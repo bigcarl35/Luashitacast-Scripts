@@ -216,7 +216,7 @@ local sets = {
 
 --[[
 	Further, there is a break out for each type of spell you can cast. For example, if you are
-	doing a Cure, you wand mind (MND) gear, etc.
+	doing a Cure, you want mind (MND) gear, etc.
 --]]
 
 	['Cure'] = {				-- Healing Magic Skill
