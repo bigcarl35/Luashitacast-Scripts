@@ -7,5 +7,5 @@ This repository contains my Luashitacast scripts that I have tailored to work on
 	that my friends and I wanted. You can use this code "as is" or change as you desire for your own needs.
 	
 	Player: Paiine
-	Date: October 2023
+	Date:   October 2023
 	Server: HorizonXI (https://horizonxi.com/)
