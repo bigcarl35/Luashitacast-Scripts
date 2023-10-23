@@ -12,9 +12,9 @@ local sets = {
 	
 	Most gear sets have an associated conditional set. These are for supporting items that give stat bonuses when
 	a certain condition is met (eg., at nighttime or when there's a full moon.) You will find all the items supported
-	in the "Conditional gear master list.txt" file which is found in the /common/ directory. Just copy and paste
+	in the "Conditional gear master list.txt" file which is also found in the /common/ directory. Just copy and paste
 	the line item you want in the appropriate conditional area. (Please note that if you have more than one item to
-	be conditionally considered, you will have to add a comma after each entry.)
+	be conditionally considered, you will have to add a comma after each entry.
 --]]
 
 --[[
@@ -216,7 +216,7 @@ local sets = {
 
 --[[
 	Further, there is a break out for each type of spell you can cast. For example, if you are
-	doing a Cure, you want mind (MND) gear, etc.
+	doing a Cure, you wand mind (MND) gear, etc.
 --]]
 
 	['Cure'] = {				-- Healing Magic Skill
@@ -954,7 +954,9 @@ profile.HandleDefault = function()
 				gFunc.EquipSet(sets.Resting_Refresh);
 				gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional);
 				-- Weapon swap to a higher MP refresh while healing weapon if appropriate.
-				gcinclude.SwapToStave('dark',false);
+				if gcdisplay.GetToggle('WSwap') == true and gcinclude.settings.bEleStaves == true then
+					gcinclude.SwapToStave('dark',false);
+				end
 			end
 		else									-- Assume idling. Priority (low to high): Idle,refresh
 			gFunc.EquipSet(sets.Idle);
@@ -1024,7 +1026,7 @@ profile.HandleAbility = function()
 			end
 			
 			-- If weapon swapping is allowed, equip a light/apollo staff (if you have one)
-			if gcdisplay.GetToggle('WSwap') == true then
+			if gcdisplay.GetToggle('WSwap') == true and gcinclude.settings.bEleStaves == true then
 				gcinclude.SwapToStave('light',false);
 			end
 		end
@@ -1063,9 +1065,11 @@ profile.HandlePrecast = function()
 		gcinclude.ProcessConditional(sets.Precast_Conditional);
 		
 		-- See if an elemental obi should be equipped
-		obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
-		if obi ~= nil then
-			gFunc.ForceEquip('Waist',obi);
+		if gcinclude.settings.bEleObis == true then
+			obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
+			if obi ~= nil then
+				gFunc.ForceEquip('Waist',obi);
+			end
 		end
 		gcinclude.CheckCancels();
 	end
@@ -1150,15 +1154,15 @@ profile.HandleMidcast = function()
 		Note: This seems like a repeat of the obi check in the precast, but in this case it's checking
 		for the spell damage type rather than the spell accuracy.
 --]]
-
-		obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.OBI);
-		if obi ~= nil then
-			gFunc.ForceEquip('Waist',obi);
-		end
+		if gcinclude.settings.bEleObis == true then
+			obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.OBI);
+			if obi ~= nil then
+				gFunc.ForceEquip('Waist',obi);
+			end
 
 		stat = nil;
 		-- Lastly, how about an elemental stave (use the MagicEleDmg in gcinclude) or summons
-		if gcdisplay.GetToggle('WSwap') == true then
+		if gcdisplay.GetToggle('WSwap') == true and gcinclude.settings.bEleStaves == true then
 			if mSet == 'Summoning' then
 				stat = gcinclude.CheckSummons(spell.Name);
 			else
