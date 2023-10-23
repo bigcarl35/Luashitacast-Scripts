@@ -1,21 +1,6 @@
 local profile = {};
 gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 
---[[
-	This implementation of a Luashitacast script is based on the code that GetAwayCoxn has published in
-	GitHub. (https://github.com/GetAwayCoxn/Luashitacast-Profiles/blob/main/config/addons/luashitacast)
-	I have done a fair amount of rewriting as well as dropping features that are not appropriate to the
-	current expansion found on HorizonXI private server. I have also added new code to support functuality
-	that my friends and I wanted. You can use this code "as is" or change as you desire for your
-	own needs. This file supports BST and is used with two lua files found in the /common/ subdirectory:
-	gcinclude.lua and gcdisplay.lua. At some point in the future I hope to upload all related lua scripts
-	to my account in GitHub.
-	
-	Programmer: Paiine
-	Date: October 2023
-	Server: HorizonXI (https://horizonxi.com/)
---]]
-
 local sets = {
 --[[
 	The Idle sets are for when you're not in town and not doing anything like fighting (or pet fighting), casting, 
