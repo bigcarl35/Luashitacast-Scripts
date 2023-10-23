@@ -12,9 +12,9 @@ local sets = {
 	
 	Most gear sets have an associated conditional set. These are for supporting items that give stat bonuses when
 	a certain condition is met (eg., at nighttime or when there's a full moon.) You will find all the items supported
-	in the "Conditional gear master list.txt" file which is also found in the /common/ directory. Just copy and paste
+	in the "Conditional gear master list.txt" file which is found in the /common/ directory. Just copy and paste
 	the line item you want in the appropriate conditional area. (Please note that if you have more than one item to
-	be conditionally considered, you will have to add a comma after each entry.
+	be conditionally considered, you will have to add a comma after each entry.)
 --]]
 
 --[[
