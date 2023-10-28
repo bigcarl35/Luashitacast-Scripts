@@ -31,7 +31,7 @@ area from the last conquest tally. Used with some conditional gear.
 **/craftset [AL|BN|CL|CO|GS|LT|SM|WW]**: Equips the crafting gear set specified and turns off gear
 swapping. AL - Alchemy, BN - Bonecraft, CL - Clothcraft, CO - Cooking, GS - Goldsmithing, 
 LT - Leathercraft, SM - Smithing, WW - Woodworking.  
-**/gatherset [HELM|DIG|CLAM]**: Equips the gathering set specified and turns off gear swapping.  
+**/gatherset [HELM|DIG|CLAM]**: Equips the gathering set specified and turns off gear swapping.
 HELM - Harvest, Excavation, Logging, Mining, DIG - Digging, CLAM - Clamming.  
 **/fishset**: Equips the fishing gear and turns off automatic gear swapping.  
 **/maxsong "name"**: Determines the highest level spell player can cast that has the common root
