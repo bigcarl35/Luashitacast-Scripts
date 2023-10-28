@@ -34,7 +34,7 @@ LT - Leathercraft, SM - Smithing, WW - Woodworking.
 **/gatherset [HELM|DIG|CLAM]**: Equips the gathering set specified and turns off gear swapping.
 HELM - Harvest, Excavation, Logging, Mining, DIG - Digging, CLAM - Clamming.  
 **/fishset**: Equips the fishing gear and turns off automatic gear swapping.  
-**/maxsong "name"**: Determines the highest level spell player can cast that has the common root
+**/maxspell "name"**: Determines the highest level spell player can cast that has the common root
 name (e.g., Cure gets you Cure III if you're 75 and /whm.)  
 **/maxsong "name"**: Determines the highest level song player can perform that has either the
 common root name (see /maxsong) or the common buff name (e.g., paeon when
