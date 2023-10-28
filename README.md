@@ -11,8 +11,8 @@ This repository contains my Luashitacast scripts that I have tailored to work on
 	Date:   October 2023
 	Server: HorizonXI (https://horizonxi.com/)
 
-Supported commands
-------------------
+## Supported commands
+
 The following commands are supported by this implementation of luashitacast.
 
 /gswap			Turns on/off automatic gear swapping. Useful when doing something not supported
@@ -43,8 +43,7 @@ The following commands are supported by this implementation of luashitacast.
    			performing one of the army paeon songs.)
 /help [command]		List description of "command" or lists all commands if no parameter specified.
 
-Useful luashitacast commands
-----------------------------
+## Useful luashitacast commands
 
 /lac disable		Disables all equipment slots.
 /lac enable		Enables all equipment slots.
