@@ -1,0 +1,265 @@
+Welcome to configuring my Luashitacast scripts. This document should help you to tailor the
+LUA so that job scripts can work the way you want them to work. There is a bit of trial and
+error involved though, so don't be surprised if you have to go back into the scripts and
+change some of the settings after you test that it is working the way you want. (This is not
+an error, it is just the tweaking that occurs when you have configurable code.)
+
+When you installed HorizonXi, a directory structure of the files was created that looks something
+like /HorizonXI/Game/... What's confusing about this install is that there's two places that
+addons can be found: /HorizonXI/Game/addons/luashitacast/ and 
+/HorizonXI/Game/config/addons/luashitacast/. The former is where the luashitacast addon files 
+are stored and the latter are where your configuration scripts should be placed. The scripts 
+consist of three lua files, the job file (in this document I will use the BST file as an example),
+gcinclude.lua and gcdisplay.lua which are found in the /common/ subdirectory. You will also find 
+a text file called "Conditional gear master list.txt" in the /common/ subdirectory which contains 
+a master list of all supported conditional gear. (I'll talk about that file a bit later.) The only 
+two files that you will modify are the job file ("your character name"_BST.lua) and gcinclude.lua.
+
+Each job that is supported will have a separate job file, but only one copy of gcinclude is
+needed. (The job file has specific definitions for that job whereas gcinclude.lua contains 
+definitions that are true across all jobs.) All configuration occurs in the top part of the
+script. (You can modify the code itself if you feel comfortable doing that, but at that point
+the code is yours.)
+
+Gear sets
+=========
+The largest amount of configuration takes place when defining gear sets. Most of the set names
+found in your job file will have the same names, it's just the gear itself that needs to be
+tailored to the job. Listed below are all of the gear set names and where they're found. Where
+helpful I have included a comment in the code explaining what the set is used for
+
+job (BST) file							gcinclude.lua
+==============							=============
+Idle									Doomed
+Idle_Regen								Holy_Water
+Idle_Refresh							Sleeping
+Resting									Blind
+Resting_Refresh							Weakened
+Starting_Weapons						Crafting
+Town									Gathering
+DT_Physical								FishingGear
+DT_Magical
+DT_Breath
+DT_Evasion
+TP
+TP_Accuracy
+TP_Evasion
+Preshot
+Midshot
+Precast
+Midcast
+Cure
+Dark
+Divine
+Enfeebling
+Enhancing
+Elemental
+Ninjitsu
+Summoning
+INT
+MND
+macc
+Phalanx
+Stoneskin
+Refresh
+Start_Weapon
+WS_STR
+WS_STRDEX
+WS_STRINT
+WS_STRINT_30_20
+WS_STRMND
+WS_STRVIT
+WS_DEX
+WS_DEXINT
+WS_INTAGI
+WS_CHR
+WS_MND
+WS_Accuracy
+Call_Beast
+Reward
+Tame
+Charm
+Charm_Evasion
+PetReady
+PetAttack
+Movement
+CAP20
+CAP25
+CAP30
+CAP40
+CAP50
+CAP60
+
+Not all gear sets need to be defined, just the ones you want to. That's why you'll find some
+empty definitions. Not all gear sets need all the equipment slots defined. Just specify the
+gear that makes sense (if any). Don't change the names of the gear sets. If you do they won't
+be used since the program is looking for the ones I've listed. Most gear sets have a conditional
+gear set named similarly below their definition. These are very different from the gear set and
+I'll discuss how to configure them further down in the document.
+
+There's basically two ways to define a gear set. You either type in the definitions manually or
+you take advantage of a luashitacast command and save your currently equipped gear into the 
+defined gear set. The name of the gear piece has to be what it is called in the appropriate
+inventory/wardrobe slot. This includes abbreviations. This is doable, but it's a bit of a pain
+too. That's why I favor equipping the gear (in game) and then using the luashitacast command to
+save that set into my job definitions file. (Please note that you probably need to disable
+gear swapping before you can change gear manually. To do that you just type /gswap. That command
+toggles on and off gear swapping.)
+
+	/lac addset "gear set name"			eg.: /lac addset Charm
+	
+That command will replace the current definition of the specified gear set with the gear you have
+equipped. Make sure you spell the gear set name correctly including capitalization. Another
+advantage of using this command is there's nothing stopping you from making special gear sets that
+have meaning to you. (This is what I did when I made the CAPxx sets.) If you want to use a gear set
+that the program will not automatically know how to use, you use the /gearset command (eg. /gearset 
+CAP40). This will equip the gear set you specified and turn off automatic gear swapping until you 
+turn it back on. Real handy when going into level capped zones or some other special condition you 
+want to support.
+
+You might have noticed that I didn't mention being able to save gear sets into the gcinclude.lua 
+file with the /lac command. Unfortunately you can't do it. What I tend to do is create the set in
+the job file, copy it and replace the one in gcinclude.lua. I know, it's a pain, but that does work. 
+Listed below is a blank, full gear set definition. Use it as a template if you like and if you prefer
+to have all the slots listed, that's fine. Just leave the piece of gear off in all slots you want
+any already loaded gear to pass through. Lastly, if the gear piece's name is possessive, has an
+apostrophe in the name, you need to "escape" that apostrophe. That's done with the \ before the '.
+(Eg., Barbarian\'s Belt.)
+
+	['name'] = {
+        Main = ,
+        Ammo = ,
+        Head = ,
+        Neck = ',
+        Ear1 = ',
+        Ear2 = ',
+        Body = ',
+        Hands = ',
+        Ring1 = ',
+        Ring2 = ',
+        Back = ',
+        Waist = ',
+        Legs = ',
+        Feet = ',
+    },
+	
+One set you might have noticed is the Start_Weapons set. This should only contain the top row of 
+the equipment you want loaded. (Specifically, the main hand, off hand, ranged, and ammo slot.)
+One of the big problems that occur when you swap weapons is the loss of TP. To minimize this loss
+it is recommended that weapons are only specified in this set and you leave the top row of your
+equipment empty when you save other gear sets. The program does support weapon swapping, but only
+if you indicate that weapon swapping is permitted. (Use /WSwap to turn on/off this feature.) The
+program only swaps to elemental staves where appropriate. "Start_Weapons" are loaded when you change
+to the job or when you login.
+	
+Conditional Gear
+================
+There is gear that has conditional properties, ones that will only be enabled when the specified
+condition is met (eg., +3 evasion in areas controlled by home nation). You don't want that type
+of gear to be loaded all the time unless the rest of the stats make it worthwhile, but if the
+condition can be met, that piece of gear might be worth using. That's what the conditional gear
+areas are used for. There's a file in the /common/ area called "Conditional gear master list.txt"
+that contains a list of all of the gear in FFXI that has conditional settings supported by the
+luashitacast scripts. Below each gear set definition you will probably find a "conditional" block.
+This is where you specify the gear you want loaded if the appropriate condition is met. You do this
+by copying the line of the gear piece you want from the "master" list and pasting it into the 
+appropriate "conditional" block. If you want to specify more than one conditional, the entries
+must be separated by a comma. Some conditionals are not found on the gear description, but are
+custom and have been implemented in the code. These are also found in the "master" list. Each
+definition line in the "master" list contains: an item code, name of the gear piece, and a 
+description. The first two parts should not be modified, but the description can be anything you
+want. It's intended to tell you what condition needs to be met.
+
+Example of a conditional block:
+
+	['TP_Conditional'] = {
+		{'BD-1','Gaudy Harness','Adds refresh if MP < 50'},
+		{'RN-11','Tamas Ring','will equip if subjob can do magic'}
+	},
+
+If no conditional gear are specified, the block will look like:
+
+	['TP_Conditional'] = {
+	},
+	
+Please note that the same conditional gear can be specified in many "conditional" blocks.
+
+Gear Set Relationship
+=====================
+One of the things that won't be obvious when looking at the gear sets is how they interact with
+each other. Successive gear swaps will overwrite where gear is specified and leave gear that was
+previously equipped where no gear was specified in the new set. This "layering" effect ends up
+giving you an amalgamation set representing all the pieces that were overlapped. In most cases
+only one set is used at a time (with the associated "conditional" gear possibly taking precidence.)
+But, in some cases many sets are considered. The most complex is probably when casting magic.
+
+There is a Precast and a Midcast section and each address different concerns, but both are done
+for each spell. The Precast focuses on equipping gear that have fast cast and casting time reduction
+gear while Midcast focuses on magic attack, magic attack bonus, and magic enhancing gear. Spell
+cast is further broken down by type (eg., curing or enfeebling), stat enhancing, magical accuracy,
+and sometimes specific spell enhancements. The processing looks like this:
+
+Precast
+	Precast gear
+	Precast conditional gear
+	Elemental Obi for magical accuracy
+	
+Midcast
+	Midcast gear
+	Midcast conditional gear
+	Mind or Intelligence gear, accordingly
+	Mind or Intelligence conditional gear, accordingly
+	Specific spell gear, accordingly
+	Specific spell conditional gear, accordingly
+	Magical accuracy gear, if specified
+	Magical accuracy conditional gear, if specified
+	Spell type gear
+	Spell type conditional gear
+	Elemental Obi for magical damage
+	Possible swapping of weapon to a stave to enhance the spell's effect
+	
+That's quite a process and definitely the most comprehensive.
+
+Other Settings
+==============
+The only other thing in the BST job file that might be modified is the profile.JugPets table. This
+contains a list of all of the BST jug pets supported on HorizonXI including details on what is the 
+jug called, what pet is summoned, the min/max level the pet is useful for, how long it lasts, do
+you have access to that jug (programmatically determined) and the field you might want to change,
+if the jug pet favored. By that I mean if given a list of jugs you can equip that are level appropriate,
+are their any you prefer to equip. This data is used when you invoke "call beast" and you don't have 
+a jug pet broth equipped in your ammo slot. Ideally only one jug pet is favored in a specific level 
+range, but if you specify multiple, it means that any one of those are fine and the first one the 
+program finds will be used. To specify you favor a jug pet, change the last "false" on the line to 
+"true".
+
+In the gcinclude.lua file, there's more customization needed. Past the gear sets the first thing you
+run into are the gcinclude.settings. Most of them are automatically set by the program or by you through the
+appropriate command, but RegenGearHPP and RefreshGearMPP can only be modified by you. They represent
+the percentage value for HP and MP, respectively, when the appropriate gear will be equipped during
+Idle and Rest. The defaults are 60% HP and 70% MP.
+
+Next you want to move to the section that defines gcinclude.elemental_staves. Here's where you 
+indicate that you own any elemental stave (NQ or HQ) and that they are accessible in either your
+inventory or in wardrobe/wardrobe 2. Each line represents an element and the true/false element
+after the staff name is what you change depending on what you own. Each line shows the NQ version
+of the staff and then the HQ. If you've indicated you have both, the HQ will take priority. You
+might notice that the iridal/chatoyant staves are missing, those two don't get introduced into
+FFXI until synergy is released which is in Wings of the Godess expansion which is not available
+on HorizonXI yet.
+
+The next area of concern is gcinclude.elemental_obis which indicates if you own any of the elemental
+obis that were introduced in Chains of Promathia. Like with the elemental staves, if you own any
+of the obis and they're accessible outside of a mog house, change the true/false value at the end of
+the line to true. (And like with the elemental staves, you might notice that the Hachirin's obi is 
+missing. This obi is also created with synergy which is not available yet on HorizonXI.)
+
+Lastly, the next area of concern is gcinclude.elemental_gorgets which indicates if you own any of 
+the elemental gorgets that were introduced in Chains of Promathia. Like with the elemental obis, if
+you own any of the gorgets and they're accessible outside of a mog house, change the trur/false value
+at the end of the line to true. (And like Hachirin's obi, there's a similar gorget: Fotia Gorget,
+which isn't currently available on the HorizonXI server yet.)
+
+That's pretty much it. If you have any questions, feel free to contact me.
+
+Paiine
