@@ -15,11 +15,11 @@ This repository contains my Luashitacast scripts that I have tailored to work on
 
 The following commands are supported by this implementation of luashitacast.
 
-/gswap			Turns on/off automatic gear swapping. Useful when doing something not supported
+/gswap			Turns on/off automatic gear swapping. Useful when doing something not supported  
 /wsdistance [#]		Turns on/off distance check on melee weapon skill. Also supports changing the
-			the default distance from 4.7 yalms to whatever you want
+			the default distance from 4.7 yalms to whatever you want  
 /dt			Turns on/off automatic equipping of damage taken gear. Type depens on the setting
-			of dt_type
+			of dt_type  
 /dt_type [Physical|Magical|Breath]	Defines type of damage taken gear to equip when /DT turned on. 
 /kite			Turns on/off equipping movement gear.
 /acc			Turns on/off equipping accuracy gear. This includes both physical and magical.
