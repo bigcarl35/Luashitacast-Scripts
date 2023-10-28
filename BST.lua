@@ -78,8 +78,7 @@ local sets = {
 	['Start_Weapons'] = {
 	    Main = 'Maneater',
 		Sub = 'Tatami Shield',
-        Ammo = 'S. Herbal Broth',
-	},
+ 	},
 	['Start_Weapons_Conditional'] = {
 	},
 	
@@ -400,7 +399,7 @@ local sets = {
 		Sword: Shining Blade,Seraph Blade
 --]]
 	
-	['WS_B'] = {
+	['WS_STRMND'] = {
 		Head = 'Beast helm',					-- +3 MND
 		Neck = 'Justice badge',					-- +3 MND
 		Body = 'Narasimha\'s vest',				-- +3 STR
@@ -705,11 +704,43 @@ local sets = {
         Feet = 'Beast Gaiters',
     },
 };
+-- list of all jug pets available on HorizonXI.
+-- what,name,min level,max level,duration,have,favored
+profile.JugPetsIndices = T {['JUG'] = 1, ['MIN'] = 2, ['MAX'] = 3, ['DUR'] = 4, ['HAV'] = 5, ['FAV'] = 6};
+profile.JugPets = T {
+	['carrot broth'] = {'Hare Familiar',23,35,90,false,false},
+	['herbal broth'] = {'Sheep Familiar',23,35,60,false,false},
+	['humus'] = {'Flowerpot Bill',28,40,60,false,false},
+	['meat broth'] = {'Tiger Familiar',28,40,60,false,false},
+	['grasshopper broth'] = {'Flytrap Familiar',28,40,60,false,false},
+	['carrion broth'] = {'Lizard Familiar',33,45,60,false,false},
+	['bug broth'] = {'Mayfly Familiar',33,45,60,false,false},
+	['mole broth'] = {'Eft Familiar',33,45,60,false,false},
+	['tree sap'] = {'Beetle Familiar',38,45,60,false,false},
+	['antica broth'] = {'Antlion Familiar',38,50,60,false,false},
+	['fish broth'] = {'Crab Familiar',23,55,30,false,false},
+	['blood bath'] = {'Mite Familiar',43,55,60,false,false},
+	['f. carrot broth'] = {'Keeneared Steffi',43,75,90,false,false},
+	['s. herbal broth'] = {'Lullaby Melodia',43,75,60,false,true},
+	['rich humus'] = {'Flowerpot Ben',51,75,60,false,false},
+	['w. meat broth'] = {'Saber Siravarde',51,75,60,false,false},
+	['seedbed soil'] = {'Funguar Familiar',33,65,60,false,false},
+	['qdv. bug broth'] = {'Shellbuster Orob',53,75,60,false,false},
+	['c. carrion broth'] = {'Coldblood Como',53,75,60,false,false},
+	['fish oil broth'] = {'Courier Carrie',23,75,30,false,false},
+	['alchemist water'] = {'Homunculus',23,75,60,false,false},
+	['n. grasshopper broth'] = {'Voracious Audrey',53,75,60,false,false},
+	['l. mole broth'] = {'Ambusher Allie',58,75,60,false,false},
+	['scarlet sap'] = {'Panzer Galahad',63,75,60,false,false},
+	['c. blood broth'] = {'Lifedrinker Lars',63,75,60,false,false},
+	['f. antica broth'] = {'Chopsuey Chucky',63,75,60,false,false},
+	['sun water'] = {'Amigo Sabotender',75,75,30,false,false},
+};
 
 profile.Sets = sets;
 profile.sjb = nil;
-profile.bReward = false;
-profile.sAmmo;
+profile.bAmmo = false;
+profile.sAmmo = nil;
 
 --[[
 	HandlePetAction equips the appropriate gear set based on the type of action
@@ -722,13 +753,13 @@ local function HandlePetAction(PetAction)
 
 		if (gcinclude.BstPetAttack:contains(PetAction.Name)) then
 			gFunc.EquipSet(sets.PetAttack);
-			gcinclude.ProcessConditional(sets.PetAttack_Conditional);	
+			gcinclude.ProcessConditional(sets.PetAttack_Conditional,nil);	
 		elseif (gcinclude.BstPetMagicAttack:contains(PetAction.Name)) then
 			gFunc.EquipSet(sets.PetMagicAttack);
-			gcinclude.ProcessConditional(sets.PetMagicAttack_Conditional);			
+			gcinclude.ProcessConditional(sets.PetMagicAttack_Conditional,nil);			
 		elseif (gcinclude.BstPetMagicAccuracy:contains(PetAction.Name)) then
 			gFunc.EquipSet(sets.PetMagicAccuracy);
-			gcinclude.ProcessConditional(sets.PetMagicAccuracy_Conditional);			
+			gcinclude.ProcessConditional(sets.PetMagicAccuracy_Conditional,nil);			
 		end
     end
 end
@@ -778,7 +809,7 @@ profile.OnLoad = function()
 	-- Load up the weapons bar. (This need only be done once.)
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 		gFunc.EquipSet(sets.Start_Weapons);	
-		gcinclude.ProcessConditional(sets.Start_Weapon_Conditional);
+		gcinclude.ProcessConditional(sets.Start_Weapon_Conditional,nil);
 	end
 end
 
@@ -809,10 +840,8 @@ local function ShowCommands(args)
 		print(chat.header('Help'):append(chat.message('/eva --Toggles whether evasion set should be equipped or not. Default is FALSE.')));
 		print(chat.header('Help'):append(chat.message('/acc --Toggle whether accuracy gear should override melee/weapon skill gear. Default is FALSE')));
 		print(chat.header('Help'):append(chat.message('/gearset name --Will equip the named gear set and then disable GSwap.')));
-		print(chat.header('Help'):append(chat.message('/craft_type [AL|BN|CL|CO|GS|LT|SM|WW] --Sets the type of crafting set to load')));
-		print(chat.header('Help'):append(chat.message('/craft [type] --Equips the selected crafting set or the passed type and turns GSwap off.')));
-		print(chat.header('Help'):append(chat.message('/gather_type [HELM|DIG|CLAM] --Sets the type of gathering gear set to load')));
-		print(chat.header('Help'):append(chat.message('/gather [type] --Equips the selected gathering set or passed type and turns GSwap off.')));
+		print(chat.header('Help'):append(chat.message('/craftset [AL|BN|CL|CO|GS|LT|SM|WW] --Equips the specified crafting gear and turns GSwap off.')));
+		print(chat.header('Help'):append(chat.message('/gatherset [HELM|DIG|CLAM] --Equips the specified gathering gear and turns GSwap off.')));
 		print(chat.header('Help'):append(chat.message('/fishset --Equips the fishing set and turns off GSwap.')));
 		print(chat.header('Help'):append(chat.message('/region --Toggles whether the area you\'re adventuring in is controlled by your nation or not.')));
 		print(chat.header('Help'):append(chat.message('/maxspell name -- Determines the highest level spell your current jobs can cast that has the passed name')));
@@ -853,14 +882,12 @@ local function ShowCommands(args)
 			print(chat.header('Help'):append(chat.message('/acc --This toggles whether accuracy gear takes priority over normal melee gear. Casting and ranged accuracy are handled automatically. If Acc is true, then the accuracy set will be loaded over the TP set and the appropriate weaponskill set. Default is FALSE.')));
 		elseif cmd == 'eva' then
 			print(chat.header('Help'):append(chat.message('/eva --This toggles whether evasion gear takes priority over normal melee gear. If Eva is true, then the evasion set will be loaded over the TP set and the appropriate weaponskill set. Default is FALSE')));
-		elseif cmd == 'craft_type' then
-			print(chat.header('Help'):append(chat.message('/craft_type [AL|BN|CL|CO|GS|LT|SM|WW] --This command sets the type of crafting gear that will be loaded when /craft specified. Valid types are: AL (Alchemy), BN (Bonecraft), CL (Clothcraft), CO (Cooking), GS (Gold Smithing), LT (Leatherwork), SM (Smithing), and WW (Woodworking). No type specified just increments the type to the next available setting')));
-		elseif cmd == 'craft' then
-			print(chat.header('Help'):append(chat.message('/craft [type] equips the crafting gear specied in the craft_type or the passed type and turns GSwap off.')));
-		elseif cmd == 'gather_type' then
-			print(chat.header('Help'):append(chat.message('/gather_type [HELM|DIG|CLAM] --This command sets the type of gathering gear that will be loaded when /gather specified. HELM includes harvesting, excavation, logging, and mining, DIG is digging and CLAM is clamming. No type specified just increments the type to the next available setting')));
-		elseif cmd == 'gather' then
-			print(chat.header('Help'):append(chat.message('/gather [type] --This equips gather_type\'s setting or the specified gathering gear and turns GSwap off.')));
+		elseif cmd == 'craftset' then
+			print(chat.header('Help'):append(chat.message('/craftset [AL,BN,CL,CO,GS,LT,SM,WW] equips specified crafting gear and turns GSwap off.')));
+			print(chat.header('Help'):append(chat.message('AL - Alchemy, BN - Bonecraft, CL - Clothcraft, CO - Cooking, GS - Goldsmithing, LT - Leathercraft, SM - Smithing, and WW - Woodworking')));			
+		elseif cmd == 'gatherset' then
+			print(chat.header('Help'):append(chat.message('/gatherset [HELM,DIG,CLAM] --This equips specified gathering gear and turns GSwap off.')));
+			print(chat.header('Help'):append(chat.message('HELM - harvest,excavation,logging,mining, DIG - digging, and CLAM - clamming')));
 		elseif cmd == 'region' then
 			print(chat.header('Help'):append(chat.message('/region --This indicates if the current area where you\'re playing is controlled by your nation. Default is TRUE')));
 		elseif cmd == 'fishset' then
@@ -878,6 +905,83 @@ local function ShowCommands(args)
 		else
 			print(chat.header('Help'):append(chat.message('The command you specified either does not exist or is not supported for BST.')));
 		end
+	end
+end
+--[[
+	findJugPets traverses the master list of jugs and determines if any are accessible. The appropriate 
+	indicator is updated accordingly. Returned is whether any jug pets were found.
+	
+	Note: I did look into adapting gcinclude.FindString since there is a similarity, but it was more 
+	work than it was worth doing, so this routine will look similar.
+--]]
+
+profile.findJugPets = function()
+	local inventory = AshitaCore:GetMemoryManager():GetInventory();
+	local resources = AshitaCore:GetResourceManager();
+	local player = gData.GetPlayer();
+	local iCount = 0;
+	
+	-- Clear the table ownership settings
+	for k,v in pairs(profile.JugPets) do
+		v[5] = false;
+	end
+	
+	-- Now walk the equipable (in the field) storage areas
+	for k,v in pairs(gcinclude.EQUIPABLE) do
+		containerID = v[1];
+		-- then loop through the selected container looking for a jug pet's broth
+		for j = 1,inventory:GetContainerCountMax(containerID),1 do
+			local itemEntry = inventory:GetContainerItem(containerID, j);
+			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
+                local item = resources:GetItemById(itemEntry.Id);
+				-- then check the master list of jug pets
+				for kk,tpf in pairs(profile.JugPets) do
+					if kk == string.lower(item.Name[1]) then
+						if (tpf[2] <= player.MainJobSync) and (tpf[3] >= player.MainJobSync) then
+							-- finally, this one is possible to be selected
+							profile.JugPets[kk][5] = true;
+							iCount = iCount + 1;
+						end
+					end
+				end
+			end
+		end
+	end
+	
+	-- assuming any were found, return true or false
+	return (iCount > 0);
+end
+
+--[[
+	findMaxEquipableJugPet determines what is the best jug pet to load and equips it. The success is returned.
+	The way this function works is by searching for available jug pets and determining which are level
+	appropriate. Of those check if any are favored. If so, equip that one, else equip first one on list.
+--]]
+
+profile.findMaxEquipableJugPet = function()
+	local sPos = nil;
+
+	-- find any equipable jug pets
+	if profile.findJugPets() == true then
+		-- then cycle through the list and find the favored one. If none favored, the first jug found will be used.
+		for k,v in pairs(profile.JugPets) do
+			if v[5] == true then		-- One of the found pets
+				sPos = k;
+				if v[6] == true then	-- Favored
+					break;
+				end
+			end
+		end
+		if sPos ~= nil then
+			gFunc.ForceEquip('Ammo',sPos);
+			return true;
+		else
+			print(chat.header('findMaxEquipableJugPet'):append(chat.message('Error: Found jug, but none equipped!')));
+			return false;
+		end
+	else
+		print(chat.header('findMaxEquipableJugPet'):append(chat.message('Error: No jug pets found to equip')));
+		return false;
 	end
 end
 
@@ -907,15 +1011,17 @@ profile.HandleDefault = function()
 		
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 
-		-- When you want to reward your pet the current item in the ammo slot is saved.
-		-- The following will set it back to what you had before the pet food was equipped.
-		if profile.bReward then
+		-- When you want to reward your pet and you do not have pet food equipped or when you 
+		-- want to summon a pet and a jug is not equipped, the current item in the ammo slot 
+		-- is saved. The following will set it back to what you had before either of those two 
+		-- items were equipped.
+		if profile.bAmmo then
 			gFunc.ForceEquip('Ammo',profile.sAmmo);
 			profile.sAmmo = nil;
-			profile.bReward = false;
+			profile.bAmmo = false;
 		end
 		
-		-- A pet action takes priority over a player's action. Sorry.
+		-- A pet action takes priority over a player's action.
 		if (petAction ~= nil) then
 			HandlePetAction(petAction);
 			return;
@@ -938,21 +1044,21 @@ profile.HandleDefault = function()
 		-- Now process the player status accordingly
 		if player.Status == 'Engaged' then		-- Player is fighting. Priority (low to high): TP,evasion,accuracy
 			gFunc.EquipSet(sets.TP);
-			gcinclude.ProcessConditional(sets.TP_Conditional);
+			gcinclude.ProcessConditional(sets.TP_Conditional,nil);
 			if gcdisplay.GetToggle('Eva') == true then
 				gFunc.EquipSet(sets.TP_Evasion);
-				gcinclude.ProcessConditional(sets.TP_Evasion_Conditional);
+				gcinclude.ProcessConditional(sets.TP_Evasion_Conditional,nil);
 			end
 			if gcdisplay.GetToggle('Acc') == true then 
 				gFunc.EquipSet(sets.TP_Accuracy);
-				gcinclude.ProcessConditional(sets.TP_Accuracy_Conditional);
+				gcinclude.ProcessConditional(sets.TP_Accuracy_Conditional,nil);
 			end
 		elseif player.Status == 'Resting' then	-- Player kneeling. Priority (low to high): Resting,refresh
 			gFunc.EquipSet(sets.Resting);
-			gcinclude.ProcessConditional(sets.Resting_Conditional);
+			gcinclude.ProcessConditional(sets.Resting_Conditional,nil);
 			if (gcinclude.settings.bMagic and player.MPP < gcinclude.settings.RefreshGearMPP) then
 				gFunc.EquipSet(sets.Resting_Refresh);
-				gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional);
+				gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional,nil);
 				-- Weapon swap to a higher MP refresh while healing weapon if appropriate.
 				if gcdisplay.GetToggle('WSwap') == true and gcinclude.settings.bEleStaves == true then
 					gcinclude.SwapToStave('dark',false);
@@ -960,7 +1066,7 @@ profile.HandleDefault = function()
 			end
 		else									-- Assume idling. Priority (low to high): Idle,refresh
 			gFunc.EquipSet(sets.Idle);
-			gcinclude.ProcessConditional(sets.Idle_Conditional);
+			gcinclude.ProcessConditional(sets.Idle_Conditional,nil);
 			if player.HPP < gcinclude.settings.RegenGearHPP then		-- if the player's HP is below the threshold setting, equip the idle regen gear
 				gFunc.EquipSet(sets.Idle_Regen);
 			end
@@ -974,7 +1080,7 @@ profile.HandleDefault = function()
 		-- If player has indicated kiting, load movement gear set
 		if (gcdisplay.GetToggle('Kite') == true) then
 			gFunc.EquipSet(sets.Movement);
-			gcinclude.ProcessConditional(sets.Movement_Conditional);
+			gcinclude.ProcessConditional(sets.Movement_Conditional,nil);
 		end
 		
 		gcinclude.CheckDefault ();
@@ -982,11 +1088,11 @@ profile.HandleDefault = function()
 		if (gcdisplay.GetToggle('DT') == true) then
 			gFunc.EquipSet('DT_' .. gcdisplay.GetCycle('DT_Type'));
 			if gcdisplay.GetCycle('DT_Type') == gcinclude.PHY then
-				gcinclude.ProcessConditional(sets.DT_Physical_Conditional);
+				gcinclude.ProcessConditional(sets.DT_Physical_Conditional,nil);
 			elseif gcdisplay.GetCycle('DT_Type') == gcinclude.MAG then
-				gcinclude.ProcessConditional(sets.DT_Magical_Conditional);
+				gcinclude.ProcessConditional(sets.DT_Magical_Conditional,nil);
 			else
-				gcinclude.ProcessConditional(sets.DT_Breath_Conditional);
+				gcinclude.ProcessConditional(sets.DT_Breath_Conditional,nil);
 			end
 		end
 	end
@@ -1001,28 +1107,41 @@ profile.HandleAbility = function()
 
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 		if string.match(ability.Name, 'Call Beast') or string.match(ability.Name, 'Bestial Loyalty') then
-			gFunc.EquipSet(sets.Call_Beast);
-			gcinclude.ProcessConditional(sets.Call_Beast_Conditional);
-		elseif string.match(ability.Name, 'Reward') then
-			-- Save what's in the ammo slot before changing to the pet food
-			profile.bReward = true;
+			-- See if a jug pet already equipped
 			profile.sAmmo = gData.GetEquipSlot('Ammo');
+			if string.find(string.lower(profile.sAmmo),'jug ') == nil then		-- something else equipped
+				profile.bAmmo = profile.findMaxEquipableJugPet();
+				end
+			end			
+			gFunc.EquipSet(sets.Call_Beast);
+			gcinclude.ProcessConditional(sets.Call_Beast_Conditional,nil);
+		elseif string.match(ability.Name, 'Reward') then
+			-- See if pet food already equipped
+			profile.sAmmo = gData.GetEquipSlot('Ammo');
+			if string.find(string.lower(profile.sAmmo),'pet f') == nil then		-- something else equipped
+				if gcinclude.findMaxEquipablePetFood() == false then
+					print(chat.header('HandleAbility'):append(chat.message('Error: Reward failed, no equipable pet food found')));
+					return;
+				else
+					profile.bAmmo = true;
+				end
+			end
 			gFunc.EquipSet(sets.Reward);
-			gcinclude.ProcessConditional(sets.Reward_Conditional);
+			gcinclude.ProcessConditional(sets.Reward_Conditional,nil);
 		elseif string.match(ability.Name, 'Ready') or string.match(ability.Name, 'Sic') then
 			gFunc.EquipSet(sets.PetReady);
-			gcinclude.ProcessConditional(sets.PetReady_Conditional);
+			gcinclude.ProcessConditional(sets.PetReady_Conditional,nil);
 		elseif string.match(ability.Name, 'Tame') then
 			gFunc.EquipSet(sets.Tame);
-			gcinclude.ProcessConditional(sets.Tame_Conditional);
+			gcinclude.ProcessConditional(sets.Tame_Conditional,nil);
 		elseif string.match(ability.Name, 'Charm') then
 			gFunc.EquipSet(sets.Charm);
-			gcinclude.ProcessConditional(sets.Charm_Conditional);
+			gcinclude.ProcessConditional(sets.Charm_Conditional,nil);
 		
 			-- If evasion is wanted, override the appropriate gear
 			if gcdisplay.GetToggle('eva') == true then
 				gFunc.EquipSet(sets.Charm_Evasion);
-				gcinclude.ProcessConditional(sets.Charm_Evasion_Conditional);
+				gcinclude.ProcessConditional(sets.Charm_Evasion_Conditional,nil);
 			end
 			
 			-- If weapon swapping is allowed, equip a light/apollo staff (if you have one)
@@ -1033,10 +1152,10 @@ profile.HandleAbility = function()
 		
 		gcinclude.CheckCancels();
 	end
-end
 
 --[[
-	HandleItem is the place for gear a special item is used. Currently only 'Holy Water' is supported
+	HandleItem is the place to equip gear when a special item is used. Currently only 'Holy Water' 
+	is supported
 --]]
 
 profile.HandleItem = function()
@@ -1062,7 +1181,7 @@ profile.HandlePrecast = function()
 	-- Now, normal process
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 		gFunc.EquipSet(sets.Precast);
-		gcinclude.ProcessConditional(sets.Precast_Conditional);
+		gcinclude.ProcessConditional(sets.Precast_Conditional,nil);
 		
 		-- See if an elemental obi should be equipped
 		if gcinclude.settings.bEleObis == true then
@@ -1091,36 +1210,36 @@ profile.HandleMidcast = function()
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true	
 		-- First load the midcast set
 		gFunc.EquipSet(sets.Midcast);
-		gcinclude.ProcessConditional(sets.Midcast_Conditional);
+		gcinclude.ProcessConditional(sets.Midcast_Conditional,nil);
 		
 		-- Then, see if INT/MND gear should be loaded
 		sSet = gcinclude.WhichStat(spell.Name);
 		if sSet ~= nil then
 			if sSet == 'MND' then
 				gFunc.EquipSet(sets.MND);
-				gcinclude.ProcessConditional(sets.MND_Conditional);
+				gcinclude.ProcessConditional(sets.MND_Conditional,nil);
 			elseif sSet == 'INT' then
 				gfunc.EquipSet(sets.INT);
-				gcinclude.ProcessConditional(sets.INT_Conditional);
+				gcinclude.ProcessConditional(sets.INT_Conditional,nil);
 			end
 		end
 		
 		-- Then check spell specific gear
 		if string.match(spell.Name, 'Phalanx') then
 			gFunc.EquipSet(sets.Phalanx);
-			gcinclude.ProcessConditional(sets.Phalanx_Conditional);
+			gcinclude.ProcessConditional(sets.Phalanx_Conditional,nil);
 		elseif string.match(spell.Name, 'Stoneskin') then
 			gFunc.EquipSet(sets.Stoneskin);
-			gcinclude.ProcessConditional(sets.Stoneskin_Conditional);
+			gcinclude.ProcessConditional(sets.Stoneskin_Conditional,nil);
 		elseif string.contains(spell.Name, 'Refresh') then
 			gFunc.EquipSet(sets.Refresh);
-			gcinclude.ProcessConditional(sets.Refresh_Conditional);
+			gcinclude.ProcessConditional(sets.Refresh_Conditional,nil);
 		end
 
 		-- Then magical accuracy
 		if gcdisplay.GetToggle('acc') == true then
 			gFunc.EquipSet(sets.macc);
-			gcinclude.ProcessConditional(sets.macc_Conditional);
+			gcinclude.ProcessConditional(sets.macc_Conditional,nil);
 		end
 		
 		-- Then the appropriate magic skill
@@ -1129,21 +1248,21 @@ profile.HandleMidcast = function()
 		if mSet ~= nil then
 			gFunc.EquipSet(mSet);
 			if mSet == 'Cure' then
-				gcinclude.ProcessConditional(sets.Cure_Conditional);
+				gcinclude.ProcessConditional(sets.Cure_Conditional,nil);
 			elseif mSet == 'Dark' then
-				gcinclude.ProcessConditional(sets.Dark_Conditional);
+				gcinclude.ProcessConditional(sets.Dark_Conditional,nil);
 			elseif mSet == 'Divine' then
-				gcinclude.ProcessConditional(sets.Divine_Conditional);
+				gcinclude.ProcessConditional(sets.Divine_Conditional,nil);
 			elseif mSet == 'Enfeebling' then
-				gcinclude.ProcessConditional(sets.Enfeebling_Conditional);
+				gcinclude.ProcessConditional(sets.Enfeebling_Conditional,nil);
 			elseif mSet == 'Enhancing' then
-				gcinclude.ProcessConditional(sets.Enhancing_Conditional);
+				gcinclude.ProcessConditional(sets.Enhancing_Conditional,nil);
 			elseif mSet == 'Elemental' then
-				gcinclude.ProcessConditional(sets.Elemental_Conditional);
+				gcinclude.ProcessConditional(sets.Elemental_Conditional,nil);
 			elseif mSet == 'Ninjitsu' then
-				gcinclude.ProcessConditional(sets.Ninjitsu_Conditional);
+				gcinclude.ProcessConditional(sets.Ninjitsu_Conditional,nil);
 			elseif mSet == 'Summoning' then
-				gcinclude.ProcessConditional(sets.Summoning_Conditional);
+				gcinclude.ProcessConditional(sets.Summoning_Conditional,nil);
 			end				
 		end
 
@@ -1159,7 +1278,8 @@ profile.HandleMidcast = function()
 			if obi ~= nil then
 				gFunc.ForceEquip('Waist',obi);
 			end
-
+		end
+		
 		stat = nil;
 		-- Lastly, how about an elemental stave (use the MagicEleDmg in gcinclude) or summons
 		if gcdisplay.GetToggle('WSwap') == true and gcinclude.settings.bEleStaves == true then
@@ -1183,7 +1303,7 @@ end
 profile.HandlePreshot = function()
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 		gFunc.EquipSet(sets.Preshot);
-		gcinclude.ProcessConditional(sets.Preshot_Conditional);
+		gcinclude.ProcessConditional(sets.Preshot_Conditional,nil);
 	end
 end
 
@@ -1194,7 +1314,7 @@ end
 profile.HandleMidshot = function()
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 		gFunc.EquipSet(sets.Midshot);
-		gcinclude.ProcessConditional(sets.Midshot_Conditional);
+		gcinclude.ProcessConditional(sets.Midshot_Conditional,nil);
 	end
 end
 
@@ -1217,27 +1337,27 @@ profile.HandleWeaponskill = function()
 			gFunc.EquipSet(sWS);
 			
 			if sWS == 'WS_CHR' then
-				gcinclude.ProcessConditional(sets.WS_CHR_Conditional);
+				gcinclude.ProcessConditional(sets.WS_CHR_Conditional,nil);
 			elseif sWS == 'WS_DEX' then
-				gcinclude.ProcessConditional(sets.WS_DEX_Conditional);
+				gcinclude.ProcessConditional(sets.WS_DEX_Conditional,nil);
 			elseif sWS == 'WS_DEXINT' then
-				gcinclude.ProcessConditional(sets.WS_DEXINT_Conditional);
+				gcinclude.ProcessConditional(sets.WS_DEXINT_Conditional,nil);
 			elseif sWS == 'WS_INTAGI' then
-				gcinclude.ProcessConditional(sets.WS_INTAGI_Conditional);
+				gcinclude.ProcessConditional(sets.WS_INTAGI_Conditional,nil);
 			elseif sWS == 'WS_STR' then
-				gcinclude.ProcessConditional(sets.WS_STR_Conditional);
+				gcinclude.ProcessConditional(sets.WS_STR_Conditional,nil);
 			elseif sWS == 'WS_MND' then
-				gcinclude.ProcessConditional(sets.WS_MND_Conditional);
+				gcinclude.ProcessConditional(sets.WS_MND_Conditional,nil);
 			elseif sWS == 'WS_STRDEX' then
-				gcinclude.ProcessConditional(sets.WS_STRDEX_Conditional);
+				gcinclude.ProcessConditional(sets.WS_STRDEX_Conditional,nil);
 			elseif sWS == 'WS_STRMND' then
-				gcinclude.ProcessConditional(sets.WS_STRMND_Conditional);
+				gcinclude.ProcessConditional(sets.WS_STRMND_Conditional,nil);
 			elseif sWS == 'WS_STRINT' then
-				gcinclude.ProcessConditional(sets.WS_STRINT_Conditional);
+				gcinclude.ProcessConditional(sets.WS_STRINT_Conditional,nil);
 			elseif sWS == 'WS_STRINT_30_20' then
-				gcinclude.ProcessConditional(sets.WS_STRINT_30_20_Conditional);
+				gcinclude.ProcessConditional(sets.WS_STRINT_30_20_Conditional,nil);
 			elseif sWS == 'WS_STRVIT' then
-				gcinclude.ProcessConditional(sets.WS_STRVIT_Conditional);
+				gcinclude.ProcessConditional(sets.WS_STRVIT_Conditional,nil);
 			end
 			
 			-- See if an elemental gorget makes sense to equip
