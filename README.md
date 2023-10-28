@@ -48,7 +48,7 @@ performing one of the army paeon songs.)
 **/lac load**: Loads the luashitacast job file for the current job.  
 **/lac unload**: Unloads the current luashitacast job definitions.  
 **/lac reload**: Unloads and the loads the current luashitacast job definitions.  
-**/lac addset "name"**: Stores the currently equipped gear into the job file either adding new or 
-replacing currently stored set by that name. Easy way to update your gear  
+**/lac addset "name"**: Stores the currently equipped gear into the job file either adding new or
+replacing currently stored set by that name. Easy way to update your gear
 sets. Make sure that capitalization of gear set matches stored name.  
 **/lac list**: Lists all the stored gear sets.  
