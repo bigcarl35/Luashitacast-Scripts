@@ -162,7 +162,8 @@ gcinclude.WS_STRAGI = 'Sickle Moon,Vorpal Thrust,Flaming Arrow,Piercing Arrow,Du
 gcinclude.WS_STRDEX = 'Combo,Backhand Blow,Raging Fists,Fast Blade,Knights of Round,Double Thrust,Penta Thrust,Blade: Rin,Blade: Retsu,Blade: Jin,Blade: Ten,Blade: Ku';
 gcinclude.WS_STRINT = 'Dark Harvest,Shadow of Death,Nightmare Scythe,Spiral Hell,Burning Blade,Frostbite,Freezebite,Spinning Slash,Ground Strike,Thunder Thrust,Raiden Thrust,Blade: Teki,Blade: To,Blade: Chi,Blade: Ei,Rock Crusher,Earth Crusher';
 gcinclude.WS_STRINT_30_20 = 'Red Lotus Blade';
-gcinclude.WS_STRMND = 'Guillotine,Cross Reaper,Shining Blade,Seraph Blade,Swift Blade,Savage Blade,Shockwave,Tachi: Koki,Shining Strike,Seraph Strike,Judgment,Hexastrike,Black Halo,Randgrith,Starburst,Sunburst,Retribution';
+gcinclude.WS_STRMND = 'Guillotine,Cross Reaper,Shining Blade,Seraph Blade,Swift Blade,Savage Blade,Shockwave,Tachi: Koki,Shining Strike,Seraph Strike,Judgment,Hexastrike,Randgrith,Starburst,Sunburst,Retribution';
+gcinclude.WS_STRMND_30_50 = 'Black Halo';
 gcinclude.WS_STRVIT = 'Calamity,Slice,Spinning Scythe,Vorpal Scythe,Howling Fist,Dragon Kick,Asuran Fists,Power Slash,Scourge,Shield Break,Armor Break,Weapon Break,Full Break,Steel Cyclone';
 gcinclude.WS_VIT = 'Shoulder Tackle,One Inch Punch,Final Heaven';
 
@@ -1573,6 +1574,8 @@ function gcinclude.WsStat(ws_name,ws_default)
 		ws_stat = 'WS_STRDEX';
 	elseif string.find(ws_name,gcinclude.WS_STRMND) ~= nil then
 		ws_stat = 'WS_STRMND';
+	elseif string.find(ws_name,gcinclude.WS_STRMND_30_50) ~= nil then
+		ws_stat = 'WS_STRMND_30_50';		
 	elseif string.find(ws_name,gcinclude.WS_STRINT) ~= nil then
 		ws_stat = 'WS_STRINT';
 	elseif string.find(ws_name,gcinclude.WS_STRINT_30_20) ~= nil then
