@@ -807,10 +807,8 @@ profile.OnLoad = function()
 	SetSubjobSet(player.SubJob);
 	
 	-- Load up the weapons bar. (This need only be done once.)
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
-		gFunc.EquipSet(sets.Start_Weapons);	
-		gcinclude.ProcessConditional(sets.Start_Weapon_Conditional,nil);
-	end
+	gFunc.EquipSet(sets.Start_Weapons);	
+	gcinclude.ProcessConditional(sets.Start_Weapon_Conditional,nil);
 end
 
 --[[
