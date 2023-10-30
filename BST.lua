@@ -533,7 +533,6 @@ local sets = {
 	},
 	
 	['Reward'] = {
-        Ammo = 'Pet Food Zeta',
         Head = 'Beast Helm',
         Neck = 'Justice Badge',
         Body = 'Beast Jackcoat',
@@ -1026,7 +1025,12 @@ profile.HandleDefault = function()
 		end
 	
 		local player = gData.GetPlayer();
-		local eWeap = gData.GetEquipSlot('Main');
+		local ew = gData.GetEquipment();
+		local eWeap = nil;
+
+		if ew['Main'] ~= nil then
+			eWeap = ew['Main'].Name;
+		end;
 		
 		SetSubjobSet(player.SubJob);			-- Make sure the correct set is shown in case the subjob was changed.
 	
@@ -1097,17 +1101,41 @@ profile.HandleDefault = function()
 end
 
 --[[
+	bAmmoIsJug determines if the item in the Ammo slot is a jug pet or not.
+--]]
+
+profile.bAmmoIsJug = function(sAmmo)
+	local bFound = false;
+	
+	if sAmmo ~= nil then
+		sAmmo = string.lower(sAmmo)
+		for k,v in pairs(profile.JugPets) do
+			if string.find(sAmmo,string.lower(k)) ~= nil then
+				bFound = true;
+				break;
+			end
+		end		
+	end
+	return bFound;
+end
+
+--[[
 	HandleAbility is used to change the player's gear appropriately for the specified pet ability.
 --]]
 
 profile.HandleAbility = function()
 	local ability = gData.GetAction();
-
+	local eq = gData.GetEquipment();
+	
+	if eq.Ammo ~= nil then
+		profile.sAmmo = eq.Ammo.Name;
+	else
+		profile.sAmmo = nil;
+	end
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 		if string.match(ability.Name, 'Call Beast') or string.match(ability.Name, 'Bestial Loyalty') then
 			-- See if a jug pet already equipped
-			profile.sAmmo = gData.GetEquipSlot('Ammo');
-			if string.find(string.lower(profile.sAmmo),'jug ') == nil then		-- something else equipped
+			if profile.bAmmoIsJug(profile.sAmmo) == false then
 				profile.bAmmo = profile.findMaxEquipableJugPet();
 				end
 			end			
@@ -1115,7 +1143,6 @@ profile.HandleAbility = function()
 			gcinclude.ProcessConditional(sets.Call_Beast_Conditional,nil);
 		elseif string.match(ability.Name, 'Reward') then
 			-- See if pet food already equipped
-			profile.sAmmo = gData.GetEquipSlot('Ammo');
 			if string.find(string.lower(profile.sAmmo),'pet f') == nil then		-- something else equipped
 				if gcinclude.findMaxEquipablePetFood() == false then
 					print(chat.header('HandleAbility'):append(chat.message('Error: Reward failed, no equipable pet food found')));
