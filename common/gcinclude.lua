@@ -821,8 +821,9 @@ function gcinclude.SetVariables()
 	gcdisplay.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned'});
 	
 	-- Initialize what weapons are equipped
-	gcinclude.weapon = gData.GetEquipSlot('Main');
-	gcinclude.offhand = gData.GetEquipSlot('Sub');
+	local ew = gData.GetEquipment();
+	gcinclude.weapon = ew.Main.Name;
+	gcinclude.offhand = ew.Sub.Name;
 							
 	gcinclude.CheckElementalGear();
 end
@@ -1264,14 +1265,18 @@ end
 --[[
 	SwapToStave determines if swapping your weapon out for one of the elemental staves makes
 	sense and does it for you while remembering what weapon/offhand you had equipped.
+	
+	Note: there's a timing issue when it comes to getting the two weapons currently equipped
+	that has to do with zoning. I don't see any reason for this routine to run afoul of the
+	problem, so I'm going to assume it won't occur here. If an error does arise though, what
+	is needed to be done is to check if ew['Main'] == nil (the same is true for ew['Sub']).
 --]]
 
 function gcinclude.SwapToStave(sStave,noSave)
-	local mh = gEquip.GetCurrentEquip(1);	-- Main Hand
-	local oh = gEquip.GetCurrentEquip(2);	-- Off Hand
-	local eWeap = AshitaCore:GetResourceManager():GetItemById(mh.Item.Id).Name[1];
-	local eOff = nil;
-
+	local ew = gData.GetEquipment();
+	local eWeap = ew['Main'].Name;
+	local eOff = ew['Sub'].Name;
+	
 	if oh.Item ~= nil then
 		eOff = AshitaCore:GetResourceManager():GetItemById(oh.Item.Id).Name[1];
 	end
