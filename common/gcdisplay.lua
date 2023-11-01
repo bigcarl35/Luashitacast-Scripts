@@ -14,6 +14,9 @@ local MainLV = 0;
 local SubLV = 0;
 local Main = 'FOO';
 local Sub = 'BAR';
+local JobSpecific = {			-- Need to update to support job specific toggles/cycles
+	['BST'] = 'ajug',
+};
 
 local fontSettings = T{
 	visible = true,
@@ -168,6 +171,23 @@ function gcdisplay.Unload()
 end
 
 --[[
+	bDisplayIt is a function that determines if the passed string should be displayed in the luashita
+	display bar. (Some settings are job specific and should only be displayed if the main job is
+	associated with the current main job.)
+--]]
+
+function gcdisplay.bDisplayIt(s)
+	local ss = string.lower(s);
+	
+	for k,v in pairs(JobSpecific) do
+		if string.find(string.lower(v),ss) ~= nil and k ~= Main then
+			return false;
+		end
+	end
+	return true;
+end
+
+--[[
 	Initialize creates the display bar
 --]]
 
@@ -177,15 +197,19 @@ function gcdisplay.Initialize()
 	ashita.events.register('d3d_present', 'gcdisplay_present_cb', function ()
 		local display = MainLV .. Main .. '/' .. SubLV .. Sub ..'   Attk:' .. Attk .. '   Def:' .. Def;
 		for k, v in pairs(Toggles) do
-			display = display .. '   ';
-			if (v == true) then
-				display = display .. '|cFF00FF00|' .. k .. '|r';
-			else
-				display = display .. '|cFFFF0000|' .. k .. '|r';
+			if gcdisplay.bDisplayIt(k) == true then
+				display = display .. '   ';
+				if (v == true) then
+					display = display .. '|cFF00FF00|' .. k .. '|r';
+				else
+					display = display .. '|cFFFF0000|' .. k .. '|r';
+				end
 			end
 		end
 		for key, value in pairs(Cycles) do
-			display = display .. '  ' .. key .. ': ' .. '|cFF00FF00|' .. value.Array[value.Index] .. '|r';
+			if gcdisplay.bDisplayIt(key) == true then
+				display = display .. '  ' .. key .. ': ' .. '|cFF00FF00|' .. value.Array[value.Index] .. '|r';
+			end
 		end
 		gcdisplay.FontObject.text = display;
 	end);

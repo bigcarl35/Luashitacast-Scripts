@@ -112,7 +112,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','dt_type','kite','acc','eva','craftset','gatherset','fishset','gearset','help','wswap','petfood','maxspell','maxsong','region'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','dt_type','kite','acc','eva','craftset','gatherset','fishset','gearset','help','wswap','petfood','maxspell','maxsong','region','ajug'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T {'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T {'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -816,14 +816,17 @@ function gcinclude.SetVariables()
 	gcdisplay.CreateToggle('Acc', false);
 	gcdisplay.CreateToggle('Eva', false);
 	gcdisplay.CreateToggle('WSwap',false);
+	gcdisplay.CreateToggle('AJug',true);
 	
 	gcdisplay.CreateCycle('DT_Type', {[1] = gcinclude.PHY, [2] = gcinclude.MAG, [3] = gcinclude.BRE});
 	gcdisplay.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned'});
 	
 	-- Initialize what weapons are equipped
 	local ew = gData.GetEquipment();
-	gcinclude.weapon = ew.Main.Name;
-	gcinclude.offhand = ew.Sub.Name;
+	if ew.Main ~= nil then
+		gcinclude.weapon = ew.Main.Name;
+		gcinclude.offhand = ew.Sub.Name;
+	end
 							
 	gcinclude.CheckElementalGear();
 end
@@ -970,7 +973,7 @@ function gcinclude.ProcessConditional(tTest,sType)
 		if (string.find(tMatched[3],pMJ) ~= nil or tMatched[3] == 'ALL') then
 			-- Check that the gear minimum level isn't too high
 			if tMatched[2] <= pLevel then
-				bMatch = false;	-- Indicate if there was a match
+				bMatch = false;	-- Indicator to track if there's a match
 				-- Now determine the type of condition and process
 				if tMatched[4] == 'CRAFT' then
 					sKey = string.upper(sType);
@@ -1136,15 +1139,16 @@ function gcinclude.MaxSong(root,bBack,bCast)
 					print(chat.header('MaxSong'):append(chat.message('Highest song of '.. root ..' that you can cast is ' .. sName[2] .. ' (max-1)')));
 				end
 			else
-				print(chat.header('MaxSong'):append(chat.message('Only one song matchged')));
+				print(chat.header('MaxSong'):append(chat.message('Only one song matched')));
 			end
-		end
-		if bCast then
-			print(chat.header('MaxSong'):append(chat.message('Casting ' .. sName[1])));
-			sCmd = '/ma "' .. sName[1] .. '" <t>';
-			AshitaCore:GetChatManager():QueueCommand(1, sCmd);
 		else
-			print(chat.header('MaxSong'):append(chat.message('Highest song of '.. root ..' that you can cast is ' .. sName[2])));
+			if bCast then
+				print(chat.header('MaxSong'):append(chat.message('Casting ' .. sName[1])));
+				sCmd = '/ma "' .. sName[1] .. '" <t>';
+				AshitaCore:GetChatManager():QueueCommand(1, sCmd);
+			else
+				print(chat.header('MaxSong'):append(chat.message('Highest song of '.. root ..' that you can cast is ' .. sName[2])));
+			end
 		end
 	end	
 end
@@ -1433,7 +1437,9 @@ function gcinclude.HandleCommands(args)
 	elseif (args[1] == 'gearset') then			-- Forces a gear set to be loaded and turns GSWAP off
 		if #args > 1 then
 			gFunc.ForceEquipSet(args[2]);
-			gcdisplay.SetToggle('GSwap',false);
+			if not (#args == 3 and string.lower(args[3]) == 'on') then
+				gcdisplay.SetToggle('GSwap',false);
+			end
 			toggle = 'Gear Swap';
 			status = gcdisplay.GetToggle('GSwap');
 		else
