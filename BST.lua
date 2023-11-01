@@ -591,6 +591,15 @@ local sets = {
 	},
 	['Movement_Conditional'] = {
 	},
+
+--[[
+	Treasure Hunter gear
+--]]
+
+	['TH'] = {
+	},
+	['TH_Conditional'] = {
+	},
 	
 --[[
 	The following sets are added as a convenience for playing in level capped areas. The only way for them to be loaded
@@ -843,6 +852,7 @@ local function ShowCommands(args)
 		print(chat.header('Help'):append(chat.message('/region --Toggles whether the area you\'re adventuring in is controlled by your nation or not.')));
 		print(chat.header('Help'):append(chat.message('/maxspell name -- Determines the highest level spell your current jobs can cast that has the passed name')));
 		print(chat.header('Help'):append(chat.message('/maxsong name [back] -- Determines the highest level song your current jobs can cast that has the passed name or next to highest')));
+		print(chat.header('Help'):append(chat.message('/TH --Toggles on whether treasure hunter gear should be equipped. Default is FALSE.')));
 		print(chat.header('Help'):append(chat.message('/help [command] --Display this listing or specific details on the specified command.')));
 		print(chat.header('Help'):append(chat.message(' ')));
 		print(chat.header('Help'):append(chat.message('Command(s) specific for BST:')));
@@ -891,9 +901,11 @@ local function ShowCommands(args)
 		elseif cmd == 'fishset' then
 			print(chat.header('Help'):append(chat.message('/fishset --This command loads up your fishing gear and turns off GSwap.')));
 		elseif cmd == 'maxspell' then
-			print(chat.header('Help'):append(chat.message('maxspell name --This determines the highest level spell that matches the name you indicated that your current job can cast.')));
+			print(chat.header('Help'):append(chat.message('/maxspell name --This determines the highest level spell that matches the name you indicated that your current job can cast.')));
 		elseif cmd == 'maxsong' then
-			print(chat.header('Help'):append(chat.message('maxsong name [back] --This determines the highest level song that matches the name you indicated to cast or one of the max if asked for.')));			
+			print(chat.header('Help'):append(chat.message('/maxsong name [back] --This determines the highest level song that matches the name you indicated to cast or one of the max if asked for.')));			
+		elseif cmd == 'th' then
+			print(chat.header('Help'):append(chat.message('/TH --Toggles whether TH gear should be equipped or not. Default is FALSE.')));
 		elseif cmd == 'help' then
 			print(chat.header('Help'):append(chat.message('/help [[all]|command] --This command displays help for all Luashitacast commands or the specified command.')));
 		elseif cmd == 'petfood' then
@@ -1091,6 +1103,13 @@ profile.HandleDefault = function()
 		end
 		
 		gcinclude.CheckDefault ();
+		
+		-- Add TH gear if indicated
+		if (gcdisplay.GetToggle('TH') == true) then
+			gFunc.EquipSet(sets.TH);
+			gcinclude.ProcessConditional(sets.TH_Conditional,nil);
+		end
+			
 		-- Lastly, equip the appriopriate Damage Taken gear if desired
 		if (gcdisplay.GetToggle('DT') == true) then
 			gFunc.EquipSet('DT_' .. gcdisplay.GetCycle('DT_Type'));
