@@ -41,6 +41,7 @@ name (e.g., Cure gets you Cure III if you're 75 and /whm.)
 **/maxsong "name"**: Determines the highest level song player can perform that has either the
 common root name (see /maxsong) or the common buff name (e.g., paeon when
 performing one of the army paeon songs.)  
+**/th**: Turns on/off equipping treasure hunter gear.  
 **/help [command]**: List description of "command" or lists all commands if no parameter specified.  
 
 ## Useful luashitacast commands
