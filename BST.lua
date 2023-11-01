@@ -836,7 +836,7 @@ local function ShowCommands(args)
 		print(chat.header('Help'):append(chat.message('/wswap --Toggles whether weapons will be swapped as needed. Default is FALSE to preserve TP.')));
 		print(chat.header('Help'):append(chat.message('/eva --Toggles whether evasion set should be equipped or not. Default is FALSE.')));
 		print(chat.header('Help'):append(chat.message('/acc --Toggle whether accuracy gear should override melee/weapon skill gear. Default is FALSE')));
-		print(chat.header('Help'):append(chat.message('/gearset name --Will equip the named gear set and then disable GSwap.')));
+		print(chat.header('Help'):append(chat.message('/gearset name [on]--Will equip the named gear set and then disable GSwap unless optional parameter set to ON')));
 		print(chat.header('Help'):append(chat.message('/craftset [AL|BN|CL|CO|GS|LT|SM|WW] --Equips the specified crafting gear and turns GSwap off.')));
 		print(chat.header('Help'):append(chat.message('/gatherset [HELM|DIG|CLAM] --Equips the specified gathering gear and turns GSwap off.')));
 		print(chat.header('Help'):append(chat.message('/fishset --Equips the fishing set and turns off GSwap.')));
@@ -847,6 +847,7 @@ local function ShowCommands(args)
 		print(chat.header('Help'):append(chat.message(' ')));
 		print(chat.header('Help'):append(chat.message('Command(s) specific for BST:')));
 		print(chat.header('Help'):append(chat.message('/petfood [name] --Equips the specified pet food or determines best food and equips it.')));
+		print(chat.header('Help'):append(chat.message('/ajug -- Tiggles whether the automated jug pet system is enabled. Default is TRUE'))); 
 		print(chat.header('Help'):append(chat.message(' ')));
 		print(chat.header('Help'):append(chat.message('Some /lac commands of note:')));
 		print(chat.header('Help'):append(chat.message('/lac disable --Disables all gear slots so that no automatic gear changes can occur.')));
@@ -874,7 +875,7 @@ local function ShowCommands(args)
 		elseif cmd == 'wswap' then
 			print(chat.header('Help'):append(chat.message('/wswap --Toggles whether weapon swapping is permissible. Weapon swapping causes the loss of tp, but there are advantages too. Default is FALSE')));
 		elseif cmd == 'gearset' then
-			print(chat.header('Help'):append(chat.message('/gearset name --This forcibly loads the indicated gear set and turns off GSwap.')));
+			print(chat.header('Help'):append(chat.message('/gearset name [on]--This forcibly loads the indicated gear set and turns off GSwap unless optional parameter is on. Then GSwap remains enabled.')));
 		elseif cmd == 'acc' then
 			print(chat.header('Help'):append(chat.message('/acc --This toggles whether accuracy gear takes priority over normal melee gear. Casting and ranged accuracy are handled automatically. If Acc is true, then the accuracy set will be loaded over the TP set and the appropriate weaponskill set. Default is FALSE.')));
 		elseif cmd == 'eva' then
@@ -897,6 +898,8 @@ local function ShowCommands(args)
 			print(chat.header('Help'):append(chat.message('/help [[all]|command] --This command displays help for all Luashitacast commands or the specified command.')));
 		elseif cmd == 'petfood' then
 			print(chat.header('Help'):append(chat.message('/petfood [alpha|beta|gamma|delta|epsilon|zeta] --This command either equips the specified pet food in the ammo slot or determines what is the best pet food that can be equipped.')));
+		elseif cmd == 'ajug' then
+			print(chat.header('Help'):append(chat.message('/ajug --Toggles whether the automated jug pet system is enabled. This loads a jug pet if the ammo slot doesn\'t have a jug pet in it. Default is TRUE')));
 		elseif cmd == 'lac' then
 			print(chat.header('Help'):append(chat.message('/lac action ... --This command is native to Luashitacast and requires an action (ex: load, unload, list, etc.) and possibly further arguments. Further details are beyond what this help section can cover.')));
 		else
@@ -990,6 +993,8 @@ end
 profile.HandleCommand = function(args)
 	if args[1] == 'help' then
 		ShowCommands(args);
+	elseif (args[1] == 'ajug') then			-- Turns on/off whether Automated Jug Pets supported
+		gcdisplay.AdvanceToggle('AJug');
 	elseif args[1] == 'petfood' then
 		gcinclude.doPetFood(args[2],args[3]);
 	else
@@ -1107,7 +1112,9 @@ end
 profile.bAmmoIsJug = function(sAmmo)
 	local bFound = false;
 	
-	if sAmmo ~= nil then
+	if sAmmo == nil then
+		return nil;
+	else
 		sAmmo = string.lower(sAmmo)
 		for k,v in pairs(profile.JugPets) do
 			if string.find(sAmmo,string.lower(k)) ~= nil then
@@ -1132,13 +1139,17 @@ profile.HandleAbility = function()
 	else
 		profile.sAmmo = nil;
 	end
+	
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 		if string.match(ability.Name, 'Call Beast') or string.match(ability.Name, 'Bestial Loyalty') then
-			-- See if a jug pet already equipped
-			if profile.bAmmoIsJug(profile.sAmmo) == false then
-				profile.bAmmo = profile.findMaxEquipableJugPet();
+			-- First make sure player wants the automated jug pet funtionality
+			if gcdisplay.GetToggle('AJug') == true then
+				-- Ok, now see if a jug pet already equipped
+				local bJugFound = profile.bAmmoIsJug(profile.sAmmo);
+				if bJugFound ~= nil and bJugFound == false then
+					profile.bAmmo = profile.findMaxEquipableJugPet();
 				end
-			end			
+			end
 			gFunc.EquipSet(sets.Call_Beast);
 			gcinclude.ProcessConditional(sets.Call_Beast_Conditional,nil);
 		elseif string.match(ability.Name, 'Reward') then
@@ -1177,6 +1188,7 @@ profile.HandleAbility = function()
 		
 		gcinclude.CheckCancels();
 	end
+end
 
 --[[
 	HandleItem is the place to equip gear when a special item is used. Currently only 'Holy Water' 
