@@ -27,7 +27,9 @@ the default distance from 4.7 yalms to whatever you want.
 **/region**: Swaps between *owned/not* owned indicating if player's nation controls the
 area from the last conquest tally. Used with some conditional gear.  
 **/petfood [name]**: Equips either named petfood or determines best pet food and equips that.  
-**/gearset "name"**: Equips the specified gear set and turns off automatic gears swapping.  
+**/ajug**: Turns on/off automated jug pet routine when Call Beast invoked and no jug in ammo slot.  
+**/gearset "name" [on]**: Equips the specified gear set and turns off automatic gears swapping if 
+optional parameter isn't included.  
 **/craftset [AL|BN|CL|CO|GS|LT|SM|WW]**: Equips the crafting gear set specified and turns off gear
 swapping. AL - Alchemy, BN - Bonecraft, CL - Clothcraft, CO - Cooking, GS - Goldsmithing, 
 LT - Leathercraft, SM - Smithing, WW - Woodworking.  
