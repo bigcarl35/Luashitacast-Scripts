@@ -23,7 +23,7 @@ local sets = {
 --]]
 
 	['Idle'] = {
-        Head = 'Panther mask',
+        Head = 'Panther Mask',
         Neck = 'Ryl.Grd. Collar',
         Ear1 = 'Coral Earring',
         Ear2 = 'Beastly Earring',
@@ -32,7 +32,7 @@ local sets = {
         Ring1 = 'Sun Ring',
         Ring2 = 'Sun Ring',
         Back = 'Psilos Mantle',
-        Waist = 'Life Belt',
+        Waist = 'Swift Belt',
         Legs = 'Thick Breeches',
         Feet = 'Thick Sollerets',
     },
@@ -76,9 +76,10 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-	    Main = 'Maneater',
-		Sub = 'Tatami Shield',
- 	},
+        Main = 'Maneater',
+        Sub = 'Tatami Shield',
+        Ammo = 'S. Herbal Broth',
+    },
 	['Start_Weapons_Conditional'] = {
 	},
 	
@@ -126,7 +127,7 @@ local sets = {
 --]]
 
 	['TP'] = {
-        Head = 'Optical Hat',
+        Head = 'Shep. Bonnet',
         Neck = 'Ryl.Grd. Collar',
         Ear1 = 'Coral Earring',
         Ear2 = 'Beastly Earring',
@@ -175,7 +176,10 @@ local sets = {
 --]]
 
 	['Preshot'] = {
-	},
+        Head = 'Optical Hat',
+        Ring1 = 'Jaeger Ring',
+        Back = 'Psilos Mantle',
+    },
 	['Preshot_Conditional'] = {
 	},
 	
@@ -185,7 +189,8 @@ local sets = {
 --]]
 
 	['Midshot'] = {
-	},
+        Back = 'Psilos Mantle',
+    },
 	['Midshot_Conditional'] = {
 	},
 
@@ -194,8 +199,8 @@ local sets = {
 	stat based gear. (In some cases individual spells have special entries.) These sets do not 
 	include elemental gear which is	dependent on day/weather/weapon skill.
 
-	The first stage is Precast. This is where you place any Fast Cast, cast time reduction, and 
-	quick cast gear 
+	The first stage is Precast. This is where you place any Fast Cast, cast time reduction, quick 
+	cast gear, and spell interruption rate
 --]]
 
 	['Precast'] = {							
@@ -218,13 +223,14 @@ local sets = {
 	doing a Cure, you wand mind (MND) gear, etc.
 --]]
 
-	['Cure'] = {				-- Healing Magic Skill
+	['Cure'] = {				-- Healing Magic Skill, Cure Potency
     },
 	['Cure_Conditional'] = {
 	},
 	
-	['Dark'] = {				-- Dark Magic Skill
-	},
+	['Dark'] = {				-- Dark Magic Skill, magical accuracy
+        Ring1 = 'Tamas Ring',
+    },
 	['Dark_Conditional'] = {
 	},
 	
@@ -238,22 +244,23 @@ local sets = {
 	['Enfeebling_Conditional'] = {
 	},
 	
-	['Enhancing'] = {	 		-- Enhancing Magic Skill
+	['Enhancing'] = {	 		-- Enhancing Magic Skill, enhancing magic time reduction, enhancing magic duration
 	},
 	['Enhancing_Conditional'] = {
 	},
 	
-	['Elemental'] = {			-- Elemental Magic Skill
+	['Elemental'] = {			-- Elemental Magic Skill, magic accuracy, elemental magic casting time reduction, elemental magic recast time reduction, magic burst bonus, magic attack bonus
+        Ring1 = 'Tamas Ring',
 	},
 	['Elemental_Conditional'] = {
 	},
 	
-	['Ninjitsu'] = {			-- Ninjitsu Skill
+	['Ninjitsu'] = {			-- Ninjitsu Skill, magic burst bonus, magic attack bonus
 	},
 	['Ninjitsu_Conditional'] = {
 	},
 	
-	['Summoning'] = {			-- Summoning Skill, any boost to pet or summoning ability
+	['Summoning'] = {			-- Summoning Skill, spell interruption rate, summoning magic casting time reduction
 	},
 	['Summoning_Conditional'] = {
 	},
@@ -263,19 +270,22 @@ local sets = {
 --]]
 
 	['INT'] = {
-		Ring2 = 'Tamas Ring',			-- +2~5 INT
-	},
+        Ring1 = 'Tamas Ring',			-- +2~5 INT
+        Ring2 = 'Windurstian Ring',		-- +1 INT
+        Feet = 'Mannequin Pumps',		-- +1 INT
+    },
 	['INT_Conditional'] = {
 	},
 	
 	['MND'] = {
-        Head = 'Beast helm',
+        Head = 'Beast helm',			-- +3 MND
         Neck = 'Justice Badge',			-- +3 MND
         Body = 'Wonder Kaftan',			-- +1 MND
         Ring1 = 'Tranquility Ring',		-- +2 MND
         Ring2 = 'Tamas Ring',			-- +2~5 MND
         Waist = 'Friar\'s Rope',		-- +1 MND
         Legs = 'Wonder Braccae',		-- +2 MND
+        Feet = 'Mannequin Pumps',		-- +2 MND
 	},
 	['MND_Conditional'] = {
 	},
@@ -292,16 +302,19 @@ local sets = {
 --[[
 	And some spells are special cases, so they have individual gears sets.
 --]]
+	-- Phalanx: Enhancing Magic Skill
 	['Phalanx'] = {
 	},
 	['Phalanx_Conditional'] = {
 	},
 	
-	['Stoneskin'] = {	-- Combination of MND and enhancing skill. MND is 3x more important. There's also gear that enhances
+	-- Combination of MND and enhancing skill. MND is 3x more important. There's also gear that enhances
+	['Stoneskin'] = {	
 	},	
 	['Stoneskin_Conditional'] = {
 	},
 	
+	-- Refresh gear, refresh duration gear
 	['Refresh'] = { 
 	},
 	['Refresh_Conditional'] = {
@@ -327,16 +340,18 @@ local sets = {
 -]]
 	
 	['WS_STR'] = {
-		Head = 'Mercenary Captain\'s headgear',		-- +1 STR
-		Neck = 'Spike necklace',					-- +3 STR
-		Body = 'Narasimha\'s vest',					-- +3 STR
-		Hands = 'Ogre gloves',						-- +6 STR
-		Ring1 = 'Sun ring',							-- +3 STR
-		Ring2 = 'Sun ring',							-- +3 STR
-		Waist = 'Barbarian\'s belt',				-- +1 STR
-		Legs = 'Wonder braccae',					-- +1 STR
-		Feet = 'Creek F clomps',					-- +4 STR
-	},
+        Head = 'Mrc.Cpt. Headgear',				-- +1 STR
+        Neck = 'Spike Necklace',				-- +3 STR
+		Ear2 = 'Beastly Earring',
+        Body = 'Narasimha\'s Vest',				-- +3 STR
+        Hands = 'Ogre Gloves',					-- +6 STR
+        Ring1 = 'Sun Ring',						-- +3 STR
+        Ring2 = 'Sun Ring',						-- +3 STR
+        Back = 'Amemet Mantle',					-- +1 STR
+        Waist = 'Barbarian\'s Belt',			-- +1 STR
+        Legs = 'Wonder Braccae',				-- +1 STR
+        Feet = 'Creek F Clomps',				-- +4 STR
+    },
 	['WS_STR_Conditional'] = {
 	},
 	
@@ -346,7 +361,17 @@ local sets = {
 --]]
 
 	['WS_STRDEX'] = {
-	},
+        Head = 'Empress Hairpin',				-- +3 DEX
+        Neck = 'Spike Necklace',				-- +3 STR, +3 DEX
+        Ear2 = 'Beastly Earring',
+        Body = 'Narasimha\'s Vest',				-- +3 STR
+        Hands = 'Ogre Gloves',					-- +6 STR -3 DEX
+        Ring1 = 'Sun Ring',						-- +3 STR
+        Ring2 = 'Sun Ring',						-- +3 STR
+        Back = 'Amemet Mantle',					-- +1 STR
+        Legs = 'Wonder Braccae',				-- +1 STR
+        Feet = 'Creek F Clomps',				-- +4 STR
+    },
 	['WS_STRDEX_Conditional'] = {
 	},
 
@@ -362,6 +387,7 @@ local sets = {
 	['WS_STRINT'] = {
 		Head = 'Beast helm',					-- +5 INT
 		Neck = 'Spike necklace',				-- +3 STR
+		Ear2 = 'Beastly Earring',
 		Body = 'Narasimha\'s vest',				-- +3 STR
 		Hands = 'Ogre gloves',					-- +6 STR
 		Ring1 = 'Sun ring',						-- +3 STR
@@ -381,6 +407,7 @@ local sets = {
 	['WS_STRINT_30_20'] = {
 		Head = 'Beast helm',					-- +5 INT
 		Neck = 'Spike necklace',				-- +3 STR
+        Ear2 = 'Beastly Earring',
 		Body = 'Narasimha\'s vest',				-- +3 STR
 		Hands = 'Ogre gloves',					-- +6 STR
 		Ring1 = 'Sun ring',						-- +3 STR
@@ -398,10 +425,11 @@ local sets = {
 		Club: Shining Strike,Seraph Strike,Judgement
 		Sword: Shining Blade,Seraph Blade
 --]]
-	
+
 	['WS_STRMND'] = {
 		Head = 'Beast helm',					-- +3 MND
 		Neck = 'Justice badge',					-- +3 MND
+        Ear2 = 'Beastly Earring',
 		Body = 'Narasimha\'s vest',				-- +3 STR
 		Hands = 'Ogre gloves',					-- +6 STR
 		Ring1 = 'Sun ring',						-- +3 STR
@@ -421,6 +449,7 @@ local sets = {
 	['WS_STRVIT'] = {
 		Head = 'Mercenary Captain\'s headgear',	-- +1 STR
 		Neck = 'Spike necklace',				-- +3 STR
+        Ear2 = 'Beastly Earring',
 		Body = 'Narasimha\'s vest',				-- +3 STR, +3 VIT
 		Hands = 'Ogre gloves',					-- +6 STR
 		Ring1 = 'Sun ring',						-- +3 STR
@@ -441,12 +470,15 @@ local sets = {
 --]]
 	
 	['WS_DEX'] = {
-		Head = 'Mercenary Captain\'s headgear',	-- +1 DEX
-		Neck = 'Spike necklace',				-- +3 DEX
-		Body = 'Brigandine armor',				-- +2 DEX
-		Hands = 'Beast gloves',					-- +3 DEX
-		Ring1 = 'Balance ring',					-- +2 DEX
-	},
+        Head = 'Empress Hairpin',				-- +3 DEX
+        Neck = 'Spike Necklace',				-- +3 DEX
+        Ear2 = 'Beastly Earring',
+        Body = 'Brigandine',					-- +2 DEX
+        Hands = 'Beast Gloves',					-- +3 DEX
+        Ring1 = 'Balance Ring',					-- +2 DEX
+        Ring2 = 'Bastokan Ring',				-- +1 DEX
+        Feet = 'Bounding Boots',				-- +3 DEX
+    },
 	['WS_DEX_Conditional'] = {
 	},
 
@@ -458,12 +490,14 @@ local sets = {
 --]]
 	
 	['WS_DEXINT'] = {
-		Head = 'Beast helm',					-- +5 INT
-		Neck = 'Spike necklace',				-- +3 DEX
-		Body = 'Brigandine armor',				-- +2 DEX
-		Hands = 'Beast gloves',					-- +3 DEX
-		Ring1 = 'Balance ring',					-- +2 DEX
-	},
+        Head = 'Beast Helm',					-- +5 INT
+        Neck = 'Spike Necklace',				-- +3 DEX
+        Ear2 = 'Beastly Earring',
+        Body = 'Brigandine',					-- +2 DEX
+        Hands = 'Beast Gloves',					-- +3 DEX
+        Ring1 = 'Balance Ring',					-- +2 DEX
+        Feet = 'Bounding Boots',				-- +3 DEX
+    },
 	['WS_DEXINT_Conditional'] = {
 	},
 
@@ -473,10 +507,14 @@ local sets = {
 --]]
 	
 	['WS_INTAGI'] = {
-		Head = 'Beast helm',					-- +5 INT
-		Ear1 = 'Drone earring',					-- +3 AGI
-		Body = 'Mercenary Captain\'s doublet',	-- +1 AGI
-	},
+        Head = 'Beast Helm',					-- +5 INT
+        Ear1 = 'Drone Earring',					-- +3 AGI
+        Ear2 = 'Beastly Earring',
+        Body = 'Mrc.Cpt. Doublet',				-- +1 AGI
+        Ring1 = 'Tamas Ring',					-- +2~5 INT
+        Ring2 = 'Windurstian Ring',				-- +1 INT, +1 AGI
+        Feet = 'Bounding Boots',				-- +3 AGI
+    },
 	['WS_INTAGI_Conditional'] = {
 	},
 
@@ -507,7 +545,15 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
-	},
+        Head = 'Beast Helm',					-- +3 MND
+        Neck = 'Justice Badge',					-- +3 MND
+        Ear2 = 'Beastly Earring',
+        Body = 'Wonder Kaftan',					-- +1 MND
+        Ring1 = 'Tamas Ring',					-- +2~5 MND
+        Ring2 = 'Tranquility Ring',				-- +2 MND
+        Waist = 'Friar\'s Rope',				-- +1 MND
+        Legs = 'Wonder Braccae',				-- +2 MND
+    },
 	['WS_MND_Conditional'] = {
 	},
 	
@@ -518,8 +564,19 @@ local sets = {
 	on the appropriate gear set loaded.
 --]]
 
-	['WS_Accuracy'] = {	-- Gear with weaponskill accuracy
-	},	
+	['WS_Accuracy'] = {
+        Head = 'Optical Hat',					-- +10 Acc
+        Neck = 'Ryl.Grd. Collar',				-- +4 Acc
+        Ear2 = 'Beastly Earring',
+        Body = 'Narasimha\'s Vest',				-- +4 Acc
+        Hands = 'Thick Mufflers',				-- +3 Acc
+        Ring1 = 'Toreador\'s Ring',				-- +7 Acc
+        Ring2 = 'Jaeger Ring',					-- +4 Acc
+        Back = 'Psilos Mantle',					-- +1 Acc
+        Waist = 'Life Belt',					-- +10 Acc
+        Legs = 'Thick Breeches',				-- +2 Acc
+        Feet = 'Thick Sollerets',				-- +2 Acc
+    },	
 	['WS_Accuracy_Conditional'] = {
 	},
 	
@@ -527,31 +584,34 @@ local sets = {
 	The following sets are used with pet abilities/pet commands
 --]]
 	
-	['Call_Beast'] = {			-- or bestial loyalty
+	['Call_Beast'] = {			-- or bestial loyalty, augmented call beast gear
 	},
 	['Call_Beast_Conditional'] = {
 	},
 	
+	-- Reward potency, reward augment,eward enhancement, and MND gear
 	['Reward'] = {
-        Head = 'Beast Helm',
-        Neck = 'Justice Badge',
-        Body = 'Beast Jackcoat',
-        Hands = 'Ogre Gloves',
-        Ring1 = 'Tamas Ring',
-        Ring2 = 'Tranquility Ring',
-        Waist = 'Friar\'s Rope',
-        Legs = 'Wonder Braccae',
-        Feet = 'Beast Gaiters',
+        Head = 'Beast Helm',			-- +3 MND
+        Neck = 'Justice Badge',			-- +3 MND
+        Body = 'Beast Jackcoat',		-- Augments reward
+        Hands = 'Ogre Gloves',			-- Enhances reward
+        Ring1 = 'Tamas Ring',			-- +2~5 MND
+        Ring2 = 'Tranquility Ring',		-- +2 MND
+        Waist = 'Friar\'s Rope',		-- +1 MND
+        Legs = 'Wonder Braccae',		-- +2 MND
+        Feet = 'Beast Gaiters',			-- Enhances reward
     },
 	['Reward_Conditional'] = {
 	},
 	
+	-- Tame success rate
 	['Tame'] = {
-        Head = 'Beast Helm',
+        Head = 'Beast Helm',			-- Increases tame success rate
     },
 	['Tame_Conditional'] = {
 	},
 	
+	-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration
 	['Charm'] = {
         Head = 'Beast Helm',			-- Charm+4
         Neck = 'Flower Necklace',		-- +3 CHR
@@ -572,11 +632,15 @@ local sets = {
 	['Charm_Evasion_Conditional'] = {
 	},
 	
-	['PetReady'] = {	-- Applies to both Sic and Ready. Consider pet accuracy, similar abilities
-	},
+	-- Applies to both Sic and Ready. Consider pet accuracy, similar abilities
+	['PetReady'] = {
+        Head = 'Shep. Bonnet',			-- +5 Pet Acc
+        Ear2 = 'Beastly Earring',		-- +10 Pet Acc
+    },
 	['PetReady_Conditional'] = {
 	},
 	
+	-- Fight command: affected by pet's STR
 	['PetAttack'] = {	-- Fight command
 	},
 	['PetAttack_Conditional'] = {
@@ -587,6 +651,7 @@ local sets = {
 	might also want gear that has evasion. The choice is yours.
 --]]
 
+	-- Movement speed gear, does not include nation aketons which are found in conditional gear for home town
 	['Movement'] = { 
 	},
 	['Movement_Conditional'] = {
@@ -608,9 +673,7 @@ local sets = {
 --]]
 
 	['CAP20'] = {
-        Main = 'Freesword\'s Staff',
-        Ammo = 'Fortune Egg',
-        Head = 'Garrison Sallet',
+        Head = 'Silver Hairpin',
         Neck = 'Rep.Bronze Medal',
         Ear1 = 'Onyx Earring',
         Ear2 = 'Onyx Earring',
@@ -621,13 +684,11 @@ local sets = {
         Back = 'Lizard Mantle',
         Waist = 'Barbarian\'s Belt',
         Legs = 'Ryl.Ftm. Trousers',
-        Feet = 'Lizard Ledelsens',
+        Feet = 'Bounding Boots',
     },
 	
 	['CAP25'] = {
-        Main = 'Freesword\'s Staff',
-        Ammo = 'S. Herbal Broth',
-        Head = 'Garrison Sallet',
+        Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
         Ear1 = 'Beetle Earring',
         Ear2 = 'Beetle Earring',
@@ -638,13 +699,11 @@ local sets = {
         Back = 'Lizard Mantle',
         Waist = 'Barbarian\'s Belt',
         Legs = 'San. Trousers',
-        Feet = 'Lizard Ledelsens',
+        Feet = 'Bounding Boots',
     },
 	
 	['CAP30'] = {
-        Main = 'Frostreaper',
-        Ammo = 'S. Herbal Broth',
-        Head = 'Mrc.Cpt. Headgear',
+        Head = 'Shep. Bonnet',
         Neck = 'Spike Necklace',
         Ear1 = 'Beetle Earring',
         Ear2 = 'Beetle Earring',
@@ -662,7 +721,7 @@ local sets = {
         Main = 'Barbaroi Axe',
         Sub = 'Fish Scale Shield',
         Ammo = 'S. Herbal Broth',
-        Head = 'Mrc.Cpt. Headgear',
+        Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
         Ear1 = 'Beetle Earring',
         Ear2 = 'Beetle Earring',
@@ -671,16 +730,16 @@ local sets = {
         Ring1 = 'Courage Ring',
         Ring2 = 'Tamas Ring',
         Back = 'Lizard Mantle',
-        Waist = 'Barbarian\'s Belt',
+        Waist = 'Tilt Belt',
         Legs = 'Wonder Braccae',
-        Feet = 'Wonder Clomps',
+        Feet = 'Bounding Boots',
     },
 	
 	['CAP50'] = {
         Main = 'Barbaroi Axe',
         Sub = 'Fish Scale Shield',
         Ammo = 'S. Herbal Broth',
-        Head = 'Mrc.Cpt. Headgear',
+        Head = 'Shep. Bonnet',
         Neck = 'Spike Necklace',
         Ear1 = 'Beetle Earring',
         Ear2 = 'Beetle Earring',
@@ -688,10 +747,10 @@ local sets = {
         Hands = 'Wonder Mitts',
         Ring1 = 'Courage Ring',
         Ring2 = 'Tamas Ring',
-        Back = 'Lizard Mantle',
-        Waist = 'Life Belt',
+        Back = 'Raptor Mantle',
+        Waist = 'Swift Belt',
         Legs = 'Wonder Braccae',
-        Feet = 'Wonder Clomps',
+        Feet = 'Bounding Boots',
     },
 
 	['CAP60'] = {
@@ -707,7 +766,7 @@ local sets = {
         Ring1 = 'Sun Ring',
         Ring2 = 'Tamas Ring',
         Back = 'Raptor Mantle',
-        Waist = 'Life Belt',
+        Waist = 'Swift Belt',
         Legs = 'Beast Trousers',
         Feet = 'Beast Gaiters',
     },
@@ -1054,7 +1113,7 @@ profile.HandleDefault = function()
 		-- If player is not resting and has MP and has swapped weapons, set the weapon back to what 
 		-- they had before the switch
 		if player.Status ~= 'Resting' and gcdisplay.GetToggle('WSwap') == true then
-			if eWeap ~= gcinclude.weapon then
+			if gcinclude.weapon ~= nil and eWeap ~= gcinclude.weapon then
 				gFunc.ForceEquip('Main', gcinclude.weapon);	
 				gFunc.ForceEquip('Sub', gcinclude.offhand);	
 			end
@@ -1287,6 +1346,11 @@ profile.HandleMidcast = function()
 		elseif string.match(spell.Name, 'Stoneskin') then
 			gFunc.EquipSet(sets.Stoneskin);
 			gcinclude.ProcessConditional(sets.Stoneskin_Conditional,nil);
+			-- Stoneskin is heavily affected by MND, but it's an enhancing spell, so
+			-- MND gear wasn't loaded above. Additionally, MND is more potent than
+			-- Enhancing skill. Load that here.
+			gFunc.EquipSet(sets.MND);
+			gcinclude.ProcessConditional(sets.MND_Conditional,nil);
 		elseif string.contains(spell.Name, 'Refresh') then
 			gFunc.EquipSet(sets.Refresh);
 			gcinclude.ProcessConditional(sets.Refresh_Conditional,nil);
@@ -1347,7 +1411,7 @@ profile.HandleMidcast = function()
 		end
 		
 		if stat ~= nil then
-			gcinclude.SwapToStave(stat,false,mSet);
+			gcinclude.SwapToStave(stat,false);
 		end
 	end
 end
