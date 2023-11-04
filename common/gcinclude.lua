@@ -825,7 +825,11 @@ function gcinclude.SetVariables()
 	local ew = gData.GetEquipment();
 	if ew.Main ~= nil then
 		gcinclude.weapon = ew.Main.Name;
-		gcinclude.offhand = ew.Sub.Name;
+		if ew.Sub == nil then
+			gcinclude.offhand = nil;
+		else
+			gcinclude.offhand = ew.Sub.Name;
+		end
 	end
 							
 	gcinclude.CheckElementalGear();
@@ -1279,14 +1283,15 @@ end
 function gcinclude.SwapToStave(sStave,noSave)
 	local ew = gData.GetEquipment();
 	local eWeap = ew['Main'].Name;
-	local eOff = ew['Sub'].Name;
-	
-	if oh.Item ~= nil then
-		eOff = AshitaCore:GetResourceManager():GetItemById(oh.Item.Id).Name[1];
-	end
+	local eOff = nil;
+
+	if ew['Sub'] ~= nil then
+		eOff = ew['Sub'].Name;
+	end;
 
 	if ((gcdisplay.GetToggle('WSwap') == true or gcinclude.settings.bSummoner) and 
 		(gcinclude.elemental_staves[sStave][2] == true or gcinclude.elemental_staves[sStave][4] == true)) then
+
 		-- See if a current weapon is the one of the targetted staves
 		if not ((string.lower(eWeap) == string.lower(gcinclude.elemental_staves[sStave][1])) or 
 			(string.lower(eWeap) == string.lower(gcinclude.elemental_staves[sStave][3]))) then
