@@ -106,6 +106,7 @@ gcinclude.settings = {
 	bEleObis = false;	 -- does the player have any elemental obis. 
 	bEleGorgets = false; -- does the player have any elemental gorgets.
 	bSummoner = false;	 -- is the player a summoner. /smn doesn't count
+	bStave = false;		 -- indicates if the auto-detection of elemental staves has occurred
 };
 
 -- The following arrays are used by the functions contained in this file. Probably best to leave them alone
@@ -204,17 +205,17 @@ gcinclude.OBI = 'obi';
 gcinclude.aketon = {['Sandy'] = {'Kingdom Aketon',false}, ['Windy'] = {'Federation Aketon',true}, ['Bastok'] = {'Republic Aketon',false}};
 gcinclude.sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,SCH,GEO,RUN';
 
--- Indicate below all the staves you own. (If you have both the NQ and HQ of an element, only indicate the HQ
-gcinclude.elemental_staves = T{['fire'] = {'Fire staff',true,'Vulcan\'s staff',false},
-							   ['ice'] = {'Ice staff',true,'Aquilo\'s staff',false},
+-- Below indicates all the staves you own. (The settings are programmatically determined.)
+gcinclude.elemental_staves = T{['fire'] = {'Fire staff',false,'Vulcan\'s staff',false},
+							   ['ice'] = {'Ice staff',false,'Aquilo\'s staff',false},
 							   ['wind'] = {'Wind staff',false,'Auster\'s staff',false},
 							   ['earth'] = {'Earth staff',false,'Terra\'s staff',false},
 							   ['thunder'] = {'Thunder staff',false,'Jupiter\'s staff',false},
 							   ['water'] = {'Water staff',false,'Neptune\'s staff',false},
-							   ['light'] = {'Light staff',true,'Apollo\'s staff',false},
-							   ['dark'] = {'Dark staff',true,'Pluto\'s staff',false}};
+							   ['light'] = {'Light staff',false,'Apollo\'s staff',false},
+							   ['dark'] = {'Dark staff',false,'Pluto\'s staff',false}};
 							  
--- Indicate below if you own any of the elemental obis or elemental gorgets
+-- Below indicate all the elemental obis you own or elemental gorgets. (This is determined programmatically.)
 gcinclude.elemental_obis = T{['fire'] = {'Karin obi',false},
 							 ['earth'] = {'Dorin obi',false},
 							 ['water'] = {'Suirin obi',false},
@@ -774,32 +775,105 @@ function gcinclude.ClearAlias()
 end
 
 --[[
-	CheckElementalGear determines if the player has indicated they have any elemental staves, obis, or gorgets
+	CheckForStaves determines if the player has any elemental staves and updates the master listing
+	accordingly.
 --]]
 
-function gcinclude.CheckElementalGear()
+function gcinclude.CheckForStaves()
+	local inventory = AshitaCore:GetMemoryManager():GetInventory();
+	local resources = AshitaCore:GetResourceManager();
+	local tStorage = gcinclude.EQUIPABLE;
 	
-	for k,v in pairs(gcinclude.elemental_staves) do
-		if v[2] or v[4] then						-- 2 and 4 indicate if stave is owned, NQ and HQ respectively
-			gcinclude.settings.bEleStaves = true;
-			break;
+	-- First, set all the entries to false, do not assume that what's there is correct
+	for k,_ in pairs(gcinclude.elemental_staves) do
+		gcinclude.elemental_staves[k][2] = false;
+		gcinclude.elemental_staves[k][4] = false;
+	end
+	
+	iCnt = 0;
+	for _ in pairs(tStorage) do iCnt = iCnt + 1 end
+
+	-- now, loop through the passed storage containers
+	for i = 1,iCnt,1 do
+		bFound = false;
+		containerID = tStorage[i][1];
+
+		-- then loop through the container
+		for j = 1,inventory:GetContainerCountMax(containerID),1 do
+			local itemEntry = inventory:GetContainerItem(containerID, j);
+			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
+                local item = resources:GetItemById(itemEntry.Id);
+				local sIN = string.lower(item.Name[1])
+				b,c = string.find(sIN,'staff');
+				if b ~= nil then
+					for k,_ in pairs(gcinclude.elemental_staves) do
+						if sIN == string.lower(gcinclude.elemental_staves[k][1]) then
+							gcinclude.elemental_staves[k][2] = true;
+							gcinclude.settings.bEleStaves = true
+						elseif sIN == string.lower(gcinclude.elemental_staves[k][3]) then
+							gcinclude.elemental_staves[k][4] = true;
+							gcinclude.settings.bEleStaves = true
+						end
+					end
+				end
+			end
 		end
 	end
 	
-	for k,v in pairs(gcinclude.elemental_obis) do
-		if v[2] then								-- 2 indicates if the elemental obi is owned
-			gcinclude.settings.bEleObis = true;
-			break;
-		end
+	return true;
+end
+
+--[[
+	CheckForObisGorgets determines if the player has any elemental obis/gorgets and updates the master listing
+	accordingly.
+--]]
+
+function gcinclude.CheckForObisGorgets()
+	local inventory = AshitaCore:GetMemoryManager():GetInventory();
+	local resources = AshitaCore:GetResourceManager();
+	local tStorage = gcinclude.EQUIPABLE;
+	
+	-- First, set all the entries to false. Both obis and gorgets have same number of elements
+	for k,_ in pairs(gcinclude.elemental_obis) do
+		gcinclude.elemental_obis[k][2] = false;
+		gcinclude.elemental_gorgets[k][2] = false;
 	end
 	
-	for k,v in pairs(gcinclude.elemental_gorgets) do
-		if v[2] then								-- 2 indicates if the elemental gorget is owned
-			gcinclude.settings.bEleGorgets = true;
-			break;
+	iCnt = 0;
+	for _ in pairs(tStorage) do iCnt = iCnt + 1 end
+	
+	-- now, loop through the passed storage containers
+	for i = 1,iCnt,1 do
+		bFound = false;
+		containerID = tStorage[i][1];
+
+		-- then loop through the container
+		for j = 1,inventory:GetContainerCountMax(containerID),1 do
+			local itemEntry = inventory:GetContainerItem(containerID, j);
+			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
+                local item = resources:GetItemById(itemEntry.Id);
+				local sIN = string.lower(item.Name[1]);
+		
+				-- Start with the obis
+				for k,_ in pairs(gcinclude.elemental_obis) do
+					local sOIN = string.lower(gcinclude.elemental_obis[k][1]);
+					if sIN == sOIN then
+						gcinclude.elemental_obis[k][2] = true;
+						gcinclude.settings.bEleObis = true;
+					end
+				end
+				
+				-- Then check the gorgets
+				for k,_ in pairs(gcinclude.elemental_gorgets) do
+					local sOIN = string.lower(gcinclude.elemental_gorgets[k][1]);
+					if sIN == sOIN then
+						gcinclude.elemental_gorgets[k][2] = true;
+						gcinclude.settings.bEleGorgets = true;
+					end
+				end
+			end
 		end
 	end
-	return;
 end
 
 --[[
@@ -831,8 +905,9 @@ function gcinclude.SetVariables()
 			gcinclude.offhand = ew.Sub.Name;
 		end
 	end
-							
-	gcinclude.CheckElementalGear();
+
+	gcinclude.CheckForStaves();
+	gcinclude.CheckForObisGorgets();
 end
 
 --[[
