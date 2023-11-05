@@ -29,6 +29,19 @@ local sets = {
 --]]
 
 	['Idle'] = {
+        Ammo = 'Fortune Egg',
+        Head = 'Austere Hat',
+        Neck = 'Smn. Torque',
+        Ear1 = 'Black Earring',
+        Ear2 = 'Bat Earring',
+        Body = 'Austere Robe',
+        Hands = 'Carbuncle Mitts',
+        Ring1 = 'Evoker\'s Ring',
+		Ring2 = 'Tamas Ring',
+        Back = 'Blue Cape',
+        Waist = 'Powerful Rope',
+        Legs = 'Evoker\'s Spats',
+        Feet = 'Mannequin Pumps',
     },
 	['Idle_Conditional'] = {
 	},
@@ -46,12 +59,43 @@ local sets = {
 	['Idle_Refresh'] = {
 	},
 	
+	-- This is equipped when the pet is idle
+	['Pet_Idle'] = {
+        Ammo = 'Fortune Egg',
+        Head = 'Shep. Bonnet',
+        Neck = 'Smn. Torque',
+        Ear1 = 'Black Earring',
+        Ear2 = 'Bat Earring',
+        Body = 'Austere Robe',
+        Hands = 'Carbuncle Mitts',
+        Ring1 = 'Evoker\'s Ring',
+		Ring2 = 'Tamas Ring',
+        Back = 'Blue Cape',
+        Waist = 'Powerful Rope',
+        Legs = 'Evoker\'s Spats',
+        Feet = 'Mannequin Pumps',
+    },
+	['Pet_Idle_Conditional'] = {
+	},	
+	
 	--[[
 		Resting emphasizes either HP regen or MP refresh. Regen is the assumed target when resting
 	--]]
 	
-	['Resting'] = { 
-	},
+	['Resting'] = {
+        Ammo = 'Fortune Egg',
+        Neck = 'Smn. Torque',
+        Ear1 = 'Black Earring',
+        Ear2 = 'Bat Earring',
+        Body = 'Austere Robe',
+        Hands = 'Carbuncle Mitts',
+        Ring1 = 'Evoker\'s Ring',
+		Ring2 = 'Tamas Ring',
+        Back = 'Blue Cape',
+        Waist = 'Powerful Rope',
+        Legs = 'Evoker\'s Spats',
+        Feet = 'Mannequin Pumps',
+    },
 	['Resting_Conditional'] = {
 	},
 	
@@ -60,34 +104,46 @@ local sets = {
 	['Resting_Refresh_Conditional'] = {
 	},
 
-	['SIR'] = {		-- Spell interuption rate
+	-- Spell interuption rate
+	['SIR'] = {
 	},
 	['SIR_Conditional'] = {
 	},
 	
-	['BP'] = {		-- Blood Pact ability delay and summoning skill, I/II cap at 15, the rest need 680 skill total			
-		Ring1 = 'Evoker\'s Ring',	-- +10 Summoning Skill
-	},
+	-- Blood pact: Blood pact delay, blood pact recast
+	['BP'] = {
+        Head = 'Austere Hat',
+        Neck = 'Smn. Torque',
+        Body = 'Austere Robe',
+        Hands = 'Carbuncle Mitts',
+        Ring1 = 'Evoker\'s Ring',
+    },
 	['BP_Conditional'] = {
 	},
 	
-	['SmnPhysical'] = {				-- Physical blood pact: pet atk, pet acc, pet crit, pet DA, BP physical dmg+
+	-- Physical blood pact: pet atk, pet acc, pet crit, pet DA, BP physical dmg+
+	['SmnPhysical'] = {
     },
 	['SmnPhysical_Conditional'] = {
 	},
 	
-	['SmnMagical'] = {				-- Magical blood pact: pet MAB, pet M.acc, BP magical dmg+
+	-- Magical blood pact: pet MAB, pet M.acc, BP magical dmg+
+	['SmnMagical'] = {
     },
 	['SmnMagical_Conditional'] = {
 	},
 	
-	['SmnSkill'] = {				-- Bonus from summoning skill
-		Ring1 = 'Evoker\'s Ring',	-- +10 Summoning Skill
-	},
+	['SmnSkill'] = {
+        Head = 'Austere Hat',		-- +2 Summoning Skill
+        Neck = 'Smn. Torque',		-- +7 Summoning Skill
+        Hands = 'Carbuncle Mitts',
+        Ring1 = 'Evoker\'s Ring',	-- +10 Summoning Skill
+    },
 	['SmnSkill_Conditional'] = {
 	},
 	
-    ['SmnAccuracy'] = {				--avatar magic accuracy, summoning skill
+    ['SmnAccuracy'] = {
+        Head = 'Shep. Bonnet',		-- +5 Pet Accuracy, +3 Pet Magic Accuracy
     },
 	['SmnAccuracy_Conditional'] = {
 	},
@@ -158,14 +214,65 @@ local sets = {
 	['TP_Conditional'] = {
 	},
 	
-	['TP_Accuracy'] = {		-- player accuracy
+	['TP_Accuracy'] = {
+        Head = 'Optical Hat',
+        Ring1 = 'Toreador\'s Ring',
+        Ring2 = 'Jaeger Ring',
+        Waist = 'Life Belt',
     },
 	['TP_Accuracy_Conditional'] = {
 	},
 	
-	['TP_Evasion'] = {		-- player evasion
+	['TP_Evasion'] = {
+        Head = 'Optical Hat',
+        Neck = 'Spirit Torque',
+        Legs = 'Evoker\'s Spats',
     },
 	['TP_Evasion_Conditional'] = {
+	},
+	
+	-- Use when pet is fighting but not the player
+	
+	['Pet_TP'] = {
+        Head = 'Shep. Bonnet',
+        Neck = 'Smn. Torque',
+		Ear2 = 'Beastly Earring',
+        Body = 'Austere Robe',
+        Hands = 'Carbuncle Mitts',
+        Ring1 = 'Evoker\'s Ring',
+        Legs = 'Evoker\'s Spats',
+    },
+	['Pet_TP_Conditional'] = {
+	},	
+	
+	['Pet_TP_Accuracy'] = {
+        Head = 'Shep. Bonnet',
+        Ear2 = 'Beastly Earring',
+        Ring2 = 'Tamas Ring',
+    },
+	['Pet_TP_Accuracy_Conditional'] = {
+	},
+	
+--[[
+	Preshot is the first stage of when a ranged shot is being performed. This is where you place any 
+	Ranged Accuracy or Ranged Attack Speed gear. 
+--]]
+
+	['Preshot'] = {
+        Head = 'Optical Hat',
+        Ring1 = 'Jaeger Ring',
+    },
+	['Preshot_Conditional'] = {
+	},
+	
+--[[
+	Midshot is the second stage of a ranged shot. This is where you place Ranged Attack or Ranged 
+	Damage gear
+--]]
+
+	['Midshot'] = {
+    },
+	['Midshot_Conditional'] = {
 	},
 	
 --[[
@@ -197,43 +304,58 @@ local sets = {
 	doing a Cure, you wand mind (MND) gear, etc.
 --]]
 
-	['Cure'] = {				-- Healing Magic Skill
+	-- Healing Magic Skill
+	['Cure'] = {
     },
 	['Cure_Conditional'] = {
 	},
 	
-	['Dark'] = {				-- Dark Magic Skill
+	-- Dark Magic Skill
+	['Dark'] = {
 	},
 	['Dark_Conditional'] = {
 	},
 	
-	['Divine'] = {				-- Divine Magic Skill
+	-- Divine Magic Skill
+	['Divine'] = {
 	},
 	['Divine_Conditional'] = {
 	},
 	
-	['Enfeebling'] = {	 		-- Enfeebling Magic Skill
+	-- Enfeebling Magic Skill
+	['Enfeebling'] = {
 	},
 	['Enfeebling_Conditional'] = {
 	},
 	
-	['Enhancing'] = {	 		-- Enhancing Magic Skill
+	-- Enhancing Magic Skill
+	['Enhancing'] = {
 	},
 	['Enhancing_Conditional'] = {
 	},
 	
-	['Elemental'] = {			-- Elemental Magic Skill
+	-- Elemental Magic Skill
+	['Elemental'] = {
 	},
 	['Elemental_Conditional'] = {
 	},
 	
-	['Ninjitsu'] = {			-- Ninjitsu Skill
+	-- Ninjitsu Skill
+	['Ninjitsu'] = {
 	},
 	['Ninjitsu_Conditional'] = {
 	},
 	
-	['Summoning'] = {			-- Summoning Skill, any boost to pet or summoning ability
-	},
+	-- Summoning Skill, any boost to pet or summoning ability
+	['Summoning'] = {
+        Head = 'Austere Hat',
+        Neck = 'Smn. Torque',
+        Ear2 = 'Beastly Earring',
+        Body = 'Austere Robe',
+        Hands = 'Carbuncle Mitts',
+        Ring1 = 'Evoker\'s Ring',
+        Legs = 'Evoker\'s Spats',
+    },
 	['Summoning_Conditional'] = {
 	},
 	
@@ -242,13 +364,27 @@ local sets = {
 --]]
 
 	['INT'] = {
-		Ring2 = 'Tamas Ring',			-- +2~5 INT
-	},
+        Hands = 'Seer\'s Mitts',		-- +1 INT
+        Ring1 = 'Windurstian Ring',		-- +1 INT
+        Ring2 = 'Tamas Ring',			-- +2~5 INT
+        Waist = 'Mrc.Cpt. Belt',		-- +1 INT
+        Legs = 'Seer\'s Slacks',		-- +1 INT
+        Feet = 'Mannequin Pumps',		-- +1 INT
+    },
 	['INT_Conditional'] = {
 	},
 	
 	['MND'] = {
-	},
+        Neck = 'Justice Badge',			-- +3 MND
+        Body = 'Wonder Kaftan',			-- +1 MND
+        Hands = 'Seer\'s Mitts',		-- +1 MND
+        Ring1 = 'Tranquility Ring',		-- +2 MND
+        Ring2 = 'Tamas Ring',			-- +2~5 MND
+        Back = 'White Cape',			-- +2 MND
+        Waist = 'Mrc.Cpt. Belt',		-- +1 MND
+        Legs = 'Wonder Braccae',		-- +2 MND
+        Feet = 'Mannequin Pumps',		-- +2 MND
+    },
 	['MND_Conditional'] = {
 	},
 	
@@ -257,6 +393,7 @@ local sets = {
 --]]
 
 	['macc'] = {
+		Head = 'Shep. Bonnet',
 	},
 	['macc_Conditional'] = {
 	},
@@ -269,7 +406,8 @@ local sets = {
 	['Phalanx_Conditional'] = {
 	},
 	
-	['Stoneskin'] = {	-- Combination of MND and enhancing skill. MND is 3x more important. There's also gear that enhances
+	-- Combination of MND and enhancing skill. MND is 3x more important. There's also gear that enhances
+	['Stoneskin'] = {
 	},	
 	['Stoneskin_Conditional'] = {
 	},
@@ -278,6 +416,7 @@ local sets = {
 	},
 	['Refresh_Conditional'] = {
 	},
+
 
 --[[
 		SMN can use the following weapons: staff (B), Club (C+), dagger (E). Any other weapon will have 
@@ -290,7 +429,18 @@ local sets = {
 -]]
 	
 	['WS_STR'] = {
-	},
+        Head = 'Mrc.Cpt. Headgear',
+        Neck = 'Spike Necklace',
+        Ear1 = 'Fang Earring',
+        Ear2 = 'Fang Earring',
+        Body = 'Wonder Kaftan',
+        Hands = 'Wonder Mitts',
+        Ring1 = 'Sun Ring',
+        Ring2 = 'Sun Ring',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Wonder Braccae',
+        Feet = 'Creek F Clomps',
+    },
 	['WS_STR_Conditional'] = {
 	},
 	
@@ -301,7 +451,18 @@ local sets = {
 --]]
 	
 	['WS_STRINT'] = {
-	},
+        Head = 'Mrc.Cpt. Headgear',
+        Neck = 'Spike Necklace',
+        Ear1 = 'Fang Earring',
+        Ear2 = 'Fang Earring',
+        Body = 'Wonder Kaftan',
+        Hands = 'Wonder Mitts',
+        Ring1 = 'Sun Ring',
+        Ring2 = 'Tamas Ring',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Seer\'s Slacks',
+        Feet = 'Creek F Clomps',
+    },
 	['WS_STRINT_Conditional'] = {
 	},
 
@@ -312,7 +473,17 @@ local sets = {
 --]]
 	
 	['WS_STRMND'] = {
-	},
+        Head = 'Mrc.Cpt. Headgear',
+        Neck = 'Justice Badge',
+        Body = 'Wonder Kaftan',
+        Hands = 'Wonder Mitts',
+        Ring1 = 'Sun Ring',
+        Ring2 = 'Tamas Ring',
+        Back = 'White Cape',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Wonder Braccae',
+        Feet = 'Creek F Clomps',
+    },
 	['WS_STRMND_Conditional'] = {
 	},
 
@@ -322,7 +493,17 @@ local sets = {
 --]]
 
 	['WS_STRMND_30_50'] = {
-	},
+        Head = 'Mrc.Cpt. Headgear',
+        Neck = 'Justice Badge',
+        Body = 'Wonder Kaftan',
+        Hands = 'Wonder Mitts',
+        Ring1 = 'Sun Ring',
+        Ring2 = 'Tamas Ring',
+        Back = 'White Cape',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Wonder Braccae',
+        Feet = 'Creek F Clomps',
+    },
 	['WS_STRMND_30_50_Conditional'] = {
 	},
 	
@@ -334,7 +515,13 @@ local sets = {
 --]]
 	
 	['WS_DEX'] = {
-	},
+        Head = 'Empress Hairpin',
+        Neck = 'Spike Necklace',
+        Body = 'Mrc.Cpt. Doublet',
+        Ring1 = 'Balance Ring',
+        Ring2 = 'Bastokan Ring',
+        Waist = 'Mrc.Cpt. Belt',
+    },
 	['WS_DEX_Conditional'] = {
 	},
 
@@ -346,7 +533,16 @@ local sets = {
 --]]
 	
 	['WS_DEXINT'] = {
-	},
+        Head = 'Empress Hairpin',
+        Neck = 'Spike Necklace',
+        Body = 'Mrc.Cpt. Doublet',
+        Hands = 'Seer\'s Mitts',
+        Ring1 = 'Windurstian Ring',
+        Ring2 = 'Tamas Ring',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Seer\'s Slacks',
+        Feet = 'Mannequin Pumps',
+    },
 	['WS_DEXINT_Conditional'] = {
 	},
 
@@ -356,7 +552,13 @@ local sets = {
 --]]
 	
 	['WS_INT'] = {
-	},
+        Hands = 'Seer\'s Mitts',
+        Ring1 = 'Windurstian Ring',
+        Ring2 = 'Tamas Ring',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Seer\'s Slacks',
+        Feet = 'Mannequin Pumps',
+    },
 	['WS_INT_Conditional'] = {
 	},
 	
@@ -366,7 +568,15 @@ local sets = {
 --]]
 	
 	['WS_INTMND'] = {
-	},
+        Neck = 'Justice Badge',
+        Body = 'Wonder Kaftan',
+        Hands = 'Seer\'s Mitts',
+        Ring1 = 'Windurstian Ring',
+        Ring2 = 'Tamas Ring',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Wonder Braccae',
+        Feet = 'Mannequin Pumps',
+    },
 	['WS_INTMND_Conditional'] = {
 	},
 	
@@ -376,7 +586,12 @@ local sets = {
 --]]
 	
 	['WS_CHR'] = {
-	},
+        Head = 'Entrancing Ribbon',
+        Neck = 'Flower Necklace',
+        Ring1 = 'Moon Ring',
+        Ring2 = 'Moon Ring',
+        Waist = 'Corsette',
+    },
 	['WS_CHR_Conditional'] = {
 	},
 
@@ -388,7 +603,16 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
-	},
+        Neck = 'Justice Badge',
+        Body = 'Wonder Kaftan',
+        Hands = 'Seer\'s Mitts',
+        Ring1 = 'Tranquility Ring',
+        Ring2 = 'Tamas Ring',
+        Back = 'White Cape',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Wonder Braccae',
+        Feet = 'Mannequin Pumps',
+    },
 	['WS_MND_Conditional'] = {
 	},
 	
@@ -399,8 +623,13 @@ local sets = {
 	on the appropriate gear set loaded.
 --]]
 
-	['WS_Accuracy'] = {	-- Gear with weaponskill accuracy
-	},	
+	['WS_Accuracy'] = {
+        Head = 'Optical Hat',
+        Ring1 = 'Toreador\'s Ring',
+        Ring2 = 'Jaeger Ring',
+        Waist = 'Life Belt',
+        Legs = 'Evoker\'s Spats',
+    },	
 	['WS_Accuracy_Conditional'] = {
 	},
 	
@@ -413,6 +642,15 @@ local sets = {
 	},
 	['Movement_Conditional'] = {
 	},
+
+--[[
+	Treasure Hunter gear
+--]]
+
+	['TH'] = {
+	},
+	['TH_Conditional'] = {
+	},
 	
 --[[
 	The following sets are added as a convenience for playing in level capped areas. The only way for them to be loaded
@@ -421,21 +659,96 @@ local sets = {
 --]]
 
 	['CAP20'] = {
+        Ammo = 'Fortune Egg',
+        Head = 'Silver Hairpin',
+        Neck = 'Rep.Bronze Medal',
+        Ear1 = 'Onyx Earring',
+        Ear2 = 'Onyx Earring',
+        Body = 'Angler\'s Tunica',
+        Hands = 'Carbuncle Mitts',
+        Ring1 = 'Astral Ring',
+        Ring2 = 'Astral Ring',
+        Waist = 'Friar\'s Rope',
+        Legs = 'Freesword\'s Slops',
+        Feet = 'Waders',
     },
 	
 	['CAP25'] = {
+        Ammo = 'Fortune Egg',
+        Head = 'Shep. Bonnet',
+        Neck = 'Rep.Bronze Medal',
+        Ear1 = 'Onyx Earring',
+        Ear2 = 'Onyx Earring',
+        Body = 'Angler\'s Tunica',
+        Hands = 'Carbuncle Mitts',
+        Ring1 = 'Astral Ring',
+        Ring2 = 'Astral Ring',
+        Waist = 'Friar\'s Rope',
+        Legs = 'Freesword\'s Slops',
+        Feet = 'Waders',
     },
 	
 	['CAP30'] = {
+        Ammo = 'Fortune Egg',
+        Head = 'Shep. Bonnet',
+        Neck = 'Rep.Bronze Medal',
+        Ear1 = 'Onyx Earring',
+        Ear2 = 'Onyx Earring',
+        Body = 'Seer\'s Tunic',
+        Hands = 'Carbuncle Mitts',
+        Ring1 = 'Astral Ring',
+        Ring2 = 'Tamas Ring',
+        Waist = 'Friar\'s Rope',
+        Legs = 'Seer\'s Slacks',
+        Feet = 'Seer\'s Pumps',
     },
 	
 	['CAP40'] = {
+        Ammo = 'Fortune Egg',
+        Head = 'Shep. Bonnet',
+        Neck = 'Spirit Torque',
+        Ear1 = 'Black Earring',
+        Ear2 = 'Onyx Earring',
+        Body = 'Seer\'s Tunic',
+        Hands = 'Carbuncle Mitts',
+        Ring1 = 'Astral Ring',
+        Ring2 = 'Tamas Ring',
+        Back = 'White Cape',
+        Waist = 'Friar\'s Rope',
+        Legs = 'Seer\'s Slacks',
+        Feet = 'Mannequin Pumps',
     },
 	
 	['CAP50'] = {
+        Ammo = 'Fortune Egg',
+        Head = 'Austere Hat',
+        Neck = 'Spirit Torque',
+        Ear1 = 'Black Earring',
+        Ear2 = 'Onyx Earring',
+        Body = 'Austere Robe',
+        Hands = 'Carbuncle Mitts',
+        Ring1 = 'Astral Ring',
+        Ring2 = 'Tamas Ring',
+        Back = 'White Cape',
+        Waist = 'Powerful Rope',
+        Legs = 'Seer\'s Slacks',
+        Feet = 'Mannequin Pumps',
     },
 
 	['CAP60'] = {
+        Ammo = 'Fortune Egg',
+        Head = 'Austere Hat',
+        Neck = 'Spirit Torque',
+        Ear1 = 'Black Earring',
+        Ear2 = 'Bat Earring',
+        Body = 'Austere Robe',
+        Hands = 'Carbuncle Mitts',
+        Ring1 = 'Astral Ring',
+        Ring2 = 'Tamas Ring',
+        Back = 'White Cape',
+        Waist = 'Powerful Rope',
+        Legs = 'Evoker\'s Spats',
+        Feet = 'Mannequin Pumps',
     },
 };
 
@@ -456,15 +769,26 @@ local function HandlePetAction(PetAction)
 		elseif (gcinclude.SmnMagical:contains(PetAction.Name)) then	
 			gFunc.EquipSet(sets.SmnMagical);
 			gcinclude.ProcessConditional(sets.SmnMagical_Conditional,nil);
+			if gcdisplay.GetToggle('Acc') == true then
+				gFunc.EquipSet(sets.macc);
+				gcinclude.ProcessConditional(sets.macc_Conditional,nil);
+			end			
 		elseif (gcinclude.SmnHybrid:contains(PetAction.Name)) then		
 			gFunc.EquipSet(sets.SmnHybrid);
 			gcinclude.ProcessConditional(sets.SmnHybrid_Conditional,nil);
-		elseif (gcinclude.SmnAccuracy:contains(PetAction.Name)) then
-			gFunc.EquipSet(sets.SmnAccuracy);
-			gcinclude.ProcessConditional(sets.SmnAccuracy_Conditional,nil);			
+			if gcdisplay.GetToggle('Acc') == true then
+				gFunc.EquipSet(sets.SmnAccuracy);
+				gcinclude.ProcessConditional(sets.SmnAccuracy_Conditional,nil);
+				gFunc.EquipSet(sets.macc);
+				gcinclude.ProcessConditional(sets.macc_Conditional,nil);
+			end				
 		else	
 			gFunc.EquipSet(sets.SmnPhysical);
 			gcinclude.ProcessConditional(sets.SmnPhysical_Conditional,nil);
+			if gcdisplay.GetToggle('Acc') == true then
+				gFunc.EquipSet(sets.SmnAccuracy);
+				gcinclude.ProcessConditional(sets.SmnAccuracy_Conditional,nil);
+			end
 		end
 	end
 end
@@ -671,10 +995,17 @@ profile.HandleDefault = function()
 				gFunc.EquipSet(sets.TP_Accuracy);
 				gcinclude.ProcessConditional(sets.TP_Accuracy_Conditional,nil);
 			end
+		elseif (pet ~= nil and pet.Status == 'Engaged') then
+			gFunc.EquipSet(sets.Pet_TP);
+			gcinclude.ProcessConditional(sets.Pet_TP_Conditional,nil);
+			if gcdisplay.GetToggle('Acc') == true then 
+				gFunc.EquipSet(sets.Pet_TP_Accuracy);
+				gcinclude.ProcessConditional(sets.Pet_TP_Accuracy_Conditional,nil);
+			end
 		elseif player.Status == 'Resting' then	-- Player kneeling. Priority (low to high): resting, refresh
 			gFunc.EquipSet(sets.Resting);
 			gcinclude.ProcessConditional(sets.Resting_Conditional,nil);
-			if (gcinclude.settings.bMagic and player.MPP < gcinclude.settings.RefreshGearMPP) then
+			if player.MPP < gcinclude.settings.RefreshGearMPP then
 				gFunc.EquipSet(sets.Resting_Refresh);
 				gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional,nil);
 				-- Weapon swap to a higher MP refresh while healing weapon if appropriate.
@@ -690,6 +1021,11 @@ profile.HandleDefault = function()
 			end
 			if player.MPP < gcinclude.settings.RefreshGearMPP then		-- if the player's MP is below the threshold setting, equip the idle refresh gear
 				gFunc.EquipSet(sets.Idle_Refresh);
+			end
+			
+			if (pet ~= nil and pet.Status == 'Idle') then
+				gFunc.EquipSet(sets.Pet_Idle);
+				gcinclude.ProcessConditional(sets.Pet_Idle_Conditional,nil);
 			end
 		end
 	
@@ -826,8 +1162,13 @@ profile.HandleMidcast = function()
 			gFunc.EquipSet(sets.Phalanx);
 			gcinclude.ProcessConditional(sets.Phalanx_Conditional,nil);
 		elseif string.match(spell.Name, 'Stoneskin') then
-			gFunc.EquipSet(sets.Stoneskin);
+			gFunc.EquipSet(sets.Stoneskin);			
 			gcinclude.ProcessConditional(sets.Stoneskin_Conditional,nil);
+			-- Stoneskin is heavily affected by MND, but it's an enhancing spell, so
+			-- MND gear wasn't loaded above. Additionally, MND is more potent than
+			-- Enhancing skill. Load that here.
+			gFunc.EquipSet(sets.MND);
+			gcinclude.ProcessConditional(sets.MND_Conditional,nil);			
 		elseif string.contains(spell.Name, 'Refresh') then
 			gFunc.EquipSet(sets.Refresh);
 			gcinclude.ProcessConditional(sets.Refresh_Conditional,nil);
@@ -891,6 +1232,30 @@ profile.HandleMidcast = function()
 			gcinclude.SwapToStave(stat,false);
 		end
 	end
+end
+
+--[[
+	HandlePreshot loads Ranged Accuracy and Ranged Shot Speed Gear for a ranged attack
+--]]
+
+profile.HandlePreshot = function()
+	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
+		gFunc.EquipSet(sets.Preshot);
+		gcinclude.ProcessConditional(sets.Preshot_Conditional,nil);
+	end
+end
+
+--[[
+	HandleMidshot loads Ranged Attack and Damage gear for a ranged attack
+--]]
+
+profile.HandleMidshot = function()
+	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
+		gFunc.EquipSet(sets.Midshot);
+		gcinclude.ProcessConditional(sets.Midshot_Conditional,nil);
+	end
+
+	if (gcdisplay.GetToggle('TH') == true) then gFunc.EquipSet(sets.TH) end
 end
 
 --[[
