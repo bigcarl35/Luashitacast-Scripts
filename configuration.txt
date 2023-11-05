@@ -239,27 +239,6 @@ appropriate command, but RegenGearHPP and RefreshGearMPP can only be modified by
 the percentage value for HP and MP, respectively, when the appropriate gear will be equipped during
 Idle and Rest. The defaults are 60% HP and 70% MP.
 
-Next you want to move to the section that defines gcinclude.elemental_staves. Here's where you 
-indicate that you own any elemental stave (NQ or HQ) and that they are accessible in either your
-inventory or in wardrobe/wardrobe 2. Each line represents an element and the true/false element
-after the staff name is what you change depending on what you own. Each line shows the NQ version
-of the staff and then the HQ. If you've indicated you have both, the HQ will take priority. You
-might notice that the iridal/chatoyant staves are missing, those two don't get introduced into
-FFXI until synergy is released which is in Wings of the Godess expansion which is not available
-on HorizonXI yet.
-
-The next area of concern is gcinclude.elemental_obis which indicates if you own any of the elemental
-obis that were introduced in Chains of Promathia. Like with the elemental staves, if you own any
-of the obis and they're accessible outside of a mog house, change the true/false value at the end of
-the line to true. (And like with the elemental staves, you might notice that the Hachirin's obi is 
-missing. This obi is also created with synergy which is not available yet on HorizonXI.)
-
-Lastly, the next area of concern is gcinclude.elemental_gorgets which indicates if you own any of 
-the elemental gorgets that were introduced in Chains of Promathia. Like with the elemental obis, if
-you own any of the gorgets and they're accessible outside of a mog house, change the trur/false value
-at the end of the line to true. (And like Hachirin's obi, there's a similar gorget: Fotia Gorget,
-which isn't currently available on the HorizonXI server yet.)
-
 That's pretty much it. If you have any questions, feel free to contact me.
 
 Paiine
