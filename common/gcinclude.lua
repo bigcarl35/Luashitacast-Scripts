@@ -106,7 +106,8 @@ gcinclude.settings = {
 	bEleObis = false;	 -- does the player have any elemental obis. 
 	bEleGorgets = false; -- does the player have any elemental gorgets.
 	bSummoner = false;	 -- is the player a summoner. /smn doesn't count
-	bStave = false;		 -- indicates if the auto-detection of elemental staves has occurred
+	bStave = false;		 -- indicates if the auto-detection of elemental staves has successfully occurred
+	bObiGorget = false;	 -- indicates if the auto-detection of elemental obis/gorgets has successfully occurred
 };
 
 -- The following arrays are used by the functions contained in this file. Probably best to leave them alone
@@ -783,6 +784,7 @@ function gcinclude.CheckForStaves()
 	local inventory = AshitaCore:GetMemoryManager():GetInventory();
 	local resources = AshitaCore:GetResourceManager();
 	local tStorage = gcinclude.EQUIPABLE;
+	local iTmp = 0;
 	
 	-- First, set all the entries to false, do not assume that what's there is correct
 	for k,_ in pairs(gcinclude.elemental_staves) do
@@ -804,6 +806,7 @@ function gcinclude.CheckForStaves()
 			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
                 local item = resources:GetItemById(itemEntry.Id);
 				local sIN = string.lower(item.Name[1])
+				iTmp = iTmp + 1;
 				b,c = string.find(sIN,'staff');
 				if b ~= nil then
 					for k,_ in pairs(gcinclude.elemental_staves) do
@@ -819,6 +822,8 @@ function gcinclude.CheckForStaves()
 			end
 		end
 	end
+	-- Below indicates that the inventories really were check and it's not a loading issue
+	gcinclude.settings.bStave = (iTmp > 10);
 end
 
 --[[
@@ -830,6 +835,7 @@ function gcinclude.CheckForObisGorgets()
 	local inventory = AshitaCore:GetMemoryManager():GetInventory();
 	local resources = AshitaCore:GetResourceManager();
 	local tStorage = gcinclude.EQUIPABLE;
+	local iTmp = 0;
 	
 	-- First, set all the entries to false. Both obis and gorgets have same number of elements
 	for k,_ in pairs(gcinclude.elemental_obis) do
@@ -851,7 +857,8 @@ function gcinclude.CheckForObisGorgets()
 			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
                 local item = resources:GetItemById(itemEntry.Id);
 				local sIN = string.lower(item.Name[1]);
-		
+				iTmp = iTmp + 1;
+						
 				-- Start with the obis
 				for k,_ in pairs(gcinclude.elemental_obis) do
 					local sOIN = string.lower(gcinclude.elemental_obis[k][1]);
@@ -872,6 +879,8 @@ function gcinclude.CheckForObisGorgets()
 			end
 		end
 	end
+	
+	gcinclude.settings.bObiGorget = (iTmp > 10);
 end
 
 --[[
