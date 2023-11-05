@@ -819,8 +819,6 @@ function gcinclude.CheckForStaves()
 			end
 		end
 	end
-	
-	return true;
 end
 
 --[[
