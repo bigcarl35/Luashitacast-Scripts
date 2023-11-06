@@ -954,7 +954,15 @@ end
 profile.HandleDefault = function()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();
-		
+	
+	-- Make sure that the staves/obis/gorgets settings are know
+	if gcinclude.settings.bStave == false then
+		gcinclude.CheckForStaves();
+	end
+	if gcinclude.settings.bObiGorget == false then
+		gcinclude.CheckForObisGorgets();
+	end
+	
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 	
 		-- A pet action takes priority over a player's action.
