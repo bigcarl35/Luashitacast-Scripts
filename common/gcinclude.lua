@@ -2073,8 +2073,9 @@ function gcinclude.findString(tStorage,sString,bUpdate,sName)
 	-- now, loop through the passed storage containers
 	for i = 1,iCnt,1 do
 		bFound = false;
-		containerID = gcinclude.STORAGES[tStorage[i]][1];
-	
+		--containerID = gcinclude.STORAGES[tStorage[i]][1];
+		containerID = tStorage[i][1];
+		
 		-- then loop through the container
 		for j = 1,inventory:GetContainerCountMax(containerID),1 do
 			local itemEntry = inventory:GetContainerItem(containerID, j);
