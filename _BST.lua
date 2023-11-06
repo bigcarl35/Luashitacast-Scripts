@@ -1082,6 +1082,14 @@ profile.HandleDefault = function()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();
 		
+	-- Make sure that the staves/obis/gorgets settings are known
+	if gcinclude.settings.bStave == false then
+		gcinclude.CheckForStaves();
+	end
+	if gcinclude.settings.bObiGorget == false then
+		gcinclude.CheckForObisGorgets();
+	end
+	
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 
 		-- When you want to reward your pet and you do not have pet food equipped or when you 
