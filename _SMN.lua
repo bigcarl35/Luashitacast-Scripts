@@ -1,12 +1,6 @@
 local profile = {};
 gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 
---[[
-	Please note that there are many reasons why a SMN/BST is not a good idea, probably more against than for.
-	This implementation does not support /BST. You'll have to modify this file to support BST abilities if
-	you insist on playing SMN/BST.
---]]
-
 local sets = {
 --[[
 	The Idle sets are for when you're not in town and not doing anything like fighting (or pet fighting), casting, 
@@ -144,6 +138,7 @@ local sets = {
 	
     ['SmnAccuracy'] = {
         Head = 'Shep. Bonnet',		-- +5 Pet Accuracy, +3 Pet Magic Accuracy
+		Ear2 = 'Beastly Earring',	-- +10 Pet Accuracy
     },
 	['SmnAccuracy_Conditional'] = {
 	},
@@ -763,32 +758,35 @@ profile.sAmmo = nil;
 --]]
 
 local function HandlePetAction(PetAction)
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
-		if (gcinclude.SmnSkill:contains(PetAction.Name)) then		
-			gFunc.EquipSet(sets.SmnSkill);
-		elseif (gcinclude.SmnMagical:contains(PetAction.Name)) then	
-			gFunc.EquipSet(sets.SmnMagical);
-			gcinclude.ProcessConditional(sets.SmnMagical_Conditional,nil);
-			if gcdisplay.GetToggle('Acc') == true then
-				gFunc.EquipSet(sets.macc);
-				gcinclude.ProcessConditional(sets.macc_Conditional,nil);
-			end			
-		elseif (gcinclude.SmnHybrid:contains(PetAction.Name)) then		
-			gFunc.EquipSet(sets.SmnHybrid);
-			gcinclude.ProcessConditional(sets.SmnHybrid_Conditional,nil);
-			if gcdisplay.GetToggle('Acc') == true then
-				gFunc.EquipSet(sets.SmnAccuracy);
-				gcinclude.ProcessConditional(sets.SmnAccuracy_Conditional,nil);
-				gFunc.EquipSet(sets.macc);
-				gcinclude.ProcessConditional(sets.macc_Conditional,nil);
-			end				
-		else	
-			gFunc.EquipSet(sets.SmnPhysical);
-			gcinclude.ProcessConditional(sets.SmnPhysical_Conditional,nil);
-			if gcdisplay.GetToggle('Acc') == true then
-				gFunc.EquipSet(sets.SmnAccuracy);
-				gcinclude.ProcessConditional(sets.SmnAccuracy_Conditional,nil);
-			end
+
+	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true
+		return
+	end
+	
+	if (gcinclude.SmnSkill:contains(PetAction.Name)) then		
+		gFunc.EquipSet(sets.SmnSkill);
+	elseif (gcinclude.SmnMagical:contains(PetAction.Name)) then	
+		gFunc.EquipSet(sets.SmnMagical);
+		gcinclude.ProcessConditional(sets.SmnMagical_Conditional,nil);
+		if gcdisplay.GetToggle('Acc') == true then
+			gFunc.EquipSet(sets.macc);
+			gcinclude.ProcessConditional(sets.macc_Conditional,nil);
+		end			
+	elseif (gcinclude.SmnHybrid:contains(PetAction.Name)) then		
+		gFunc.EquipSet(sets.SmnHybrid);
+		gcinclude.ProcessConditional(sets.SmnHybrid_Conditional,nil);
+		if gcdisplay.GetToggle('Acc') == true then
+			gFunc.EquipSet(sets.macc);
+			gcinclude.ProcessConditional(sets.macc_Conditional,nil);
+			gFunc.EquipSet(sets.SmnAccuracy);
+			gcinclude.ProcessConditional(sets.SmnAccuracy_Conditional,nil);
+		end				
+	else	
+		gFunc.EquipSet(sets.SmnPhysical);
+		gcinclude.ProcessConditional(sets.SmnPhysical_Conditional,nil);
+		if gcdisplay.GetToggle('Acc') == true then
+			gFunc.EquipSet(sets.SmnAccuracy);
+			gcinclude.ProcessConditional(sets.SmnAccuracy_Conditional,nil);
 		end
 	end
 end
@@ -802,7 +800,7 @@ end
 local function SetSubjobSet(chkSJ)
 	local sj;
 
-	if (profile.sjb == nil or chkSJ ~= profile.sjb) then	-- Compare the stored subjob with the current subjob
+	if (profile.sjb == nil or (chkSJ ~= 'NON' and chkSJ ~= profile.sjb)) then	-- Compare the stored subjob with the current subjob
 		if (chkSJ == 'RDM') then 
 			sj = '2';										-- /RDM
 		elseif (chkSJ =='BLM') then
@@ -810,7 +808,7 @@ local function SetSubjobSet(chkSJ)
 		else
 			sj = '1';										-- /WHM
 		end
-	
+
 		AshitaCore:GetChatManager():QueueCommand(1, '/macro set '..sj);
 		profile.sjb = chkSJ;
 	end
@@ -963,104 +961,108 @@ profile.HandleDefault = function()
 		gcinclude.CheckForObisGorgets();
 	end
 	
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
+	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true
+		return;
+	end
 	
-		-- A pet action takes priority over a player's action.
-		if (petAction ~= nil) then
-			HandlePetAction(petAction);
-			return;
-		end
+	-- A pet action takes priority over a player's action.
+	if (petAction ~= nil) then
+		HandlePetAction(petAction);
+		return;
+	end
 	
-		local player = gData.GetPlayer();
-		local ew = gData.GetEquipment();
-		local eWeap = nil;
-		if ew['Main'] ~= nil then
-			eWeap = ew['Main'].Name;	
-		end
+	local player = gData.GetPlayer();
+	local ew = gData.GetEquipment();
+	local eWeap = nil;
+	if ew['Main'] ~= nil then
+		eWeap = ew['Main'].Name;	
+	end
 		
-		SetSubjobSet(player.SubJob);			-- Make sure the correct set is shown in case the subjob was changed.
+	SetSubjobSet(player.SubJob);			-- Make sure the correct set is shown in case the subjob was changed.
 	
-		-- If player is not resting and has a pet, make sure they're holding the
-		-- correct staff (assuming they own the correct staff)
-		if player.Status ~= 'Resting' and pet ~= nil then
-			local pName = string.lower(pet.Name);
-			local pEle = gcinclude.SummonStaves[pName];
-		
-			if eWeap ~= nil and (eWeap ~= gcinclude.elemental_staves[pEle][1] or eWeap ~= gcinclude.elemental_staves[pEle][3]) then
-				gcinclude.SwapToStave(pEle,true);
-			end
+	-- If player is not resting and has a pet, make sure they're holding the
+	-- correct staff (assuming they own the correct staff)
+	if player.Status ~= 'Resting' and pet ~= nil then
+		local pName = string.lower(pet.Name);
+		local pEle = gcinclude.SummonStaves[pName];
+	
+		if eWeap ~= nil and (eWeap ~= gcinclude.elemental_staves[pEle][1] or eWeap ~= gcinclude.elemental_staves[pEle][3]) then
+			gcinclude.SwapToStave(pEle,true);
 		end
+	end
 		
-		-- Now process the player status accordingly
-		if player.Status == 'Engaged' then		-- Player is fighting. Priority (low to high): TP,evasion,accuracy
-			gFunc.EquipSet(sets.TP);
-			gcinclude.ProcessConditional(sets.TP_Conditional,nil);
-			if gcdisplay.GetToggle('Eva') == true then
-				gFunc.EquipSet(sets.TP_Evasion);
-				gcinclude.ProcessConditional(sets.TP_Evasion_Conditional,nil);
-			end
-			if gcdisplay.GetToggle('Acc') == true then 
-				gFunc.EquipSet(sets.TP_Accuracy);
-				gcinclude.ProcessConditional(sets.TP_Accuracy_Conditional,nil);
-			end
-		elseif (pet ~= nil and pet.Status == 'Engaged') then
-			gFunc.EquipSet(sets.Pet_TP);
-			gcinclude.ProcessConditional(sets.Pet_TP_Conditional,nil);
-			if gcdisplay.GetToggle('Acc') == true then 
-				gFunc.EquipSet(sets.Pet_TP_Accuracy);
-				gcinclude.ProcessConditional(sets.Pet_TP_Accuracy_Conditional,nil);
-			end
-		elseif player.Status == 'Resting' then	-- Player kneeling. Priority (low to high): resting, refresh
+	-- Now process the player status accordingly
+	if player.Status == 'Engaged' then		-- Player is fighting. Priority (low to high): TP,evasion,accuracy
+		gFunc.EquipSet(sets.TP);
+		gcinclude.ProcessConditional(sets.TP_Conditional,nil);
+		if gcdisplay.GetToggle('Eva') == true then
+			gFunc.EquipSet(sets.TP_Evasion);
+			gcinclude.ProcessConditional(sets.TP_Evasion_Conditional,nil);
+		end
+		if gcdisplay.GetToggle('Acc') == true then 
+			gFunc.EquipSet(sets.TP_Accuracy);
+			gcinclude.ProcessConditional(sets.TP_Accuracy_Conditional,nil);
+		end
+	elseif (pet ~= nil and pet.Status == 'Engaged') then
+		gFunc.EquipSet(sets.Pet_TP);
+		gcinclude.ProcessConditional(sets.Pet_TP_Conditional,nil);
+		if gcdisplay.GetToggle('Acc') == true then 
+			gFunc.EquipSet(sets.Pet_TP_Accuracy);
+			gcinclude.ProcessConditional(sets.Pet_TP_Accuracy_Conditional,nil);
+		end
+	elseif player.Status == 'Resting' then	-- Player kneeling. Priority (low to high): resting, refresh
+		if player.HPP < gcinclude.settings.RegenGearHPP then
 			gFunc.EquipSet(sets.Resting);
 			gcinclude.ProcessConditional(sets.Resting_Conditional,nil);
-			if player.MPP < gcinclude.settings.RefreshGearMPP then
-				gFunc.EquipSet(sets.Resting_Refresh);
-				gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional,nil);
-				-- Weapon swap to a higher MP refresh while healing weapon if appropriate.
-				if gcinclude.settings.bEleStaves == true then
-					gcinclude.SwapToStave('dark',false);
-				end
-			end
-		else									-- Assume idling. Priority (low to high): Idle,refresh
-			gFunc.EquipSet(sets.Idle);
-			gcinclude.ProcessConditional(sets.Idle_Conditional,nil);
-			if player.HPP < gcinclude.settings.RegenGearHPP then		-- if the player's HP is below the threshold setting, equip the idle regen gear
-				gFunc.EquipSet(sets.Idle_Regen);
-			end
-			if player.MPP < gcinclude.settings.RefreshGearMPP then		-- if the player's MP is below the threshold setting, equip the idle refresh gear
-				gFunc.EquipSet(sets.Idle_Refresh);
-			end
+		end
+		if player.MPP < gcinclude.settings.RefreshGearMPP then
+			gFunc.EquipSet(sets.Resting_Refresh);
+			gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional,nil);
+		end
+		
+		-- Weapon swap to a higher MP refresh while healing weapon if appropriate.
+		if player.MP < player.MaxMP and gcinclude.settings.bEleStaves == true then
+			gcinclude.SwapToStave('dark',false);
+		end
+	else									-- Assume idling. Priority (low to high): Idle,refresh
+		gFunc.EquipSet(sets.Idle);
+		gcinclude.ProcessConditional(sets.Idle_Conditional,nil);
+		if player.HPP < gcinclude.settings.RegenGearHPP then		-- if the player's HP is below the threshold setting, equip the idle regen gear
+			gFunc.EquipSet(sets.Idle_Regen);
+		end
+		if player.MPP < gcinclude.settings.RefreshGearMPP then		-- if the player's MP is below the threshold setting, equip the idle refresh gear
+			gFunc.EquipSet(sets.Idle_Refresh);
+		end
 			
-			if (pet ~= nil and pet.Status == 'Idle') then
-				gFunc.EquipSet(sets.Pet_Idle);
-				gcinclude.ProcessConditional(sets.Pet_Idle_Conditional,nil);
-			end
+		if (pet ~= nil and pet.Status == 'Idle') then
+			gFunc.EquipSet(sets.Pet_Idle);
+			gcinclude.ProcessConditional(sets.Pet_Idle_Conditional,nil);
 		end
+	end
 	
-		-- If player has indicated kiting, load movement gear set
-		if (gcdisplay.GetToggle('Kite') == true) then
-			gFunc.EquipSet(sets.Movement);
-			gcinclude.ProcessConditional(sets.Movement_Conditional,nil);
-		end
+	-- If player has indicated kiting, load movement gear set
+	if (gcdisplay.GetToggle('Kite') == true) then
+		gFunc.EquipSet(sets.Movement);
+		gcinclude.ProcessConditional(sets.Movement_Conditional,nil);
+	end
 		
-		gcinclude.CheckDefault ();
+	gcinclude.CheckDefault ();
 		
-		-- Add TH gear if indicated
-		if (gcdisplay.GetToggle('TH') == true) then
-			gFunc.EquipSet(sets.TH);
-			gcinclude.ProcessConditional(sets.TH_Conditional,nil);
-		end
+	-- Add TH gear if indicated
+	if (gcdisplay.GetToggle('TH') == true) then
+		gFunc.EquipSet(sets.TH);
+		gcinclude.ProcessConditional(sets.TH_Conditional,nil);
+	end
 		
-		-- Lastly, equip the appriopriate Damage Taken gear if desired
-		if (gcdisplay.GetToggle('DT') == true) then
-			gFunc.EquipSet('DT_' .. gcdisplay.GetCycle('DT_Type'));
-			if gcdisplay.GetCycle('DT_Type') == gcinclude.PHY then
-				gcinclude.ProcessConditional(sets.DT_Physical_Conditional,nil);
-			elseif gcdisplay.GetCycle('DT_Type') == gcinclude.MAG then
-				gcinclude.ProcessConditional(sets.DT_Magical_Conditional,nil);
-			else
-				gcinclude.ProcessConditional(sets.DT_Breath_Conditional,nil);
-			end
+	-- Lastly, equip the appriopriate Damage Taken gear if desired
+	if (gcdisplay.GetToggle('DT') == true) then
+		gFunc.EquipSet('DT_' .. gcdisplay.GetCycle('DT_Type'));
+		if gcdisplay.GetCycle('DT_Type') == gcinclude.PHY then
+			gcinclude.ProcessConditional(sets.DT_Physical_Conditional,nil);
+		elseif gcdisplay.GetCycle('DT_Type') == gcinclude.MAG then
+			gcinclude.ProcessConditional(sets.DT_Magical_Conditional,nil);
+		else
+			gcinclude.ProcessConditional(sets.DT_Breath_Conditional,nil);
 		end
 	end
 end
@@ -1143,74 +1145,76 @@ profile.HandleMidcast = function()
 	local obi;
 	local sSet;
 
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true	
+	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
+		return;
+	end
 		
-		-- First load the midcast set
-		gFunc.EquipSet(sets.Midcast);
-		gcinclude.ProcessConditional(sets.Midcast_Conditional,nil);
+	-- First load the midcast set
+	gFunc.EquipSet(sets.Midcast);
+	gcinclude.ProcessConditional(sets.Midcast_Conditional,nil);
 		
-		-- Then the Spell Interruption set
-		gFunc.EquipSet(sets.SIR);
-		gcinclude.ProcessConditional(sets.SIR_Conditional,nil);
+	-- Then the Spell Interruption set
+	gFunc.EquipSet(sets.SIR);
+	gcinclude.ProcessConditional(sets.SIR_Conditional,nil);
 		
-		-- Next, see if INT/MND gear should be loaded
-		sSet = gcinclude.WhichStat(spell.Name);
-		if sSet ~= nil then
-			if sSet == 'MND' then
-				gFunc.EquipSet(sets.MND);
-				gcinclude.ProcessConditional(sets.MND_Conditional,nil);
-			elseif sSet == 'INT' then
-				gfunc.EquipSet(sets.INT);
-				gcinclude.ProcessConditional(sets.INT_Conditional,nil);
-			end
-		end
-		
-		-- Then check spell specific gear
-		if string.match(spell.Name, 'Phalanx') then
-			gFunc.EquipSet(sets.Phalanx);
-			gcinclude.ProcessConditional(sets.Phalanx_Conditional,nil);
-		elseif string.match(spell.Name, 'Stoneskin') then
-			gFunc.EquipSet(sets.Stoneskin);			
-			gcinclude.ProcessConditional(sets.Stoneskin_Conditional,nil);
-			-- Stoneskin is heavily affected by MND, but it's an enhancing spell, so
-			-- MND gear wasn't loaded above. Additionally, MND is more potent than
-			-- Enhancing skill. Load that here.
+	-- Next, see if INT/MND gear should be loaded
+	sSet = gcinclude.WhichStat(spell.Name);
+	if sSet ~= nil then
+		if sSet == 'MND' then
 			gFunc.EquipSet(sets.MND);
-			gcinclude.ProcessConditional(sets.MND_Conditional,nil);			
-		elseif string.contains(spell.Name, 'Refresh') then
-			gFunc.EquipSet(sets.Refresh);
-			gcinclude.ProcessConditional(sets.Refresh_Conditional,nil);
+			gcinclude.ProcessConditional(sets.MND_Conditional,nil);
+		elseif sSet == 'INT' then
+			gfunc.EquipSet(sets.INT);
+			gcinclude.ProcessConditional(sets.INT_Conditional,nil);
 		end
-
-		-- Then magical accuracy
-		if gcdisplay.GetToggle('acc') == true then
-			gFunc.EquipSet(sets.macc);
-			gcinclude.ProcessConditional(sets.macc_Conditional,nil);
-		end
+	end
 		
-		-- Then the appropriate magic skill
-		mSet = gcinclude.WhichMagicSkill(spell.Name);
+	-- Then check spell specific gear
+	if string.match(spell.Name, 'Phalanx') then
+		gFunc.EquipSet(sets.Phalanx);
+		gcinclude.ProcessConditional(sets.Phalanx_Conditional,nil);
+	elseif string.match(spell.Name, 'Stoneskin') then
+		gFunc.EquipSet(sets.Stoneskin);			
+		gcinclude.ProcessConditional(sets.Stoneskin_Conditional,nil);
+		-- Stoneskin is heavily affected by MND, but it's an enhancing spell, so
+		-- MND gear wasn't loaded above. Additionally, MND is more potent than
+		-- Enhancing skill. Load that here.
+		gFunc.EquipSet(sets.MND);
+		gcinclude.ProcessConditional(sets.MND_Conditional,nil);			
+	elseif string.contains(spell.Name, 'Refresh') then
+		gFunc.EquipSet(sets.Refresh);
+		gcinclude.ProcessConditional(sets.Refresh_Conditional,nil);
+	end
 
-		if mSet ~= nil then
-			gFunc.EquipSet(mSet);
-			if mSet == 'Cure' then
-				gcinclude.ProcessConditional(sets.Cure_Conditional,nil);
-			elseif mSet == 'Dark' then
-				gcinclude.ProcessConditional(sets.Dark_Conditional,nil);
-			elseif mSet == 'Divine' then
-				gcinclude.ProcessConditional(sets.Divine_Conditional,nil);
-			elseif mSet == 'Enfeebling' then
-				gcinclude.ProcessConditional(sets.Enfeebling_Conditional,nil);
-			elseif mSet == 'Enhancing' then
-				gcinclude.ProcessConditional(sets.Enhancing_Conditional,nil);
-			elseif mSet == 'Elemental' then
-				gcinclude.ProcessConditional(sets.Elemental_Conditional,nil);
-			elseif mSet == 'Ninjitsu' then
-				gcinclude.ProcessConditional(sets.Ninjitsu_Conditional,nil);
-			elseif mSet == 'Summoning' then
-				gcinclude.ProcessConditional(sets.Summoning_Conditional,nil);
-			end				
-		end
+	-- Then magical accuracy
+	if gcdisplay.GetToggle('acc') == true then
+		gFunc.EquipSet(sets.macc);
+		gcinclude.ProcessConditional(sets.macc_Conditional,nil);
+	end
+		
+	-- Then the appropriate magic skill
+	mSet = gcinclude.WhichMagicSkill(spell.Name);
+
+	if mSet ~= nil then
+		gFunc.EquipSet(mSet);
+		if mSet == 'Cure' then
+			gcinclude.ProcessConditional(sets.Cure_Conditional,nil);
+		elseif mSet == 'Dark' then
+			gcinclude.ProcessConditional(sets.Dark_Conditional,nil);
+		elseif mSet == 'Divine' then
+			gcinclude.ProcessConditional(sets.Divine_Conditional,nil);
+		elseif mSet == 'Enfeebling' then
+			gcinclude.ProcessConditional(sets.Enfeebling_Conditional,nil);
+		elseif mSet == 'Enhancing' then
+			gcinclude.ProcessConditional(sets.Enhancing_Conditional,nil);
+		elseif mSet == 'Elemental' then
+			gcinclude.ProcessConditional(sets.Elemental_Conditional,nil);
+		elseif mSet == 'Ninjitsu' then
+			gcinclude.ProcessConditional(sets.Ninjitsu_Conditional,nil);
+		elseif mSet == 'Summoning' then
+			gcinclude.ProcessConditional(sets.Summoning_Conditional,nil);
+		end				
+	end
 
 --[[		
 		Then, regardless of type of spell, see if an obi would help. No need to check and see if the 
@@ -1219,26 +1223,26 @@ profile.HandleMidcast = function()
 		Note: This seems like a repeat of the obi check in the precast, but in this case it's checking
 		for the spell damage type rather than the spell accuracy.
 --]]
-		if gcinclude.settings.bEleObis == true then
-			obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.OBI);
-			if obi ~= nil then
-				gFunc.ForceEquip('Waist',obi);
-			end
+	
+	if gcinclude.settings.bEleObis == true then
+		obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.OBI);
+		if obi ~= nil then
+			gFunc.ForceEquip('Waist',obi);
 		end
+	end
 		
-		stat = nil;
-		-- Lastly, how about an elemental stave (use the MagicEleDmg in gcinclude) or summons
-		if gcinclude.settings.bEleStaves == true then
-			if mSet == 'Summoning' then
-				stat = gcinclude.CheckSummons(spell.Name);
-			else
-				stat = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.ELEMENT);
-			end
+	stat = nil;
+	-- Lastly, how about an elemental stave (use the MagicEleDmg in gcinclude) or summons
+	if gcinclude.settings.bEleStaves == true then
+		if mSet == 'Summoning' then
+			stat = gcinclude.CheckSummons(spell.Name);
+		else
+			stat = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.ELEMENT);
 		end
+	end
 		
-		if stat ~= nil then
-			gcinclude.SwapToStave(stat,false);
-		end
+	if stat ~= nil then
+		gcinclude.SwapToStave(stat,false);
 	end
 end
 
@@ -1271,47 +1275,50 @@ end
 --]]
 
 profile.HandleWeaponskill = function()
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
-		local ws = gData.GetAction();
-		local canWS = gcinclude.CheckWsBailout();
+
+	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true
+		return;
+	end
+	
+	local ws = gData.GetAction();
+	local canWS = gcinclude.CheckWsBailout();
  
-		-- If conditions would cause the weaponskill to fail, the action will be
-		-- cancelled so you do not lose your tp.
-		if (canWS == false) then 
-			gFunc.CancelAction();
-			return;
-		else
-			local sWS = gcinclude.WsStat(ws.Name,'STR');	-- Equip appropriate gear for weapon skill
-			gFunc.EquipSet(sWS);
+	-- If conditions would cause the weaponskill to fail, the action will be
+	-- cancelled so you do not lose your tp.
+	if (canWS == false) then 
+		gFunc.CancelAction();
+		return;
+	else
+		local sWS = gcinclude.WsStat(ws.Name,'STR');	-- Equip appropriate gear for weapon skill
+		gFunc.EquipSet(sWS);
 			
-			if sWS == 'WS_CHR' then
-				gcinclude.ProcessConditional(sets.WS_CHR_Conditional,nil);
-			elseif sWS == 'WS_DEX' then
-				gcinclude.ProcessConditional(sets.WS_DEX_Conditional,nil);
-			elseif sWS == 'WS_DEXINT' then
-				gcinclude.ProcessConditional(sets.WS_DEXINT_Conditional,nil);
-			elseif sWS == 'WS_STR' then
-				gcinclude.ProcessConditional(sets.WS_STR_Conditional,nil);
-			elseif sWS == 'WS_MND' then
-				gcinclude.ProcessConditional(sets.WS_MND_Conditional,nil);
-			elseif sWS == 'WS_INT' then
-				gcinclude.ProcessConditional(sets.WS_INT_Conditional,nil);				
-			elseif sWS == 'WS_INTMND' then
-				gcinclude.ProcessConditional(sets.WS_INTMND_Conditional,nil);
-			elseif sWS == 'WS_STRMND' then
-				gcinclude.ProcessConditional(sets.WS_STRMND_Conditional,nil);
-			elseif sWS == 'WS_STRMND_30_50' then
-				gcinclude.ProcessConditional(sets.WS_STRMND_30_50_Conditional,nil);
-			elseif sWS == 'WS_STRINT' then
-				gcinclude.ProcessConditional(sets.WS_STRINT_Conditional,nil);
-			end
+		if sWS == 'WS_CHR' then
+			gcinclude.ProcessConditional(sets.WS_CHR_Conditional,nil);
+		elseif sWS == 'WS_DEX' then
+			gcinclude.ProcessConditional(sets.WS_DEX_Conditional,nil);
+		elseif sWS == 'WS_DEXINT' then
+			gcinclude.ProcessConditional(sets.WS_DEXINT_Conditional,nil);
+		elseif sWS == 'WS_STR' then
+			gcinclude.ProcessConditional(sets.WS_STR_Conditional,nil);
+		elseif sWS == 'WS_MND' then
+			gcinclude.ProcessConditional(sets.WS_MND_Conditional,nil);
+		elseif sWS == 'WS_INT' then
+			gcinclude.ProcessConditional(sets.WS_INT_Conditional,nil);				
+		elseif sWS == 'WS_INTMND' then
+			gcinclude.ProcessConditional(sets.WS_INTMND_Conditional,nil);
+		elseif sWS == 'WS_STRMND' then
+			gcinclude.ProcessConditional(sets.WS_STRMND_Conditional,nil);
+		elseif sWS == 'WS_STRMND_30_50' then
+			gcinclude.ProcessConditional(sets.WS_STRMND_30_50_Conditional,nil);
+		elseif sWS == 'WS_STRINT' then
+			gcinclude.ProcessConditional(sets.WS_STRINT_Conditional,nil);
+		end
 			
-			-- See if an elemental gorget makes sense to equip
-			if gcinclude.settings.bEleGorgets == true then
-				local sGorget = gcinclude.CheckEleGorget(ws.Name);
-				if sGorget ~= nil then
-					gFunc.ForceEquip('Neck',sGorget);
-				end
+		-- See if an elemental gorget makes sense to equip
+		if gcinclude.settings.bEleGorgets == true then
+			local sGorget = gcinclude.CheckEleGorget(ws.Name);
+			if sGorget ~= nil then
+				gFunc.ForceEquip('Neck',sGorget);
 			end
 		end
 	end

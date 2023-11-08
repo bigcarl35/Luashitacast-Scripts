@@ -839,8 +839,7 @@ end
 
 local function SetSubjobSet(chkSJ)
 	local sj;
-
-	if (profile.sjb == nil or chkSJ ~= profile.sjb) then	-- Compare the stored subjob with the current subjob
+	if (profile.sjb == nil or (chkSJ ~= 'NON' and chkSJ ~= profile.sjb)) then	-- Compare the stored subjob with the current subjob
 		if (chkSJ == 'THF') then 
 			sj = '2';										-- /THF
 		elseif (chkSJ =='BLM') then
@@ -1000,6 +999,7 @@ profile.findJugPets = function()
 	-- Now walk the equipable (in the field) storage areas
 	for k,v in pairs(gcinclude.EQUIPABLE) do
 		containerID = v[1];
+
 		-- then loop through the selected container looking for a jug pet's broth
 		for j = 1,inventory:GetContainerCountMax(containerID),1 do
 			local itemEntry = inventory:GetContainerItem(containerID, j);
@@ -1232,7 +1232,7 @@ profile.HandleAbility = function()
 			if gcdisplay.GetToggle('AJug') == true then
 				-- Ok, now see if a jug pet already equipped
 				local bJugFound = profile.bAmmoIsJug(profile.sAmmo);
-				if bJugFound ~= nil and bJugFound == false then
+				if bJugFound == nil or (bJugFound ~= nil and bJugFound == false) then
 					profile.bAmmo = profile.findMaxEquipableJugPet();
 				end
 			end
