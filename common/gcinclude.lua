@@ -1143,7 +1143,7 @@ function gcinclude.ProcessConditional(tTest,sType)
 					
 					if ((tMatched[6] == 'Windy') and (zone.Area ~= nil) and (gcinclude.Windy:contains(zone.Area)) and pNation == 2) or
 						((tMatched[6] == 'Sandy') and (zone.Area ~= nil) and (gcinclude.Sandy:contains(zone.Area)) and pNation == 0) or
-						((tMatched[6] == 'Bastok') and (zone.Area ~= nil) and (gcinclude.Bastok:contains(zone.Area)) and pNattion == 1)
+						((tMatched[6] == 'Bastok') and (zone.Area ~= nil) and (gcinclude.Bastok:contains(zone.Area)) and pNation == 1)
 					then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end
