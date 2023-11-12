@@ -56,7 +56,7 @@ local sets = {
 	-- This is equipped when the pet is idle
 	['Pet_Idle'] = {
         Ammo = 'Fortune Egg',
-        Head = 'Shep. Bonnet',
+		Head = 'Austere Hat',
         Neck = 'Smn. Torque',
         Ear1 = 'Black Earring',
         Ear2 = 'Bat Earring',
@@ -798,19 +798,23 @@ end
 --]]
 
 local function SetSubjobSet(chkSJ)
-	local sj;
+	local subs = {['WAR'] = 0, ['MNK'] = 0, ['WHM'] = 1, ['BLM'] = 3, ['RDM'] = 2, ['THF'] = 0,
+				 ['PLD'] = 0, ['DRK'] = 0, ['BST'] = nil, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = 0,
+				 ['SAM'] = 0, ['NIN'] = 0, ['DRG'] = 0, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
+				 ['DNC'] = 0, ['SCH'] = 0, ['GEO'] = 0, ['RUN'] = 0};
+	local sj = nil;
 
-	if (profile.sjb == nil or (chkSJ ~= 'NON' and chkSJ ~= profile.sjb)) then	-- Compare the stored subjob with the current subjob
-		if (chkSJ == 'RDM') then 
-			sj = '2';										-- /RDM
-		elseif (chkSJ =='BLM') then
-			sj = '3';										-- /BLM
+	if (profile.sjb == nil or (chkSJ ~= nil and chkSJ ~= 'NON' and chkSJ ~= profile.sjb)) then	-- Compare the stored subjob with the current subjob
+		if subs[chkSJ] ~= nil and subs[chkSJ] > 0 then
+			sj = subs[chkSJ];
 		else
-			sj = '1';										-- /WHM
+			sj = 1;					-- Default set
 		end
 
-		AshitaCore:GetChatManager():QueueCommand(1, '/macro set '..sj);
-		profile.sjb = chkSJ;
+		AshitaCore:GetChatManager():QueueCommand(1, '/macro set '..tostring(sj));
+		if chkSJ ~= nil and chkSJ ~= 'NON' then
+			profile.sjb = chkSJ;
+		end
 	end
 end
 

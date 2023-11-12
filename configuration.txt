@@ -33,9 +33,9 @@ job (BST) file							gcinclude.lua
 Idle									Doomed
 Idle_Regen								Holy_Water
 Idle_Refresh							Sleeping
-Resting									Blind
+Resting								Blind
 Resting_Refresh							Weakened
-Starting_Weapons						Crafting
+Starting_Weapons							Crafting
 Town									Gathering
 DT_Physical								FishingGear
 DT_Magical
@@ -103,8 +103,8 @@ defined gear set. The name of the gear piece has to be what it is called in the 
 inventory/wardrobe slot. This includes abbreviations. This is doable, but it's a bit of a pain
 too. That's why I favor equipping the gear (in game) and then using the luashitacast command to
 save that set into my job definitions file. (Please note that you probably need to disable
-gear swapping before you can change gear manually. To do that you just type /gswap. That command
-toggles on and off gear swapping.)
+gear swapping before you can change gear manually. To do that you just type /gswap which toggles
+on and off gear swapping.)
 
 	/lac addset "gear set name"			eg.: /lac addset Charm
 	
@@ -114,8 +114,9 @@ advantage of using this command is there's nothing stopping you from making spec
 have meaning to you. (This is what I did when I made the CAPxx sets.) If you want to use a gear set
 that the program will not automatically know how to use, you use the /gearset command (eg. /gearset 
 CAP40). This will equip the gear set you specified and turn off automatic gear swapping until you 
-turn it back on. Real handy when going into level capped zones or some other special condition you 
-want to support.
+turn it back on (or append the ON parameter and gearswapping will be left on. This funtionality only
+makes sense though if you're swapping weapons, an exception rather than the norm.) This is real handy 
+when going into level capped zones or some other special condition you want to support.
 
 You might have noticed that I didn't mention being able to save gear sets into the gcinclude.lua 
 file with the /lac command. Unfortunately you can't do it. What I tend to do is create the set in
@@ -231,13 +232,15 @@ are their any you prefer to equip. This data is used when you invoke "call beast
 a jug pet broth equipped in your ammo slot. Ideally only one jug pet is favored in a specific level 
 range, but if you specify multiple, it means that any one of those are fine and the first one the 
 program finds will be used. To specify you favor a jug pet, change the last "false" on the line to 
-"true".
+"true". If you don't want this "automated" jug selection, you can turn the feature off by typing
+/AJug.
 
 In the gcinclude.lua file, there's more customization needed. Past the gear sets the first thing you
 run into are the gcinclude.settings. Most of them are automatically set by the program or by you through the
 appropriate command, but RegenGearHPP and RefreshGearMPP can only be modified by you. They represent
 the percentage value for HP and MP, respectively, when the appropriate gear will be equipped during
-Idle and Rest. The defaults are 60% HP and 70% MP.
+Idle and Rest. The defaults are 60% HP and 70% MP. Please note that the MP refresh setting may have no
+meaning if the main job/sub job does not employ magic.
 
 That's pretty much it. If you have any questions, feel free to contact me.
 

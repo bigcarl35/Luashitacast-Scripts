@@ -838,20 +838,23 @@ end
 --]]
 
 local function SetSubjobSet(chkSJ)
-	local sj;
-	if (profile.sjb == nil or (chkSJ ~= 'NON' and chkSJ ~= profile.sjb)) then	-- Compare the stored subjob with the current subjob
-		if (chkSJ == 'THF') then 
-			sj = '2';										-- /THF
-		elseif (chkSJ =='BLM') then
-			sj = '3';										-- /BLM
-		elseif (chkSJ =='NIN') then
-			sj = '4';										-- /NIN
+	local subs = {['WAR'] = 0, ['MNK'] = 0, ['WHM'] = 1, ['BLM'] = 3, ['RDM'] = 0, ['THF'] = 2,
+				 ['PLD'] = 0, ['DRK'] = 0, ['BST'] = nil, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = 0,
+				 ['SAM'] = 0, ['NIN'] = 4, ['DRG'] = 0, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
+				 ['DNC'] = 0, ['SCH'] = 0, ['GEO'] = 0, ['RUN'] = 0};
+	local sj = nil;
+
+	if (profile.sjb == nil or (chkSJ ~= nil and chkSJ ~= 'NON' and chkSJ ~= profile.sjb)) then	-- Compare the stored subjob with the current subjob
+		if subs[chkSJ] ~= nil and subs[chkSJ] > 0 then
+			sj = subs[chkSJ];
 		else
-			sj = '1';										-- Assume /WHM
+			sj = 1;					-- Default set
 		end
-	
-		AshitaCore:GetChatManager():QueueCommand(1, '/macro set '..sj);
-		profile.sjb = chkSJ;
+
+		AshitaCore:GetChatManager():QueueCommand(1, '/macro set '..tostring(sj));
+		if chkSJ ~= nil and chkSJ ~= 'NON' then
+			profile.sjb = chkSJ;
+		end
 	end
 end
 
@@ -1145,10 +1148,10 @@ profile.HandleDefault = function()
 			if (gcinclude.settings.bMagic and player.MPP < gcinclude.settings.RefreshGearMPP) then
 				gFunc.EquipSet(sets.Resting_Refresh);
 				gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional,nil);
-				-- Weapon swap to a higher MP refresh while healing weapon if appropriate.
-				if gcdisplay.GetToggle('WSwap') == true and gcinclude.settings.bEleStaves == true then
-					gcinclude.SwapToStave('dark',false);
-				end
+			end
+			-- Weapon swap to a higher MP refresh while healing weapon if appropriate.
+			if gcdisplay.GetToggle('WSwap') == true and gcinclude.settings.bEleStaves == true and player.MP < player.MaxMP then
+				gcinclude.SwapToStave('dark',false);
 			end
 		else									-- Assume idling. Priority (low to high): Idle,refresh
 			gFunc.EquipSet(sets.Idle);
