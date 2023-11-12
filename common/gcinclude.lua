@@ -108,6 +108,7 @@ gcinclude.settings = {
 	bSummoner = false;	 -- is the player a summoner. /smn doesn't count
 	bStave = false;		 -- indicates if the auto-detection of elemental staves has successfully occurred
 	bObiGorget = false;	 -- indicates if the auto-detection of elemental obis/gorgets has successfully occurred
+	bAketon = false;	 -- indicates if the auto-detection of aketons has successfully occurred
 };
 
 -- The following arrays are used by the functions contained in this file. Probably best to leave them alone
@@ -203,7 +204,7 @@ gcinclude.BRE = 'Breath';
 -- Define constants dealing with magic gear and jobs
 gcinclude.ELEMENT = 'ele';
 gcinclude.OBI = 'obi';
-gcinclude.aketon = {['Sandy'] = {'Kingdom Aketon',false}, ['Windy'] = {'Federation Aketon',true}, ['Bastok'] = {'Republic Aketon',false}};
+gcinclude.aketon = {['Sandy'] = {'Kingdom Aketon',false}, ['Windy'] = {'Federation Aketon',false}, ['Bastok'] = {'Republic Aketon',false}};
 gcinclude.sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,SCH,GEO,RUN';
 
 -- Below indicates all the staves you own. (The settings are programmatically determined.)
@@ -776,6 +777,52 @@ function gcinclude.ClearAlias()
 end
 
 --[[
+	CheckForAllNationalAketons determines if the player owns any of the national aketons
+--]]
+
+function gcinclude.CheckForAllNationalAketons()
+	local inventory = AshitaCore:GetMemoryManager():GetInventory();
+	local resources = AshitaCore:GetResourceManager();
+	local tStorage = gcinclude.EQUIPABLE;
+	local iTmp = 0;
+	
+	-- First, set all the entries to false, do not assume that what's there is correct
+	for k,_ in pairs(gcinclude.aketon) do
+		gcinclude.aketon[k][2] = false;
+	end
+	
+	iCnt = 0;
+	for _ in pairs(tStorage) do iCnt = iCnt + 1 end
+	
+	-- now, loop through the passed storage containers
+	for i = 1,iCnt,1 do
+		containerID = tStorage[i][1];
+
+		-- then loop through the container
+		for j = 1,inventory:GetContainerCountMax(containerID),1 do
+			local itemEntry = inventory:GetContainerItem(containerID, j);
+			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
+                local item = resources:GetItemById(itemEntry.Id);
+				local sIN = string.lower(item.Name[1])
+				iTmp = iTmp + 1;
+				b,c = string.find(sIN,'aketon');
+				if b ~= nil then
+					for k,_ in pairs(gcinclude.aketon) do
+						if sIN == string.lower(gcinclude.aketon[k][1]) then
+							gcinclude.aketon[k][2] = true;
+							break;
+						end
+					end
+				end
+			end
+		end
+	end
+
+	-- Below indicates that the inventories really were check and it's not a loading issue
+	gcinclude.settings.bAketon = (iTmp > 10);
+end
+
+--[[
 	CheckForStaves determines if the player has any elemental staves and updates the master listing
 	accordingly.
 --]]
@@ -797,7 +844,6 @@ function gcinclude.CheckForStaves()
 
 	-- now, loop through the passed storage containers
 	for i = 1,iCnt,1 do
-		bFound = false;
 		containerID = tStorage[i][1];
 
 		-- then loop through the container
@@ -848,7 +894,6 @@ function gcinclude.CheckForObisGorgets()
 	
 	-- now, loop through the passed storage containers
 	for i = 1,iCnt,1 do
-		bFound = false;
 		containerID = tStorage[i][1];
 
 		-- then loop through the container
@@ -1042,7 +1087,6 @@ function gcinclude.ProcessConditional(tTest,sType)
 	local zone = gData.GetEnvironment();
 	local sKey;
 				  
-
 	-- clear out the holding table so no interference from a previous call
 	gcinclude.tGS = {nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil};
 	gcinclude.tGSL = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -1087,9 +1131,19 @@ function gcinclude.ProcessConditional(tTest,sType)
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end					
 				elseif tMatched[4] == 'AKETON' then
-					if ((tMatched[6] == 'Windy') and (zone.Area ~= nil) and (gcinclude.Windy:contains(zone.Area))) or
-						((tMatched[6] == 'Sandy') and (zone.Area ~= nil) and (gcinclude.Sandy:contains(zone.Area)))	or
-						((tMatched[6] == 'Bastok') and (zone.Area ~= nil) and (gcinclude.Bastok:contains(zone.Area)))
+					if gcinclude.settings.bAketon == false then		-- Make sure all nation aketon's are tracked.
+						gcinclude.CheckForAllNationalAketons();
+					end
+					
+					-- Checks for the nation of the aketon, whether the zone is in that nation, and if the player is 
+					-- from that nation (Sandy = 0, Bastok = 1, and Windy = 2). (player was not used to check nationality
+					-- since luashitacast does not carry the home nation setting that is found in AshitaCore. Alse, I found 
+					-- the nationality translations in campaign_nation.sql file that's part of AirSkyBoat Github source.)
+					local pNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation();
+					
+					if ((tMatched[6] == 'Windy') and (zone.Area ~= nil) and (gcinclude.Windy:contains(zone.Area)) and pNation == 2) or
+						((tMatched[6] == 'Sandy') and (zone.Area ~= nil) and (gcinclude.Sandy:contains(zone.Area)) and pNation == 0) or
+						((tMatched[6] == 'Bastok') and (zone.Area ~= nil) and (gcinclude.Bastok:contains(zone.Area)) and pNattion == 1)
 					then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end
