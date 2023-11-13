@@ -14,8 +14,18 @@ local MainLV = 0;
 local SubLV = 0;
 local Main = 'FOO';
 local Sub = 'BAR';
-local JobSpecific = {			-- Need to update to support job specific toggles/cycles
-	['BST'] = 'ajug',
+local JobBar = {				-- Identifies what field to display for what jobs
+	['GSwap'] = 'BST,SMN',
+	['DT'] = 'BST,SMN',
+	['Kite'] = 'BST,SMN',
+	['Acc'] = 'BST,SMN',
+	['Eva'] = 'BST,SMN',
+	['WSwap'] = 'BST',			-- SMN overrides field, no need to display
+	['TH'] = 'BST,SMN',
+	['AJug'] = 'BST',			-- BST only field
+	['DT_Type'] = 'BST,SMN',
+	['Region'] = 'BST,SMN',
+	['xSE'] = 'DRK',			-- DRK only (either main or subjob)
 };
 
 local fontSettings = T{
@@ -172,19 +182,17 @@ end
 
 --[[
 	bDisplayIt is a function that determines if the passed string should be displayed in the luashita
-	display bar. (Some settings are job specific and should only be displayed if the main job is
-	associated with the current main job.)
+	display bar. It does this by seeing if the player's main job is in the list of jobs that are
+	associated with the passed field.
 --]]
 
 function gcdisplay.bDisplayIt(s)
-	local ss = string.lower(s);
-	
-	for k,v in pairs(JobSpecific) do
-		if string.find(string.lower(v),ss) ~= nil and k ~= Main then
-			return false;
-		end
+
+	if JobBar[s] == nil then	-- Missing from table, assume it should be displayed
+		return true;
+	else
+		return (string.find(JobBar[s],Main) ~= nil);
 	end
-	return true;
 end
 
 --[[

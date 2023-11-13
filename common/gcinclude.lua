@@ -943,6 +943,7 @@ function gcinclude.SetVariables()
 	gcdisplay.CreateToggle('WSwap',false);
 	gcdisplay.CreateToggle('TH',false);
 	gcdisplay.CreateToggle('AJug',true);
+	gcdisplay.CreateToggle('xSE',true);
 	
 	gcdisplay.CreateCycle('DT_Type', {[1] = gcinclude.PHY, [2] = gcinclude.MAG, [3] = gcinclude.BRE});
 	gcdisplay.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned'});
