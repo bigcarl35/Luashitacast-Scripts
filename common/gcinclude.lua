@@ -115,7 +115,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','dt_type','kite','acc','eva','craftset','gatherset','fishset','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','dt_type','kite','acc','eva','craftset','gatherset','fishset','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','xse'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T {'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T {'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -1141,9 +1141,9 @@ function gcinclude.ProcessConditional(tTest,sType)
 					-- the nationality translations in campaign_nation.sql file that's part of AirSkyBoat Github source.)
 					local pNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation();
 					
-					if ((tMatched[6] == 'Windy') and (zone.Area ~= nil) and (gcinclude.Windy:contains(zone.Area)) and pNation == 2) or
-						((tMatched[6] == 'Sandy') and (zone.Area ~= nil) and (gcinclude.Sandy:contains(zone.Area)) and pNation == 0) or
-						((tMatched[6] == 'Bastok') and (zone.Area ~= nil) and (gcinclude.Bastok:contains(zone.Area)) and pNation == 1)
+					if ((tMatched[6] == 'Windy') and (zone.Area ~= nil) and (gcinclude.Windy:contains(zone.Area)) and pNation == 2 and gcinclude.aketon['Windy'][2] == true) or
+						((tMatched[6] == 'Sandy') and (zone.Area ~= nil) and (gcinclude.Sandy:contains(zone.Area)) and pNation == 0 and gcinclude.aketon['Sandy'][2] == true) or
+						((tMatched[6] == 'Bastok') and (zone.Area ~= nil) and (gcinclude.Bastok:contains(zone.Area)) and pNation == 1 and gcinclude.aketon['Bastok'][2] == true)
 					then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end
