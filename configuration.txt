@@ -82,6 +82,8 @@ Charm
 Charm_Evasion
 PetReady
 PetAttack
+PetMagicAccuracy
+PetMagicAttack
 Movement
 CAP20
 CAP25

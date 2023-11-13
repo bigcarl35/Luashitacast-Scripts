@@ -17,11 +17,6 @@ local sets = {
 	be conditionally considered, you will have to add a comma after each entry.
 --]]
 
---[[
-	The "Idle" set is what your character will wear when it is not fighting nor resting nor in town. This includes
-	your pet. Whether just standing out of town or going to a different area, the "Idle" set will be equipped.
---]]
-
 	['Idle'] = {
         Head = 'Panther Mask',
         Neck = 'Ryl.Grd. Collar',
@@ -646,6 +641,16 @@ local sets = {
 	['PetAttack_Conditional'] = {
 	},
 
+	['PetMagicAccuracy'] = {
+	},
+	['PetMagicAccuracy_Conditional'] = {
+	},
+	
+	['PetMagicAttack'] = {
+	},
+	['PetMagicAttack_Conditional'] = {
+	},
+	
 --[[
 	Movement tends to be used for kiting. Emphasis should be placed on gear that increases movement speed, but you 
 	might also want gear that has evasion. The choice is yours.
@@ -918,7 +923,7 @@ local function ShowCommands(args)
 		print(chat.header('Help'):append(chat.message(' ')));
 		print(chat.header('Help'):append(chat.message('Command(s) specific for BST:')));
 		print(chat.header('Help'):append(chat.message('/petfood [name] --Equips the specified pet food or determines best food and equips it.')));
-		print(chat.header('Help'):append(chat.message('/ajug -- Tiggles whether the automated jug pet system is enabled. Default is TRUE'))); 
+		print(chat.header('Help'):append(chat.message('/ajug -- Toggles whether the automated jug pet system is enabled. Default is TRUE'))); 
 		print(chat.header('Help'):append(chat.message(' ')));
 		print(chat.header('Help'):append(chat.message('Some /lac commands of note:')));
 		print(chat.header('Help'):append(chat.message('/lac disable --Disables all gear slots so that no automatic gear changes can occur.')));

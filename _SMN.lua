@@ -43,8 +43,7 @@ local sets = {
 	--[[
 		The Idle_Regen and Idle_Refresh gear sets replace the normal Idle set when the player's HP or MP
 		go below a set percentage, accordingly. For HP it is 60% and for MP it is 70%. These percentages
-		are defined in gcinclude.lua. (Please note that the BST Gaudy Harness works independently from
-		these settings, it is a piece of conditional gear.)
+		are defined in gcinclude.lua. 
 	--]]
 	
 	['Idle_Regen'] = {
@@ -199,36 +198,14 @@ local sets = {
 	},
 	
 --[[
-		The TP sets are used predominantly when your avatar is fighting. (Yes, it affects the player too.) 
-		The accuracy set is for player accuracy and will be used if ACC is specified and the evasion set 
-		for the player's evasion if EVA is specified.
+		Unlike most other jobs, Summoner's emphasis is fighting with your avatar. So, the TP sets and
+		the associated subsets (for accuracy, magical accuracy, and evasion) are directed at the avatar, 
+		not the player. If you truly wish to fight too and need special gearsets, make a special set 
+		with the appropriate gear for the player and use /gearset.
+
 --]]
 
 	['TP'] = {				-- perpetuation cost, mp refresh, and avatar attack/accuracy
-    },
-	['TP_Conditional'] = {
-	},
-	
-	['TP_Accuracy'] = {
-        Head = 'Optical Hat',
-        Ring1 = 'Toreador\'s Ring',
-        Ring2 = 'Jaeger Ring',
-        Waist = 'Life Belt',
-    },
-	['TP_Accuracy_Conditional'] = {
-	},
-	
-	['TP_Evasion'] = {
-        Head = 'Optical Hat',
-        Neck = 'Spirit Torque',
-        Legs = 'Evoker\'s Spats',
-    },
-	['TP_Evasion_Conditional'] = {
-	},
-	
-	-- Use when pet is fighting but not the player
-	
-	['Pet_TP'] = {
         Head = 'Shep. Bonnet',
         Neck = 'Smn. Torque',
 		Ear2 = 'Beastly Earring',
@@ -236,16 +213,21 @@ local sets = {
         Hands = 'Carbuncle Mitts',
         Ring1 = 'Evoker\'s Ring',
         Legs = 'Evoker\'s Spats',
-    },
-	['Pet_TP_Conditional'] = {
-	},	
+	},
+	['TP_Conditional'] = {
+	},
 	
-	['Pet_TP_Accuracy'] = {
+	['TP_Accuracy'] = {
         Head = 'Shep. Bonnet',
         Ear2 = 'Beastly Earring',
         Ring2 = 'Tamas Ring',
     },
-	['Pet_TP_Accuracy_Conditional'] = {
+	['TP_Accuracy_Conditional'] = {
+	},
+	
+	['TP_Evasion'] = {
+    },
+	['TP_Evasion_Conditional'] = {
 	},
 	
 --[[
@@ -384,7 +366,8 @@ local sets = {
 	},
 	
 --[[
-	Magic accuracy gear
+	Magic accuracy gear, for your avatar although you can include player magical accuracy gear too if
+	you want. Just make sure to emphasize pet magical accuracy.
 --]]
 
 	['macc'] = {
@@ -765,6 +748,7 @@ local function HandlePetAction(PetAction)
 	
 	if (gcinclude.SmnSkill:contains(PetAction.Name)) then		
 		gFunc.EquipSet(sets.SmnSkill);
+		gcinclude.ProcessConditional(sets.SmnSkill_Conditional,nil);
 	elseif (gcinclude.SmnMagical:contains(PetAction.Name)) then	
 		gFunc.EquipSet(sets.SmnMagical);
 		gcinclude.ProcessConditional(sets.SmnMagical_Conditional,nil);
@@ -886,7 +870,7 @@ local function ShowCommands(args)
 		print(chat.header('Help'):append(chat.message('/lac load --Loads the Luashitacast BST definitions')));
 		print(chat.header('Help'):append(chat.message('/lac unload --Unloads the Luashitacast BST definitions')));
 		print(chat.header('Help'):append(chat.message('/lac reload --Unloads and reloads the Luashitacast BST definition')));
-		print(chat.header('Help'):append(chat.message('/lac addset \"name\" --Saves the current equipped gear into Luashitacast\'s BST definition file. Don\'t include the \"\'s.')));
+		print(chat.header('Help'):append(chat.message('/lac addset \"name\" --Saves the current equipped gear into Luashitacast\'s SMN definition file. Don\'t include the \"\'s.')));
 		print(chat.header('Help'):append(chat.message('/lac list --Lists all the defined gear sets from your BST definition.')));
 		print(chat.header('Help'):append(chat.message(' ')));
 		print(chat.header('Help'):append(chat.message('Please note that if you use style lock, you will not see the gear changing, but it is changing')))
@@ -949,8 +933,7 @@ profile.HandleCommand = function(args)
 end
 
 --[[
-	HandleDefault is run when some action happens. This includes both actions by the player and by
-	their pet.
+	HandleDefault is run when some action happens. This emphasizes pet actions
 --]]
 	
 profile.HandleDefault = function()
@@ -995,8 +978,9 @@ profile.HandleDefault = function()
 		end
 	end
 		
-	-- Now process the player status accordingly
-	if player.Status == 'Engaged' then		-- Player is fighting. Priority (low to high): TP,evasion,accuracy
+	-- Now process the player status accordingly. (Note that player.Status == 'Engaged' is no longer supported since
+	-- the emphasis is on how the pet fights, not the summoner.
+	if (pet ~= nil and pet.Status == 'Engaged') then
 		gFunc.EquipSet(sets.TP);
 		gcinclude.ProcessConditional(sets.TP_Conditional,nil);
 		if gcdisplay.GetToggle('Eva') == true then
@@ -1006,13 +990,6 @@ profile.HandleDefault = function()
 		if gcdisplay.GetToggle('Acc') == true then 
 			gFunc.EquipSet(sets.TP_Accuracy);
 			gcinclude.ProcessConditional(sets.TP_Accuracy_Conditional,nil);
-		end
-	elseif (pet ~= nil and pet.Status == 'Engaged') then
-		gFunc.EquipSet(sets.Pet_TP);
-		gcinclude.ProcessConditional(sets.Pet_TP_Conditional,nil);
-		if gcdisplay.GetToggle('Acc') == true then 
-			gFunc.EquipSet(sets.Pet_TP_Accuracy);
-			gcinclude.ProcessConditional(sets.Pet_TP_Accuracy_Conditional,nil);
 		end
 	elseif player.Status == 'Resting' then	-- Player kneeling. Priority (low to high): resting, refresh
 		if player.HPP < gcinclude.settings.RegenGearHPP then
@@ -1028,7 +1005,7 @@ profile.HandleDefault = function()
 		if player.MP < player.MaxMP and gcinclude.settings.bEleStaves == true then
 			gcinclude.SwapToStave('dark',false);
 		end
-	else									-- Assume idling. Priority (low to high): Idle,refresh
+	else									-- Assume idling. Priority (low to high): Idle,refresh. (Could be player fighting, but that's ignored.)
 		gFunc.EquipSet(sets.Idle);
 		gcinclude.ProcessConditional(sets.Idle_Conditional,nil);
 		if player.HPP < gcinclude.settings.RegenGearHPP then		-- if the player's HP is below the threshold setting, equip the idle regen gear
