@@ -2,7 +2,7 @@ local gcdisplay = {};
 --[[
 	This module predominantly is for routines dealing with the display bar, but is also sets
 	up toggles and cycles. (It's still predominanytly what GetAwayCoxn wrote, but I will try
-	to comment it, for clarity.
+	to comment it, for clarity.)
 --]]
 
 local fonts = require('fonts');
@@ -14,19 +14,17 @@ local MainLV = 0;
 local SubLV = 0;
 local Main = 'FOO';
 local Sub = 'BAR';
-local JobBar = {				-- Identifies what field to display for what jobs
-	['GSwap'] = 'BST,SMN',
-	['DT'] = 'BST,SMN',
-	['Kite'] = 'BST,SMN',
-	['Acc'] = 'BST,SMN',
-	['Eva'] = 'BST,SMN',
-	['WSwap'] = 'BST',			-- SMN overrides field, no need to display
-	['TH'] = 'BST,SMN',
-	['AJug'] = 'BST',			-- BST only field
-	['DT_Type'] = 'BST,SMN',
-	['Region'] = 'BST,SMN',
-	['xSE'] = 'DRK',			-- DRK only (either main or subjob)
-};
+local JobBar = T{['GSwap'] = {'ALL','MS'},
+				 ['DT'] = {'ALL','MS'},
+				 ['Kite'] = {'ALL','MS'},
+				 ['Acc'] = {'ALL','MS'},
+				 ['Eva'] = {'ALL','MS'},
+				 ['WSwap'] = {'-SMN,BLM','M'},		-- Some jobs swap weapons all the time
+				 ['TH'] = {'ALL','MS'},
+				 ['AJug'] = {'BST','M'},			-- BST field, only valid if BST is main job
+				 ['DT_Type'] = {'ALL','MS'},
+				 ['Region'] = {'ALL','MS'},
+				 ['xSE'] = {'DRK','MS'}};			-- DRK field
 
 local fontSettings = T{
 	visible = true,
@@ -182,17 +180,33 @@ end
 
 --[[
 	bDisplayIt is a function that determines if the passed string should be displayed in the luashita
-	display bar. It does this by seeing if the player's main job is in the list of jobs that are
-	associated with the passed field.
+	display bar. 
 --]]
 
 function gcdisplay.bDisplayIt(s)
 
-	if JobBar[s] == nil then	-- Missing from table, assume it should be displayed
+	if s == nil or JobBar[s][1] == nil or JobBar[s][1] == 'ALL' then	-- Missing from table or applies to all jobs, assume it should be displayed
 		return true;
 	else
-		return (string.find(JobBar[s],Main) ~= nil);
+		-- Something specific about the entry. Parse it out
+		if string.sub(JobBar[s][1],1,1) == '-' then			-- Indicates ALL but the jobs mentioned
+			if string.find(JobBar[s][2],'M') ~= nil and string.find(JobBar[s][1],Main) ~= nil then
+				return false;
+			end
+			if string.find(JobBar[s][2],'S') ~= nil and string.find(JobBar[s][1],Sub) ~= nil then
+				return false;
+			end	
+			return true;
+		else	-- Only valid for the explicit jobs mentioned
+			if string.find(JobBar[s][2],'M') ~= nil and string.find(JobBar[s][1],Main) ~= nil then
+				return true;
+			end
+			if string.find(JobBar[s][2],'S') ~= nil and string.find(JobBar[s][1],Sub) ~= nil then
+				return true;
+			end
+		end
 	end
+	return false;
 end
 
 --[[
@@ -205,6 +219,7 @@ function gcdisplay.Initialize()
 	ashita.events.register('d3d_present', 'gcdisplay_present_cb', function ()
 		local display = MainLV .. Main .. '/' .. SubLV .. Sub ..'   Attk:' .. Attk .. '   Def:' .. Def;
 		for k, v in pairs(Toggles) do
+		
 			if gcdisplay.bDisplayIt(k) == true then
 				display = display .. '   ';
 				if (v == true) then
