@@ -1,6 +1,14 @@
 local profile = {};
 gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 
+--[[
+	This file contains all the gear sets associated with the SMN job. While it isn't outside of the realm of 
+	possibility that the subjob might be able to use gear sets too, that is not the emphasis of this program. 
+	It is tailored to handle all the aspects of SMN. If you desire a gear set change to strengthen an ability 
+	from your subjob that is not supported by this program, you probably will have to make a custom gear set 
+	and use the /gearset command to use it.
+--]]
+
 local sets = {
 --[[
 	The Idle sets are for when you're not in town and not doing anything like fighting (or pet fighting), casting, 
@@ -734,13 +742,14 @@ profile.Sets = sets;
 profile.sjb = nil;
 profile.bAmmo = false;
 profile.sAmmo = nil;
+profile.sPetAction = nil;
 
 --[[
 	HandlePetAction equips the appropriate gear set based on the type of action
 	the pet is trying to perform.
 --]]
 
-local function HandlePetAction(PetAction)
+local function HandlePetAction(Pet,PetAction)
 
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true
 		return
@@ -771,6 +780,14 @@ local function HandlePetAction(PetAction)
 		if gcdisplay.GetToggle('Acc') == true then
 			gFunc.EquipSet(sets.SmnAccuracy);
 			gcinclude.ProcessConditional(sets.SmnAccuracy_Conditional,nil);
+		end
+	end
+	-- if the action just done is a BP: rage, print out what happened in party chat
+	if profile.sPetAction == nil or profile.sPetAction ~= PetAction.Name then
+		if string.find(gcinclude.SmnBPRageList,PetAction.Name) ~= nil then
+			local sMsg = '/p [' .. Pet.Name .. ']: Blood Pact - ' .. PetAction.Name .. ' on <t>.';
+			AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
+			profile.sPetAction = PetAction.Name;
 		end
 	end
 end
@@ -954,9 +971,11 @@ profile.HandleDefault = function()
 	
 	-- A pet action takes priority over a player's action.
 	if (petAction ~= nil) then
-		HandlePetAction(petAction);
+		HandlePetAction(pet,petAction);
 		return;
 	end
+	
+	profile.sPetAction = nil;
 	
 	local player = gData.GetPlayer();
 	local ew = gData.GetEquipment();

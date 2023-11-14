@@ -1,6 +1,15 @@
 local profile = {};
 gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 
+--[[
+	This file contains all the gear sets associated with the BST job. While it isn't outside of the realm of 
+	possibility that the subjob might be able to use gear sets too, that is not the emphasis of this program. 
+	It is tailored to handle all the aspects of BST. It also supports magic use which is obviously a possibility
+	from the subjob. If you desire a gear set change to strengthen an ability from your subjob that is not 
+	supported by this program, you probably will have to make a custom gear set and use the /gearset command to
+	use it.
+--]]
+
 local sets = {
 --[[
 	The Idle sets are for when you're not in town and not doing anything like fighting (or pet fighting), casting, 
