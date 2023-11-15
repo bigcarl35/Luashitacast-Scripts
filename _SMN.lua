@@ -41,7 +41,7 @@ local sets = {
         Ring1 = 'Evoker\'s Ring',
 		Ring2 = 'Tamas Ring',
         Back = 'Blue Cape',
-        Waist = 'Powerful Rope',
+		Waist = 'Hierarch Belt',
         Legs = 'Evoker\'s Spats',
         Feet = 'Mannequin Pumps',
     },
@@ -72,7 +72,7 @@ local sets = {
         Ring1 = 'Evoker\'s Ring',
 		Ring2 = 'Tamas Ring',
         Back = 'Blue Cape',
-        Waist = 'Powerful Rope',
+        Waist = 'Hierarch Belt',
         Legs = 'Evoker\'s Spats',
         Feet = 'Mannequin Pumps',
     },
@@ -93,7 +93,7 @@ local sets = {
         Ring1 = 'Evoker\'s Ring',
 		Ring2 = 'Tamas Ring',
         Back = 'Blue Cape',
-        Waist = 'Powerful Rope',
+        Waist = 'Hierarch Belt',
         Legs = 'Evoker\'s Spats',
         Feet = 'Mannequin Pumps',
     },
@@ -101,6 +101,7 @@ local sets = {
 	},
 	
 	['Resting_Refresh'] = {
+		Waist = 'Hierarch Belt',
 	},
 	['Resting_Refresh_Conditional'] = {
 	},
@@ -213,15 +214,20 @@ local sets = {
 
 --]]
 
-	['TP'] = {				-- perpetuation cost, mp refresh, and avatar attack/accuracy
+	['TP'] = {
         Head = 'Shep. Bonnet',
         Neck = 'Smn. Torque',
-		Ear2 = 'Beastly Earring',
+        Ear1 = 'Black Earring',
+        Ear2 = 'Beastly Earring',
         Body = 'Austere Robe',
         Hands = 'Carbuncle Mitts',
         Ring1 = 'Evoker\'s Ring',
+        Ring2 = 'Tamas Ring',
+        Back = 'Blue Cape',
+        Waist = 'Hierarch Belt',
         Legs = 'Evoker\'s Spats',
-	},
+        Feet = 'Mannequin Pumps',
+    },
 	['TP_Conditional'] = {
 	},
 	
@@ -744,6 +750,8 @@ profile.bAmmo = false;
 profile.sAmmo = nil;
 profile.sPetAction = nil;
 
+
+
 --[[
 	HandlePetAction equips the appropriate gear set based on the type of action
 	the pet is trying to perform.
@@ -783,9 +791,9 @@ local function HandlePetAction(Pet,PetAction)
 		end
 	end
 	-- if the action just done is a BP: rage, print out what happened in party chat
-	if profile.sPetAction == nil or profile.sPetAction ~= PetAction.Name then
+	if (profile.sPetAction == nil or profile.sPetAction ~= PetAction.Name) and gcdisplay.GetToggle('sBP') == true then
 		if string.find(gcinclude.SmnBPRageList,PetAction.Name) ~= nil then
-			local sMsg = '/p [' .. Pet.Name .. ']: Blood Pact - ' .. PetAction.Name .. ' on <t>.';
+			local sMsg = '/p [' .. Pet.Name .. ']: Blood Pact - ' .. PetAction.Name .. ' --> <t>.';
 			AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
 			profile.sPetAction = PetAction.Name;
 		end
@@ -878,7 +886,8 @@ local function ShowCommands(args)
 		print(chat.header('Help'):append(chat.message('/region --Toggles whether the area you\'re adventuring in is controlled by your nation or not.')));
 		print(chat.header('Help'):append(chat.message('/maxspell name -- Determines the highest level spell your current jobs can cast that has the passed name')));
 		print(chat.header('Help'):append(chat.message('/maxsong name [back] -- Determines the highest level song your current jobs can cast that has the passed name or next to highest')));
-		print(chat.header('Help'):append(chat.message('/TH --Toggles on whether treasure hunter gear should be equipped. Default is FALSE.')));
+		print(chat.header('Help'):append(chat.message('/sbp -- Toggles whether offensive blood pacts will show a message in party chat. Default is True.')));
+		print(chat.header('Help'):append(chat.message('/th --Toggles on whether treasure hunter gear should be equipped. Default is FALSE.')));
 		print(chat.header('Help'):append(chat.message('/help [command] --Display this listing or specific details on the specified command.')));
 		print(chat.header('Help'):append(chat.message(' ')));
 		print(chat.header('Help'):append(chat.message('Some /lac commands of note:')));
@@ -925,7 +934,9 @@ local function ShowCommands(args)
 		elseif cmd == 'maxsong' then
 			print(chat.header('Help'):append(chat.message('maxsong name [back] --This determines the highest level song that matches the name you indicated to cast or one of the max if asked for.')));			
 		elseif cmd == 'th' then
-			print(chat.header('Help'):append(chat.message('/TH --Toggles whether TH gear should be equipped or not. Default is FALSE.')));
+			print(chat.header('Help'):append(chat.message('/th --Toggles whether TH gear should be equipped or not. Default is FALSE.')));
+		elseif cmd == 'sbp' then
+			print(chat.header('Help'):append(chat.message('/sbp --Toggles whether a party chat message should be displayed when an offensive blood pact is executed. Default is TRUE')));
 		elseif cmd == 'help' then
 			print(chat.header('Help'):append(chat.message('/help [[all]|command] --This command displays help for all Luashitacast commands or the specified command.')));
 		elseif cmd == 'lac' then
@@ -956,14 +967,6 @@ end
 profile.HandleDefault = function()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();
-	
-	-- Make sure that the staves/obis/gorgets settings are know
-	if gcinclude.settings.bStave == false then
-		gcinclude.CheckForStaves();
-	end
-	if gcinclude.settings.bObiGorget == false then
-		gcinclude.CheckForObisGorgets();
-	end
 	
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true
 		return;
@@ -1021,7 +1024,7 @@ profile.HandleDefault = function()
 		end
 		
 		-- Weapon swap to a higher MP refresh while healing weapon if appropriate.
-		if player.MP < player.MaxMP and gcinclude.settings.bEleStaves == true then
+		if player.MP < player.MaxMP then
 			gcinclude.SwapToStave('dark',false);
 		end
 	else									-- Assume idling. Priority (low to high): Idle,refresh. (Could be player fighting, but that's ignored.)
@@ -1122,6 +1125,9 @@ profile.HandlePrecast = function()
 		gcinclude.ProcessConditional(sets.Precast_Conditional,nil);
 		
 		-- See if an elemental obi should be equipped
+		if gcinclude.settings.bEleObis == false then
+			gcinclude.CheckForObisGorgets();
+		end	
 		if gcinclude.settings.bEleObis == true then
 			obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
 			if obi ~= nil then
@@ -1223,7 +1229,10 @@ profile.HandleMidcast = function()
 		Note: This seems like a repeat of the obi check in the precast, but in this case it's checking
 		for the spell damage type rather than the spell accuracy.
 --]]
-	
+
+	if gcinclude.settings.bEleObis == false then
+		gcinclude.CheckForObisGorgets();
+	end	
 	if gcinclude.settings.bEleObis == true then
 		obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.OBI);
 		if obi ~= nil then
@@ -1233,6 +1242,9 @@ profile.HandleMidcast = function()
 		
 	stat = nil;
 	-- Lastly, how about an elemental stave (use the MagicEleDmg in gcinclude) or summons
+	if gcinclude.settings.bStave == false then
+		gcinclude.CheckForStaves();
+	end
 	if gcinclude.settings.bEleStaves == true then
 		if mSet == 'Summoning' then
 			stat = gcinclude.CheckSummons(spell.Name);
@@ -1315,6 +1327,9 @@ profile.HandleWeaponskill = function()
 		end
 			
 		-- See if an elemental gorget makes sense to equip
+		if gcinclude.settings.bEleGorgets == false then
+			gcinclude.CheckForObisGorgets();
+		end
 		if gcinclude.settings.bEleGorgets == true then
 			local sGorget = gcinclude.CheckEleGorget(ws.Name);
 			if sGorget ~= nil then

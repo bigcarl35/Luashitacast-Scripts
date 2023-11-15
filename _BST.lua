@@ -1098,14 +1098,6 @@ end
 profile.HandleDefault = function()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();
-		
-	-- Make sure that the staves/obis/gorgets settings are known
-	if gcinclude.settings.bStave == false then
-		gcinclude.CheckForStaves();
-	end
-	if gcinclude.settings.bObiGorget == false then
-		gcinclude.CheckForObisGorgets();
-	end
 	
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 
@@ -1164,7 +1156,7 @@ profile.HandleDefault = function()
 				gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional,nil);
 			end
 			-- Weapon swap to a higher MP refresh while healing weapon if appropriate.
-			if gcdisplay.GetToggle('WSwap') == true and gcinclude.settings.bEleStaves == true and player.MP < player.MaxMP then
+			if gcdisplay.GetToggle('WSwap') == true and player.MP < player.MaxMP then
 				gcinclude.SwapToStave('dark',false);
 			end
 		else									-- Assume idling. Priority (low to high): Idle,refresh
@@ -1284,7 +1276,7 @@ profile.HandleAbility = function()
 			end
 			
 			-- If weapon swapping is allowed, equip a light/apollo staff (if you have one)
-			if gcdisplay.GetToggle('WSwap') == true and gcinclude.settings.bEleStaves == true then
+			if gcdisplay.GetToggle('WSwap') == true then
 				gcinclude.SwapToStave('light',false);
 			end
 		end
@@ -1324,6 +1316,9 @@ profile.HandlePrecast = function()
 		gcinclude.ProcessConditional(sets.Precast_Conditional,nil);
 		
 		-- See if an elemental obi should be equipped
+		if gcinclude.settings.bEleObis == false then
+			gcinclude.CheckForObisGorgets();
+		end	
 		if gcinclude.settings.bEleObis == true then
 			obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
 			if obi ~= nil then
@@ -1418,6 +1413,9 @@ profile.HandleMidcast = function()
 		Note: This seems like a repeat of the obi check in the precast, but in this case it's checking
 		for the spell damage type rather than the spell accuracy.
 --]]
+		if gcinclude.settings.bEleObis == false then
+			gcinclude.CheckForObisGorgets();
+		end	
 		if gcinclude.settings.bEleObis == true then
 			obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.OBI);
 			if obi ~= nil then
@@ -1427,6 +1425,9 @@ profile.HandleMidcast = function()
 		
 		stat = nil;
 		-- Lastly, how about an elemental stave (use the MagicEleDmg in gcinclude) or summons
+		if gcinclude.settings.bStave == false then
+			gcinclude.CheckForStaves();
+		end
 		if gcdisplay.GetToggle('WSwap') == true and gcinclude.settings.bEleStaves == true then
 			if mSet == 'Summoning' then
 				stat = gcinclude.CheckSummons(spell.Name);
