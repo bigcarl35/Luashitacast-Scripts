@@ -116,7 +116,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','dt_type','kite','acc','eva','craftset','gatherset','fishset','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','xse'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','dt_type','kite','acc','eva','craftset','gatherset','fishset','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','xse','sbp','showit'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T {'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T {'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -747,6 +747,38 @@ gcinclude.tGS = {Main=nil,Sub=nil,Range=nil,Ammo=nil,Head=nil,Neck=nil,Ear1=nil,
 				 Ring1=nil,Ring2=nil,Back=nil,Waist=nil,Legs=nil,Feet=nil};	-- Empty gearset for conditional gear
 gcinclude.tGSL = {Main=0,Sub=0,Range=0,Ammo=0,Head=0,Neck=0,Ear1=0,Ear2=0,Body=0,Hands=0,
 				  Ring1=0,Ring2=0,Back=0,Waist=0,Legs=0,Feet=0};			-- Empty gearset levels, for comparison
+
+--[[
+	DB_ShowIt will display debug details about the type passed.
+--]]
+
+function gcinclude.DB_ShowIt(sType)
+	print(chat.message(' '));
+	if sType == nil or string.lower(sType) == 'staff' then
+		print(chat.message('Staff'));
+		print(chat.message('-----'));
+		print(chat.message('bStave = ' .. tostring(gcinclude.settings.bStave)));
+		print(chat.message('bEleStaves = ' .. tostring(gcinclude.settings.bEleStaves)));
+		print(chat.message(' '));
+		for k,v in pairs(gcinclude.elemental_staves) do
+			print(chat.message('['..k..'] ' .. v[1] .. ' = ' .. tostring(v[2]) .. ', ' .. v[3] .. ' = ' .. tostring(v[4])));	
+		end
+	elseif string.lower(sType) == 'obi' then
+		print(chat.message('Obis and Gorgets'));
+		print(chat.message('----------------'));
+		print(chat.message('bObiGorget = ' .. tostring(gcinclude.settings.bObiGorget)));
+		print(chat.message('bEleObis = ' .. tostring(gcinclude.settings.bEleObis)));
+		print(chat.message('bEleGorgets = ' .. tostring(gcinclude.settings.bEleGorgets)));
+		print(chat.message(' '));
+		for k,v in pairs(gcinclude.elemental_obis) do
+			print(chat.message('['..k..'] ' .. v[1] .. ' = ' .. tostring(v[2]) ));	
+		end
+		print(chat.message(' '));
+		for k,v in pairs(gcinclude.elemental_gorgets) do
+			print(chat.message('['..k..'] ' .. v[1] .. ' = ' .. tostring(v[2]) ));	
+		end
+	end
+end
 	
 --[[
 	Message toggles on/off a feedback mechanism for all luashitacast commands
@@ -946,6 +978,7 @@ function gcinclude.SetVariables()
 	gcdisplay.CreateToggle('TH',false);
 	gcdisplay.CreateToggle('AJug',true);
 	gcdisplay.CreateToggle('xSE',true);
+	gcdisplay.CreateToggle('sBP',true);
 	
 	gcdisplay.CreateCycle('DT_Type', {[1] = gcinclude.PHY, [2] = gcinclude.MAG, [3] = gcinclude.BRE});
 	gcdisplay.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned'});
@@ -960,9 +993,6 @@ function gcinclude.SetVariables()
 			gcinclude.offhand = ew.Sub.Name;
 		end
 	end
-
-	gcinclude.CheckForStaves();
-	gcinclude.CheckForObisGorgets();
 end
 
 --[[
@@ -1517,6 +1547,10 @@ function gcinclude.HandleCommands(args)
 		gcdisplay.AdvanceToggle('WSwap');
 		toggle = 'Weapon Swap';
 		status = gcdisplay.GetToggle('WSwap');
+	elseif (args[1] == 'sbp') then			-- Turns on/off whether the blood pact message is shown
+		gcdisplay.AdvanceToggle('sBP');
+		toggle = 'Show Blood Pact';
+		status = gcdisplay.GetToggle('sBP');		
 	elseif (args[1] == 'th') then			-- Turns on/off whether TH gear should be equipped
 		gcdisplay.AdvanceToggle('TH');
 		toggle = 'Treasure Hunter';
@@ -1582,6 +1616,8 @@ function gcinclude.HandleCommands(args)
 		gcdisplay.SetToggle('GSwap',false);
 		toggle = 'Fishing Set';
 		status = gcdisplay.GetToggle('GSwap');
+	elseif (args[1] == 'showit') then			-- Shows debug info for specified type: staff
+		gcinclude.DB_ShowIt(args[2]);
 	elseif (args[1] == 'gearset') then			-- Forces a gear set to be loaded and turns GSWAP off
 		if #args > 1 then
 			gFunc.ForceEquipSet(args[2]);
