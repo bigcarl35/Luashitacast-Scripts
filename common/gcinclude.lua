@@ -1,5 +1,7 @@
 local gcinclude = T{};
 
+require 'common'
+
 --[[
 	This file contains routines that are used with Luashitacast across any supported job.
 	Job specific routines are found in the "Username"_job file (ex: Paiine_BST.lua)
@@ -69,6 +71,8 @@ gcinclude.sets = {
 	['Gathering'] = {				-- This is for if there's any generalized gathering gear
 	},
 	['Gathering_Conditional'] = {	-- Conditionally load gear based on type of gathering
+		{'BD-13','Tarutaru Top +1','Reduces clamming incidents for female tarutarus'},
+		{'LG-3','Taru. Shorts +1','Imnproves clamming results for female tarutarus'},
 	},
 
 --[[
@@ -109,14 +113,13 @@ gcinclude.settings = {
 	bStave = false;		 -- indicates if the auto-detection of elemental staves has successfully occurred
 	bObiGorget = false;	 -- indicates if the auto-detection of elemental obis/gorgets has successfully occurred
 	bAketon = false;	 -- indicates if the auto-detection of aketons has successfully occurred
-	bxSE = false;		 -- indicates if soul eater enabled for a weaponskill
 };
 
 -- The following arrays are used by the functions contained in this file. Probably best to leave them alone
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','dt_type','kite','acc','eva','craftset','gatherset','fishset','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','xse','sbp','showit'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','dt_type','kite','acc','eva','craftset','gatherset','fishset','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','doring','dowep'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T {'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T {'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -158,13 +161,12 @@ gcinclude.WS_DEXAGI = 'Shark Bite,Coronach';
 gcinclude.WS_DEXCHR = 'Dancing Edge';
 gcinclude.WS_DEXINT = 'Gust Slash,Cyclone';
 gcinclude.WS_INT = 'Gate of Tartarus';
-gcinclude.WS_INTAGI = 'Catastrophe';
 gcinclude.WS_INTMND = 'Spirit Taker';
 gcinclude.WS_MND = 'Energy Steal,Energy Drain';
 gcinclude.WS_STR = 'Raging Axe,Smash Axe,Gale Axe,Avalanche Axe,Spinning Axe,Rampage,Mistral Axe,Decimation,Spinning Attack,Flat Blade,Circle Blade,Vorpal Blade,Hard Slash,Crescent Moon,Mercy Stroke,Iron Tempest,Sturmwind,Keen Edge,Raging Rush,Metatron Torment,Leg Sweep,Skewer,Wheeling Thrust,Impulse Drive,Tachi: Enpi,Tachi: Hobaku,Tachi: Goten,Tachi: Kagero,Tachi: Jinpu,Tachi: Yukikaze,Tachi: Gekko,Tachi: Kasha,Tachi:Kaiten,Brainshaker,Skullbreaker,True Strike,Heavy Swing,Shell Crusher,Full Swing';
 gcinclude.WS_STRAGI = 'Sickle Moon,Vorpal Thrust,Flaming Arrow,Piercing Arrow,Dulling Arrow,Sidewinder,Blast Arrow,Arching Arrow,Empyreal Arrow,Namas Arrow';
 gcinclude.WS_STRDEX = 'Combo,Backhand Blow,Raging Fists,Fast Blade,Knights of Round,Double Thrust,Penta Thrust,Blade: Rin,Blade: Retsu,Blade: Jin,Blade: Ten,Blade: Ku';
-gcinclude.WS_STRINT = 'Dark Harvest,Shadow of Death,Nightmare Scythe,Spiral Hell,Burning Blade,Frostbite,Freezebite,Spinning Slash,Ground Strike,Thunder Thrust,Raiden Thrust,Blade: Teki,Blade: To,Blade: Chi,Blade: Ei,Rock Crusher,Earth Crusher';
+gcinclude.WS_STRINT = 'Dark Harvest,Shadow of Death,Nightmare Scythe,Spiral Hell,Burning Blade,Frostbite,Freezebite,Spinning Slash,Ground Strike,Thunder Thrust,Raiden Thrust,Blade: Teki,Blade: To,Blade: Chi,Blade: Ei,Rock Crusher,Earth Crusher,Catastrophe';
 gcinclude.WS_STRINT_30_20 = 'Red Lotus Blade';
 gcinclude.WS_STRMND = 'Guillotine,Cross Reaper,Shining Blade,Seraph Blade,Swift Blade,Savage Blade,Shockwave,Tachi: Koki,Shining Strike,Seraph Strike,Judgment,Hexastrike,Randgrith,Starburst,Sunburst,Retribution';
 gcinclude.WS_STRMND_30_50 = 'Black Halo';
@@ -562,6 +564,7 @@ gcinclude.MasterConditional = T {
 	['BD-10'] = {'Body',1,'ALL','CRAFT','WW'},
 	['BD-11'] = {'Body',1,'ALL','GATHER','HELM'},
 	['BD-12'] = {'Body',15,'ALL','GATHER','HELM'},
+	['BD-13'] = {'Body',1,'ALL','GATHER','CLAM'},
 	['BD-21'] = {'Body',1,'ALL','GATHER','DIG'},
 	['BD-22'] = {'Body',15,'ALL','GATHER','DIG'},
 	['BD-23'] = {'Body',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday'},
@@ -648,6 +651,7 @@ gcinclude.MasterConditional = T {
 	['WS-13'] = {'Waist',65,'ALL','DAY','Windsday'},
 	['LG-1'] = {'Legs',1,'ALL','GATHER','HELM'},
 	['LG-2'] = {'Legs',15,'ALL','GATHER','HELM'},
+	['LG-3'] = {'Legs',1,'ALL','GATHER','CLAM'},
 	['LG-11'] = {'Legs',1,'ALL','GATHER','DIG'},
 	['LG-12'] = {'Legs',15,'ALL','GATHER','DIG'},
 	['LG-13'] = {'Legs',1,'ALL','TIME','Nighttime'},
@@ -739,8 +743,34 @@ gcinclude.STORAGES = {
     [17]= {16, 'Wardrobe 8' }
 };
 
+-- List of rings that are commonly equipped for teleporting or exp boosts
+gcinclude.doRing = {
+	['emp'] = 'Empress Band',
+	['cha'] = 'Chariot Band',
+	['empo'] = 'Emperor Band',
+	['dem'] = 'Dem Ring',
+	['mea'] = 'Mea Ring',
+	['holla'] = 'Holla Ring',
+	['altep'] = 'Altepa Ring',
+	['yhoat'] = 'Yhoat Ring',
+	['vahzl'] = 'Vahzl Ring',
+	['home'] = 'Homing Ring',
+	['return'] = 'Return Ring',
+	['warp'] = 'Warp Ring',
+	['tav'] = 'Tavnazian Ring',
+	['dcl'] = 'Dcl.Grd. Ring',
+};
+
+-- List of weapons that are commonly equipped for attributes other than fighting
+gcinclude.doWeapon = {
+	['warp'] = 'Warp Cudgel',
+	['trick2'] = 'Trick Staff II',
+	['treat2'] = 'Treat Staff II',
+	['fork_1'] = 'Pitchfork +1',
+};
+
 -- This is the list of storage containers that can be equipped from outside of a moghouse
-gcinclude.EQUIPABLE = {gcinclude.STORAGES[1],gcinclude.STORAGES[9],gcinclude.STORAGES[11]};
+gcinclude.EQUIPABLE = {gcinclude.STORAGES[1],gcinclude.STORAGES[9],gcinclude.STORAGES[11],gcinclude.STORAGES[16]};
 
 -- Gear set for holding conditional gear that's equipable along with associated levels
 gcinclude.tGS = {Main=nil,Sub=nil,Range=nil,Ammo=nil,Head=nil,Neck=nil,Ear1=nil,Ear2=nil,Body=nil,Hands=nil,
@@ -777,8 +807,14 @@ function gcinclude.DB_ShowIt(sType)
 		for k,v in pairs(gcinclude.elemental_gorgets) do
 			print(chat.message('['..k..'] ' .. v[1] .. ' = ' .. tostring(v[2]) ));	
 		end
+	elseif string.lower(sType) == 'aketon' then
+		print(chat.message('Aketon'));
+		print(chat.message('------'));
+		for k,v in pairs(gcinclude.aketon) do
+			print(chat.message('[' .. k .. ']: ' .. v[1] .. ' = ' .. tostring(v[2])));
+		end
 	end
-end
+end		-- gcinclude.DB_ShowI
 	
 --[[
 	Message toggles on/off a feedback mechanism for all luashitacast commands
@@ -788,7 +824,7 @@ function gcinclude.Message(toggle, status)
 	if toggle ~= nil and status ~= nil then
 		print(chat.header('GCinclude'):append(chat.message(toggle .. ' is now ' .. tostring(status))))
 	end
-end
+end		-- gcinclude.Message
 
 --[[
 	SetAlias registers all of the luashitacast commands that are defined in this file
@@ -798,7 +834,7 @@ function gcinclude.SetAlias()
 	for _, v in ipairs(gcinclude.AliasList) do
 		AshitaCore:GetChatManager():QueueCommand(-1, '/alias /' .. v .. ' /lac fwd ' .. v);
 	end
-end
+end		-- gcinclude.SetAlias
 
 --[[
 	ClearAlias removes the luashitacast commands that were registered in this file
@@ -808,7 +844,7 @@ function gcinclude.ClearAlias()
 	for _, v in ipairs(gcinclude.AliasList) do
 		AshitaCore:GetChatManager():QueueCommand(-1, '/alias del /' .. v);
 	end
-end
+end		-- gcinclude.ClearAlias
 
 --[[
 	CheckForAllNationalAketons determines if the player owns any of the national aketons
@@ -854,7 +890,7 @@ function gcinclude.CheckForAllNationalAketons()
 
 	-- Below indicates that the inventories really were check and it's not a loading issue
 	gcinclude.settings.bAketon = (iTmp > 10);
-end
+end		-- gcinclude.CheckForAllNationalAketons
 
 --[[
 	CheckForStaves determines if the player has any elemental staves and updates the master listing
@@ -904,7 +940,7 @@ function gcinclude.CheckForStaves()
 	end
 	-- Below indicates that the inventories really were check and it's not a loading issue
 	gcinclude.settings.bStave = (iTmp > 10);
-end
+end		-- gcinclude.CheckForStaves
 
 --[[
 	CheckForObisGorgets determines if the player has any elemental obis/gorgets and updates the master listing
@@ -960,7 +996,7 @@ function gcinclude.CheckForObisGorgets()
 	end
 	
 	gcinclude.settings.bObiGorget = (iTmp > 10);
-end
+end		-- gcinclude.CheckForObisGorgets
 
 --[[
 	SetVariables defines run settings for luashitacast
@@ -976,9 +1012,13 @@ function gcinclude.SetVariables()
 	gcdisplay.CreateToggle('Eva', false);
 	gcdisplay.CreateToggle('WSwap',false);
 	gcdisplay.CreateToggle('TH',false);
-	gcdisplay.CreateToggle('AJug',true);
-	gcdisplay.CreateToggle('xSE',true);
-	gcdisplay.CreateToggle('sBP',true);
+	
+	if player.MainJob == 'BST' then
+		gcdisplay.CreateToggle('AJug',true);
+	end
+	if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
+		gcdisplay.CreateToggle('sBP',true);
+	end
 	
 	gcdisplay.CreateCycle('DT_Type', {[1] = gcinclude.PHY, [2] = gcinclude.MAG, [3] = gcinclude.BRE});
 	gcdisplay.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned'});
@@ -993,7 +1033,7 @@ function gcinclude.SetVariables()
 			gcinclude.offhand = ew.Sub.Name;
 		end
 	end
-end
+end		-- gcinclude.SetVariables
 
 --[[
 	BuildGear populates the holding gear set according to the passed table entries
@@ -1063,7 +1103,7 @@ function gcinclude.BuildGear(tMasCond,tEntry)
 		gcinclude.tGSL[pos] = tMasCond[2];
 		return true;
 	end
-end
+end		-- gcinclude.BuildGear
 
 --[[
 	CheckTime determines if the current server time is found in the passed name time range.
@@ -1101,7 +1141,7 @@ function gcinclude.CheckTime(hr,t,bReport)
 		bGood = false;
 	end
 	return bGood;
-end
+end		-- gcinclude.CheckTime
 	
 --[[
 	ProcessConditional determines if any of the specified consitional equipment should be loaded. 
@@ -1219,13 +1259,13 @@ function gcinclude.ProcessConditional(tTest,sType)
 	-- If any piece was populated into the build table, equip the gear
 	if iPiece > 0 then
 		for i=1,16 do
-			if gcinclude.tGSL[i] > 0 then
+			if gcinclude.tGSL[i] > 0 then	
 				--local slot = gData.Constants.EquipSlotNames[i];
-				gFunc.Equip(i,gcinclude.tGS[i]);
+				gFunc.ForceEquip(i,gcinclude.tGS[i]);
 			end
 		end
 	end
-end
+end		-- gcinclude.ProcessConditional
 
 --[[
 	MaxSong determines what is the highest tier song that matches the passed root or buff name
@@ -1324,7 +1364,7 @@ function gcinclude.MaxSong(root,bBack,bCast)
 			end
 		end
 	end	
-end
+end		-- gcinclude.MaxSong
 	
 --[[
 	MaxSpell determines what is the highest tier spell that matches the passed root that can
@@ -1417,7 +1457,7 @@ function gcinclude.MaxSpell(root,bCast)
 			end
 		end
 	end	
-end
+end		-- gcinclude.MaxSpell
 
 --[[
 	CheckMagic50 determines if the player's mainjob and subjob uses MP and whether the maximum 
@@ -1437,7 +1477,7 @@ function gcinclude.CheckMagic50(player)
 	-- This is a special case, need to check that player has potentially more than 50
 	gcinclude.settings.b50 = (gcinclude.settings.bMagic and player.MaxMP > 50);
 	return;
-end
+end		-- gcinclude.CheckMagic50
 
 --[[
 	SwapToStave determines if swapping your weapon out for one of the elemental staves makes
@@ -1479,8 +1519,8 @@ function gcinclude.SwapToStave(sStave,noSave)
 			gFunc.ForceEquip('Main', gcinclude.elemental_staves[sStave][pos]);
 			end
 		end
-	end
-
+	end		-- gcinclude.SwapToStave
+	
 --[[
 	HandleCommands processes any commands typed into luashitacast as defined in this file
 --]]
@@ -1544,13 +1584,21 @@ function gcinclude.HandleCommands(args)
 		toggle = 'Accuracy';
 		status = gcdisplay.GetToggle('Acc');
 	elseif (args[1] == 'wswap') then		-- Turns on/off whether weapon swapping is permitted
-		gcdisplay.AdvanceToggle('WSwap');
-		toggle = 'Weapon Swap';
-		status = gcdisplay.GetToggle('WSwap');
+		if player.MainJob ~= 'SMN' then
+			gcdisplay.AdvanceToggle('WSwap');
+			toggle = 'Weapon Swap';
+			status = gcdisplay.GetToggle('WSwap');
+		else
+			print(chat.header('HandleCommands'):append(chat.message('Error: Weapon swapping always enabled on summoners. Ignoring command')))
+		end		
 	elseif (args[1] == 'sbp') then			-- Turns on/off whether the blood pact message is shown
-		gcdisplay.AdvanceToggle('sBP');
-		toggle = 'Show Blood Pact';
-		status = gcdisplay.GetToggle('sBP');		
+		if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
+			gcdisplay.AdvanceToggle('sBP');
+			toggle = 'Show Blood Pact';
+			status = gcdisplay.GetToggle('sBP');
+		else
+			print(chat.header('HandleCommands'):append(chat.message('Error: /sBP is only available to summoners. Ignoring command')))
+		end
 	elseif (args[1] == 'th') then			-- Turns on/off whether TH gear should be equipped
 		gcdisplay.AdvanceToggle('TH');
 		toggle = 'Treasure Hunter';
@@ -1627,7 +1675,7 @@ function gcinclude.HandleCommands(args)
 			toggle = 'Gear Swap';
 			status = gcdisplay.GetToggle('GSwap');
 		else
-			print(chat.header('HandleCommands'):append(chat.message('No set specified for /gearset. Command ignored.')));
+			print(chat.header('HandleCommands'):append(chat.message('Error: No set specified for /gearset. Command ignored.')));
 		end	
 	elseif (args[1] == 'maxspell') then			-- Determines highest level spell to cast
 		if #args >= 2 then
@@ -1637,6 +1685,39 @@ function gcinclude.HandleCommands(args)
 	elseif (args[1] == 'maxsong') then			-- Determines highest level song to cast
 		gcinclude.MaxSong(args[2],(#args > 2),true);
 		toggle = 'MaxSong';
+	elseif args[1] == 'doring' then			-- Equip specified ring
+		if #args > 1 then
+			rName = gcinclude.doRing[args[2]];
+			if rName == nil then
+				rName = args[2];
+			end
+			if #args > 2 then					-- Slot specified
+				if args[3] == '1' or args[3] == '2' then
+					sRing = 'Ring' .. args[3];
+				else
+					sRing = 'Ring1';
+				end
+			else
+				sRing = 'Ring1';
+			end
+			gFunc.ForceEquip(sRing,rName);
+			gcdisplay.SetToggle('GSwap',false);
+		else
+			print(chat.header('HandleCommands'):append(chat.message('Error: No ring specified. Command ignored.')));
+			return;
+		end
+	elseif args[1] == 'dowep' then
+		if #args > 1 then
+			sName = gcinclude.doWeapon[args[2]];
+			if sName == nil then
+				sName = args[2];
+			end
+			gFunc.ForceEquip('Main',sName);
+			gcdisplay.SetToggle('GSwap',false);
+		else
+			print(chat.header('HandleCommands'):append(chat.message('Error: No staff specified. Command ignored.')));
+			return;
+		end
 	elseif (args[1] == 'region') then			-- Toggles the region setting
 		gcdisplay.AdvanceCycle('Region');
 		toggle = 'Region';
@@ -1646,7 +1727,7 @@ function gcinclude.HandleCommands(args)
 	if gcinclude.settings.Messages then
 		gcinclude.Message(toggle, status)
 	end
-end
+end		-- gcinclude.HandleCommands
 
 --[[
 	CheckCommonDebuffs determines if certain debuffs are on the player and loads an appropriate
@@ -1676,7 +1757,7 @@ function gcinclude.CheckCommonDebuffs()
 		gFunc.EquipSet(gcinclude.sets.Blind);
 		gcinclude.ProcessConditional(gcinclude.sets.Blind_Conditional,nil);
 	end
-end
+end		-- gcinclude.CheckCommonDebuffs
 
 --[[
 	CheckAbilityRecast determines if an ability can be cast. (It sees if the ability is
@@ -1700,7 +1781,7 @@ function gcinclude.CheckAbilityRecast(check)
 	end
 
 	return RecastTime;
-end
+end	-- gcinclude.CheckAbilityRecast
 
 --[[
 	SetTownGear will equip the appropriate gear if the player is in a town
@@ -1712,7 +1793,7 @@ function gcinclude.SetTownGear()
 		gFunc.EquipSet('Town');
 		gcinclude.ProcessConditional(gcinclude.sets.Town_Conditional,nil);
 	end
-end
+end		-- gcinclude.SetTownGear
 
 --[[
 	SetRegenRefreshGear equips gear based on whether refresh or regen is indicated
@@ -1731,7 +1812,7 @@ function gcinclude.SetRegenRefreshGear()
 			gFunc.ForceEquipSet('Idle_Refresh');
 		end
 	end
-end
+end		-- gcinclude.SetRegenRefreshGear
 
 --[[
 	WsStat determines which stats are emphasized when using the passed weaponskill name and
@@ -1755,8 +1836,6 @@ function gcinclude.WsStat(ws_name,ws_default)
 		ws_stat = 'WS_DEXINT';
 	elseif string.find(ws_name,gcinclude.WS_INT) ~= nil then
 		ws_stat = 'WS_INT';
-	elseif string.find(ws_name,gcinclude.WS_INTAGI) ~= nil then
-		ws_stat = 'WS_INTAGI';
 	elseif string.find(ws_name,gcinclude.WS_INTMND) ~= nil then
 		ws_stat = 'WS_INTMND';
 	elseif string.find(ws_name,gcinclude.WS_MND) ~= nil then
@@ -1783,7 +1862,7 @@ function gcinclude.WsStat(ws_name,ws_default)
 		ws_stat = 'WS_' .. ws_default;
 	end
 	return ws_stat;
-end
+end		-- gcinclude.WsStat
 
 --[[
 	These functions determines if the passed element is a good fit/bad fit for an elemental obi 
@@ -1801,7 +1880,7 @@ function gcinclude.EleWeak(ele)
 		end
 	end		
 	return sWeak;
-end;
+end		-- gcinclude.EleWeak
 
 --[[
 	CheckObiDW determines if the weather/day element makes equiping an elemental obi advantageous.
@@ -1855,7 +1934,7 @@ function gcinclude.CheckObiDW(ele)
 	PctWeather = PctWeather + PctIridesecene;
 	
 	return PctDay,PctWeather;
-end
+end		-- gcinclude.CheckObiDW
 
 --[[
 	CheckEleGorget determines if the passed weaponskill is elemental and whether the player
@@ -1885,7 +1964,7 @@ function gcinclude.CheckEleGorget(ws)
 		end
 	end	
 	return;	
-end
+end		-- gcinclude.CheckEleGorget
 
 --[[
 	GetRoot determines the "base" of a spell name. (The base is the first word in the spell name.)
@@ -1903,7 +1982,7 @@ function gcinclude.GetRoot(spellName)
 		root = spellName;
 	end
 	return root;
-end
+end		-- gcinclude.GetRoot
 
 --[[
 	CheckEleSpells determines if the passed in spell name is elemental in nature and returns
@@ -1937,7 +2016,7 @@ function gcinclude.CheckEleSpells(spellName,listName,sWhat)
 		end
 	end
 	return
-end
+end		-- gcinclude.CheckEleSpells
 
 --[[
 	CheckSummons is a simple routine that determines the element of the summoned avatar
@@ -1957,7 +2036,7 @@ function gcinclude.CheckSummons(spellName)
 		return gcinclude.SummonStaves[sn];
 	end
 	return nil;
-end
+end		-- gcinclude.CheckSummons
 
 --[[
 	WhichStat determines if the passed spell has a stat associated with it that overrides the default gear
@@ -1979,7 +2058,7 @@ function gcinclude.WhichStat(spellName)
 		end
 	end
 	return	
-end
+end		-- gcinclude.WhichStat
 
 --[[
 	WhichMagicSkill determines if the passed "spell" is associated with a specific magic skill set
@@ -2000,7 +2079,7 @@ function gcinclude.WhichMagicSkill(spellName)
 		end
 	end
 	return	
-end
+end		-- gcinclude.WhichMagicSkill
 
 --[[
 	CheckSpellBailout if the specified debuffs are in effect. If any are the player will be
@@ -2020,7 +2099,7 @@ function gcinclude.CheckSpellBailout()
 	else
 		return true;
 	end
-end
+end		-- gcinclude.CheckSpellBailout
 
 --[[
 	CheckWsBailout determines if there's a debuff that will inhibit automatic cancelling of a weapons
@@ -2047,40 +2126,7 @@ function gcinclude.CheckWsBailout()
 	end
 		
 	return true;
-end
-
---[[
-	DoShadows is used by the NIN job. It determines if a higher form of utsesumi is currently active
-	and cancels it so the passed utsesumi spell can be cast
---]]
-
-function gcinclude.DoShadows(spell) -- 1000% credit to zach2good for this function, copy and paste (mostly) from his ashita discord post
-	if spell.Name == 'Utsusemi: Ichi' then
-		local delay = 2.4
-		if gData.GetBuffCount(66) == 1 then
-			(function() AshitaCore:GetChatManager():QueueCommand(-1, '/cancel 66') end):once(delay)
-		elseif gData.GetBuffCount(444) == 1 then
-			(function() AshitaCore:GetChatManager():QueueCommand(-1, '/cancel 444') end):once(delay)
-		elseif gData.GetBuffCount(445) == 1 then
-			(function() AshitaCore:GetChatManager():QueueCommand(-1, '/cancel 445') end):once(delay)
-		elseif gData.GetBuffCount(446) == 1 then
-			(function() AshitaCore:GetChatManager():QueueCommand(-1, '/cancel 446') end):once(delay)
-		end
-	end
-
-	if spell.Name == 'Utsusemi: Ni' then
-		local delay = 0.5
-		if gData.GetBuffCount(66) == 1 then
-			(function() AshitaCore:GetChatManager():QueueCommand(-1, '/cancel 66') end):once(delay)
-		elseif gData.GetBuffCount(444) == 1 then
-			(function() AshitaCore:GetChatManager():QueueCommand(-1, '/cancel 444') end):once(delay)
-		elseif gData.GetBuffCount(445) == 1 then
-			(function() AshitaCore:GetChatManager():QueueCommand(-1, '/cancel 445') end):once(delay)
-		elseif gData.GetBuffCount(446) == 1 then
-			(function() AshitaCore:GetChatManager():QueueCommand(-1, '/cancel 446') end):once(delay)
-		end
-	end
-end
+end		-- gcinclude.CheckWsBailout
 
 --[[
 	CheckCancels determines if the spell that is being cast needs a previous version to be cancelled 
@@ -2117,7 +2163,7 @@ function gcinclude.CheckCancels()--tossed Stoneskin in here too
 		AshitaCore:GetChatManager():QueueCommand(1, '/cancel Stoneskin');
 		do_ss:once(1);
 	end
-end
+end		-- gcinclude.CheckCancels
 
 --[[
 	findString is multi-functional, searching the passed storage containers (whether accessible or not) for any or
@@ -2203,7 +2249,7 @@ function gcinclude.findString(tStorage,sString,bUpdate,sName)
 	end
 
 	return (iCount > 0);	
-end
+end		-- gcinclude.findString
 
 --[[
 	findMaxEquipablePetFood searches all accessible player storage containers (regardless of location)
@@ -2214,7 +2260,7 @@ function gcinclude.findMaxEquipablePetFood()
 	
 	-- see if any pet food is accessible (inventory, wardrobe, wardrobe 2)
 	return gcinclude.findString(gcinclude.EQUIPABLE,'pet f',true,nil);		
-end
+end		-- gcinclude.findMaxEquipablePetFood
 
 --[[
 	doPetFood does one of two things. It either equips the indicated food or it
@@ -2273,7 +2319,7 @@ function gcinclude.doPetFood(action, sType)
 		gFunc.ForceEquip('Ammo', sName);
 		print(chat.header('doPetFood'):append(chat.message('Equipping: ' .. sName)));
 	end				
-end
+end		-- gcinclude.doPetFood
 
 --[[
 	CheckDefaault is just a grouping routine to set common settings
@@ -2284,7 +2330,7 @@ function gcinclude.CheckDefault()
 	gcinclude.SetTownGear();
     gcinclude.CheckCommonDebuffs();
 	gcdisplay.Update();
-end
+end		-- gcinclude.CheckDefault
 
 --[[
 	Unload ensures that the aliases are removed and the display objects are removed

@@ -58,6 +58,7 @@ Body
 {'BD-10','Carpenter\'s Apron','+1 Woodworking skill'},
 {'BD-11','Field Tunica','Improves mining, logging and harvesting'},
 {'BD-12','Worker Tunica','Improves mining, logging and harvesting'},
+{'BD-13','Tarutaru Top +1','Reduces clamming incidents for female tarutarus'},
 {'BD-21','Chocobo Jack Coat','Chocobo riding time +5 minutes'},
 {'BD-22','Rider\'s Jack Coat','Chocobo riding time +5 minutes'},
 {'BD-23','Garish Tunic','+2 evasion on earthsday and windsday'},
@@ -159,6 +160,7 @@ Legs
 ----
 {'LG-1','Field Hose','Improves logging and harvesting'},
 {'LG-2','Worker Hose','Improves logging and harvesting'},
+{'LG-3','Taru. Shorts +1','Imnproves clamming results for female tarutarus'},
 {'LG-11','Chocobo Hose','Chocobo riding time +4 minutes'},
 {'LG-12','Rider\'s Hose','Chocobo riding time +4 minutes'},
 {'LG-13','Dinner Hose','+1 CHR at nighttime'},
