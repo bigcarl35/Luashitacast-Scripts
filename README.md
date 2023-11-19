@@ -41,8 +41,8 @@ name (e.g., Cure gets you Cure III if you're 75 and /whm.)
 common root name (see /maxsong) or the common buff name (e.g., paeon when
 performing one of the army paeon songs.)  
 **/doring "code|name" [1|2]**: Equips specified ring (coded or actual name) in the specified slot.
-Turns of /GSWAP.  
-**/dowep "code|name"**: Equips specified weapon (coded or actual name) and turns off /GSWAP.
+Turns off /GSWAP.  
+**/dowep "code|name"**: Equips specified weapon (coded or actual name) and turns off /GSWAP.  
 **/th**: Turns on/off equipping treasure hunter gear.  
 **/help [command]**: List description of "command" or lists all commands if no parameter specified.  
 
