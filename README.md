@@ -27,7 +27,6 @@ the default distance from 4.7 yalms to whatever you want.
 **/region**: Swaps between *owned/not* owned indicating if player's nation controls the
 area from the last conquest tally. Used with some conditional gear.  
 **/petfood [name]**: Equips either named petfood or determines best pet food and equips that.  
-**/ajug**: Turns on/off automated jug pet routine when Call Beast invoked and no jug in ammo slot.  
 **/gearset "name" [on]**: Equips the specified gear set and turns off automatic gears swapping if 
 optional parameter isn't included.  
 **/craftset [AL|BN|CL|CO|GS|LT|SM|WW]**: Equips the crafting gear set specified and turns off gear
@@ -41,6 +40,9 @@ name (e.g., Cure gets you Cure III if you're 75 and /whm.)
 **/maxsong "name"**: Determines the highest level song player can perform that has either the
 common root name (see /maxsong) or the common buff name (e.g., paeon when
 performing one of the army paeon songs.)  
+**/doring "code|name" [1|2]**: Equips specified ring (coded or actual name) in the specified slot.
+Turns of /GSWAP.
+**/dowep "code|name"**: Equips specified weapon (coded or actual name) and turns off /GSWAP.
 **/th**: Turns on/off equipping treasure hunter gear.  
 **/help [command]**: List description of "command" or lists all commands if no parameter specified.  
 
