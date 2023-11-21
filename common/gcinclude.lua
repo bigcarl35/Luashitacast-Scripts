@@ -119,7 +119,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','dt_type','kite','acc','eva','craftset','gatherset','fishset','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','doring','dowep'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','dt_type','kite','acc','eva','craftset','gatherset','fishset','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T {'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T {'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -743,30 +743,28 @@ gcinclude.STORAGES = {
     [17]= {16, 'Wardrobe 8' }
 };
 
--- List of rings that are commonly equipped for teleporting or exp boosts
-gcinclude.doRing = {
-	['emp'] = 'Empress Band',
-	['cha'] = 'Chariot Band',
-	['empo'] = 'Emperor Band',
-	['dem'] = 'Dem Ring',
-	['mea'] = 'Mea Ring',
-	['holla'] = 'Holla Ring',
-	['altep'] = 'Altepa Ring',
-	['yhoat'] = 'Yhoat Ring',
-	['vahzl'] = 'Vahzl Ring',
-	['home'] = 'Homing Ring',
-	['return'] = 'Return Ring',
-	['warp'] = 'Warp Ring',
-	['tav'] = 'Tavnazian Ring',
-	['dcl'] = 'Dcl.Grd. Ring',
-};
-
--- List of weapons that are commonly equipped for attributes other than fighting
-gcinclude.doWeapon = {
-	['warp'] = 'Warp Cudgel',
-	['trick2'] = 'Trick Staff II',
-	['treat2'] = 'Treat Staff II',
-	['fork_1'] = 'Pitchfork +1',
+-- List of items that are commonly equipped for teleporting, exp boosts, reraise, etc
+gcinclude.equipIt = {
+	['emp'] = {'Empress Band','Ring'},
+	['cha'] = {'Chariot Band','Ring'},
+	['empo'] = {'Emperor Band','Ring'},
+	['dem'] = {'Dem Ring','Ring'},
+	['mea'] = {'Mea Ring','Ring'},
+	['holla'] = {'Holla Ring','Ring'},
+	['altep'] = {'Altepa Ring','Ring'},
+	['yhoat'] = {'Yhoat Ring','Ring'},
+	['vahzl'] = {'Vahzl Ring','Ring'},
+	['home'] = {'Homing Ring','Ring'},
+	['ret'] = {'Return Ring','Ring'},
+	['warp'] = {'Warp Ring','Ring'},
+	['tav'] = {'Tavnazian Ring','Ring'},
+	['dcl'] = {'Dcl.Grd. Ring','Ring'},
+	['warp'] = {'Warp Cudgel','Main'},
+	['trick2'] = {'Trick Staff II','Main'},
+	['treat2'] = {'Treat Staff II','Main'},
+	['fork1'] = {'Pitchfork +1','Main'},
+	['purgo'] = {'Wonder Top +1','Body'},
+	['rre'] = {'Reraise Earring','Ear'},
 };
 
 -- This is the list of storage containers that can be equipped from outside of a moghouse
@@ -1520,7 +1518,58 @@ function gcinclude.SwapToStave(sStave,noSave)
 			end
 		end
 	end		-- gcinclude.SwapToStave
-	
+--[[
+	EquipItem processes the passed arguments and equips the specified item (whether by coded entry or name)
+	into the appropriate equipment slot. Then turns /gswap off.
+--]]
+
+function gcinclude.EquipItem(args)
+	local iName = nil;
+	local iSlot = nil;
+	local iPtr = nil;
+		
+	if #args > 1 then
+		-- see if the item specified is a code	
+		for k,v in pairs(gcinclude.equipIt) do
+			if k == args[2] then
+				iName = v[1];
+				iSlot = v[2];
+				iPtr = 2;
+				break;
+			end
+		end
+
+		-- if it wasn't a code, the item should be explicitly identified
+		if iName == nil then
+			iName = args[2];
+			if #args > 2 then
+				iSlot = args[3];
+				iPtr = 3;
+			else
+				print(chat.header('EquipIt'):append(chat.message('Error: incomplete /equipit command: /equipit code|name slot|#. Command ignored.')));
+				return;
+			end
+		end
+
+		-- ring and ear need a slot appended to it. Either something specified or just assume "1"
+		if string.find('ring,ear',string.lower(iSlot)) ~= nil then
+			if iPtr ~= nil and #args > iPtr and string.find('1,2',args[iPtr+1]) ~= nil then
+				iSlot = iSlot .. args[iPtr+1];
+			else
+				iSlot = iSlot .. '1';
+			end
+		end
+		
+		-- Make sure the slot is formatted right (assuming it's just a case issue)
+		iSlot = string.upper(string.sub(iSlot,1,1)) .. string.lower(string.sub(iSlot,2));
+		-- Now try and load the item
+		gFunc.ForceEquip(iSlot,iName);
+		gcdisplay.SetToggle('GSwap',false);
+	else
+		print(chat.header('EquipIt'):append(chat.message('Error: incomplete /equipit command: /equipit code|name slot|#. Command ignored.')));
+	end
+end
+
 --[[
 	HandleCommands processes any commands typed into luashitacast as defined in this file
 --]]
@@ -1669,7 +1718,7 @@ function gcinclude.HandleCommands(args)
 	elseif (args[1] == 'gearset') then			-- Forces a gear set to be loaded and turns GSWAP off
 		if #args > 1 then
 			gFunc.ForceEquipSet(args[2]);
-			if not (#args == 3 and string.lower(args[3]) == 'on') then
+			if #args == 2 or string.lower(args[3]) ~= 'on' then
 				gcdisplay.SetToggle('GSwap',false);
 			end
 			toggle = 'Gear Swap';
@@ -1685,39 +1734,8 @@ function gcinclude.HandleCommands(args)
 	elseif (args[1] == 'maxsong') then			-- Determines highest level song to cast
 		gcinclude.MaxSong(args[2],(#args > 2),true);
 		toggle = 'MaxSong';
-	elseif args[1] == 'doring' then			-- Equip specified ring
-		if #args > 1 then
-			rName = gcinclude.doRing[args[2]];
-			if rName == nil then
-				rName = args[2];
-			end
-			if #args > 2 then					-- Slot specified
-				if args[3] == '1' or args[3] == '2' then
-					sRing = 'Ring' .. args[3];
-				else
-					sRing = 'Ring1';
-				end
-			else
-				sRing = 'Ring1';
-			end
-			gFunc.ForceEquip(sRing,rName);
-			gcdisplay.SetToggle('GSwap',false);
-		else
-			print(chat.header('HandleCommands'):append(chat.message('Error: No ring specified. Command ignored.')));
-			return;
-		end
-	elseif args[1] == 'dowep' then
-		if #args > 1 then
-			sName = gcinclude.doWeapon[args[2]];
-			if sName == nil then
-				sName = args[2];
-			end
-			gFunc.ForceEquip('Main',sName);
-			gcdisplay.SetToggle('GSwap',false);
-		else
-			print(chat.header('HandleCommands'):append(chat.message('Error: No staff specified. Command ignored.')));
-			return;
-		end
+	elseif args[1] == 'equipit' then			-- Equip specified item
+		gcinclude.EquipItem(args);
 	elseif (args[1] == 'region') then			-- Toggles the region setting
 		gcdisplay.AdvanceCycle('Region');
 		toggle = 'Region';

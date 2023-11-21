@@ -63,7 +63,7 @@ function gcdisplay.ShowHelp(args)
 		print(chat.header('Help'):append(chat.message('/maxspell name -- Determines the highest level spell your current jobs can cast that has the passed name')));
 		print(chat.header('Help'):append(chat.message('/maxsong name [back] -- Determines the highest level song your current jobs can cast that has the passed name or next to highest')));
 		print(chat.header('Help'):append(chat.message('/th --Toggles on whether treasure hunter gear should be equipped. Default is FALSE.')));
-		print(chat.header('Help'):append(chat.message('/doring code|name 1|2 --Equips specified ring in ring slot and turns off /gswap.')));
+		print(chat.header('Help'):append(chat.message('/equipit code|name [slot] [1|2] --Equips specified item in the specified slot and turns off /gswap.')));
 		print(chat.header('Help'):append(chat.message('/dowep code|name --Equips specified weapon and turns off /gswap.')));
 		print(chat.header('Help'):append(chat.message('/help [command] --Display this listing or specific details on the specified command.')));
 		if Main == 'BST' then
@@ -125,10 +125,8 @@ function gcdisplay.ShowHelp(args)
 			print(chat.header('Help'):append(chat.message('/maxsong name [back] --This determines the highest level song that matches the name you indicated to cast or one of the max if asked for.')));			
 		elseif cmd == 'th' then
 			print(chat.header('Help'):append(chat.message('/th --Toggles whether TH gear should be equipped or not. Default is FALSE.')));
-		elseif cmd == 'doring' then
-			print(chat.header('Help'):append(chat.message('/doring code|name 1|2 --Equips specified ring (either coded or full name) in the specified ring slot and turns off /GSWAP. Note that if the item contains a space in the name, you have to surround the name with double quotes.')));
-		elseif cmd == 'dowep' then
-			print(chat.header('Help'):append(chat.message('/dowep code|name -- Equips the specified weapon (either coded of full name) and turns off /GSWAP. Note that if the item contains a space in the name, you have to surround the name with double quotes.')));
+		elseif cmd == 'equipit' then
+			print(chat.header('Help'):append(chat.message('/equipit code|name [slot] [1|2] --Equips specified item (either coded or full name) in the specified slot and turns off /GSWAP. Note that if the item contains a space in the name, you have to surround the name with double quotes.')));
 		elseif cmd == 'help' then
 			print(chat.header('Help'):append(chat.message('/help [[all]|command] --This command displays help for all Luashitacast commands or the specified command.')));
 		elseif cmd == 'petfood' then
