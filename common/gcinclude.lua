@@ -71,6 +71,10 @@ gcinclude.sets = {
 	['Gathering'] = {				-- This is for if there's any generalized gathering gear
 	},
 	['Gathering_Conditional'] = {	-- Conditionally load gear based on type of gathering
+		{'BD-11','Field Tunica','Improves mining, logging and harvesting'},
+		{'HN-4','Field Gloves','Improves mining and logging'},
+		{'LG-1','Field Hose','Improves logging and harvesting'},
+		{'FT-1','Field Boots','Improves mining and harvesting'},
 		{'BD-13','Tarutaru Top +1','Reduces clamming incidents for female tarutarus'},
 		{'LG-3','Taru. Shorts +1','Imnproves clamming results for female tarutarus'},
 	},
@@ -208,7 +212,8 @@ gcinclude.BRE = 'Breath';
 -- Define constants dealing with magic gear and jobs
 gcinclude.ELEMENT = 'ele';
 gcinclude.OBI = 'obi';
-gcinclude.aketon = {['Sandy'] = {'Kingdom Aketon',false}, ['Windy'] = {'Federation Aketon',false}, ['Bastok'] = {'Republic Aketon',false}};
+gcinclude.aketon = {['Sandy'] = {'Kingdom Aketon',false}, ['Windy'] = {'Federation Aketon',false}, 
+					['Bastok'] = {'Republic Aketon',false},['Omni'] = {'Ducal Aketon',false}};
 gcinclude.sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,SCH,GEO,RUN';
 
 -- Below indicates all the staves you own. (The settings are programmatically determined.)
@@ -590,13 +595,14 @@ gcinclude.MasterConditional = T {
 	['BD-43'] = {'Body',1,'ALL','AKETON',true,'Sandy'},
 	['BD-44'] = {'Body',1,'ALL','AKETON',true,'Bastok'},
 	['BD-45'] = {'Body',43,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-	['HN-1'] = {'Hands',1,'CRAFT','LT'},
-	['HN-2'] = {'Hands',1,'CRAFT','SM'},
-	['HN-3'] = {'Hands',1,'CRAFT','WW'},
-	['HN-4'] = {'Hands',1,'GATHER','HELM'},
-	['HN-5'] = {'Hands',15,'GATHER','HELM'},
-	['HN-6'] = {'Hands',1,'GATHER','DIG'},
-	['HN-7'] = {'Hands',15,'GATHER','DIG'},
+	['BD-46'] = {'Body',1,'ALL','AKETON',true,'Omni'},
+	['HN-1'] = {'Hands',1,'ALL','CRAFT','LT'},
+	['HN-2'] = {'Hands',1,'ALL','CRAFT','SM'},
+	['HN-3'] = {'Hands',1,'ALL','CRAFT','WW'},
+	['HN-4'] = {'Hands',1,'ALL','GATHER','HELM'},
+	['HN-5'] = {'Hands',15,'ALL','GATHER','HELM'},
+	['HN-6'] = {'Hands',1,'ALL','GATHER','DIG'},
+	['HN-7'] = {'Hands',15,'ALL','GATHER','DIG'},
 	['HN-8'] = {'Hands',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
 	['HN-9'] = {'Hands',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
 	['HN-10'] = {'Hands',34,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
@@ -1168,11 +1174,12 @@ function gcinclude.ProcessConditional(tTest,sType)
 		return
 	end
 	
-	for k,v in pairs(tTest) do
+	for k,v in ipairs(tTest) do
 		local tMatched = gcinclude.MasterConditional[v[1]];
-		-- Make sure current job can use the gear
+	
+		-- Make sure current job can use the gear	
 		if (string.find(tMatched[3],pMJ) ~= nil or tMatched[3] == 'ALL') then
-			-- Check that the gear minimum level isn't too high
+			-- Check that the gear minimum level isn't too high		
 			if tMatched[2] <= pLevel then
 				bMatch = false;	-- Indicator to track if there's a match
 				-- Now determine the type of condition and process
@@ -1181,7 +1188,7 @@ function gcinclude.ProcessConditional(tTest,sType)
 					if tMatched[5] == sKey then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end
-				elseif tMatched[4] == 'GATHER' then
+				elseif tMatched[4] == 'GATHER' then		
 					sKey = string.upper(sType);
 					if tMatched[5] == sKey then
 						bMatch = gcinclude.BuildGear(tMatched,v);
@@ -1212,9 +1219,14 @@ function gcinclude.ProcessConditional(tTest,sType)
 					-- the nationality translations in campaign_nation.sql file that's part of AirSkyBoat Github source.)
 					local pNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation();
 					
-					if ((tMatched[6] == 'Windy') and (zone.Area ~= nil) and (gcinclude.Windy:contains(zone.Area)) and pNation == 2 and gcinclude.aketon['Windy'][2] == true) or
-						((tMatched[6] == 'Sandy') and (zone.Area ~= nil) and (gcinclude.Sandy:contains(zone.Area)) and pNation == 0 and gcinclude.aketon['Sandy'][2] == true) or
-						((tMatched[6] == 'Bastok') and (zone.Area ~= nil) and (gcinclude.Bastok:contains(zone.Area)) and pNation == 1 and gcinclude.aketon['Bastok'][2] == true)
+					if (tMatched[6] == 'Windy' and zone.Area ~= nil and gcinclude.Windy:contains(zone.Area) and pNation == 2 
+							and gcinclude.aketon['Windy'][2] == true) or
+						(tMatched[6] == 'Sandy' and zone.Area ~= nil and gcinclude.Sandy:contains(zone.Area) and pNation == 0 
+							and gcinclude.aketon['Sandy'][2] == true) or
+						(tMatched[6] == 'Bastok' and zone.Area ~= nil and gcinclude.Bastok:contains(zone.Area) and pNation == 1 
+							and gcinclude.aketon['Bastok'][2] == true) or
+						(tMatched[6] == 'Omni') and zone.Area ~= nil and (gcinclude.Windy:contains(zone.Area) or gcinclude.Sandy:contains(zone.Area) or 
+							gcinclude.Bastok:contains(zone.Area)) and gcinclude.aketon['Omni'][2] == true
 					then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end
@@ -1568,7 +1580,7 @@ function gcinclude.EquipItem(args)
 	else
 		print(chat.header('EquipIt'):append(chat.message('Error: incomplete /equipit command: /equipit code|name slot|#. Command ignored.')));
 	end
-end
+end		-- gcinclude.EquipItem
 
 --[[
 	HandleCommands processes any commands typed into luashitacast as defined in this file
@@ -1720,6 +1732,8 @@ function gcinclude.HandleCommands(args)
 			gFunc.ForceEquipSet(args[2]);
 			if #args == 2 or string.lower(args[3]) ~= 'on' then
 				gcdisplay.SetToggle('GSwap',false);
+			else
+				gcdisplay.SetToggle('GSwap',true);			
 			end
 			toggle = 'Gear Swap';
 			status = gcdisplay.GetToggle('GSwap');

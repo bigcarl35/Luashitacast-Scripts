@@ -84,6 +84,7 @@ Body
 {'BD-43','Kingdom Aketon','Movement gain in home nation city'},
 {'BD-44','Republic Aketon','Movement gain in home nation city'},
 {'BD-45','Royal Squire\'s Robe +2','+3 INT in areas controlled by home nation'},
+{'BD-46','Ducal Aketon','Movement gain in all nation cities'},
 
 Hands
 -----
