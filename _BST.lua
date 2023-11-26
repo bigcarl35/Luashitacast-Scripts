@@ -126,12 +126,12 @@ local sets = {
 	},
 	
 --[[
-		The TP sets are used when you or your pet are fighting. The accuracy set will be used if ACC is specified
-		and the evasion set if EVA is specified.
+		The TP sets are used when you or your pet are fighting: "TP" for you and "TP_Pet" for you and your pet or just your pet. 
+		The accuracy set will be used if ACC is specified and the evasion set if EVA is specified.
 --]]
 
 	['TP'] = {
-        Head = 'Shep. Bonnet',
+        Head = 'Panther Mask',
         Neck = 'Ryl.Grd. Collar',
         Ear1 = 'Coral Earring',
         Ear2 = 'Beastly Earring',
@@ -145,6 +145,25 @@ local sets = {
         Feet = 'Thick Sollerets',
     },
 	['TP_Conditional'] = {
+		{'BD-1','Gaudy Harness','Adds refresh if MP < 50'},
+		{'RN-11','Tamas Ring','will equip if subjob can do magic'}
+	},
+	
+	['TP_Pet'] = {
+        Head = 'Shep. Bonnet',
+        Neck = 'Ryl.Grd. Collar',
+        Ear1 = 'Coral Earring',
+        Ear2 = 'Beastly Earring',
+        Body = 'Narasimha\'s Vest',
+        Hands = 'Thick Mufflers',
+        Ring1 = 'Sun Ring',
+        Ring2 = 'Sun Ring',
+        Back = 'Psilos Mantle',
+        Waist = 'Swift Belt',
+        Legs = 'Thick Breeches',
+        Feet = 'Thick Sollerets',
+    },
+	['TP_Pet_Conditional'] = {
 		{'BD-1','Gaudy Harness','Adds refresh if MP < 50'},
 		{'RN-11','Tamas Ring','will equip if subjob can do magic'}
 	},
@@ -166,12 +185,34 @@ local sets = {
 	['TP_Accuracy_Conditional'] = {
 	},
 	
+	['TP_Pet_Accuracy'] = {
+        Head = 'Shep. Bonnet',
+        Neck = 'Ryl.Grd. Collar',
+        Ear1 = 'Coral Earring',
+        Ear2 = 'Beastly Earring',
+        Body = 'Narasimha\'s Vest',
+        Hands = 'Thick Mufflers',
+        Ring1 = 'Sun Ring',
+        Ring2 = 'Tamas Ring',
+        Back = 'Psilos Mantle',
+        Waist = 'Life Belt',
+        Legs = 'Thick Breeches',
+        Feet = 'Thick Sollerets',
+    },
+	['TP_Pet_Accuracy_Conditional'] = {
+	},
+	
 	['TP_Evasion'] = {
-        Head = 'Empress Hairpin',
+        Head = 'Optical Hat',
         Body = 'Narasimha\'s Vest',
         Legs = 'San. Trousers',
     },
 	['TP_Evasion_Conditional'] = {
+	},
+	
+	['TP_Pet_Evasion'] = {
+	},
+	['TP_Pet_Evasion_Conditional'] = {
 	},
 	
 --[[
@@ -1029,15 +1070,30 @@ profile.HandleDefault = function()
 		
 		-- Now process the player status accordingly
 		if player.Status == 'Engaged' then		-- Player is fighting. Priority (low to high): TP,evasion,accuracy
-			gFunc.EquipSet(sets.TP);
-			gcinclude.ProcessConditional(sets.TP_Conditional,nil);
+			if pet == nil then
+				gFunc.EquipSet(sets.TP);
+				gcinclude.ProcessConditional(sets.TP_Conditional,nil);
+			else
+				gFunc.EquipSet(sets.TP_Pet);
+				gcinclude.ProcessConditional(sets.TP_Pet_Conditional,nil);
+			end
 			if gcdisplay.GetToggle('Eva') == true then
-				gFunc.EquipSet(sets.TP_Evasion);
-				gcinclude.ProcessConditional(sets.TP_Evasion_Conditional,nil);
+				if pet == nil then
+					gFunc.EquipSet(sets.TP_Evasion);
+					gcinclude.ProcessConditional(sets.TP_Evasion_Conditional,nil);
+				else
+					gFunc.EquipSet(sets.TP_Pet_Evasion);
+					gcinclude.ProcessConditional(sets.TP_Pet_Evasion_Conditional,nil);				
+				end			
 			end
 			if gcdisplay.GetToggle('Acc') == true then 
-				gFunc.EquipSet(sets.TP_Accuracy);
-				gcinclude.ProcessConditional(sets.TP_Accuracy_Conditional,nil);
+				if pet == nil then
+					gFunc.EquipSet(sets.TP_Accuracy);
+					gcinclude.ProcessConditional(sets.TP_Accuracy_Conditional,nil);
+				else
+					gFunc.EquipSet(sets.TP_Pet_Accuracy);
+					gcinclude.ProcessConditional(sets.TP_Pet_Accuracy_Conditional,nil);				
+				end
 			end
 		elseif player.Status == 'Resting' then	-- Player kneeling. Priority (low to high): Resting,refresh
 			gFunc.EquipSet(sets.Resting);
@@ -1140,7 +1196,7 @@ profile.HandleAbility = function()
 			gcinclude.ProcessConditional(sets.Call_Beast_Conditional,nil);
 		elseif string.match(ability.Name, 'Reward') then
 			-- See if pet food already equipped
-			if string.find(string.lower(profile.sAmmo),'pet f') == nil then		-- something else equipped
+			if profile.sAmmo == nil or string.find(string.lower(profile.sAmmo),'pet f') == nil then		-- something else equipped
 				if gcinclude.findMaxEquipablePetFood() == false then
 					print(chat.header('HandleAbility'):append(chat.message('Error: Reward failed, no equipable pet food found')));
 					return;
