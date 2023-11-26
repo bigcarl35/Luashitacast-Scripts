@@ -1583,10 +1583,22 @@ function gcinclude.EquipItem(args)
 end		-- gcinclude.EquipItem
 
 --[[
+	EquipHelmSet equips the gather set HELM and then turnd gswap off
+--]]
+
+function gcinclude.EquipHelmSet()
+
+	gFunc.ForceEquipSet(gcinclude.sets.Gathering);
+	gcinclude.ProcessConditional(gcinclude.sets.Gathering_Conditional,'HELM');	-- Then override w/any conditional that's true
+	gcdisplay.SetToggle('GSwap',false);
+end
+
+--[[
 	HandleCommands processes any commands typed into luashitacast as defined in this file
 --]]
 
 function gcinclude.HandleCommands(args)
+
 	if not gcinclude.AliasList:contains(args[1]) then return end
 
 	local player = gData.GetPlayer();
