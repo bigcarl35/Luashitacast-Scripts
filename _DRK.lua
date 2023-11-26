@@ -866,7 +866,11 @@ profile.HandleItem = function()
 	local item = gData.GetAction();
 
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
-		if string.match(item.Name, 'Holy Water') then gFunc.EquipSet(gcinclude.sets.Holy_Water) end
+		if string.match(item.Name, 'Holy Water') then 
+			gFunc.EquipSet(gcinclude.sets.Holy_Water);
+		elseif string.find('sickle,pickaxe,hatchet',string.lower(item.name)) ~- nil then	-- in case gear not equipped when gather action occurs
+			gcinclude.EquipHelmSet();
+		end			
 	end
 end
 
