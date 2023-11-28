@@ -117,6 +117,7 @@ gcinclude.settings = {
 	bStave = false;		 -- indicates if the auto-detection of elemental staves has successfully occurred
 	bObiGorget = false;	 -- indicates if the auto-detection of elemental obis/gorgets has successfully occurred
 	bAketon = false;	 -- indicates if the auto-detection of aketons has successfully occurred
+	bMagicCheck = false; -- indicates if the check on magic support has occurred
 };
 
 -- The following arrays are used by the functions contained in this file. Probably best to leave them alone
@@ -817,8 +818,27 @@ function gcinclude.DB_ShowIt(sType)
 		for k,v in pairs(gcinclude.aketon) do
 			print(chat.message('[' .. k .. ']: ' .. v[1] .. ' = ' .. tostring(v[2])));
 		end
+	elseif string.lower(sType) == 'settings' then
+		print(chat.message('Settings'));
+		print(chat.message('--------'));
+		print(chat.message('WScheck: ' .. tostring(gcinclude.settings.WScheck)));
+		print(chat.message('WSdistance: ' .. tostring(gcinclude.settings.WSdistance)));
+		print(chat.message('RegenGearHPP: ' .. tostring(gcinclude.settings.RegenGearHPP)));
+		print(chat.message('RefreshGearMPP: ' .. tostring(gcinclude.settings.RefreshGearMPP)));
+		print(chat.message('bMagic: ' .. tostring(gcinclude.settings.bMagic)));
+		print(chat.message('bMJ: ' .. tostring(gcinclude.settings.bMJ)));
+		print(chat.message('bSJ: ' .. tostring(gcinclude.settings.bSJ)));
+		print(chat.message('b50: ' .. tostring(gcinclude.settings.b50)));
+		print(chat.message('bEleStaves: ' .. tostring(gcinclude.settings.bEleStaves)));
+		print(chat.message('bEleObis: ' .. tostring(gcinclude.settings.bEleObis)));
+		print(chat.message('bEleGorgets: ' .. tostring(gcinclude.settings.bEleGorgets)));
+		print(chat.message('bSummoner: ' .. tostring(gcinclude.settings.bSummoner)));
+		print(chat.message('bStave: ' .. tostring(gcinclude.settings.bStave)));
+		print(chat.message('bObiGorget: ' .. tostring(gcinclude.settings.bObiGorget)));
+		print(chat.message('bAketon: ' .. tostring(gcinclude.settings.bAketon)));
+		print(chat.message('bMagicCheck: ' .. tostring(gcinclude.settings.bMagicCheck)));
 	end
-end		-- gcinclude.DB_ShowI
+end		-- gcinclude.DB_ShowIt
 	
 --[[
 	Message toggles on/off a feedback mechanism for all luashitacast commands
@@ -1249,12 +1269,12 @@ function gcinclude.ProcessConditional(tTest,sType)
 					if iDay ~= nil or bNight or bDay then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end				
-				elseif tMatched[4] == 'MP<50' then
+				elseif tMatched[4] == 'MP<50' then			-- Equip if mp < 50 and total mp >= 50 and can do magic
 					if (gcinclude.settings.bMagic and gcinclude.settings.b50 and player.MP < 50) then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end
-				elseif tMatched[4] == 'SJ:MAGIC' then
-					if gcinclude.settings.bMagic then
+				elseif tMatched[4] == 'SJ:MAGIC' then		-- Equip if subjob can do magic
+					if gcinclude.settings.bSJ then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end
 				else
@@ -1476,6 +1496,11 @@ end		-- gcinclude.MaxSpell
 
 function gcinclude.CheckMagic50(player)
 
+	-- First make sure player data is not in transition
+	if gcinclude.settings.bMagicCheck == false and (player.MainJob == nil or player.SubJob == nil or player.MaxMP == nil) then
+		return;
+	end
+
 	if (string.find(gcinclude.sMagicJobs,player.MainJob) ~= nil) then
 		gcinclude.settings.bMJ = true;
 	end
@@ -1484,8 +1509,9 @@ function gcinclude.CheckMagic50(player)
 	end
 	gcinclude.settings.bMagic = gcinclude.settings.bMJ or gcinclude.settings.bSJ;
 	
-	-- This is a special case, need to check that player has potentially more than 50
+	-- This is a special case, need to check that player has potentially more than 50 MP
 	gcinclude.settings.b50 = (gcinclude.settings.bMagic and player.MaxMP > 50);
+	gcinclude.settings.bMagicCheck = true;
 	return;
 end		-- gcinclude.CheckMagic50
 
