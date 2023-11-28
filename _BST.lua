@@ -1030,6 +1030,13 @@ end
 profile.HandleDefault = function()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();
+	local player = gData.GetPlayer();
+	local ew = gData.GetEquipment();
+	local eWeap = nil;
+		
+	if gcinclude.settings.bMagicCheck == false then
+		gcinclude.CheckMagic50(player);
+	end
 	
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 
@@ -1049,10 +1056,6 @@ profile.HandleDefault = function()
 			return;
 		end
 	
-		local player = gData.GetPlayer();
-		local ew = gData.GetEquipment();
-		local eWeap = nil;
-
 		if ew['Main'] ~= nil then
 			eWeap = ew['Main'].Name;
 		end;
@@ -1243,8 +1246,6 @@ profile.HandleItem = function()
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 		if string.match(item.Name, 'Holy Water') then 
 			gFunc.EquipSet(gcinclude.sets.Holy_Water);
-		elseif string.find('sickle,pickaxe,hatchet',string.lower(item.name)) ~- nil then	-- in case gear not equipped when gather action occurs
-			gcinclude.EquipHelmSet();
 		end
 	end
 end
