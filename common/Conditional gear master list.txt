@@ -59,7 +59,7 @@ Body
 {'BD-11','Field Tunica','Improves mining, logging and harvesting'},
 {'BD-12','Worker Tunica','Improves mining, logging and harvesting'},
 {'BD-13','Tarutaru Top +1','Reduces clamming incidents for female tarutarus'},
-{'BD-21','Chocobo Jack Coat','Chocobo riding time +5 minutes'},
+{'BD-21','Choc. Jack Coat','Chocobo riding time +5 minutes'},
 {'BD-22','Rider\'s Jack Coat','Chocobo riding time +5 minutes'},
 {'BD-23','Garish Tunic','+2 evasion on earthsday and windsday'},
 {'BD-24','Mist Tunic','+2 evasion on earthsday'},

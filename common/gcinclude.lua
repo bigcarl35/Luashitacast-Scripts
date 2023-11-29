@@ -75,6 +75,7 @@ gcinclude.sets = {
 		{'HN-4','Field Gloves','Improves mining and logging'},
 		{'LG-1','Field Hose','Improves logging and harvesting'},
 		{'FT-1','Field Boots','Improves mining and harvesting'},
+		{'BD-21','Choc. Jack Coat','Chocobo riding time +5 minutes'},
 		{'BD-13','Tarutaru Top +1','Reduces clamming incidents for female tarutarus'},
 		{'LG-3','Taru. Shorts +1','Imnproves clamming results for female tarutarus'},
 	},
