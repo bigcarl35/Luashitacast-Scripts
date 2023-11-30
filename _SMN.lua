@@ -113,6 +113,9 @@ local sets = {
 	
 	-- Physical blood pact: pet atk, pet acc, pet crit, pet DA, BP physical dmg+
 	['SmnPhysical'] = {
+	    Head = 'Shep. Bonnet',
+		Body = 'Austere Robe',
+		Ear2 = 'Beastly Earring',
     },
 	['SmnPhysical_Conditional'] = {
 	},
@@ -799,7 +802,7 @@ end
 
 local function SetSubjobSet(chkSJ)
 	local subs = {['WAR'] = 0, ['MNK'] = 0, ['WHM'] = 1, ['BLM'] = 3, ['RDM'] = 2, ['THF'] = 0,
-				 ['PLD'] = 0, ['DRK'] = 0, ['BST'] = nil, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = 0,
+				 ['PLD'] = 0, ['DRK'] = 0, ['BST'] = 0, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = nil,
 				 ['SAM'] = 0, ['NIN'] = 0, ['DRG'] = 0, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
 				 ['DNC'] = 0, ['SCH'] = 0, ['GEO'] = 0, ['RUN'] = 0};
 	local sj = nil;
