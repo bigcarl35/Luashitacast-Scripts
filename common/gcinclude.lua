@@ -1528,9 +1528,13 @@ end		-- gcinclude.CheckMagic50
 
 function gcinclude.SwapToStave(sStave,noSave)
 	local ew = gData.GetEquipment();
-	local eWeap = ew['Main'].Name;
+	local eWeap = nil;
 	local eOff = nil;
 
+	if ew['Main'] ~= nil then
+		eWeap = ew['Main'].Name;
+	end
+	
 	if ew['Sub'] ~= nil then
 		eOff = ew['Sub'].Name;
 	end;
@@ -1608,17 +1612,6 @@ function gcinclude.EquipItem(args)
 		print(chat.header('EquipIt'):append(chat.message('Error: incomplete /equipit command: /equipit code|name slot|#. Command ignored.')));
 	end
 end		-- gcinclude.EquipItem
-
---[[
-	EquipHelmSet equips the gather set HELM and then turnd gswap off
---]]
-
-function gcinclude.EquipHelmSet()
-
-	gFunc.ForceEquipSet(gcinclude.sets.Gathering);
-	gcinclude.ProcessConditional(gcinclude.sets.Gathering_Conditional,'HELM');	-- Then override w/any conditional that's true
-	gcdisplay.SetToggle('GSwap',false);
-end
 
 --[[
 	HandleCommands processes any commands typed into luashitacast as defined in this file
