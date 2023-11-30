@@ -32,11 +32,10 @@ local sets = {
 
 	['Idle'] = {
         Ammo = 'Fortune Egg',
-        Head = 'Austere Hat',
         Neck = 'Smn. Torque',
         Ear1 = 'Black Earring',
         Ear2 = 'Bat Earring',
-        Body = 'Austere Robe',
+        Body = 'Vermillion Cloak',
         Hands = 'Carbuncle Mitts',
         Ring1 = 'Evoker\'s Ring',
 		Ring2 = 'Tamas Ring',
@@ -63,11 +62,10 @@ local sets = {
 	-- This is equipped when the pet is idle
 	['Pet_Idle'] = {
         Ammo = 'Fortune Egg',
-		Head = 'Austere Hat',
-        Neck = 'Smn. Torque',
+		Neck = 'Smn. Torque',
         Ear1 = 'Black Earring',
         Ear2 = 'Bat Earring',
-        Body = 'Austere Robe',
+        Body = 'Vermillion Cloak',
         Hands = 'Carbuncle Mitts',
         Ring1 = 'Evoker\'s Ring',
 		Ring2 = 'Tamas Ring',
@@ -84,23 +82,13 @@ local sets = {
 	--]]
 	
 	['Resting'] = {
-        Ammo = 'Fortune Egg',
-        Neck = 'Smn. Torque',
-        Ear1 = 'Black Earring',
-        Ear2 = 'Bat Earring',
-        Body = 'Austere Robe',
-        Hands = 'Carbuncle Mitts',
-        Ring1 = 'Evoker\'s Ring',
-		Ring2 = 'Tamas Ring',
-        Back = 'Blue Cape',
         Waist = 'Hierarch Belt',
-        Legs = 'Evoker\'s Spats',
-        Feet = 'Mannequin Pumps',
     },
 	['Resting_Conditional'] = {
 	},
 	
 	['Resting_Refresh'] = {
+        Body = 'Vermillion Cloak',
 		Waist = 'Hierarch Belt',
 	},
 	['Resting_Refresh_Conditional'] = {
@@ -176,6 +164,7 @@ local sets = {
 	
 	['Town'] = {
         Head = 'Lilac Corsage',
+		Body = 'Austere Robe',
     },
 	
 --[[
@@ -339,10 +328,9 @@ local sets = {
 	
 	-- Summoning Skill, any boost to pet or summoning ability
 	['Summoning'] = {
-        Head = 'Austere Hat',
         Neck = 'Smn. Torque',
         Ear2 = 'Beastly Earring',
-        Body = 'Austere Robe',
+ 		Body = 'Vermillion Cloak',
         Hands = 'Carbuncle Mitts',
         Ring1 = 'Evoker\'s Ring',
         Legs = 'Evoker\'s Spats',
