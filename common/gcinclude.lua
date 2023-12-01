@@ -2264,7 +2264,7 @@ function gcinclude.findString(tStorage,sString,bUpdate,sName)
 	if sName ~= nil then
 		sName = string.lower(sName);
 	end
-	
+
 	for k,_ in pairs(gcinclude.petfood) do
 		gcinclude.petfood[k][4] = false;
 		gcinclude.petfood[k][5] = nil;
@@ -2272,39 +2272,42 @@ function gcinclude.findString(tStorage,sString,bUpdate,sName)
 
 	iCnt = 0;
 	for _ in pairs(tStorage) do iCnt = iCnt + 1 end
-
+	
 	-- now, loop through the passed storage containers
 	for i = 1,iCnt,1 do
 		bFound = false;
-		--containerID = gcinclude.STORAGES[tStorage[i]][1];
-		containerID = tStorage[i][1];
-		
+		containerID = gcinclude.STORAGES[i][1];
 		-- then loop through the container
 		for j = 1,inventory:GetContainerCountMax(containerID),1 do
 			local itemEntry = inventory:GetContainerItem(containerID, j);
 			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
                 local item = resources:GetItemById(itemEntry.Id);
-				b,c = string.find(string.lower(item.Name[1]),sString);
+				b,c = string.find(string.lower(item.Name[1]),sString);	
 				if b ~= nil then
 					if bUpdate then
 						for k,tpf in pairs(gcinclude.petfood) do
 							if string.lower(tpf[2]) == string.lower(item.Name[1]) then
 								if gcinclude.petfood[k][4] == false then
 									gcinclude.petfood[k][4] = true;
-									gcinclude.petfood[k][5] = gcinclude.STORAGES[i][2];
+									gcinclude.petfood[k][5] = gcinclude.STORAGES[i][2];							
 								end
 							end
 						end
 						iCount = iCount + 1;
 					else
-						iCnt = itemEntry.Count
-						if iCnt ~= nil and iCnt > 0 then
+						iCt = itemEntry.Count
+						if iCt ~= nil and iCt > 0 then
 							iCount = iCount + 1;
 							if not bFound then
-								print(chat.header('findString'):append(chat.message(gcinclude.STORAGES[tStorage[i]][2])));
-								bFound = true;
+								for l,sl in pairs(gcinclude.STORAGES) do
+									if containerID == sl[1] then
+										print(chat.header('findString'):append(chat.message(sl[2])));
+										bFound = true;
+										break;
+									end
+								end
 							end
-							print(chat.header('findString'):append(chat.message('   ' .. item.Name[1] .. ' ('..tostring(iCnt) .. ')')));
+							print(chat.header('findString'):append(chat.message('   ' .. item.Name[1] .. ' ('..tostring(iCt) .. ')')));
 						end
 					end
 				end
