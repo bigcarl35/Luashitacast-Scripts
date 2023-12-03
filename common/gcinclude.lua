@@ -2355,14 +2355,14 @@ end		-- gcinclude.findMaxEquipablePetFood
 
 function gcinclude.doPetFood(action, sType)
 	local player = gData.GetPlayer();
-	local ilvl = 0;
+	local ilvl;
 	local sName = nil;
 		
 	if action == nil then
 		sAction = 'max';
 	else
 		sAction = string.lower(action);
-		if not (sAction == 'all' or sAction == 'max') then
+		if not (sAction == 'all' or sAction == 'max' or sAction == 'min') then
 			if sType ~= nil then
 				print(chat.header('doPetFood'):append(chat.message('Invalid action specified : ' .. action .. '. Ignoring command')));
 				return;
@@ -2378,7 +2378,7 @@ function gcinclude.doPetFood(action, sType)
 			print(chat.header('doPetFood'):append(chat.message('No pet food found')));
 		end
 	else
-		if sAction == 'max' then
+		if (sAction == 'max' or sAction == 'min') then
 			if not gcinclude.findMaxEquipablePetFood() then
 				print(chat.header('doPetFood'):append(chat.message('No equipable pet food found or found pet food is too high level')));
 				return;
@@ -2386,18 +2386,32 @@ function gcinclude.doPetFood(action, sType)
 		else
 			if not gcinclude.findString(gcinclude.EQUIPABLE,sAction,true,nil) then 
 				print(chat.header('doPetFood'):append(chat.message(action .. ' not found in accessible storage')));
-				return;
 			end
+			return;
 		end
 		
 		-- Now to process what was found
+		if sAction == 'max' then
+			ilvl = 0;
+		else
+			ilvl = player.MainJobLevel;
+		end
+		
 		for k,tpf in pairs(gcinclude.petfood) do
-			if tpf[4] and tpf[3] > ilvl and tpf[3] <= player.MainJobLevel then
-				iLvl = tpf[3];
-				sName = tpf[2];
+			if sAction == 'max' then
+				if tpf[4] and (tpf[3] > ilvl) and (tpf[3] <= player.MainJobLevel) then
+					ilvl = tpf[3];
+					sName = tpf[2];
+				end
+			elseif sAction == 'min' then
+				if tpf[4] and tpf[3] <= ilvl then
+					ilvl = tpf[3];
+					sName = tpf[2];
+				end
 			end
 		end
 	end
+
 	if sName ~= nil then
 		gFunc.ForceEquip('Ammo', sName);
 		print(chat.header('doPetFood'):append(chat.message('Equipping: ' .. sName)));

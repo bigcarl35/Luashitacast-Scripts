@@ -72,7 +72,7 @@ function gcdisplay.ShowHelp(args)
 			print(chat.header('Help'):append(chat.message(' ')));
 			print(chat.header('Help'):append(chat.message('Command(s) specific for BST/ or /BST:')));
 			print(chat.header('Help'):append(chat.message('/ajug -- Toggles whether the automated jug pet system is enabled. Default is TRUE. (BST/ only)'))); 
-			print(chat.header('Help'):append(chat.message('/petfood [name] --Equips the specified pet food or determines best food and equips it.')));
+			print(chat.header('Help'):append(chat.message('/petfood [name|ALL|MAX|MIN] --Equips the specified pet food or determines best food and equips it.')));
 		end
 		if Main == 'SMN' or Sub == 'SMN' then
 			print(chat.header('Help'):append(chat.message(' ')));
@@ -134,7 +134,7 @@ function gcdisplay.ShowHelp(args)
 		elseif cmd == 'help' then
 			print(chat.header('Help'):append(chat.message('/help [[all]|command] --This command displays help for all Luashitacast commands or the specified command.')));
 		elseif cmd == 'petfood' then
-			print(chat.header('Help'):append(chat.message('/petfood [alpha|beta|gamma|delta|epsilon|zeta] --This command either equips the specified pet food in the ammo slot or determines what is the best pet food that can be equipped.')));
+			print(chat.header('Help'):append(chat.message('/petfood [alpha|beta|gamma|delta|epsilon|zeta|ALL|MIN|MAX] --This command either equips the specified pet food in the ammo slot or lists all the pet food that\'s accessible or determines the best or the weakest pet food that can be equipped.')));
 		elseif cmd == 'ajug' then
 			print(chat.header('Help'):append(chat.message('/ajug --Toggles whether the automated jug pet system is enabled. This loads a jug pet if the ammo slot doesn\'t have a jug pet in it. Default is TRUE')));
 		elseif cmd == 'sbp' then
