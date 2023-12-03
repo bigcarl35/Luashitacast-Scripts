@@ -75,7 +75,7 @@ local sets = {
 
 	['Start_Weapons'] = {
         Main = 'Windurstian Sword',
-        Ammo = 'Happy Egg',
+        Ammo = 'Fortune Egg',
     },
 	['Start_Weapons_Conditional'] = {
 	},
@@ -129,8 +129,9 @@ local sets = {
         Ear2 = 'Beetle Earring',
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Ring1 = 'Courage Ring',
+        Ring1 = 'Tamas Ring',
         Ring2 = 'Balance Ring',
+		Back = 'Ram mantle',
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Bounding Boots',
@@ -138,23 +139,17 @@ local sets = {
 	['TP_Conditional'] = {
 	},
 	
-	['TP_Accuracy'] = {
-        Ring1 = 'Jaeger Ring',
-        Ring2 = 'Balance Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Feet = 'Bounding Boots',
+	['Accuracy'] = {
+        Ring2 = 'Jaeger Ring',				-- Accuracy +4
     },
-	['TP_Accuracy_Conditional'] = {
+	['Accuracy_Conditional'] = {
 	},
 	
-	['TP_Evasion'] = {
-        Head = 'Empress Hairpin',
-        Ring2 = 'Balance Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'San. Trousers',
-        Feet = 'Bounding Boots',
+	['Evasion'] = {
+        Head = 'Empress Hairpin',			-- Evasion 10
+        Legs = 'San. Trousers',				-- Evasion +2
     },
-	['TP_Evasion_Conditional'] = {
+	['Evasion_Conditional'] = {
 	},
 	
 --[[
@@ -301,10 +296,10 @@ local sets = {
 	Magic accuracy gear
 --]]
 
-	['macc'] = {
-        Ring1 = 'Tamas Ring',
+	['Macc'] = {
+        Ring1 = 'Tamas Ring',			-- Magical Accuracy +5
     },
-	['macc_Conditional'] = {
+	['Macc_Conditional'] = {
 	},
 	
 --[[
@@ -360,8 +355,8 @@ local sets = {
         Neck = 'Spike Necklace',
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Ring1 = 'Courage Ring',
-        Ring2 = 'San d\'Orian Ring',
+        Ring1 = 'San d\'Orian Ring',
+        Ring2 = 'Courage Ring',
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Wonder Clomps',
@@ -380,8 +375,8 @@ local sets = {
         Ear2 = 'Drone Earring',
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Ring1 = 'Courage Ring',
-        Ring2 = 'San d\'Orian Ring',
+        Ring1 = 'San d\'Orian Ring',
+        Ring2 = 'Courage Ring',
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Bounding Boots',
@@ -421,8 +416,8 @@ local sets = {
         Ear2 = 'Drone Earring',
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Ring1 = 'Courage Ring',
-        Ring2 = 'Tamas Ring',
+        Ring1 = 'Tamas Ring',
+        Ring2 = 'Courage Ring',
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Wonder Clomps',
@@ -440,8 +435,8 @@ local sets = {
         Ear2 = 'Drone Earring',
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Ring1 = 'Courage Ring',
-        Ring2 = 'Tamas Ring',
+        Ring1 = 'Tamas Ring',
+        Ring2 = 'Courage Ring',
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Wonder Clomps',
@@ -461,8 +456,8 @@ local sets = {
         Neck = 'Justice Badge',
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Ring1 = 'Courage Ring',
-        Ring2 = 'Tamas Ring',
+        Ring1 = 'Tamas Ring',
+        Ring2 = 'Courage Ring',
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Wonder Clomps',
@@ -483,8 +478,8 @@ local sets = {
         Neck = 'Spike Necklace',
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Ring1 = 'Courage Ring',
-        Ring2 = 'Bastokan Ring',
+        Ring1 = 'Bastokan Ring',
+        Ring2 = 'Courage Ring',
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Wonder Clomps',
@@ -514,7 +509,7 @@ local sets = {
 	['WS_DEX'] = {
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
-        Ring1 = 'Balance Ring',
+        Ring2 = 'Balance Ring',
         Waist = 'Mrc.Cpt. Belt',
         Feet = 'Bounding Boots',
     },
@@ -529,7 +524,7 @@ local sets = {
 	['WS_DEXINT'] = {
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
-        Ring1 = 'Balance Ring',
+        Ring2 = 'Balance Ring',
         Waist = 'Mrc.Cpt. Belt',
         Feet = 'Bounding Boots',
     },
@@ -544,25 +539,12 @@ local sets = {
 	['WS_MND'] = {
         Neck = 'Justice Badge',
         Body = 'Wonder Kaftan',
-        Ring1 = 'Tranquility Ring',
-        Ring2 = 'Tamas Ring',
+        Ring1 = 'Tamas Ring',
+        Ring2 = 'Tranquility Ring',
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
     },
 	['WS_MND_Conditional'] = {
-	},
-	
---[[
-	Weapon skill sets don't consider accuracy in their definitions. If an accuracy emphasis is
-	desired, the following set will replace the gear from the appropriate weapon skill set.
-	(Please note: only include accuracy gear here so that the weapon skill set has some emphasis
-	on the appropriate gear set loaded.
---]]
-
-	['WS_Accuracy'] = {
-        Ring1 = 'Jaeger Ring',
-    },	
-	['WS_Accuracy_Conditional'] = {
 	},
 	
 --[[
@@ -572,13 +554,9 @@ local sets = {
 	
 	-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration)
 	['Charm'] = {
+		Neck = 'Flower Necklace',			-- Chr +3
     },
 	['Charm_Conditional'] = {
-	},
-	
-	['Charm_Evasion'] = {
-	},
-	['Charm_Evasion_Conditional'] = {
 	},
 	
 --[[
@@ -599,6 +577,21 @@ local sets = {
 	['TH'] = {
 	},
 	['TH_Conditional'] = {
+	},
+	
+--[[
+	Enmity sets are used to boost/reduce enmity, accordingly
+--]]
+
+	['Enmity_Plus'] = {
+	},
+	['Enmity_Plus_Conditional'] = {
+	},
+
+	['Enmity_Minus'] = {
+        Ring1 = 'Tamas Ring',			-- -5 Enmity
+	},
+	['Enmity_Minus_Conditional'] = {
 	},
 	
 --[[
@@ -777,13 +770,24 @@ profile.HandleDefault = function()
 	if player.Status == 'Engaged' then		-- Player is fighting. Priority (low to high): TP,evasion,accuracy
 		gFunc.EquipSet(sets.TP);
 		gcinclude.ProcessConditional(sets.TP_Conditional,nil);
+		-- Possible evasion override
 		if gcdisplay.GetToggle('Eva') == true then
-			gFunc.EquipSet(sets.TP_Evasion);
-			gcinclude.ProcessConditional(sets.TP_Evasion_Conditional,nil);
+			gFunc.EquipSet(sets.Evasion);
+			gcinclude.ProcessConditional(sets.Evasion_Conditional,nil);
 		end
+		-- Possible enmity override
+		local sEmn = gcdisplay.GetCycle('Enmity');
+		if sEmn == 'Minus' then
+			gFunc.EquipSet(sets.Enmity_Minus);
+			gcinclude.ProcessConditional(sets.Enmity_Minus_Conditional,nil);				
+		elseif sEmn == 'Plus' then
+			gFunc.EquipSet(sets.Enmity_Plus);
+			gcinclude.ProcessConditional(sets.Enmity_Plus_Conditional,nil);			
+		end
+		-- Possible accuracy override
 		if gcdisplay.GetToggle('Acc') == true then 
-			gFunc.EquipSet(sets.TP_Accuracy);
-			gcinclude.ProcessConditional(sets.TP_Accuracy_Conditional,nil);
+			gFunc.EquipSet(sets.Accuracy);
+			gcinclude.ProcessConditional(sets.Accuracy_Conditional,nil);
 		end
 	elseif player.Status == 'Resting' then	-- Player kneeling. Priority (low to high): Resting,refresh
 		gFunc.EquipSet(sets.Resting);
@@ -842,7 +846,7 @@ end
 
 profile.HandleAbility = function()
 	local ability = gData.GetAction();
-	
+			
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
@@ -856,6 +860,24 @@ profile.HandleAbility = function()
 	elseif string.match(ability.Name, 'Souleater') then
 		gFunc.EquipSet(sets.Souleater);
 		gcinclude.ProcessConditional(sets.Souleater_Conditional,nil);
+	elseif string.match(ability.Name, 'Charm') then						-- assumes /bst	
+		gFunc.EquipSet(sets.Charm);
+		gcinclude.ProcessConditional(sets.Charm_Conditional,nil);
+		
+		-- If evasion is wanted, override the appropriate gear
+		if gcdisplay.GetToggle('eva') == true then
+			gFunc.EquipSet(sets.Evasion);
+			gcinclude.ProcessConditional(sets.Evasion_Conditional,nil);
+		end
+		-- If enmity is wanted, override
+		local sEmn = gcdisplay.GetCycle('Enmity');
+		if sEmn == 'Minus' then
+			gFunc.EquipSet(sets.Enmity_Minus);
+			gcinclude.ProcessConditional(sets.Enmity_Minus_Conditional,nil);				
+		elseif sEmn == 'Plus' then
+			gFunc.EquipSet(sets.Enmity_Plus);
+			gcinclude.ProcessConditional(sets.Enmity_Plus_Conditional,nil);			
+		end
 	end
 end
 	
@@ -946,11 +968,6 @@ profile.HandleMidcast = function()
 	elseif string.match(spell.Name, 'Stoneskin') then
 		gFunc.EquipSet(sets.Stoneskin);
 		gcinclude.ProcessConditional(sets.Stoneskin_Conditional,nil);
-		-- Stoneskin is heavily affected by MND, but it's an enhancing spell, so
-		-- MND gear wasn't loaded above. Additionally, MND is more potent than
-		-- Enhancing skill. Load that here.
-		gFunc.EquipSet(sets.MND);
-		gcinclude.ProcessConditional(sets.MND_Conditional,nil);
 	elseif string.contains(spell.Name, 'Refresh') then
 		gFunc.EquipSet(sets.Refresh);
 		gcinclude.ProcessConditional(sets.Refresh_Conditional,nil);
@@ -964,8 +981,8 @@ profile.HandleMidcast = function()
 
 	-- Then magical accuracy
 	if gcdisplay.GetToggle('acc') == true then
-		gFunc.EquipSet(sets.macc);
-		gcinclude.ProcessConditional(sets.macc_Conditional,nil);
+		gFunc.EquipSet(sets.Macc);
+		gcinclude.ProcessConditional(sets.Macc_Conditional,nil);
 	end
 		
 	-- Then the appropriate magic skill
@@ -1102,6 +1119,20 @@ profile.HandleWeaponskill = function()
 				if sGorget ~= nil then
 					gFunc.ForceEquip('Neck',sGorget);
 				end
+			end
+			-- if enmity wanted, load that
+			local sEmn = gcdisplay.GetCycle('Enmity');
+			if sEmn == 'Minus' then
+				gFunc.EquipSet(sets.Enmity_Minus);
+				gcinclude.ProcessConditional(sets.Enmity_Minus_Conditional,nil);				
+			elseif sEmn == 'Plus' then
+				gFunc.EquipSet(sets.Enmity_Plus);
+				gcinclude.ProcessConditional(sets.Enmity_Plus_Conditional,nil);			
+			end
+			-- Lastly, if accuracy indicated, load that
+			if gcdisplay.GetToggle('acc') == true then
+				gFunc.EquipSet(sets.Accuracy);
+				gcinclude.ProcessConditional(sets.Accuracy_Conditional,nil);
 			end
 		end
 	end

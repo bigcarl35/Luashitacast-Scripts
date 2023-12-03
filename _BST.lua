@@ -138,7 +138,7 @@ local sets = {
         Body = 'Narasimha\'s Vest',
         Hands = 'Thick Mufflers',
         Ring1 = 'Sun Ring',
-        Ring2 = 'Tamas Ring',
+        Ring2 = 'Sun Ring',
         Back = 'Psilos Mantle',
         Waist = 'Swift Belt',
         Legs = 'Thick Breeches',
@@ -151,68 +151,8 @@ local sets = {
 	
 	['TP_Pet'] = {
         Head = 'Shep. Bonnet',
-        Neck = 'Ryl.Grd. Collar',
-        Ear1 = 'Coral Earring',
-        Ear2 = 'Beastly Earring',
-        Body = 'Narasimha\'s Vest',
-        Hands = 'Thick Mufflers',
-        Ring1 = 'Sun Ring',
-        Ring2 = 'Sun Ring',
-        Back = 'Psilos Mantle',
-        Waist = 'Swift Belt',
-        Legs = 'Thick Breeches',
-        Feet = 'Thick Sollerets',
     },
 	['TP_Pet_Conditional'] = {
-		{'BD-1','Gaudy Harness','Adds refresh if MP < 50'},
-		{'RN-11','Tamas Ring','will equip if subjob can do magic'}
-	},
-	
-	['TP_Accuracy'] = {
-        Head = 'Optical Hat',
-        Neck = 'Ryl.Grd. Collar',
-        Ear1 = 'Coral Earring',
-        Ear2 = 'Beastly Earring',
-        Body = 'Narasimha\'s Vest',
-        Hands = 'Thick Mufflers',
-        Ring1 = 'Jaeger Ring',
-        Ring2 = 'Toreador\'s Ring',
-        Back = 'Psilos Mantle',
-        Waist = 'Life Belt',
-        Legs = 'Thick Breeches',
-        Feet = 'Thick Sollerets',
-    },
-	['TP_Accuracy_Conditional'] = {
-	},
-	
-	['TP_Pet_Accuracy'] = {
-        Head = 'Shep. Bonnet',
-        Neck = 'Ryl.Grd. Collar',
-        Ear1 = 'Coral Earring',
-        Ear2 = 'Beastly Earring',
-        Body = 'Narasimha\'s Vest',
-        Hands = 'Thick Mufflers',
-        Ring1 = 'Sun Ring',
-        Ring2 = 'Tamas Ring',
-        Back = 'Psilos Mantle',
-        Waist = 'Life Belt',
-        Legs = 'Thick Breeches',
-        Feet = 'Thick Sollerets',
-    },
-	['TP_Pet_Accuracy_Conditional'] = {
-	},
-	
-	['TP_Evasion'] = {
-        Head = 'Optical Hat',
-        Body = 'Narasimha\'s Vest',
-        Legs = 'San. Trousers',
-    },
-	['TP_Evasion_Conditional'] = {
-	},
-	
-	['TP_Pet_Evasion'] = {
-	},
-	['TP_Pet_Evasion_Conditional'] = {
 	},
 	
 --[[
@@ -315,19 +255,20 @@ local sets = {
 --]]
 
 	['INT'] = {
+        Head = 'Beast helm',			-- +5 INT
         Ring1 = 'Tamas Ring',			-- +2~5 INT
         Ring2 = 'Windurstian Ring',		-- +1 INT
+		Waist = 'Mrc.Cpt. Belt',		-- +1 INT
         Feet = 'Mannequin Pumps',		-- +1 INT
     },
 	['INT_Conditional'] = {
 	},
 	
 	['MND'] = {
-        Head = 'Beast helm',			-- +3 MND
         Neck = 'Justice Badge',			-- +3 MND
         Body = 'Wonder Kaftan',			-- +1 MND
-        Ring1 = 'Tranquility Ring',		-- +2 MND
-        Ring2 = 'Tamas Ring',			-- +2~5 MND
+        Ring1 = 'Tamas Ring',			-- +2~5 MND
+        Ring2 = 'Tranquility Ring',		-- +2 MND
         Waist = 'Friar\'s Rope',		-- +1 MND
         Legs = 'Wonder Braccae',		-- +2 MND
         Feet = 'Mannequin Pumps',		-- +2 MND
@@ -355,6 +296,13 @@ local sets = {
 	
 	-- Combination of MND and enhancing skill. MND is 3x more important. There's also gear that enhances
 	['Stoneskin'] = {	
+	    Neck = 'Justice Badge',			-- +3 MND
+        Body = 'Wonder Kaftan',			-- +1 MND
+        Ring1 = 'Tamas Ring',			-- +2~5 MND
+        Ring2 = 'Tranquility Ring',		-- +2 MND
+        Waist = 'Friar\'s Rope',		-- +1 MND
+        Legs = 'Wonder Braccae',		-- +2 MND
+        Feet = 'Mannequin Pumps',		-- +2 MND
 	},	
 	['Stoneskin_Conditional'] = {
 	},
@@ -472,7 +420,7 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
-		Head = 'Beast helm',					-- +3 MND
+		Head = 'Mrc.Cpt. Headgear',				-- +1 STR
 		Neck = 'Justice badge',					-- +3 MND
         Ear2 = 'Beastly Earring',
 		Body = 'Narasimha\'s vest',				-- +3 STR
@@ -492,7 +440,7 @@ local sets = {
 --]]
 	
 	['WS_STRVIT'] = {
-		Head = 'Mercenary Captain\'s headgear',	-- +1 STR
+		Head = 'Mrc.Cpt. Headgear',				-- +1 STR
 		Neck = 'Spike necklace',				-- +3 STR
         Ear2 = 'Beastly Earring',
 		Body = 'Narasimha\'s vest',				-- +3 STR, +3 VIT
@@ -573,7 +521,6 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
-        Head = 'Beast Helm',					-- +3 MND
         Neck = 'Justice Badge',					-- +3 MND
         Ear2 = 'Beastly Earring',
         Body = 'Wonder Kaftan',					-- +1 MND
@@ -586,16 +533,13 @@ local sets = {
 	},
 	
 --[[
-	Weapon skill sets don't consider accuracy in their definitions. If an accuracy emphasis is
-	desired, the following set will replace the gear from the appropriate weapon skill set.
-	(Please note: only include accuracy gear here so that the weapon skill set has some emphasis
-	on the appropriate gear set loaded.
+	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
+	(Please note that Pet_Accuracy is applied after Accuracy if you have a pet.)
 --]]
 
-	['WS_Accuracy'] = {
+	['Accuracy'] = {
         Head = 'Optical Hat',					-- +10 Acc
         Neck = 'Ryl.Grd. Collar',				-- +4 Acc
-        Ear2 = 'Beastly Earring',
         Body = 'Narasimha\'s Vest',				-- +4 Acc
         Hands = 'Thick Mufflers',				-- +3 Acc
         Ring1 = 'Toreador\'s Ring',				-- +7 Acc
@@ -605,7 +549,27 @@ local sets = {
         Legs = 'Thick Breeches',				-- +2 Acc
         Feet = 'Thick Sollerets',				-- +2 Acc
     },	
-	['WS_Accuracy_Conditional'] = {
+	['Accuracy_Conditional'] = {
+	},
+
+	['Pet_Accuracy'] = {
+	    Head = 'Shep. Bonnet',					-- Pet Accuracy +5
+		Ear2 = 'Beastly Earring',				-- Pet Accuracy +10
+    },	
+	['Pet_Accuracy_Conditional'] = {
+	},
+
+--[[
+	If evasion wanted, equip evasion gear
+--]]	
+	['Evasion'] = {
+        Head = 'Optical Hat',					-- +10 eva
+        Body = 'Narasimha\'s Vest',				-- +4 eva
+		Hands = 'Ogre Gloves',					-- Default gear is Thick Mufflers which have -2 eva
+        Legs = 'San. Trousers',					-- +2 eva
+		Feet = 'Bounding Boots',				-- Default gear is Thick Sollerets which have -2 eva
+    },
+	['Evasion_Conditional'] = {
 	},
 	
 --[[
@@ -617,9 +581,8 @@ local sets = {
 	['Call_Beast_Conditional'] = {
 	},
 	
-	-- Reward potency, reward augment,eward enhancement, and MND gear
+	-- Reward potency, reward augment,reward enhancement, and MND gear
 	['Reward'] = {
-        Head = 'Beast Helm',			-- +3 MND
         Neck = 'Justice Badge',			-- +3 MND
         Body = 'Beast Jackcoat',		-- Augments reward
         Hands = 'Ogre Gloves',			-- Enhances reward
@@ -655,33 +618,19 @@ local sets = {
 	['Charm_Conditional'] = {
 	},
 	
-	['Charm_Evasion'] = {
+	['Pet_Attack'] = {					-- Pet's strength, not accuracy
 	},
-	['Charm_Evasion_Conditional'] = {
-	},
-	
-	-- Applies to both Sic and Ready. Consider pet accuracy, similar abilities
-	['PetReady'] = {
-        Head = 'Shep. Bonnet',			-- +5 Pet Acc
-        Ear2 = 'Beastly Earring',		-- +10 Pet Acc
-    },
-	['PetReady_Conditional'] = {
-	},
-	
-	-- Fight command: affected by pet's STR
-	['PetAttack'] = {	-- Fight command
-	},
-	['PetAttack_Conditional'] = {
+	['Pet_Attack_Conditional'] = {
 	},
 
-	['PetMagicAccuracy'] = {
+	['Pet_Macc'] = {					-- Pet's Magical Accuracy
 	},
-	['PetMagicAccuracy_Conditional'] = {
+	['Pet_Macc_Conditional'] = {
 	},
 	
-	['PetMagicAttack'] = {
+	['Pet_Matt'] = {					-- Pet's Magical Attack
 	},
-	['PetMagicAttack_Conditional'] = {
+	['Pet_Matt_Conditional'] = {
 	},
 	
 --[[
@@ -702,6 +651,21 @@ local sets = {
 	['TH'] = {
 	},
 	['TH_Conditional'] = {
+	},
+
+--[[
+	Enmity sets are used to boost/reduce enmity, accordingly
+--]]
+
+	['Enmity_Plus'] = {
+	},
+	['Enmity_Plus_Conditional'] = {
+	},
+
+	['Enmity_Minus'] = {
+        Ring1 = 'Tamas Ring',			-- -5 Enmity
+	},
+	['Enmity_Minus_Conditional'] = {
 	},
 	
 --[[
@@ -854,17 +818,20 @@ profile.sAmmo = nil;
 
 local function HandlePetAction(PetAction)
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
-		gFunc.EquipSet(sets.PetReady);
 
 		if (gcinclude.BstPetAttack:contains(PetAction.Name)) then
-			gFunc.EquipSet(sets.PetAttack);
-			gcinclude.ProcessConditional(sets.PetAttack_Conditional,nil);	
+			gFunc.EquipSet(sets.Pet_Attack);
+			gcinclude.ProcessConditional(sets.Pet_Attack_Conditional,nil);
+			if gcdisplay.GetToggle('acc') == true then
+				gFunc.EquipSet(sets.Pet_Accuracy);
+				gcinclude.ProcessConditional(sets.Pet_Accuracy_Conditional,nil);	
+			end
 		elseif (gcinclude.BstPetMagicAttack:contains(PetAction.Name)) then
-			gFunc.EquipSet(sets.PetMagicAttack);
-			gcinclude.ProcessConditional(sets.PetMagicAttack_Conditional,nil);			
+			gFunc.EquipSet(sets.Pet_Matt);
+			gcinclude.ProcessConditional(sets.Pet_Matt_Conditional,nil);			
 		elseif (gcinclude.BstPetMagicAccuracy:contains(PetAction.Name)) then
-			gFunc.EquipSet(sets.PetMagicAccuracy);
-			gcinclude.ProcessConditional(sets.PetMagicAccuracy_Conditional,nil);			
+			gFunc.EquipSet(sets.Pet_Macc);
+			gcinclude.ProcessConditional(sets.Pet_Macc_Conditional,nil);			
 		end
     end
 end
@@ -1073,13 +1040,13 @@ profile.HandleDefault = function()
 		
 		-- Now process the player status accordingly
 		if player.Status == 'Engaged' then		-- Player is fighting. Priority (low to high): TP,evasion,accuracy
-			if pet == nil then
-				gFunc.EquipSet(sets.TP);
-				gcinclude.ProcessConditional(sets.TP_Conditional,nil);
-			else
+			gFunc.EquipSet(sets.TP);
+			gcinclude.ProcessConditional(sets.TP_Conditional,nil);
+			if pet ~= nil then
 				gFunc.EquipSet(sets.TP_Pet);
 				gcinclude.ProcessConditional(sets.TP_Pet_Conditional,nil);
 			end
+			-- Possible evasion override
 			if gcdisplay.GetToggle('Eva') == true then
 				if pet == nil then
 					gFunc.EquipSet(sets.TP_Evasion);
@@ -1089,13 +1056,22 @@ profile.HandleDefault = function()
 					gcinclude.ProcessConditional(sets.TP_Pet_Evasion_Conditional,nil);				
 				end			
 			end
+			-- Possible enmity override
+			local sEmn = gcdisplay.GetCycle('Enmity');
+			if sEmn == 'Minus' then
+				gFunc.EquipSet(sets.Enmity_Minus);
+				gcinclude.ProcessConditional(sets.Enmity_Minus_Conditional,nil);				
+			elseif sEmn == 'Plus' then
+				gFunc.EquipSet(sets.Enmity_Plus);
+				gcinclude.ProcessConditional(sets.Enmity_Plus_Conditional,nil);			
+			end
+			-- Possible accuracy override
 			if gcdisplay.GetToggle('Acc') == true then 
-				if pet == nil then
-					gFunc.EquipSet(sets.TP_Accuracy);
-					gcinclude.ProcessConditional(sets.TP_Accuracy_Conditional,nil);
-				else
-					gFunc.EquipSet(sets.TP_Pet_Accuracy);
-					gcinclude.ProcessConditional(sets.TP_Pet_Accuracy_Conditional,nil);				
+				gFunc.EquipSet(sets.Accuracy);
+				gcinclude.ProcessConditional(sets.Accuracy_Conditional,nil);
+				if pet ~= nil then
+					gFunc.EquipSet(sets.Pet_Accuracy);
+					gcinclude.ProcessConditional(sets.Pet_Accuracy_Conditional,nil);				
 				end
 			end
 		elseif player.Status == 'Resting' then	-- Player kneeling. Priority (low to high): Resting,refresh
@@ -1210,8 +1186,10 @@ profile.HandleAbility = function()
 			gFunc.EquipSet(sets.Reward);
 			gcinclude.ProcessConditional(sets.Reward_Conditional,nil);
 		elseif string.match(ability.Name, 'Ready') or string.match(ability.Name, 'Sic') then
-			gFunc.EquipSet(sets.PetReady);
-			gcinclude.ProcessConditional(sets.PetReady_Conditional,nil);
+			if gcdisplay.GetToggle('acc') == true then
+				gFunc.EquipSet(sets.Pet_Accuracy);
+				gcinclude.ProcessConditional(sets.Pet_Accuracy_Conditional,nil);
+			end
 		elseif string.match(ability.Name, 'Tame') then
 			gFunc.EquipSet(sets.Tame);
 			gcinclude.ProcessConditional(sets.Tame_Conditional,nil);
@@ -1221,8 +1199,17 @@ profile.HandleAbility = function()
 		
 			-- If evasion is wanted, override the appropriate gear
 			if gcdisplay.GetToggle('eva') == true then
-				gFunc.EquipSet(sets.Charm_Evasion);
-				gcinclude.ProcessConditional(sets.Charm_Evasion_Conditional,nil);
+				gFunc.EquipSet(sets.Evasion);
+				gcinclude.ProcessConditional(sets.Evasion_Conditional,nil);
+			end
+			-- If enmity is wanted, override
+			local sEmn = gcdisplay.GetCycle('Enmity');
+			if sEmn == 'Minus' then
+				gFunc.EquipSet(sets.Enmity_Minus);
+				gcinclude.ProcessConditional(sets.Enmity_Minus_Conditional,nil);				
+			elseif sEmn == 'Plus' then
+				gFunc.EquipSet(sets.Enmity_Plus);
+				gcinclude.ProcessConditional(sets.Enmity_Plus_Conditional,nil);			
 			end
 			
 			-- If weapon swapping is allowed, equip a light/apollo staff (if you have one)
@@ -1462,6 +1449,20 @@ profile.HandleWeaponskill = function()
 				if sGorget ~= nil then
 					gFunc.ForceEquip('Neck',sGorget);
 				end
+			end
+			-- if enmity wanted, load that
+			local sEmn = gcdisplay.GetCycle('Enmity');
+			if sEmn == 'Minus' then
+				gFunc.EquipSet(sets.Enmity_Minus);
+				gcinclude.ProcessConditional(sets.Enmity_Minus_Conditional,nil);				
+			elseif sEmn == 'Plus' then
+				gFunc.EquipSet(sets.Enmity_Plus);
+				gcinclude.ProcessConditional(sets.Enmity_Plus_Conditional,nil);			
+			end
+			-- Lastly, if accuracy indicated, load that
+			if gcdisplay.GetToggle('acc') == true then
+				gFunc.EquipSet(sets.Accuracy);
+				gcinclude.ProcessConditional(sets.Accuracy_Conditional,nil);
 			end
 		end
 	end
