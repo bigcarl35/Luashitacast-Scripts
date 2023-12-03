@@ -64,6 +64,7 @@ function gcdisplay.ShowHelp(args)
 		print(chat.header('Help'):append(chat.message('/maxspell name -- Determines the highest level spell your current jobs can cast that has the passed name')));
 		print(chat.header('Help'):append(chat.message('/maxsong name [back] -- Determines the highest level song your current jobs can cast that has the passed name or next to highest')));
 		print(chat.header('Help'):append(chat.message('/th --Toggles on whether treasure hunter gear should be equipped. Default is FALSE.')));
+		print(chat.header('Help'):append(chat.message('/enmity [OFF|PLUS|MINUS] --Determines if/type of enmity gear to equip. Default is OFF')));
 		print(chat.header('Help'):append(chat.message('/equipit code|name [slot] [1|2] --Equips specified item in the specified slot and turns off /gswap.')));
 		print(chat.header('Help'):append(chat.message('/dowep code|name --Equips specified weapon and turns off /gswap.')));
 		print(chat.header('Help'):append(chat.message('/help [command] --Display this listing or specific details on the specified command.')));
@@ -126,6 +127,8 @@ function gcdisplay.ShowHelp(args)
 			print(chat.header('Help'):append(chat.message('/maxsong name [back] --This determines the highest level song that matches the name you indicated to cast or one of the max if asked for.')));			
 		elseif cmd == 'th' then
 			print(chat.header('Help'):append(chat.message('/th --Toggles whether TH gear should be equipped or not. Default is FALSE.')));
+		elseif cmd == 'emmity' then
+			print(chat.header('Help'):append(chat.message('/enmity [OFF|PLUS|MINUS] --Lets you enable whether enmity gear should be equipped and type. Default is OFF.')));			
 		elseif cmd == 'equipit' then
 			print(chat.header('Help'):append(chat.message('/equipit code|name [slot] [1|2] --Equips specified item (either coded or full name) in the specified slot and turns off /GSWAP. Note that if the item contains a space in the name, you have to surround the name with double quotes.')));
 		elseif cmd == 'help' then
