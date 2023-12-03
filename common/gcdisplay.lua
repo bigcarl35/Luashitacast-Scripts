@@ -24,6 +24,7 @@ local JobBar = T{['GSwap'] = {'ALL','MS'},
 				 ['AJug'] = {'BST','M'},			-- BST field, only valid if BST is main job
 				 ['DT_Type'] = {'ALL','MS'},
 				 ['Region'] = {'ALL','MS'},
+				 ['Enmity'] = {'ALL','MS'}, 
 				 ['sBP'] = {'SMN','MS'}};			-- DRK field
 
 local fontSettings = T{

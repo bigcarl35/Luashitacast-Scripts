@@ -125,7 +125,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','dt_type','kite','acc','eva','craftset','gatherset','fishset','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','dt_type','kite','acc','eva','craftset','gatherset','fishset','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','enmity'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T {'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T {'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -1046,6 +1046,7 @@ function gcinclude.SetVariables()
 	end
 	
 	gcdisplay.CreateCycle('DT_Type', {[1] = gcinclude.PHY, [2] = gcinclude.MAG, [3] = gcinclude.BRE});
+	gcdisplay.CreateCycle('Enmity', {[1] = 'Off', [2] = 'Minus', [3] = 'Plus'});
 	gcdisplay.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned'});
 	
 	-- Initialize what weapons are equipped
@@ -1667,7 +1668,7 @@ function gcinclude.HandleCommands(args)
 			gcdisplay.SetCycle('DT_Type',sType);
 		end
 		toggle = 'DT_Type';
-		status = gcdisplay.GetToggle('DT_Type');
+		status = gcdisplay.GetCycle('DT_Type');
 	elseif (args[1] == 'kite') then			-- Turns on/off whether movement gear is equipped
 		gcdisplay.AdvanceToggle('Kite');
 		toggle = 'Kite Set';
@@ -1759,6 +1760,21 @@ function gcinclude.HandleCommands(args)
 		status = gcdisplay.GetToggle('GSwap');
 	elseif (args[1] == 'showit') then			-- Shows debug info for specified type: staff
 		gcinclude.DB_ShowIt(args[2]);
+	elseif (args[1] == 'enmity') then
+		if #args == 1 then			-- No qualifier, assume next in set
+			gcdisplay.AdvanceCycle('Enmity');
+		else
+			local sType = string.lower(args[2]);
+			local sSet = 'Off';
+			if  sType == 'minus' then
+				sSet = 'Minus';
+			elseif sType == 'plus' then
+				sSet = 'Plus';
+			end
+			gcdisplay.SetCycle('Enmity',sSet);
+		end
+		toggle = 'Enmity';
+		status = gcdisplay.GetCycle('Enmity');
 	elseif (args[1] == 'gearset') then			-- Forces a gear set to be loaded and turns GSWAP off
 		if #args > 1 then
 			gFunc.ForceEquipSet(args[2]);
