@@ -344,6 +344,7 @@ local sets = {
 	['Summoning'] = {
 		Head = 'Austere hat',			-- Summoning magic skill +2
         Neck = 'Smn. Torque',			-- Summoning magic skill +7
+		Body = 'Austere Robe',
         Ring1 = 'Evoker\'s Ring',		-- Summoning magic skill +10
     },
 	['Summoning_Conditional'] = {
@@ -405,7 +406,19 @@ local sets = {
 	},
 	['Refresh_Conditional'] = {
 	},
-
+	
+	['Sneak'] = {
+		Feet = 'Dream Boots +1',
+	},
+	['Sneak_Conditional'] = {
+	},
+	
+	['Invisible'] = {
+		Hands = 'Dream Mittens +1',
+	},
+	['Invisible_Conditional'] = {
+	},
+	
 --[[
 		SMN can use the following weapons: staff (B), Club (C+), dagger (E). Any other weapon will have 
 		no weaponskill available. Weapon skill sets are named based on stat(s) used, regardless of weapon
@@ -1090,7 +1103,7 @@ profile.HandleMidcast = function()
 			gFunc.EquipSet(sets.MND);
 			gcinclude.ProcessConditional(sets.MND_Conditional,nil);
 		elseif sSet == 'INT' then
-			gfunc.EquipSet(sets.INT);
+			gFunc.EquipSet(sets.INT);
 			gcinclude.ProcessConditional(sets.INT_Conditional,nil);
 		end
 	end
@@ -1137,12 +1150,24 @@ profile.HandleMidcast = function()
 		end				
 	end
 
+--[[
+	There's a couple of spells that have to go here: sneak and invisible
+--]]
+
+	if string.match(spell.Name, 'Sneak') then
+		gFunc.EquipSet(sets.Sneak);
+		gcinclude.ProcessConditional(sets.Sneak_Conditional,nil);
+	elseif string.match(spell.Name, 'Invisible') then
+		gFunc.EquipSet(sets.Invisible);
+		gcinclude.ProcessConditional(sets.Invisible_Conditional,nil);
+	end
+	
 --[[		
-		Then, regardless of type of spell, see if an obi would help. No need to check and see if the 
-		player has the obi or not, if they do, it equips. If not, nothing happens.
+	Then, regardless of type of spell, see if an obi would help. No need to check and see if the 
+	player has the obi or not, if they do, it equips. If not, nothing happens.
 		
-		Note: This seems like a repeat of the obi check in the precast, but in this case it's checking
-		for the spell damage type rather than the spell accuracy.
+	Note: This seems like a repeat of the obi check in the precast, but in this case it's checking
+	for the spell damage type rather than the spell accuracy.
 --]]
 
 	if gcinclude.settings.bEleObis == false then
