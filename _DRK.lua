@@ -33,9 +33,9 @@ local sets = {
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
         Ring1 = 'Tamas Ring',
-        Ring2 = 'Balance Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
+        Ring2 = 'Jaeger Ring',
+        Waist = 'Tilt Belt',
+        Legs = 'Ryl.Sqr. Breeches',
         Feet = 'Bounding Boots',
     },
 	['Idle_Conditional'] = {
@@ -130,10 +130,10 @@ local sets = {
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
         Ring1 = 'Tamas Ring',
-        Ring2 = 'Balance Ring',
+        Ring2 = 'Jaeger Ring',
 		Back = 'Ram mantle',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
+        Waist = 'Tilt Belt',
+		Legs = 'Ryl.Sqr. Breeches',
         Feet = 'Bounding Boots',
     },
 	['TP_Conditional'] = {
@@ -333,6 +333,18 @@ local sets = {
 	['Drain'] = {
     },
 	['Drain_Conditional'] = {
+	},
+	
+	['Sneak'] = {
+		Feet = 'Dream Boots +1',
+	},
+	['Sneak_Conditional'] = {
+	},
+	
+	['Invisible'] = {
+		Hands = 'Dream Mittens +1',
+	},
+	['Invisible_Conditional'] = {
 	},
 	
 --[[
@@ -1009,6 +1021,18 @@ profile.HandleMidcast = function()
 		end				
 	end
 
+--[[
+	There's a couple of spells that have to go here: sneak and invisible
+--]]
+
+	if string.match(spell.Name, 'Sneak') then
+		gFunc.EquipSet(sets.Sneak);
+		gcinclude.ProcessConditional(sets.Sneak_Conditional,nil);
+	elseif string.match(spell.Name, 'Invisible') then
+		gFunc.EquipSet(sets.Invisible);
+		gcinclude.ProcessConditional(sets.Invisible_Conditional,nil);
+	end
+	
 --[[		
 	Then, regardless of type of spell, see if an obi would help. No need to check and see if the 
 	player has the obi or not, if they do, it equips. If not, nothing happens.

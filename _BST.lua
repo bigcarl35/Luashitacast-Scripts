@@ -312,7 +312,19 @@ local sets = {
 	},
 	['Refresh_Conditional'] = {
 	},
-
+	
+	['Sneak'] = {
+		Feet = 'Dream Boots +1',
+	},
+	['Sneak_Conditional'] = {
+	},
+	
+	['Invisible'] = {
+		Hands = 'Dream Mittens +1',
+	},
+	['Invisible_Conditional'] = {
+	},
+	
 --[[
 		BST can use the following weapons: axe (A-), scythe (B-), dagger (C+), club(D), sword (E). Any other weapon
 		will have no weaponskill available. Weapon skill sets are named based on stat(s) used, regardless of weapon
@@ -1342,6 +1354,18 @@ profile.HandleMidcast = function()
 			end				
 		end
 
+--[[
+	There's a couple of spells that have to go here: sneak and invisible
+--]]
+
+	if string.match(spell.Name, 'Sneak') then
+		gFunc.EquipSet(sets.Sneak);
+		gcinclude.ProcessConditional(sets.Sneak_Conditional,nil);
+	elseif string.match(spell.Name, 'Invisible') then
+		gFunc.EquipSet(sets.Invisible);
+		gcinclude.ProcessConditional(sets.Invisible_Conditional,nil);
+	end
+	
 --[[		
 		Then, regardless of type of spell, see if an obi would help. No need to check and see if the 
 		player has the obi or not, if they do, it equips. If not, nothing happens.
