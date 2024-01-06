@@ -1548,22 +1548,23 @@ function gcinclude.SwapToStave(sStave,noSave)
 		(gcinclude.elemental_staves[sStave][2] == true or gcinclude.elemental_staves[sStave][4] == true)) then
 
 		-- See if a current weapon is the one of the targetted staves
-		if not ((string.lower(eWeap) == string.lower(gcinclude.elemental_staves[sStave][1])) or 
-			(string.lower(eWeap) == string.lower(gcinclude.elemental_staves[sStave][3]))) then
+		if not (eWeap == nil or
+				string.lower(eWeap) == string.lower(gcinclude.elemental_staves[sStave][1]) or 
+				string.lower(eWeap) == string.lower(gcinclude.elemental_staves[sStave][3])) then
 			-- save the weapon so it can be equipped again
 			if eWeap ~= gcinclude.weapon and noSave == false and gcinclude.settings.bSummoner == false then
 				gcinclude.weapon = eWeap;
 				gcinclude.offhand = eOff;
 			end
+		end
 
-			-- Now, try the HQ and then the NQ
-			if gcinclude.elemental_staves[sStave][4] == true then
-				pos = 3;
-			else
-				pos = 1;
-			end
-			gFunc.ForceEquip('Main', gcinclude.elemental_staves[sStave][pos]);
-			end
+		-- Now, try the HQ and then the NQ
+		if gcinclude.elemental_staves[sStave][4] == true then
+			pos = 3;
+		else
+			pos = 1;
+		end
+		gFunc.ForceEquip('Main', gcinclude.elemental_staves[sStave][pos]);
 		end
 	end		-- gcinclude.SwapToStave
 --[[
