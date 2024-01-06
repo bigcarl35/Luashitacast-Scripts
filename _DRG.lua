@@ -161,7 +161,7 @@ local sets = {
 	['AncientCircle_Conditional'] = {
 	},
 	
-	['Jumps'] = [
+	['Jumps'] = {
 	},
 	['Jumps_Conditional'] = {
 	},
@@ -1016,7 +1016,7 @@ profile.HandleWeaponskill = function()
 			local sWS = gcinclude.WsStat(ws.Name,'STR');	-- Equip appropriate gear for weapon skill
 			gFunc.EquipSet(sWS);
 
-.			if sWS == 'WS_AGI' then
+			if sWS == 'WS_AGI' then
 				gcinclude.ProcessConditional(sets.WS_AGI_Conditional,nil);			
 			elseif sWS == 'WS_CHR' then
 				gcinclude.ProcessConditional(sets.WS_CHR_Conditional,nil);
