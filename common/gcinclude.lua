@@ -119,6 +119,10 @@ gcinclude.settings = {
 	bObiGorget = false;	 -- indicates if the auto-detection of elemental obis/gorgets has successfully occurred
 	bAketon = false;	 -- indicates if the auto-detection of aketons has successfully occurred
 	bMagicCheck = false; -- indicates if the check on magic support has occurred
+	--
+	bIsCapped = false;	-- indicates if in a capped area/bcnm/etc
+	bCapped = false;	-- indicates if the capped process has occurred
+	iCapped = 0;		-- level determined by capped process
 };
 
 -- The following arrays are used by the functions contained in this file. Probably best to leave them alone
@@ -160,9 +164,9 @@ gcinclude.Gathering_Types = 'HELM,DIG,CLAM';
 --[[
 	The following define all the weaponskills according to the desired stats
 --]]
-gcinclude.WS_AGI = 'Hot Shot,Split Shot,Sniper Shot,Slugshot,Blast Shot,Heavy Shot,Detonator';
+gcinclude.WS_AGI = 'Hot Shot,Split Shot,Sniper Shot,Slugshot,Blast Shot,Heavy Shot,Detonator,Geirskogul';
 gcinclude.WS_CHR = 'Shadowstitch';
-gcinclude.WS_DEX = 'Wasp Sting,Viper Bite,Eviseration,Onslaught,Geirskogul,Blade: Metsu';
+gcinclude.WS_DEX = 'Wasp Sting,Viper Bite,Eviseration,Onslaught,Blade: Metsu';
 gcinclude.WS_DEXAGI = 'Shark Bite,Coronach';
 gcinclude.WS_DEXCHR = 'Dancing Edge';
 gcinclude.WS_DEXINT = 'Gust Slash,Cyclone';
@@ -1170,7 +1174,7 @@ function gcinclude.CheckTime(hr,t,bReport)
 end		-- gcinclude.CheckTime
 	
 --[[
-	ProcessConditional determines if any of the specified consitional equipment should be loaded. 
+	ProcessConditional determines if any of the specified conditional equipment should be loaded. 
 	tTable is the conditional gear.
 	
 	WIP, need to rethink this some. Of concern is multiple conditions. Initially will only support
@@ -1841,7 +1845,7 @@ end		-- gcinclude.CheckCommonDebuffs
 
 --[[
 	CheckAbilityRecast determines if an ability can be cast. (It sees if the ability is
-	currently cooling down.
+	currently cooling down.)
 --]]
 
 function gcinclude.CheckAbilityRecast(check)
@@ -2211,6 +2215,8 @@ end		-- gcinclude.CheckWsBailout
 --[[
 	CheckCancels determines if the spell that is being cast needs a previous version to be cancelled 
 	first and does so as needed
+	
+	Note: I don't think this works on HorizonXI
 --]]
 
 function gcinclude.CheckCancels()--tossed Stoneskin in here too
@@ -2373,7 +2379,9 @@ function gcinclude.doPetFood(action, sType)
 	end
 	
 	if sAction == 'all' then
-		-- Currently only 1=Inventory,2=Safe,3=storage,6=satchel,9=wardrobe,11=wardrobe 2 are used, but have included all for future expansion
+		-- Currently only 1=Inventory,2=Safe,3=storage,6=satchel,9=wardrobe,11=wardrobe 2 are used, but 
+		-- have included all for future expansion. (Note that 17=Wardrobe 8 holds event gear and is accessible,
+		-- but you can't store petfood in there.)
 		if not gcinclude.findString({1,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17},'pet f',false,sType) then
 			print(chat.header('doPetFood'):append(chat.message('No pet food found')));
 		end
@@ -2419,7 +2427,7 @@ function gcinclude.doPetFood(action, sType)
 end		-- gcinclude.doPetFood
 
 --[[
-	CheckDefaault is just a grouping routine to set common settings
+	CheckDefault is just a grouping routine to set common settings
 --]]
 
 function gcinclude.CheckDefault()
