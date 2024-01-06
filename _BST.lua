@@ -1439,7 +1439,7 @@ profile.HandleWeaponskill = function()
 				gcinclude.ProcessConditional(sets.WS_DEX_Conditional,nil);
 			elseif sWS == 'WS_DEXINT' then
 				gcinclude.ProcessConditional(sets.WS_DEXINT_Conditional,nil);
-			.elseif sWS == 'WS_STR' then
+			elseif sWS == 'WS_STR' then
 				gcinclude.ProcessConditional(sets.WS_STR_Conditional,nil);
 			elseif sWS == 'WS_MND' then
 				gcinclude.ProcessConditional(sets.WS_MND_Conditional,nil);
