@@ -402,11 +402,6 @@ local sets = {
 	['Stoneskin_Conditional'] = {
 	},
 	
-	['Refresh'] = { 
-	},
-	['Refresh_Conditional'] = {
-	},
-	
 	['Sneak'] = {
 		Feet = 'Dream Boots +1',
 	},
@@ -1115,9 +1110,6 @@ profile.HandleMidcast = function()
 	elseif string.match(spell.Name, 'Stoneskin') then
 		gFunc.EquipSet(sets.Stoneskin);			
 		gcinclude.ProcessConditional(sets.Stoneskin_Conditional,nil);		
-	elseif string.contains(spell.Name, 'Refresh') then
-		gFunc.EquipSet(sets.Refresh);
-		gcinclude.ProcessConditional(sets.Refresh_Conditional,nil);
 	end
 
 	-- Then magical accuracy

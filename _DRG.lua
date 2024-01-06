@@ -156,41 +156,26 @@ local sets = {
 	The following are abilities affected by gear
 --]]
 
-	['ArcaneCircle'] = {
+	['AncientCircle'] = {
     },
-	['ArcaneCircle_Conditional'] = {
+	['AncientCircle_Conditional'] = {
 	},
 	
-	['LastResort'] = {
-    },
-	['LastResort_Conditional'] = {
+	['Jumps'] = [
+	},
+	['Jumps_Conditional'] = {
 	},
 	
-	['Souleater'] = {
-    },
-	['Souleater_Conditional'] = {
+	['Jumps_Accuracy'] = {
+	},
+	['Jumps_Accuracy_Conditional'] = {
+	},
+	
+	['Spirit_Link'] = {
+	},
+	['Spirit_Link_Conditional'] = {
 	},
 		
---[[
-	Preshot is the first stage of when a ranged shot is being performed. This is where you place any 
-	Ranged Accuracy or Ranged Attack Speed gear. 
---]]
-
-	['Preshot'] = {
-    },
-	['Preshot_Conditional'] = {
-	},
-	
---[[
-	Midshot is the second stage of a ranged shot. This is where you place Ranged Attack or Ranged 
-	Damage gear
---]]
-
-	['Midshot'] = {
-    },
-	['Midshot_Conditional'] = {
-	},
-
 --[[
 	Spells are a bit different. Each type of spell can have it's own enhancement gear as well as 
 	stat based gear. (In some cases individual spells have special entries.) These sets do not 
@@ -226,7 +211,6 @@ local sets = {
 	},
 	
 	['Dark'] = {
-        Ring1 = 'Tamas Ring',
     },
 	['Dark_Conditional'] = {
 	},
@@ -297,7 +281,6 @@ local sets = {
 --]]
 
 	['Macc'] = {
-        Ring1 = 'Tamas Ring',			-- Magical Accuracy +5
     },
 	['Macc_Conditional'] = {
 	},
@@ -315,12 +298,6 @@ local sets = {
 	['Stoneskin'] = {	
 	},	
 	['Stoneskin_Conditional'] = {
-	},
-	
-	-- Potency of dread spikes depends on how much HP you have during cast
-    ['DreadSpikes'] = {
-    },
-	['DreadSpikes_Conditional'] = {
 	},
 	
 	-- Potency of drain depends on your dark magic skill, but a drain set is needed to include drain enhancing gear
@@ -342,19 +319,15 @@ local sets = {
 	},
 	
 --[[
-		DRK can use the following weapons: scythe (A+), great sword (A-), axe (B-), great axe (B-), sword (B-), dagger (C), club(C-).
-		Any other weapon will have no weaponskill available. Weapon skill sets are named based on stat(s) used, regardless of weapon
+		DRG can use the following weapons: polearm (A+), staff (B-), sword (A-), club(E), dagger (E).
+		Any other weapon will have no weaponskill available. Weapon skill sets are named based on stat(s) used, 
+		regardless of weapon
 
 		* Strength based or just skill based *
-		Scythe: Slice,Spinning Scythe,Vorpal Scythe
-		Great Sword: Hard Slash,Crescent Moon
-		Axe: Raging Axe,Smash Axe,Gale Axe,Avalanche Axe,Spinning Axe^,Rampage,Decimation^
-		Great Axe: Iron Tempest,Sturmwind^^,Keen Edge,Raging Rush
-		Sword: Flat Blade,Circle Blade,Spirits Within,Vorpal Blade
-		Club: Starlight,Brainshaker,Moonlight,Skullbreaker,True Strike
-		
-		^ Main or Sub must be WAR, DRK, or BST
-		^^ Main or Sub must be WAR, DRK or RUN
+		Polearm: Double Thrust,Leg Sweep,Skewer,Wheeling Thrust,Impulse Drive
+		Staff: Heavy Swing,Shell Crusher,Full Swing
+		Sword: Flat Blade,Circle Blade,Vorpal Blade,Spirits Within
+		Club: Starlight,Brainshaker,Skullbreaker,True Strike
 -]]
 	
 	['WS_STR'] = {
@@ -372,7 +345,7 @@ local sets = {
 
 --[[
 		* Strength and Agility based, even weighting *
-		Great Sword: Sickle Moon
+		Polearm: Vorpal Thrust
 --]]
 
 	['WS_STRAGI'] = {
@@ -392,6 +365,7 @@ local sets = {
 	
 --[[
 		* Strength and Dexterity based, even weighting *
+		Polearm: Penta Thrust
 		Sword: Fast Blade
 --]]
 
@@ -412,9 +386,9 @@ local sets = {
 
 --[[
 		* Strength and Intelligence based, even weighting *
-		Scythe: Dark Harvest,Shadow of Death,Nightmare Scythe,Spiral Hell, Catastrophe
-		Great Sword: Frostbite,Freezebite,Spinning Slash,Ground Strike
-		Sword: Burning Blade
+		Polearm: Thunder Thrust,Raiden Thrust
+		Staff: Rock Crusher
+		Sword: Burning Blade,Red Lotus Blade
 --]]
 	
 	['WS_STRINT'] = {
@@ -432,30 +406,10 @@ local sets = {
 	},
 
 --[[
-		* Strength and Intelligence based, 30%/20% respectively *
-		Sword: Red Lotus Blade
---]]
-	
-	['WS_STRINT_30_20'] = {
-        Neck = 'Spike Necklace',
-        Ear2 = 'Drone Earring',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'Tamas Ring',
-        Ring2 = 'Courage Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Wonder Clomps',
-    },
-	['WS_STRINT_30_20_Conditional'] = {
-	},
-
---[[
 		* Strength and Mind based, even weighting *
-		Scythe: Guillotine,Cross Reaper
-		Great Sword: Shockwave
-		Sword: Shining Blade,Seraph Blade
-		Club: Shining Strike,Seraph Strike,Judgement
+		Staff: Starburst,Retribution
+		Sword: Shining Blade,Seraph Blade	
+		Club: Shining Strike
 --]]
 
 	['WS_STRMND'] = {
@@ -472,27 +426,17 @@ local sets = {
 	},
 
 --[[
-		* Strength and Vitality based, even weighting *
-		Great Sword: Power Slash,Scourge
-		Great Axe: Shield Break,Armor Break,Weapon Break,Steel Cyclone^^
-		Sword: Shining Blade,Seraph Blade,Swift Blade,Savage Blade
-		
-		^^ WAR, DRK or RUN only
+		* Agility based *
+		Polearm: Geirskogul
 --]]
-	
-	['WS_STRVIT'] = {
-        Neck = 'Spike Necklace',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'Bastokan Ring',
-        Ring2 = 'Courage Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Wonder Clomps',
-    },
-	['WS_STRVIT_Conditional'] = {
-	},
 
+	['WS_AGI'] = {
+        Neck = 'Flower Necklace',
+        Waist = 'Mrc.Cpt. Belt',
+    },
+	['WS_AGI_Conditional'] = {
+	},
+	
 --[[
 		* Charisma based *
 		Dagger: Shadowstitch
@@ -507,9 +451,7 @@ local sets = {
 	
 --[[
 		* Dexterity based *
-		Dagger: Wasp Sting,Viper Bite^
-
-		^ Subjob must be one of: RDM,THF,BRD,RNG,NIN
+		Dagger: Wasp Sting
 --]]
 	
 	['WS_DEX'] = {
@@ -538,8 +480,24 @@ local sets = {
 	},
 
 --[[
+		* Intelligence and Mind based *
+		Staff: Spirit Taker
+--]]
+
+	['WS_INTMND'] = {
+        Neck = 'Justice Badge',
+        Body = 'Wonder Kaftan',
+        Ring1 = 'Tamas Ring',
+        Ring2 = 'Tranquility Ring',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Wonder Braccae',
+    },
+	['WS_INTMND_Conditional'] = {
+	},
+	
+--[[
 		* Mind based *
-		Dagger: Energy Steal, Energy Drain
+		Dagger: Energy Steal
 --]]
 
 	['WS_MND'] = {
@@ -595,7 +553,6 @@ local sets = {
 	},
 
 	['Enmity_Minus'] = {
-        Ring1 = 'Tamas Ring',			-- -5 Enmity
 	},
 	['Enmity_Minus_Conditional'] = {
 	},
@@ -621,31 +578,9 @@ local sets = {
     },
 	
 	['CAP25'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ear1 = 'Beetle Earring',
-        Ear2 = 'Beetle Earring',
-        Body = 'Beetle Harness',
-        Hands = 'Ryl.Ftm. Gloves',
-        Ring1 = 'Beetle Ring +1',
-        Ring2 = 'Beetle Ring +1',
-        Waist = 'Barbarian\'s Belt',
-        Legs = 'San. Trousers',
-        Feet = 'Bounding Boots',
     },
 	
 	['CAP30'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ear1 = 'Beetle Earring',
-        Ear2 = 'Beetle Earring',
-        Body = 'Beetle Harness',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'Tamas Ring',
-        Ring2 = 'Beetle Ring +1',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'San. Trousers',
-        Feet = 'Bounding Boots',
     },
 	
 	['CAP40'] = {
@@ -670,9 +605,9 @@ profile.sAmmo = nil;
 --]]
 
 local function SetSubjobSet(chkSJ)
-	local subs = {['WAR'] = 2, ['MNK'] = 0, ['WHM'] = 2, ['BLM'] = 3, ['RDM'] = 2, ['THF'] = 3,
-				 ['PLD'] = 0, ['DRK'] = nil, ['BST'] = 0, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = 0,
-				 ['SAM'] = 1, ['NIN'] = 1, ['DRG'] = 1, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
+	local subs = {['WAR'] = 1, ['MNK'] = 2, ['WHM'] = 3, ['BLM'] = 3, ['RDM'] = 3, ['THF'] = 4,
+				 ['PLD'] = 1, ['DRK'] = 0, ['BST'] = 4, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = 4,
+				 ['SAM'] = 1, ['NIN'] = 1, ['DRG'] = nil, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
 				 ['DNC'] = 0, ['SCH'] = 0, ['GEO'] = 0, ['RUN'] = 0};
 	local sj = nil;
 
@@ -857,16 +792,20 @@ profile.HandleAbility = function()
 		return;
 	end
 	
-	if string.match(ability.Name, 'Arcane Circle') then
-		gFunc.EquipSet(sets.ArcaneCircle);
-		gcinclude.ProcessConditional(sets.ArcaneCircle_Conditional,nil);
-	elseif string.match(ability.Name, 'Last Resort') then
-		gFunc.EquipSet(sets.LastResort);
-		gcinclude.ProcessConditional(sets.LastResort_Conditional,nil);	
-	elseif string.match(ability.Name, 'Souleater') then
-		gFunc.EquipSet(sets.Souleater);
-		gcinclude.ProcessConditional(sets.Souleater_Conditional,nil);
-	elseif string.match(ability.Name, 'Charm') then						-- assumes /bst	
+	if string.contains(ability.Name,'Jump') then
+		gFunc.EquipSet(sets.Jumps);
+		gcinclude.ProcessConditional(sets.Jumps_Conditional,nil);
+		if gcdisplay.GetToggle('Acc') == true then 
+			gFunc.EquipSet(sets.Jumps_Accuracy);
+			gcinclude.ProcessConditional(sets.Jumps_Accuracy_Conditional,nil);
+		end
+	elseif string.contains(ability.Name,'Ancient') then
+		gFunc.EquipSet(sets.AncientCircle);
+		gcinclude.ProcessConditional(sets.AncientCircle_Conditional,nil);	
+	elseif string.contains(ability.Name,'Spirit') then
+		gFunc.EquipSet(sets.Spirit_Link);
+		gcinclude.ProcessConditional(sets.Spirit_Link_Conditional,nil);	
+	elseif string.contains(ability.Name, 'Charm') then						-- assumes /bst	
 		gFunc.EquipSet(sets.Charm);
 		gcinclude.ProcessConditional(sets.Charm_Conditional,nil);
 	end
@@ -975,9 +914,6 @@ profile.HandleMidcast = function()
 	elseif string.match(spell.Name, 'Stoneskin') then
 		gFunc.EquipSet(sets.Stoneskin);
 		gcinclude.ProcessConditional(sets.Stoneskin_Conditional,nil);
-	elseif string.contains(spell.Name, 'DreadSpikes') then
-		gFunc.EquipSet(sets.Dread_Spikes);
-		gcinclude.ProcessConditional(sets.DreadSpikes_Conditional,nil);
 	elseif string.contains(spell.Name, 'Drain') then
 		gFunc.EquipSet(sets.Drain);
 		gcinclude.ProcessConditional(sets.Drain_Conditional,nil);
@@ -1061,28 +997,6 @@ profile.HandleMidcast = function()
 end
 
 --[[
-	HandlePreshot loads Ranged Accuracy and Ranged Shot Speed Gear for a ranged attack
---]]
-
-profile.HandlePreshot = function()
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
-		gFunc.EquipSet(sets.Preshot);
-		gcinclude.ProcessConditional(sets.Preshot_Conditional,nil);
-	end
-end
-
---[[
-	HandleMidshot loads Ranged Attack and Damage gear for a ranged attack
---]]
-
-profile.HandleMidshot = function()
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
-		gFunc.EquipSet(sets.Midshot);
-		gcinclude.ProcessConditional(sets.Midshot_Conditional,nil);
-	end
-end
-
---[[
 	HandleWeaponskill loads the gear appropriately for the weapon skill you're doing
 --]]
 
@@ -1101,29 +1015,27 @@ profile.HandleWeaponskill = function()
 		else
 			local sWS = gcinclude.WsStat(ws.Name,'STR');	-- Equip appropriate gear for weapon skill
 			gFunc.EquipSet(sWS);
-			
-			if sWS == 'WS_CHR' then
+
+.			if sWS == 'WS_AGI' then
+				gcinclude.ProcessConditional(sets.WS_AGI_Conditional,nil);			
+			elseif sWS == 'WS_CHR' then
 				gcinclude.ProcessConditional(sets.WS_CHR_Conditional,nil);
 			elseif sWS == 'WS_DEX' then
 				gcinclude.ProcessConditional(sets.WS_DEX_Conditional,nil);
 			elseif sWS == 'WS_DEXINT' then
 				gcinclude.ProcessConditional(sets.WS_DEXINT_Conditional,nil);
+			elseif sWS == 'WS_INTMND' then
+				gcinclude.ProcessConditional(sets.WS_INTMND_Conditional,nil);
 			elseif sWS == 'WS_STR' then
 				gcinclude.ProcessConditional(sets.WS_STR_Conditional,nil);
 			elseif sWS == 'WS_MND' then
-				gcinclude.ProcessConditional(sets.WS_MND_Conditional,nil);
-			elseif sWS == 'WS_STRAGI' then
-				gcinclude.ProcessConditional(sets.WS_STRDEX_Conditional,nil);				
+				gcinclude.ProcessConditional(sets.WS_MND_Conditional,nil);		
 			elseif sWS == 'WS_STRDEX' then
 				gcinclude.ProcessConditional(sets.WS_STRDEX_Conditional,nil);
 			elseif sWS == 'WS_STRMND' then
 				gcinclude.ProcessConditional(sets.WS_STRMND_Conditional,nil);
 			elseif sWS == 'WS_STRINT' then
 				gcinclude.ProcessConditional(sets.WS_STRINT_Conditional,nil);
-			elseif sWS == 'WS_STRINT_30_20' then
-				gcinclude.ProcessConditional(sets.WS_STRINT_30_20_Conditional,nil);
-			elseif sWS == 'WS_STRVIT' then
-				gcinclude.ProcessConditional(sets.WS_STRVIT_Conditional,nil);
 			end
 			
 			-- See if an elemental gorget makes sense to equip

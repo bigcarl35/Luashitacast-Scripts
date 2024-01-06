@@ -307,12 +307,6 @@ local sets = {
 	['Stoneskin_Conditional'] = {
 	},
 	
-	-- Refresh gear, refresh duration gear
-	['Refresh'] = { 
-	},
-	['Refresh_Conditional'] = {
-	},
-	
 	['Sneak'] = {
 		Feet = 'Dream Boots +1',
 	},
@@ -1319,9 +1313,6 @@ profile.HandleMidcast = function()
 			-- Enhancing skill. Load that here.
 			gFunc.EquipSet(sets.MND);
 			gcinclude.ProcessConditional(sets.MND_Conditional,nil);
-		elseif string.contains(spell.Name, 'Refresh') then
-			gFunc.EquipSet(sets.Refresh);
-			gcinclude.ProcessConditional(sets.Refresh_Conditional,nil);
 		end
 
 		-- Then magical accuracy
@@ -1448,7 +1439,7 @@ profile.HandleWeaponskill = function()
 				gcinclude.ProcessConditional(sets.WS_DEX_Conditional,nil);
 			elseif sWS == 'WS_DEXINT' then
 				gcinclude.ProcessConditional(sets.WS_DEXINT_Conditional,nil);
-			elseif sWS == 'WS_STR' then
+			.elseif sWS == 'WS_STR' then
 				gcinclude.ProcessConditional(sets.WS_STR_Conditional,nil);
 			elseif sWS == 'WS_MND' then
 				gcinclude.ProcessConditional(sets.WS_MND_Conditional,nil);
