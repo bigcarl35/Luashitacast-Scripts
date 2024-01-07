@@ -90,7 +90,6 @@ gcinclude.sets = {
         Ammo = 'Shrimp Lure',
         Body = 'Angler\'s Tunica',
         Hands = 'Fsh. Gloves',
-        Ring2 = 'Pelican Ring',
         Legs = 'Fisherman\'s Hose',
         Feet = 'Waders',
     },
@@ -288,15 +287,14 @@ gcinclude.StatMagic = T{
 	['mnd'] = {'MND','banish,distract,frazzle,paralyze,slow,cure,curaga,cura'},
 };
 
--- This breaks out all spells/songs based on type of magic skill. Please note that "singing" includes instrument 
--- skills too
+-- This breaks out all spells based on type of magic skill. Please note that only the "root" of the spell name is listed
 gcinclude.MagicSkill = T{
-	['Cure'] = 'cure,curaga,cura',
+	['Healing'] = 'cure,curaga,cura,blindna,cursna,esuna,paralyna,poisona,raise,reraise,sacrifice,silena,stona,viruna',
 	['Dark'] = 'bio,drain,aspir,absorb-agi,absorb-chr,absorb-dex,absorb-int,absorb-mnd,absorb-str,absorb-vit,absorb-tp,absorb-acc,tractor,stun,dread',
 	['Divine'] = 'banish,holy,flash,repose,enlight',
 	['Enfeebling'] = 'bind,blind,dia,diaga,distract,frazzle,gravity,paralyze,poison,poisonga,sleep,sleepga,silence,slow',
 	['Enhancing'] = 'aquaveil,auspice,baraera,baraero,barblind,barblindra,barblizzard,barblizzara,barfira,barfire,barparalyze,barparalyzra,barpetra,barpetrify,barpoison,barpoisonra,barsilence,barsilenera,barsleep,barsleepra,barstone,barstonra,barthunder,barthundra,barvira,barvirus,barwater,barwatera,blaze,blink,deoderize,enaero,enblizzard,enfire,enstone,enthunder,enwater,erase,escape,flurry,haste,ice,invisible,phalanx,protect,protectra,refresh,regen,reprisal,retrace,shell,shellra,shock,sneak,stoneskin,teleport-altep,teleport-dem,teleport-holla,teleport-mea,teleport-vahzl,teleport-yhoat,warp',
-	['Elemental'] = 'aero,aeroga,blizzaga,blizzard,burn,burst,drown,fira,firaga,fire,flare,flood,freeze,frost,quake,rasp,shock,stone,stonega,thundaga,thunder,tornado,water,watera',
+	['Elemental'] = 'aero,aeroga,blizzaga,blizzard,burn,burst,drown,fira,firaga,fire,flare,flood,freeze,frost,quake,rasp,shock,stone,stonega,thundaga,thunder,tornado,water,waterga',
 	['Ninjitsu'] = 'tonko:,utsusemi:,katon:,hyoton:,huton:,doton:,raiton:,suiton:,kurayami:,hojo:,monomi:,dokumori:,jubaku:',
 	['Summoning'] = 'carbuncle,fenrir,ifrit,titan,leviathan,garuda,shiva,ramuh,diabolos,fire,ice,air,earth,thunder,water,light,dark,cait,siren,atomos,alexander,odin',
 };
@@ -1275,11 +1273,17 @@ function gcinclude.ProcessConditional(tTest,sType)
 					if iDay ~= nil or bNight or bDay then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end				
-				elseif tMatched[4] == 'MP<50' then			-- Equip if mp < 50 and total mp >= 50 and can do magic
-					if (gcinclude.settings.bMagic and gcinclude.settings.b50 and player.MP < 50) then
+				elseif tMatched[4] == 'MP<50' then						-- Equip if mp < 50 and total mp >= 50 and can do magic
+					if gcinclude.settings.bMagicCheck == false then 	-- Make sure magic settings are known.
+						gcinclude.CheckMagic50(player); 
+					end				
+					if gcinclude.settings.bMagic and gcinclude.settings.b50 and player.MP < 50 then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end
-				elseif tMatched[4] == 'SJ:MAGIC' then		-- Equip if subjob can do magic
+				elseif tMatched[4] == 'SJ:MAGIC' then					-- Equip if subjob can do magic
+					if gcinclude.settings.bMagicCheck == false then 	-- Make sure magic settings are known.
+						gcinclude.CheckMagic50(player); 
+					end
 					if gcinclude.settings.bSJ then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end
@@ -1724,7 +1728,7 @@ function gcinclude.HandleCommands(args)
 		end
 
 		if bOk then
-			gFunc.ForceEquipSet(gcinclude.sets.Crafting);							-- Load the default set
+			gFunc.EquipSet(gcinclude.sets.Crafting);								-- Load the default set
 			gcinclude.ProcessConditional(gcinclude.sets.Crafting_Conditional,sKey);	-- Then override w/any conditional that's true
 			gcdisplay.SetToggle('GSwap',false);
 			toggle = 'Crafting';
@@ -1752,7 +1756,7 @@ function gcinclude.HandleCommands(args)
 		end
 
 		if bOk then
-			gFunc.ForceEquipSet(gcinclude.sets.Gathering);								-- Load the default set
+			gFunc.EquipSet(gcinclude.sets.Gathering);									-- Load the default set
 			gcinclude.ProcessConditional(gcinclude.sets.Gathering_Conditional,sKey);	-- Then override w/any conditional that's true
 			gcdisplay.SetToggle('GSwap',false);
 			toggle = 'Gathering';
@@ -1782,7 +1786,7 @@ function gcinclude.HandleCommands(args)
 		status = gcdisplay.GetCycle('Enmity');
 	elseif (args[1] == 'gearset') then			-- Forces a gear set to be loaded and turns GSWAP off
 		if #args > 1 then
-			gFunc.ForceEquipSet(args[2]);
+			gFunc.EquipSet(args[2]);
 			if #args == 2 or string.lower(args[3]) ~= 'on' then
 				gcdisplay.SetToggle('GSwap',false);
 			else
@@ -1891,10 +1895,10 @@ function gcinclude.SetRegenRefreshGear()
 	local pet = gData.GetPet();
 	if (player.Status == 'Idle') then
 		if (player.HPP < gcinclude.settings.RegenGearHPP ) then 
-			gFunc.ForceEquipSet('Idle_Regen');
+			gFunc.EquipSet('Idle_Regen');
 		end
 		if (gcinclude.settings.bMagic and player.MPP < gcinclude.settings.RefreshGearMPP ) then 
-			gFunc.ForceEquipSet('Idle_Refresh');
+			gFunc.EquipSet('Idle_Refresh');
 		end
 	end
 end		-- gcinclude.SetRegenRefreshGear
