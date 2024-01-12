@@ -13,29 +13,23 @@ require 'common'
 gcinclude.sets = {
 	['Doomed'] = { 					-- this set will equip any time you have the doom status
     },
-	['Doomed_Conditional'] = {
-	},
 	
 	['Holy_Water'] = { 				-- update with whatever gear you use for the Holy Water item
     },
-	['Holy_Water_Conditional'] = {
-	},
 	
 	['Sleeping'] = { 				-- this set will auto equip if you are asleep
 		Neck = 'Opo-opo necklace',	-- might as well gain tp
     },
-	['Sleeping_Conditional'] = {
-	},
 	
 	['Blind'] = {					-- this will autoequip if you're blind
 		Ear2 = 'Bat Earring',		-- gain some evasion
 	},
-	['Blind_Conditional'] = {
-	},
 	
 	['Weakened'] = {  				-- this set will try to auto equip if you are weakened
 	},
-	['Weakened_Conditional'] = {
+	
+	['Shining_Ruby'] = {			-- this will auto-equip when you have the shining ruby buff
+		--Hands = 'Carbuncle\'s Cuffs',
 	},
 	
 --[[
@@ -119,16 +113,19 @@ gcinclude.settings = {
 	bAketon = false;	 -- indicates if the auto-detection of aketons has successfully occurred
 	bMagicCheck = false; -- indicates if the check on magic support has occurred
 	--
-	bIsCapped = false;	-- indicates if in a capped area/bcnm/etc
+	sCapped = false;	-- indicates if in a capped area/bcnm/etc
 	bCapped = false;	-- indicates if the capped process has occurred
 	iCapped = 0;		-- level determined by capped process
+	priorityEngaged = 'ABCDEFGH'; 	-- indicates order of steps for engagement
+	priorityMidCast = 'ABCDEFGH';	-- indicates order of steps for spell midcast
+	priorityWeaponSkill = 'ABCDE';	-- indicates order of steps for a weapon skill
 };
 
 -- The following arrays are used by the functions contained in this file. Probably best to leave them alone
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','dt_type','kite','acc','eva','craftset','gatherset','fishset','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','enmity'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','craftset','gatherset','fishset','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','enmity'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T {'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T {'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -209,7 +206,8 @@ gcinclude.WeekDayElement = T{
 	['Darksday'] = {'dark','light'}
 };
 
--- define constants for DT_Type so typos aren't made
+-- define constants for DT so typos aren't made
+gcinclude.OFF = 'Off';
 gcinclude.PHY = 'Physical';
 gcinclude.MAG = 'Magical';
 gcinclude.BRE = 'Breath';
@@ -296,19 +294,19 @@ gcinclude.MagicSkill = T{
 	['Enhancing'] = 'aquaveil,auspice,baraera,baraero,barblind,barblindra,barblizzard,barblizzara,barfira,barfire,barparalyze,barparalyzra,barpetra,barpetrify,barpoison,barpoisonra,barsilence,barsilenera,barsleep,barsleepra,barstone,barstonra,barthunder,barthundra,barvira,barvirus,barwater,barwatera,blaze,blink,deoderize,enaero,enblizzard,enfire,enstone,enthunder,enwater,erase,escape,flurry,haste,ice,invisible,phalanx,protect,protectra,refresh,regen,reprisal,retrace,shell,shellra,shock,sneak,stoneskin,teleport-altep,teleport-dem,teleport-holla,teleport-mea,teleport-vahzl,teleport-yhoat,warp',
 	['Elemental'] = 'aero,aeroga,blizzaga,blizzard,burn,burst,drown,fira,firaga,fire,flare,flood,freeze,frost,quake,rasp,shock,stone,stonega,thundaga,thunder,tornado,water,waterga',
 	['Ninjitsu'] = 'tonko:,utsusemi:,katon:,hyoton:,huton:,doton:,raiton:,suiton:,kurayami:,hojo:,monomi:,dokumori:,jubaku:',
-	['Summoning'] = 'carbuncle,fenrir,ifrit,titan,leviathan,garuda,shiva,ramuh,diabolos,fire,ice,air,earth,thunder,water,light,dark,cait,siren,atomos,alexander,odin',
+	['Summoning'] = 'carbuncle,fenrir,ifrit,titan,leviathan,garuda,shiva,ramuh,diabolos,fire,firespirit,ice,icespirit,air,airspirit,earth,earthspirit,thunder,thunderspirit,water,waterspirit,light,lightspirit,dark,darkspirit,cait,caitsith,siren,atomos,alexander,odin',
 };
 
 -- This table associates a summoned avatar with an element so that the appropriate stave can be equipped
 gcinclude.SummonStaves = T{
-	['carbuncle'] = 'light', ['light spirit'] = 'light', ['cait sith'] = 'light', ['alexander'] = 'light',
-	['fenrir'] = 'dark', ['diabolos'] = 'dark', ['dark spirit'] = 'dark', ['atomos'] = 'dark', ['odin'] = 'dark',
-	['ifrit'] = 'fire', ['fire spirit'] = 'fire',
-	['titan'] = 'earth', ['earth spirit'] = 'earth',
-	['leviathan'] = 'water', ['water spirit'] = 'water',
-	['garuda'] = 'wind', ['air spirit'] = 'wind', ['siren'] = 'wind',
-	['shiva'] = 'ice', ['ice spirit'] = 'ice',
-	['ramuh'] = 'thunder', ['thunder spirit'] = 'thunder'
+	['carbuncle'] = 'light', ['light spirit'] = 'light', ['lightspirit'] = 'light', ['cait sith'] = 'light', ['caitsith'] = 'light', ['alexander'] = 'light',
+	['fenrir'] = 'dark', ['diabolos'] = 'dark', ['darks pirit'] = 'dark', ['darkspirit'] = 'dark', ['atomos'] = 'dark', ['odin'] = 'dark',
+	['ifrit'] = 'fire', ['fire spirit'] = 'fire', ['firespirit'] = 'fire',
+	['titan'] = 'earth', ['earth spirit'] = 'earth', ['earthspirit'] = 'earth',
+	['leviathan'] = 'water', ['water spirit'] = 'water', ['waterspirit'] = 'water',
+	['garuda'] = 'wind', ['air spirit'] = 'wind', ['airspirit'] = 'wind', ['siren'] = 'wind',
+	['shiva'] = 'ice', ['ice spirit'] = 'ice', ['icespirit'] = 'ice',
+	['ramuh'] = 'thunder', ['thunder spirit'] = 'thunder', ['thunderspirit'] = 'thunder'
 };
 
 --[[
@@ -558,6 +556,7 @@ gcinclude.MasterConditional = T {
 	['NK-5'] = {'Neck',65,'ALL','NATION',false},
 	['NK-6'] = {'Neck',71,'ALL','DAY|TIME'},
 	['NK-7'] = {'Neck',71,'ALL','DAY|TIME'},
+	['NK-8'] = {'Neck',70,'ALL','MP.LE.50P'},
 	['ER-1'] = {'EAR',40,'ALL','NATION',false},
 	['ER-2'] = {'EAR',65,'ALL','WEATHER','Dark'},
 	['ER-3'] = {'EAR',67,'WAR/PLD/DRK/BST/SAM/NIN','TIME','Nighttime'},
@@ -644,6 +643,7 @@ gcinclude.MasterConditional = T {
 	['RN-9'] = {'RING',65,'ALL','DAY','Windsday'},
 	['RN-10'] = {'RING',75,'ALL','DAY','Darksday'},
 	['RN-11'] = {'RING',30,'ALL','SJ:MAGIC'},
+	['RN-12'] = {'RING',50,'SMN','HPP|TPP.LE.',75,1000},
 	['BK-1'] = {'Back',40,'WAR/MNK/RDM/THF/PLD/DRK/BST/BRD/RNG/SAM/NIN/DRG/BLU/COR/DNC/RUN','NATION',false},
 	['BK-2'] = {'Back',62,'ALL','WEATHER','Earth'},
 	['BK-3'] = {'Back',62,'ALL','WEATHER','Earth'},
@@ -712,7 +712,22 @@ gcinclude.MasterConditional = T {
 	['FT-23'] = {'Feet',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
 	['FT-24'] = {'Feet',59,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/BLU/PUP/SCH/GEO/RUN','TIME','Nighttime'},
 	['FT-25'] = {'Feet',74,'NIN','TIME','DUSK2DAWN'},
-	['FT-26'] = {'Feet',75,'NIN','TIME','DUSK2DAWN'}
+	['FT-26'] = {'Feet',75,'NIN','TIME','DUSK2DAWN'},
+	-- User defined conditional list
+	['WP-*'] = {'Main'},		
+	['OH-*'] = {'Sub'},
+	['RA-*'] = {'Ranged'},
+	['AM-*'] = {'Ammo'},
+	['HD-*'] = {'Head'},
+	['NK-*'] = {'Neck'},
+	['ER-*'] = {'Earring'},
+	['BD-*'] = {'Body'},
+	['HN-*'] = {'Hands'},
+	['ER-*'] = {'Earring'},
+	['BK-*'] = {'Back'},
+	['WS-*'] = {'Waist'},
+	['LG-*'] = {'Legs'},
+	['FT-*'] = {'Feet'},
 };
 
 -- Temporary holding variables for the MH and OH weapons
@@ -758,6 +773,7 @@ gcinclude.equipIt = {
 	['emp'] = {'Empress Band','Ring'},
 	['cha'] = {'Chariot Band','Ring'},
 	['empo'] = {'Emperor Band','Ring'},
+	['ann'] = {'Anniversary Ring','Ring'},
 	['dem'] = {'Dem Ring','Ring'},
 	['mea'] = {'Mea Ring','Ring'},
 	['holla'] = {'Holla Ring','Ring'},
@@ -1033,7 +1049,6 @@ function gcinclude.SetVariables()
 	local player = gData.GetPlayer();
 
 	gcdisplay.CreateToggle('GSwap', true);
-	gcdisplay.CreateToggle('DT', false);
 	gcdisplay.CreateToggle('Kite', false);
 	gcdisplay.CreateToggle('Acc', false);
 	gcdisplay.CreateToggle('Eva', false);
@@ -1047,7 +1062,7 @@ function gcinclude.SetVariables()
 		gcdisplay.CreateToggle('sBP',true);
 	end
 	
-	gcdisplay.CreateCycle('DT_Type', {[1] = gcinclude.PHY, [2] = gcinclude.MAG, [3] = gcinclude.BRE});
+	gcdisplay.CreateCycle('DT', {[1] = gcinclude.OFF, [2] = gcinclude.PHY, [3] = gcinclude.MAG, [4] = gcinclude.BRE});
 	gcdisplay.CreateCycle('Enmity', {[1] = 'Off', [2] = 'Minus', [3] = 'Plus'});
 	gcdisplay.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned'});
 	
@@ -1064,13 +1079,37 @@ function gcinclude.SetVariables()
 end		-- gcinclude.SetVariables
 
 --[[
+	isPetNamed determines if that passed pet has the passed name
+--]]
+function gcinclude.isPetNamed(sName,pet)
+
+	if pet == nil then
+		return false;
+	end
+	
+	if sName ~= nil then
+		local sPetName = string.lower(pet.Name);
+		local sMatch = string.lower(sName);
+		
+		if string.match(sMatch,sPetName) ~= nil then
+			return true;
+		else
+			return false;
+		end
+	else
+		print(chat.header('isPetNamed'):append(chat.message('Error: Passed name is nil')));
+		return false;
+	end
+end
+
+--[[
 	BuildGear populates the holding gear set according to the passed table entries
 --]]
 
 function gcinclude.BuildGear(tMasCond,tEntry)
 	local pos = 0;
 	local slot;
-	
+
 	-- There's a special case for RING and EARRING. We just need to find the
 	-- first ones (ring1,earring1) and we can proceed from there.
 	if tMasCond[1] == 'RING' then
@@ -1080,7 +1119,7 @@ function gcinclude.BuildGear(tMasCond,tEntry)
 	else
 		slot = tMasCond[1];
 	end
-		
+
 	-- First, determine which slot is being addressed
 	for i,j in pairs(gData.Constants.EquipSlotNames) do
 		if string.lower(j) == string.lower(slot) then
@@ -1088,7 +1127,7 @@ function gcinclude.BuildGear(tMasCond,tEntry)
 			break;
 		end
 	end
-	
+
 	if pos <1 then
 		pos = 1;
 	elseif pos > 16 then
@@ -1122,7 +1161,7 @@ function gcinclude.BuildGear(tMasCond,tEntry)
 			end
 		end
 	end
-				
+	
 	-- Now process normally. Check to see that the level of the item being populated is higher than what is there
 	if tMasCond[2] > gcinclude.tGSL[pos] then
 		-- Copy the name of the gear piece to the appropriate slot in the temporary gear set
@@ -1186,7 +1225,10 @@ function gcinclude.ProcessConditional(tTest,sType)
 	local timestamp = gData.GetTimestamp();
 	local environ = gData.GetEnvironment();
 	local zone = gData.GetEnvironment();
+	local pet = gData.GetPet();
 	local sKey;
+	local tMatched;
+	local bUserDefined = false;
 				  
 	-- clear out the holding table so no interference from a previous call
 	gcinclude.tGS = {nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil};
@@ -1199,11 +1241,32 @@ function gcinclude.ProcessConditional(tTest,sType)
 	end
 	
 	for k,v in ipairs(tTest) do
-		local tMatched = gcinclude.MasterConditional[v[1]];
+		local cLast = string.sub(v[1],-1);		-- Get the last character of the id
+		
+		if cLast == '*' then		-- User defined conditional
+			bUserDefined = true;
+			-- Assign amax sized array then overwrite the elements
+			tMatched = gcinclude.MasterConditional['HD-5'];
+			-- Need to build an array that matches the MasterConditional layout
+			tMatched[1] = v[4];						-- Slot
+			tMatched[2] = v[5];						-- Level
+			tMatched[3] = string.upper(v[6]);		-- Job list
+			tMatched[4] = string.upper(v[7]);		-- Conditional code
+			-- The rest depends on how many variables needed, nil if not defined
+			if string.find('CRAFT,GATHER,MOON,DAY,TIME,NATION,WEATHER,DAY|TIME,PET_NAME',tMatched[4]) ~= nil then
+				tMatched[5] = v[8];
+			elseif tMatched[4] == 'MOON:DAY:NIGHT' then
+				tMatched[5] = v[8];
+				tMatched[6] = v[9];		
+				tMatched[7] = v[10];		
+			end
+		else
+			tMatched = gcinclude.MasterConditional[v[1]];
+		end
 	
 		-- Make sure current job can use the gear	
 		if (string.find(tMatched[3],pMJ) ~= nil or tMatched[3] == 'ALL') then
-			-- Check that the gear minimum level isn't too high		
+			-- Check that the gear minimum level isn't too high			
 			if tMatched[2] <= pLevel then
 				bMatch = false;	-- Indicator to track if there's a match
 				-- Now determine the type of condition and process
@@ -1226,7 +1289,9 @@ function gcinclude.ProcessConditional(tTest,sType)
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end
 				elseif tMatched[4] == 'TIME' then
-					bMatch = gcinclude.CheckTime(timestamp.hour.tMatched[5],true);
+					if (gcinclude.CheckTime(timestamp.hour,tMatched[5],true)) then
+						bMatch = gcinclude.BuildGear(tMatched,v);
+					end
 				elseif tMatched[4] == 'NATION' then
 					bKey = (gcdisplay.GetCycle('Region') == 'Owned');
 					if (bKey and tMatched[5]) or (bKey == false and tMatched == false) then
@@ -1259,18 +1324,22 @@ function gcinclude.ProcessConditional(tTest,sType)
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end
 				elseif tMatched[4] == 'MOON:DAY:NIGHT' then
-					if string.find(lower(tMatched[5]),lower(environ.MoonPhase)) ~= nil then
-						if string.find(lower(tMatched[6]),lower(environ.Day)) ~= nil then
+					if tMatched[5] == environ.MoonPhase then
+						if tMatched[6] == environ.Day then
 							bMatch = gcinclude.CheckTime(timestamp.hour,tMatched[7],true);
 						end
 					end
 				elseif tMatched[4] == 'DAY|TIME' then	-- Funky test for Brisingamen
-					local iDay = string.find(lower(v[4]),lower(environ.Day));
+					if bUserDefined then
+						local bDayOfWeek = (string.find(v[8],environ.Day) ~= nil);
+					else
+						local bDayOfWeek = (string.find(v[4],environ.Day) ~= nil);
+					end
 					local ts = timestamp.hour;
 					local bNight = gcinclude.CheckTime(ts,'Nighttime',false);
 					local bDay = gcinclude.CheckTime(ts,'Daytime',false);
 				
-					if iDay ~= nil or bNight or bDay then
+					if bDayOfWeek or bNight or bDay then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end				
 				elseif tMatched[4] == 'MP<50' then						-- Equip if mp < 50 and total mp >= 50 and can do magic
@@ -1280,6 +1349,10 @@ function gcinclude.ProcessConditional(tTest,sType)
 					if gcinclude.settings.bMagic and gcinclude.settings.b50 and player.MP < 50 then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end
+				elseif tMatched[4] == 'MP.LE.50P' then					-- Equip if MP <= 50%
+					if player.MPP <= 50 then
+						bMatch = gcinclude.BuildGear(tMatched,v);
+					end
 				elseif tMatched[4] == 'SJ:MAGIC' then					-- Equip if subjob can do magic
 					if gcinclude.settings.bMagicCheck == false then 	-- Make sure magic settings are known.
 						gcinclude.CheckMagic50(player); 
@@ -1287,6 +1360,28 @@ function gcinclude.ProcessConditional(tTest,sType)
 					if gcinclude.settings.bSJ then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end
+				elseif tMatched[4] == 'HPP|TPP.LE.' then				-- HP% <= 'a' and TP <= 'b'
+					if player.HPP <= tMatched[5] and player.TP <= tMatched[6] then
+						bMatch = gcinclude.BuildGear(tMatched,v);
+					end
+--[[
+-- Code commented out due to strange behavior when equipping gear. Problem
+-- seems to be in gFunc.ForceEquip. Not sure what to do about that.
+--		CCF, 1/12/2024
+
+				elseif tMatched[4] == 'PET_NAME' then
+					if pet ~= nil then
+						if string.find(string.lower(tMatched[5]),string.lower(pet.Name)) ~= nil then
+							bMatch = gcinclude.BuildGear(tMatched,v);
+						end
+					end	
+				elseif tMatched[4] == 'NOT_PET_NAME' then
+					if pet ~= nil then
+						if string.find(string.lower(tMatched[5]),string.lower(pet.Name)) == nil then
+							bMatch = gcinclude.BuildGear(tMatched,v);
+						end
+					end
+--]]					
 				else
 					print(chat.header('ProcessConditional'):append(chat.message('Error: Unknown conditional: '.. tMatched[4])));
 				end
@@ -1299,8 +1394,7 @@ function gcinclude.ProcessConditional(tTest,sType)
 	-- If any piece was populated into the build table, equip the gear
 	if iPiece > 0 then
 		for i=1,16 do
-			if gcinclude.tGSL[i] > 0 then	
-				--local slot = gData.Constants.EquipSlotNames[i];
+			if gcinclude.tGSL[i] > 0 then
 				gFunc.ForceEquip(i,gcinclude.tGS[i]);
 			end
 		end
@@ -1659,25 +1753,23 @@ function gcinclude.HandleCommands(args)
 			gcinclude.settings.WScheck = not gcinclude.settings.WScheck;
 			print(chat.header('HandleCommands'):append(chat.message('WS distance check is now set to ' .. tostring(gcinclude.settings.WScheck))));
 		end
-	elseif (args[1] == 'dt') then 			-- Indicates if damage taken gear needs to be equuipped
-		gcdisplay.AdvanceToggle('DT');
-		toggle = 'DT';
-		status = gcdisplay.GetToggle('DT');
-	elseif (args[1] == 'dt_type') then		-- Indicates the type of damage taken gear that will be equipped if desired
-		if #args == 1 then			-- No qualifier, assume next in set
-			gcdisplay.AdvanceCycle('DT_Type');
+	elseif (args[1] == 'dt') then		-- Indicates the type of damage taken gear that will be equipped if desired
+		if #args == 1 then				-- No qualifier, assume next in set
+			gcdisplay.AdvanceCycle('DT');
 		else
 			local cType = string.upper(string.sub(args[2],1,1));
-			local sType = gcinclude.PHY;
+			local sType = gcinclude.OFF;
 			if  cType == 'M' then
 				sType = gcinclude.MAG;
 			elseif cType == 'B' then
 				sType = gcinclude.BRE;
+			elseif cType == 'P' then
+				sType = gcinclude.PHY;			
 			end				
-			gcdisplay.SetCycle('DT_Type',sType);
+			gcdisplay.SetCycle('DT',sType);
 		end
-		toggle = 'DT_Type';
-		status = gcdisplay.GetCycle('DT_Type');
+		toggle = 'DT';
+		status = gcdisplay.GetCycle('DT');
 	elseif (args[1] == 'kite') then			-- Turns on/off whether movement gear is equipped
 		gcdisplay.AdvanceToggle('Kite');
 		toggle = 'Kite Set';
@@ -1686,6 +1778,10 @@ function gcinclude.HandleCommands(args)
 		gcdisplay.AdvanceToggle('Acc');
 		toggle = 'Accuracy';
 		status = gcdisplay.GetToggle('Acc');
+	elseif (args[1] == 'eva') then			-- Turns on/off whether evasion gear should be equipped
+		gcdisplay.AdvanceToggle('Eva');
+		toggle = 'Evasion';
+		status = gcdisplay.GetToggle('Eva');
 	elseif (args[1] == 'wswap') then		-- Turns on/off whether weapon swapping is permitted
 		if player.MainJob ~= 'SMN' then
 			gcdisplay.AdvanceToggle('WSwap');
@@ -1786,7 +1882,7 @@ function gcinclude.HandleCommands(args)
 		status = gcdisplay.GetCycle('Enmity');
 	elseif (args[1] == 'gearset') then			-- Forces a gear set to be loaded and turns GSWAP off
 		if #args > 1 then
-			gFunc.EquipSet(args[2]);
+			gFunc.ForceEquipSet(args[2]);	
 			if #args == 2 or string.lower(args[3]) ~= 'on' then
 				gcdisplay.SetToggle('GSwap',false);
 			else
@@ -1829,22 +1925,22 @@ function gcinclude.CheckCommonDebuffs()
 	local sleep = gData.GetBuffCount('Sleep');
 	local blind = gData.GetBuffCount('Blind');
 	local doom = (gData.GetBuffCount('Doom'))+(gData.GetBuffCount('Bane'));
+	local shiningRuby = gData.GetBuffCount('Shining Ruby');
 
 	if (sleep >= 1) then 
 		gFunc.EquipSet(gcinclude.sets.Sleeping);
-		gcinclude.ProcessConditional(gcinclude.sets.Sleeping_Conditional,nil);
 	end
 	if (doom >= 1) then	
 		gFunc.EquipSet(gcinclude.sets.Doomed);
-		gcinclude.ProcessConditional(gcinclude.sets.Doomed_Conditional,nil);
 	end
 	if (weakened >= 1) then
 		gFunc.EquipSet(gcinclude.sets.Weakened);
-		gcinclude.ProcessConditional(gcinclude.sets.Weakened_Conditional,nil);
 	end;
 	if (blind >= 1) then
 		gFunc.EquipSet(gcinclude.sets.Blind);
-		gcinclude.ProcessConditional(gcinclude.sets.Blind_Conditional,nil);
+	end
+	if (shiningRuby >= 1) then
+		gFunc.EquipSet(gcinclude.sets.Shining_Ruby);
 	end
 end		-- gcinclude.CheckCommonDebuffs
 
@@ -1871,37 +1967,6 @@ function gcinclude.CheckAbilityRecast(check)
 
 	return RecastTime;
 end	-- gcinclude.CheckAbilityRecast
-
---[[
-	SetTownGear will equip the appropriate gear if the player is in a town
---]]
-
-function gcinclude.SetTownGear()
-	local zone = gData.GetEnvironment();
-	if (zone.Area ~= nil) and (gcinclude.Towns:contains(zone.Area)) then
-		gFunc.EquipSet('Town');
-		gcinclude.ProcessConditional(gcinclude.sets.Town_Conditional,nil);
-	end
-end		-- gcinclude.SetTownGear
-
---[[
-	SetRegenRefreshGear equips gear based on whether refresh or regen is indicated
---]]
-
-function gcinclude.SetRegenRefreshGear()
-	if gcinclude.settings.AutoGear == false then return end
-
-	local player = gData.GetPlayer();
-	local pet = gData.GetPet();
-	if (player.Status == 'Idle') then
-		if (player.HPP < gcinclude.settings.RegenGearHPP ) then 
-			gFunc.EquipSet('Idle_Regen');
-		end
-		if (gcinclude.settings.bMagic and player.MPP < gcinclude.settings.RefreshGearMPP ) then 
-			gFunc.EquipSet('Idle_Refresh');
-		end
-	end
-end		-- gcinclude.SetRegenRefreshGear
 
 --[[
 	WsStat determines which stats are emphasized when using the passed weaponskill name and
@@ -2218,45 +2283,6 @@ function gcinclude.CheckWsBailout()
 end		-- gcinclude.CheckWsBailout
 
 --[[
-	CheckCancels determines if the spell that is being cast needs a previous version to be cancelled 
-	first and does so as needed
-	
-	Note: I don't think this works on HorizonXI
---]]
-
-function gcinclude.CheckCancels()--tossed Stoneskin in here too
-	local action = gData.GetAction();
-	local sneak = gData.GetBuffCount('Sneak');
-	local stoneskin = gData.GetBuffCount('Stoneskin');
-	local target = gData.GetActionTarget();
-	local me = AshitaCore:GetMemoryManager():GetParty():GetMemberName(0);
-	
-	local function do_jig()
-		AshitaCore:GetChatManager():QueueCommand(1, '/ja "Spectral Jig" <me>');
-	end
-	local function do_sneak()
-		AshitaCore:GetChatManager():QueueCommand(1, '/ma "Sneak" <me>');
-	end
-	local function do_ss()
-		AshitaCore:GetChatManager():QueueCommand(1, '/ma "Stoneskin" <me>');
-	end
-
-	if (action.Name == 'Spectral Jig' and sneak ~=0) then
-		gFunc.CancelAction();
-		AshitaCore:GetChatManager():QueueCommand(1, '/cancel Sneak');
-		do_jig:once(2);
-	elseif (action.Name == 'Sneak' and sneak ~= 0 and target.Name == me) then
-		gFunc.CancelAction();
-		AshitaCore:GetChatManager():QueueCommand(1, '/cancel Sneak');
-		do_sneak:once(1);
-	elseif (action.Name == 'Stoneskin' and stoneskin ~= 0) then
-		gFunc.CancelAction();
-		AshitaCore:GetChatManager():QueueCommand(1, '/cancel Stoneskin');
-		do_ss:once(1);
-	end
-end		-- gcinclude.CheckCancels
-
---[[
 	findString is multi-functional, searching the passed storage containers (whether accessible or not) for any or
 	all of the passed string. Depending on the passed arguments, either the found items will be listed or the accessible
 	storage table will be updated.
@@ -2376,7 +2402,7 @@ function gcinclude.doPetFood(action, sType)
 		if not (sAction == 'all' or sAction == 'max' or sAction == 'min') then
 			if sType ~= nil then
 				print(chat.header('doPetFood'):append(chat.message('Invalid action specified : ' .. action .. '. Ignoring command')));
-				return;
+				return false;
 			end
 		else
 			sType = nil;
@@ -2394,13 +2420,13 @@ function gcinclude.doPetFood(action, sType)
 		if (sAction == 'max' or sAction == 'min') then
 			if not gcinclude.findMaxEquipablePetFood() then
 				print(chat.header('doPetFood'):append(chat.message('No equipable pet food found or found pet food is too high level')));
-				return;
+				return false;
 			end
 		else
 			if not gcinclude.findString(gcinclude.EQUIPABLE,sAction,true,nil) then 
 				print(chat.header('doPetFood'):append(chat.message(action .. ' not found in accessible storage')));
 			end
-			return;
+			return false;
 		end
 		
 		-- Now to process what was found
@@ -2428,19 +2454,9 @@ function gcinclude.doPetFood(action, sType)
 	if sName ~= nil then
 		gFunc.ForceEquip('Ammo', sName);
 		print(chat.header('doPetFood'):append(chat.message('Equipping: ' .. sName)));
+		return true;
 	end				
 end		-- gcinclude.doPetFood
-
---[[
-	CheckDefault is just a grouping routine to set common settings
---]]
-
-function gcinclude.CheckDefault()
-	gcinclude.SetRegenRefreshGear();
-	gcinclude.SetTownGear();
-    gcinclude.CheckCommonDebuffs();
-	gcdisplay.Update();
-end		-- gcinclude.CheckDefault
 
 --[[
 	Unload ensures that the aliases are removed and the display objects are removed

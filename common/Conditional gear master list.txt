@@ -37,6 +37,7 @@ Neck
 {'NK-5','Windurstian Scarf','+7 defense/+15 HP/+7 evasion in areas not controlled by home nation'},
 {'NK-6','Brisingamen','+5 to primary stats depending on day or HP/MP +10 depending on time',nil}, -- replace nil with list of days and/or nighttime/daytime
 {'NK-7','Brisingamen +1','+5 to primary stats depending on day or HP/MP +10 depending on time',nil}, -- replace nil with list of days and/or nighttime/daytime
+{'NK-8','Uggalepih Pendant','+8 magic attack bonus when MP <= 50%'},
 
 Earring
 -------
@@ -46,6 +47,7 @@ Earring
 
 Body
 ----
+{'BD-0','item name','User defined conditional,'Body',level,conditional,qualifier,...},
 {'BD-1','Gaudy Harness','Adds refresh if MP < 50'},
 {'BD-2','Federation Aketon','Movement gain in home nation city'},
 {'BD-3','Alchemist\'s Apron','+1 Alchemy skill'},
@@ -135,6 +137,7 @@ Rings
 {'RN-9','Wind Ring','-15% HP/15 evasion on windsday'},
 {'RN-10','Shadow Ring','magic defense bonus on darksday'},
 {'RN-11','Tamas Ring','will equip if subjob can do magic'},		-- Special case
+{'RN-12','Conjurer\'s Ring','Avatar perpetuation cost -1 while player HP <= 75% and TP <= 100%'},
 
 Back
 ----
@@ -188,7 +191,6 @@ Legs
 {'LG-34','Tactician Magician\'s Slops +2','+4 MND in areas controlled by home nation'},
 {'LG-35','Koga Hakama','+10 evasion at nighttime'},
 
-
 Feet
 ----
 {'FT-1','Field Boots','Improves mining and harvesting'},
@@ -217,3 +219,87 @@ Feet
 {'FT-24','Vampire Boots','+10 evasion at nighttime'},
 {'FT-25','Ninja Kyahan +1','+25% movement speed between dusk and dawn'},
 {'FT-26','Koga Kyahan +1','+7 DEX between dusk and dawn'},
+
+User defined conditionals
+-------------------------
+{'WP-*','item name','User defined description',slot,level,jobs,conditional,qualifier,...},
+{'OH-*','item name','User defined description',slot,level,jobs,conditional,qualifier,...},
+{'RA-*','item name','User defined description',slot,level,jobs,conditional,qualifier,...},
+{'AM-*','item name','User defined description',slot,level,jobs,conditional,qualifier,...},
+{'HD-*','item name','User defined description',slot,level,jobs,conditional,qualifier,...},
+{'NK-*','item name','User defined description',slot,level,jobs,conditional,qualifier,...},
+{'ER-*','item name','User defined description',slot,level,jobs,conditional,qualifier,...},
+{'BD-*','item name','User defined description',slot,level,jobs,conditional,qualifier,...},
+{'HN-*','item name','User defined description',slot,level,jobs,conditional,qualifier,...},
+{'ER-*','item name','User defined description',slot,level,jobs,conditional,qualifier,...},
+{'BK-*','item name','User defined description',slot,level,jobs,conditional,qualifier,...},
+{'WS-*','item name','User defined description',slot,level,jobs,conditional,qualifier,...},
+{'LG-*','item name','User defined description',slot,level,jobs,conditional,qualifier,...},
+{'FT-*','item name','User defined description',slot,level,jobs,conditional,qualifier,...},
+
+User defined conditionals are a special version of conditional entries. They're used
+when you want a piece of gear to be conditionally equipped that inherently does not
+have a conditional aspect to it. What this means is that you define what the conditional
+is in the entry and don't depend on a corresponding entry in luashitacast to have the
+appropriate conditional information. What that means is you can make any piece of gear
+conditional according to your rules. The only limitation is that the type of condition
+must be recognized by luashitacast.
+
+Unlike other conditional entries in the master list what is provided here is a template.
+You need to define the specifics. The only matching aspect in luashitacast is the ID
+and the position of the piece. The rest you define. Unlike other entries which are
+very specific to a piece of gear, you might define multiple entries for the same
+conditional gear set that has the same ID. Doing so you will want the conditions to
+be mutually exclusive of each other. If not, only the last one will be equipped which
+I doubt is what you wanted.
+
+How about an example. Let's say you have two neckpieces that you want to load based on
+the time of day: Uggalepih Pendant at night, Fenrir's Torque during the day. The
+Uggalepih Pendant doesn't have any inherant conditional aspect other than possibly
+the latent magic attack bonus when your HP <= 75% and your TP <= 100%. This example
+isn't playing on that condition though and as to the Fenrir's Torque, +30 MP during
+the day time, -3 enmity at night, what's wanted is to focus on part of the condition.
+A better implementation would be to do the following:
+
+['TP_Conditional'] = {
+	{'NK-*','Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
+	{'NK-*','Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},
+}
+
+The columns for an entry are: the ID, the name of the piece of gear, a meaningful
+description for you about what the condition is, the minimum level the piece can
+be equipped, what jobs can use the piece (ALL for any job. Otherwise separate the
+three letter abbreviation by /'s (e.g., WHM/BRD)), the keyword conditional (see 
+list), and the value that must be matched. The above example will flip between
+the two neck pieces based upon the time of day.
+
+Alternatively you could have included one of the items as the default in the main
+([TP]) block and only included the other neck piece as a conditional, but this has
+a slightly different behavior. When you do this, the default piece will always
+equip and then if the conditional condition is found to be true, that piece will
+be loaded. In some cases that flicking between neck pieces might cause an issue.
+The two user-defined conditionals found in the example ensure that only one
+neckpiece will ever be equipped, because the two entries are mutually exclusive.
+(I'm assuming that no default neckpiece would be defined.)
+
+List of known keyword conditionals,	meaning and how many pieces of data expected
+--------------------------------------------------------------------------------
+CRAFT			Crafting piece			One (type of craft: AL,BN,CL,CO,GS,SM,LT,WW)
+GATHER			Gathering piece			One (type of gathering: HELM,DIG,CLAM)
+MOON			Moon phase				One (Full Moon, New Moon, etc)
+DAY				Week day				One (Firesday, Iceday, etc)
+TIME			Time range				One (Nighttime,Daytime,DUSK2DAWN,Dawn,Day,Dusk,Evening,DEADOFNIGHT)
+NATION			Home nation				One (Owned, Not Owned)
+AKETON			Nation aketon			None (determines if you have any and if condition met)
+WEATHER			Weather					One (Clear, Clouds, Thunder, etc)
+MOON:DAY:NIGHT	Moon phase/day/time		Three (MOON, DAY, TIME), see above for details
+DAY|TIME		Days or time			One (List of days or "Daytime"/"Nighttime")
+MP<50			MP less than 50			None
+MP.LE.50P		MP <= 50%				None (Sees if you MP is below 50%)
+SJ:MAGIC		Magical subjob			None (Checks to see if your subjob is magical)
+HPP|TPP.LE.		HP <= 50% and MP <= 50%	None
+
+I having problems with the following two:
+PET_NAME		Specific pet name		One (e.g., Carbuncle)
+NOT_PET_NAME	Any pet except			One (e.g., Ifrit/Ramuh)
+They've been disabled for now.

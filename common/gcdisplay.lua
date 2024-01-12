@@ -20,12 +20,12 @@ local JobBar = T{['GSwap'] = {'ALL','MS'},
 				 ['Acc'] = {'ALL','MS'},
 				 ['Eva'] = {'ALL','MS'},
 				 ['WSwap'] = {'-SMN,BLM','M'},		-- Some jobs swap weapons all the time
-				 ['TH'] = {'ALL','MS'},
+				 ['TH'] = {'THF','M'},				-- THF field, only valid if THF is main job
 				 ['AJug'] = {'BST','M'},			-- BST field, only valid if BST is main job
 				 ['DT_Type'] = {'ALL','MS'},
 				 ['Region'] = {'ALL','MS'},
 				 ['Enmity'] = {'ALL','MS'}, 
-				 ['sBP'] = {'SMN','MS'}};			-- DRK field
+				 ['sBP'] = {'SMN','MS'}};
 
 local fontSettings = T{
 	visible = true,
@@ -325,7 +325,7 @@ function gcdisplay.Initialize()
 	gcdisplay.Update();
 	gcdisplay.FontObject = fonts.new(fontSettings);	
 	ashita.events.register('d3d_present', 'gcdisplay_present_cb', function ()
-		local display = MainLV .. Main .. '/' .. SubLV .. Sub ..'   Attk:' .. Attk .. '   Def:' .. Def;
+		local display = MainLV .. Main .. '/' .. SubLV .. Sub ..'   Attk:' .. Attk .. '   Def:' .. Def .. ' |';
 		for k, v in pairs(Toggles) do
 		
 			if gcdisplay.bDisplayIt(k) == true then
@@ -337,6 +337,7 @@ function gcdisplay.Initialize()
 				end
 			end
 		end
+		display = display .. ' |';
 		for key, value in pairs(Cycles) do
 			if gcdisplay.bDisplayIt(key) == true then
 				display = display .. '  ' .. key .. ': ' .. '|cFF00FF00|' .. value.Array[value.Index] .. '|r';
