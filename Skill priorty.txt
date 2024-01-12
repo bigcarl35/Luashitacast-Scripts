@@ -1,0 +1,58 @@
+Gearset prioritization lets the player design what takes priority in the order of steps. There are
+three sections where you can designate the order of presidence: fighting (either you or your pet
+or both), spell midcast, and weaponskill. Each step is given a letter code and the priority sequence
+is just the letters strung together. Listed below for each step is the code and what the step means.
+The order displayed here is the default order. It is important to remember that the least important
+step goes first and the most important step last. It is also important that at least one of the
+gear sets in the sequence be fairly complete so you don't end up with empty slots in your equipment
+unnecessarily. There's nothing stopping you from omitting steps, that is up to the player. The
+sequence is stored in gcinclude.lua:
+
+				gcinclude.settings.priorityEngaged = 'ABCDEFGH';
+				gcinclude.settings.priorityMidCast = 'ABCDEFGH';
+				gcinclude.settings.priorityWeaponSkill = 'ABCDE';
+				
+If you want a different order, just change the sequence order in the job file under the OnLoad
+function to the order you want.
+
+Listed below are each type of sequence, their codes, and what they mean. Use this listing to help
+you decide if you want to reorder the steps.
+
+Engaged (you and/or pet fighting)
+=================================
+
+Code	Meaning
+----	-------
+ A		Player is fighting
+ B		Pet is fighting
+ C		Evasion set (if /eva set on)
+ D		Enmity set (depends on setting of /enmity)
+ E		Accuracy set (if /acc set on, applies to both player and pet)
+ F		Movement set (if /kite set on)
+ G		Common debuffs/buffs set (depends on what's on your player character)
+ H		Damage Taken set (depends on setting of /dt_type and if /dt enabled)
+ 
+Spell MidCast
+=============
+ 
+Code	Meaning
+----	------- 
+ A		MidCast gear
+ B		Spell Interruption Rate gear
+ C		INT/MND set if spell depends on either stat
+ D		Magic type: healing, dark, divine, enfeebling, enhancing, elemental, ninjitsu, and summoning
+ E		Magical accuracy set
+ F		Spell specific gear: stoneskin, drain, aspir, sneak. and invisible
+ G		Elemental Obi
+ H		Elemental Stave (if summoner or /wswap is enabled)
+ 
+WeaponSkill
+===========
+ 
+Code	Meaning
+----	------- 
+ A		WeaponSkill set (determined by program which is appropriate set)
+ B		Elemental gorget
+ C		Enmity set (depends on setting of /enmity)
+ D		Accuracy set (if /acc set on, applies to both player and pet)
+ (E		Elemental Obi) -- Currently not implemented
