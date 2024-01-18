@@ -2,40 +2,79 @@ local profile = {};
 gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 
 --[[
-	This file contains all the gear sets associated with the DRK job. While it isn't outside of the realm of 
+	This file contains all the gear sets associated with the DRG job. While it isn't outside of the realm of 
 	possibility that the subjob might be able to use gear sets too, that is not the emphasis of this program. 
-	It is tailored to handle all the aspects of DRK. If you desire a gear set change to strengthen an ability
+	It is tailored to handle all the aspects of DRG. If you desire a gear set change to strengthen an ability
 	from your subjob that is not supported by this program, you probably will have to make a custom gear set 
 	and use the /gearset command to use it.
 --]]
 
 local sets = {
 --[[
-	The Idle sets are for when you're not in town and not doing anything like fighting (or pet fighting), casting, 
-	resting, etc. "Idle" is the default setting and "_Refresh" and "_Regen" are when you want to emphasize the
-	aforementioned ability.
+	The gear sets are usually defined by a pair of sets: the "main" one and an associated "conditional" set. The
+	"main" is loaded when appropriate and the conditional is processed to see if any of the entries should be
+	equipped too. ("Conditional" entries consist of gear that need to meet certain conditions before they will be
+	equipped.) "main" sets contain your standard gear slot='gear piece' combinations and the "conditional" entries
+	consist of a gear ID (defined in "Conditional gear master list.txt" found in the ./common directory), the name 
+	of the piece of gear, and a description of the condition that must be true. Entries in the "conditional" set 
+	should Just be copied from the master list file.
 	
-	Regardless, do not include anything from the first row of equipment (Main, Sub, Ranged, Ammo). Doing so you
-	will find yourself fighting luashitacast (like when equiping a dark staff when you are resting.)
+	It is recommended that "main" sets not include any gear found in the top line of your equipment grid (main hand,
+	off hand, ranged weapon, ammo). Doing so will mean that TP will be reset to 0 whenever gear is changed which can
+	be very frustrating. Further, any time you do change a weapon, it will convert back to what was defined in a set.
+	Believe me, it's no fun	fighting Luashitacast!
+
+	Also, not all sets need to be defined. There is nothing wrong with leaving a set "empty", but don't delete any
+	of the sets. All the ones listed here (except for any custom sets) are expected to exist by Luashitacast.
+		
+	*** Note ***
 	
-	Most gear sets have an associated conditional set. These are for supporting items that give stat bonuses when
-	a certain condition is met (eg., at nighttime or when there's a full moon.) You will find all the items supported
-	in the "Conditional gear master list.txt" file which is also found in the /common/ directory. Just copy and paste
-	the line item you want in the appropriate conditional area. (Please note that if you have more than one item to
-	be conditionally considered, you will have to add a comma after each entry.
+	If you use a piece of gear in one of of your common gear sets (e.g., Idle, TP, etc) that restricts you from using 
+	another specific armor slot, if in a subsequent gear set you specify gear for the slot that was restricted, it
+	is recommended that you also replace the other piece of gear too. (In some cases gear will keep swapping as 
+	Luashitacast fights the FFXI client. In other cases, the other slot will become unequipped. This is just a normal
+	behavior of the equipment grid, but it can be disconcerting.
+
+	Example: body='Vermillion cloak', head is restricted. Next set equips 'austere hat'. You should also replace the body
+	piece. head='austere hat', body='austere robe'.
+			
+	*** Aside ***
+	If the piece of gear that restricts an additional slot is from a "conditional" set where /gswap is turned off,
+	you don't have to worry about it. When /gswap is turned on that conditional piece will be removed.
+	
+	*** Note 2 ***
+	Unlike when summoner is used as a subjob, /bst's pets are charmed at the max level of your BST or the level
+	of your PLD, whichever is lower. That means you can charm higher level mobs than you would expect with /bst.
+	Just note though that you can't have two pets, so if you have charmed a pet with /bst, you can't summon your
+	avatar and visa versa.
+		
+	*** Note 3 ***
+	I have restored all of the _conditional gear sets because the User-Definied conditionals are not limited to
+	what gear is available. (A lot of these sets were originally removed since there was no conditional gear
+	in era for them.)
+	
+--]]
+
+--[[
+	The "Idle" set is what your character will wear when it is not fighting nor resting nor in town. This includes
+	your pet. Whether just standing out of town or going to a different area, the "Idle" set will be equipped. If
+	for some bizarre reason you've subbed /SMN (Why would you, you can't have two pets out at the same time and your
+	summoned avatar would be half your level at best.), it is strongly recommended that you use gear that has avatar
+	perpetuation cost down attributes on it here. If you sub /BST, again you have the two pet restriction and you
+	don't have access to jug pets, just charmed pets.
 --]]
 
 	['Idle'] = {
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
         Ear1 = 'Beetle Earring',
-        Ear2 = 'Beetle Earring',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'Tamas Ring',
-        Ring2 = 'Jaeger Ring',
-        Waist = 'Tilt Belt',
-        Legs = 'Ryl.Sqr. Breeches',
+        Ear2 = 'Physical Earring',
+        Body = 'Beetle Harness',
+        Hands = 'Battle Gloves',
+        Ring1 = 'Batokan Ring',
+        Ring2 = 'Courage Ring',
+        Waist = 'Barbarian\'s Belt',
+        Legs = 'San. Trousers',
         Feet = 'Bounding Boots',
     },
 	['Idle_Conditional'] = {
@@ -43,18 +82,26 @@ local sets = {
 	
 	--[[
 		The Idle_Regen and Idle_Refresh gear sets replace the normal Idle set when the player's HP or MP
-		go below a set percentage, accordingly. For HP it is 60% and for MP it is 70%. These percentages
-		are defined in gcinclude.lua.
+		go below a set percentage (defined in gcinclude.lua, but can be overriden in profile.OnLoad function).
 	--]]
 	
 	['Idle_Regen'] = {
 	},
+	['Idle_Regen_Conditional'] = {
+	},
 	
 	['Idle_Refresh'] = {
 	},
-	
+	['Idle_Refresh_Conditional'] = {
+	},
+		
 	--[[
-		Resting emphasizes either HP regen or MP refresh. Regen is the assumed target when resting
+		When you are resting (kneeling down), your HP 'Resting' set will be equipped. If your subjob
+		uses MP and your MP is below the set threshhold (defined by gcinclude.settings.RefreshGearMP), 
+		your MP 'Resting_Refresh' gear set will be equipped. Regardless of which set is equipped, 
+		assuming that your subjob uses magic, you have a Dark/Pluto staff accessible, weapon swapping 
+		is enabled (/wswap), and your MP is not at maximum, the Dark/Pluto staff will automatically be 
+		equipped.
 	--]]
 	
 	['Resting'] = { 
@@ -66,16 +113,25 @@ local sets = {
 	},
 	['Resting_Refresh_Conditional'] = {
 	},
+
+	-- If you have any Spell Interruption Rate down gear, put them into the "SIR" gear set.
+	-- This gear set is equipped in the HandleMidcast function that all spells go through.
+	-- Currently only gear equippable by any job is applicable here. There's no gear that's 
+	-- specific for DRG that gives spell interruption rate down.
+	['SIR'] = {
+	},
+	['SIR_Conditional'] = {
+	},
 	
 --[[
 	Start weapons are where you define what you want the first row of equipment to look like when you
-	either log in as a BST or you switch your main job to BST. Any other gear you mention will be overridden
+	either log in as a SMN or you switch your main job to SMN. Any other gear you mention will be overridden
 	by the Idle or Town set, so no need to include here.
 --]]
 
 	['Start_Weapons'] = {
-        Main = 'Windurstian Sword',
-        Ammo = 'Fortune Egg',
+        Main = 'Platoon Lance',
+        Ammo = 'Happy Egg',
     },
 	['Start_Weapons_Conditional'] = {
 	},
@@ -83,7 +139,8 @@ local sets = {
 --[[
 	What do you want to wear around town? You can define a full set or just an item or two, it is up to you.
 	(Please note that a nation's aketon is considered conditional gear, so no need to place here unless you
-	want the aketon equipped regardless if it is your home nation's city or not.)
+	want the aketon equipped regardless if it is your home nation's city or not. Due to some of the 
+	complexities of lua, the Town_Conditional set is found in the gcinclude.lua file.)
 --]]
 	
 	['Town'] = {
@@ -93,14 +150,15 @@ local sets = {
 --[[
 	Damage reduction gear depends on the type of damage. The most common is physical, but there's times when
 	you'll want to reduce magic damage or breath damage. The three gear sets are defined below. The correct
-	one will be loaded depending if DT is indicated and the TYPE selected. Please consider not including gear
-	that doesn't have any damage taken property so other wanted stats can shine through
+	one will be equipped depending on whether DT is enabled and which set is equipped depends on the DT_TYPE 
+	selected. Please consider not including gear that doesn't have any damage taken property so other wanted 
+	stats can shine through.
 --]]
 
 	['DT_Physical'] = {
 	},
 	['DT_Physical_Conditional'] = {
-	},
+	}
 	
 	['DT_Magical'] = {
     },
@@ -112,38 +170,61 @@ local sets = {
 	['DT_Breath_Conditional'] = {
 	},
 	
-	['DT_Evasion'] = {
-	},
-	['DT_Evasion_Conditional'] = {
-	},
-	
 --[[
-		The TP sets are used when you are fighting. The accuracy set will be used if ACC is specified
-		and the evasion set if EVA is specified.
+		The TP sets are used when you are fighting. The accuracy set will be used if /acc is specified
+		and the evasion set if /eva is specified. Please note that if you have a subjob that can use a
+		pet, none of the abilities are supported here. Only main jobs that have pets (SMN,BST) support
+		pet actions.
 --]]
 
 	['TP'] = {
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
         Ear1 = 'Beetle Earring',
-        Ear2 = 'Beetle Earring',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'Tamas Ring',
-        Ring2 = 'Jaeger Ring',
-		Back = 'Ram mantle',
-        Waist = 'Tilt Belt',
-		Legs = 'Ryl.Sqr. Breeches',
+        Ear2 = 'Physical Earring',
+        Body = 'Beetle Harness',
+        Hands = 'Battle Gloves',
+        Ring1 = 'Batokan Ring',
+        Ring2 = 'Courage Ring',
+        Waist = 'Barbarian\'s Belt',
+        Legs = 'San. Trousers',
         Feet = 'Bounding Boots',
     },
 	['TP_Conditional'] = {
 	},
+
+	['TP_Pet'] = {
+    },
+	['TP_Pet_Conditional'] = {
+	},
+	
+--[[
+	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
+	(Please note that Pet_Accuracy is applied after Accuracy if you have a pet.)
+--]]
 	
 	['Accuracy'] = {
-        Ring2 = 'Jaeger Ring',				-- Accuracy +4
     },
 	['Accuracy_Conditional'] = {
 	},
+	
+	['Pet_Accuracy'] = {
+    },
+	['Pet_Accuracy_Conditional'] = {
+	},
+	
+--[[
+	Haste gear
+--]]
+
+	['Haste'] = {
+	},
+	['Haste_Conditional'] = {
+	},
+	
+--[[
+	If evasion wanted, equip evasion gear
+--]]
 	
 	['Evasion'] = {
         Head = 'Empress Hairpin',			-- Evasion 10
@@ -151,31 +232,50 @@ local sets = {
     },
 	['Evasion_Conditional'] = {
 	},
-	
+
 --[[
-	The following are abilities affected by gear
+	Magic accuracy gear
 --]]
 
-	['AncientCircle'] = {
+	['Macc'] = {
     },
-	['AncientCircle_Conditional'] = {
+	['Macc_Conditional'] = {
+	},
+
+--[[
+	Enmity sets are used to boost/reduce enmity, accordingly
+--]]
+
+	['Enmity_Plus'] = {
+	},
+	['Enmity_Plus_Conditional'] = {
+	},
+
+	['Enmity_Minus'] = {
+	},
+	['Enmity_Minus_Conditional'] = {
+	},
+
+--[[
+	Preshot is the first stage of when a ranged shot is being performed. This is where you place any 
+	Ranged Accuracy or Ranged Attack Speed gear. 
+--]]
+
+	['Preshot'] = {
+    },
+	['Preshot_Conditional'] = {
 	},
 	
-	['Jumps'] = {
+--[[
+	Midshot is the second stage of a ranged shot. This is where you place Ranged Attack or Ranged 
+	Damage gear
+--]]
+
+	['Midshot'] = {
+    },
+	['Midshot_Conditional'] = {
 	},
-	['Jumps_Conditional'] = {
-	},
-	
-	['Jumps_Accuracy'] = {
-	},
-	['Jumps_Accuracy_Conditional'] = {
-	},
-	
-	['Spirit_Link'] = {
-	},
-	['Spirit_Link_Conditional'] = {
-	},
-		
+
 --[[
 	Spells are a bit different. Each type of spell can have it's own enhancement gear as well as 
 	stat based gear. (In some cases individual spells have special entries.) These sets do not 
@@ -201,54 +301,67 @@ local sets = {
 	},
 
 --[[
-	Further, there is a break out for each type of spell you can cast. For example, if you are
-	doing a Cure, you wand mind (MND) gear, etc.
+	Further, there is a break out for each type of spell. I've included a comment on the type of attributes
+	the piece of gear should have. While the spell might have other attributes than those listed, the ones I have
+	listed have gear that a DRG or anyone can wear.
 --]]
 
-	['Cure'] = {				-- Healing Magic Skill, Cure Potency
+	-- Healing: Healing Magic Skill. Currently only a Healing Earring affects healing spells from a sub job. No other gear
+    -- gives bonuses to Healing magic from a sub job. Also, gear with MND bonuses will boost cure spell's potency, but MND 
+	-- gear is automatically equipped prior to the Healing set being equipped in the HandleMidcast function. There's no need 
+	-- to include MND gear here.
+	['Healing'] = {
     },
-	['Cure_Conditional'] = {
+	['Healing_Conditional'] = {
 	},
 	
+	-- Dark: Dark Magic Skill. Currently only gear equippable by any job gives is applicable here. There's no gear that's 
+	-- specific for DRG that gives any dark magic skill.	
 	['Dark'] = {
     },
 	['Dark_Conditional'] = {
 	},
-	
-	['Divine'] = {				-- Divine Magic Skill
+
+	-- Divine: Divine Magic Skill.	
+	['Divine'] = {
 	},
 	['Divine_Conditional'] = {
 	},
 	
-	['Enfeebling'] = {	 		-- Enfeebling Magic Skill
+	-- Enfeebling Magic Skill.	Currently only gear equippable by any job gives is applicable here. There's no gear that's 
+	-- specific for DRG that gives any enfeebling magic skill.	
+	['Enfeebling'] = {
 	},
 	['Enfeebling_Conditional'] = {
 	},
 	
-	['Enhancing'] = {	 		-- Enhancing Magic Skill, enhancing magic time reduction, enhancing magic duration
+	-- Enhancing: There is no gear that a DRG can wear to enhance any magic spell. Leave the Enhancing gear sets empty.
+	['Enhancing'] = {
 	},
 	['Enhancing_Conditional'] = {
 	},
 	
-	['Elemental'] = {			-- Elemental Magic Skill, magic accuracy, elemental magic casting time reduction, elemental magic recast time reduction, magic burst bonus, magic attack bonus
+	-- Elemental: Elemental Magic Skill. Currently only gear equippable by any job gives is applicable here. There's no gear
+	-- that's specific for DRG that gives any elemental magic skill. Note: don't include elemental staves or elemental 
+	-- obis/gorgets here, that is done automatically in the HandlePrecast/HandleMidcast functions (if /wswap is enabled).
+	['Elemental'] = {
 	},
 	['Elemental_Conditional'] = {
 	},
-	
+
+	-- Ninjitsu: There is no gear that a DRG can wear to add Ninjitsu skill. Leave the following two
+	-- gear sets empty.	
 	['Ninjitsu'] = {			-- Ninjitsu Skill, magic burst bonus, magic attack bonus
 	},
 	['Ninjitsu_Conditional'] = {
 	},
 	
-	['Summoning'] = {			-- Summoning Skill, spell interruption rate, summoning magic casting time reduction
+	-- Summoning: Summoning Magic Skill and Avatar Perpetuation Cost. Currently only gear equippable by any job gives
+	-- is applicable here. There's no gear that's specific for DRG that gives any summoning skill. Note: currently on 
+	-- HorizonXI summoning skills are ignored. Any gear piece that only gives summoning skill will be commented out	
+	['Summoning'] = {
 	},
 	['Summoning_Conditional'] = {
-	},
-
-	-- Spell interuption rate
-	['SIR'] = {
-	},
-	['SIR_Conditional'] = {
 	},
 	
 --[[
@@ -256,74 +369,89 @@ local sets = {
 --]]
 
 	['INT'] = {
-        Ring1 = 'Tamas Ring',
         Ring2 = 'Windurstian Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Feet = 'Mannequin Pumps',
     },
 	['INT_Conditional'] = {
 	},
 	
 	['MND'] = {
         Neck = 'Justice Badge',
-        Body = 'Wonder Kaftan',
-        Ring1 = 'Tamas Ring',
         Ring2 = 'Tranquility Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Mannequin Pumps',
     },
 	['MND_Conditional'] = {
 	},
-	
---[[
-	Magic accuracy gear
---]]
 
-	['Macc'] = {
-    },
-	['Macc_Conditional'] = {
-	},
-	
 --[[
 	And some spells are special cases, so they have individual gears sets.
 --]]
-	-- Phalanx: Enhancing Magic Skill
-	['Phalanx'] = {
-	},
-	['Phalanx_Conditional'] = {
-	},
 	
-	-- Combination of MND and enhancing skill. MND is 3x more important. There's also gear that enhances
-	['Stoneskin'] = {	
+	-- Stoneskin: Stoneskin Enhancement, Mind, and Enhancing Magic Skill. Mind is 3x more important than enhancing
+	-- Magic Skill. The only piece of gear a DRG can wear to enhance stoneskin is a Stone Gorget. There's no gear
+	-- that a DRG (or any job) can wear to enhance magic. Note: This gear set has no effect on Titan's Stoneskin
+	-- blood pact.
+	['Stoneskin'] = {
+		Neck = 'Justice Badge',			-- +3 MND
+        Ring2 = 'Tranquility Ring',		-- +2 MND
+        Waist = 'Friar\'s Rope',		-- +1 MND
 	},	
 	['Stoneskin_Conditional'] = {
 	},
 	
-	-- Potency of drain depends on your dark magic skill, but a drain set is needed to include drain enhancing gear
+	-- Drain: Drain Enhancement, Dark Magic Skill, Dark Magic Accuracy. Currently no gear supports Drain enhancement.
+	-- Drain is part of Dark Magic, so Potency which is based on dark magic skill will already be loaded in HandleMidcast 
+	-- function and need not be repeated here. No current gear supports dark magic accuracy for any job. Magic attack 
+	-- bonus and magic critical hit have no effect on potency. Leave the two Drain gear sets empty.
 	['Drain'] = {
     },
 	['Drain_Conditional'] = {
 	},
 	
+	-- Aspir: Aspir Enhancement, Dark Magic Skill, Dark Magic Accuracy. Currently no gear equippable by a
+	-- DRG enhances Aspir. Aspir is part of Dark Magic, so potency which is based on dark magic skill will
+	-- already be loaded in HandleMidcast function and need not be repeated here. No current gear supports
+	-- dark magic accuracy for any job. Magic attack bonus and magic critical hit have no effect on potency.
+	-- Leave the two Aspir gear sets empty.
+	['Aspir'] = {
+    },
+	['Aspir_Conditional'] = {
+	},
+	
+	-- Sneak: Enhances Sneak and Enhances Stealth. Currently on Dream Boots +1 enhances sneak and is equippable
+	-- by any job. (Attained through the Starlight Celebration.) No gear for any job supports Enhances Stealth
+	-- yet.
 	['Sneak'] = {
 		Feet = 'Dream Boots +1',
 	},
 	['Sneak_Conditional'] = {
 	},
 	
+	-- Invisible: Enhances Invisible Effect. Currently only Dream Mittens +1 enhances invisible and is equippable
+	-- by any job. (Attained through the Starlight Celebration.)	
 	['Invisible'] = {
 		Hands = 'Dream Mittens +1',
 	},
 	['Invisible_Conditional'] = {
 	},
 	
+	-- Note: Phalanx does have gear that supports the spell, but it is out of era
+	
 --[[
-		DRG can use the following weapons: polearm (A+), staff (B-), sword (A-), club(E), dagger (E).
-		Any other weapon will have no weaponskill available. Weapon skill sets are named based on stat(s) used, 
-		regardless of weapon
+	The following are abilities affected by gear
+--]]
+	
+--[[
+	The following weapon skill gearsets are defined by the stat they emphasize. Listed are all of the sets that
+	you will need to use every weapon skill that your job can do. The leading comment defines what weapon/weapon
+	skill combination the set applies to.
+	
+	DRG can use the following weapons: polearm (A+), staff (B-), sword (A-), club(E), dagger (E).
+	Any other weapon will have no weaponskill available. Weapon skill sets are named based on stat(s) used, 
+	regardless of weapon
+--]]
 
+--[[
 		* Strength based or just skill based *
+		
 		Polearm: Double Thrust,Leg Sweep,Skewer,Wheeling Thrust,Impulse Drive
 		Staff: Heavy Swing,Shell Crusher,Full Swing
 		Sword: Flat Blade,Circle Blade,Vorpal Blade,Spirits Within
@@ -332,32 +460,23 @@ local sets = {
 	
 	['WS_STR'] = {
         Neck = 'Spike Necklace',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
         Ring1 = 'San d\'Orian Ring',
         Ring2 = 'Courage Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Wonder Clomps',
     },
 	['WS_STR_Conditional'] = {
 	},
 
 --[[
 		* Strength and Agility based, even weighting *
+		
 		Polearm: Vorpal Thrust
 --]]
 
 	['WS_STRAGI'] = {
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
-        Ear2 = 'Drone Earring',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
         Ring1 = 'San d\'Orian Ring',
         Ring2 = 'Courage Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
         Feet = 'Bounding Boots',
     },
 	['WS_STRAGI_Conditional'] = {
@@ -365,6 +484,7 @@ local sets = {
 	
 --[[
 		* Strength and Dexterity based, even weighting *
+		
 		Polearm: Penta Thrust
 		Sword: Fast Blade
 --]]
@@ -372,13 +492,8 @@ local sets = {
 	['WS_STRDEX'] = {
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
-        Ear2 = 'Drone Earring',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
         Ring1 = 'Courage Ring',
         Ring2 = 'Balance Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
         Feet = 'Bounding Boots',
     },
 	['WS_STRDEX_Conditional'] = {
@@ -386,6 +501,7 @@ local sets = {
 
 --[[
 		* Strength and Intelligence based, even weighting *
+		
 		Polearm: Thunder Thrust,Raiden Thrust
 		Staff: Rock Crusher
 		Sword: Burning Blade,Red Lotus Blade
@@ -393,20 +509,14 @@ local sets = {
 	
 	['WS_STRINT'] = {
         Neck = 'Spike Necklace',
-        Ear2 = 'Drone Earring',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'Tamas Ring',
         Ring2 = 'Courage Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Wonder Clomps',
     },
 	['WS_STRINT_Conditional'] = {
 	},
 
 --[[
 		* Strength and Mind based, even weighting *
+		
 		Staff: Starburst,Retribution
 		Sword: Shining Blade,Seraph Blade	
 		Club: Shining Strike
@@ -414,43 +524,36 @@ local sets = {
 
 	['WS_STRMND'] = {
         Neck = 'Justice Badge',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'Tamas Ring',
         Ring2 = 'Courage Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Wonder Clomps',
     },
 	['WS_STRMND_Conditional'] = {
 	},
 
 --[[
 		* Agility based *
+		
 		Polearm: Geirskogul
 --]]
 
 	['WS_AGI'] = {
-        Neck = 'Flower Necklace',
-        Waist = 'Mrc.Cpt. Belt',
     },
 	['WS_AGI_Conditional'] = {
 	},
 	
 --[[
 		* Charisma based *
+		
 		Dagger: Shadowstitch
 --]]
 	
 	['WS_CHR'] = {
-        Neck = 'Flower Necklace',
-        Waist = 'Mrc.Cpt. Belt',
     },
 	['WS_CHR_Conditional'] = {
 	},
 	
 --[[
 		* Dexterity based *
+		
 		Dagger: Wasp Sting
 --]]
 	
@@ -458,7 +561,6 @@ local sets = {
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
         Ring2 = 'Balance Ring',
-        Waist = 'Mrc.Cpt. Belt',
         Feet = 'Bounding Boots',
     },
 	['WS_DEX_Conditional'] = {
@@ -466,6 +568,7 @@ local sets = {
 
 --[[
 		* Dexterity and Intelligence based *
+		
 		Dagger: Gust Slash
 --]]
 	
@@ -473,7 +576,6 @@ local sets = {
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
         Ring2 = 'Balance Ring',
-        Waist = 'Mrc.Cpt. Belt',
         Feet = 'Bounding Boots',
     },
 	['WS_DEXINT_Conditional'] = {
@@ -481,46 +583,28 @@ local sets = {
 
 --[[
 		* Intelligence and Mind based *
+		
 		Staff: Spirit Taker
 --]]
 
 	['WS_INTMND'] = {
         Neck = 'Justice Badge',
-        Body = 'Wonder Kaftan',
-        Ring1 = 'Tamas Ring',
         Ring2 = 'Tranquility Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
     },
 	['WS_INTMND_Conditional'] = {
 	},
 	
 --[[
 		* Mind based *
+		
 		Dagger: Energy Steal
 --]]
 
 	['WS_MND'] = {
         Neck = 'Justice Badge',
-        Body = 'Wonder Kaftan',
-        Ring1 = 'Tamas Ring',
         Ring2 = 'Tranquility Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
     },
 	['WS_MND_Conditional'] = {
-	},
-	
---[[
-	While it's possible that the player's subjob will be pet-based (/BST,/SMN,/DRG), minimal gear set
-	support is provided.
---]]
-	
-	-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration)
-	['Charm'] = {
-		Neck = 'Flower Necklace',			-- Chr +3
-    },
-	['Charm_Conditional'] = {
 	},
 	
 --[[
@@ -528,56 +612,102 @@ local sets = {
 	might also want gear that has evasion. The choice is yours.
 --]]
 
-	-- Movement speed gear, does not include nation aketons which are found in conditional gear for home town
 	['Movement'] = { 
 	},
 	['Movement_Conditional'] = {
 	},
 
 --[[
-	Treasure Hunter gear
+	The following are abilities affected by gear
 --]]
-
-	['TH'] = {
+	
+	['AncientCircle'] = {
+    },
+	['AncientCircle_Conditional'] = {
 	},
-	['TH_Conditional'] = {
+	
+	['Jumps'] = {
+	},
+	['Jumps_Conditional'] = {
+	},
+	
+	['Spirit_Link'] = {
+	},
+	['Spirit_Link_Conditional'] = {
 	},
 	
 --[[
-	Enmity sets are used to boost/reduce enmity, accordingly
+	Some subjobs really make no sense when combined with dragoon, but all abilities across all jobs that
+	have gear that can be equipped by a PLD are included here.
+	
+	The following sub jobs have no skills with equippable gear by a DRG: WAR,THF,BLM,MNK,WHM,RDM,RNG,NIN,
+	SMN,BRD,SAM,PLD
 --]]
+	--* BST *--
+	-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration)
+	['Charm'] = {
+		Head = 'Entrancing Ribbon',
+    },
+	['Charm_Conditional'] = {
+	},
 
-	['Enmity_Plus'] = {
+	['Pet_Attack'] = {					-- Pet's strength, not accuracy
 	},
-	['Enmity_Plus_Conditional'] = {
+	['Pet_Attack_Conditional'] = {
 	},
-
-	['Enmity_Minus'] = {
+	
+	['Pet_Macc'] = {					-- Pet's Magical Accuracy
 	},
-	['Enmity_Minus_Conditional'] = {
+	['Pet_Macc_Conditional'] = {
+	},
+	
+	['Pet_Matt'] = {					-- Pet's Magical Attack
+	},
+	['Pet_Matt_Conditional'] = {
+	},
+	
+	--* DRK *--
+	['WeaponBash'] = {
+	},
+	['WeaponBash_Conditional'] = {
 	},
 	
 --[[
-	The following sets are added as a convenience for playing in level capped areas. The only way for them to be loaded
-	is via the /gearset command, which will turn GSwap off. If you're level syncing, pick the set that's closest to the
-	sync level and adjust accordingly. 
+								*** Custom Sets Go below this comment ***
+								
+	The following "CAP" sets are added as a convenience for playing in level capped areas. The only way for them to be 
+	loaded is via the /gearset command, which will turn GSwap off. If you're level syncing, pick the set that's closest 
+	to the sync level and adjust accordingly.
 --]]
 
 	['CAP20'] = {
-        Head = 'Silver Hairpin',
-        Neck = 'Spike Necklace',
+		Main = 'Platoon Lance',
+		Ammo = 'Happy Egg',
         Ear1 = 'Beetle Earring',
-        Ear2 = 'Beetle Earring',
+        Ear2 = 'Physical Earring',
         Body = 'Angler\'s Tunica',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'Courage Ring',
-        Ring2 = 'Balance Ring',
+        Hands = 'Battle Gloves',
+        Ring1 = 'San d\'Orian Ring',
+        Ring2 = 'Courage Ring',
         Waist = 'Barbarian\'s Belt',
         Legs = 'Ryl.Ftm. Trousers',
         Feet = 'Bounding Boots',
     },
 	
 	['CAP25'] = {
+		Main = 'Platoon Lance',
+		Ammo = 'Happy Egg',
+		Head = 'Empress Hairpin',
+		Neck = 'Spike Neckless',
+        Ear1 = 'Beetle Earring',
+        Ear2 = 'Physical Earring',
+		Body = 'Beetle Harness',
+        Hands = 'Battle Gloves',
+        Ring1 = 'San d\'Orian Ring',
+        Ring2 = 'Courage Ring',
+        Waist = 'Barbarian\'s Belt',
+        Legs = 'Ryl.Ftm. Trousers',
+        Feet = 'Bounding Boots',	
     },
 	
 	['CAP30'] = {
@@ -591,12 +721,46 @@ local sets = {
 
 	['CAP60'] = {
     },
+	
+--[[
+	The following set is used to dynamically create a gear set to be displayed once rather
+	than in a piecemeal manner. It is hoped that this will cut down on flickering gear and
+	possibly speed up the code. *** This set is to be left empty by the player ***. Please
+	do not modify it.
+--]]	
+	['CurrentGear'] = { },		
 };
 
 profile.Sets = sets;
 profile.sjb = nil;
 profile.bAmmo = false;
 profile.sAmmo = nil;
+
+local function HandlePetAction(PetAction)
+	-- Only gear swap if this flag is true
+	if gcdisplay.GetToggle('GSwap') == false then
+		return;
+	end
+
+	-- Only /BST pet attacks have associated gear sets because /smn pets are at most half the
+	-- level of your BST level
+	if (gcinclude.BstPetAttack:contains(PetAction.Name)) then				-- Pet Attack
+		gcinclude.MoveToCurrent(sets.Pet_Attack,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.Pet_Attack_Conditional,nil,sets.CurrentGear);
+		-- If /acc enabled equip pet accuracy gear
+		if gcdisplay.GetToggle('acc') == true then
+			gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.Pet_Accuracy_Conditional,nil,sets.CurrentGear);
+		end
+	elseif (gcinclude.BstPetMagicAttack:contains(PetAction.Name)) then		-- Pet Magical Attack
+		gcinclude.MoveToCurrent(sets.Pet_Matt,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.Pet_Matt_Conditional,nil,sets.CurrentGear);
+	elseif (gcinclude.BstPetMagicAccuracy:contains(PetAction.Name)) then	-- Pet Magical Accuracy Attack
+		gcinclude.MoveToCurrent(sets.Pet_Macc,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.Pet_Macc_Conditional,nil,sets.CurrentGear);
+    end
+	gcinclude.EquipTheGear(sets.CurrentGear);
+end
 
 --[[
 	SetSubjobSet is used to pick the appropriate set for the loaded macrobook based on
@@ -637,18 +801,22 @@ profile.OnLoad = function()
 	gcinclude.settings.RegenGearHPP = 50;
     gcinclude.settings.RefreshGearMPP = 60;
 	
+	-- Coded order of operation override
+	gcinclude.settings.priorityEngaged = 'ABCDIEFGH';
+	gcinclude.settings.priorityMidCast = 'ABCDIEFGH';
+	gcinclude.settings.priorityWeaponSkill = 'ABCDE';
+	
 	-- Determine if subjob uses magic and if the maximum MP is > 50.
 	gcinclude.CheckMagic50(player);
 	
 	-- Set your job macro toolbar defaults here. Which set depends on the subjob
-	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 9');		-- DRK
+	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 15');		-- DRG
 	SetSubjobSet(player.SubJob);
 	
 	-- Load up the weapons bar. (This need only be done once.)
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true	
-		gFunc.EquipSet(sets.Start_Weapons);	
-		gcinclude.ProcessConditional(sets.Start_Weapon_Conditional,nil);
-	end
+	gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear);
+	gcinclude.ProcessConditional(sets.Start_Weapons_Conditional,nil,sets.CurrentGear);	
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end
 
 --[[
@@ -681,22 +849,37 @@ end
 	
 profile.HandleDefault = function()
 	local player = gData.GetPlayer();
+	local pet = gData.GetPet();
+	local petAction = gData.GetPetAction();	
 	local ew = gData.GetEquipment();
+	local zone = gData.GetEnvironment();	
 	local eWeap = nil;
-	
-	if gcinclude.settings.bMagicCheck == false then
+	local cKey;
+
+	-- Make sure that the global magic settings for the player are known.	
+	if gcinclude.settings.bMagicCheck == false or gcinclude.settings.sMJ ~= player.MainJob then
 		gcinclude.CheckMagic50(player);
 	end
-	
-	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true
+
+	-- Only pet actions from BST are supported.
+	if (petAction ~= nil and player.SubJob == 'BST') then
+		HandlePetAction(petAction);
 		return;
 	end
-	
+
+	-- Save the name of the main weapon		
 	if ew['Main'] ~= nil then
 		eWeap = ew['Main'].Name;
 	end;
-		
-	SetSubjobSet(player.SubJob);			-- Make sure the correct set is shown in case the subjob was changed.
+
+	-- Make sure the macro set is shown and that the display on the top of the screen is correct
+	-- in case the subjob was changed.	
+	SetSubjobSet(player.SubJob);
+
+	-- Only gear swap if this flag is true
+	if gcdisplay.GetToggle('GSwap') == false then
+		return;
+	end
 	
 	-- If player is not resting and has MP and has swapped weapons, set the weapon back to what 
 	-- they had before the switch
@@ -708,77 +891,116 @@ profile.HandleDefault = function()
 	end
 		
 	-- Now process the player status accordingly
-	if player.Status == 'Engaged' then		-- Player is fighting. Priority (low to high): TP,evasion,accuracy
-		gFunc.EquipSet(sets.TP);
-		gcinclude.ProcessConditional(sets.TP_Conditional,nil);
-		-- Possible evasion override
-		if gcdisplay.GetToggle('Eva') == true then
-			gFunc.EquipSet(sets.Evasion);
-			gcinclude.ProcessConditional(sets.Evasion_Conditional,nil);
+	if player.Status == 'Engaged' then
+		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
+		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
+			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
+			if cKey == 'A' then			-- Player is fighting. Equip the TP gear set
+				gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.TP_Conditional,nil,sets.CurrentGear);
+			elseif cKey == 'B' then		-- Pet (if out) is fighting
+				if pet ~= nil and pet.Status == 'Engaged' then
+					gcinclude.MoveToCurrent(sets.TP_Pet,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.TP_Pet_Conditional,nil,sets.CurrentGear);
+				end		
+			elseif cKey == 'C' then		-- Evasion			
+				if gcdisplay.GetToggle('Eva') == true then
+					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.Evasion_Conditional,nil,sets.CurrentGear);
+				end
+			elseif cKey == 'D' then		-- Enmity		
+				local sEmn = gcdisplay.GetCycle('Enmity');
+				if sEmn == 'Minus' then
+					gcinclude.MoveToCurrent(sets.Enmity_Minus,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.Enmity_Minus_Conditional,nil,sets.CurrentGear);				
+				elseif sEmn == 'Plus' then
+					gcinclude.MoveToCurrent(sets.Enmity_Plus,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.Enmity_Plus_Conditional,nil,sets.CurrentGear);
+				end				
+			elseif cKey == 'E' then		-- Accuracy	
+				if gcdisplay.GetToggle('Acc') == true then 
+					gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.Accuracy_Conditional,nil,sets.CurrentGear);
+					if pet ~= nil and pet.Status == 'Engaged' then
+						gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear);
+						gcinclude.ProcessConditional(sets.Pet_Accuracy_Conditional,nil,sets.CurrentGear);
+					end
+				end
+			elseif cKey == 'F' then		-- Kiting
+				if (gcdisplay.GetToggle('Kite') == true) then
+					gcinclude.MoveToCurrent(sets.Movement,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.Movement_Conditional,nil,sets.CurrentGear);
+				end	
+			elseif cKey == 'G' then		-- common buffs/debuffs
+				gcinclude.CheckCommonDebuffs();	
+			elseif cKey == 'H' then		-- Damage Taken gear
+				if (gcdisplay.GetCycle('DT') ~= gcinclude.OFF) then
+					if gcdisplay.GetCycle('DT') == 'Physical' then
+						gcinclude.MoveToCurrent(sets.DT_Physical,sets.CurrentGear);
+						gcinclude.ProcessConditional(sets.DT_Physical_Conditional,nil,sets.CurrentGear);
+					elseif gcdisplay.GetCycle('DT') == 'Magical' then
+						gcinclude.MoveToCurrent(sets.DT_Magical,sets.CurrentGear);
+						gcinclude.ProcessConditional(sets.DT_Magical_Conditional,nil,sets.CurrentGear);
+					elseif gcdisplay.GetCycle('DT') == 'Breath' then
+						gcinclude.MoveToCurrent(sets.DT_Breath,sets.CurrentGear);
+						gcinclude.ProcessConditional(sets.DT_Breath_Conditional,nil,sets.CurrentGear);
+					end
+				end
+			elseif cKey == 'I' then				-- Haste
+				if gcdisplay.GetToggle('Haste') == true then 
+					gcinclude.MoveToCurrent(sets.Haste,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.Haste_Conditional,nil,sets.CurrentGear);
+				end			
+			end				
 		end
-		-- Possible enmity override
-		local sEmn = gcdisplay.GetCycle('Enmity');
-		if sEmn == 'Minus' then
-			gFunc.EquipSet(sets.Enmity_Minus);
-			gcinclude.ProcessConditional(sets.Enmity_Minus_Conditional,nil);				
-		elseif sEmn == 'Plus' then
-			gFunc.EquipSet(sets.Enmity_Plus);
-			gcinclude.ProcessConditional(sets.Enmity_Plus_Conditional,nil);			
+	elseif player.Status == 'Resting' then	
+		-- Player kneeling. Priority (low to high): Resting,refresh
+		gcinclude.MoveToCurrent(sets.Resting,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.Resting_Conditional,nil,sets.CurrentGear);
+		if gcinclude.settings.bMagic == true and player.MPP < gcinclude.settings.RefreshGearMPP then
+			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional,nil,sets.CurrentGear);
 		end
-		-- Possible accuracy override
-		if gcdisplay.GetToggle('Acc') == true then 
-			gFunc.EquipSet(sets.Accuracy);
-			gcinclude.ProcessConditional(sets.Accuracy_Conditional,nil);
-		end
-	elseif player.Status == 'Resting' then	-- Player kneeling. Priority (low to high): Resting,refresh
-		gFunc.EquipSet(sets.Resting);
-		gcinclude.ProcessConditional(sets.Resting_Conditional,nil);
-		if (gcinclude.settings.bMagic and player.MPP < gcinclude.settings.RefreshGearMPP) then
-			gFunc.EquipSet(sets.Resting_Refresh);
-			gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional,nil);
-		end
-		-- Weapon swap to a higher MP refresh while healing weapon if appropriate.
+		
+		-- Weapon swap to a weapon that refreshes MP if player's subjob uses magic, weapon swapping
+		-- is enabled (/wswap) and their MP is not at maximum
 		if gcdisplay.GetToggle('WSwap') == true and player.MP < player.MaxMP then
-			gcinclude.SwapToStave('dark',false);
-		end
-	else									-- Assume idling. Priority (low to high): Idle,refresh
-		gFunc.EquipSet(sets.Idle);
-		gcinclude.ProcessConditional(sets.Idle_Conditional,nil);
-		if player.HPP < gcinclude.settings.RegenGearHPP then		-- if the player's HP is below the threshold setting, equip the idle regen gear
-			gFunc.EquipSet(sets.Idle_Regen);
-		end
-		if profile.bMagic == true then				-- Magic subjob
-			if player.MPP < gcinclude.settings.RefreshGearMPP then		-- if the player's MP is below the threshold setting, equip the idle refresh gear
-				gFunc.EquipSet(sets.Idle_Refresh);
+			if gcinclude.settings.bStave == false then
+				gcinclude.CheckForStaves();
+			end
+			if gcinclude.settings.bStave == true then
+				gcinclude.SwapToStave('dark',false,sets.CurrentGear);
 			end
 		end
-	end
-	
-	-- If player has indicated kiting, load movement gear set
-	if (gcdisplay.GetToggle('Kite') == true) then
-		gFunc.EquipSet(sets.Movement);
-		gcinclude.ProcessConditional(sets.Movement_Conditional,nil);
-	end
-		
-	gcinclude.CheckDefault ();
-		
-	-- Add TH gear if indicated
-	if (gcdisplay.GetToggle('TH') == true) then
-		gFunc.EquipSet(sets.TH);
-		gcinclude.ProcessConditional(sets.TH_Conditional,nil);
-	end
-			
-	-- Lastly, equip the appriopriate Damage Taken gear if desired
-	if (gcdisplay.GetToggle('DT') == true) then
-		gFunc.EquipSet('DT_' .. gcdisplay.GetCycle('DT_Type'));
-		if gcdisplay.GetCycle('DT_Type') == gcinclude.PHY then
-			gcinclude.ProcessConditional(sets.DT_Physical_Conditional,nil);
-		elseif gcdisplay.GetCycle('DT_Type') == gcinclude.MAG then
-			gcinclude.ProcessConditional(sets.DT_Magical_Conditional,nil);
-		else
-			gcinclude.ProcessConditional(sets.DT_Breath_Conditional,nil);
+		-- Check for common debuffs
+		gcinclude.CheckCommonDebuffs();
+	else									
+		-- Assume idling. Priority (low to high): Idle,refresh
+		gcinclude.MoveToCurrent(sets.Idle,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.Idle_Conditional,nil);
+		-- See if in a town		
+		if not (zone.Area ~= nil and gcinclude.Towns:contains(zone.Area)) then		
+			gcinclude.MoveToCurrent(sets.Town,sets.CurrentGear);
+			gcinclude.ProcessConditional(gcinclude.sets.Town_Conditional,nil,sets.CurrentGear);
 		end
+		-- if the player's HP is below the threshold setting, equip the idle regen gear
+		if player.HPP < gcinclude.settings.RegenGearHPP then
+			gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.Idle_Regen_Conditional,nil,sets.CurrentGear);
+		end
+		-- if the player's MP is below the threshold setting, equip the idle refresh gear
+		if player.MPP < gcinclude.settings.RefreshGearMPP then
+			gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.Idle_Refresh_Conditional,nil,sets.CurrentGear);
+		end		
+		-- Check for common debuffs
+		gcinclude.CheckCommonDebuffs();	
 	end
+		
+	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set
+					
+	-- Lastly, update the display, just in case
+	gcdisplay.Update();
 end
 
 --[[
@@ -792,39 +1014,46 @@ profile.HandleAbility = function()
 		return;
 	end
 	
-	if string.contains(ability.Name,'Jump') then
-		gFunc.EquipSet(sets.Jumps);
-		gcinclude.ProcessConditional(sets.Jumps_Conditional,nil);
-		if gcdisplay.GetToggle('Acc') == true then 
-			gFunc.EquipSet(sets.Jumps_Accuracy);
-			gcinclude.ProcessConditional(sets.Jumps_Accuracy_Conditional,nil);
+	-- Now process the appropriate job ability. Start with abilities associated with DRG
+	if string.match(ability.Name, 'Ancient Circle') then
+		gcinclude.MoveToCurrent(sets.AncientCircle,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.AncientCircle_Conditional,nil,sets.CurrentGear);
+	elseif string.contains(ability.Name,'Jump') then
+		gcinclude.MoveToCurrent(sets.Jumps,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.Jumps_Conditional,nil,sets.CurrentGear);	
+		
+	elseif string.contains(ability.Name, 'Spirit') then
+		gcinclude.MoveToCurrent(sets.Spirit_Link,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.Spirit_Link_Conditional,nil,sets.CurrentGear);	
+
+	-- And now the subjob abilities
+	elseif string.contains(ability.Name, 'Charm') then			-- assumes /bst	
+		gcinclude.MoveToCurrent(sets.Charm,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.Charm_Conditional,nil,sets.CurrentGear);
+		
+		-- If weapon swapping is allowed, equip a light/apollo staff (if you have one)
+	
+		if gcdisplay.GetToggle('WSwap') == true then
+			if gcinclude.settings.bStave == false then
+				gcinclude.CheckForStaves();
+			end	
+			if gcinclude.settings.bStave == true then
+				gcinclude.SwapToStave('light',false,sets.CurrentGear);
+			end
 		end
-	elseif string.contains(ability.Name,'Ancient') then
-		gFunc.EquipSet(sets.AncientCircle);
-		gcinclude.ProcessConditional(sets.AncientCircle_Conditional,nil);	
-	elseif string.contains(ability.Name,'Spirit') then
-		gFunc.EquipSet(sets.Spirit_Link);
-		gcinclude.ProcessConditional(sets.Spirit_Link_Conditional,nil);	
-	elseif string.contains(ability.Name, 'Charm') then						-- assumes /bst	
-		gFunc.EquipSet(sets.Charm);
-		gcinclude.ProcessConditional(sets.Charm_Conditional,nil);
-	end
+	elseif string.match(ability.Name, 'Weapon Bash') then		-- assumes /drk
+		gcinclude.MoveToCurrent(sets.WeaponBash,sets.CurrentGear);	
 	
-	-- If evasion is wanted, override the appropriate gear
-	if gcdisplay.GetToggle('eva') == true then
-		gFunc.EquipSet(sets.Evasion);
-		gcinclude.ProcessConditional(sets.Evasion_Conditional,nil);
+--[[
+		Abilities associated with subjobs go here. The following subjobs have
+		no ability entries because of lack of gear or just doesn't make sense: 
+		SMN,WAR,MNK,WHM,BLM,RDM,BRD,RNG,SAM,THF
+		
+		Note: for /THF, sneak attack gets no bonus from DEX and trick attack gets
+		no bonus from AGI
+--]]	
 	end
-	
-	-- If enmity is wanted, override
-	local sEmn = gcdisplay.GetCycle('Enmity');
-	if sEmn == 'Minus' then
-		gFunc.EquipSet(sets.Enmity_Minus);
-		gcinclude.ProcessConditional(sets.Enmity_Minus_Conditional,nil);				
-	elseif sEmn == 'Plus' then
-		gFunc.EquipSet(sets.Enmity_Plus);
-		gcinclude.ProcessConditional(sets.Enmity_Plus_Conditional,nil);			
-	end
+	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleAbility set
 end
 	
 --[[
@@ -837,7 +1066,9 @@ profile.HandleItem = function()
 
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 		if string.match(item.Name, 'Holy Water') then 
-			gFunc.EquipSet(gcinclude.sets.Holy_Water);
+			gcinclude.MoveToCurrent(gcinclude.sets.Holy_Water,sets.CurrentGear);
+			gcinclude.ProcessConditional(gcinclude.sets.Holy_Water_Conditional,nil,sets.CurrentGear);
+			gcinclude.EquipTheGear(sets.CurrentGear);	-- if more items are added, move this to addess all
 		end			
 	end
 end
@@ -854,7 +1085,6 @@ profile.HandlePrecast = function()
 	-- Normal process
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 		gFunc.EquipSet(sets.Precast);
-		gcinclude.ProcessConditional(sets.Precast_Conditional,nil);
 		
 		-- See if an elemental obi should be equipped
 		if gcinclude.settings.bEleObis == false then
@@ -866,15 +1096,13 @@ profile.HandlePrecast = function()
 				gFunc.ForceEquip('Waist',obi);
 			end
 		end
-		gcinclude.CheckCancels();
 	end
 end
 
 --[[
-	HandleMidcast loads the appropriate gear for magic skill, duration, mab, macc, and potency
-	
-	There's an order to how the pieces are loaded: INT/MND, spell specific, macc, magic skill, obi, ele swap
-	
+	HandleMidcast is the second function invoked when a player casts a spell. It equips gear appropriate for 
+	magic skill, duration, magic attack bonus, magic accuracy, and potency. There's an order to how the pieces 
+	are loaded: INT/MND, spell specific, macc, magic skill, obi, ele swap	
 --]]
 
 profile.HandleMidcast = function()
@@ -882,118 +1110,156 @@ profile.HandleMidcast = function()
 	local spell = gData.GetAction();
 	local obi;
 	local sSet;
+	local cKey;
 
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
 		return;
 	end
-		
-	-- First load the midcast set
-	gFunc.EquipSet(sets.Midcast);
-	gcinclude.ProcessConditional(sets.Midcast_Conditional,nil);
-			
-	-- Then the Spell Interruption set
-	gFunc.EquipSet(sets.SIR);
-	gcinclude.ProcessConditional(sets.SIR_Conditional,nil);
+
+	gcinclude.settings.priorityMidCast = string.upper(gcinclude.settings.priorityMidCast);
+	for i = 1,string.len(gcinclude.settings.priorityMidCast),1 do
+		cKey = string.sub(gcinclude.settings.priorityMidCast,i,i);
 	
-	-- Next, see if INT/MND gear should be loaded
-	sSet = gcinclude.WhichStat(spell.Name);
-	if sSet ~= nil then
-		if sSet == 'MND' then
-			gFunc.EquipSet(sets.MND);
-			gcinclude.ProcessConditional(sets.MND_Conditional,nil);
-		elseif sSet == 'INT' then
-			gFunc.EquipSet(sets.INT);
-			gcinclude.ProcessConditional(sets.INT_Conditional,nil);
-		end
-	end
+		if cKey == 'A' then				-- midcast gear	
+			gcinclude.MoveToCurrent(sets.Midcast,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.Midcast_Conditional,nil,sets.CurrentGear);
+		elseif cKey == 'B' then			-- Spell Interruption Rate gear
+			gcinclude.MoveToCurrent(sets.SIR,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.SIR_Conditional,nil,sets.CurrentGear);
+		elseif cKey == 'C' then			-- INT/MND gear?
+			sSet = gcinclude.WhichStat(spell.Name);
+			if sSet ~= nil then
+				if sSet == 'MND' then
+					gcinclude.MoveToCurrent(sets.MND,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.MND_Conditional,nil,sets.CurrentGear);
+				elseif sSet == 'INT' then
+					gcinclude.MoveToCurrent(sets.INT,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.INT_Conditional,nil,sets.CurrentGear);
+				end
+			end				
+		elseif cKey == 'D' then			-- Magic Skill Type
+			mSet = gcinclude.WhichMagicSkill(spell.Name);
+			if mSet ~= nil then
+				if mSet == 'Healing' then
+					gcinclude.MoveToCurrent(sets.Healing,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.Healing_Conditional,nil,sets.CurrentGear);
+				elseif mSet == 'Dark' then
+					gcinclude.MoveToCurrent(sets.Dark,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.Dark_Conditional,nil,sets.CurrentGear);
+				elseif mSet == 'Divine' then
+					gcinclude.MoveToCurrent(sets.Divine,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.Divine_Conditional,nil,sets.CurrentGear);
+				elseif mSet == 'Enfeebling' then
+					gcinclude.MoveToCurrent(sets.Enfeebling,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.Enfeebling_Conditional,nil,sets.CurrentGear);
+				elseif mSet == 'Enhancing' then
+					gcinclude.MoveToCurrent(sets.Enhancing,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.Enhancing_Conditional,nil,sets.CurrentGear);
+				elseif mSet == 'Elemental' then
+					gcinclude.MoveToCurrent(sets.Elemental,sets.CurrentGear);				
+					gcinclude.ProcessConditional(sets.Elemental_Conditional,nil,sets.CurrentGear);
+				elseif mSet == 'Ninjitsu' then
+					gcinclude.MoveToCurrent(sets.Ninjitsu,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.Ninjitsu_Conditional,nil,sets.CurrentGear);
+				elseif mSet == 'Summoning' then
+					gcinclude.MoveToCurrent(sets.Summoning,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.Summoning_Conditional,nil,sets.CurrentGear);
+				end
+			end
+		elseif cKey == 'E' then			--Magical accuracy
+			if gcdisplay.GetToggle('acc') == true then
+				gcinclude.MoveToCurrent(sets.Macc,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.macc_Conditional,nil,sets.CurrentGear);
+			end
+		elseif cKey == 'F' then			-- Spell specific gear			
+			if string.match(spell.Name, 'Stoneskin') then
+				gcinclude.MoveToCurrent(sets.Stoneskin,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.Stoneskin_Conditional,nil,sets.CurrentGear);
+			elseif string.match(spell.Name, 'Drain') then
+				gcinclude.MoveToCurrent(sets.Drain,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.Drain_Conditional,nil,sets.CurrentGear);
+			elseif string.match(spell.Name, 'Aspir') then
+				gcinclude.MoveToCurrent(sets.Aspir,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.Aspir_Conditional,nil,sets.CurrentGear);
+			elseif string.match(spell.Name, 'Sneak') then
+				gcinclude.MoveToCurrent(sets.Sneak,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.Sneak_Conditional,nil,sets.CurrentGear);
+			elseif string.match(spell.Name, 'Invisible') then
+				gcinclude.MoveToCurrent(sets.Invisible,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.Invisible_Conditional,nil,sets.CurrentGear);
+			end		
+		elseif cKey == 'G' then				-- Elemental Obi	
+			if gcinclude.settings.bEleObis == false then
+				gcinclude.CheckForObisGorgets();
+			end	
+			if gcinclude.settings.bEleObis == true then
+				obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.OBI);
+				if obi ~= nil then
+					sets.CurrentGear['Waist'] = obi;
+				end
+			end	
+		elseif cKey == 'H' then				-- Elemental Stave	
+			if gcinclude.settings.bStave == false then
+				gcinclude.CheckForStaves();
+			end
+			if gcdisplay.GetToggle('WSwap') == true and gcinclude.settings.bEleStaves == true then
+				if mSet == 'Summoning' then
+					stat = gcinclude.CheckSummons(spell.Name);
+				else
+					stat = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.ELEMENT);
+				end
+			end
 		
-	-- Then check spell specific gear
-	if string.match(spell.Name, 'Phalanx') then
-		gFunc.EquipSet(sets.Phalanx);
-		gcinclude.ProcessConditional(sets.Phalanx_Conditional,nil);
-	elseif string.match(spell.Name, 'Stoneskin') then
-		gFunc.EquipSet(sets.Stoneskin);
-		gcinclude.ProcessConditional(sets.Stoneskin_Conditional,nil);
-	elseif string.contains(spell.Name, 'Drain') then
-		gFunc.EquipSet(sets.Drain);
-		gcinclude.ProcessConditional(sets.Drain_Conditional,nil);
+			if stat ~= nil then
+				gcinclude.SwapToStave(stat,false,sets.CurrentGear);
+			end
+			stat = nil;
+		elseif cKey == 'I' then				-- Haste
+			if gcdisplay.GetToggle('Haste') == true then 
+				gcinclude.MoveToCurrent(sets.Haste,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.Haste_Conditional,nil,sets.CurrentGear);
+			end			
+		end	
 	end
-
-	-- Then magical accuracy
-	if gcdisplay.GetToggle('acc') == true then
-		gFunc.EquipSet(sets.Macc);
-		gcinclude.ProcessConditional(sets.Macc_Conditional,nil);
-	end
-		
-	-- Then the appropriate magic skill
-	mSet = gcinclude.WhichMagicSkill(spell.Name);
-
-	if mSet ~= nil then
-		gFunc.EquipSet(mSet);
-		if mSet == 'Cure' then
-			gcinclude.ProcessConditional(sets.Cure_Conditional,nil);
-		elseif mSet == 'Dark' then
-			gcinclude.ProcessConditional(sets.Dark_Conditional,nil);
-		elseif mSet == 'Divine' then
-			gcinclude.ProcessConditional(sets.Divine_Conditional,nil);
-		elseif mSet == 'Enfeebling' then
-			gcinclude.ProcessConditional(sets.Enfeebling_Conditional,nil);
-		elseif mSet == 'Enhancing' then
-			gcinclude.ProcessConditional(sets.Enhancing_Conditional,nil);
-		elseif mSet == 'Elemental' then
-			gcinclude.ProcessConditional(sets.Elemental_Conditional,nil);
-		elseif mSet == 'Ninjitsu' then
-			gcinclude.ProcessConditional(sets.Ninjitsu_Conditional,nil);
-		elseif mSet == 'Summoning' then
-			gcinclude.ProcessConditional(sets.Summoning_Conditional,nil);
-		end				
-	end
+	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited midcast set			
+end
 
 --[[
-	There's a couple of spells that have to go here: sneak and invisible
+	HandlePreshot is similar to HandlePrecast, but for ranged actions. It loads Ranged Accuracy 
+	and Ranged Shot Speed Gear for a ranged attack
 --]]
 
-	if string.match(spell.Name, 'Sneak') then
-		gFunc.EquipSet(sets.Sneak);
-		gcinclude.ProcessConditional(sets.Sneak_Conditional,nil);
-	elseif string.match(spell.Name, 'Invisible') then
-		gFunc.EquipSet(sets.Invisible);
-		gcinclude.ProcessConditional(sets.Invisible_Conditional,nil);
+profile.HandlePreshot = function()
+	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
+		gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.Preshot_Conditional,nil,sets.CurrentGear);
+		gcinclude.EquipTheGear(sets.CurrentGear);
+end
+
+--[[
+	HandleMidshot is similar to HandleMidcast, but for ranged actions. It loads Ranged Attack 
+	and Damage gear for a ranged attack
+--]]
+
+profile.HandleMidshot = function()
+	-- Only gear swap if this flag is true
+	if gcdisplay.GetToggle('GSwap') == false then
+		return;
 	end
 	
---[[		
-	Then, regardless of type of spell, see if an obi would help. No need to check and see if the 
-	player has the obi or not, if they do, it equips. If not, nothing happens.
-		
-	Note: This seems like a repeat of the obi check in the precast, but in this case it's checking
-	for the spell damage type rather than the spell accuracy.
---]]
-	if gcinclude.settings.bEleObis == false then
-		gcinclude.CheckForObisGorgets();
-	end		
-	if gcinclude.settings.bEleObis == true then
-		obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.OBI);
-		if obi ~= nil then
-			gFunc.ForceEquip('Waist',obi);
-		end
+	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
+	gcinclude.ProcessConditional(sets.Midshot_Conditional,nil,sets.CurrentGear);
+
+	-- if enmity wanted, load that
+	local sEmn = gcdisplay.GetCycle('Enmity');
+	if sEmn == 'Minus' then
+		gcinclude.MoveToCurrent(sets.Enmity_Minus,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.Enmity_Minus_Conditional,nil,sets.CurrentGear);		
+	elseif sEmn == 'Plus' then
+		gcinclude.MoveToCurrent(sets.Enmity_Plus,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.Enmity_Plus_Conditional,nil,sets.CurrentGear);		
 	end
-		
-	stat = nil;
-	-- Lastly, how about an elemental stave (use the MagicEleDmg in gcinclude) or summons
-	if gcinclude.settings.bStave == false then
-		gcinclude.CheckForStaves();
-	end
-	if gcdisplay.GetToggle('WSwap') == true and gcinclude.settings.bEleStaves == true then
-		if mSet == 'Summoning' then
-			stat = gcinclude.CheckSummons(spell.Name);
-		else
-			stat = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.ELEMENT);
-		end
-	end
-		
-	if stat ~= nil then
-		gcinclude.SwapToStave(stat,false);
-	end
+	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited Midshot set	
 end
 
 --[[
@@ -1001,9 +1267,6 @@ end
 --]]
 
 profile.HandleWeaponskill = function()
-	
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
-	
 		local ws = gData.GetAction();
 		local canWS = gcinclude.CheckWsBailout();
  
@@ -1012,58 +1275,87 @@ profile.HandleWeaponskill = function()
 		if (canWS == false) then 
 			gFunc.CancelAction();
 			return;
-		else
-			local sWS = gcinclude.WsStat(ws.Name,'STR');	-- Equip appropriate gear for weapon skill
-			gFunc.EquipSet(sWS);
+		end
+
+	-- Only gear swap if this flag is true		
+	if gcdisplay.GetToggle('GSwap') == false then
+		return;
+	end
+
+ 	gcinclude.settings.priorityWeaponSkill = string.upper(gcinclude.settings.priorityWeaponSkill);
+	for i = 1,string.len(gcinclude.settings.priorityWeaponSkill),1 do
+		cKey = string.sub(gcinclude.settings.priorityWeaponSkill,i,i);
+		if cKey == 'A' then			-- weaponskill set
+			local sWS = gcinclude.WsStat(ws.Name,'STR');
 
 			if sWS == 'WS_AGI' then
-				gcinclude.ProcessConditional(sets.WS_AGI_Conditional,nil);			
+				gcinclude.MoveToCurrent(sets.WS_AGI,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.WS_AGI_Conditional,nil,sets.CurrentGear);			
 			elseif sWS == 'WS_CHR' then
-				gcinclude.ProcessConditional(sets.WS_CHR_Conditional,nil);
+				gcinclude.MoveToCurrent(sets.WS_CHR,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.WS_CHR_Conditional,nil,sets.CurrentGear);
 			elseif sWS == 'WS_DEX' then
-				gcinclude.ProcessConditional(sets.WS_DEX_Conditional,nil);
+				gcinclude.MoveToCurrent(sets.WS_DEX,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.WS_DEX_Conditional,nil,sets.CurrentGear);
 			elseif sWS == 'WS_DEXINT' then
-				gcinclude.ProcessConditional(sets.WS_DEXINT_Conditional,nil);
+				gcinclude.MoveToCurrent(sets.WS_DEXINT,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.WS_DEXINT_Conditional,nil,sets.CurrentGear);
 			elseif sWS == 'WS_INTMND' then
-				gcinclude.ProcessConditional(sets.WS_INTMND_Conditional,nil);
+				gcinclude.MoveToCurrent(sets.WS_INTMND,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.WS_INTMND_Conditional,nil,sets.CurrentGear);
 			elseif sWS == 'WS_STR' then
-				gcinclude.ProcessConditional(sets.WS_STR_Conditional,nil);
+				gcinclude.MoveToCurrent(sets.WS_STR,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.WS_STR_Conditional,nil,sets.CurrentGear);
 			elseif sWS == 'WS_MND' then
-				gcinclude.ProcessConditional(sets.WS_MND_Conditional,nil);		
+				gcinclude.MoveToCurrent(sets.WS_MND,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.WS_MND_Conditional,nil,sets.CurrentGear);		
 			elseif sWS == 'WS_STRDEX' then
-				gcinclude.ProcessConditional(sets.WS_STRDEX_Conditional,nil);
+				gcinclude.MoveToCurrent(sets.WS_STRDEX,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.WS_STRDEX_Conditional,nil,sets.CurrentGear);
 			elseif sWS == 'WS_STRMND' then
-				gcinclude.ProcessConditional(sets.WS_STRMND_Conditional,nil);
+				gcinclude.MoveToCurrent(sets.WS_STRMND,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.WS_STRMND_Conditional,nil,sets.CurrentGear);
 			elseif sWS == 'WS_STRINT' then
-				gcinclude.ProcessConditional(sets.WS_STRINT_Conditional,nil);
+				gcinclude.MoveToCurrent(sets.WS_STRINT,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.WS_STRINT_Conditional,nil,sets.CurrentGear);
 			end
-			
-			-- See if an elemental gorget makes sense to equip
+		elseif cKey == 'B' then		-- elemental gorget	
 			if gcinclude.settings.bEleGorgets == false then
 				gcinclude.CheckForObisGorgets();
-			end		
+			end			
 			if gcinclude.settings.bEleGorgets == true then
 				local sGorget = gcinclude.CheckEleGorget(ws.Name);
 				if sGorget ~= nil then
-					gFunc.ForceEquip('Neck',sGorget);
+					sets.CurrentGear['Neck'] = sGorget;
 				end
 			end
-			-- if enmity wanted, load that
+		elseif cKey == 'C' then		-- enmity	
 			local sEmn = gcdisplay.GetCycle('Enmity');
 			if sEmn == 'Minus' then
-				gFunc.EquipSet(sets.Enmity_Minus);
-				gcinclude.ProcessConditional(sets.Enmity_Minus_Conditional,nil);				
+				gcinclude.MoveToCurrent(sets.Enmity_Minus,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.Enmity_Minus_Conditional,nil,sets.CurrentGear);
 			elseif sEmn == 'Plus' then
-				gFunc.EquipSet(sets.Enmity_Plus);
-				gcinclude.ProcessConditional(sets.Enmity_Plus_Conditional,nil);			
-			end
-			-- Lastly, if accuracy indicated, load that
+				gcinclude.MoveToCurrent(sets.Enmity_Plus,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.Enmity_Plus_Conditional,nil,sets.CurrentGear);
+			end				
+		elseif cKey == 'D' then		-- accuracy	
 			if gcdisplay.GetToggle('acc') == true then
-				gFunc.EquipSet(sets.Accuracy);
-				gcinclude.ProcessConditional(sets.Accuracy_Conditional,nil);
-			end
-		end
+				gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.Accuracy_Conditional,nil,sets.CurrentGear);
+			end	
+		elseif cKey == 'E' then		-- elemental obi
+--[[
+			If the weaponskill is elemental and is closing a skillchain, then if the
+			conditions for equipping an elemental obi are advantageous, it should be
+			equipped now. Unfortunately I have no idea how to detect the closing of
+			a skillchain and the automatic equipment of an elemental obi could 
+			adversely affect the damage, so this section is not implemented. If I can
+			ever figure out how to detect closing a skillchain, I will readdress this.
+															- CCF, 1/12/2024
+--]]	
+		end				
 	end
+	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited weaponskill set	
 end
 
 return profile;
