@@ -295,11 +295,10 @@ WEATHER			Weather					One (Clear, Clouds, Thunder, etc)
 MOON:DAY:NIGHT	Moon phase/day/time		Three (MOON, DAY, TIME), see above for details
 DAY|TIME		Days or time			One (List of days or "Daytime"/"Nighttime")
 MP<50			MP less than 50			None
-MP.LE.50P		MP <= 50%				None (Sees if you MP is below 50%)
+MP.LE.50P		MP <= 50%				None (Sees if your MP is below 50%)
 SJ:MAGIC		Magical subjob			None (Checks to see if your subjob is magical)
 HPP|TPP.LE.		HP <= 50% and MP <= 50%	None
-
-I having problems with the following two:
-PET_NAME		Specific pet name		One (e.g., Carbuncle)
-NOT_PET_NAME	Any pet except			One (e.g., Ifrit/Ramuh)
-They've been disabled for now.
+PET_NAME		Specific pet name		One (one or a / delimited list, e.g., Carbuncle)
+NOT_PET_NAME	Any pet except			One (one or a / delimited list, e.g., Ifrit/Ramuh)
+SJIS			Subjob is				One	(one or a / delimited list, e.g., THF/NIN) 
+SJISN			Subjob is not			One	(one or a / delimited list, e.g., THF/NIN) 

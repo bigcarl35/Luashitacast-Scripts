@@ -13,23 +13,35 @@ require 'common'
 gcinclude.sets = {
 	['Doomed'] = { 					-- this set will equip any time you have the doom status
     },
+	['Doomed_Conditional'] = {
+	},
 	
 	['Holy_Water'] = { 				-- update with whatever gear you use for the Holy Water item
     },
+	['Holy_Water_Conditional'] = {
+	}
 	
 	['Sleeping'] = { 				-- this set will auto equip if you are asleep
 		Neck = 'Opo-opo necklace',	-- might as well gain tp
     },
+	['Sleeping_Conditional'] = {
+	},
 	
 	['Blind'] = {					-- this will autoequip if you're blind
 		Ear2 = 'Bat Earring',		-- gain some evasion
 	},
+	['Blind_Conditional'] = {
+	},
 	
 	['Weakened'] = {  				-- this set will try to auto equip if you are weakened
+	},
+	['Weakened_Conditional'] = {
 	},
 	
 	['Shining_Ruby'] = {			-- this will auto-equip when you have the shining ruby buff
 		--Hands = 'Carbuncle\'s Cuffs',
+	},
+	['Shining_Ruby_Conditional'] = {
 	},
 	
 --[[
@@ -87,6 +99,8 @@ gcinclude.sets = {
         Legs = 'Fisherman\'s Hose',
         Feet = 'Waders',
     },
+	['FishingGear_Conditional'] = {
+	},
 };
 
 gcinclude.settings = {
@@ -101,6 +115,8 @@ gcinclude.settings = {
 	RegenGearHPP = 60; 	 -- idle regen set gets loaded if player's max HP is <= 60%
 	RefreshGearMPP = 70; -- idle refresh set gets loaded if player's max MP <= 70%. Refresh takes priority over regen
 	bMagic = false;		 -- does job combination support magic.
+	sMJ = nil;			 -- What is the main job
+	sSJ = nil;			 -- What is the sub job
 	bMJ = false;		 -- does the main job use magic
 	bSJ = false;		 -- does the sub job use magic
 	b50 = false;		 -- does the player have more than 50 MP capacity
@@ -125,7 +141,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','craftset','gatherset','fishset','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','enmity'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','craftset','gatherset','fishset','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','enmity','haste'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T {'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T {'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -845,6 +861,8 @@ function gcinclude.DB_ShowIt(sType)
 		print(chat.message('RegenGearHPP: ' .. tostring(gcinclude.settings.RegenGearHPP)));
 		print(chat.message('RefreshGearMPP: ' .. tostring(gcinclude.settings.RefreshGearMPP)));
 		print(chat.message('bMagic: ' .. tostring(gcinclude.settings.bMagic)));
+		print(chat.message('sMJ: :' .. tostring(gcinclude.settings.sMJ)));
+		print(chat.message('sSJ: :' .. tostring(gcinclude.settings.sSJ)));		
 		print(chat.message('bMJ: ' .. tostring(gcinclude.settings.bMJ)));
 		print(chat.message('bSJ: ' .. tostring(gcinclude.settings.bSJ)));
 		print(chat.message('b50: ' .. tostring(gcinclude.settings.b50)));
@@ -1054,6 +1072,7 @@ function gcinclude.SetVariables()
 	gcdisplay.CreateToggle('Eva', false);
 	gcdisplay.CreateToggle('WSwap',false);
 	gcdisplay.CreateToggle('TH',false);
+	gcdisplay.CreateToggle('Haste', false);
 	
 	if player.MainJob == 'BST' then
 		gcdisplay.CreateToggle('AJug',true);
@@ -1218,7 +1237,7 @@ end		-- gcinclude.CheckTime
 	one condition. Get that working and then maybe support multiple.
 --]]
 
-function gcinclude.ProcessConditional(tTest,sType)
+function gcinclude.ProcessConditional(tTest,sType,tMaster)
 	local player = gData.GetPlayer();
 	local pMJ = player.MainJob;
 	local pLevel = player.MainJobSync;
@@ -1342,10 +1361,7 @@ function gcinclude.ProcessConditional(tTest,sType)
 					if bDayOfWeek or bNight or bDay then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end				
-				elseif tMatched[4] == 'MP<50' then						-- Equip if mp < 50 and total mp >= 50 and can do magic
-					if gcinclude.settings.bMagicCheck == false then 	-- Make sure magic settings are known.
-						gcinclude.CheckMagic50(player); 
-					end				
+				elseif tMatched[4] == 'MP<50' then						-- Equip if mp < 50 and total mp >= 50 and can do magic		
 					if gcinclude.settings.bMagic and gcinclude.settings.b50 and player.MP < 50 then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end
@@ -1354,9 +1370,6 @@ function gcinclude.ProcessConditional(tTest,sType)
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end
 				elseif tMatched[4] == 'SJ:MAGIC' then					-- Equip if subjob can do magic
-					if gcinclude.settings.bMagicCheck == false then 	-- Make sure magic settings are known.
-						gcinclude.CheckMagic50(player); 
-					end
 					if gcinclude.settings.bSJ then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end
@@ -1364,24 +1377,32 @@ function gcinclude.ProcessConditional(tTest,sType)
 					if player.HPP <= tMatched[5] and player.TP <= tMatched[6] then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end
---[[
--- Code commented out due to strange behavior when equipping gear. Problem
--- seems to be in gFunc.ForceEquip. Not sure what to do about that.
---		CCF, 1/12/2024
-
 				elseif tMatched[4] == 'PET_NAME' then
 					if pet ~= nil then
-						if string.find(string.lower(tMatched[5]),string.lower(pet.Name)) ~= nil then
+						local s = string.lower(tMatched[5]);
+						local sp = string.lower(pet.Name);
+						if string.find(s,sp) ~= nil then
 							bMatch = gcinclude.BuildGear(tMatched,v);
 						end
 					end	
 				elseif tMatched[4] == 'NOT_PET_NAME' then
 					if pet ~= nil then
-						if string.find(string.lower(tMatched[5]),string.lower(pet.Name)) == nil then
+						local s = string.lower(tMatched[5]);
+						local sp = string.lower(pet.Name);
+						if string.find(string.lower(s,sp)) == nil then
 							bMatch = gcinclude.BuildGear(tMatched,v);
 						end
 					end
---]]					
+				elseif tMatched[4] = 'SJIS' then		-- subjob is
+					local s = string.upper(tMatched[5]);
+					if string.find(s,player.SubJob) ~= nil then
+						bMatch = gcinclude.BuildGear(tMatched,v);
+					end					
+				elseif tMatched[4] = 'SJISN' then		-- subjob is not
+					local s = string.upper(tMatched[5]);
+					if string.find(s,player.SubJob) == nil then
+						bMatch = gcinclude.BuildGear(tMatched,v);
+					end	
 				else
 					print(chat.header('ProcessConditional'):append(chat.message('Error: Unknown conditional: '.. tMatched[4])));
 				end
@@ -1395,12 +1416,41 @@ function gcinclude.ProcessConditional(tTest,sType)
 	if iPiece > 0 then
 		for i=1,16 do
 			if gcinclude.tGSL[i] > 0 then
-				gFunc.ForceEquip(i,gcinclude.tGS[i]);
+				tMaster[gData.Constants.EquipSlotNames[i]] = gcinclude.tGS[i];
 			end
 		end
 	end
 end		-- gcinclude.ProcessConditional
 
+--[[
+	MoveToCurrent copies the gear defined in the passed set to current master
+	set. Nothing is displayed, this is just a transfer routine.
+--]]
+
+function gcinclude.MoveToCurrent(tSet,tMaster)
+
+	if tSet == nil then
+		return;
+	end
+
+	for k,v in pairs(tSet) do
+		tMaster[k] = v;
+	end
+end
+
+--[[
+	EquipTheGear makes sure that the passed gear set doesn't have an item in a slot
+	that is being blocked by another item (e.g., no head gear if a vermillion cloak
+	is in the body slot.) It the equips the gear set.
+--]]
+function gcinclude.EquipTheGear(tSet)
+
+	if tSet['Body'] == 'Vermillion Cloak' then
+		tSet['Head'] = '';
+	end
+	
+	gFunc.EquipSet(tSet);
+end
 --[[
 	MaxSong determines what is the highest tier song that matches the passed root or buff name
 	for a bard song that can be cast by the player and if indicated, it will cast it. Further,
@@ -1604,9 +1654,12 @@ function gcinclude.CheckMagic50(player)
 	if gcinclude.settings.bMagicCheck == false and (player.MainJob == nil or player.SubJob == nil or player.MaxMP == nil) then
 		return;
 	end
-
+	
+	gcinclude.settings.sMJ = player.MainJob;
+	gcinclude.settings.sSJ = player.SubJob;
 	if (string.find(gcinclude.sMagicJobs,player.MainJob) ~= nil) then
 		gcinclude.settings.bMJ = true;
+
 	end
 	if (string.find(gcinclude.sMagicJobs,player.SubJob) ~= nil) then
 		gcinclude.settings.bSJ = true;
@@ -1629,7 +1682,7 @@ end		-- gcinclude.CheckMagic50
 	is needed to be done is to check if ew['Main'] == nil (the same is true for ew['Sub']).
 --]]
 
-function gcinclude.SwapToStave(sStave,noSave)
+function gcinclude.SwapToStave(sStave,noSave,cs)
 	local ew = gData.GetEquipment();
 	local eWeap = nil;
 	local eOff = nil;
@@ -1662,9 +1715,9 @@ function gcinclude.SwapToStave(sStave,noSave)
 		else
 			pos = 1;
 		end
-		gFunc.ForceEquip('Main', gcinclude.elemental_staves[sStave][pos]);
-		end
-	end		-- gcinclude.SwapToStave
+		cs['Main'] = gcinclude.elemental_staves[sStave][pos];
+	end
+end		-- gcinclude.SwapToStave
 --[[
 	EquipItem processes the passed arguments and equips the specified item (whether by coded entry or name)
 	into the appropriate equipment slot. Then turns /gswap off.
@@ -1778,6 +1831,10 @@ function gcinclude.HandleCommands(args)
 		gcdisplay.AdvanceToggle('Acc');
 		toggle = 'Accuracy';
 		status = gcdisplay.GetToggle('Acc');
+	elseif (args[1] == 'haste') then			-- Turns on/off whether accuracy gear should be equipped
+		gcdisplay.AdvanceToggle('Haste');
+		toggle = 'Haste';
+		status = gcdisplay.GetToggle('Haste');
 	elseif (args[1] == 'eva') then			-- Turns on/off whether evasion gear should be equipped
 		gcdisplay.AdvanceToggle('Eva');
 		toggle = 'Evasion';
