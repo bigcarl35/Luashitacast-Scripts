@@ -18,8 +18,7 @@ The following commands are supported by this implementation of luashitacast.
 **/gswap**: Turns on/off automatic gear swapping. Useful when doing something not supported.  
 **/wsdistance [#]**: Turns on/off distance check on melee weapon skill. Also supports changing the
 the default distance from 4.7 yalms to whatever you want.  
-**/dt**: Turns on/off automatic equipping of damage taken gear. Type depends on the setting of dt_type.  
-**/dt_type [Physical|Magical|Breath]**: Defines type of damage taken gear to equip when /DT turned on.  
+**/dt: [Physical|Magical|Breath]**: Defines type of damage taken gear to equip  
 **/kite**: Turns on/off equipping movement gear.  
 **/acc**: Turns on/off equipping accuracy gear. This includes both physical and magical.  
 **/eva**: Turns on/off equipping evasion gear.  
@@ -40,11 +39,13 @@ name (e.g., Cure gets you Cure III if you're 75 and /whm.)
 **/maxsong "name"**: Determines the highest level song player can perform that has either the
 common root name (see /maxsong) or the common buff name (e.g., paeon when
 performing one of the army paeon songs.)  
-**/doring "code|name" [1|2]**: Equips specified ring (coded or actual name) in the specified slot.
+**/equipit "code|name" [1|2]**: Equips specified ring (coded or actual name) in the specified slot.
 Turns off /GSWAP.  
-**/dowep "code|name"**: Equips specified weapon (coded or actual name) and turns off /GSWAP.  
-**/th**: Turns on/off equipping treasure hunter gear.  
 **/help [command]**: List description of "command" or lists all commands if no parameter specified.  
+
+**/TH**: Toggles on/off equipping treasure hunter gear. THF only.  
+**/sBP**: Toggles on/off whether Blood Pact message should be set to /p. SMN only.  
+**/AJug**: Toggles on/off whether automatic jug pet routine should be enabled. BST only.
 
 ## Useful luashitacast commands
 
