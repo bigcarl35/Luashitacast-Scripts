@@ -50,7 +50,7 @@ gcinclude.sets = {
 --]]
 
 	['Town_Conditional'] = {
-		{'BD-2','Federation Aketon','Movement gain in home nation city'},
+		{'Federation Aketon','Movement gain in home nation city','Body',1,'ALL','AKETON','Windy'},
 	},
 
 --[[
@@ -77,13 +77,13 @@ gcinclude.sets = {
 	['Gathering'] = {				-- This is for if there's any generalized gathering gear
 	},
 	['Gathering_Conditional'] = {	-- Conditionally load gear based on type of gathering
-		{'BD-11','Field Tunica','Improves mining, logging and harvesting'},
-		{'HN-4','Field Gloves','Improves mining and logging'},
-		{'LG-1','Field Hose','Improves logging and harvesting'},
-		{'FT-1','Field Boots','Improves mining and harvesting'},
-		{'BD-21','Choc. Jack Coat','Chocobo riding time +5 minutes'},
-		{'BD-13','Tarutaru Top +1','Reduces clamming incidents for female tarutarus'},
-		{'LG-3','Taru. Shorts +1','Imnproves clamming results for female tarutarus'},
+		{'Field Tunica','Improves mining, logging and harvesting','Body',1,'ALL','GATHER','HELM'},
+		{'Field Gloves','Improves mining and logging','Hands',1,'ALL','GATHER','HELM'},
+		{'Field Hose','Improves logging and harvesting','Legs',1,'ALL','GATHER','HELM'},
+		{'Field Boots','Improves mining and harvesting','Feet',1,'ALL','GATHER','HELM'},
+		{'Choc. Jack Coat','Chocobo riding time +5 minutes','Body',1,'ALL','GATHER','DIG'},
+		{'Tarutaru Top +1','Reduces clamming incidents for female tarutarus','Body',1,'ALL','GATHER','CLAM'},
+		{'Taru. Shorts +1','Imnproves clamming results for female tarutarus','Legs',1,'ALL','GATHER','CLAM'},
 	},
 
 --[[
@@ -531,221 +531,6 @@ gcinclude.TieredSongs = T{
 	{'Victory March',420,'victory',2,60,'march'}
 };
 
---[[
-	This table contains all of the parameters needed to process the conditional gear to
-	determine if it should be equipped. The columns are: ID, slot, level, job(s), [code, 
-	param, Operator], ...	as needed. Param's separated by commas mean that one of the
-	params must match to be counted.
-	
-	Note: Nighttime is 17:00 to 6:00, Daytime is 6:00 to 18:00, Dusk to Dawn: 17:00 to 7:00,
-		  New Day: 4:00, Dawn: 6:00 to 7:00, Day: 7:00 to 17:00, Dusk: 17:00 to 18:00, 
-		  Evening: 18:00 to 20:00, Dead of Night: 20:00 to 4:00.
---]]
-
-gcinclude.MasterConditional = T {
-	['WP-1'] = {'Main',1,'ALL','CRAFT','AL'},
-	['HD-1'] = {'Head',1,'ALL','CRAFT','BN'},
-	['HD-2'] = {'Head',1,'ALL','CRAFT','CL'},
-	['HD-3'] = {'Head',1,'ALL','CRAFT','CO'},
-	['HD-4'] = {'Head',1,'ALL','CRAFT','GS'},
-	['HD-5'] = {'Head',1,'ALL','MOON:DAY:NIGHT','Full Moon','Darksday','Nighttime'},
-	['HD-6'] = {'Head',1,'ALL','MOON:DAY:NIGHT','New Moon','Lightsday','Daytime'},
-	['HD-7'] = {'Head',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday,Windsday'},
-	['HD-8'] = {'Head',34,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-	['HD-9'] = {'Head',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-	['HD-10'] = {'Head',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-	['HD-11'] = {'Head',34,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-	['HD-12'] = {'Head',34,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-	['HD-13'] = {'Head',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-	['HD-14'] = {'Head',41,'ALL','WEATHER','Water'},
-	['HD-15'] = {'Head',43,'WAR/PLD/DRK','NATION',true},
-	['HD-16'] = {'Head',43,'WAR/PLD/DRK','NATION',true},
-	['HD-17'] = {'Head',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-	['HD-18'] = {'Head',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-	['HD-19'] = {'Head',53,'MNK/SAM/NIN','WEATHER','Water'},
-	['HD-20'] = {'Head',62,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','DAY','Watersday,Darksday'},
-	['HD-21'] = {'Head',65,'MNK/WHM/RDM/THF/BST/BRD/NIN/DRG/DNC','NATION',true},
-	['NK-1'] = {'Neck',30,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-	['NK-2'] = {'Neck',40,'ALL','WEATHER','Ice'},
-	['NK-3'] = {'Neck',65,'ALL','NATION',false},
-	['NK-4'] = {'Neck',65,'ALL','NATION',false},
-	['NK-5'] = {'Neck',65,'ALL','NATION',false},
-	['NK-6'] = {'Neck',71,'ALL','DAY|TIME'},
-	['NK-7'] = {'Neck',71,'ALL','DAY|TIME'},
-	['NK-8'] = {'Neck',70,'ALL','MP.LE.50P'},
-	['ER-1'] = {'EAR',40,'ALL','NATION',false},
-	['ER-2'] = {'EAR',65,'ALL','WEATHER','Dark'},
-	['ER-3'] = {'EAR',67,'WAR/PLD/DRK/BST/SAM/NIN','TIME','Nighttime'},
-	['BD-1'] = {'Body',50,'BST','MP<50'},
-	['BD-2'] = {'Body',1,'ALL','AKETON',true,'Windy'},
-	['BD-3'] = {'Body',1,'ALL','CRAFT','AL'},
-	['BD-4'] = {'Body',1,'ALL','CRAFT','BN'},
-	['BD-5'] = {'Body',1,'ALL','CRAFT','CL'},
-	['BD-6'] = {'Body',1,'ALL','CRAFT','CO'},
-	['BD-7'] = {'Body',1,'ALL','CRAFT','GS'},
-	['BD-8'] = {'Body',1,'ALL','CRAFT','LT'},
-	['BD-9'] = {'Body',1,'ALL','CRAFT','SM'},
-	['BD-10'] = {'Body',1,'ALL','CRAFT','WW'},
-	['BD-11'] = {'Body',1,'ALL','GATHER','HELM'},
-	['BD-12'] = {'Body',15,'ALL','GATHER','HELM'},
-	['BD-13'] = {'Body',1,'ALL','GATHER','CLAM'},
-	['BD-21'] = {'Body',1,'ALL','GATHER','DIG'},
-	['BD-22'] = {'Body',15,'ALL','GATHER','DIG'},
-	['BD-23'] = {'Body',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday'},
-	['BD-24'] = {'Body',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday'},
-	['BD-25'] = {'Body',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday,Windsday'},
-	['BD-26'] = {'Body',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-	['BD-27'] = {'Body',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COP/PUP/DNC/GEO/RUN','NATION',true},
-	['BD-28'] = {'Body',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-	['BD-29'] = {'Body',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-	['BD-30'] = {'Body',43,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/BLU/PUP/SCH/GEO/RUN','NATION',true},
-	['BD-31'] = {'Body',43,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/BLU/PUP/SCH/GEO/RUN','NATION',true},
-	['BD-32'] = {'Body',43,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-	['BD-33'] = {'Body',43,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-	['BD-34'] = {'Body',43,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-	['BD-35'] = {'Body',43,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-	['BD-36'] = {'Body',43,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-	['BD-37'] = {'Body',52,'WAR/PLD/DRK','NATION',true},
-	['BD-38'] = {'Body',52,'WAR/PLD/DRK','NATION',true},
-	['BD-39'] = {'Body',52,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/PUP/SCH/GEO/RUN','NATION',true},
-	['BD-40'] = {'Body',52,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/PUP/SCH/GEO/RUN','NATION',true},
-	['BD-41'] = {'Body',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-	['BD-42'] = {'Body',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-	['BD-43'] = {'Body',1,'ALL','AKETON',true,'Sandy'},
-	['BD-44'] = {'Body',1,'ALL','AKETON',true,'Bastok'},
-	['BD-45'] = {'Body',43,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-	['BD-46'] = {'Body',1,'ALL','AKETON',true,'Omni'},
-	['HN-1'] = {'Hands',1,'ALL','CRAFT','LT'},
-	['HN-2'] = {'Hands',1,'ALL','CRAFT','SM'},
-	['HN-3'] = {'Hands',1,'ALL','CRAFT','WW'},
-	['HN-4'] = {'Hands',1,'ALL','GATHER','HELM'},
-	['HN-5'] = {'Hands',15,'ALL','GATHER','HELM'},
-	['HN-6'] = {'Hands',1,'ALL','GATHER','DIG'},
-	['HN-7'] = {'Hands',15,'ALL','GATHER','DIG'},
-	['HN-8'] = {'Hands',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-	['HN-9'] = {'Hands',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-	['HN-10'] = {'Hands',34,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-	['HN-11'] = {'Hands',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-	['HN-12'] = {'Hands',34,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-	['HN-13'] = {'Hands',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-	['HN-14'] = {'Hands',36,'ALL','DAY','Firesday,Earthsday,Watersday,Windsday,Iceday,Lightningday'},
-	['HN-15'] = {'Hands',43,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/BLU/PUP/SCH/GEO/RUN','NATION',true},
-	['HN-16'] = {'Hands',43,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/BLU/PUP/SCH/GEO/RUN','NATION',true},
-	['HN-17'] = {'Hands',43,'WAR/PLD/DRK','NATION',true},
-	['HN-18'] = {'Hands',43,'WAR/PLD/DRK','NATION',true},
-	['HN-19'] = {'Hands',43,'MNK/SAM/NIN','WEATHER','Water'},
-	['HN-20'] = {'Hands',52,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-	['HN-21'] = {'Hands',52,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-	['HN-22'] = {'Hands',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-	['HN-23'] = {'Hands',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-	['HN-24'] = {'Hands',58,'MNK/SAM/NIN','WEATHER','Water'},
-	['HN-25'] = {'Hands',58,'MNK/SAM/NIN','WEATHER','Water'},
-	['HN-26'] = {'Hands',58,'WAR/RDM/THF/PLD/DRK/BST/BRD/RNG/SAM/NIN/DRG','WEATHER','Earth'},
-	['HN-27'] = {'Hands',63,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','TIME','Daytime'},
-	['HN-28'] = {'Hands',63,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','TIME','Daytime'},
-	['HN-29'] = {'Hands',65,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',false},
-	['HN-30'] = {'Hands',65,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',false},	
-	['HN-31'] = {'Hands',65,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',false},
-	['HN-32'] = {'Hands',65,'MNK/WHM/BLM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',false},
-	['HD-33'] = {'Hands',65,'ALL','NATION',false},
-	['RN-1'] = {'RING',60,'ALL','NATION',true},
-	['RN-2'] = {'RING',60,'ALL','NATION',true},
-	['RN-3'] = {'RING',60,'ALL','NATION',true},
-	['RN-4'] = {'RING',65,'ALL','DAY','Darksday'},
-	['RN-5'] = {'RING',65,'ALL','DAY','Earthsday'},
-	['RN-6'] = {'RING',65,'ALL','DAY','Firesday'},
-	['RN-7'] = {'RING',65,'ALL','DAY','Lightningday'},
-	['RN-8'] = {'RING',65,'ALL','DAY','Watersday'},
-	['RN-9'] = {'RING',65,'ALL','DAY','Windsday'},
-	['RN-10'] = {'RING',75,'ALL','DAY','Darksday'},
-	['RN-11'] = {'RING',30,'ALL','SJ:MAGIC'},
-	['RN-12'] = {'RING',50,'SMN','HPP|TPP.LE.',75,1000},
-	['BK-1'] = {'Back',40,'WAR/MNK/RDM/THF/PLD/DRK/BST/BRD/RNG/SAM/NIN/DRG/BLU/COR/DNC/RUN','NATION',false},
-	['BK-2'] = {'Back',62,'ALL','WEATHER','Earth'},
-	['BK-3'] = {'Back',62,'ALL','WEATHER','Earth'},
-	['WS-1'] = {'Waist',1,'ALL','CRAFT','AL'},
-	['WS-2'] = {'Waist',1,'ALL','CRAFT','BN'},
-	['WS-3'] = {'Waist',1,'ALL','CRAFT','CL'},
-	['WS-4'] = {'Waist',1,'ALL','CRAFT','CO'},
-	['WS-5'] = {'Waist',1,'ALL','CRAFT','GS'},
-	['WS-6'] = {'Waist',1,'ALL','CRAFT','LT'},
-	['WS-7'] = {'Waist',1,'ALL','CRAFT','SM'},
-	['WS-8'] = {'Waist',1,'ALL','CRAFT','WW'},
-	['WS-10'] = {'Waist',52,'WAR/RDM/THF/PLD/BST/BRD/RNG/SAM/NIN/DRG/BLU/COR/DNC/RUN','NATION',true},
-	['WS-11'] = {'Waist',52,'WAR/RDM/THF/PLD/BST/BRD/RNG/SAM/NIN/DRG/BLU/COR/DNC/RUN','NATION',true},
-	['WS-12'] = {'Waist',65,'ALL','DAY','Watersday'},
-	['WS-13'] = {'Waist',65,'ALL','DAY','Windsday'},
-	['LG-1'] = {'Legs',1,'ALL','GATHER','HELM'},
-	['LG-2'] = {'Legs',15,'ALL','GATHER','HELM'},
-	['LG-3'] = {'Legs',1,'ALL','GATHER','CLAM'},
-	['LG-11'] = {'Legs',1,'ALL','GATHER','DIG'},
-	['LG-12'] = {'Legs',15,'ALL','GATHER','DIG'},
-	['LG-13'] = {'Legs',1,'ALL','TIME','Nighttime'},
-	['LG-14'] = {'Legs',1,'ALL','WEATHER','Sunshine'},
-	['LG-15'] = {'Legs',1,'ALL','WEATHER','Sunshine'},
-	['LG-16'] = {'Legs',1,'ALL','WEATHER','Sunshine'},
-	['LG-17'] = {'Legs',1,'ALL','WEATHER','Sunshine'},
-	['LG-18'] = {'Legs',1,'ALL','WEATHER','Sunshine'},
-	['LG-19'] = {'Legs',1,'ALL','WEATHER','Sunshine'},
-	['LG-20'] = {'Legs',1,'ALL','WEATHER','Sunshine'},
-	['LG-21'] = {'Legs',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday'},
-	['LG-22'] = {'Legs',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday,Windsday'},
-	['LG-23'] = {'Legs',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-	['LG-24'] = {'Legs',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-	['LG-25'] = {'Legs',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-	['LG-26'] = {'Legs',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-	['LG-27'] = {'Legs',43,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/BLU/PUP/SCH/GEO/RUN','NATION',true},
-	['LG-28'] = {'Legs',43,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/BLU/PUP/SCH/GEO/RUN','NATION',true},
-	['LG-29'] = {'Legs',43,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-	['LG-30'] = {'Legs',43,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-	['LG-31'] = {'Legs',52,'WAR/PLD/DRK','NATION',true},
-	['LG-32'] = {'Legs',52,'WAR/PLD/DRK','NATION',true},
-	['LG-33'] = {'Legs',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-	['LG-34'] = {'Legs',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-	['LG-35'] = {'Legs',71,'NIN','TIME','Nighttime'},
-	['FT-1'] = {'Feet',1,'ALL','GATHER','HELM'},
-	['FT-2'] = {'Feet',15,'ALL','GATHER','HELM'},
-	['FT-3'] = {'Feet',1,'ALL','GATHER','DIG'},
-	['FT-4'] = {'Feet',15,'ALL','GATHER','DIG'},
-	['FT-5'] = {'Feet',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday'},
-	['FT-6'] = {'Feet',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday,Windsday'},
-	['FT-7'] = {'Feet',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-	['FT-8'] = {'Feet',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-	['FT-9'] = {'Feet',34,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-	['FT-10'] = {'Feet',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-	['FT-11'] = {'Feet',34,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-	['FT-12'] = {'Feet',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-	['FT-13'] = {'Feet',41,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','MOON','New Moon'},
-	['FT-14'] = {'Feet',41,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','MOON','New Moon'},
-	['FT-15'] = {'Feet',43,'MNK/WHM/BLM/RDM/PLD/BRD/RND/SMN/BLU/PUP/SCH/GEO/RUN','NATION',true},
-	['FT-16'] = {'Feet',43,'MNK/WHM/BLM/RDM/PLD/BRD/RND/SMN/BLU/PUP/SCH/GEO/RUN','NATION',true},
-	['FT-17'] = {'Feet',43,'WAR/PLD/DRK','NATION',true},
-	['FT-18'] = {'Feet',43,'WAR/PLD/DRK','NATION',true},
-	['FT-19'] = {'Feet',47,'MNK/SAM/NIN','WEATHER','Water'},
-	['FT-20'] = {'Feet',52,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-	['FT-21'] = {'Feet',52,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-	['FT-22'] = {'Feet',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-	['FT-23'] = {'Feet',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-	['FT-24'] = {'Feet',59,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/BLU/PUP/SCH/GEO/RUN','TIME','Nighttime'},
-	['FT-25'] = {'Feet',74,'NIN','TIME','DUSK2DAWN'},
-	['FT-26'] = {'Feet',75,'NIN','TIME','DUSK2DAWN'},
-	-- User defined conditional list
-	['WP-*'] = {'Main'},		
-	['OH-*'] = {'Sub'},
-	['RA-*'] = {'Ranged'},
-	['AM-*'] = {'Ammo'},
-	['HD-*'] = {'Head'},
-	['NK-*'] = {'Neck'},
-	['ER-*'] = {'Earring'},
-	['BD-*'] = {'Body'},
-	['HN-*'] = {'Hands'},
-	['ER-*'] = {'Earring'},
-	['BK-*'] = {'Back'},
-	['WS-*'] = {'Waist'},
-	['LG-*'] = {'Legs'},
-	['FT-*'] = {'Feet'},
-};
-
 -- Temporary holding variables for the MH and OH weapons
 gcinclude.weapon = nil;
 gcinclude.offhand = nil;
@@ -1089,6 +874,7 @@ end		-- gcinclude.SetVariables
 --[[
 	isPetNamed determines if that passed pet has the passed name
 --]]
+
 function gcinclude.isPetNamed(sName,pet)
 
 	if pet == nil then
@@ -1099,11 +885,7 @@ function gcinclude.isPetNamed(sName,pet)
 		local sPetName = string.lower(pet.Name);
 		local sMatch = string.lower(sName);
 		
-		if string.match(sMatch,sPetName) ~= nil then
-			return true;
-		else
-			return false;
-		end
+		return (string.find(sMatch,sPetName) ~= nil);
 	else
 		print(chat.header('isPetNamed'):append(chat.message('Error: Passed name is nil')));
 		return false;
@@ -1114,18 +896,18 @@ end
 	BuildGear populates the holding gear set according to the passed table entries
 --]]
 
-function gcinclude.BuildGear(tMasCond,tEntry)
+function gcinclude.BuildGear(tMasCond)
 	local pos = 0;
 	local slot;
 
 	-- There's a special case for RING and EARRING. We just need to find the
 	-- first ones (ring1,earring1) and we can proceed from there.
-	if tMasCond[1] == 'RING' then
+	if tMasCond[2] == 'RING' then
 		slot = 'Ring1';
-	elseif tMasCond[1] == 'EARRING' then
+	elseif tMasCond[2] == 'EARRING' then
 		slot = 'Ear1';	
 	else
-		slot = tMasCond[1];
+		slot = tMasCond[2];
 	end
 
 	-- First, determine which slot is being addressed
@@ -1153,11 +935,11 @@ function gcinclude.BuildGear(tMasCond,tEntry)
 	- if the level of the item being checked is less than the level of the item in the second slot, disregard item
 --]]
 
-	if tMasCond[1] == 'RING' or tMasCond == 'EARRING' then
+	if tMasCond[2] == 'RING' or tMasCond[2] == 'EARRING' then
 		if gcinclude.tGSL[pos] > 0 then				-- A conditional already processed for spot
 			if gcinclude.tGSL[pos+1] > 0 then		-- Two already processed for slot. Trickier...
-				if tMasCond[2] < gcinclude.tGSL[pos] then
-					if tMasCond[2] > gcinclude.tGSL[pos+1] then
+				if tMasCond[3] < gcinclude.tGSL[pos] then
+					if tMasCond[3] > gcinclude.tGSL[pos+1] then
 						pos = pos + 1;
 					end
 				else
@@ -1171,11 +953,11 @@ function gcinclude.BuildGear(tMasCond,tEntry)
 	end
 	
 	-- Now process normally. Check to see that the level of the item being populated is higher than what is there
-	if tMasCond[2] > gcinclude.tGSL[pos] then
+	if tMasCond[3] > gcinclude.tGSL[pos] then
 		-- Copy the name of the gear piece to the appropriate slot in the temporary gear set
-		gcinclude.tGS[pos] = tEntry[2];
+		gcinclude.tGS[pos] = tMasCond[1];
 		-- Copy the level of the gear piece to the associaed slot in the temporary gear set level list
-		gcinclude.tGSL[pos] = tMasCond[2];
+		gcinclude.tGSL[pos] = tMasCond[3];
 		return true;
 	end
 end		-- gcinclude.BuildGear
@@ -1192,7 +974,7 @@ end		-- gcinclude.BuildGear
 function gcinclude.CheckTime(hr,t,bReport)
 
 	local bGood = false;
-	
+
 	if t == 'Nighttime' then
 		bGood = (hr >= 17 or hr <= 6);
 	elseif t == 'Daytime' then
@@ -1222,8 +1004,8 @@ end		-- gcinclude.CheckTime
 	ProcessConditional determines if any of the specified conditional equipment should be loaded. 
 	tTable is the conditional gear.
 	
-	WIP, need to rethink this some. Of concern is multiple conditions. Initially will only support
-	one condition. Get that working and then maybe support multiple.
+	*** Note ***
+	This procedure has been changed to treat all conditionals like they're User-Defined.
 --]]
 
 function gcinclude.ProcessConditional(tTest,sType,tMaster)
@@ -1235,8 +1017,7 @@ function gcinclude.ProcessConditional(tTest,sType,tMaster)
 	local zone = gData.GetEnvironment();
 	local pet = gData.GetPet();
 	local sKey;
-	local tMatched;
-	local bUserDefined = false;
+	local tMatched = {};
 				  
 	-- clear out the holding table so no interference from a previous call
 	gcinclude.tGS = {nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil};
@@ -1249,63 +1030,50 @@ function gcinclude.ProcessConditional(tTest,sType,tMaster)
 	end
 	
 	for k,v in ipairs(tTest) do
-		local cLast = string.sub(v[1],-1);		-- Get the last character of the id
-		
-		if cLast == '*' then		-- User defined conditional
-			bUserDefined = true;
-			-- Assign amax sized array then overwrite the elements
-			tMatched = gcinclude.MasterConditional['HD-5'];
-			-- Need to build an array that matches the MasterConditional layout
-			tMatched[1] = v[4];						-- Slot
-			tMatched[2] = v[5];						-- Level
-			tMatched[3] = string.upper(v[6]);		-- Job list
-			tMatched[4] = string.upper(v[7]);		-- Conditional code
-			-- The rest depends on how many variables needed, nil if not defined
-			if string.find('CRAFT,GATHER,MOON,DAY,TIME,NATION,WEATHER,DAY|TIME,PET_NAME',tMatched[4]) ~= nil then
-				tMatched[5] = v[8];
-			elseif tMatched[4] == 'MOON:DAY:NIGHT' then
-				tMatched[5] = v[8];
-				tMatched[6] = v[9];		
-				tMatched[7] = v[10];		
-			end
-		else
-			tMatched = gcinclude.MasterConditional[v[1]];
-		end
-	
+		tMatched[1] = v[1];						-- Gear piece name
+		tMatched[2] = v[3];						-- Slot
+		tMatched[3] = v[4];						-- Level
+		tMatched[4] = string.upper(v[5]);		-- Job list
+		tMatched[5] = string.upper(v[6]);		-- Conditional code
+		-- What is filled in the next 3 statements depends on the conditional code
+		tMatched[6] = v[7];
+		tMatched[7] = v[8];
+		tMatched[8] = v[9];
+
 		-- Make sure current job can use the gear	
-		if (string.find(tMatched[3],pMJ) ~= nil or tMatched[3] == 'ALL') then
+		if (string.find(tMatched[4],pMJ) ~= nil or tMatched[4] == 'ALL') then
 			-- Check that the gear minimum level isn't too high			
-			if tMatched[2] <= pLevel then
+			if tMatched[3] <= pLevel then
 				bMatch = false;	-- Indicator to track if there's a match
 				-- Now determine the type of condition and process
-				if tMatched[4] == 'CRAFT' then
+				if tMatched[5] == 'CRAFT' then
 					sKey = string.upper(sType);
-					if tMatched[5] == sKey then
-						bMatch = gcinclude.BuildGear(tMatched,v);
+					if sKey ~= nil and tMatched[6] == sKey then
+						bMatch = gcinclude.BuildGear(tMatched);
 					end
-				elseif tMatched[4] == 'GATHER' then		
+				elseif tMatched[5] == 'GATHER' then	
 					sKey = string.upper(sType);
-					if tMatched[5] == sKey then
-						bMatch = gcinclude.BuildGear(tMatched,v);
+					if sKey ~= nil and tMatched[6] == sKey then
+						bMatch = gcinclude.BuildGear(tMatched);
 					end
-				elseif tMatched[4] == 'MOON' then
-					if lower(environ.MoonPhase) == lower(tMatched[5]) then
-						bMatch = gcinclude.BuildGear(tMatched,v);
+				elseif tMatched[5] == 'MOON' then
+					if lower(environ.MoonPhase) == lower(tMatched[6]) then
+						bMatch = gcinclude.BuildGear(tMatched);
 					end
-				elseif tMatched[4] == 'DAY' then
-					if string.find(lower(v[5]),lower(environ.Day)) ~= nil then
-						bMatch = gcinclude.BuildGear(tMatched,v);
+				elseif tMatched[5] == 'DAY' then
+					if string.find(lower(v[6]),lower(environ.Day)) ~= nil then
+						bMatch = gcinclude.BuildGear(tMatched);
 					end
-				elseif tMatched[4] == 'TIME' then
-					if (gcinclude.CheckTime(timestamp.hour,tMatched[5],true)) then
-						bMatch = gcinclude.BuildGear(tMatched,v);
+				elseif tMatched[5] == 'TIME' then
+					if (gcinclude.CheckTime(timestamp.hour,tMatched[6],true)) then
+						bMatch = gcinclude.BuildGear(tMatched);
 					end
-				elseif tMatched[4] == 'NATION' then
+				elseif tMatched[5] == 'NATION' then
 					bKey = (gcdisplay.GetCycle('Region') == 'Owned');
-					if (bKey and tMatched[5]) or (bKey == false and tMatched == false) then
-						bMatch = gcinclude.BuildGear(tMatched,v);
+					if (bKey and tMatched[6]) or (bKey == false and tMatched[6] == false) then
+						bMatch = gcinclude.BuildGear(tMatched);
 					end					
-				elseif tMatched[4] == 'AKETON' then
+				elseif tMatched[5] == 'AKETON' then
 					if gcinclude.settings.bAketon == false then		-- Make sure all nation aketon's are tracked.
 						gcinclude.CheckForAllNationalAketons();
 					end
@@ -1325,70 +1093,68 @@ function gcinclude.ProcessConditional(tTest,sType,tMaster)
 						(tMatched[6] == 'Omni') and zone.Area ~= nil and (gcinclude.Windy:contains(zone.Area) or gcinclude.Sandy:contains(zone.Area) or 
 							gcinclude.Bastok:contains(zone.Area)) and gcinclude.aketon['Omni'][2] == true
 					then
-						bMatch = gcinclude.BuildGear(tMatched,v);
+						bMatch = gcinclude.BuildGear(tMatched);
 					end
-				elseif tMatched[4] == 'WEATHER' then
-					if string.find(lower(tMatched[5]),lower(environ.RawWeather)) ~= nil then 
-						bMatch = gcinclude.BuildGear(tMatched,v);
+				elseif tMatched[5] == 'WEATHER' then
+					if string.find(lower(tMatched[6]),lower(environ.RawWeather)) ~= nil then 
+						bMatch = gcinclude.BuildGear(tMatched);
 					end
-				elseif tMatched[4] == 'MOON:DAY:NIGHT' then
-					if tMatched[5] == environ.MoonPhase then
-						if tMatched[6] == environ.Day then
-							bMatch = gcinclude.CheckTime(timestamp.hour,tMatched[7],true);
+				elseif tMatched[5] == 'MOON:DAY:NIGHT' then
+					if tMatched[6] == environ.MoonPhase then
+						if tMatched[7] == environ.Day then
+							if gcinclude.CheckTime(timestamp.hour,tMatched[8],true) then
+								bMatch = gcinclude.BuildGear(tMatched);
+							end
 						end
 					end
-				elseif tMatched[4] == 'DAY|TIME' then	-- Funky test for Brisingamen
-					if bUserDefined then
-						local bDayOfWeek = (string.find(v[8],environ.Day) ~= nil);
-					else
-						local bDayOfWeek = (string.find(v[4],environ.Day) ~= nil);
-					end
+				elseif tMatched[5] == 'DAY|TIME' then
+					local bDayOfWeek = (string.find(v[6],environ.Day) ~= nil);
 					local ts = timestamp.hour;
 					local bNight = gcinclude.CheckTime(ts,'Nighttime',false);
 					local bDay = gcinclude.CheckTime(ts,'Daytime',false);
 				
 					if bDayOfWeek or bNight or bDay then
-						bMatch = gcinclude.BuildGear(tMatched,v);
+						bMatch = gcinclude.BuildGear(tMatched);
 					end				
-				elseif tMatched[4] == 'MP<50' then						-- Equip if mp < 50 and total mp >= 50 and can do magic		
+				elseif tMatched[5] == 'MP<50' then						-- Equip if mp < 50 and total mp >= 50 and can do magic		
 					if gcinclude.settings.bMagic and gcinclude.settings.b50 and player.MP < 50 then
-						bMatch = gcinclude.BuildGear(tMatched,v);
+						bMatch = gcinclude.BuildGear(tMatched);
 					end
-				elseif tMatched[4] == 'MP.LE.50P' then					-- Equip if MP <= 50%
+				elseif tMatched[5] == 'MP.LE.50P' then					-- Equip if MP <= 50%
 					if player.MPP <= 50 then
-						bMatch = gcinclude.BuildGear(tMatched,v);
+						bMatch = gcinclude.BuildGear(tMatched);
 					end
-				elseif tMatched[4] == 'SJ:MAGIC' then					-- Equip if subjob can do magic
+				elseif tMatched[5] == 'SJ:MAGIC' then					-- Equip if subjob can do magic
 					if gcinclude.settings.bSJ then
-						bMatch = gcinclude.BuildGear(tMatched,v);
+						bMatch = gcinclude.BuildGear(tMatched);
 					end
-				elseif tMatched[4] == 'HPP|TPP.LE.' then				-- HP% <= 'a' and TP <= 'b'
-					if player.HPP <= tMatched[5] and player.TP <= tMatched[6] then
-						bMatch = gcinclude.BuildGear(tMatched,v);
+				elseif tMatched[5] == 'HPP|TPP.LE.' then				-- HP% <= 'a' and TP <= 'b'
+					if player.HPP <= tMatched[6] and player.TP <= tMatched[7] then
+						bMatch = gcinclude.BuildGear(tMatched);
 					end
-				elseif tMatched[4] == 'PET_NAME' then
+				elseif tMatched[5] == 'PET_NAME' then
 					if pet ~= nil then
-						local s = string.lower(tMatched[5]);
+						local s = string.lower(tMatched[6]);
 						local sp = string.lower(pet.Name);
 						if string.find(s,sp) ~= nil then
-							bMatch = gcinclude.BuildGear(tMatched,v);
+							bMatch = gcinclude.BuildGear(tMatched);
 						end
 					end	
-				elseif tMatched[4] == 'NOT_PET_NAME' then
+				elseif tMatched[5] == 'NOT_PET_NAME' then
 					if pet ~= nil then
-						local s = string.lower(tMatched[5]);
+						local s = string.lower(tMatched[6]);
 						local sp = string.lower(pet.Name);
 						if string.find(string.lower(s,sp)) == nil then
-							bMatch = gcinclude.BuildGear(tMatched,v);
+							bMatch = gcinclude.BuildGear(tMatched);
 						end
 					end
-				elseif tMatched[4] == 'SJIS' then		-- subjob is
-					local s = string.upper(tMatched[5]);
+				elseif tMatched[5] == 'SJIS' then		-- subjob is
+					local s = string.upper(tMatched[6]);
 					if string.find(s,player.SubJob) ~= nil then
-						bMatch = gcinclude.BuildGear(tMatched,v);
+						bMatch = gcinclude.BuildGear(tMatched);
 					end					
-				elseif tMatched[4] == 'SJISN' then		-- subjob is not
-					local s = string.upper(tMatched[5]);
+				elseif tMatched[5] == 'SJISN' then		-- subjob is not
+					local s = string.upper(tMatched[6]);
 					if string.find(s,player.SubJob) == nil then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end	
@@ -1443,14 +1209,16 @@ end
 	that is being blocked by another item (e.g., no head gear if a vermillion cloak
 	is in the body slot.) It the equips the gear set.
 --]]
+
 function gcinclude.EquipTheGear(tSet)
 
 	if tSet['Body'] == 'Vermillion Cloak' then
 		tSet['Head'] = '';
 	end
 	
-	gFunc.EquipSet(tSet);
+	gFunc.ForceEquipSet(tSet);
 end
+
 --[[
 	MaxSong determines what is the highest tier song that matches the passed root or buff name
 	for a bard song that can be cast by the player and if indicated, it will cast it. Further,
@@ -1718,6 +1486,7 @@ function gcinclude.SwapToStave(sStave,noSave,cs)
 		cs['Main'] = gcinclude.elemental_staves[sStave][pos];
 	end
 end		-- gcinclude.SwapToStave
+
 --[[
 	EquipItem processes the passed arguments and equips the specified item (whether by coded entry or name)
 	into the appropriate equipment slot. Then turns /gswap off.
