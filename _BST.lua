@@ -77,7 +77,7 @@ local sets = {
         Feet = 'Thick Sollerets',
     },	
 	['Idle_Conditional'] = {
-		{'BD-1','Gaudy Harness','Adds refresh if MP < 50'},
+		{'Gaudy Harness','Adds refresh if MP < 50','Body',50,'BST','MP<50'},
 	},
 	
 	--[[
@@ -93,7 +93,7 @@ local sets = {
 	['Idle_Refresh'] = {
 	},
 	['Idle_Refresh_Conditional'] = {
-		{'BD-1','Gaudy Harness','Adds refresh if MP < 50'},
+		{'Gaudy Harness','Adds refresh if MP < 50','Body',50,'BST','MP<50'},
 	},
 	
 	--[[
@@ -113,7 +113,7 @@ local sets = {
 	['Resting_Refresh'] = {
 	},
 	['Resting_Refresh_Conditional'] = {
-		{'BD-1','Gaudy Harness','Adds refresh if MP < 50'}
+		{'Gaudy Harness','Adds refresh if MP < 50','Body',50,'BST','MP<50'},
 	},
 	
 	-- If you have any Spell Interruption Rate down gear, put them into the "SIR" gear set.
@@ -194,7 +194,7 @@ local sets = {
         Feet = 'Thick Sollerets',
     },
 	['TP_Conditional'] = {
-		{'BD-1','Gaudy Harness','Adds refresh if MP < 50'},
+		{'Gaudy Harness','Adds refresh if MP < 50','Body',50,'BST','MP<50'},
 	},
 	
 	['TP_Pet'] = {
@@ -324,7 +324,7 @@ local sets = {
 	['Midcast'] = {
 	},
 	['Midcast_Conditional'] = {
-		{'NK-*','Uggalepih Pendant','MAB +8% if MPP <= 50%','Neck',70,'ALL','MP.LE.50P'},
+		{'Uggalepih Pendant','MAB +8% if MPP <= 50%','Neck',70,'ALL','MP.LE.50P'}, -- doesn't need to be user-defined
 	},
 
 --[[

@@ -77,8 +77,8 @@ local sets = {
         Feet = 'Mannequin Pumps',				-- +12 MP
 	},
 	['Idle_Conditional'] = {
-		{'NK-*','Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
-		{'NK-*','Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},	
+		{'Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
+		{'Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},	
 	},
 	
 	['Idle_With_Pet'] = {
@@ -289,8 +289,8 @@ local sets = {
         Feet = 'Mannequin Pumps',			-- +12 MP
     },
 	['TP_Conditional'] = {
-		{'NK-*','Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
-		{'NK-*','Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},	
+		{'Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
+		{'Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},	
 	},
 	
 	['TP_With_Carbuncle'] = {
@@ -298,8 +298,8 @@ local sets = {
 		Hands = 'Carbuncle Mitts',				-- +14 MP, 1/2 perpetuation cost on carbuncle
 	},
 	['TP_With_Carbuncle_Conditional'] = {
-		{'NK-*','Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
-		{'NK-*','Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},
+		{'Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
+		{'Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},
 	},	
 	
 --[[
@@ -385,7 +385,7 @@ local sets = {
 	['Midshot'] = {
     },
 	['Midshot_Conditional'] = {
-		{'NK-*','Uggalepih Pendant','MAB +8% if MPP <= 50%','Neck',70,'ALL','MP.LE.50P'},
+		{'Uggalepih Pendant','MAB +8% if MPP <= 50%','Neck',70,'ALL','MP.LE.50P'},
 	},
 	
 --[[
