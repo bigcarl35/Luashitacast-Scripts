@@ -63,6 +63,18 @@ local sets = {
 --]]
 
 	['Idle'] = {
+        Head = 'Silver Hairpin',
+        Neck = 'Spirit Torque',
+        Ear1 = 'Black Earring',
+        Ear2 = 'Onyx Earring',
+        Body = 'Seer\'s Tunic',
+        Hands = 'Seer\'s Mitts',
+        Ring1 = 'Ether Ring',
+        Ring2 = 'Tamas Ring',
+        Back = 'White Cape',
+        Waist = 'Friar\'s Rope',
+        Legs = 'Seer\'s Slacks',
+        Feet = 'Mannequin Pumps',
     },
 	['Idle_Conditional'] = {
 	},
@@ -97,8 +109,26 @@ local sets = {
 	},
 	
 	['Resting_Refresh'] = {
-	},
+        Head = 'Silver Hairpin',
+        Neck = 'Spirit Torque',
+        Ear1 = 'Black Earring',
+        Ear2 = 'Onyx Earring',
+        Body = 'Seer\'s Tunic',
+        Hands = 'Seer\'s Mitts',
+        Ring1 = 'Ether Ring',
+        Ring2 = 'Tamas Ring',
+        Back = 'White Cape',
+        Waist = 'Friar\'s Rope',
+        Legs = 'Seer\'s Slacks',
+        Feet = 'Mannequin Pumps',
+    },
 	['Resting_Refresh_Conditional'] = {
+	},
+	
+	['Resting_Refresh_Weapon_Sub51'] = {
+		Main = 'Pilgrim\'s Wand',		-- level 10, WHM/BLM/RDM/SMN/BLU/SCH
+	},
+	['Resting_Refresh_Weapon_Sub51_Conditional'] = {
 	},
 
 	-- If you have any Spell Interruption Rate down gear, put them into the "SIR" gear set.
@@ -117,6 +147,9 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
+		Main = 'Solid Wand',
+		Sub = 'Fish Scale Shield',
+		Ammo = 'Fortune Egg',
     },
 	['Start_Weapons_Conditional'] = {
 	},
@@ -143,7 +176,7 @@ local sets = {
 	['DT_Physical'] = {
 	},
 	['DT_Physical_Conditional'] = {
-	}
+	},
 	
 	['DT_Magical'] = {
     },
@@ -163,6 +196,17 @@ local sets = {
 --]]
 
 	['TP'] = {
+        Head = 'Mrc.Cpt. Headgear',
+        Neck = 'Spike Necklace',
+        Ear1 = 'Beetle Earring',
+        Ear2 = 'Beetle Earring',
+        Body = 'Wonder Kaftan',
+        Hands = 'Wonder Mitts',
+        Ring1 = 'Courage Ring',
+        Ring2 = 'San d\'Orian Ring',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Wonder Braccae',
+        Feet = 'Wonder Clomps',
     },
 	['TP_Conditional'] = {
 	},
@@ -178,6 +222,9 @@ local sets = {
 --]]
 	
 	['Accuracy'] = {
+        Hands = 'Battle Gloves',
+        Waist = 'Tilt Belt',
+		Ring1 = 'Jaeger Ring',
     },
 	['Accuracy_Conditional'] = {
 	},
@@ -201,6 +248,8 @@ local sets = {
 --]]
 	
 	['Evasion'] = {
+        Head = 'Empress Hairpin',
+        Hands = 'Battle Gloves',
     },
 	['Evasion_Conditional'] = {
 	},
@@ -341,11 +390,26 @@ local sets = {
 --]]
 
 	['INT'] = {
+        Hands = 'Seer\'s Mitts',
+        Ring1 = 'Windurstian Ring',
+        Ring2 = 'Tamas Ring',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Seer\'s Slacks',
+        Feet = 'Mannequin Pumps',
     },
 	['INT_Conditional'] = {
 	},
 	
 	['MND'] = {
+        Neck = 'Justice Badge',
+        Body = 'Wonder Kaftan',
+        Hands = 'Seer\'s Mitts',
+        Ring1 = 'Tranquility Ring',
+        Ring2 = 'Tamas Ring',
+		Back = 'White Cape',
+        Waist = 'Friar\'s Rope',
+        Legs = 'Wonder Braccae',
+        Feet = 'Mannequin Pumps',
     },
 	['MND_Conditional'] = {
 	},
@@ -424,6 +488,14 @@ local sets = {
 -]]
 	
 	['WS_STR'] = {
+        Head = 'Mrc.Cpt. Headgear',
+        Neck = 'Spike Necklace',
+        Body = 'Wonder Kaftan',
+        Hands = 'Wonder Mitts',
+        Ring1 = 'Courage Ring',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Wonder Braccae',
+        Feet = 'Wonder Clomps',
     },
 	['WS_STR_Conditional'] = {
 	},
@@ -437,6 +509,16 @@ local sets = {
 --]]
 
 	['WS_STRAGI'] = {
+        Head = 'Mrc.Cpt. Headgear',
+        Neck = 'Spike Necklace',
+        Ear1 = 'Drone Earring',
+        Body = 'Wonder Kaftan',
+        Hands = 'Wonder Mitts',
+        Ring1 = 'Courage Ring',
+        Back = 'White Cape',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Wonder Braccae',
+        Feet = 'Wonder Clomps',
     },
 	['WS_STRAGI_Conditional'] = {
 	},
@@ -451,6 +533,15 @@ local sets = {
 --]]
 
 	['WS_STRDEX'] = {
+        Head = 'Empress Hairpin',
+        Neck = 'Spike Necklace',
+        Body = 'Wonder Kaftan',
+        Hands = 'Wonder Mitts',
+        Ring1 = 'Courage Ring',
+        Ring2 = 'Bastokan Ring',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Wonder Braccae',
+        Feet = 'Wonder Clomps',
     },
 	['WS_STRDEX_Conditional'] = {
 	},
@@ -462,6 +553,15 @@ local sets = {
 --]]
 	
 	['WS_STRINT'] = {
+        Head = 'Mrc.Cpt. Headgear',
+        Neck = 'Spike Necklace',
+        Body = 'Wonder Kaftan',
+        Hands = 'Wonder Mitts',
+        Ring1 = 'Courage Ring',
+        Ring2 = 'Tamas Ring',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Wonder Braccae',
+        Feet = 'Wonder Clomps',
     },
 	['WS_STRINT_Conditional'] = {
 	},
@@ -474,6 +574,16 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
+        Head = 'Mrc.Cpt. Headgear',
+        Neck = 'Justice Badge',
+        Body = 'Wonder Kaftan',
+        Hands = 'Wonder Mitts',
+        Ring1 = 'Courage Ring',
+        Ring2 = 'Tamas Ring',
+        Back = 'White Cape',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Wonder Braccae',
+        Feet = 'Wonder Clomps',
     },
 	['WS_STRMND_Conditional'] = {
 	},
@@ -488,6 +598,11 @@ local sets = {
 --]]
 
 	['WS_AGI'] = {
+        Head = 'Empress Hairpin',
+        Ear1 = 'Drone Earring',
+        Body = 'Mrc.Cpt. Doublet',
+		Ring2 = 'Windurstian Ring',
+        Waist = 'Mrc.Cpt. Belt',
     },
 	['WS_AGI_Conditional'] = {
 	},
@@ -499,6 +614,9 @@ local sets = {
 --]]
 	
 	['WS_CHR'] = {
+        Head = 'Entrancing Ribbon',
+        Neck = 'Flower Necklace',
+        Waist = 'Corsette',
     },
 	['WS_CHR_Conditional'] = {
 	},
@@ -510,6 +628,12 @@ local sets = {
 --]]
 	
 	['WS_DEX'] = {
+        Head = 'Empress Hairpin',
+        Neck = 'Spike Necklace',
+        Body = 'Mrc.Cpt. Doublet',
+        Ring1 = 'Balance Ring',
+        Ring2 = 'Bastokan Ring',
+        Waist = 'Mrc.Cpt. Belt',
     },
 	['WS_DEX_Conditional'] = {
 	},
@@ -521,6 +645,13 @@ local sets = {
 --]]
 	
 	['WS_DEXAGI'] = {
+        Head = 'Empress Hairpin',
+        Neck = 'Spike Necklace',
+        Ear1 = 'Drone Earring',
+        Body = 'Mrc.Cpt. Doublet',
+        Ring1 = 'Balance Ring',
+        Ring2 = 'Bastokan Ring',
+        Waist = 'Mrc.Cpt. Belt',
     },
 	['WS_DEXAGI_Conditional'] = {
 	},
@@ -532,6 +663,12 @@ local sets = {
 --]]
 	
 	['WS_DEXCHR'] = {
+        Head = 'Empress Hairpin',
+        Neck = 'Spike Necklace',
+        Body = 'Mrc.Cpt. Doublet',
+        Ring1 = 'Balance Ring',
+        Ring2 = 'Bastokan Ring',
+        Waist = 'Corsette',
     },
 	['WS_DEXCHR_Conditional'] = {
 	},
@@ -543,6 +680,15 @@ local sets = {
 --]]
 	
 	['WS_DEXINT'] = {
+        Head = 'Empress Hairpin',
+        Neck = 'Spike Necklace',
+        Body = 'Mrc.Cpt. Doublet',
+        Hands = 'Seer\'s Mitts',
+        Ring1 = 'Balance Ring',
+        Ring2 = 'Bastokan Ring',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Seer\'s Slacks',
+        Feet = 'Mannequin Pumps',
     },
 	['WS_DEXINT_Conditional'] = {
 	},
@@ -554,6 +700,15 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
+        Neck = 'Justice Badge',
+        Body = 'Wonder Kaftan',
+        Hands = 'Seer\'s Mitts',
+        Ring1 = 'Tranquility Ring',
+        Ring2 = 'Tamas Ring',
+        Back = 'White Cape',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Wonder Braccae',
+        Feet = 'Mannequin Pumps',
     },
 	['WS_MND_Conditional'] = {
 	},
@@ -567,9 +722,14 @@ local sets = {
 --]]
 
 	['WS_VIT'] = {
+        Body = 'Wonder Kaftan',
+        Ring2 = 'Bastokan Ring',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Wonder Braccae',
     },
 	['WS_VIT_Conditional'] = {
 	},
+	
 --[[
 	Movement tends to be used for kiting. Emphasis should be placed on gear that increases movement speed, but you 
 	might also want gear that has evasion. The choice is yours.
@@ -604,6 +764,9 @@ local sets = {
 	--* BST *--
 	-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration)
 	['Charm'] = {
+	    Head = 'Entrancing Ribbon',
+        Neck = 'Flower Necklace',
+        Waist = 'Corsette',
     },
 	['Charm_Conditional'] = {
 	},
@@ -644,15 +807,69 @@ local sets = {
 --]]
 
 	['CAP20'] = {
+        Main = 'Yew Wand',
+        Sub = 'Fish Scale Shield',
+        Ammo = 'Fortune Egg',
+        Head = 'Silver Hairpin',
+        Neck = 'Justice Badge',
+        Ear2 = 'Onyx Earring',
+        Body = 'Angler\'s Tunica',
+        Hands = 'Fsh. Gloves',
+        Ring1 = 'Astral Ring',
+        Ring2 = 'Tranquility Ring',
+        Waist = 'Friar\'s Rope',
+        Legs = 'Freesword\'s Slops',
+        Feet = 'Waders',
     },
 	
 	['CAP25'] = {
+        Main = 'Yew Wand',
+        Sub = 'Fish Scale Shield',
+        Ammo = 'Fortune Egg',
+        Head = 'Silver Hairpin',
+        Neck = 'Justice Badge',
+        Ear2 = 'Onyx Earring',
+        Body = 'Angler\'s Tunica',
+        Hands = 'Fsh. Gloves',
+        Ring1 = 'Astral Ring',
+        Ring2 = 'Tranquility Ring',
+        Waist = 'Friar\'s Rope',
+        Legs = 'Freesword\'s Slops',
+        Feet = 'Waders',
     },
 	
 	['CAP30'] = {
+        Main = 'Yew Wand',
+        Sub = 'Fish Scale Shield',
+        Ammo = 'Fortune Egg',
+        Head = 'Silver Hairpin',
+        Neck = 'Justice Badge',
+        Ear2 = 'Onyx Earring',
+        Body = 'Seer\'s Tunic',
+        Hands = 'Seer\'s Mitts',
+        Ring1 = 'Astral Ring',
+        Ring2 = 'Tamas Ring',		
+        Waist = 'Friar\'s Rope',
+        Legs = 'Seer\'s Slacks',
+        Feet = 'Seer\'s Pumps',
     },
 	
 	['CAP40'] = {
+        Main = 'Solid Wand',
+        Sub = 'Fish Scale Shield',
+        Ammo = 'Fortune Egg',
+        Head = 'Silver Hairpin',
+        Neck = 'Spirit Torque',
+        Ear1 = 'Black Earring',
+        Ear2 = 'Onyx Earring',
+        Body = 'Seer\'s Tunic',
+        Hands = 'Seer\'s Mitts',
+        Ring1 = 'Astral Ring',
+        Ring2 = 'Tamas Ring',
+        Back = 'White Cape',
+        Waist = 'Friar\'s Rope',
+        Legs = 'Seer\'s Slacks',
+        Feet = 'Mannequin Pumps',
     },
 	
 	['CAP50'] = {
@@ -749,13 +966,21 @@ profile.OnLoad = function()
 	gcinclude.CheckMagic50(player);
 	
 	-- Set your job macro toolbar defaults here. Which set depends on the subjob
-	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 15');		-- WHM
+	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 2');		-- WHM
 	SetSubjobSet(player.SubJob);
 	
 	-- Load up the weapons bar. (This need only be done once.)
 	gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear);
 	gcinclude.ProcessConditional(sets.Start_Weapons_Conditional,nil,sets.CurrentGear);	
 	gcinclude.EquipTheGear(sets.CurrentGear);
+	
+	-- Make sure the saved weapons are the starting weapons
+	gcinclude.weapon = sets.CurrentGear['Main'];
+	if sets.CurrentGear['Sub'] == nil then
+		gcinclude.offhand = nil;
+	else
+		gcinclude.offhand = sets.CurrentGear['Sub'];
+	end	
 end
 
 --[[
@@ -806,6 +1031,9 @@ profile.HandleDefault = function()
 		return;
 	end
 
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
+	
 	-- Save the name of the main weapon		
 	if ew['Main'] ~= nil then
 		eWeap = ew['Main'].Name;
@@ -819,7 +1047,7 @@ profile.HandleDefault = function()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
-	
+
 	-- If player is not resting and has MP and has swapped weapons, set the weapon back to what 
 	-- they had before the switch
 	if player.Status ~= 'Resting' and gcdisplay.GetToggle('WSwap') == true then
@@ -907,8 +1135,12 @@ profile.HandleDefault = function()
 			if gcinclude.settings.bStave == false then
 				gcinclude.CheckForStaves();
 			end
-			if gcinclude.settings.bStave == true then
+
+			if gcinclude.settings.bStave == true and player.MainJobLevel >= 51 then
 				gcinclude.SwapToStave('dark',false,sets.CurrentGear);
+			else
+				gcinclude.MoveToCurrent(sets.Resting_Refresh_Weapon_Sub51,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.Resting_Refresh_Weapon_Sub51_Conditional,nil,sets.CurrentGear);
 			end
 		end
 		-- Check for common debuffs
@@ -952,6 +1184,9 @@ profile.HandleAbility = function()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
+
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Now process the appropriate job ability. Start with abilities associated with WHM
 	if string.match(ability.Name, 'Divine Seal') then
@@ -1005,6 +1240,9 @@ end
 profile.HandleItem = function()
 	local item = gData.GetAction();
 
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
+	
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 		if string.match(item.Name, 'Holy Water') then 
 			gcinclude.MoveToCurrent(gcinclude.sets.Holy_Water,sets.CurrentGear);
@@ -1057,6 +1295,9 @@ profile.HandleMidcast = function()
 		return;
 	end
 
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
+	
 	gcinclude.settings.priorityMidCast = string.upper(gcinclude.settings.priorityMidCast);
 	for i = 1,string.len(gcinclude.settings.priorityMidCast),1 do
 		cKey = string.sub(gcinclude.settings.priorityMidCast,i,i);
@@ -1172,6 +1413,9 @@ end
 
 profile.HandlePreshot = function()
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
+		-- Clear out the CurrentGear in case of leftovers
+		gcinclude.ClearSet(sets.CurrentGear);
+		
 		gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
 		gcinclude.ProcessConditional(sets.Preshot_Conditional,nil,sets.CurrentGear);
 		gcinclude.EquipTheGear(sets.CurrentGear);
@@ -1188,6 +1432,9 @@ profile.HandleMidshot = function()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
+
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
 	gcinclude.ProcessConditional(sets.Midshot_Conditional,nil,sets.CurrentGear);
@@ -1224,6 +1471,9 @@ profile.HandleWeaponskill = function()
 		return;
 	end
 
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
+	
  	gcinclude.settings.priorityWeaponSkill = string.upper(gcinclude.settings.priorityWeaponSkill);
 	for i = 1,string.len(gcinclude.settings.priorityWeaponSkill),1 do
 		cKey = string.sub(gcinclude.settings.priorityWeaponSkill,i,i);

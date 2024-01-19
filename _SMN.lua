@@ -135,6 +135,12 @@ local sets = {
 	['Resting_Refresh_Conditional'] = {
 	},
 
+	['Resting_Refresh_Weapon_Sub51'] = {
+		Main = 'Pilgrim\'s Wand',		-- level 10, WHM/BLM/RDM/SMN/BLU/SCH
+	},
+	['Resting_Refresh_Weapon_Sub51_Conditional'] = {
+	},
+	
 	-- If you have any Spell Interruption Rate down gear, put them into the "SIR" gear set.
 	-- This gear set is equipped in the HandleMidcast function that all spells go through.
 	['SIR'] = {
@@ -245,7 +251,7 @@ local sets = {
 	['DT_Physical'] = {
 	},
 	['DT_Physical_Conditional'] = {
-	}
+	},
 	
 	['DT_Magical'] = {
         Ear1 = 'Coral Earring',							-- magic damage taken -1
@@ -349,7 +355,7 @@ local sets = {
 
 	['Enmity_Plus'] = {
 	},
-	{'Enmity_Plus_Conditional'] = {
+	['Enmity_Plus_Conditional'] = {
 	},
 	
 	['Enmity_Minus'] = {
@@ -1086,6 +1092,14 @@ profile.OnLoad = function()
 	gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear);
 	gcinclude.ProcessConditional(sets.Start_Weapons_Conditional,nil,sets.CurrentGear);	
 	gcinclude.EquipTheGear(sets.CurrentGear);
+	
+		-- Make sure the saved weapons are the starting weapons
+	gcinclude.weapon = sets.CurrentGear['Main'];
+	if sets.CurrentGear['Sub'] == nil then
+		gcinclude.offhand = nil;
+	else
+		gcinclude.offhand = sets.CurrentGear['Sub'];
+	end
 end
 
 --[[
@@ -1139,6 +1153,9 @@ profile.HandleDefault = function()
 	end
 	
 	profile.sPetAction = nil;
+	
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Save the name of the main weapon
 	if ew['Main'] ~= nil then
@@ -1234,23 +1251,25 @@ profile.HandleDefault = function()
 			gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional,nil,sets.CurrentGear);
 		end
 		-- Weapon swap to a weapon that refreshes MP if their MP is not at maximum
-		if player.MP < player.MaxMP then
+		if player.MP < player.MaxMP and player.MainJobLevel >= 51 then 
 			gcinclude.SwapToStave('dark',false,sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(sets.Resting_Refresh_Weapon_Sub51,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.Resting_Refresh_Weapon_Sub51_Conditional,nil,sets.CurrentGear);		
 		end
 		-- Check for common debuffs
 		gcinclude.CheckCommonDebuffs();
 	else
+		-- Assume idling. Priority (low to high): Idle,refresh.
+		gcinclude.MoveToCurrent(sets.Idle,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.Idle_Conditional,nil,sets.CurrentGear);
+		
 		-- See if in a town
 		if zone.Area ~= nil and gcinclude.Towns:contains(zone.Area) then
 			gcinclude.MoveToCurrent(sets.Town,sets.CurrentGear);
 			gcinclude.ProcessConditional(gcinclude.sets.Town_Conditional,nil,sets.CurrentGear);
 		else
-			-- Assume idling. Priority (low to high): Idle,refresh.
-			-- Check to see if there's an avatar
-			
-			gcinclude.MoveToCurrent(sets.Idle,sets.CurrentGear);
-			gcinclude.ProcessConditional(sets.Idle_Conditional,nil,sets.CurrentGear);
-				
+			-- Check to see if there's an avatar							
 			if pet ~= nil then	
 				pet.Name = string.lower(pet.Name);		
 				if string.find(gcinclude.MagicSkill['Summoning'],pet.Name) ~= nil then
@@ -1263,24 +1282,25 @@ profile.HandleDefault = function()
 					end
 				end
 			end
-			-- While you don't need accuracy gear while idling, a visual confirmation can be appreciated
-			if gcdisplay.GetToggle('Acc') == true then 
-				gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
-				gcinclude.ProcessConditional(sets.Accuracy_Conditional,nil,sets.CurrentGear);
-			end
-			-- if the player's HP is below the threshold setting, equip the idle regen gear
-			if player.HPP < gcinclude.settings.RegenGearHPP then
-				gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
-				gcinclude.ProcessConditional(sets.Idle_Regen_Conditional,nil,sets.CurrentGear);
-			end
-			-- if the player's MP is below the threshold setting, equip the idle refresh gear
-			if player.MPP < gcinclude.settings.RefreshGearMPP then
-				gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
-				gcinclude.ProcessConditional(sets.Idle_Refresh_Conditional,nil,sets.CurrentGear);
-			end
-			-- Check for common debuffs
-			gcinclude.CheckCommonDebuffs();
 		end
+		
+		-- While you don't need accuracy gear while idling, a visual confirmation can be appreciated
+		if gcdisplay.GetToggle('Acc') == true then 
+			gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.Accuracy_Conditional,nil,sets.CurrentGear);
+		end
+		-- if the player's HP is below the threshold setting, equip the idle regen gear
+		if player.HPP < gcinclude.settings.RegenGearHPP then
+			gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.Idle_Regen_Conditional,nil,sets.CurrentGear);
+		end
+		-- if the player's MP is below the threshold setting, equip the idle refresh gear
+		if player.MPP < gcinclude.settings.RefreshGearMPP then
+			gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.Idle_Refresh_Conditional,nil,sets.CurrentGear);
+		end
+		-- Check for common debuffs
+		gcinclude.CheckCommonDebuffs();
 	end
 	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set
@@ -1313,6 +1333,9 @@ profile.HandleAbility = function()
 	else
 		profile.sAmmo = nil;
 	end
+	
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Check for abilities first that are not associated with smn.
 	-- Start with BST
@@ -1359,6 +1382,9 @@ end
 profile.HandleItem = function()
 	local item = gData.GetAction();
 
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
+	
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 		if string.match(item.Name, 'Holy Water') then 
 			gcinclude.MoveToCurrent(gcinclude.sets.Holy_Water,sets.CurrentGear);
@@ -1415,6 +1441,9 @@ profile.HandleMidcast = function()
 		return;
 	end
 
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
+	
 	gcinclude.settings.priorityMidCast = string.upper(gcinclude.settings.priorityMidCast);
 	for i = 1,string.len(gcinclude.settings.priorityMidCast),1 do
 		cKey = string.sub(gcinclude.settings.priorityMidCast,i,i);
@@ -1531,6 +1560,9 @@ end
 
 profile.HandlePreshot = function()
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
+		-- Clear out the CurrentGear in case of leftovers
+		gcinclude.ClearSet(sets.CurrentGear);
+		
 		gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
 		gcinclude.ProcessConditional(sets.Preshot_Conditional,nil,sets.CurrentGear);
 		gcinclude.EquipTheGear(sets.CurrentGear);
@@ -1547,6 +1579,9 @@ profile.HandleMidshot = function()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
+	
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
 	gcinclude.ProcessConditional(sets.Midshot_Conditional,nil,sets.CurrentGear);
@@ -1582,6 +1617,9 @@ profile.HandleWeaponskill = function()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
+
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
 	
 	gcinclude.settings.priorityWeaponSkill = string.upper(gcinclude.settings.priorityWeaponSkill);
 	for i = 1,string.len(gcinclude.settings.priorityWeaponSkill),1 do

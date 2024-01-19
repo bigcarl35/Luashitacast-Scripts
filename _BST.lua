@@ -161,7 +161,7 @@ local sets = {
 	['DT_Physical'] = {
 	},
 	['DT_Physical_Conditional'] = {
-	}
+	},
 	
 	['DT_Magical'] = {
         Ear1 = 'Coral Earring',
@@ -269,7 +269,7 @@ local sets = {
 
 	['Enmity_Plus'] = {
 	},
-	{'Enmity_Plus_Conditional'] = {
+	['Enmity_Plus_Conditional'] = {
 	},
 
 	['Enmity_Minus'] = {
@@ -1027,8 +1027,16 @@ profile.OnLoad = function()
 	
 	-- Load up the weapons bar. (This need only be done once.)
 	gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear);
-	gcinclude.ProcessConditional(sets.Start_Weapons_Conditional,nil,sets.CurrentGear);	
+	gcinclude.ProcessConditional(sets.Start_Weapons_Conditional,nil,sets.CurrentGear);
 	gcinclude.EquipTheGear(sets.CurrentGear);
+	
+	-- Make sure the saved weapons are the starting weapons
+	gcinclude.weapon = sets.CurrentGear['Main'];
+	if sets.CurrentGear['Sub'] == nil then
+		gcinclude.offhand = nil;
+	else
+		gcinclude.offhand = sets.CurrentGear['Sub'];
+	end
 end
 
 --[[
@@ -1162,7 +1170,10 @@ profile.HandleDefault = function()
 		HandlePetAction(petAction);
 		return;
 	end
-		
+	
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
+	
 	-- Save the name of the main weapon	
 	if ew['Main'] ~= nil then
 		eWeap = ew['Main'].Name;
@@ -1189,6 +1200,7 @@ profile.HandleDefault = function()
 	
 	-- If player is not resting and has swapped weapons, set the weapon back to what 
 	-- they had before the switch
+
 	if player.Status ~= 'Resting' and 
 		gcdisplay.GetToggle('WSwap') == true and 	
 		gcinclude.weapon ~= nil and 
@@ -1196,7 +1208,7 @@ profile.HandleDefault = function()
 		sets.CurrentGear['Main'] = gcinclude.weapon;
 		sets.CurrentGear['Sub'] = gcinclude.offhand;
 	end
-		
+
 	-- Now process the player status accordingly
 	if (player ~= nil and player.Status == 'Engaged') or (pet ~= nil and pet.Status == 'Engaged') then
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
@@ -1350,7 +1362,10 @@ profile.HandleAbility = function()
 	if gcdisplay.GetToggle('GSwap') == False then
 		return;
 	end
-		
+
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
+	
 	-- Now process the appropriate job ability. 
 	-- Start with abilities associated with BST
 	if string.match(ability.Name, 'Call Beast') or string.match(ability.Name, 'Bestial Loyalty') then
@@ -1423,6 +1438,9 @@ end
 profile.HandleItem = function()
 	local item = gData.GetAction();
 
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
+	
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 		if string.match(item.Name, 'Holy Water') then 
 			gcinclude.MoveToCurrent(gcinclude.sets.Holy_Water,sets.CurrentGear);
@@ -1478,6 +1496,9 @@ profile.HandleMidcast = function()
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
 		return;
 	end
+
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
 	
 	gcinclude.settings.priorityMidCast = string.upper(gcinclude.settings.priorityMidCast);
 	for i = 1,string.len(gcinclude.settings.priorityMidCast),1 do
@@ -1594,6 +1615,9 @@ end
 
 profile.HandlePreshot = function()
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
+		-- Clear out the CurrentGear in case of leftovers
+		gcinclude.ClearSet(sets.CurrentGear);	
+		
 		gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
 		gcinclude.ProcessConditional(sets.Preshot_Conditional,nil,sets.CurrentGear);
 		gcinclude.EquipTheGear(sets.CurrentGear);
@@ -1610,6 +1634,9 @@ profile.HandleMidshot = function()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
+
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
 	gcinclude.ProcessConditional(sets.Midshot_Conditional,nil,sets.CurrentGear);
@@ -1646,6 +1673,9 @@ profile.HandleWeaponskill = function()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
+
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
 	
  	gcinclude.settings.priorityWeaponSkill = string.upper(gcinclude.settings.priorityWeaponSkill);
 	for i = 1,string.len(gcinclude.settings.priorityWeaponSkill),1 do
