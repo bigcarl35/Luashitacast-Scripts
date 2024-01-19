@@ -19,7 +19,7 @@ gcinclude.sets = {
 	['Holy_Water'] = { 				-- update with whatever gear you use for the Holy Water item
     },
 	['Holy_Water_Conditional'] = {
-	}
+	},
 	
 	['Sleeping'] = { 				-- this set will auto equip if you are asleep
 		Neck = 'Opo-opo necklace',	-- might as well gain tp
@@ -1084,17 +1084,6 @@ function gcinclude.SetVariables()
 	gcdisplay.CreateCycle('DT', {[1] = gcinclude.OFF, [2] = gcinclude.PHY, [3] = gcinclude.MAG, [4] = gcinclude.BRE});
 	gcdisplay.CreateCycle('Enmity', {[1] = 'Off', [2] = 'Minus', [3] = 'Plus'});
 	gcdisplay.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned'});
-	
-	-- Initialize what weapons are equipped
-	local ew = gData.GetEquipment();
-	if ew.Main ~= nil then
-		gcinclude.weapon = ew.Main.Name;
-		if ew.Sub == nil then
-			gcinclude.offhand = nil;
-		else
-			gcinclude.offhand = ew.Sub.Name;
-		end
-	end
 end		-- gcinclude.SetVariables
 
 --[[
@@ -1393,12 +1382,12 @@ function gcinclude.ProcessConditional(tTest,sType,tMaster)
 							bMatch = gcinclude.BuildGear(tMatched,v);
 						end
 					end
-				elseif tMatched[4] = 'SJIS' then		-- subjob is
+				elseif tMatched[4] == 'SJIS' then		-- subjob is
 					local s = string.upper(tMatched[5]);
 					if string.find(s,player.SubJob) ~= nil then
 						bMatch = gcinclude.BuildGear(tMatched,v);
 					end					
-				elseif tMatched[4] = 'SJISN' then		-- subjob is not
+				elseif tMatched[4] == 'SJISN' then		-- subjob is not
 					local s = string.upper(tMatched[5]);
 					if string.find(s,player.SubJob) == nil then
 						bMatch = gcinclude.BuildGear(tMatched,v);
@@ -1421,6 +1410,17 @@ function gcinclude.ProcessConditional(tTest,sType,tMaster)
 		end
 	end
 end		-- gcinclude.ProcessConditional
+
+--[[
+	ClearSet blanks out the passed gear set
+--]]
+
+function gcinclude.ClearSet(gSet)
+	
+	for k,v in pairs(gData.Constants.EquipSlots) do
+		gSet[k] = '';
+	end
+end
 
 --[[
 	MoveToCurrent copies the gear defined in the passed set to current master
