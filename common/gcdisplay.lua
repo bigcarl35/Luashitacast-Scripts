@@ -19,13 +19,11 @@ local JobBar = T{['GSwap'] = {'ALL','MS'},
 				 ['Kite'] = {'ALL','MS'},
 				 ['Acc'] = {'ALL','MS'},
 				 ['Eva'] = {'ALL','MS'},
-				 ['Haste'] = {'ALL','MS'},
+				 ['Tank'] = {'ALL','MS'},
 				 ['WSwap'] = {'-SMN,BLM','M'},		-- Some jobs swap weapons all the time
 				 ['TH'] = {'THF','M'},				-- THF field, only valid if THF is main job
 				 ['AJug'] = {'BST','M'},			-- BST field, only valid if BST is main job
-				 ['DT_Type'] = {'ALL','MS'},
 				 ['Region'] = {'ALL','MS'},
-				 ['Enmity'] = {'ALL','MS'}, 
 				 ['sBP'] = {'SMN','MS'}};
 
 local fontSettings = T{
@@ -44,108 +42,51 @@ local fontSettings = T{
 --[[
 	ShowHelp Displays help for all the commands across jobs
 --]]
-function gcdisplay.ShowHelp(args)
+function gcdisplay.ShowHelp()
 	
-	if #args == 1 then
-		print(chat.header('Help'):append(chat.message('The following commands are available to use from within Luashitacast. These are targetting either your specific job or are available across all jobs.\n')));
-		print(chat.header('Help'):append(chat.message('Commands for all jobs: ')));
-		print(chat.header('Help'):append(chat.message('/gswap --Toggles whether automatic gear swaps occur or not. Default is TRUE.')));
-		print(chat.header('Help'):append(chat.message('/wsdistance [#] --Toggles whether a distance check is done for non-ranged weaponskills and how far. Default TRUE at ' .. tostring(gcinclude.settings.WSdistance) .. ' yalms.')));
-		print(chat.header('Help'):append(chat.message('/dt --Indicates if a damage taken set should be used')));
-		print(chat.header('Help'):append(chat.message('/dt_type [P|M|B] --Determines the type of damage taken set to use. Physical is assumed.')));
-		print(chat.header('Help'):append(chat.message('/kite --Equips defined movement set.')));
-		print(chat.header('Help'):append(chat.message('/wswap --Toggles whether weapons will be swapped as needed. Default is FALSE to preserve TP.')));
-		print(chat.header('Help'):append(chat.message('/eva --Toggles whether evasion set should be equipped or not. Default is FALSE.')));
-		print(chat.header('Help'):append(chat.message('/acc --Toggle whether accuracy gear should override melee/weapon skill gear. Default is FALSE')));
-		print(chat.header('Help'):append(chat.message('/gearset name [on]--Will equip the named gear set and then disable GSwap unless optional parameter set to ON')));
-		print(chat.header('Help'):append(chat.message('/craftset [AL|BN|CL|CO|GS|LT|SM|WW] --Equips the specified crafting gear and turns GSwap off.')));
-		print(chat.header('Help'):append(chat.message('/gatherset [HELM|DIG|CLAM] --Equips the specified gathering gear and turns GSwap off.')));
-		print(chat.header('Help'):append(chat.message('/fishset --Equips the fishing set and turns off GSwap.')));
-		print(chat.header('Help'):append(chat.message('/region --Toggles whether the area you\'re adventuring in is controlled by your nation or not.')));
-		print(chat.header('Help'):append(chat.message('/maxspell name -- Determines the highest level spell your current jobs can cast that has the passed name')));
-		print(chat.header('Help'):append(chat.message('/maxsong name [back] -- Determines the highest level song your current jobs can cast that has the passed name or next to highest')));
-		print(chat.header('Help'):append(chat.message('/th --Toggles on whether treasure hunter gear should be equipped. Default is FALSE.')));
-		print(chat.header('Help'):append(chat.message('/enmity [OFF|PLUS|MINUS] --Determines if/type of enmity gear to equip. Default is OFF')));
-		print(chat.header('Help'):append(chat.message('/equipit code|name [slot] [1|2] --Equips specified item in the specified slot and turns off /gswap.')));
-		print(chat.header('Help'):append(chat.message('/dowep code|name --Equips specified weapon and turns off /gswap.')));
-		print(chat.header('Help'):append(chat.message('/help [command] --Display this listing or specific details on the specified command.')));
-		if Main == 'BST' then
-			print(chat.header('Help'):append(chat.message(' ')));
-			print(chat.header('Help'):append(chat.message('Command(s) specific for BST/ or /BST:')));
-			print(chat.header('Help'):append(chat.message('/ajug -- Toggles whether the automated jug pet system is enabled. Default is TRUE. (BST/ only)'))); 
-			print(chat.header('Help'):append(chat.message('/petfood [name|ALL|MAX|MIN] --Equips the specified pet food or determines best food and equips it.')));
-		end
-		if Main == 'SMN' or Sub == 'SMN' then
-			print(chat.header('Help'):append(chat.message(' ')));
-			print(chat.header('Help'):append(chat.message('Command(s) specific for SMN/ or /SMN:')));
-			print(chat.header('Help'):append(chat.message('/sbp -- Toggles whether offensive blood pacts will show a message in party chat. Default is True.')));
-		end
+	print(chat.header('Help'):append(chat.message('The following commands are available to use from within Luashitacast. These are targetting either your specific job or are available across all jobs.\n')));
+	print(chat.header('Help'):append(chat.message('Commands for all jobs: ')));
+	print(chat.header('Help'):append(chat.message('/gswap --Toggles whether automatic gear swaps occur or not. Default is TRUE.')));
+	print(chat.header('Help'):append(chat.message('/wsdistance [#] --Toggles whether a distance check is done for non-ranged weaponskills and how far. Default TRUE at ' .. tostring(gcinclude.settings.WSdistance) .. ' yalms.')));
+	print(chat.header('Help'):append(chat.message('/dt --Indicates type of damage taken set should be used: Physical is assumed.')));
+	print(chat.header('Help'):append(chat.message('/kite --Equips defined movement set.')));
+	print(chat.header('Help'):append(chat.message('/wswap --Toggles whether weapons will be swapped as needed. Default is FALSE to preserve TP.')));
+	print(chat.header('Help'):append(chat.message('/eva --Toggles whether evasion set should be equipped or not. Default is FALSE.')));
+	print(chat.header('Help'):append(chat.message('/acc --Toggle whether accuracy gear should override melee/weapon skill gear. Default is FALSE')));
+	print(chat.header('Help'):append(chat.message('/tank -- Toggles whether tanking TP gear set should be equipped. Default is FALSE.')));
+	print(chat.header('Help'):append(chat.message('/gearset name [on]--Will equip the named gear set and then disable GSwap unless optional parameter set to ON')));
+	print(chat.header('Help'):append(chat.message('          [AL|BN|CL|CO|GS|LT|SM|WW] --Equips the specified crafting gear.')));
+	print(chat.header('Help'):append(chat.message('          [HELM|DIG|CLAM|FISH] --Equips the specified gathering gear.')));
+	print(chat.header('Help'):append(chat.message('/region --Toggles whether the area you\'re adventuring in is controlled by your nation or not.')));
+	print(chat.header('Help'):append(chat.message('/maxspell name -- Determines the highest level spell your current jobs can cast that has the passed name')));
+	print(chat.header('Help'):append(chat.message('/maxsong name [back] -- Determines the highest level song your current jobs can cast that has the passed name or next to highest')));
+	print(chat.header('Help'):append(chat.message('/th --Toggles on whether treasure hunter gear should be equipped. Default is FALSE.')));
+	print(chat.header('Help'):append(chat.message('/enmity [OFF|PLUS|MINUS] --Determines if/type of enmity gear to equip. Default is OFF')));
+	print(chat.header('Help'):append(chat.message('/equipit code|name [slot] [1|2] --Equips specified item in the specified slot and turns off /gswap.')));
+	print(chat.header('Help'):append(chat.message('/dowep code|name --Equips specified weapon and turns off /gswap.')));
+	print(chat.header('Help'):append(chat.message('/help [command] --Display this listing or specific details on the specified command.')));
+	if Main == 'BST' then
 		print(chat.header('Help'):append(chat.message(' ')));
-		print(chat.header('Help'):append(chat.message('Some /lac commands of note:')));
-		print(chat.header('Help'):append(chat.message('/lac disable --Disables all gear slots so that no automatic gear changes can occur.')));
-		print(chat.header('Help'):append(chat.message('/lac enable --Enables all gear slots so automatic gear changes can occur.')));
-		print(chat.header('Help'):append(chat.message('/lac load --Loads the Luashitacast BST definitions')));
-		print(chat.header('Help'):append(chat.message('/lac unload --Unloads the Luashitacast BST definitions')));
-		print(chat.header('Help'):append(chat.message('/lac reload --Unloads and reloads the Luashitacast BST definition')));
-		print(chat.header('Help'):append(chat.message('/lac addset \"name\" --Saves the current equipped gear into Luashitacast\'s DRK definition file. Don\'t include the \"\'s.')));
-		print(chat.header('Help'):append(chat.message('/lac list --Lists all the defined gear sets from your BST definition.')));
-		print(chat.header('Help'):append(chat.message(' ')));
-		print(chat.header('Help'):append(chat.message('Please note that if you use style lock, you will not see the gear changing, but it is changing')))
-	else
-		local cmd = string.lower(args[2]);
-		
-		if cmd == 'gswap' then
-			print(chat.header('Help'):append(chat.message('/gswap --This toggles whether automatic gear swapping is enabled or not. Default is TRUE')));
-		elseif cmd == 'wsdistance' then
-			print(chat.header('Help'):append(chat.message('wsdistance # --Non-ranged weapon skills require you to be no more than a certain distance from your target. By default, the maximum distance a tarutaru can hit a target is ' .. tostring(gcinclude.settings.WSdistance) ..' yalms. If your character\'s race is larger, you might want to change the distance to a larger number. This check prevents TP lost when you\'re too far away.')));
-		elseif cmd == 'dt' then
-			print(chat.header('Help'):append(chat.message('/dt --This toggles whether the damage taken gear set takes priority over the current gear set. Default is FALSE')));
-		elseif cmd == 'dt_type' then
-			print(chat.header('Help'):append(chat.message('/dt_type indicates the type of damage taken gear to use. P for physical, M for magical, and B for breath. Default is Physical')));
-		elseif cmd == 'kite' then
-			print(chat.header('Help'):append(chat.message('/kite --This toggles whether movement gear should be equipped. Default is FALSE')));
-		elseif cmd == 'wswap' then
-			print(chat.header('Help'):append(chat.message('/wswap --Toggles whether weapon swapping is permissible. Weapon swapping causes the loss of tp, but there are advantages too. Default is FALSE')));
-		elseif cmd == 'gearset' then
-			print(chat.header('Help'):append(chat.message('/gearset name [on]--This forcibly loads the indicated gear set and turns off GSwap unless optional parameter is on. Then GSwap remains enabled.')));
-		elseif cmd == 'acc' then
-			print(chat.header('Help'):append(chat.message('/acc --This toggles whether accuracy gear takes priority over normal melee gear. Casting and ranged accuracy are handled automatically. If Acc is true, then the accuracy set will be loaded over the TP set and the appropriate weaponskill set. Default is FALSE.')));
-		elseif cmd == 'eva' then
-			print(chat.header('Help'):append(chat.message('/eva --This toggles whether evasion gear takes priority over normal melee gear. If Eva is true, then the evasion set will be loaded over the TP set and the appropriate weaponskill set. Default is FALSE')));
-		elseif cmd == 'craftset' then
-			print(chat.header('Help'):append(chat.message('/craftset [AL,BN,CL,CO,GS,LT,SM,WW] equips specified crafting gear and turns GSwap off.')));
-			print(chat.header('Help'):append(chat.message('AL - Alchemy, BN - Bonecraft, CL - Clothcraft, CO - Cooking, GS - Goldsmithing, LT - Leathercraft, SM - Smithing, and WW - Woodworking')));			
-		elseif cmd == 'gatherset' then
-			print(chat.header('Help'):append(chat.message('/gatherset [HELM,DIG,CLAM] --This equips specified gathering gear and turns GSwap off.')));
-			print(chat.header('Help'):append(chat.message('HELM - harvest,excavation,logging,mining, DIG - digging, and CLAM - clamming')));
-		elseif cmd == 'region' then
-			print(chat.header('Help'):append(chat.message('/region --This indicates if the current area where you\'re playing is controlled by your nation. Default is TRUE')));
-		elseif cmd == 'fishset' then
-			print(chat.header('Help'):append(chat.message('/fishset --This command loads up your fishing gear and turns off GSwap.')));
-		elseif cmd == 'maxspell' then
-			print(chat.header('Help'):append(chat.message('/maxspell name --This determines the highest level spell that matches the name you indicated that your current job can cast.')));
-		elseif cmd == 'maxsong' then
-			print(chat.header('Help'):append(chat.message('/maxsong name [back] --This determines the highest level song that matches the name you indicated to cast or one of the max if asked for.')));			
-		elseif cmd == 'th' then
-			print(chat.header('Help'):append(chat.message('/th --Toggles whether TH gear should be equipped or not. Default is FALSE.')));
-		elseif cmd == 'emmity' then
-			print(chat.header('Help'):append(chat.message('/enmity [OFF|PLUS|MINUS] --Lets you enable whether enmity gear should be equipped and type. Default is OFF.')));			
-		elseif cmd == 'equipit' then
-			print(chat.header('Help'):append(chat.message('/equipit code|name [slot] [1|2] --Equips specified item (either coded or full name) in the specified slot and turns off /GSWAP. Note that if the item contains a space in the name, you have to surround the name with double quotes.')));
-		elseif cmd == 'help' then
-			print(chat.header('Help'):append(chat.message('/help [[all]|command] --This command displays help for all Luashitacast commands or the specified command.')));
-		elseif cmd == 'petfood' then
-			print(chat.header('Help'):append(chat.message('/petfood [alpha|beta|gamma|delta|epsilon|zeta|ALL|MIN|MAX] --This command either equips the specified pet food in the ammo slot or lists all the pet food that\'s accessible or determines the best or the weakest pet food that can be equipped.')));
-		elseif cmd == 'ajug' then
-			print(chat.header('Help'):append(chat.message('/ajug --Toggles whether the automated jug pet system is enabled. This loads a jug pet if the ammo slot doesn\'t have a jug pet in it. Default is TRUE')));
-		elseif cmd == 'sbp' then
-			print(chat.header('Help'):append(chat.message('/sbp --Toggles whether a party chat message should be displayed when an offensive blood pact is executed. Default is TRUE')));
-		elseif cmd == 'lac' then
-			print(chat.header('Help'):append(chat.message('/lac action ... --This command is native to Luashitacast and requires an action (ex: load, unload, list, etc.) and possibly further arguments. Further details are beyond what this help section can cover.')));
-		else
-			print(chat.header('Help'):append(chat.message('The command you specified either does not exist or is not supported for BST.')));
-		end
+		print(chat.header('Help'):append(chat.message('Command(s) specific for BST/ or /BST:')));
+		print(chat.header('Help'):append(chat.message('/ajug -- Toggles whether the automated jug pet system is enabled. Default is TRUE. (BST/ only)'))); 
+		print(chat.header('Help'):append(chat.message('/petfood [name|ALL|MAX|MIN] --Equips the specified pet food or determines best food and equips it.')));
 	end
+	if Main == 'SMN' or Sub == 'SMN' then
+		print(chat.header('Help'):append(chat.message(' ')));
+		print(chat.header('Help'):append(chat.message('Command(s) specific for SMN/ or /SMN:')));
+		print(chat.header('Help'):append(chat.message('/sbp -- Toggles whether offensive blood pacts will show a message in party chat. Default is True.')));
+	end
+	print(chat.header('Help'):append(chat.message(' ')));
+	print(chat.header('Help'):append(chat.message('Some /lac commands of note:')));
+	print(chat.header('Help'):append(chat.message('/lac disable --Disables all gear slots so that no automatic gear changes can occur.')));
+	print(chat.header('Help'):append(chat.message('/lac enable --Enables all gear slots so automatic gear changes can occur.')));
+	print(chat.header('Help'):append(chat.message('/lac load --Loads the Luashitacast BST definitions')));
+	print(chat.header('Help'):append(chat.message('/lac unload --Unloads the Luashitacast BST definitions')));
+	print(chat.header('Help'):append(chat.message('/lac reload --Unloads and reloads the Luashitacast BST definition')));
+	print(chat.header('Help'):append(chat.message('/lac addset \"name\" --Saves the current equipped gear into Luashitacast\'s DRK definition file. Don\'t include the \"\'s.')));
+	print(chat.header('Help'):append(chat.message('/lac list --Lists all the defined gear sets from your BST definition.')));
+	print(chat.header('Help'):append(chat.message(' ')));
+	print(chat.header('Help'):append(chat.message('Please note that if you use style lock, you will not see the gear changing, but it is changing')))
 end		-- gcdisplay.ShowHelp
 
 --[[

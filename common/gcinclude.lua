@@ -38,6 +38,11 @@ gcinclude.sets = {
 	['Weakened_Conditional'] = {
 	},
 	
+	['Paralyzed'] = {				-- this set will equip if you are paralyzed
+	},
+	['Paralyzed_Conditional'] = {
+	},
+	
 	['Shining_Ruby'] = {			-- this will auto-equip when you have the shining ruby buff
 		--Hands = 'Carbuncle\'s Cuffs',
 	},
@@ -101,6 +106,14 @@ gcinclude.sets = {
     },
 	['FishingGear_Conditional'] = {
 	},
+	
+--[[
+	The following set is used to dynamically create a gear set to be displayed once rather
+	than in a piecemeal manner. It is hoped that this will cut down on flickering gear and
+	possibly speed up the code. *** This set is to be left empty by the player ***. Please
+	do not modify it.
+--]]	
+	['CurrentGear'] = { },	
 };
 
 gcinclude.settings = {
@@ -132,16 +145,16 @@ gcinclude.settings = {
 	sCapped = false;	-- indicates if in a capped area/bcnm/etc
 	bCapped = false;	-- indicates if the capped process has occurred
 	iCapped = 0;		-- level determined by capped process
-	priorityEngaged = 'ABCDEFGH'; 	-- indicates order of steps for engagement
+	priorityEngaged = 'BCEFGH'; 	-- indicates order of steps for engagement
 	priorityMidCast = 'ABCDEFGH';	-- indicates order of steps for spell midcast
-	priorityWeaponSkill = 'ABCDE';	-- indicates order of steps for a weapon skill
+	priorityWeaponSkill = 'ABDE';	-- indicates order of steps for a weapon skill
 };
 
 -- The following arrays are used by the functions contained in this file. Probably best to leave them alone
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','craftset','gatherset','fishset','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','enmity','haste'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','tank'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T {'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T {'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -851,14 +864,18 @@ end		-- gcinclude.CheckForObisGorgets
 function gcinclude.SetVariables()
 	local player = gData.GetPlayer();
 
+	-- General toggles
 	gcdisplay.CreateToggle('GSwap', true);
 	gcdisplay.CreateToggle('Kite', false);
 	gcdisplay.CreateToggle('Acc', false);
 	gcdisplay.CreateToggle('Eva', false);
 	gcdisplay.CreateToggle('WSwap',false);
-	gcdisplay.CreateToggle('TH',false);
-	gcdisplay.CreateToggle('Haste', false);
+	gcdisplay.CreateToggle('Tank',false);
 	
+	-- Job specific toggles
+	if player.MainJob == 'THF' then
+		gcdisplay.CreateToggle('TH',false);
+	end	
 	if player.MainJob == 'BST' then
 		gcdisplay.CreateToggle('AJug',true);
 	end
@@ -866,8 +883,8 @@ function gcinclude.SetVariables()
 		gcdisplay.CreateToggle('sBP',true);
 	end
 	
+	-- General cycles
 	gcdisplay.CreateCycle('DT', {[1] = gcinclude.OFF, [2] = gcinclude.PHY, [3] = gcinclude.MAG, [4] = gcinclude.BRE});
-	gcdisplay.CreateCycle('Enmity', {[1] = 'Off', [2] = 'Minus', [3] = 'Plus'});
 	gcdisplay.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned'});
 end		-- gcinclude.SetVariables
 
@@ -1553,6 +1570,9 @@ function gcinclude.HandleCommands(args)
 	local sKey;
 	local sSet;
 	
+	-- Clear out the local copy of current gear
+	gcinclude.ClearSet(gcinclude.sets.CurrentGear);
+	
 	args[1] = string.lower(args[1]);
 	if (args[1] == 'gswap') then			-- turns gear swapping on or off
 		gcdisplay.AdvanceToggle('GSwap');
@@ -1600,10 +1620,6 @@ function gcinclude.HandleCommands(args)
 		gcdisplay.AdvanceToggle('Acc');
 		toggle = 'Accuracy';
 		status = gcdisplay.GetToggle('Acc');
-	elseif (args[1] == 'haste') then			-- Turns on/off whether accuracy gear should be equipped
-		gcdisplay.AdvanceToggle('Haste');
-		toggle = 'Haste';
-		status = gcdisplay.GetToggle('Haste');
 	elseif (args[1] == 'eva') then			-- Turns on/off whether evasion gear should be equipped
 		gcdisplay.AdvanceToggle('Eva');
 		toggle = 'Evasion';
@@ -1628,87 +1644,33 @@ function gcinclude.HandleCommands(args)
 		gcdisplay.AdvanceToggle('TH');
 		toggle = 'Treasure Hunter';
 		status = gcdisplay.GetToggle('TH');		
-	elseif (args[1] == 'craftset') then		-- Equips the specified crafting set gear and turns off GSWAP
-		bOk = true;
-		
-		if args[2] ~= nil then
-			sKey = string.upper(args[2]);
-		else
-			sKey = nil;
-		end
-		
-		if #args > 1 then
-			if string.find(gcinclude.Crafting_Types,sKey) == nil then
-				print(chat.header('HandleCommands'):append(chat.message('Error: Invalid crafting type specified: ' ..args[2])));
-				print(chat.header('HandleCommands'):append(chat.message('Valid crafting types: '..gcinclude.Crafting_Types)))
-				bOk = false;
-			end
-		else
-			print(chat.header('HandleCommands'):append(chat.message('Error: No craft type specified.')));
-			print(chat.header('HandleCommands'):append(chat.message('Correct command: /craftset ['..gcinclude.Crafting_Types..']')));
-			bOk = false;
-		end
-
-		if bOk then
-			gFunc.EquipSet(gcinclude.sets.Crafting);								-- Load the default set
-			gcinclude.ProcessConditional(gcinclude.sets.Crafting_Conditional,sKey);	-- Then override w/any conditional that's true
-			gcdisplay.SetToggle('GSwap',false);
-			toggle = 'Crafting';
-			status = gcdisplay.GetToggle('GSwap');
-		end
-	elseif (args[1] == 'gatherset') then			-- Equips the specified gathering gear and turns off GSWAP
-		bOk = true;
-		
-		if args[2] ~= nil then
-			sKey = string.upper(args[2]);
-		else
-			sKey = nil;
-		end
-		
-		if #args > 1 then
-			if string.find(gcinclude.Gathering_Types,sKey) == nil then
-				print(chat.header('HandleCommands'):append(chat.message('Error: Invalid gathering type specified: ' ..args[2])));
-				print(chat.header('HandleCommands'):append(chat.message('Valid gathering types: '..gcinclude.Gathering_Types)))
-				bOk = false;
-			end
-		else
-			print(chat.header('HandleCommands'):append(chat.message('Error: No gathering type specified.')));
-			print(chat.header('HandleCommands'):append(chat.message('Correct command: /gatherset ['..gcinclude.Gathering_Types..']')));
-			bOk = false;
-		end
-
-		if bOk then
-			gFunc.EquipSet(gcinclude.sets.Gathering);									-- Load the default set
-			gcinclude.ProcessConditional(gcinclude.sets.Gathering_Conditional,sKey);	-- Then override w/any conditional that's true
-			gcdisplay.SetToggle('GSwap',false);
-			toggle = 'Gathering';
-			status = gcdisplay.GetToggle('GSwap');
-		end
-	elseif (args[1] == 'fishset') then			-- Equips fishing gear and turns GSWAP off
-		gFunc.ForceEquipSet(gcinclude.sets.FishingGear);
-		gcdisplay.SetToggle('GSwap',false);
-		toggle = 'Fishing Set';
-		status = gcdisplay.GetToggle('GSwap');
 	elseif (args[1] == 'showit') then			-- Shows debug info for specified type: staff
 		gcinclude.DB_ShowIt(args[2]);
-	elseif (args[1] == 'enmity') then
-		if #args == 1 then			-- No qualifier, assume next in set
-			gcdisplay.AdvanceCycle('Enmity');
-		else
-			local sType = string.lower(args[2]);
-			local sSet = 'Off';
-			if  sType == 'minus' then
-				sSet = 'Minus';
-			elseif sType == 'plus' then
-				sSet = 'Plus';
-			end
-			gcdisplay.SetCycle('Enmity',sSet);
-		end
-		toggle = 'Enmity';
-		status = gcdisplay.GetCycle('Enmity');
 	elseif (args[1] == 'gearset') then			-- Forces a gear set to be loaded and turns GSWAP off
 		if #args > 1 then
-			gFunc.ForceEquipSet(args[2]);	
+			local sArg = string.upper(args[2]);
+			local sTemp = ',' .. gcinclude.Crafting_Types .. ',' ..gcinclude.Gathering_Types .. ',FISH,';
+			if string.find(sTemp,sArg) ~= nils then
+				-- gather or crafting set
+				local sCraft = ',' .. gcinclude.Crafting_Types .. ',';
+				if string.find(sCraft,sArg) then
+					-- crafting set
+					gcinclude.MoveToCurrent(gcinclude.sets.Crafting,gcinclude.sets.CurrentGear);
+					gcinclude.ProcessConditional(gcinclude.sets.Crafting_Conditional,sArg,gcinclude.sets.CurrentGear);					
+				else
+					if sArg == 'FISH' then
+						--fish set
+						gcinclude.MoveToCurrent(gcinclude.sets.FishingGear,gcinclude.sets.CurrentGear);
+					else
+						-- HELM, DIG or CLAM set
+						gcinclude.MoveToCurrent(gcinclude.sets.Gathering,gcinclude.sets.CurrentGear);
+						gcinclude.ProcessConditional(gcinclude.sets.Gathering_Conditional,sArg,gcinclude.sets.CurrentGear);
+					end
+				end
+				gcinclude.EquipTheGear(gcinclude.sets.CurrentGear);
+			else
+				gFunc.ForceEquipSet(sArg);
+			end
 			if #args == 2 or string.lower(args[3]) ~= 'on' then
 				gcdisplay.SetToggle('GSwap',false);
 			else
@@ -1750,6 +1712,7 @@ function gcinclude.CheckCommonDebuffs()
 	local weakened = gData.GetBuffCount('Weakened');
 	local sleep = gData.GetBuffCount('Sleep');
 	local blind = gData.GetBuffCount('Blind');
+	local para = gData.GetBuffCount('Paralyzed');
 	local doom = (gData.GetBuffCount('Doom'))+(gData.GetBuffCount('Bane'));
 	local shiningRuby = gData.GetBuffCount('Shining Ruby');
 
@@ -1765,34 +1728,13 @@ function gcinclude.CheckCommonDebuffs()
 	if (blind >= 1) then
 		gFunc.EquipSet(gcinclude.sets.Blind);
 	end
+	if (para >= 1) then
+		gFunc.EquipSet(gcinclude.sets.Paralyzed);
+	end	
 	if (shiningRuby >= 1) then
 		gFunc.EquipSet(gcinclude.sets.Shining_Ruby);
 	end
 end		-- gcinclude.CheckCommonDebuffs
-
---[[
-	CheckAbilityRecast determines if an ability can be cast. (It sees if the ability is
-	currently cooling down.)
---]]
-
-function gcinclude.CheckAbilityRecast(check)
-	local RecastTime = 0;
-
-	for x = 0, 31 do
-		local id = AshitaCore:GetMemoryManager():GetRecast():GetAbilityTimerId(x);
-		local timer = AshitaCore:GetMemoryManager():GetRecast():GetAbilityTimer(x);
-
-		if ((id ~= 0 or x == 0) and timer > 0) then
-			local ability = AshitaCore:GetResourceManager():GetAbilityByTimerId(id);
-			if ability == nil then return end
-			if (ability.Name[1] == check) and (ability.Name[1] ~= 'Unknown') then
-				RecastTime = timer;
-			end
-		end
-	end
-
-	return RecastTime;
-end	-- gcinclude.CheckAbilityRecast
 
 --[[
 	WsStat determines which stats are emphasized when using the passed weaponskill name and
