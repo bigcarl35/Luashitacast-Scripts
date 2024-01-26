@@ -21,24 +21,20 @@ the default distance from 4.7 yalms to whatever you want.
 **/dt: [Physical|Magical|Breath]**: Defines type of damage taken gear to equip  
 **/kite**: Turns on/off equipping movement gear.  
 **/acc**: Turns on/off equipping accuracy gear. This includes both physical and magical.  
-**/eva**: Turns on/off equipping evasion gear.  
+**/eva**: Turns on/off equipping evasion gear.
+**/tank**: Turns on/off equipping TP tank gear.  
 **/wswap**: Turns on/off whether weapon swapping is permitted. Useful when casting spells.  
 **/region**: Swaps between *owned/not* owned indicating if player's nation controls the
 area from the last conquest tally. Used with some conditional gear.  
 **/petfood [name]**: Equips either named petfood or determines best pet food and equips that.  
-**/gearset "name" [on]**: Equips the specified gear set and turns off automatic gears swapping if 
-optional parameter isn't included.  
-**/craftset [AL|BN|CL|CO|GS|LT|SM|WW]**: Equips the crafting gear set specified and turns off gear
-swapping. AL - Alchemy, BN - Bonecraft, CL - Clothcraft, CO - Cooking, GS - Goldsmithing, 
-LT - Leathercraft, SM - Smithing, WW - Woodworking.  
-**/gatherset [HELM|DIG|CLAM]**: Equips the gathering set specified and turns off gear swapping.
-HELM - Harvest, Excavation, Logging, Mining, DIG - Digging, CLAM - Clamming.  
-**/fishset**: Equips the fishing gear and turns off automatic gear swapping.  
 **/maxspell "name"**: Determines the highest level spell player can cast that has the common root
 name (e.g., Cure gets you Cure III if you're 75 and /whm.)  
 **/maxsong "name"**: Determines the highest level song player can perform that has either the
 common root name (see /maxsong) or the common buff name (e.g., paeon when
 performing one of the army paeon songs.)  
+**/gearset**: Equips specified gear set and turns off /gswap
+    HELM|DIG|CLAM|FISH for appropriate gather set.  
+    AL|BN|CL|CO|GS|LT|SM|WW for appropriate crafting set.
 **/equipit "code|name" [1|2]**: Equips specified ring (coded or actual name) in the specified slot.
 Turns off /GSWAP.  
 **/help [command]**: List description of "command" or lists all commands if no parameter specified.  
