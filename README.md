@@ -32,9 +32,9 @@ name (e.g., Cure gets you Cure III if you're 75 and /whm.)
 **/maxsong "name"**: Determines the highest level song player can perform that has either the
 common root name (see /maxsong) or the common buff name (e.g., paeon when
 performing one of the army paeon songs.)  
-**/gearset**: Equips specified gear set and turns off /gswap
+**/gearset**: Equips specified gear set and turns off /gswap  
     HELM|DIG|CLAM|FISH for appropriate gather set.  
-    AL|BN|CL|CO|GS|LT|SM|WW for appropriate crafting set.
+    AL|BN|CL|CO|GS|LT|SM|WW for appropriate crafting set.  
 **/equipit "code|name" [1|2]**: Equips specified ring (coded or actual name) in the specified slot.
 Turns off /GSWAP.  
 **/help [command]**: List description of "command" or lists all commands if no parameter specified.  
