@@ -19,7 +19,7 @@ local JobBar = T{['GSwap'] = {'ALL','MS'},
 				 ['Kite'] = {'ALL','MS'},
 				 ['Acc'] = {'ALL','MS'},
 				 ['Eva'] = {'ALL','MS'},
-				 ['Tank'] = {'ALL','MS'},
+				 ['Tank'] = {'-SMN','M'},
 				 ['WSwap'] = {'-SMN,BLM','M'},		-- Some jobs swap weapons all the time
 				 ['TH'] = {'THF','M'},				-- THF field, only valid if THF is main job
 				 ['AJug'] = {'BST','M'},			-- BST field, only valid if BST is main job

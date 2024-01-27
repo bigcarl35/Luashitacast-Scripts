@@ -1616,6 +1616,14 @@ function gcinclude.HandleCommands(args)
 		gcdisplay.AdvanceToggle('Kite');
 		toggle = 'Kite Set';
 		status = gcdisplay.GetToggle('Kite');
+	elseif (args[1] == 'tank') then			-- Turns on/off whether tanking gear is equipped
+		if player.MainJob ~= 'SMN' then
+			gcdisplay.AdvanceToggle('Tank');
+			toggle = 'Tank Set';
+			status = gcdisplay.GetToggle('Tank');
+		else
+			print(chat.header('HandleCommands'):append(chat.message('Error: SMN does not support tanking. Ignoring command')))
+		end				
 	elseif (args[1] == 'acc') then			-- Turns on/off whether accuracy gear should be equipped
 		gcdisplay.AdvanceToggle('Acc');
 		toggle = 'Accuracy';
