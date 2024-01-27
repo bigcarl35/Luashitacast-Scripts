@@ -90,7 +90,7 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-        Main = 'Windurstian Sword',
+        Main = 'Glorious Sword',
         Ammo = 'Fortune Egg',
     },
 	['Start_Weapons_Conditional'] = {
@@ -136,17 +136,17 @@ local sets = {
 
 	['TP'] = {
         Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ear1 = 'Beetle Earring',
-        Ear2 = 'Beetle Earring',
-        Body = 'Wonder Kaftan',
+        Neck = 'Peacock Amulet',
+        Ear1 = 'Drone Earring',
+        Ear2 = 'Physical Earring',
+        Body = 'Brigandine',
         Hands = 'Wonder Mitts',
         Ring1 = 'Tamas Ring',
         Ring2 = 'Jaeger Ring',
-		Back = 'Ram mantle',
-        Waist = 'Tilt Belt',
-		Legs = 'Ryl.Sqr. Breeches',
-        Feet = 'Bounding Boots',
+        Back = 'Raptor Mantle',
+        Waist = 'Swift Belt',
+        Legs = 'Ryl.Sqr. Breeches',
+        Feet = 'Chaos Sollerets',
     },
 	['TP_Conditional'] = {
 	},
@@ -167,7 +167,8 @@ local sets = {
 --]]
 		
 	['Accuracy'] = {
-        Ring2 = 'Jaeger Ring',				-- Accuracy +4
+        Ring2 = 'Jaeger Ring',				-- +4 Accuracy
+		Feet = 'Chaos Sollerets',			-- +3 Accuracy
     },
 	['Accuracy_Conditional'] = {
 	},
@@ -326,7 +327,7 @@ local sets = {
         Ring2 = 'Tranquility Ring',
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
-        Feet = 'Mannequin Pumps',
+        Feet = 'Chaos Sollerets',
     },
 	['MND_Conditional'] = {
 	},
@@ -635,6 +636,7 @@ local sets = {
 --]]
 
 	['ArcaneCircle'] = {
+		Feet = 'Chaos Sollerets',
     },
 	['ArcaneCircle_Conditional'] = {
 	},
@@ -749,6 +751,20 @@ local sets = {
     },
 	
 	['CAP50'] = {
+        Main = 'Icicle Sword',
+        Ammo = 'Fortune Egg',
+        Head = 'Empress Hairpin',
+        Neck = 'Spike Necklace',
+        Ear1 = 'Beetle Earring',
+        Ear2 = 'Beetle Earring',
+        Body = 'Wonder Kaftan',
+        Hands = 'Wonder Mitts',
+        Ring1 = 'Tamas Ring',
+        Ring2 = 'Jaeger Ring',
+        Back = 'Ram Mantle',
+        Waist = 'Tilt Belt',
+        Legs = 'Ryl.Sqr. Breeches',
+        Feet = 'Bounding Boots',
     },
 
 	['CAP60'] = {
@@ -774,8 +790,10 @@ profile.sAmmo = nil;		-- /BST specific. Name of ammo equipped
 --]]
 
 local function HandlePetAction(PetAction)
+	local pet = gData.GetPet();
+	
 	-- Only gear swap if this flag is true
-	if gcdisplay.GetToggle('GSwap') == false then
+	if gcdisplay.GetToggle('GSwap') == false or string.find(gcinclude.MagicSkill['Summoning'],pet.Name) ~= nil then
 		return;
 	end
 
@@ -1155,7 +1173,6 @@ profile.HandlePrecast = function()
 				gFunc.ForceEquip('Waist',obi);
 			end
 		end
-		gcinclude.CheckCancels();
 	end
 end
 

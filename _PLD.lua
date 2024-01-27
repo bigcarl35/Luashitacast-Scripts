@@ -824,8 +824,10 @@ profile.sAmmo = nil;
 --]]
 
 local function HandlePetAction(PetAction)
+	local pet = gData.GetPet();
+	
 	-- Only gear swap if this flag is true
-	if gcdisplay.GetToggle('GSwap') == false then
+	if gcdisplay.GetToggle('GSwap') == false or string.find(gcinclude.MagicSkill['Summoning'],pet.Name) ~= nil then
 		return;
 	end
 
@@ -887,6 +889,7 @@ profile.OnLoad = function()
 	gcinclude.Initialize();
 	gcinclude.settings.RegenGearHPP = 50;
     gcinclude.settings.RefreshGearMPP = 60;
+	gcdisplay.SerToggle('Tank',true);		-- Assume PLD is a tank
 
 	-- Coded order of operation override
 	gcinclude.settings.priorityEngaged = 'BCEFGH';
