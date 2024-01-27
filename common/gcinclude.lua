@@ -1141,6 +1141,15 @@ function gcinclude.ProcessConditional(tTest,sType,tMaster)
 					if player.MPP <= 50 then
 						bMatch = gcinclude.BuildGear(tMatched);
 					end
+				elseif tMatched[5] == 'MP.LE.50P.WS' then				-- Equip if MP <= 50% and weapon skill is
+					if player.MPP <= 50 and tMatched[6] ~= nil then
+						local ws = gData.GetAction();
+						tMatched[6] = string.lower(tMatched[6]);
+						ws.Name = string.lower(ws.Name);
+						if string.find(tMatched[6],ws.Name) ~= nil then
+							bMatch = gcinclude.BuildGear(tMatched);
+						end
+					end					
 				elseif tMatched[5] == 'SJ:MAGIC' then					-- Equip if subjob can do magic
 					if gcinclude.settings.bSJ then
 						bMatch = gcinclude.BuildGear(tMatched);

@@ -60,14 +60,19 @@ Neck
 	
 	-- User-Defined
 {'Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
+{'Uggalepih Pendant','MAB +8% if MPP <= 50%','Neck',70,'ALL','MP.LE.50P'},
+{'Uggalepih Pendant','MAB +8% if MPP <= 50% and WS Red Lotus Blade or Saanguine Blade','Neck',70,'ALL','MP.LE.50P.WS','Red Lotus Blade,Sanguine Blade'},
 {'Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},
 
 Earring
 -------
-{'Intruder Earring','Convert 40 MP to HP in areas not controlled by home nation','EAR',40,'ALL','NATION',false},
-{'Diabolos's Earring','-3 accuracy/+3 magic accuracy in dark weather','EAR',65,'ALL','WEATHER','Dark'},
-{'Vampire Earring','+4 STR/+4 VIT at nighttime','EAR',67,'WAR/PLD/DRK/BST/SAM/NIN','TIME','Nighttime'},
+{'Intruder Earring','Convert 40 MP to HP in areas not controlled by home nation','EARRING',40,'ALL','NATION',false},
+{'Diabolos's Earring','-3 accuracy/+3 magic accuracy in dark weather','EARRING',65,'ALL','WEATHER','Dark'},
+{'Vampire Earring','+4 STR/+4 VIT at nighttime','EARRING',67,'WAR/PLD/DRK/BST/SAM/NIN','TIME','Nighttime'},
 
+	-- User-Defined --
+{'Genin Earring','Equip if /nin','EARRING',30,'ALL','SJIS','NIN'},
+	
 Body
 ----
 {'Gaudy Harness','Adds refresh if MP < 50','Body',50,'BST','MP<50'},
