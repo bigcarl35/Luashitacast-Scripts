@@ -61,7 +61,6 @@ Neck
 	-- User-Defined
 {'Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
 {'Uggalepih Pendant','MAB +8% if MPP <= 50%','Neck',70,'ALL','MP.LE.50P'},
-{'Uggalepih Pendant','MAB +8% if MPP <= 50% and WS Red Lotus Blade or Saanguine Blade','Neck',70,'ALL','MP.LE.50P.WS','Red Lotus Blade,Sanguine Blade'},
 {'Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},
 
 Earring
