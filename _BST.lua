@@ -888,8 +888,10 @@ profile.sAmmo = nil;		-- BST specific. Name of ammo equipped
 --]]
 
 local function HandlePetAction(PetAction)
-	-- Only gear swap if this flag is true
-	if gcdisplay.GetToggle('GSwap') == false then
+	local pet = gData.GetPet();
+	
+	-- Only gear swap if this flag is true and the pet is a summoned pet
+	if gcdisplay.GetToggle('GSwap') == false or string.find(gcinclude.MagicSkill['Summoning'],pet.Name) ~= nil then
 		return;
 	end
 

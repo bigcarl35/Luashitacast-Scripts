@@ -270,11 +270,6 @@ local sets = {
 	},
 	['TP_No_Pet_Conditional'] = {
 	},
-	
-	['TP_Tank'] = {
-	},
-	['TP_Tank_Conditional'] = {
-	},
 		
 --[[
 	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
@@ -908,15 +903,32 @@ profile.sAmmo = nil;		-- /BST specific. Name of ammo equipped
 --]]
 
 local function HandlePetAction(Pet,PetAction)
+	local bSmn = false;
+	
+	Pet.Name = string.lower(Pet.Name);
+	if string.find(gcinclude.MagicSkill['Summoning'],Pet.Name) ~= nil then
+		bSmn = true;
+		
+		-- if the action is a BP: rage, print out what happened in party chat
+		if (profile.sPetAction == nil or profile.sPetAction ~= PetAction.Name) and gcdisplay.GetToggle('sBP') == true then
+			local sMsg;
+			if string.find(gcinclude.SmnBPRageList,PetAction.Name) ~= nil then
+				sMsg = '/p  Blood Pact [' .. Pet.Name .. ']:  ' .. PetAction.Name .. ' >> <t>.';
+			else
+				sMsg = '/echo [' .. Pet.Name .. ']: Blood Pact - ' .. PetAction.Name;
+			end
+			AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
+			profile.sPetAction = PetAction.Name;
+		end
+	end
 	
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
 	
-	-- Check to see if the pet is a smn's avatar or a /bst pet
-	Pet.Name = string.lower(Pet.Name);
-	if string.find(gcinclude.MagicSkill['Summoning'],Pet.Name) ~= nil then
+	if bSmn == true then
+		-- Check to see if the pet is a smn's avatar or a /bst pet
 		-- All SMN pet actions are blood pacts. Address accordingly
 		if (gcinclude.SmnSkill:contains(PetAction.Name)) then			-- summoning skill based blood pact?
 			gcinclude.MoveToCurrent(sets.SmnSkill,sets.CurrentGear);
@@ -924,7 +936,7 @@ local function HandlePetAction(Pet,PetAction)
 		elseif (gcinclude.SmnMagical:contains(PetAction.Name)) then		-- magical based blood pact?
 			gcinclude.MoveToCurrent(sets.SmnMagical,sets.CurrentGear);
 			gcinclude.ProcessConditional(sets.SmnMagical_Conditional,nil,sets.CurrentGear);			
-				-- If /acc flagged, load accuracy set (for magical accuracy)
+			-- If /acc flagged, load accuracy set (for magical accuracy)
 			if gcdisplay.GetToggle('Acc') == true then
 				gcinclude.MoveToCurrent(sets.SmnAccuracy,sets.CurrentGear);
 				gcinclude.ProcessConditional(sets.SmnAccuracy_Conditional,nil,sets.CurrentGear);				
@@ -943,20 +955,8 @@ local function HandlePetAction(Pet,PetAction)
 			gcinclude.ProcessConditional(sets.SmnPhysical_Conditional,nil,sets.CurrentGear);			
 			if gcdisplay.GetToggle('Acc') == true then
 				gcinclude.MoveToCurrent(sets.SmnAccuracy,sets.CurrentGear);
-				gcinclude.ProcessConditional(sets.SmnAccuracy_Conditional,nil,sets.CurrentGear);				
+				gcinclude.ProcessConditional(sets.SmnAccuracy_Conditional,nil,sets.CurrentGear);
 			end
-		end
-
-		-- if the action just done is a BP: rage, print out what happened in party chat
-		if (profile.sPetAction == nil or profile.sPetAction ~= PetAction.Name) and gcdisplay.GetToggle('sBP') == true then
-			local sMsg;
-			if string.find(gcinclude.SmnBPRageList,PetAction.Name) ~= nil then
-				sMsg = '/p  Blood Pact [' .. Pet.Name .. ']:  ' .. PetAction.Name .. ' >> <t>.';
-			else
-				sMsg = '/echo [' .. Pet.Name .. ']: Blood Pact - ' .. PetAction.Name;
-			end
-			AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
-			profile.sPetAction = PetAction.Name;
 		end
 	else
 		-- Must be a /BST charmed pet.
@@ -1127,19 +1127,16 @@ profile.HandleDefault = function()
 		local pName = string.lower(pet.Name);
 		local pEle = gcinclude.SummonStaves[pName];
 
-		if eWeap ~= nil and (eWeap ~= gcinclude.elemental_staves[pEle][1] or eWeap ~= gcinclude.elemental_staves[pEle][3]) then
-			gcinclude.SwapToStave(pEle,true,sets.CurrentGear);
+		if string.find(gcinclude.MagicSkill['Summoning'],pet.Name) ~= nil then
+			if eWeap ~= nil and (eWeap ~= gcinclude.elemental_staves[pEle][1] or eWeap ~= gcinclude.elemental_staves[pEle][3]) then
+				gcinclude.SwapToStave(pEle,true,sets.CurrentGear);
+			end
 		end
 	end
 	
 	-- The default set is the TP gear set. Load it up
 	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
 	gcinclude.ProcessConditional(sets.TP_Conditional,nil,sets.CurrentGear);
-	
-	if gcdisplay.GetToggle('Tank') == true then
-		gcinclude.MoveToCurrent(sets.TP_Tank,sets.CurrentGear);
-		gcinclude.ProcessConditional(sets.TP_Tank_Conditional,nil,sets.CurrentGear);	
-	end
 	
 	if pet == nil then
 		gcinclude.MoveToCurrent(sets.TP_No_Pet,sets.CurrentGear);
