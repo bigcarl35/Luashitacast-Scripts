@@ -200,7 +200,17 @@ local sets = {
     },
 	['Macc_Conditional'] = {
 	},
-		
+
+--[[
+	Magic Attack Bonus (MAB) is used for more than just spells, so it is broken out
+--]]
+
+	['MAB'] = {
+	},
+	['MAB_Conditional'] = {
+		{'Uggalepih Pendant','MAB +8% if MPP <= 50%','Neck',70,'ALL','MP.LE.50P'},
+	},
+	
 --[[
 	Preshot is the first stage of when a ranged shot is being performed. This is where you place any 
 	Ranged Accuracy or Ranged Attack Speed gear. 
@@ -236,8 +246,8 @@ local sets = {
 	},
 
 --[[
-	The second stage is Midcast. This is where you'll want to equip magic attack, magic attack 
-	bonus, or magic enhancing gear.
+	The second stage is Midcast. This is where you'll want to equip magic attack, or magic enhancing 
+	gear. (Magic Attack Bonus also happens here, but is broken out into it's own gear set. See MAB.)
 --]]	
 
 	['Midcast'] = {
@@ -1245,6 +1255,13 @@ profile.HandleMidcast = function()
 					gcinclude.MoveToCurrent(sets.Summoning,sets.CurrentGear);
 					gcinclude.ProcessConditional(sets.Summoning_Conditional,nil,sets.CurrentGear);
 				end
+				-- See if Magic Attack Bonus useful. Note: Spells like bio/dia initial damage is
+				-- affected by MAB, but not the tic. Not worth trying to support here. Also, Ninjitsu
+				-- is affected by Ninjitsu Magic Attack Bonus and not just Magic Bonus.
+				if string.find('Healing,Enfeebling,Enhancing,Ninjitsu,Summoning',mSet) == nil then
+					gcinclude.MoveToCurrent(sets.MAB,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.MAB_Conditional,nil,sets.CurrentGear);
+				end				
 			end
 		elseif cKey == 'E' then			--Magical accuracy
 			if gcdisplay.GetToggle('acc') == true then
@@ -1428,7 +1445,16 @@ profile.HandleWeaponskill = function()
 --]]	
 		end				
 	end
-	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited weaponskill set
+
+	-- Special case(s) for specific weapon skills go here
+	ws.Name = string.lower(ws.Name);
+	if string.find('red lotus blade,sanguine blade',ws.Name) ~= nil then
+		gcinclude.MoveToCurrent(sets.MAB,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.MAB_Conditional,nil,sets.CurrentGear);	
+	end
+
+	-- Equip the composited weaponskill set	
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end
 
 return profile;
