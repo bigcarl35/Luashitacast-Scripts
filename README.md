@@ -21,7 +21,7 @@ the default distance from 4.7 yalms to whatever you want.
 **/dt: [Physical|Magical|Breath]**: Defines type of damage taken gear to equip  
 **/kite**: Turns on/off equipping movement gear.  
 **/acc**: Turns on/off equipping accuracy gear. This includes both physical and magical.  
-**/eva**: Turns on/off equipping evasion gear.
+**/eva**: Turns on/off equipping evasion gear.  
 **/tank**: Turns on/off equipping TP tank gear.  
 **/wswap**: Turns on/off whether weapon swapping is permitted. Useful when casting spells.  
 **/region**: Swaps between *owned/not* owned indicating if player's nation controls the
