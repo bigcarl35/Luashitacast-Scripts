@@ -114,7 +114,7 @@ local sets = {
 	},
 	
 	-- Blood pacts go through a simulated process that mimics spell casting. The precast
-	-- happens when the blood page is invoked (either rage or ward), loading the 'BP'
+	-- happens when the blood pack is invoked (either rage or ward), loading the 'BP'
 	-- gear set. You want gear that has Blood Pact Ability Delay, Blood Pact Recast, and
 	-- avatar perpetuation cost abilities defined here. (Once summoning skill is working
 	-- on HorizonXI, that is also a desirable attribute.) The midcast happens when the
@@ -130,8 +130,8 @@ local sets = {
 	},
 	
 	--[[
-		Rage blood pacts are devided by type: physical, magical,summoning skill,accuracy, 
-		and hybrid. (Ward blood pacts do not have this type of distiction. Each blood pact 
+		Rage blood pacts are devided by type: physical, magical, summoning skill, accuracy, 
+		and hybrid. (Ward blood pacts do not have this type of distiction.) Each blood pact 
 		though is of a fixed type and can be looked up. The following gear sets named
 		SmnXXX where XXX is the type define the gear to be equipped when the blood pact
 		goes off. Look to the specific gear set type for what gear stats are wanted.
@@ -164,7 +164,7 @@ local sets = {
 	['SmnSkill'] = {
 	},
 	
-	-- Accuracy blood pact: pet accuracy, Pet magic accuracy
+	-- Accuracy blood pact: pet accuracy, pet magic accuracy
     ['SmnAccuracy'] = {
         Head = 'Shep. Bonnet',		-- +5 Pet Accuracy, +3 Pet Magic Accuracy
 		Ear2 = 'Beastly Earring',	-- +10 Pet Accuracy
@@ -233,7 +233,7 @@ local sets = {
 		not the player. If you insist on fighting, modify the TP set to be a hybrid of stats for your
 		avatar and stats that will help you. (Beyond skilling up a weapon I doubt you'll ever fight
 		on a summoner.) Please note that accuracy gear should go into the Accuracy set, magic accuracy/
-		attack 	gear goes in the Macc set, magical attack gear goes in the Matt set, and that evasion
+		attack gear goes in the Macc set, magical attack gear goes in the Matt set, and that evasion
 		gear should go into the Evasion set. If you want to make a TP set just for you (no pet), I 
 		suggest you make a custom gear set and use /gearset.
 --]]
@@ -330,7 +330,6 @@ local sets = {
 	['Midshot'] = {
     },
 	['Midshot_Conditional'] = {
-		{'Uggalepih Pendant','MAB +8% if MPP <= 50%','Neck',70,'ALL','MP.LE.50P'},
 	},
 	
 --[[
@@ -353,6 +352,7 @@ local sets = {
 --]]	
 
 	['Midcast'] = {
+		{'Uggalepih Pendant','MAB +8% if MPP <= 50%','Neck',70,'ALL','MP.LE.50P'},
 	},
 	['Midcast_Conditional'] = {
 	},
