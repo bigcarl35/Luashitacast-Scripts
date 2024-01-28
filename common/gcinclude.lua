@@ -1722,7 +1722,7 @@ function gcinclude.CheckCommonDebuffs()
 	local weakened = gData.GetBuffCount('Weakened');
 	local sleep = gData.GetBuffCount('Sleep');
 	local blind = gData.GetBuffCount('Blind');
-	local para = gData.GetBuffCount('Paralyzed');
+	local para = gData.GetBuffCount('Paralysis');
 	local doom = (gData.GetBuffCount('Doom'))+(gData.GetBuffCount('Bane'));
 	local shiningRuby = gData.GetBuffCount('Shining Ruby');
 
