@@ -207,6 +207,8 @@ gcinclude.WS_STRMND = 'Guillotine,Cross Reaper,Shining Blade,Seraph Blade,Swift 
 gcinclude.WS_STRMND_30_50 = 'Black Halo';
 gcinclude.WS_STRVIT = 'Calamity,Slice,Spinning Scythe,Vorpal Scythe,Howling Fist,Dragon Kick,Asuran Fists,Power Slash,Scourge,Shield Break,Armor Break,Weapon Break,Full Break,Steel Cyclone';
 gcinclude.WS_VIT = 'Shoulder Tackle,One Inch Punch,Final Heaven';
+gcinclude.WS_Skill = 'Starlight,Moonlight';
+gcinclude.WS_HP = 'Spirits Within';
 
 --[[
 	Define all weapon skills that are elemental in nature
@@ -1788,6 +1790,10 @@ function gcinclude.WsStat(ws_name,ws_default)
 		ws_stat = 'WS_STRVIT';
 	elseif string.find(ws_name,gcinclude.WS_VIT) ~= nil then
 		ws_stat = 'WS_VIT';
+	elseif string.find(ws_name,gcinclude.WS_Skill) ~= nil then
+		ws_stat = 'WS_Skill';
+	elseif string.find(ws_name,gcinclude.WS_HP) ~= nil then
+		ws_stat = 'WS_HP';
 	else
 		ws_stat = 'WS_' .. ws_default;
 	end

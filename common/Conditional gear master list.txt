@@ -22,6 +22,7 @@ Sub
 ---
 	-- User-Defined --
 {'Mrc.Cpt. Kukri','Equip if /nin or /dnc','Sub',30,'WAR/THF/DRK/RNG/COR/PUP/DNC','SJIS','NIN/DNC'},
+{'Tabarzin','Equip if /nin or /dnc','Sub',71,'WAR/DRK/BST/RUN','SJIS','NIN/DNC'},
 	
 Head
 ----
@@ -287,4 +288,4 @@ HPP|TPP.LE.		HP <= 50% and MP <= 50%	Two (one for each each percentage check, e.
 PET_NAME		Specific pet name		One (one or a / delimited list, e.g., Carbuncle)
 NOT_PET_NAME	Any pet except			One (one or a / delimited list, e.g., Ifrit/Ramuh)
 SJIS			Subjob is				One	(one or a / delimited list, e.g., THF/NIN) 
-SJISN			Subjob is not			One	(one or a / delimited list, e.g., THF/NIN) 
+SJISN			Subjob is not			One	(one or a / delimited list, e.g., THF/NIN)
