@@ -570,6 +570,37 @@ local sets = {
     },
 	['WS_MND_Conditional'] = {
 	},
+
+--[[
+		* Skill based *
+		
+		Club: Starlight,Moonlight
+--]]
+
+	['WS_Skill'] = {
+    },
+	['WS_Skill_Conditional'] = {
+	},
+
+--[[
+		* HP based *
+		
+		Sword: Spirits Within
+--]]
+
+	['WS_HP'] = {
+        Head = 'Beast Helm',				-- +15 HP
+        Ear1 = 'Ethereal Earring',			-- +15 HP
+        Ear2 = 'Physical Earring',			-- +25 HP
+        Body = 'Wonder Kaftan',				-- +36 HP
+        Hands = 'Wonder Mitts',				-- +12 HP
+        Ring1 = 'Toreador\'s Ring',			-- +10 HP
+        Waist = 'Powerful Rope',			-- +20 HP
+        Legs = 'Wonder Braccae',			-- +21 HP
+        Feet = 'Creek F Clomps',			-- +35 HP
+    },
+	['WS_HP_Conditional'] = {
+	},
 	
 --[[
 	Movement tends to be used for kiting. Emphasis should be placed on gear that increases movement speed, but you 
@@ -1315,6 +1346,12 @@ profile.HandleWeaponskill = function()
 			elseif sWS == 'WS_STRINT' then
 				gcinclude.MoveToCurrent(sets.WS_STRINT,sets.CurrentGear);
 				gcinclude.ProcessConditional(sets.WS_STRINT_Conditional,nil,sets.CurrentGear);
+			elseif sWS == 'WS_Skill' then
+				gcinclude.MoveToCurrent(sets.WS_Skill,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.WS_Skill_Conditional,nil,sets.CurrentGear);
+			elseif sWS == 'WS_HP' then
+				gcinclude.MoveToCurrent(sets.WS_HP,sets.CurrentGear);			
+				gcinclude.ProcessConditional(sets.WS_HP_Conditional,nil,sets.CurrentGear);
 			end
 		elseif cKey == 'B' then		-- elemental gorget	
 			if gcinclude.settings.bEleGorgets == false then

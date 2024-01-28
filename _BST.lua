@@ -99,6 +99,7 @@ local sets = {
         Ammo = 'S. Herbal Broth',
     },
 	['Start_Weapons_Conditional'] = {
+		{'Tabarzin','Equip if /nin or /dnc','Sub',71,'WAR/DRK/BST/RUN','SJIS','NIN/DNC'},
 	},
 
 --[[
@@ -143,7 +144,7 @@ local sets = {
 	['TP'] = {
         Head = 'Panther Mask',
         Neck = 'Peacock Amulet',
-        Ear1 = 'Coral Earring',
+        Ear1 = 'Ethereal Earring',
         Ear2 = 'Beastly Earring',
         Body = 'Narasimha\'s Vest',
         Hands = 'Thick Mufflers',
@@ -203,8 +204,9 @@ local sets = {
 
 	['Evasion'] = {
         Head = 'Optical Hat',					-- +10 eva
+		Ear1 = 'Ethereal Earring',				-- +5 eva
         Body = 'Narasimha\'s Vest',				-- +4 eva
-		Hands = 'Ogre Gloves',					-- Default gear is Thick Mufflers which have -2 eva
+		Hands = 'Battle Gloves',				-- +3 eva
         Legs = 'San. Trousers',					-- +2 eva
 		Feet = 'Bounding Boots',				-- Default gear is Thick Sollerets which have -2 eva
     },
@@ -218,6 +220,7 @@ local sets = {
 	['macc'] = {
 	},
 	['macc_Conditional'] = {
+		{'Tamas Ring','will equip if subjob can do magic','RING',30,'ALL','SJ:MAGIC'},
 	},
 	
 --[[
@@ -236,10 +239,10 @@ local sets = {
 --]]
 
 	['Preshot'] = {
-        Head = 'Optical Hat',
-		Neck = 'Peacock Amulet',
-        Ring1 = 'Jaeger Ring',
-        Back = 'Psilos Mantle',
+        Head = 'Optical Hat',			-- Ranged Accuracy +10
+		Neck = 'Peacock Amulet',		-- Ranged Accuracy +10
+        Ring1 = 'Jaeger Ring',			-- Ranged Accuracy +4
+        Back = 'Psilos Mantle',			-- Ranged Accuracy +1
     },
 	['Preshot_Conditional'] = {
 	},
@@ -250,7 +253,7 @@ local sets = {
 --]]
 
 	['Midshot'] = {
-        Back = 'Psilos Mantle',
+        Back = 'Psilos Mantle',			-- Ranged Attack +12
     },
 	['Midshot_Conditional'] = {
 	},
@@ -353,7 +356,6 @@ local sets = {
         Head = 'Beast helm',			-- +5 INT
         Ring1 = 'Tamas Ring',			-- +2~5 INT
         Ring2 = 'Windurstian Ring',		-- +1 INT
-		Waist = 'Mrc.Cpt. Belt',		-- +1 INT
         Feet = 'Mannequin Pumps',		-- +1 INT
     },
 	['INT_Conditional'] = {
@@ -444,8 +446,8 @@ local sets = {
 		Axe: Raging Axe,Smash Axe,Gale Axe,Avalanche Axe,Spinning Axe,Rampage,
 			 Mistral Axe,Decimation
 		Scythe: Slice,Spinning Scythe,Vorpal Scythe
-		Club: Starlight,Brainshaker,Moonlight,Skullbreaker,True Strike
-		Sword: Flat Blade,Circle Blade,Spirits Within,Vorpal Blade
+		Club: Brainshaker,Skullbreaker,True Strike
+		Sword: Flat Blade,Circle Blade,Vorpal Blade
 -]]
 	
 	['WS_STR'] = {
@@ -652,6 +654,37 @@ local sets = {
         Legs = 'Wonder Braccae',				-- +2 MND
     },
 	['WS_MND_Conditional'] = {
+	},
+
+--[[
+		* Skill based *
+		
+		Club: Starlight,Moonlight
+--]]
+
+	['WS_Skill'] = {
+    },
+	['WS_Skill_Conditional'] = {
+	},
+
+--[[
+		* HP based *
+		
+		Sword: Spirits Within
+--]]
+
+	['WS_HP'] = {
+        Head = 'Beast Helm',				-- +15 HP
+        Ear1 = 'Ethereal Earring',			-- +15 HP
+        Ear2 = 'Physical Earring',			-- +25 HP
+        Body = 'Wonder Kaftan',				-- +36 HP
+        Hands = 'Wonder Mitts',				-- +12 HP
+        Ring1 = 'Toreador\'s Ring',			-- +10 HP
+        Waist = 'Powerful Rope',			-- +20 HP
+        Legs = 'Wonder Braccae',			-- +21 HP
+        Feet = 'Creek F Clomps',			-- +35 HP
+    },
+	['WS_HP_Conditional'] = {
 	},
 	
 --[[
@@ -1659,6 +1692,12 @@ profile.HandleWeaponskill = function()
 			elseif sWS == 'WS_STRVIT' then
 				gcinclude.MoveToCurrent(sets.WS_STRVIT,sets.CurrentGear);
 				gcinclude.ProcessConditional(sets.WS_STRVIT_Conditional,nil,sets.CurrentGear);
+			elseif sWS == 'WS_Skill' then
+				gcinclude.MoveToCurrent(sets.WS_Skill,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.WS_Skill_Conditional,nil,sets.CurrentGear);
+			elseif sWS == 'WS_HP' then
+				gcinclude.MoveToCurrent(sets.WS_HP,sets.CurrentGear);			
+				gcinclude.ProcessConditional(sets.WS_HP_Conditional,nil,sets.CurrentGear);				
 			end
 		elseif cKey == 'B' then		-- elemental gorget	
 			if gcinclude.settings.bEleGorgets == false then

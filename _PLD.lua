@@ -675,6 +675,17 @@ local sets = {
 	},
 
 --[[
+		* Skill based *
+		
+		Club: Starlight,Moonlight
+--]]
+
+	['WS_Skill'] = {
+    },
+	['WS_Skill_Conditional'] = {
+	},
+
+--[[
 	Movement tends to be used for kiting. Emphasis should be placed on gear that increases movement speed, but you 
 	might also want gear that has evasion. The choice is yours.
 --]]
@@ -1459,6 +1470,9 @@ profile.HandleWeaponskill = function()
 			elseif sWS == 'WS_STRVIT' then
 				gcinclude.MoveToCurrent(sets.WS_STRVIT,sets.CurrentGear);
 				gcinclude.ProcessConditional(sets.WS_STRVIT_Conditional,nil,sets.CurrentGear);
+			elseif sWS == 'WS_Skill' then
+				gcinclude.MoveToCurrent(sets.WS_Skill,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.WS_Skill_Conditional,nil,sets.CurrentGear);
 			end
 		elseif cKey == 'B' then		-- elemental gorget	
 			if gcinclude.settings.bEleGorgets == false then

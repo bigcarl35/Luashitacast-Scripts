@@ -240,7 +240,7 @@ local sets = {
 
 	['TP'] = {
         Head = 'Shep. Bonnet',
-        Ear1 = 'Black Earring',				-- +4 MP
+        Ear1 = 'Bat Earring',				-- +5 MP
         Ear2 = 'Beastly Earring',			-- +5 MP, blinded: +15 evasion
         Body = 'Austere Robe',				-- avatar perpetuation cost -1, ability delay -3 
         Hands = 'Carbuncle Mitts',			-- +14 MP, 1/2 perpetuation cost for carbuncle
@@ -279,6 +279,7 @@ local sets = {
         Head = 'Shep. Bonnet',				-- Pet Accuracy +5
 		Body = 'Austere Robe',
 		Ear2 = 'Beastly Earring',			-- Pet Accuracy +10
+		Hands = 'Battle Gloves',			-- Accuracy +3
 		Ring1 = 'Toreador\'s Ring',			-- Accuracy +7
 		Ring2 = 'Jaeger ring',				-- Accuract +4
 		Waist = 'Life Belt',				-- Accuracy +10
@@ -294,6 +295,8 @@ local sets = {
 	['Evasion'] = {							-- This is player evasion
 		Head = 'Optical Hat',				-- Evasion +10
 		Body = 'Austere Robe',
+		Hands = 'Battle Gloves',			-- Evasion +3
+		Legs = 'Shep. Hose',				-- Pet Evasion +3
 		Neck = 'Spirit Torque',				-- Evasion +5
     },
 	['Evasion_Conditional'] = {
@@ -325,10 +328,11 @@ local sets = {
 --]]
 
 	['Preshot'] = {
-        Head = 'Optical Hat',
+        Head = 'Optical Hat',			-- Ranged Accuracy +10
+		Neck = 'Peacock Amulet',		-- Ranged Accuracy +10
 		Body = 'Austere Robe',
-        Ring1 = 'Jaeger Ring',
-    },
+        Ring1 = 'Jaeger Ring',			-- Ranged Accuracy +4
+		},
 	['Preshot_Conditional'] = {
 	},
 	
@@ -428,6 +432,7 @@ local sets = {
 		Head = 'Austere hat',			-- Summoning magic skill +2, blood pact ability delay -2
         -- Neck = 'Smn. Torque',		-- Summoning magic skill +7
 		Body = 'Austere Robe',			-- Avatar perpetuation cost -1, blood pact ability delay -3
+		Hands = 'Carbuncle Mitts',		-- Avatar perpetuation cost 50% for carbuncle
         Ring1 = 'Evoker\'s Ring',		-- Summoning magic skill +10, avatar perpetuation cost -1
     },
 	['Summoning_Conditional'] = {
@@ -536,7 +541,7 @@ local sets = {
 		* Strength based or just skill based *
 		
 		Staff: Heavy Swing,Shell Crusher,Full Swing
-		Club: Starlight,Brainshaker,Moonlight,Skullbreaker,True Strike
+		Club: Brainshaker,Skullbreaker,True Strike
 -]]
 	
 	['WS_STR'] = {
@@ -649,7 +654,7 @@ local sets = {
         Body = 'Mrc.Cpt. Doublet',			-- +1 DEX
         Hands = 'Seer\'s Mitts',			-- +1 INT
         Ring1 = 'Tamas Ring',				-- +2~5 INT
-        Ring2 = 'Windurstian Ring',			-- +1 INT
+        Ring2 = 'Balance Ring',				-- +2 DEX
         Waist = 'Mrc.Cpt. Belt',			-- +1 DEX, +1 INT
         Legs = 'Seer\'s Slacks',			-- +1 DEX
         Feet = 'Mannequin Pumps',			-- +1 INT
@@ -684,7 +689,7 @@ local sets = {
         Neck = 'Justice Badge',				-- +3 MND
         Body = 'Wonder Kaftan',				-- +1 MND
         Hands = 'Seer\'s Mitts',			-- +1 INT, +1 MND
-        Ring1 = 'Windurstian Ring',			-- +1 INT
+        Ring1 = 'Tranquility Ring',			-- +2 MND
         Ring2 = 'Tamas Ring',				-- +2~5 INT, +2~5 MND
         Waist = 'Mrc.Cpt. Belt',			-- +1 INT, +1 MND
         Legs = 'Wonder Braccae',			-- +2 MND
@@ -702,6 +707,7 @@ local sets = {
 	['WS_CHR'] = {
         Head = 'Entrancing Ribbon',			-- +2 CHR
         Neck = 'Flower Necklace',			-- +3 CHR
+		Ear2 = 'Beastly Earring',			-- +2 CHR
         Ring1 = 'Moon Ring',				-- +3 CHR
         Ring2 = 'Moon Ring',				-- +3 CHR
         Waist = 'Corsette',					-- +5 CHR
@@ -732,6 +738,17 @@ local sets = {
 	},
 	
 --[[
+		* Skill based *
+		
+		Club: Starlight,Moonlight
+--]]
+	
+	['WS_Skill'] = {
+    },
+	['WS_Skill_Conditional'] = {
+	},
+	
+--[[
 	Movement tends to be used for kiting. Emphasis should be placed on gear that increases movement speed, but you 
 	might also want gear that has evasion. The choice is yours.
 --]]
@@ -748,6 +765,7 @@ local sets = {
 --]]
 	-- BST ability, CHR gear.
 	['Charm'] = {
+		Head = 'Entrancing Ribbon',		-- +2 CHR
         Neck = 'Flower Necklace',		-- +3 CHR
         Ear2 = 'Beastly Earring',		-- +2 CHR
         Ring1 = 'Moon Ring',			-- +3 CHR
@@ -763,6 +781,7 @@ local sets = {
 	},
 	
 	['Pet_Macc'] = {					-- Pet's Magical Accuracy
+		Head = 'Shep. Bonnet',			-- pet's magical accuracy +3
 	},
 	['Pet_Macc_Conditional'] = {
 	},
@@ -793,11 +812,11 @@ local sets = {
 --]]
 
 	['CAP20'] = {
+        Main = 'Yew Wand',
         Ammo = 'Fortune Egg',
         Head = 'Silver Hairpin',
         Neck = 'Rep.Bronze Medal',
         Ear1 = 'Onyx Earring',
-        Ear2 = 'Onyx Earring',
         Body = 'Angler\'s Tunica',
         Hands = 'Carbuncle Mitts',
         Ring1 = 'Astral Ring',
@@ -1603,6 +1622,9 @@ profile.HandleWeaponskill = function()
 			elseif sWS == 'WS_STRINT' then
 				gcinclude.MoveToCurrent(sets.WS_STRINT,sets.CurrentGear);			
 				gcinclude.ProcessConditional(sets.WS_STRINT_Conditional,nil,sets.CurrentGear);
+			elseif sWS == 'WS_Skill' then
+				gcinclude.MoveToCurrent(sets.WS_Skill,sets.CurrentGear);			
+				gcinclude.ProcessConditional(sets.WS_Skill_Conditional,nil,sets.CurrentGear);
 			end
 		elseif cKey == 'B' then		-- elemental gorget	
 			if gcinclude.settings.bEleGorgets == false then
