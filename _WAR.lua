@@ -759,7 +759,7 @@ end
 --]]
 
 local function SetSubjobSet(chkSJ)
-	local subs = {['WAR'] = 0, ['MNK'] = 0, ['WHM'] = 0, ['BLM'] = 0, ['RDM'] = 0, ['THF'] = nil,
+	local subs = {['WAR'] = nil, ['MNK'] = 0, ['WHM'] = 1, ['BLM'] = 0, ['RDM'] = 0, ['THF'] = nil,
 				 ['PLD'] = 0, ['DRK'] = 0, ['BST'] = 0, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = 0,
 				 ['SAM'] = 0, ['NIN'] = 1, ['DRG'] = 0, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
 				 ['DNC'] = 0, ['SCH'] = 0, ['GEO'] = 0, ['RUN'] = 0};
@@ -1013,9 +1013,15 @@ profile.HandleAbility = function()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Now process the appropriate job ability. Start with abilities associated with WAR
-	if string.match(ability.Name, '...') then
-		gcinclude.MoveToCurrent(sets....,sets.CurrentGear);
-		gcinclude.ProcessConditional(gcinclude.sets...._Conditional,nil,sets.CurrentGear);
+	if string.match(ability.Name, 'Berserk') then
+		gcinclude.MoveToCurrent(sets.Berserk,sets.CurrentGear);
+		gcinclude.ProcessConditional(gcinclude.sets.Berserk_Conditional,nil,sets.CurrentGear);
+	elseif string.match(ability.Name, 'Warcry') then
+		gcinclude.MoveToCurrent(sets.Warcry,sets.CurrentGear);
+		gcinclude.ProcessConditional(gcinclude.sets.Warcry_Conditional,nil,sets.CurrentGear);		
+	elseif string.match(ability.Name, 'Aggressor') then
+		gcinclude.MoveToCurrent(sets.Aggressor,sets.CurrentGear);
+		gcinclude.ProcessConditional(gcinclude.sets.Aggressor_Conditional,nil,sets.CurrentGear);
 		
 	-- And now the subjob abilities
 	elseif string.contains(ability.Name, 'Charm') then			-- assumes /bst	

@@ -1273,6 +1273,12 @@ profile.HandleDefault = function()
 		gcinclude.CheckCommonDebuffs();
 	end
 	
+	if (pet ~= nil) then
+		pet.Name = string.lower(pet.Name);
+		local pEle = gcinclude.SummonStaves[pet.Name];
+		gcinclude.SwapToStave(pEle,false,sets.CurrentGear);
+	end
+	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set
 	
 	-- Lastly, update the display, just in case
