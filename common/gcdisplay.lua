@@ -20,6 +20,7 @@ local JobBar = T{['GSwap'] = {'ALL','MS'},
 				 ['Acc'] = {'ALL','MS'},
 				 ['Eva'] = {'ALL','MS'},
 				 ['Tank'] = {'-SMN','M'},
+				 ['Solo'] = {'ALL','MS'},
 				 ['WSwap'] = {'-SMN,BLM','M'},		-- Some jobs swap weapons all the time
 				 ['TH'] = {'THF','M'},				-- THF field, only valid if THF is main job
 				 ['AJug'] = {'BST','M'},			-- BST field, only valid if BST is main job
@@ -50,6 +51,7 @@ function gcdisplay.ShowHelp()
 	print(chat.header('Help'):append(chat.message('/wsdistance [#] --Toggles whether a distance check is done for non-ranged weaponskills and how far. Default TRUE at ' .. tostring(gcinclude.settings.WSdistance) .. ' yalms.')));
 	print(chat.header('Help'):append(chat.message('/dt --Indicates type of damage taken set should be used: Physical is assumed.')));
 	print(chat.header('Help'):append(chat.message('/kite --Equips defined movement set.')));
+	print(chat.header('Help'):append(chat.message('/solo --Indicates if in a party or soloing/duoing. Default is FALSE.')));
 	print(chat.header('Help'):append(chat.message('/wswap --Toggles whether weapons will be swapped as needed. Default is FALSE to preserve TP.')));
 	print(chat.header('Help'):append(chat.message('/eva --Toggles whether evasion set should be equipped or not. Default is FALSE.')));
 	print(chat.header('Help'):append(chat.message('/acc --Toggle whether accuracy gear should override melee/weapon skill gear. Default is FALSE')));

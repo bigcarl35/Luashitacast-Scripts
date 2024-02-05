@@ -154,7 +154,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','tank'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','tank','solo'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T {'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T {'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -873,6 +873,7 @@ function gcinclude.SetVariables()
 	gcdisplay.CreateToggle('Eva', false);
 	gcdisplay.CreateToggle('WSwap',false);
 	gcdisplay.CreateToggle('Tank',false);
+	gcdisplay.CreateToggle('Solo',false);
 	
 	-- Job specific toggles
 	if player.MainJob == 'THF' then
@@ -1618,6 +1619,10 @@ function gcinclude.HandleCommands(args)
 		gcdisplay.AdvanceToggle('Kite');
 		toggle = 'Kite Set';
 		status = gcdisplay.GetToggle('Kite');
+	elseif (args[1] == 'solo') then			-- Turns on/off whether movement gear is equipped
+		gcdisplay.AdvanceToggle('Solo');
+		toggle = 'Solo Set';
+		status = gcdisplay.GetToggle('Solo');		
 	elseif (args[1] == 'tank') then			-- Turns on/off whether tanking gear is equipped
 		if player.MainJob ~= 'SMN' then
 			gcdisplay.AdvanceToggle('Tank');
