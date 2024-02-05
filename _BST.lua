@@ -158,6 +158,11 @@ local sets = {
 	['TP_Conditional'] = {
 		{'Gaudy Harness','Adds refresh if MP < 50','Body',50,'BST','MP<50'},
 	},
+
+	['TP_Solo'] = {
+	},
+	['TP_Solo_Conditional'] = {
+	},
 	
 	['TP_Pet'] = {
         Head = 'Shep. Bonnet',
@@ -1200,7 +1205,11 @@ profile.HandleDefault = function()
 	-- The default set is the TP gear set. Load it up
 	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
 	gcinclude.ProcessConditional(sets.TP_Conditional,nil,sets.CurrentGear);	
-
+	if (gcdisplay.GetCycle('Solo') == true then
+		gcinclude.MoveToCurrent(sets.TP_Solo,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.TP_Solo_Conditional,nil,sets.CurrentGear);
+	end
+	
 	if gcdisplay.GetToggle('Tank') == true then
 		gcinclude.MoveToCurrent(sets.TP_Tank,sets.CurrentGear);
 		gcinclude.ProcessConditional(sets.TP_Tank_Conditional,nil,sets.CurrentGear);	
@@ -1344,7 +1353,7 @@ profile.HandleAbility = function()
 	end
 
 	-- Only gear swap if this flag is true
-	if gcdisplay.GetToggle('GSwap') == False then
+	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
 

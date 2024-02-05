@@ -256,6 +256,11 @@ local sets = {
 		{'Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},	
 	},
 	
+	['TP_Solo'] = {
+	},
+	['TP_Solo_Conditional'] = {
+	},
+	
 	['TP_With_Carbuncle'] = {
 		Body = 'Vermillion Cloak',				-- No head allowed, adds "refresh" effect
 		Hands = 'Carbuncle Mitts',				-- +14 MP, 1/2 perpetuation cost on carbuncle
@@ -1165,10 +1170,14 @@ profile.HandleDefault = function()
 	-- The default set is the TP gear set. Load it up
 	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
 	gcinclude.ProcessConditional(sets.TP_Conditional,nil,sets.CurrentGear);
+	if (gcdisplay.GetCycle('Solo') == true then
+		gcinclude.MoveToCurrent(sets.TP_Solo,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.TP_Solo_Conditional,nil,sets.CurrentGear);
+	end
 	
 	if pet == nil then
 		gcinclude.MoveToCurrent(sets.TP_No_Pet,sets.CurrentGear);
-		gcinclude.ProcessConditional(sets.TP_No_Pet_Conditional,nil,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.TP_No_Pet_Conditional,nil,sets.CurrentGear);	
 	end
 	-- Now process the pet/player statuses accordingly.
 	if (pet ~= nil and pet.Status == 'Engaged') or (player ~= nil and player.status == 'Engaged') then

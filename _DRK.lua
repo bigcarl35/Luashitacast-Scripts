@@ -151,6 +151,11 @@ local sets = {
 	['TP_Conditional'] = {
 	},
 
+	['TP_Solo'] = {
+	},
+	['TP_Solo_Conditional'] = {
+	},
+	
 	['TP_Pet'] = {
     },
 	['TP_Pet_Conditional'] = {
@@ -1007,6 +1012,10 @@ profile.HandleDefault = function()
 	-- The default set is the TP gear set. Load it up
 	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
 	gcinclude.ProcessConditional(sets.TP_Conditional,nil,sets.CurrentGear);
+	if (gcdisplay.GetCycle('Solo') == true then
+		gcinclude.MoveToCurrent(sets.TP_Solo,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.TP_Solo_Conditional,nil,sets.CurrentGear);
+	end
 	
 	if gcdisplay.GetToggle('Tank') == true then
 		gcinclude.MoveToCurrent(sets.TP_Tank,sets.CurrentGear);

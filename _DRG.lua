@@ -100,7 +100,7 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-        Main = 'Platoon Lance',
+        Main = 'Lance',
         Ammo = 'Happy Egg',
     },
 	['Start_Weapons_Conditional'] = {
@@ -148,20 +148,26 @@ local sets = {
 
 	['TP'] = {
         Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
+        Neck = 'Peacock Amulet', --'Spike Necklace',
         Ear1 = 'Reraise Earring',
         Ear2 = 'Physical Earring',
-        Body = 'Beetle Harness',
+        Body = 'Wonder Kaftan', --'Mrc.Cpt. Doublet',
         Hands = 'Battle Gloves',
-        Ring1 = 'Bastokan Ring',
+        Ring1 = 'Jaeger Ring',
         Ring2 = 'Courage Ring',
+		Back = 'Ram Mantle',
         Waist = 'Warrior\'s Belt',
-        Legs = 'San. Trousers',
+        Legs = 'Wonder Braccae', --'Shep. Hose',
         Feet = 'Bounding Boots',
     },
 	['TP_Conditional'] = {
 	},
 
+	['TP_Solo'] = {
+	},
+	['TP_Solo_Conditional'] = {
+	},
+	
 	['TP_Pet'] = {
     },
 	['TP_Pet_Conditional'] = {
@@ -178,7 +184,11 @@ local sets = {
 --]]
 	
 	['Accuracy'] = {
+		Neck = 'Peacock Amulet',
+		Ring2 = 'Jaeger Ring',
         Hands = 'Battle Gloves',
+		Waist = 'Life Belt',
+		Feet = 'Chaos Sollerets',
     },
 	['Accuracy_Conditional'] = {
 	},
@@ -767,7 +777,7 @@ end
 --]]
 
 local function SetSubjobSet(chkSJ)
-	local subs = {['WAR'] = 1, ['MNK'] = 2, ['WHM'] = 3, ['BLM'] = 3, ['RDM'] = 3, ['THF'] = 4,
+	local subs = {['WAR'] = 1, ['MNK'] = 2, ['WHM'] = 1, ['BLM'] = 3, ['RDM'] = 3, ['THF'] = 4,
 				 ['PLD'] = 1, ['DRK'] = 0, ['BST'] = 4, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = 4,
 				 ['SAM'] = 1, ['NIN'] = 1, ['DRG'] = nil, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
 				 ['DNC'] = 0, ['SCH'] = 0, ['GEO'] = 0, ['RUN'] = 0};
@@ -902,6 +912,10 @@ profile.HandleDefault = function()
 	-- The default set is the TP gear set. Load it up
 	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
 	gcinclude.ProcessConditional(sets.TP_Conditional,nil,sets.CurrentGear);
+	if (gcdisplay.GetCycle('Solo') == true then
+		gcinclude.MoveToCurrent(sets.TP_Solo,sets.CurrentGear);
+		gcinclude.ProcessConditional(sets.TP_Solo_Conditional,nil,sets.CurrentGear);
+	end
 	
 	if gcdisplay.GetToggle('Tank') == true then
 		gcinclude.MoveToCurrent(sets.TP_Tank,sets.CurrentGear);
