@@ -23,6 +23,7 @@ the default distance from 4.7 yalms to whatever you want.
 **/acc**: Turns on/off equipping accuracy gear. This includes both physical and magical.  
 **/eva**: Turns on/off equipping evasion gear.  
 **/tank**: Turns on/off equipping TP tank gear.  
+**/solo**: Turns on/off equipping Solo TP gear.  
 **/wswap**: Turns on/off whether weapon swapping is permitted. Useful when casting spells.  
 **/region**: Swaps between *owned/not* owned indicating if player's nation controls the
 area from the last conquest tally. Used with some conditional gear.  
