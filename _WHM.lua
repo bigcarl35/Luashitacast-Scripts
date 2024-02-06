@@ -1040,7 +1040,7 @@ profile.HandleDefault = function()
 	-- The default set is the TP gear set. Load it up
 	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
 	gcinclude.ProcessConditional(sets.TP_Conditional,nil,sets.CurrentGear);	
-	if (gcdisplay.GetCycle('Solo') == true then
+	if gcdisplay.GetCycle('Solo') == true then
 		gcinclude.MoveToCurrent(sets.TP_Solo,sets.CurrentGear);
 		gcinclude.ProcessConditional(sets.TP_Solo_Conditional,nil,sets.CurrentGear);
 	end
