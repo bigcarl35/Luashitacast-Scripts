@@ -154,7 +154,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','tank','solo'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','tank','solo','test'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T {'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T {'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -983,6 +983,29 @@ function gcinclude.BuildGear(tMasCond)
 end		-- gcinclude.BuildGear
 
 --[[
+	CheckPartyJob determines if the party has a member of the passed job.
+--]]
+
+function gcinclude.CheckPartyJob(jobs)
+	local pParty = AshitaCore:GetMemoryManager():GetParty();
+	local bFound = false;
+	 
+	jobs = string.upper(jobs);
+	 
+	for i=1,6,1 do
+		if (pParty:GetMemberIsActive(i - 1) == 1) then
+			-- Player found
+			local mainJob = pParty:GetMemberMainJob(i - 1);
+			local job = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", mainJob);
+			if string.find(jobs,job) ~= nil then
+				bFound = true;
+			end
+		end
+	end
+	return bFound;
+end
+
+--[[
 	CheckTime determines if the current server time is found in the passed name time range.
 	The following named time ranges are valid:
 	
@@ -1581,6 +1604,9 @@ function gcinclude.HandleCommands(args)
 		gcdisplay.AdvanceToggle('GSwap');
 		toggle = 'Gear Swap';
 		status = gcdisplay.GetToggle('GSwap');
+	elseif args[1] == 'test' then
+		local bTest = gcinclude.CheckPartyJob(args[2]);
+		print(chat.header('Test'):append(chat.message('CheckPartyJob=' .. args[2] ..': ' ..tostring(bTest))));
     elseif args[1] == 'gcmessages' then		-- turns feedback on/off for all commands
 		gcinclude.settings.Messages = not gcinclude.settings.Messages;
 		if gcinclude.settings.Messages then
