@@ -144,7 +144,7 @@ gcinclude.settings = {
 	--
 	sCapped = false;	-- indicates if in a capped area/bcnm/etc
 	bCapped = false;	-- indicates if the capped process has occurred
-	iCapped = 0;		-- level determined by capped process
+	iCurrentLevel = 0;	-- indicates the current level (capped or otherwise)
 	priorityEngaged = 'BCEFGH'; 	-- indicates order of steps for engagement
 	priorityMidCast = 'ABCDEFGH';	-- indicates order of steps for spell midcast
 	priorityWeaponSkill = 'ABDE';	-- indicates order of steps for a weapon skill
@@ -184,7 +184,7 @@ gcinclude.NinNukes = T{'Katon: Ichi', 'Katon: Ni', 'Katon: San', 'Hyoton: Ichi',
 gcinclude.Rolls = T{{'Fighter\'s Roll',5,9}, {'Monk\'s Roll',3,7}, {'Healer\'s Roll',3,7}, {'Corsair\'s Roll',5,9}, {'Ninja Roll',4,8},{'Hunter\'s Roll',4,8}, {'Chaos Roll',4,8}, {'Magus\'s Roll',2,6}, {'Drachen Roll',4,8}, {'Choral Roll',2,6},{'Beast Roll',4,8}, {'Samurai Roll',2,6}, {'Evoker\'s Roll',5,9}, {'Rogue\'s Roll',5,9}, {'Warlock\'s Roll',4,8},
 	{'Puppet Roll',3,7}, {'Gallant\'s Roll',3,7}, {'Wizard\'s Roll',5,9}, {'Dancer\'s Roll',3,7}, {'Scholar\'s Roll',2,6},{'Naturalist\'s Roll',3,7}, {'Runeist\'s Roll',4,8}, {'Bolter\'s Roll',3,9}, {'Caster\'s Roll',2,7}, {'Courser\'s Roll',3,9},{'Blitzer\'s Roll',4,9}, {'Tactician\'s Roll',5,8}, {'Allies\' Roll',3,10}, {'Miser\'s Roll',5,7},
 	{'Companion\'s Roll',2,10},{'Avenger\'s Roll',4,8},}; -- {name,lucky,unlucky}
-gcinclude.Crafting_Types = 'AL,BN,CL,CO,GS,LT,SM,WW';
+gcinclude.Crafting_Types = 'ALC,BON,CTH,COOK,GSM,LTH,SMT,WW';
 gcinclude.Gathering_Types = 'HELM,DIG,CLAM';
 --[[
 	The following define all the weaponskills according to the desired stats
@@ -249,6 +249,7 @@ gcinclude.OBI = 'obi';
 gcinclude.aketon = {['Sandy'] = {'Kingdom Aketon',false}, ['Windy'] = {'Federation Aketon',false}, 
 					['Bastok'] = {'Republic Aketon',false},['Omni'] = {'Ducal Aketon',false}};
 gcinclude.sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,SCH,GEO,RUN';
+gcinclude.sVisibleGear = 'Main,Sub,Head,Body,Hands,Legs,Feet';
 
 -- Below indicates all the staves you own. (The settings are programmatically determined.)
 gcinclude.elemental_staves = T{['fire'] = {'Fire staff',false,'Vulcan\'s staff',false},
@@ -354,6 +355,7 @@ gcinclude.TieredIndices = T {['SN'] = 1, ['ID'] = 2, ['RT'] = 3, ['TI'] = 4, ['M
 							 ['RUN'] = 14 , ['NIN'] = 15};
 gcinclude.TieredSongIndices = T {['SN'] = 1, ['ID'] = 2, ['RT'] = 3, ['TI'] = 4, ['BUF'] = 5};						 
 gcinclude.TieredMagicJobs = 'WHM,RDM,PLD,SCH,BLM,DRK,BRD,GEO,RUN,NIN';
+gcinclude.GearWarnings = '';
 
 gcinclude.TieredMagic = T {
 	{'Cure',1,'cure',1,8,1,3,5,5,nil,nil,nil,nil,nil,nil},
@@ -610,7 +612,10 @@ gcinclude.equipIt = {
 };
 
 -- This is the list of storage containers that can be equipped from outside of a moghouse
-gcinclude.EQUIPABLE = {gcinclude.STORAGES[1],gcinclude.STORAGES[9],gcinclude.STORAGES[11],gcinclude.STORAGES[16]};
+gcinclude.EQUIPABLE = {gcinclude.STORAGES[1],		-- Inventory
+					   gcinclude.STORAGES[9],		-- Wardrobe
+					   gcinclude.STORAGES[11],		-- Wardrobe 2
+					   gcinclude.STORAGES[17]};		-- Wardrobe 8
 
 -- Gear set for holding conditional gear that's equipable along with associated levels
 gcinclude.tGS = {Main=nil,Sub=nil,Range=nil,Ammo=nil,Head=nil,Neck=nil,Ear1=nil,Ear2=nil,Body=nil,Hands=nil,
@@ -895,7 +900,8 @@ end		-- gcinclude.SetVariables
 	isPetNamed determines if that passed pet has the passed name
 --]]
 
-function gcinclude.isPetNamed(sName,pet)
+function gcinclude.isPetNamed(sName)
+	local pet = gData.GetPet();
 
 	if pet == nil then
 		return false;
@@ -1054,7 +1060,7 @@ end		-- gcinclude.CheckTime
 function gcinclude.ProcessConditional(tTest,sType,tMaster)
 	local player = gData.GetPlayer();
 	local pMJ = player.MainJob;
-	local pLevel = player.MainJobSync;
+	local pLevel = gcinclude.settings.iCurrentLevel;
 	local timestamp = gData.GetTimestamp();
 	local environ = gData.GetEnvironment();
 	local zone = gData.GetEnvironment();
@@ -1200,7 +1206,17 @@ function gcinclude.ProcessConditional(tTest,sType,tMaster)
 					local s = string.upper(tMatched[6]);
 					if string.find(s,player.SubJob) == nil then
 						bMatch = gcinclude.BuildGear(tMatched,v);
-					end	
+					end
+				elseif tMatched[5] == 'PARTY:JOB' then		-- does party member have job
+					local s = string.upper(tMatched[6]);
+					if gcinclude.CheckPartyJob(s) == true then
+						bMatch = gcinclude.BuildGear(tMatched);
+					end
+				elseif tMatched[5] == 'WEAPON' then			-- load specific weapon
+					if (gcdisplay.GetToggle('WSwap') == true) 
+						or (gcinclude.settings.bSummoner == true) then
+						bMatch = gcinclude.BuildGear(tMatched);
+					end											
 				else
 					print(chat.header('ProcessConditional'):append(chat.message('Error: Unknown conditional: '.. tMatched[4])));
 				end
@@ -1232,18 +1248,121 @@ function gcinclude.ClearSet(gSet)
 end
 
 --[[
+	CheckInline checks for a simple conditional on the item passed into it.
+	Returned is whether the condition is met and the item's name (minus the
+	conditional.
+--]]
+
+function gcinclude.CheckInline(gear)
+	local iPos,suCode;
+	local sj = gData.GetPlayer().SubJob;
+	local pet = gData.GetPet();
+	
+	iPos = string.find(gear,'//');
+	if iPos ~= nil then
+		suCode = string.upper(string.sub(gear,iPos+2,-1));
+		sGear = string.sub(gear,1,iPos-1);
+		
+		if suCode == 'MSJ' then
+			return (string.find(gcinclude.sMagicJobs,sj) ~= nil),sGear;
+		elseif string.sub(suCode,1,2) == 'SJ' and string.len(suCode) == 5 then	-- //SJ"job"
+			return (string.sub(suCode,3,-1) == sj),sGear;
+		elseif suCode == 'CARBY' then
+			return (gcinclude.isPetNamed('Carbuncle')),sGear;
+		elseif suCode == 'BLIND' then
+			local blind = gData.GetBuffCount('Blind');
+			return (blind >= 1),sGear;
+		else
+			print(chat.header('CheckInline'):append(chat.message('Warning: Unknown code = ' .. suCode .. '. Ignoring piece of gear.')));
+			return false,sGear;
+		end
+	else
+		return true,gear;
+	end
+end
+
+--[[
 	MoveToCurrent copies the gear defined in the passed set to current master
-	set. Nothing is displayed, this is just a transfer routine.
+	set. Nothing is displayed, this is just a transfer routine. Note: Added
+	inline conditional check
 --]]
 
 function gcinclude.MoveToCurrent(tSet,tMaster)
+	local item = {};
+	local root,sK,vRoot,vConditional;
+	local bContinue,iNum,bGood;
 
 	if tSet == nil then
 		return;
 	end
 
+	-- Walk the gear set slots
 	for k,v in pairs(tSet) do
-		tMaster[k] = v;
+		bContinue = false;
+		sK = string.lower(k);
+		
+		-- Check for special case, Ears or Rings
+		if string.find('ears,rings',sK) ~= nil then
+			root = string.sub(k,1,-2);
+			iNum = 1;
+			bContinue = true;
+		end
+		
+		-- If definition is a table, then multiple pieces identified. Determine
+		-- appropriate one to use.
+		
+		if type(v) == 'table' then
+			iNum = 1;
+			-- Walk list of items and equip level appropriate one
+			for kk,vv in pairs(v) do
+				-- See if there's an inline conditional to be checked
+				bGood,vRoot = gcinclude.CheckInline(vv);
+			
+				if bGood then
+					item = AshitaCore:GetResourceManager():GetItemByName(vRoot,2);
+
+					if item == nil then
+						if string.find(gcinclude.GearWarnings,vv) == nil then
+							print(chat.header('MoveToCurrent'):append(chat.message('Warning: ' .. vv .. ' not a valid piece of gear. Ignoring.')));
+							gcinclude.GearWarnings = gcinclude.GearWarnings .. vv .. ',';
+						end
+					else
+						-- Check level of item vs level of player
+						if item.Level <= gcinclude.settings.iCurrentLevel then
+							-- Either an actual or a pseudo slot name: Ears or Rings. 
+							-- Build slot name and equip item there. Bump counter for 
+							--next of pair
+							if bContinue then
+								sK = root .. tostring(iNum);
+								tMaster[sK] = vRoot;
+								iNum = iNum + 1;
+							else
+								-- Normal single slot
+								tMaster[k] = vRoot;
+								break;
+							end
+						end
+						
+						-- When iNum > 2, all special slots of "root" populated
+						if iNum > 2 then
+							break;
+						end
+					end
+				end
+			end	
+		else
+			-- See if there's an inline conditional to be checked
+			bGood,vRoot = gcinclude.CheckInline(v);
+			if bGood then
+				-- No table, but specified as Ears or Rings
+				if bContinue then
+					sK = root .. tostring(iNum);
+					tMaster[sK] = vRoot;
+				else
+					tMaster[k] = vRoot;
+				end
+			end
+		end
 	end
 end
 
@@ -1274,7 +1393,7 @@ function gcinclude.MaxSong(root,bBack,bCast)
 	local player = gData.GetPlayer();
 	local sMain = player.MainJob;
 	local sSub = player.SubJob;
-	local MainLvl = player.MainJobSync;
+	local MainLvl = gcinclude.settings.iCurrentLevel;
 	local SubLvl = player.SubJobSync;
 	local mp = player.MP;
 	local iLvl;
@@ -1373,7 +1492,7 @@ function gcinclude.MaxSpell(root,bCast)
 	local player = gData.GetPlayer();
 	local sMain = player.MainJob;
 	local sSub = player.SubJob;
-	local MainLvl = player.MainJobSync;
+	local MainLvl = gcinclude.settings.iCurrentLevel;
 	local SubLvl = player.SubJobSync;
 	local mp = player.MP;
 
@@ -1526,7 +1645,10 @@ function gcinclude.SwapToStave(sStave,noSave,cs)
 		else
 			pos = 1;
 		end
-		cs['Main'] = gcinclude.elemental_staves[sStave][pos];
+		
+		if gcinclude.settings.iCurrentLevel >= 51 then
+			cs['Main'] = gcinclude.elemental_staves[sStave][pos];
+		end
 	end
 end		-- gcinclude.SwapToStave
 
@@ -1604,9 +1726,14 @@ function gcinclude.HandleCommands(args)
 		gcdisplay.AdvanceToggle('GSwap');
 		toggle = 'Gear Swap';
 		status = gcdisplay.GetToggle('GSwap');
+
 	elseif args[1] == 'test' then
-		local bTest = gcinclude.CheckPartyJob(args[2]);
-		print(chat.header('Test'):append(chat.message('CheckPartyJob=' .. args[2] ..': ' ..tostring(bTest))));
+		local item = AshitaCore:GetResourceManager():GetItemByName('Fenrir\'s Torque',2);	-- 2nd param is language
+		print(chat.header('Test'):append(chat.message(item.Name[2])));
+		print('Level = ' .. tostring(item.Level));
+		print('Slot = ' .. tostring(item.Slots));
+		print('Jobs = ' .. tostring(items.Jobs));
+		print(item.Description[2]);
     elseif args[1] == 'gcmessages' then		-- turns feedback on/off for all commands
 		gcinclude.settings.Messages = not gcinclude.settings.Messages;
 		if gcinclude.settings.Messages then

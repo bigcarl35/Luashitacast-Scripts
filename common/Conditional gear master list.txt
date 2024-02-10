@@ -26,10 +26,10 @@ Sub
 	
 Head
 ----
-{'Protective Spectacles','+1 Bonecraft skill','Head',1,'ALL','CRAFT','BN'},
-{'Magnifying Spectacles','+1 Clothcraft skill','Head',1,'ALL','CRAFT','CL'},
-{'Chef\'s Hat','+1 Cooking skill','Head',1,'ALL','CRAFT','CO'},
-{'Shaded Spectacles','+1 Goldsmithing skill','Head',1,'ALL','CRAFT','GS'},
+{'Protective Spectacles','+1 Bonecraft skill','Head',1,'ALL','CRAFT','BON'},
+{'Magnifying Spectacles','+1 Clothcraft skill','Head',1,'ALL','CRAFT','CTH'},
+{'Chef\'s Hat','+1 Cooking skill','Head',1,'ALL','CRAFT','COOK'},
+{'Shaded Spectacles','+1 Goldsmithing skill','Head',1,'ALL','CRAFT','GSM'},
 {'Horror Head','-50 emnity if full moon, darksday and nighttime','Head',1,'ALL','MOON:DAY:NIGHT','Full Moon','Darksday','Nighttime'},
 {'Horror Head II','+50 emnity if new moon, lightsday, and daytime','Head',1,'ALL','MOON:DAY:NIGHT','New Moon','Lightsday','Daytime'},
 {'Rubius Crown','+2 evasion on earthsday and windsday','Head',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday,Windsday'},
@@ -77,13 +77,13 @@ Body
 ----
 {'Gaudy Harness','Adds refresh if MP < 50','Body',50,'BST','MP<50'},
 {'Federation Aketon','Movement gain in home nation city','Body',1,'ALL','AKETON','Windy'},
-{'Alchemist\'s Apron','+1 Alchemy skill','Body',1,'ALL','CRAFT','AL'},
-{'Bonecrafter\'s Apron','+1 Bonecraft skill','Body',1,'ALL','CRAFT','BN'},
-{'Weaver\'s Apron','+1 Clothcraft skill','Body',1,'ALL','CRAFT','CL'},
-{'Culinarian\'s Apron','+1 Cooking skill','Body',1,'ALL','CRAFT','CO'},
-{'Goldsmith\'s Apron','+1 Goldsmithing skill','Body',1,'ALL','CRAFT','GS'},
-{'Tanner\'s Apron','+1 Leathercraft skill','Body',1,'ALL','CRAFT','LT},
-{'Blacksmith\'s Apron','+1 Smithing skill','Body',1,'ALL','CRAFT','SM'},
+{'Alchemist\'s Apron','+1 Alchemy skill','Body',1,'ALL','CRAFT','ALC'},
+{'Bonecrafter\'s Apron','+1 Bonecraft skill','Body',1,'ALL','CRAFT','BON'},
+{'Weaver\'s Apron','+1 Clothcraft skill','Body',1,'ALL','CRAFT','CTH'},
+{'Culinarian\'s Apron','+1 Cooking skill','Body',1,'ALL','CRAFT','COOK'},
+{'Goldsmith\'s Apron','+1 Goldsmithing skill','Body',1,'ALL','CRAFT','GSM'},
+{'Tanner\'s Apron','+1 Leathercraft skill','Body',1,'ALL','CRAFT','LTH'},
+{'Blacksmith\'s Apron','+1 Smithing skill','Body',1,'ALL','CRAFT','SMT'},
 {'Carpenter\'s Apron','+1 Woodworking skill','Body',1,'ALL','CRAFT','WW'},
 {'Field Tunica','Improves mining, logging and harvesting','Body',1,'ALL','GATHER','HELM'},
 {'Worker Tunica','Improves mining, logging and harvesting','Body',15,'ALL','GATHER','HELM'},
@@ -117,8 +117,8 @@ Body
 
 Hands
 -----
-{'Tanner\'s Gloves','+1 Leathercraft skill','Hands',1,'ALL','CRAFT','LT'},
-{'Smithy\'s Gloves','+1 Smithing skill','Hands',1,'ALL','CRAFT','SM'},
+{'Tanner\'s Gloves','+1 Leathercraft skill','Hands',1,'ALL','CRAFT','LTH'},
+{'Smithy\'s Gloves','+1 Smithing skill','Hands',1,'ALL','CRAFT','SMT'},
 {'Carpenter\'s Gloves','+1 Woodworking skill','Hands',1,'ALL','CRAFT','WW'},
 {'Field Gloves','Improves mining and logging','Hands',1,'ALL','GATHER','HELM'},
 {'Worker Gloves','Improves mining and logging','Hands',15,'ALL','GATHER','HELM},
@@ -176,13 +176,13 @@ Back
 
 Waist
 -----
-{'Alchemist\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','AL'},
-{'Bonecraft\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','BN'},
-{'Weaver\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','CL'},
-{'Culinarian\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','CO'},
-{'Goldsmith\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','GS'},
-{'Tanner\'s Belt','Advanced s-ynthesis image support enchantment','Waist',1,'ALL','CRAFT','LT'},
-{'Blacksmith\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','SM'},
+{'Alchemist\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','ALC'},
+{'Bonecraft\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','BON'},
+{'Weaver\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','CTH'},
+{'Culinarian\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','COOK'},
+{'Goldsmith\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','GSM'},
+{'Tanner\'s Belt','Advanced s-ynthesis image support enchantment','Waist',1,'ALL','CRAFT','LTH'},
+{'Blacksmith\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','SMT'},
 {'Carpenter\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','WW'},
 {'Royal Knight\'s Belt +1','+5 ranged attack in areas controlled by home nation','Waist',52,'WAR/RDM/THF/PLD/BST/BRD/RNG/SAM/NIN/DRG/BLU/COR/DNC/RUN','NATION',true},
 {'Royal Knight\'s Belt +2','+6 ranged attack in areas controlled by home nation','Waist',52,'WAR/RDM/THF/PLD/BST/BRD/RNG/SAM/NIN/DRG/BLU/COR/DNC/RUN','NATION',true},
@@ -271,7 +271,7 @@ something that's not on this list, please let me know.
 
 List of known keyword conditionals,	meaning, and how many pieces of data expected
 ---------------------------------------------------------------------------------
-CRAFT			Crafting piece			One (type of craft: AL,BN,CL,CO,GS,SM,LT,WW)
+CRAFT			Crafting piece			One (type of craft: ALC,BON,CTH,COOK,GSM,SMT,LTH,WW)
 GATHER			Gathering piece			One (type of gathering: HELM,DIG,CLAM)
 MOON			Moon phase				One (Full Moon, New Moon, etc)
 DAY				Week day				One (Firesday, Iceday, etc)
@@ -281,7 +281,7 @@ AKETON			Nation aketon			One (Windy, Sandy, Bastok)
 WEATHER			Weather					One (Clear, Clouds, Thunder, etc)
 MOON:DAY:NIGHT	Moon phase/day/time		Three (MOON, DAY, TIME), see above for details
 DAY|TIME		Days or time			One (List of days or "Daytime"/"Nighttime")
-MP<50			MP less than 50			None
+MP<50			MP less than 50			None (SJ must be magical)
 MP.LE.50P		MP <= 50%				None (Sees if your MP is below 50%)
 SJ:MAGIC		Magical subjob			None (Checks to see if your subjob is magical)
 HPP|TPP.LE.		HP <= 50% and MP <= 50%	Two (one for each each percentage check, e.g., 50,70)
@@ -289,3 +289,18 @@ PET_NAME		Specific pet name		One (one or a / delimited list, e.g., Carbuncle)
 NOT_PET_NAME	Any pet except			One (one or a / delimited list, e.g., Ifrit/Ramuh)
 SJIS			Subjob is				One	(one or a / delimited list, e.g., THF/NIN) 
 SJISN			Subjob is not			One	(one or a / delimited list, e.g., THF/NIN)
+PARTY:JOB		Player in part is job	One (one or a / delimited list, e.g., THF/NIN)
+WEAPON			Equips weapon			None (if /wswap on or a smn)
+
+Inline conditionals are simple codes attached to the piece of gear that require a check
+to occur before the piece is equipped. For example, this is a way to intersperse mp gear
+onto a physical job with a magical subjob. You denote an inline conditional with a "//"
+on the end of the piece of gear followed by the code. Please note that a key difference
+between an inline conditional and the separate "_Conditional" block is that the latter
+is always equpped if the condition is met whereas the former is equipped if the level
+is appropriate and then the condition is met.
+
+//MSJ		Equip if player's subjob is magical
+//SJ"job"	Equip if player's subjob is "job" (i.e., THF, NIN, etc)
+//CARBY		Equip if player has a pet and it is Carbuncle
+//BLIND		Equip if player blinded

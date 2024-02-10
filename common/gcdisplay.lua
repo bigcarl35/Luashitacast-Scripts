@@ -44,7 +44,6 @@ local fontSettings = T{
 	ShowHelp Displays help for all the commands across jobs
 --]]
 function gcdisplay.ShowHelp()
-	
 	print(chat.header('Help'):append(chat.message('The following commands are available to use from within Luashitacast. These are targetting either your specific job or are available across all jobs.\n')));
 	print(chat.header('Help'):append(chat.message('Commands for all jobs: ')));
 	print(chat.header('Help'):append(chat.message('/gswap --Toggles whether automatic gear swaps occur or not. Default is TRUE.')));
@@ -57,7 +56,7 @@ function gcdisplay.ShowHelp()
 	print(chat.header('Help'):append(chat.message('/acc --Toggle whether accuracy gear should override melee/weapon skill gear. Default is FALSE')));
 	print(chat.header('Help'):append(chat.message('/tank -- Toggles whether tanking TP gear set should be equipped. Default is FALSE.')));
 	print(chat.header('Help'):append(chat.message('/gearset name [on]--Will equip the named gear set and then disable GSwap unless optional parameter set to ON')));
-	print(chat.header('Help'):append(chat.message('          [AL|BN|CL|CO|GS|LT|SM|WW] --Equips the specified crafting gear.')));
+	print(chat.header('Help'):append(chat.message('          [ALC|BON|CTH|COOK|GSM|LTH|SMT|WW] --Equips the specified crafting gear.')));
 	print(chat.header('Help'):append(chat.message('          [HELM|DIG|CLAM|FISH] --Equips the specified gathering gear.')));
 	print(chat.header('Help'):append(chat.message('/region --Toggles whether the area you\'re adventuring in is controlled by your nation or not.')));
 	print(chat.header('Help'):append(chat.message('/maxspell name -- Determines the highest level spell your current jobs can cast that has the passed name')));
