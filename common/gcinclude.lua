@@ -158,6 +158,7 @@ gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nash
 gcinclude.Windy = T {'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T {'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
 gcinclude.Bastok = T {'Bastok Markets [S]','Bastok Mines','Bastok Markets','Port Bastok','Metalworks'};
+gcinclude.Jeuno = T {'Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno'};
 gcinclude.DistanceWS = T{'Flaming Arrow','Piercing Arrow','Dulling Arrow','Sidewinder','Blast Arrow','Arching Arrow','Empyreal Arrow','Refulgent Arrow','Apex Arrow','Namas Arrow','Jishnu\'s Randiance','Hot Shot','Split Shot','Sniper Shot','Slug Shot','Blast Shot','Heavy Shot','Detonator','Numbing Shot','Last Stand','Coronach','Wildfire','Trueflight','Leaden Salute','Myrkr','Dagan','Moonlight','Starlight','Mistral Axe'};
 gcinclude.BstPetAttack = T{'Foot Kick','Whirl Claws','Big Scissors','Tail Blow','Blockhead','Sensilla Blades','Tegmina Buffet','Lamb Chop','Sheep Charge','Pentapeck','Recoil Dive','Frogkick','Queasyshroom','Numbshroom','Shakeshroom','Nimble Snap','Cyclotail','Somersault','Tickling Tendrils','Sweeping Gouge','Grapple','Double Claw','Spinning Top','Suction','Tortoise Stomp','Power Attack','Rhino Attack','Razor Fang','Claw Cyclone','Crossthrash','Scythe Tail','Ripper Fang','Chomp Rush','Pecking Flurry','Sickle Slash','Mandibular Bite','Wing Slap','Beak Lunge','Head Butt','Wild Oats','Needle Shot','Disembowel','Extirpating Salvo','Mega Scissors','Back Heel','Hoof Volley','Fluid Toss','Fluid Spread'};
 gcinclude.BstPetMagicAttack = T{'Gloom Spray','Fireball','Acid Spray','Molting Plumage','Cursed Sphere','Nectarous Deluge','Charged Whisker','Nepenthic Plunge'};
@@ -1138,8 +1139,10 @@ function gcinclude.ProcessConditional(tTest,sType,tMaster)
 							and gcinclude.aketon['Sandy'][2] == true) or
 						(tMatched[6] == 'Bastok' and zone.Area ~= nil and gcinclude.Bastok:contains(zone.Area) and pNation == 1 
 							and gcinclude.aketon['Bastok'][2] == true) or
-						(tMatched[6] == 'Omni') and zone.Area ~= nil and (gcinclude.Windy:contains(zone.Area) or gcinclude.Sandy:contains(zone.Area) or 
-							gcinclude.Bastok:contains(zone.Area)) and gcinclude.aketon['Omni'][2] == true
+						(tMatched[6] == 'Omni') and zone.Area ~= nil and (gcinclude.Windy:contains(zone.Area) 
+							or gcinclude.Sandy:contains(zone.Area) 
+							or gcinclude.Bastok:contains(zone.Area) 
+							or gcinclude.Jeuno:contains(zone.Area)) and gcinclude.aketon['Omni'][2] == true
 					then
 						bMatch = gcinclude.BuildGear(tMatched);
 					end
@@ -1731,8 +1734,8 @@ function gcinclude.HandleCommands(args)
 		print(chat.header('Test'):append(chat.message(item.Name[2])));
 		print('Level = ' .. tostring(item.Level));
 		print('Slot = ' .. tostring(item.Slots));
-		print('Jobs = ' .. tostring(items.Jobs));
-		print(item.Description[2]);
+		print('Jobs = ' .. tostring(item.Jobs));
+		print(item.Description[1]);
     elseif args[1] == 'gcmessages' then		-- turns feedback on/off for all commands
 		gcinclude.settings.Messages = not gcinclude.settings.Messages;
 		if gcinclude.settings.Messages then
