@@ -1066,7 +1066,7 @@ profile.HandleDefault = function()
 			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
 			if cKey == 'C' then		-- Evasion
 				if gcdisplay.GetToggle('Eva') == true then
-					if pet ~= nil and pet.Status = 'Engaged' then
+					if pet ~= nil and pet.Status == 'Engaged' then
 						gcinclude.MoveToCurrent(sets.Pet_Evasion,sets.CurrentGear);
 						gcinclude.ProcessConditional(sets.Pet_Evasion_Conditional,nil,sets.CurrentGear);
 					else
@@ -1076,7 +1076,7 @@ profile.HandleDefault = function()
 				end
 			elseif cKey == 'E' then		-- Accuracy
 				if gcdisplay.GetToggle('Acc') == true then 
-					if pet ~= nil and pet.Status = 'Engaged' then
+					if pet ~= nil and pet.Status == 'Engaged' then
 						gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear);
 						gcinclude.ProcessConditional(sets.Pet_Accuracy_Conditional,nil,sets.CurrentGear);					
 					else
