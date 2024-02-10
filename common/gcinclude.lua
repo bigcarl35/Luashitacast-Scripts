@@ -27,8 +27,7 @@ gcinclude.sets = {
 	['Sleeping_Conditional'] = {
 	},
 	
-	['Blind'] = {					-- this will autoequip if you're blind
-		Ear2 = 'Bat Earring',		-- gain some evasion
+	['Blind'] = {					-- this will autoequip if you're blind. Note: bat earring found in job file under evasion w/inline condition
 	},
 	['Blind_Conditional'] = {
 	},
