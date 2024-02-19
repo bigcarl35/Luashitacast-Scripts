@@ -14,13 +14,15 @@ local MainLV = 0;
 local SubLV = 0;
 local Main = 'FOO';
 local Sub = 'BAR';
+local Locks = 'None';
+local Action = 'Idle';
 local JobBar = T{['GSwap'] = {'ALL','MS'},
 				 ['DT'] = {'ALL','MS'},
 				 ['Kite'] = {'ALL','MS'},
 				 ['Acc'] = {'ALL','MS'},
 				 ['Eva'] = {'ALL','MS'},
-				 ['Tank'] = {'-SMN','M'},
-				 ['Solo'] = {'ALL','MS'},
+				 ['Tank'] = {'-SMN,BST','M'},
+				 ['Solo'] = {'-SMN,BST','MS'},
 				 ['WSwap'] = {'-SMN,BLM','M'},		-- Some jobs swap weapons all the time
 				 ['TH'] = {'THF','M'},				-- THF field, only valid if THF is main job
 				 ['AJug'] = {'BST','M'},			-- BST field, only valid if BST is main job
@@ -30,7 +32,7 @@ local JobBar = T{['GSwap'] = {'ALL','MS'},
 local fontSettings = T{
 	visible = true,
 	font_family = 'Arial',
-	font_height = 12,
+	font_height = 14,
 	color = 0xFFFFFFFF,
 	position_x = 300,
 	position_y = 0,
@@ -217,6 +219,14 @@ function gcdisplay.GetCycle(name)
 	end
 end		-- gcdisplay.GetCycle
 
+function gcdisplay.SetLocksAction(sLList,sAction)
+
+	Locks = sLList;
+	if sAction ~= nil then
+		Action = sAction;
+	end
+end
+
 --[[
 	Unload removes the objects and commands created by the gcdisplay code
 --]]
@@ -286,6 +296,16 @@ function gcdisplay.Initialize()
 				display = display .. '  ' .. key .. ': ' .. '|cFF00FF00|' .. value.Array[value.Index] .. '|r';
 			end
 		end
+		
+		-- Locks
+		if Locks ~= 'None' then
+			display = display .. ' | Locks: ' .. '|cFF00FF00|' .. Locks .. '|r';
+		else
+			display = display .. ' | Locks: ' .. '|cFFFF0000|' .. Locks .. '|r';
+		end
+		
+		-- Current Action
+		display = display .. ' | Action: ' .. '|cFF00FF00|' .. Action .. '|r';
 		gcdisplay.FontObject.text = display;
 	end);
 end		-- gcdisplay.Initialize

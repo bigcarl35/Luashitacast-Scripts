@@ -54,7 +54,7 @@ gcinclude.sets = {
 --]]
 
 	['Town_Conditional'] = {
-		{'Federation Aketon','Movement gain in home nation city','Body',1,'ALL','AKETON','Windy'},
+		{'Republic Aketon','Movement gain in home nation city','Body',1,'ALL','AKETON','Bastok'},
 	},
 
 --[[
@@ -153,7 +153,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','tank','solo','test'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','tank','solo','test','lock','unlock','validate'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T {'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T {'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -250,6 +250,14 @@ gcinclude.aketon = {['Sandy'] = {'Kingdom Aketon',false}, ['Windy'] = {'Federati
 					['Bastok'] = {'Republic Aketon',false},['Omni'] = {'Ducal Aketon',false}};
 gcinclude.sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,SCH,GEO,RUN';
 gcinclude.sVisibleGear = 'Main,Sub,Head,Body,Hands,Legs,Feet';
+
+gcinclude.Locks = { [1] = {'main', false}, [2] = {'sub',false}, [3] = {'range',false}, 
+					[4] = {'ammo',false}, [5] = {'head',false}, [6] = {'neck',false},
+					[7] = {'ear1',false}, [8] = {'ear2',false}, [9] = {'body',false},
+					[10] = {'hands',false}, [11] = {'ring1',false}, [12] = {'ring2',false},
+					[13] = {'back',false}, [14] = {'waist', false}, [15] = {'legs',false}, 
+					[16] = {'feet',false}};
+gcinclude.LocksNumeric = 'None';
 
 -- Below indicates all the staves you own. (The settings are programmatically determined.)
 gcinclude.elemental_staves = T{['fire'] = {'Fire staff',false,'Vulcan\'s staff',false},
@@ -622,6 +630,7 @@ gcinclude.tGS = {Main=nil,Sub=nil,Range=nil,Ammo=nil,Head=nil,Neck=nil,Ear1=nil,
 				 Ring1=nil,Ring2=nil,Back=nil,Waist=nil,Legs=nil,Feet=nil};	-- Empty gearset for conditional gear
 gcinclude.tGSL = {Main=0,Sub=0,Range=0,Ammo=0,Head=0,Neck=0,Ear1=0,Ear2=0,Body=0,Hands=0,
 				  Ring1=0,Ring2=0,Back=0,Waist=0,Legs=0,Feet=0};			-- Empty gearset levels, for comparison
+gcinclude.Sets = gcinclude.sets;
 
 --[[
 	DB_ShowIt will display debug details about the type passed.
@@ -713,6 +722,54 @@ function gcinclude.ClearAlias()
 end		-- gcinclude.ClearAlias
 
 --[[
+	GetLockedList returns a comma delimited list or nil if all unlocked
+--]]
+
+function gcinclude.GetLockedList()
+	local sList = nil;
+
+	for i,j in ipairs(gcinclude.Locks) do
+		if j[2] == true then
+			if sList == nil then		
+				sList = gData.Constants.EquipSlotNames[gData.Constants.EquipSlotsLC[j[1]]];
+				gcinclude.LocksNumeric = tostring(i);
+			else	
+				sList = sList .. ', ' .. gData.Constants.EquipSlotNames[gData.Constants.EquipSlotsLC[j[1]]];
+				gcinclude.LocksNumeric = gcinclude.LocksNumeric .. ',' .. tostring(i);			
+			end
+		end
+	end
+	if sList == nil then
+		gcinclude.LocksNumeric = 'None';
+	end
+	return sList;
+end
+
+--[[
+	Unlock removes the specified (or all) the locked slots. Supported are either the
+	slot name or the slot number.
+--]]
+function gcinclude.LockUnlock(sType,sWhich)
+
+	sWhich = ',' .. string.lower(sWhich) .. ',';
+	for k,l in ipairs(gcinclude.Locks) do
+		local sk = ',' .. tostring(k) .. ',';
+		if (sWhich == ',all,') or (string.find(sWhich,l[1]) ~= nil) or (string.find(sWhich,sk) ~= nil) then
+			gcinclude.Locks[k][2] = (string.lower(sType) == 'lock');
+		end
+	end
+	
+	-- Special case for ears and rings
+	for i=1,16,1 do
+		if string.find(sWhich,'ears') and string.sub(gcinclude.Locks[i][1],1,-2) == 'ear' then
+			gcinclude.Locks[i][2] = (string.lower(sType) == 'lock');
+		elseif string.find(sWhich,'rings') and string.sub(gcinclude.Locks[i][1],1,-2) == 'ring' then
+			gcinclude.Locks[i][2] = (string.lower(sType) == 'lock');
+		end
+	end
+end
+
+--[[
 	CheckForAllNationalAketons determines if the player owns any of the national aketons
 --]]
 
@@ -728,7 +785,9 @@ function gcinclude.CheckForAllNationalAketons()
 	end
 	
 	iCnt = 0;
-	for _ in pairs(tStorage) do iCnt = iCnt + 1 end
+	for _ in pairs(tStorage) do 
+		iCnt = iCnt + 1;
+	end
 	
 	-- now, loop through the passed storage containers
 	for i = 1,iCnt,1 do
@@ -739,10 +798,10 @@ function gcinclude.CheckForAllNationalAketons()
 			local itemEntry = inventory:GetContainerItem(containerID, j);
 			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
                 local item = resources:GetItemById(itemEntry.Id);
-				local sIN = string.lower(item.Name[1])
+				local sIN = string.lower(item.Name[1]);		
 				iTmp = iTmp + 1;
 				b,c = string.find(sIN,'aketon');
-				if b ~= nil then
+				if b ~= nil then			
 					for k,_ in pairs(gcinclude.aketon) do
 						if sIN == string.lower(gcinclude.aketon[k][1]) then
 							gcinclude.aketon[k][2] = true;
@@ -1067,7 +1126,13 @@ function gcinclude.ProcessConditional(tTest,sType,tMaster)
 	local pet = gData.GetPet();
 	local sKey;
 	local tMatched = {};
-				  
+	local bCond;
+	
+	-- Check for a missing set. If so, exit routine
+	if tTest == nil then
+		return;
+	end
+	
 	-- clear out the holding table so no interference from a previous call
 	gcinclude.tGS = {nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil};
 	gcinclude.tGSL = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -1079,151 +1144,167 @@ function gcinclude.ProcessConditional(tTest,sType,tMaster)
 	end
 	
 	for k,v in ipairs(tTest) do
-		tMatched[1] = v[1];						-- Gear piece name
-		tMatched[2] = v[3];						-- Slot
-		tMatched[3] = v[4];						-- Level
-		tMatched[4] = string.upper(v[5]);		-- Job list
-		tMatched[5] = string.upper(v[6]);		-- Conditional code
-		-- What is filled in the next 3 statements depends on the conditional code
-		tMatched[6] = v[7];
-		tMatched[7] = v[8];
-		tMatched[8] = v[9];
+		bCond,tMatched[1] = gcinclude.CheckInline(v[1])
+		--tMatched[1] = v[1];						-- Gear piece name
+		if bCond == true then
+			tMatched[2] = v[3];						-- Slot
+			tMatched[3] = v[4];						-- Level
+			tMatched[4] = string.upper(v[5]);		-- Job list
+			tMatched[5] = string.upper(v[6]);		-- Conditional code
+			-- What is filled in the next 3 statements depends on the conditional code
+			tMatched[6] = v[7];
+			tMatched[7] = v[8];
+			tMatched[8] = v[9];
 
-		-- Make sure current job can use the gear	
-		if (string.find(tMatched[4],pMJ) ~= nil or tMatched[4] == 'ALL') then
-			-- Check that the gear minimum level isn't too high			
-			if tMatched[3] <= pLevel then
-				bMatch = false;	-- Indicator to track if there's a match
-				-- Now determine the type of condition and process
-				if tMatched[5] == 'CRAFT' then
-					sKey = string.upper(sType);
-					if sKey ~= nil and tMatched[6] == sKey then
-						bMatch = gcinclude.BuildGear(tMatched);
-					end
-				elseif tMatched[5] == 'GATHER' then	
-					sKey = string.upper(sType);
-					if sKey ~= nil and tMatched[6] == sKey then
-						bMatch = gcinclude.BuildGear(tMatched);
-					end
-				elseif tMatched[5] == 'MOON' then
-					if lower(environ.MoonPhase) == lower(tMatched[6]) then
-						bMatch = gcinclude.BuildGear(tMatched);
-					end
-				elseif tMatched[5] == 'DAY' then
-					if string.find(lower(v[6]),lower(environ.Day)) ~= nil then
-						bMatch = gcinclude.BuildGear(tMatched);
-					end
-				elseif tMatched[5] == 'TIME' then
-					if (gcinclude.CheckTime(timestamp.hour,tMatched[6],true)) then
-						bMatch = gcinclude.BuildGear(tMatched);
-					end
-				elseif tMatched[5] == 'NATION' then
-					bKey = (gcdisplay.GetCycle('Region') == 'Owned');
-					if (bKey and tMatched[6]) or (bKey == false and tMatched[6] == false) then
-						bMatch = gcinclude.BuildGear(tMatched);
-					end					
-				elseif tMatched[5] == 'AKETON' then
-					if gcinclude.settings.bAketon == false then		-- Make sure all nation aketon's are tracked.
-						gcinclude.CheckForAllNationalAketons();
-					end
+			-- Make sure current job can use the gear	
+			if (string.find(tMatched[4],pMJ) ~= nil or tMatched[4] == 'ALL') then
+				-- Check that the gear minimum level isn't too high			
+				if tMatched[3] <= pLevel then
+					bMatch = false;	-- Indicator to track if there's a match
+					-- Now determine the type of condition and process
+					if tMatched[5] == 'CRAFT' then
+						sKey = string.upper(sType);
+						if sKey ~= nil and tMatched[6] == sKey then
+							bMatch = gcinclude.BuildGear(tMatched);
+						end
+					elseif tMatched[5] == 'GATHER' then	
+						sKey = string.upper(sType);
+						if sKey ~= nil and tMatched[6] == sKey then
+							bMatch = gcinclude.BuildGear(tMatched);
+						end
+					elseif tMatched[5] == 'MOON' then
+						if lower(environ.MoonPhase) == lower(tMatched[6]) then
+							bMatch = gcinclude.BuildGear(tMatched);
+						end
+					elseif tMatched[5] == 'DAY' then
+						if string.find(lower(v[6]),lower(environ.Day)) ~= nil then
+							bMatch = gcinclude.BuildGear(tMatched);
+						end
+					elseif tMatched[5] == 'TIME' then
+						if (gcinclude.CheckTime(timestamp.hour,tMatched[6],true)) then
+							bMatch = gcinclude.BuildGear(tMatched);
+						end			
+					elseif tMatched[5] == 'AKETON' then
+						if gcinclude.settings.bAketon == false then		-- Make sure all nation aketon's are tracked.
+							gcinclude.CheckForAllNationalAketons();
+						end
 					
-					-- Checks for the nation of the aketon, whether the zone is in that nation, and if the player is 
-					-- from that nation (Sandy = 0, Bastok = 1, and Windy = 2). (player was not used to check nationality
-					-- since luashitacast does not carry the home nation setting that is found in AshitaCore. Alse, I found 
-					-- the nationality translations in campaign_nation.sql file that's part of AirSkyBoat Github source.)
-					local pNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation();
-					
-					if (tMatched[6] == 'Windy' and zone.Area ~= nil and gcinclude.Windy:contains(zone.Area) and pNation == 2 
-							and gcinclude.aketon['Windy'][2] == true) or
-						(tMatched[6] == 'Sandy' and zone.Area ~= nil and gcinclude.Sandy:contains(zone.Area) and pNation == 0 
-							and gcinclude.aketon['Sandy'][2] == true) or
-						(tMatched[6] == 'Bastok' and zone.Area ~= nil and gcinclude.Bastok:contains(zone.Area) and pNation == 1 
-							and gcinclude.aketon['Bastok'][2] == true) or
-						(tMatched[6] == 'Omni') and zone.Area ~= nil and (gcinclude.Windy:contains(zone.Area) 
-							or gcinclude.Sandy:contains(zone.Area) 
-							or gcinclude.Bastok:contains(zone.Area) 
-							or gcinclude.Jeuno:contains(zone.Area)) and gcinclude.aketon['Omni'][2] == true
-					then
-						bMatch = gcinclude.BuildGear(tMatched);
-					end
-				elseif tMatched[5] == 'WEATHER' then
-					if string.find(lower(tMatched[6]),lower(environ.RawWeather)) ~= nil then 
-						bMatch = gcinclude.BuildGear(tMatched);
-					end
-				elseif tMatched[5] == 'MOON:DAY:NIGHT' then
-					if tMatched[6] == environ.MoonPhase then
-						if tMatched[7] == environ.Day then
-							if gcinclude.CheckTime(timestamp.hour,tMatched[8],true) then
+						-- Checks for the nation of the aketon, whether the zone is in that nation, and if the player is 
+						-- from that nation (Sandy = 0, Bastok = 1, and Windy = 2). (player was not used to check nationality
+						-- since luashitacast does not carry the home nation setting that is found in AshitaCore. Alse, I found 
+						-- the nationality translations in campaign_nation.sql file that's part of AirSkyBoat Github source.)
+						local pNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation();				
+						if (tMatched[6] == 'Windy' 
+								and zone.Area ~= nil 
+								and gcinclude.Windy:contains(zone.Area) 
+								and pNation == 2 
+								and gcinclude.aketon['Windy'][2] == true) or
+							(tMatched[6] == 'Sandy' and zone.Area ~= nil 
+								and gcinclude.Sandy:contains(zone.Area) 
+								and pNation == 0 
+								and gcinclude.aketon['Sandy'][2] == true) or
+							(tMatched[6] == 'Bastok' 
+								and zone.Area ~= nil 
+								and gcinclude.Bastok:contains(zone.Area) 
+								and pNation == 1 
+								and gcinclude.aketon['Bastok'][2] == true) or
+							(tMatched[6] == 'Omni' 
+								and zone.Area ~= nil 
+								and ((gcinclude.Windy:contains(zone.Area) 
+								or gcinclude.Sandy:contains(zone.Area) 
+								or gcinclude.Bastok:contains(zone.Area) 
+								or gcinclude.Jeuno:contains(zone.Area)) 
+								and gcinclude.aketon['Omni'][2] == true))
+						then					
+							bMatch = gcinclude.BuildGear(tMatched);
+						end
+					elseif tMatched[5] == 'WEATHER' then
+						if string.find(lower(tMatched[6]),lower(environ.RawWeather)) ~= nil then 
+							bMatch = gcinclude.BuildGear(tMatched);
+						end
+					elseif tMatched[5] == 'MOON:DAY:NIGHT' then
+						if tMatched[6] == environ.MoonPhase then
+							if tMatched[7] == environ.Day then
+								if gcinclude.CheckTime(timestamp.hour,tMatched[8],true) then
+									bMatch = gcinclude.BuildGear(tMatched);
+								end
+							end
+						end
+					elseif tMatched[5] == 'DAY|TIME' then
+						local bDayOfWeek = (string.find(v[6],environ.Day) ~= nil);
+						local ts = timestamp.hour;
+						local bNight = gcinclude.CheckTime(ts,'Nighttime',false);
+						local bDay = gcinclude.CheckTime(ts,'Daytime',false);
+				
+						if bDayOfWeek or bNight or bDay then
+							bMatch = gcinclude.BuildGear(tMatched);
+						end		
+					elseif tMatched[5] == 'OWN' then						-- Equip if region controlled by player's nation
+						if gcdisplay.GetCycle('Region') == 'Owned' then
+							bMatch = gcinclude.BuildGear(tMatched);
+						end	
+					elseif tMatched[5] == 'Not_OWN' then					-- Equip if region not controlled by player's nation
+						if gcdisplay.GetCycle('Region') ~= 'Owned' then
+							bMatch = gcinclude.BuildGear(tMatched);
+						end	
+					elseif tMatched[5] == 'MSJ' then						-- Equip if magicaa subjob
+						if string.find(gcinclude.sMagicJobs,player.SubJob) then
+							bMatch = gcinclude.BuildGear(tMatched);
+						end
+					elseif tMatched[5] == 'MP.LT.50' then						-- Equip if mp < 50 and total mp >= 50 and can do magic		
+						if gcinclude.settings.bMagic and gcinclude.settings.b50 and player.MP < 50 then
+							bMatch = gcinclude.BuildGear(tMatched);
+						end
+					elseif tMatched[5] == 'MP.LE.50P' then					-- Equip if MP <= 50%
+						if player.MPP <= 50 then
+							bMatch = gcinclude.BuildGear(tMatched);
+						end
+					elseif tMatched[5] == 'HPP|TPP.LE.' then				-- HP% <= 'a' and TP <= 'b'
+						if player.HPP <= tMatched[6] and player.TP <= tMatched[7] then
+							bMatch = gcinclude.BuildGear(tMatched);
+						end
+					elseif tMatched[5] == 'PET_NAME' then
+						if pet ~= nil then
+							local s = string.lower(tMatched[6]);
+							local sp = string.lower(pet.Name);
+							if string.find(s,sp) ~= nil then
+								bMatch = gcinclude.BuildGear(tMatched);
+							end
+						end	
+					elseif tMatched[5] == 'NOT_PET_NAME' then
+						if pet ~= nil then
+							local s = string.lower(tMatched[6]);
+							local sp = string.lower(pet.Name);
+							if string.find(string.lower(s,sp)) == nil then
 								bMatch = gcinclude.BuildGear(tMatched);
 							end
 						end
-					end
-				elseif tMatched[5] == 'DAY|TIME' then
-					local bDayOfWeek = (string.find(v[6],environ.Day) ~= nil);
-					local ts = timestamp.hour;
-					local bNight = gcinclude.CheckTime(ts,'Nighttime',false);
-					local bDay = gcinclude.CheckTime(ts,'Daytime',false);
-				
-					if bDayOfWeek or bNight or bDay then
-						bMatch = gcinclude.BuildGear(tMatched);
-					end				
-				elseif tMatched[5] == 'MP<50' then						-- Equip if mp < 50 and total mp >= 50 and can do magic		
-					if gcinclude.settings.bMagic and gcinclude.settings.b50 and player.MP < 50 then
-						bMatch = gcinclude.BuildGear(tMatched);
-					end
-				elseif tMatched[5] == 'MP.LE.50P' then					-- Equip if MP <= 50%
-					if player.MPP <= 50 then
-						bMatch = gcinclude.BuildGear(tMatched);
-					end			
-				elseif tMatched[5] == 'SJ:MAGIC' then					-- Equip if subjob can do magic
-					if gcinclude.settings.bSJ then
-						bMatch = gcinclude.BuildGear(tMatched);
-					end
-				elseif tMatched[5] == 'HPP|TPP.LE.' then				-- HP% <= 'a' and TP <= 'b'
-					if player.HPP <= tMatched[6] and player.TP <= tMatched[7] then
-						bMatch = gcinclude.BuildGear(tMatched);
-					end
-				elseif tMatched[5] == 'PET_NAME' then
-					if pet ~= nil then
-						local s = string.lower(tMatched[6]);
-						local sp = string.lower(pet.Name);
-						if string.find(s,sp) ~= nil then
+					elseif tMatched[5] == 'SJIS' then		-- subjob is
+						local s = string.upper(tMatched[6]);
+						if string.find(s,player.SubJob) ~= nil then
+							bMatch = gcinclude.BuildGear(tMatched,v);
+						end						
+					elseif tMatched[5] == 'SJISN' then		-- subjob is not
+						local s = string.upper(tMatched[6]);
+						if string.find(s,player.SubJob) == nil then
+							bMatch = gcinclude.BuildGear(tMatched,v);
+						end
+					elseif tMatched[5] == 'PJIS' then		-- does party member have job
+						local s = string.upper(tMatched[6]);
+						if gcinclude.CheckPartyJob(s) == true then
 							bMatch = gcinclude.BuildGear(tMatched);
 						end
-					end	
-				elseif tMatched[5] == 'NOT_PET_NAME' then
-					if pet ~= nil then
-						local s = string.lower(tMatched[6]);
-						local sp = string.lower(pet.Name);
-						if string.find(string.lower(s,sp)) == nil then
+					elseif tMatched[5] == 'WEAPON' then			-- load specific weapon
+						if (gcdisplay.GetToggle('WSwap') == true) 
+							or (gcinclude.settings.bSummoner == true) then
 							bMatch = gcinclude.BuildGear(tMatched);
-						end
+						end											
+					else
+						print(chat.header('ProcessConditional'):append(chat.message('Error: Unknown conditional: '.. tMatched[4])));
 					end
-				elseif tMatched[5] == 'SJIS' then		-- subjob is
-					local s = string.upper(tMatched[6]);
-					if string.find(s,player.SubJob) ~= nil then
-						bMatch = gcinclude.BuildGear(tMatched);
-					end					
-				elseif tMatched[5] == 'SJISN' then		-- subjob is not
-					local s = string.upper(tMatched[6]);
-					if string.find(s,player.SubJob) == nil then
-						bMatch = gcinclude.BuildGear(tMatched,v);
+					if bMatch then
+						iPiece = iPiece + 1;	-- We have a piece since it processed fine
 					end
-				elseif tMatched[5] == 'PARTY:JOB' then		-- does party member have job
-					local s = string.upper(tMatched[6]);
-					if gcinclude.CheckPartyJob(s) == true then
-						bMatch = gcinclude.BuildGear(tMatched);
-					end
-				elseif tMatched[5] == 'WEAPON' then			-- load specific weapon
-					if (gcdisplay.GetToggle('WSwap') == true) 
-						or (gcinclude.settings.bSummoner == true) then
-						bMatch = gcinclude.BuildGear(tMatched);
-					end											
-				else
-					print(chat.header('ProcessConditional'):append(chat.message('Error: Unknown conditional: '.. tMatched[4])));
-				end
-				if bMatch then
-					iPiece = iPiece + 1;	-- We have a piece since it processed fine
 				end
 			end
 		end
@@ -1247,7 +1328,7 @@ function gcinclude.ClearSet(gSet)
 	for k,v in pairs(gData.Constants.EquipSlots) do
 		gSet[k] = '';
 	end
-end
+end		-- gcinclude.ClearSet
 
 --[[
 	CheckInline checks for a simple conditional on the item passed into it.
@@ -1257,23 +1338,45 @@ end
 
 function gcinclude.CheckInline(gear)
 	local iPos,suCode;
-	local sj = gData.GetPlayer().SubJob;
+	local player = gData.GetPlayer();
+	local sj = player.SubJob;
 	local pet = gData.GetPet();
+	
+	if gear == nil then
+		return false,gear;
+	end
 	
 	iPos = string.find(gear,'//');
 	if iPos ~= nil then
 		suCode = string.upper(string.sub(gear,iPos+2,-1));
 		sGear = string.sub(gear,1,iPos-1);
-		
+
 		if suCode == 'MSJ' then
-			return (string.find(gcinclude.sMagicJobs,sj) ~= nil),sGear;
+			return (string.find(gcinclude.sMagicJobs,sj) ~= nil),sGear;	
 		elseif string.sub(suCode,1,2) == 'SJ' and string.len(suCode) == 5 then	-- //SJ"job"
 			return (string.sub(suCode,3,-1) == sj),sGear;
+		elseif string.sub(suCode,1,2) == 'PJ' and string.len(suCode) == 5 then	-- //PJ"job"
+			local s string.sub(suCode,3,-1);
+			return (gcinclude.CheckPartyJob(s)),sGear;			
 		elseif suCode == 'CARBY' then
 			return (gcinclude.isPetNamed('Carbuncle')),sGear;
 		elseif suCode == 'BLIND' then
 			local blind = gData.GetBuffCount('Blind');
 			return (blind >= 1),sGear;
+		elseif suCode == 'OWN' then
+			return (gcdisplay.GetCycle('Region') == 'Owned'),sGear;
+		elseif suCode == 'NOT_OWN' then
+			return (gcdisplay.GetCycle('Region') ~= 'Owned'),sGear;
+		elseif suCode == 'MP.SUB.50P' then
+			return (player.MPP <= 50),sGear;
+		elseif suCode == 'WSWAP' then
+			return (gcdisplay.GetToggle('WSwap') == true),sGear;
+		elseif suCode == 'PET' then
+			return (pet ~= nil),sGear;
+		elseif suCode == 'PETF' then
+			return (pet ~= nil and pet.Status == 'Engaged'),sGear;
+		elseif suCode == 'PETFNPF' then
+			return (pet ~= nil and pet.Status == 'Engaged' and player.Status ~= 'Engaged'),sGear;
 		else
 			print(chat.header('CheckInline'):append(chat.message('Warning: Unknown code = ' .. suCode .. '. Ignoring piece of gear.')));
 			return false,sGear;
@@ -1281,7 +1384,7 @@ function gcinclude.CheckInline(gear)
 	else
 		return true,gear;
 	end
-end
+end		-- gcinclude.CheckInline
 
 --[[
 	MoveToCurrent copies the gear defined in the passed set to current master
@@ -1366,7 +1469,7 @@ function gcinclude.MoveToCurrent(tSet,tMaster)
 			end
 		end
 	end
-end
+end		-- gcinclude.MoveToCurrent
 
 --[[
 	EquipTheGear makes sure that the passed gear set doesn't have an item in a slot
@@ -1375,13 +1478,23 @@ end
 --]]
 
 function gcinclude.EquipTheGear(tSet)
-
+	local sSlot;
+	
+	-- First, deal with the v.cloak, make sure no head gear
 	if tSet['Body'] == 'Vermillion Cloak' then
 		tSet['Head'] = '';
 	end
 	
+	-- Now, clear out the locked slots
+	for i,j in pairs(gcinclude.Locks) do
+		if j[2] == true then
+			sSlot = gData.Constants.EquipSlotNames[gData.Constants.EquipSlotsLC[j[1]]];		
+			tSet[sSlot] = '';	
+		end
+	end
+
 	gFunc.ForceEquipSet(tSet);
-end
+end			-- gcinclude.EquipTheGear
 
 --[[
 	MaxSong determines what is the highest tier song that matches the passed root or buff name
@@ -1627,6 +1740,11 @@ function gcinclude.SwapToStave(sStave,noSave,cs)
 		eOff = ew['Sub'].Name;
 	end;
 
+	-- This is needed for a timing issue
+	if sStave == nil then
+		return;
+	end
+	
 	if ((gcdisplay.GetToggle('WSwap') == true or gcinclude.settings.bSummoner) and 
 		(gcinclude.elemental_staves[sStave][2] == true or gcinclude.elemental_staves[sStave][4] == true)) then
 
@@ -1648,7 +1766,7 @@ function gcinclude.SwapToStave(sStave,noSave,cs)
 			pos = 1;
 		end
 		
-		if gcinclude.settings.iCurrentLevel >= 51 then
+		if gcinclude.settings.iCurrentLevel >= 51 and gcinclude.Locks[1][2] == false then	-- Locks[1] is 'Main'
 			cs['Main'] = gcinclude.elemental_staves[sStave][pos];
 		end
 	end
@@ -1656,13 +1774,14 @@ end		-- gcinclude.SwapToStave
 
 --[[
 	EquipItem processes the passed arguments and equips the specified item (whether by coded entry or name)
-	into the appropriate equipment slot. Then turns /gswap off.
+	into the appropriate equipment slot. Then locks the appropriate slot
+	
+		/equipset code|"item name" slot
 --]]
 
 function gcinclude.EquipItem(args)
 	local iName = nil;
 	local iSlot = nil;
-	local iPtr = nil;
 		
 	if #args > 1 then
 		-- see if the item specified is a code	
@@ -1670,41 +1789,75 @@ function gcinclude.EquipItem(args)
 			if k == args[2] then
 				iName = v[1];
 				iSlot = v[2];
-				iPtr = 2;
 				break;
 			end
 		end
 
-		-- if it wasn't a code, the item should be explicitly identified
+		-- if it wasn't a code, the item should be explicitly identified and the slot
 		if iName == nil then
 			iName = args[2];
 			if #args > 2 then
+				if string.find('ears,rings',args[3]) ~= nil then
+					args[3] = string.sub(args[3],1,-2);
+				end
 				iSlot = args[3];
-				iPtr = 3;
 			else
-				print(chat.header('EquipIt'):append(chat.message('Error: incomplete /equipit command: /equipit code|name slot|#. Command ignored.')));
+				print(chat.header('EquipIt'):append(chat.message('Error: incomplete /equipit command: /equipit code|name slot. Command ignored.')));
 				return;
 			end
 		end
 
-		-- ring and ear need a slot appended to it. Either something specified or just assume "1"
+		-- ring and ear need a slot appended to it. Just assume "1"
 		if string.find('ring,ear',string.lower(iSlot)) ~= nil then
-			if iPtr ~= nil and #args > iPtr and string.find('1,2',args[iPtr+1]) ~= nil then
-				iSlot = iSlot .. args[iPtr+1];
-			else
-				iSlot = iSlot .. '1';
-			end
+			iSlot = iSlot .. '1';
 		end
 		
 		-- Make sure the slot is formatted right (assuming it's just a case issue)
 		iSlot = string.upper(string.sub(iSlot,1,1)) .. string.lower(string.sub(iSlot,2));
 		-- Now try and load the item
 		gFunc.ForceEquip(iSlot,iName);
-		gcdisplay.SetToggle('GSwap',false);
+		gcinclude.LockUnlock('lock',iSlot);
+		local sList = gcinclude.GetLockedList();
+		print(chat.message(iSlot .. ' has been locked'));
+		gcdisplay.SetLocksAction(gcinclude.LocksNumeric,nil);	
 	else
 		print(chat.header('EquipIt'):append(chat.message('Error: incomplete /equipit command: /equipit code|name slot|#. Command ignored.')));
 	end
 end		-- gcinclude.EquipItem
+
+--[[
+	GetTableByName returns the gear set that is associated with the set name passed to it.
+	It does this by walking the Sets (either gProfile.Sets or gcinclude.Sets)
+--]]
+
+function gcinclude.GetTableByName(sName)
+	local s,s2;
+	local sName2;
+	
+	sName2 = string.lower(sName);
+	s = string.find(sName2,'gcinclude');
+	if s == nil then
+		for k,l in pairs(gProfile.Sets) do
+			if string.lower(k) == sName2 then
+				return l,false;
+			end
+		end
+	else
+		s2 = string.sub(sName2,s+2,-1);
+	end
+	
+	if s2 == nil then
+		s2 = sName2;
+	end
+	
+	for k,l in pairs(gcinclude.Sets) do
+		if string.lower(k) == s2 then
+			return l,true;
+		end
+	end
+	
+	return nil,false;
+end
 
 --[[
 	HandleCommands processes any commands typed into luashitacast as defined in this file
@@ -1717,8 +1870,7 @@ function gcinclude.HandleCommands(args)
 	local player = gData.GetPlayer();
 	local toggle = nil;
 	local status = nil;
-	local sKey;
-	local sSet;
+	local sList, sKey, sSet;
 	
 	-- Clear out the local copy of current gear
 	gcinclude.ClearSet(gcinclude.sets.CurrentGear);
@@ -1813,14 +1965,37 @@ function gcinclude.HandleCommands(args)
 	elseif (args[1] == 'th') then			-- Turns on/off whether TH gear should be equipped
 		gcdisplay.AdvanceToggle('TH');
 		toggle = 'Treasure Hunter';
-		status = gcdisplay.GetToggle('TH');		
+		status = gcdisplay.GetToggle('TH');
+	elseif (args[1] == 'lock') then
+		if args[2] ~= nil then
+			gcinclude.LockUnlock('lock',args[2]);
+		end
+		sList = gcinclude.GetLockedList();	
+		if sList ~= nil then			
+			print(chat.message('The following slot(s) are locked: ' .. sList));
+		else
+			print(chat.message('All slots are unlocked'));
+		end
+		--gcdisplay.SetLocksAction(gcinclude.LocksNumeric,player.Status);
+	elseif (args[1] == 'unlock') then
+		if args[2] ~= nil then
+			gcinclude.LockUnlock('unlock',args[2]);
+			if string.lower(args[2]) == 'all' then
+				print(chat.message('All slots are unlocked'));
+			else
+				print(chat.message('\'' .. args[2] .. '\' have been unlocked'));
+			end
+		end
+		sList = gcinclude.GetLockedList();
+		--gcdisplay.SetLocksAction(gcinclude.LocksNumeric,player.Status);
 	elseif (args[1] == 'showit') then			-- Shows debug info for specified type: staff
 		gcinclude.DB_ShowIt(args[2]);
 	elseif (args[1] == 'gearset') then			-- Forces a gear set to be loaded and turns GSWAP off
 		if #args > 1 then
 			local sArg = string.upper(args[2]);
-			local sTemp = ',' .. gcinclude.Crafting_Types .. ',' ..gcinclude.Gathering_Types .. ',FISH,';
-			if string.find(sTemp,sArg) ~= nils then
+			local sTmp = ',' .. gcinclude.Crafting_Types .. ',';
+			local sTmp2 = ',' ..gcinclude.Gathering_Types .. ',FISH,';
+			if string.find(sTmp,sArg) ~= nil or string.find(sTmp2,sArg) ~= nil then
 				-- gather or crafting set
 				local sCraft = ',' .. gcinclude.Crafting_Types .. ',';
 				if string.find(sCraft,sArg) then
@@ -1837,15 +2012,18 @@ function gcinclude.HandleCommands(args)
 						gcinclude.ProcessConditional(gcinclude.sets.Gathering_Conditional,sArg,gcinclude.sets.CurrentGear);
 					end
 				end
-				gcinclude.EquipTheGear(gcinclude.sets.CurrentGear);
 			else
-				gFunc.ForceEquipSet(sArg);
+				local tTable,bInc = gcinclude.GetTableByName(sArg);	-- Change string to table
+				if tTable ~= nil then
+					gcinclude.MoveToCurrent(tTable,gcinclude.sets.CurrentGear);
+				else
+					print(chat.header('HandleCommands'):append(chat.message('Gear set not found: ' .. sName)));
+				end
 			end
-			if #args == 2 or string.lower(args[3]) ~= 'on' then
-				gcdisplay.SetToggle('GSwap',false);
-			else
-				gcdisplay.SetToggle('GSwap',true);			
-			end
+			
+			gcinclude.EquipTheGear(gcinclude.sets.CurrentGear);
+			
+			gcdisplay.SetToggle('GSwap',(not(#args == 2 or string.lower(args[3]) ~= 'on')));
 			toggle = 'Gear Swap';
 			status = gcdisplay.GetToggle('GSwap');
 		else
@@ -1865,6 +2043,9 @@ function gcinclude.HandleCommands(args)
 		gcdisplay.AdvanceCycle('Region');
 		toggle = 'Region';
 		status = gcdisplay.GetCycle('Region');
+	elseif (args[1] == 'validate') then
+		--gcinclude.ValidateGear(args[2]);
+		print(chat.message('Validate gear is not implemented yet'));
     end
 
 	if gcinclude.settings.Messages then
@@ -2394,9 +2575,14 @@ function gcinclude.doPetFood(action, sType)
 	end
 
 	if sName ~= nil then
-		gFunc.ForceEquip('Ammo', sName);
-		print(chat.header('doPetFood'):append(chat.message('Equipping: ' .. sName)));
-		return true;
+		if gcinclude.Locks[4][2] == false then
+			gFunc.ForceEquip('Ammo', sName);
+			print(chat.header('doPetFood'):append(chat.message('Equipping: ' .. sName)));
+			return true;
+		else
+			print(chat.header('doPetFood'):append(chat.message('Ammo slot locked. Unable to equip: ' .. sName)));
+			return false;
+		end
 	end				
 end		-- gcinclude.doPetFood
 

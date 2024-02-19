@@ -33,49 +33,31 @@ Head
 {'Horror Head','-50 emnity if full moon, darksday and nighttime','Head',1,'ALL','MOON:DAY:NIGHT','Full Moon','Darksday','Nighttime'},
 {'Horror Head II','+50 emnity if new moon, lightsday, and daytime','Head',1,'ALL','MOON:DAY:NIGHT','New Moon','Lightsday','Daytime'},
 {'Rubius Crown','+2 evasion on earthsday and windsday','Head',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday,Windsday'},
-{'Bastokan Circlet','+3 magic attack bonus in areas controlled by home nation','Head',34,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-{'Bastokan Visor','+5 HP/+5 MP in areas controlled by home nation','Head',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-{'Federation Headgear','+12 MP in areas controlled by home nation','Head',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-{'Kingdom Helm','+12 HP in area controlled by home nation','Head',34,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-{'Republic Circlet','+5 magic attack bonus in areas controlled by home nation','Head',34,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-{'Republic Visor','+10 MP in areas controlled by home nation','Head',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
 {'Rain Hat','adds regen in rainy weather','Head',41,'ALL','WEATHER','Water'},
-{'Iron Musketeer\'s Armet +1','+14 MP in areas controlled by home nation','Head',43,'WAR/PLD/DRK','NATION',true},
-{'Iron Musketeer\'s Armet +2','+16 MP in areas controlled by home nation','Head',43,'WAR/PLD/DRK','NATION',true},
-{'Tactician Magician\'s Hat +1','+3 INT/+3 MND in areas controlled by home nation','Head',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-{'Tactician Magician\'s Hat +2','+4 INT/+4 MND in areas controlled by home nation','Head',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
 {'Monsoon Jinpachi','+8 evasion in rainy weather','Head',53,'MNK/SAM/NIN','WEATHER','Water'},
 {'Mushroom Helm','adds regen on watersday and darksday','Head',62,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','DAY','Watersday,Darksday'},
 {'Presidential Hairpin','adds regen when in areas not controlled by home nation','Head',65,'MNK/WHM/RDM/THF/BST/BRD/NIN/DRG/DNC','NATION',true},
 
 Neck
 ----
-{'Ajase Beads','+3 accuracy/+3 attack in areas controlled by home nation','Neck',30,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
 {'Harakdr\'s Muffler','+5 store TP during ice weather','Neck',40,'ALL','WEATHER','Ice'},
-{'Grand Temple Knight\'s Collar','+7 defense/+5 accuracy/+5 attack in areas not controlled by home nation','Neck',65,'ALL','NATION',false},
-{'Republican Gold Medal','+50 MP in areas not controlled by home nation','Neck',65,'ALL','NATION',false},
-{'Windurstian Scarf','+7 defense/+15 HP/+7 evasion in areas not controlled by home nation','Neck',65,'ALL','NATION',false},
 {'Brisingamen','+5 to primary stats depending on day or HP/MP +10 depending on time','Neck',71,'ALL','DAY|TIME',nil}, -- replace nil with list of days and/or nighttime/daytime
 {'Brisingamen +1','+5 to primary stats depending on day or HP/MP +10 depending on time','Neck',71,'ALL','DAY|TIME',nil}, -- replace nil with list of days and/or nighttime/daytime
-{'Uggalepih Pendant','+8 magic attack bonus when MP <= 50%','Neck',70,'ALL','MP.LE.50P'},
+{'Uggalepih Pendant','+8 magic attack bonus when MP <= 50%','Neck',70,'ALL','MPP.LE.50P'},
 	
 	-- User-Defined
 {'Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
-{'Uggalepih Pendant','MAB +8% if MPP <= 50%','Neck',70,'ALL','MP.LE.50P'},
+{'Uggalepih Pendant','MAB +8% if MPP <= 50%','Neck',70,'ALL','MPP.LE.50P'},
 {'Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},
 
 Earring
 -------
-{'Intruder Earring','Convert 40 MP to HP in areas not controlled by home nation','EARRING',40,'ALL','NATION',false},
 {'Diabolos's Earring','-3 accuracy/+3 magic accuracy in dark weather','EARRING',65,'ALL','WEATHER','Dark'},
 {'Vampire Earring','+4 STR/+4 VIT at nighttime','EARRING',67,'WAR/PLD/DRK/BST/SAM/NIN','TIME','Nighttime'},
-
-	-- User-Defined --
-{'Genin Earring','Equip if /nin','EARRING',30,'ALL','SJIS','NIN'},
 	
 Body
 ----
-{'Gaudy Harness','Adds refresh if MP < 50','Body',50,'BST','MP<50'},
+{'Gaudy Harness','Adds refresh if MP < 50','Body',50,'BST','MP.LT.50'},
 {'Federation Aketon','Movement gain in home nation city','Body',1,'ALL','AKETON','Windy'},
 {'Alchemist\'s Apron','+1 Alchemy skill','Body',1,'ALL','CRAFT','ALC'},
 {'Bonecrafter\'s Apron','+1 Bonecraft skill','Body',1,'ALL','CRAFT','BON'},
@@ -93,26 +75,8 @@ Body
 {'Garish Tunic','+2 evasion on earthsday and windsday','Body',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday'},
 {'Mist Tunic','+2 evasion on earthsday','Body',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday'},
 {'Rubious Tunic','+2 evasion on earthsday and windsday','Body',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday,Windsday'},
-{'Bastokan Scale Mail','+3 evasion in areas controlled by home nation','Body',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-{'Federation Doublet','+2 CHR in areas controlled by home nation','Body',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COP/PUP/DNC/GEO/RUN','NATION',true},
-{'Republic Scale Mail','+4 evasion in areas controlled by home nation','Body',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-{'Windurstian Doublet','+1 CHR in areas controlled by home nation','Body',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-{'Combat Caster\'s Cloak +1','+4 evasion in areas controlled by home nation','Body',43,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/BLU/PUP/SCH/GEO/RUN','NATION',true},
-{'Combat Caster\'s Cloak +2','+6 evasion in areas controlled by home nation','Body',43,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/BLU/PUP/SCH/GEO/RUN','NATION',true},
-{'Iron Musketeer\'s Gambison +1','+6 defense in areas controlled by home nation','Body',43,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-{'Iron Musketeer\'s Gambison +2','+8 defense in areas controlled by home nation','Body',43,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-{'Royal Squire\'s Chainmail +1','+6 attack/6 ranged attack in areas controlled by home nation','Body',43,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-{'Royal Squire\'s Chainmail +2','+8 attack/8 ranged attack in areas controlled by home nation','Body',43,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-{'Royal Squire\'s Robe +1','+2 INT in areas controlled by home nation','Body',43,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-{'Iron Musketeer\'s Cuirass +1','+6 evasion in areas controlled by home nation','Body',52,'WAR/PLD/DRK','NATION',true},
-{'Iron Musketeer\'s Cuirass +2','+7 evasion in areas controlled by home nation','Body',52,'WAR/PLD/DRK','NATION',true},
-{'Royal Knight\'s Cloak +1','+3 AGI in areas controlled by home nation','Body',52,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/PUP/SCH/GEO/RUN','NATION',true},
-{'Royal Knight\'s Cloak +2','+4 AGI in areas controlled by home nation','Body',52,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/PUP/SCH/GEO/RUN','NATION',true},
-{'Tactician Magician\'s Coat +1','+18 MP in areas controlled by home nation','Body',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-{'Tactician Magician\'s Coat +2','+20 MP in areas controlled by home nation','Body',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
 {'Kingdom Aketon','Movement gain in home nation city','Body',1,'ALL','AKETON','Sandy'},
 {'Republic Aketon','Movement gain in home nation city','Body',1,'ALL','AKETON','Bastok'},
-{'Royal Squire\'s Robe +2','+3 INT in areas controlled by home nation','Body',43,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
 {'Ducal Aketon','Movement gain in all nation cities','Body',1,'ALL','AKETON','Omni'},
 
 Hands
@@ -124,38 +88,16 @@ Hands
 {'Worker Gloves','Improves mining and logging','Hands',15,'ALL','GATHER','HELM},
 {'Chocobo Gloves','Chocobo riding time +3 minutes','Hands',1,'ALL','GATHER','DIG'},
 {'Rider\'s Gloves','Chocobo riding time +3 minutes','Hands',15,'ALL','GATHER','DIG'},
-{'Bastokan Finger Gauntlets','+1 STR in areas controlled by home nation','Hands',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-{'Federation Gloves','+7 attack/7 ranged attack in areas controlled by home nation','Hands',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-{'Kingdom Mufflers','+12 MP in areas controlled by home nation','Hands',34,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-{'Republic Finger Gauntlets','+2 STR in areas controlled by home nation','Hands',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',tru},
-{'San d\'Orian Mufflers','+10 MP in areas controlled by home nation','Hands',34,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-{'Windurstian Gloves','+5 attack/5 ranged attack in areas controlled by home nation','Hands',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
 {'Sennight Bangles','+10 MP in areas controlled by home nation','Hands',36,'ALL','DAY','Firesday,Earthsday,Watersday,Windsday,Iceday,Lightningday'},
-{'Combat Caster\'s Mitts +1','+14 HP in areas controlled by home nation','Hands',43,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/BLU/PUP/SCH/GEO/RUN','NATION',true},
-{'Combat Caster\'s Mitts +2','+16 HP in areas controlled by home nation','Hands',43,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/BLU/PUP/SCH/GEO/RUN','NATION',true},
-{'Iron Musketeer\'s Gauntlets +1','+2 STR in areas controlled by home nation','Hands',43,'WAR/PLD/DRK','NATION',true},
-{'Iron Musketeer\'s Gauntlets +2','+3 STR in areas controlled by home nation','Hands',43,'WAR/PLD/DRK','NATION',true},
 {'Monsoon Tekko','+8 accuracy when raining','Hands',43,'MNK/SAM/NIN','WEATHER','Water'},
-{'Royal Knight\'s Mufflers +1','+5 ranged accuracy in areas controlled by home nation','Hands',52,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-{'Royal Knight\'s Mufflers +2','+6 ranged accuracy in areas controlled by home nation','Hands',52,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-{'Tactician Magician\'s Cuffs +1','+5 accuracy in areas controlled by home nation','Hands',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-{'Tactician Magician\'s Cuffs +2','+6 accuracy in areas controlled by home nation','Hands',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
 {'Hailstorm Tekko','+9 accuracy when raining','Hands',58,'MNK/SAM/NIN','WEATHER','Water'},
 {'Hailstorm Tekko +1','+10 accuracy when raining','Hands',58,'MNK/SAM/NIN','WEATHER','Water'},
 {'Sand Gloves','+7 evasion when sandstorm','Hands',58,'WAR/RDM/THF/PLD/DRK/BST/BRD/RNG/SAM/NIN/DRG','WEATHER','Earth'},
 {'Feronia\'s Bangles','adds regen during daytime','Hands',63,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','TIME','Daytime'},
 {'Garden Bangles','adds regen during daytime','Hands',63,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','TIME','Daytime'},
-{'Grand Temple Knight\'s Bangles','+2 AGI/7 evasion in areas not controlled by home nation','Hands',65,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',false},
-{'Grand Temple Knight\'s Gauntlets','+2 DEX/+10 parry skill in areas not controlled by home nation','Hands',65,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',false},
-{'Master Caster\'s Bracelets','+1 INT/1 MND/7 enfeebling skill/7 elemental skill in areas not controlled by home nation','Hands',65,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',false},
-{'Master Caster\'s Mitts','+2 AGI/10 evasion in areas not controlled by home nation','Hands',65,'MNK/WHM/BLM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',false},
-{'Praefectus\'s Gloves','+2 VIT/5 evasion/5 parry skill in areas not controlled by home nation','Hands',65,'ALL','NATION',false},
 
 Rings
 -----
-{'Gold Musketeer\'s Ring','+4 defense/3 VIT/2 AGI in areas controlled by home nation','RING',60,'ALL','NATION',true},
-{'Grand Knight\'s Ring','+6 MP/2 DEX/3 MND in areas controlled by home nation','RING',60,'ALL','NATION',true},
-{'Patriarch Protector\'s Ring','+6 HP/2 STR/3 INT in areas controlled by home nation','RING',60,'ALL','NATION',true},
 {'Diabolos\'s Ring','-15% MP/15 dark magic skill on darksday','RING',65,'ALL','DAY','Darksday'},
 {'Earth Ring','-15% HP/15 defense on earthsday','RING',65,'ALL','DAY','Earthsday'},
 {'Fire Ring','-15% HP/15 attack/15 ranged attack of firesday','RING',65,'ALL','DAY','Firesday'},
@@ -165,12 +107,10 @@ Rings
 {'Shadow Ring','magic defense bonus on darksday','RING',75,'ALL','DAY','Darksday'},
 	
 	-- User-Defined --
-{'Tamas Ring','will equip if subjob can do magic','RING',30,'ALL','SJ:MAGIC'},
 {'Conjurer\'s Ring','Avatar perpetuation cost -1 while player HP <= 75% and TP <= 100%','RING',50,'SMN','HPP|TPP.LE.',75,1000},
 
 Back
 ----
-{'Resentment Cape','-5% magic damage taken in areas not controlled by home nation','Back',40,'WAR/MNK/RDM/THF/PLD/DRK/BST/BRD/RNG/SAM/NIN/DRG/BLU/COR/DNC/RUN','NATION',false},
 {'Desert Mantle','+2 AGI in sandstorms','Back',62,'ALL','WEATHER','Earth'},
 {'Desert Mantle +1','+3 AGI in sandstorms','Back',62,'ALL','WEATHER','Earth'},
 
@@ -184,8 +124,6 @@ Waist
 {'Tanner\'s Belt','Advanced s-ynthesis image support enchantment','Waist',1,'ALL','CRAFT','LTH'},
 {'Blacksmith\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','SMT'},
 {'Carpenter\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','WW'},
-{'Royal Knight\'s Belt +1','+5 ranged attack in areas controlled by home nation','Waist',52,'WAR/RDM/THF/PLD/BST/BRD/RNG/SAM/NIN/DRG/BLU/COR/DNC/RUN','NATION',true},
-{'Royal Knight\'s Belt +2','+6 ranged attack in areas controlled by home nation','Waist',52,'WAR/RDM/THF/PLD/BST/BRD/RNG/SAM/NIN/DRG/BLU/COR/DNC/RUN','NATION',true},
 {'Water Belt','+3 MND on watersday','Waist',65,'ALL','DAY','Watersday'},
 {'Wind Belt','+3 AGI on windsday','Waist',65,'ALL','DAY','Windsday'},
 
@@ -206,18 +144,6 @@ Legs
 {'Wonder Trunks +1','+20 HP in sunny weather','Legs',1,'ALL','WEATHER','Sunshine'},
 {'Garish Slacks','+2 evasion on earthsday','Legs',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday'},
 {'Rubious Slacks','+2 evasion on earthsday or windsday','Legs',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday,Windsday'},
-{'Bastokan Cuisses','+5 attack/5 ranged attack in areas controlled by home nation','Legs',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-{'Federation Brais','+12 HP in areas controlled by home nation','Legs',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-{'Republic Cuisses','+7 attack/7 ranged attack in areas controlled by home nation','Legs',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-{'Windurstian Brais','+10 HP in areas controlled by home nation','Legs',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-{'Combat Caster\'s Slacks +1','+14 MP in areas controlled by home nation','Legs',43,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/BLU/PUP/SCH/GEO/RUN','NATION',true},
-{'Combat Caster\'s Slacks +2','+16 MP in areas controlled by home nation','Legs',43,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/BLU/PUP/SCH/GEO/RUN','NATION',true},
-{'Royal Squire\'s Breeches +1','+14 HP in areas controlled by home nation','Legs',43,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-{'Royal Squire\'s Breeches +2','+16 HP in areas controlled by home nation','Legs',43,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-{'Iron Musketeer\'s Cuisses +1','+3 STR in areas controlled by home nation','Legs',52,'WAR/PLD/DRK','NATION',true},
-{'Iron Musketeer\'s Cuisses +2','+4 STR in areas controlled by home nation','Legs',52,'WAR/PLD/DRK','NATION',true},
-{'Tactician Magician\'s Slops +1','+3 MND in areas controlled by home nation','Legs',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-{'Tactician Magician\'s Slops +2','+4 MND in areas controlled by home nation','Legs',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
 {'Koga Hakama','+10 evasion at nighttime','Legs',71,'NIN','TIME','Nighttime'},
 
 Feet
@@ -228,23 +154,9 @@ Feet
 {'Rider\'s Boots','Chocobo riding time +3 minutes','Feet',15,'ALL','GATHER','DIG'},
 {'Garish Pumps','+2 evasion on earthsday','Feet',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday'},
 {'Rubious Pumps','+2 evasion on earthsday and windsday','Feet',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday,Windsday'},
-{'Bastokan Greaves','+3 accuracy/3 ranged accuracy in areas controlled by home nation','Feet',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-{'Federation Gaiters','+7 attack/7 ranged attack in areas controlled by home nation','Feet',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
-{'Kingdom Sollerets','+2 DEX in areas controlled by home nation','Feet',34,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-{'Republic Greaves','+4 accuracy/4 ranged accuracy in areas controlled by home nation','Feet',34,'WAR/RDM/PLD/DRK/BST/RNG/SAM/DRG/BLU/RUN','NATION',true},
-{'San d\'Orian Sollerets','+1 DEX in areas controlled by home nation','Feet',34,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-{'Windurstian Gaiters','+5 attack/5 ranged attack in areas controlled by home nation','Feet',34,'MNK/WHM/RDM/THF/PLD/BST/BRD/DRG/SMN/BLU/COR/PUP/DNC/GEO/RUN','NATION',true},
 {'Inferno Sabots','+1 INT/3 dark magic skill during new moon','Feet',41,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','MOON','New Moon'},
 {'Inferno Sabots +1','+2 INT/5 dark magic skill during new moon','Feet',41,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','MOON','New Moon'},
-{'Combat Caster\'s Shoes +1','+2 AGI in areas controlled by home nation','Feet',43,'MNK/WHM/BLM/RDM/PLD/BRD/RND/SMN/BLU/PUP/SCH/GEO/RUN','NATION',true},
-{'Combat Caster\'s Shoes +2','+3 AGI in areas controlled by home nation','Feet',43,'MNK/WHM/BLM/RDM/PLD/BRD/RND/SMN/BLU/PUP/SCH/GEO/RUN','NATION',true},
-{'Iron Musketeer\'s Sabotons +1','+2 AGI in areas controlled by home nation','Feet',43,'WAR/PLD/DRK','NATION',true},
-{'Iron Musketeer\'s Sabotons +2','+3 AGI in areas controlled by home nation','Feet',43,'WAR/PLD/DRK','NATION',true},
 {'Monsoon Kyahan','+8 evasion in rain','Feet',47,'MNK/SAM/NIN','WEATHER','Water'},
-{'Royal Knight\'s Sollerets +1','+3 VIT in areas controlled by home nation','Feet',52,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-{'Royal Knight\'s Sollerets +2','+4 VIT in areas controlled by home nation','Feet',52,'WAR/PLD/DRK/BST/SAM/NIN','NATION',true},
-{'Tactician Magician\'s Pigaches +1','+3 INT in areas controlled by home nation','Feet',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
-{'Tactician Magician\'s Pigaches +2','+4 INT in areas controlled by home nation','Feet',52,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','NATION',true},
 {'Vampire Boots','+10 evasion at nighttime','Feet',59,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/BLU/PUP/SCH/GEO/RUN','TIME','Nighttime'},
 {'Ninja Kyahan +1','+25% movement speed between dusk and dawn','Feet',74,'NIN','TIME','DUSK2DAWN},
 {'Koga Kyahan +1','+7 DEX between dusk and dawn','Feet',74,'NIN','TIME','DUSK2DAWN},
@@ -257,7 +169,7 @@ equipped.)
 
 Example:
 
-{'Uggalepih Pendant','+8 magic attack bonus when MP <= 50%','Neck',70,'ALL','MP.LE.50P'},
+{'Uggalepih Pendant','+8 magic attack bonus when MP <= 50%','Neck',70,'ALL','MPP.LE.50P'},
 {'Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
 
 The first example is a regular condinional. It is invoked when the latent's criteria
@@ -276,20 +188,20 @@ GATHER			Gathering piece			One (type of gathering: HELM,DIG,CLAM)
 MOON			Moon phase				One (Full Moon, New Moon, etc)
 DAY				Week day				One (Firesday, Iceday, etc)
 TIME			Time range				One (Nighttime,Daytime,DUSK2DAWN,Dawn,Day,Dusk,Evening,DEADOFNIGHT)
-NATION			Home nation				One (Owned, Not Owned)
 AKETON			Nation aketon			One (Windy, Sandy, Bastok)
 WEATHER			Weather					One (Clear, Clouds, Thunder, etc)
 MOON:DAY:NIGHT	Moon phase/day/time		Three (MOON, DAY, TIME), see above for details
 DAY|TIME		Days or time			One (List of days or "Daytime"/"Nighttime")
-MP<50			MP less than 50			None (SJ must be magical)
-MP.LE.50P		MP <= 50%				None (Sees if your MP is below 50%)
-SJ:MAGIC		Magical subjob			None (Checks to see if your subjob is magical)
+OWN				Region control			None (Is player in region controlled by their nation)
+MSJ				Magical subjob			None
+MP.LT.50		MP less than 50			None (SJ must be magical)
+MPP.LE.50P		MP <= 50%				None (Sees if your MP is below 50%)
 HPP|TPP.LE.		HP <= 50% and MP <= 50%	Two (one for each each percentage check, e.g., 50,70)
 PET_NAME		Specific pet name		One (one or a / delimited list, e.g., Carbuncle)
 NOT_PET_NAME	Any pet except			One (one or a / delimited list, e.g., Ifrit/Ramuh)
-SJIS			Subjob is				One	(one or a / delimited list, e.g., THF/NIN) 
+SJIS			Subjob is				One	(one or a / delimited list, e.g., THF/NIN)
 SJISN			Subjob is not			One	(one or a / delimited list, e.g., THF/NIN)
-PARTY:JOB		Player in part is job	One (one or a / delimited list, e.g., THF/NIN)
+PJIS			Player in party is job	One (one or a / delimited list, e.g., THF/NIN)
 WEAPON			Equips weapon			None (if /wswap on or a smn)
 
 Inline conditionals are simple codes attached to the piece of gear that require a check
@@ -300,7 +212,15 @@ between an inline conditional and the separate "_Conditional" block is that the 
 is always equpped if the condition is met whereas the former is equipped if the level
 is appropriate and then the condition is met.
 
-//MSJ		Equip if player's subjob is magical
-//SJ"job"	Equip if player's subjob is "job" (i.e., THF, NIN, etc)
-//CARBY		Equip if player has a pet and it is Carbuncle
-//BLIND		Equip if player blinded
+//MSJ			Equip if player's subjob is magical
+//SJ"job"		Equip if player's subjob is "job" (i.e., THF, NIN, etc)
+//CARBY			Equip if player has a pet and it is Carbuncle
+//BLIND			Equip if player blinded
+//OWN			Equip if region controlled by player's nation. (Does not include cities)
+//NOT_OWN		Equip if region not controlled by player's nation
+//MPP.LE.50P	Equip if player's MP % <= 50% (approximation)
+//PJ"job"		Equip if player in party is "job" (ex., BRD)
+//WSWAP			Equip if /WSWAP is on
+//PET			Equip if player has a pet
+//PETF			Equip if player has pet and it is fighting
+//PETFNPF		Equip if player has pet and it is fighting but the player is not fighting
