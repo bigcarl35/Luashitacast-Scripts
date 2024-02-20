@@ -224,3 +224,4 @@ is appropriate and then the condition is met.
 //PET			Equip if player has a pet
 //PETF			Equip if player has pet and it is fighting
 //PETFNPF		Equip if player has pet and it is fighting but the player is not fighting
+//ELEAVA		Equip if player summoning an elemental avatar

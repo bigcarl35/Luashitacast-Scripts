@@ -337,6 +337,9 @@ gcinclude.MagicSkill = T{
 	['Summoning'] = 'carbuncle,fenrir,ifrit,titan,leviathan,garuda,shiva,ramuh,diabolos,fire,firespirit,ice,icespirit,air,airspirit,earth,earthspirit,thunder,thunderspirit,water,waterspirit,light,lightspirit,dark,darkspirit,cait,caitsith,siren,atomos,alexander,odin',
 };
 
+-- List of elemental spirit avatars
+gcinclude.Spirits = 'fire,firespirit,ice,icespirit,air,airspirit,earth,earthspirit,thunder,thunderspirit,water,waterspirit,light,lightspirit,dark,darkspirit';
+
 -- This table associates a summoned avatar with an element so that the appropriate stave can be equipped
 gcinclude.SummonStaves = T{
 	['carbuncle'] = 'light', ['light spirit'] = 'light', ['lightspirit'] = 'light', ['cait sith'] = 'light', ['caitsith'] = 'light', ['alexander'] = 'light',
@@ -1341,6 +1344,7 @@ function gcinclude.CheckInline(gear)
 	local player = gData.GetPlayer();
 	local sj = player.SubJob;
 	local pet = gData.GetPet();
+	local spell = gData.GetAction();
 	
 	if gear == nil then
 		return false,gear;
@@ -1377,6 +1381,8 @@ function gcinclude.CheckInline(gear)
 			return (pet ~= nil and pet.Status == 'Engaged'),sGear;
 		elseif suCode == 'PETFNPF' then
 			return (pet ~= nil and pet.Status == 'Engaged' and player.Status ~= 'Engaged'),sGear;
+		elseif suCode == 'ELEAVA' then
+			return (string.find(gcinclude.Spirits,spell.Name) ~= nil),sGear;
 		else
 			print(chat.header('CheckInline'):append(chat.message('Warning: Unknown code = ' .. suCode .. '. Ignoring piece of gear.')));
 			return false,sGear;
