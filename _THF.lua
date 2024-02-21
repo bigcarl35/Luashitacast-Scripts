@@ -36,10 +36,84 @@ local sets = {
 	avatar and visa versa.
 --]]
 
-	--[[
-		The Idle_Regen and Idle_Refresh gear sets replace the normal Idle set when the player's HP or MP
-		go below a set percentage (defined in gcinclude.lua, but can be overriden in profile.OnLoad function).
-	--]]
+--[[
+	The TP sets are used when you are fighting. The accuracy set will be used if /acc is specified
+	and the evasion set if /eva is specified. Please note that if you have a subjob that can use a
+	pet, none of the abilities are supported here. Only main jobs that have pets (SMN,BST) support
+	pet actions.
+--]]
+
+	['TP'] = {
+        Head  = 'Empress Hairpin',
+        Neck  = 'Spike Necklace',
+        Ears  = { 'Beetle Earring', 'Beetle Earring' },
+        Body  = 'Brigandine',
+        Hands = 'Battle Gloves',
+        Rings = { 'Balance Ring', 'Bastokan Ring' },
+        Back  = 'Ram Mantle',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs  = 'San. Trousers',
+        Feet  = 'Bounding Boots',
+    },
+	['TP_Conditional'] = {
+	},
+
+	['TP_Pet'] = {
+    },
+	['TP_Pet_Conditional'] = {
+	},
+	
+--[[
+	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
+	(Please note that Pet_Accuracy is applied before Accuracy if you have a pet.)
+--]]
+	
+	['Accuracy'] = {
+        Head  = 'Empress Hairpin',
+        Neck  = 'Spike Necklace',
+        Body  = 'Brigandine',
+        Hands = 'Battle Gloves',
+        Ring1 = 'Balance Ring',
+        Ring2 = 'Jaeger Ring',
+        Waist = 'Tilt Belt',
+        Feet  = 'Bounding Boots',
+    },
+	['Accuracy_Conditional'] = {
+	},
+	
+	['Pet_Accuracy'] = {
+		Head = 'Shep. Bonnet',
+    },
+	['Pet_Accuracy_Conditional'] = {
+	},
+	
+--[[
+	If evasion wanted, equip evasion gear
+--]]
+	
+	['Evasion'] = {
+        Head  = 'Empress Hairpin',
+        Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },
+        Body  = 'Mrc.Cpt. Doublet',
+        Hands = 'Battle Gloves',
+        Ring1 = 'Windurstian Ring',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs  = 'San. Trousers',
+        Feet  = 'Bounding Boots',
+    },
+	['Evasion_Conditional'] = {
+	},
+
+	['Pet_Evasion'] = {
+		Legs  = 'Shep. Hose',
+    },
+	['Pet_Evasion_Conditional'] = {
+	},
+	
+--[[
+	The Idle_Regen and Idle_Refresh gear sets replace the normal Idle set when the player's HP or MP
+	go below a set percentage (defined in gcinclude.lua, but can be overriden in profile.OnLoad function).
+--]]
 	
 	['Idle_Regen'] = {
 	},
@@ -51,14 +125,14 @@ local sets = {
 	['Idle_Refresh_Conditional'] = {
 	},
 		
-	--[[
-		When you are resting (kneeling down), your HP 'Resting' set will be equipped. If your subjob
-		uses MP and your MP is below the set threshhold (defined by gcinclude.settings.RefreshGearMP), 
-		your MP 'Resting_Refresh' gear set will be equipped. Regardless of which set is equipped, 
-		assuming that your subjob uses magic, you have a Dark/Pluto staff accessible, weapon swapping 
-		is enabled (/wswap), and your MP is not at maximum, the Dark/Pluto staff will automatically be 
-		equipped.
-	--]]
+--[[
+	When you are resting (kneeling down), your HP 'Resting' set will be equipped. If your subjob
+	uses MP and your MP is below the set threshhold (defined by gcinclude.settings.RefreshGearMP), 
+	your MP 'Resting_Refresh' gear set will be equipped. Regardless of which set is equipped, 
+	assuming that your subjob uses magic, you have a Dark/Pluto staff accessible, weapon swapping 
+	is enabled (/wswap), and your MP is not at maximum, the Dark/Pluto staff will automatically be 
+	equipped.
+--]]
 	
 	['Resting_Regen'] = { 
 	},
@@ -91,11 +165,11 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-		Main = 'Marauder\'s Knife',
+		Main  = 'Marauder\'s Knife',
+		Sub   = { 'Mrc.Cpt. Kukri//SJNIN', 'Mrc.Cpt. Kukri//SJDNC' },
 		Range = 'Thug\'s Zambrak',
     },
-	['Start_Weapons_Conditional'] = {
-		{'Mrc.Cpt. Kukri','Equip if /nin or /dnc','Sub',30,'WAR/THF/DRK/RNG/COR/PUP/DNC','SJIS','NIN/DNC'},
+	['Start_Weapons_Conditional'] = {		
 	},
 	
 --[[
@@ -132,85 +206,6 @@ local sets = {
 	},
 	
 --[[
-		The TP sets are used when you are fighting. The accuracy set will be used if /acc is specified
-		and the evasion set if /eva is specified. Please note that if you have a subjob that can use a
-		pet, none of the abilities are supported here. Only main jobs that have pets (SMN,BST) support
-		pet actions.
---]]
-
-	['TP'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ear1 = 'Beetle Earring',
-        Ear2 = 'Beetle Earring',
-        Body = 'Brigandine',
-        Hands = 'Battle Gloves',
-        Ring1 = 'Balance Ring',
-        Ring2 = 'Bastokan Ring',
-        Back = 'Ram Mantle',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'San. Trousers',
-        Feet = 'Bounding Boots',
-    },
-	['TP_Conditional'] = {
-	},
-
-	['TP_Solo'] = {
-	},
-	['TP_Solo_Conditional'] = {
-	},
-	
-	['TP_Pet'] = {
-    },
-	['TP_Pet_Conditional'] = {
-	},
-	
-	['TP_Tank'] = {
-	},
-	['TP_Tank_Conditional'] = {
-	},
-	
---[[
-	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
-	(Please note that Pet_Accuracy is applied after Accuracy if you have a pet.)
---]]
-	
-	['Accuracy'] = {
-        Head = 'Empress Hairpin',					-- +3 DEX
-        Neck = 'Spike Necklace',
-        Body = 'Brigandine',
-        Hands = 'Battle Gloves',
-        Ring1 = 'Balance Ring',						-- +2 DEX
-        Ring2 = 'Jaeger Ring',
-        Waist = 'Tilt Belt',
-        Feet = 'Bounding Boots',
-    },
-	['Accuracy_Conditional'] = {
-	},
-	
-	['Pet_Accuracy'] = {
-    },
-	['Pet_Accuracy_Conditional'] = {
-	},
-	
---[[
-	If evasion wanted, equip evasion gear
---]]
-	
-	['Evasion'] = {
-        Head = 'Empress Hairpin',
-        Ear1 = 'Drone Earring',						-- +3 AGI
-        Body = 'Mrc.Cpt. Doublet',
-        Hands = 'Battle Gloves',
-        Ring1 = 'Windurstian Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'San. Trousers',
-        Feet = 'Bounding Boots',
-    },
-	['Evasion_Conditional'] = {
-	},
-
---[[
 	Magic accuracy gear
 --]]
 
@@ -227,7 +222,6 @@ local sets = {
 	['MAB'] = {
 	},
 	['MAB_Conditional'] = {
-		{'Uggalepih Pendant','MAB +8% if MPP <= 50%','Neck',70,'ALL','MP.LE.50P'},
 	},
 	
 --[[
@@ -236,8 +230,8 @@ local sets = {
 --]]
 
 	['Preshot'] = {
-        Ring1 = 'Beetle Ring +1',
-        Ring2 = 'Beetle Ring +1',
+		Neck  = 'Peacock Amulet',
+        Rings = { 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
     },
 	['Preshot_Conditional'] = {
 	},
@@ -336,6 +330,7 @@ local sets = {
 	-- is applicable here. There's no gear that's specific for THF that gives any summoning skill. Note: currently on 
 	-- HorizonXI summoning skills are ignored. Any gear piece that only gives summoning skill will be commented out	
 	['Summoning'] = {
+		Hands = 'Carbuncle Mitts',
 	},
 	['Summoning_Conditional'] = {
 	},
@@ -345,20 +340,18 @@ local sets = {
 --]]
 
 	['INT'] = {
-        Ring1 = 'Tamas Ring',					-- +2~5 INT
-        Ring2 = 'Windurstian Ring',
-        Waist = 'Mrc.Cpt. Belt',				-- +1 INT
+        Rings = { 'Tamas Ring', 'Windurstian Ring' },
+        Waist = 'Mrc.Cpt. Belt',
         Feet = 'Mannequin Pumps',
     },
 	['INT_Conditional'] = {
 	},
 	
 	['MND'] = {
-        Neck = 'Justice Badge',					-- +3 MND
+        Neck = 'Justice Badge',
         Body = 'Wonder Kaftan',
-        Ring1 = 'Tamas Ring',					-- +2~5 MND
-        Ring2 = 'Tranquility Ring',				-- +2 MND
-        Waist = 'Mrc.Cpt. Belt',				-- +1 MND
+        Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
+        Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Mannequin Pumps',
     },
@@ -443,8 +436,7 @@ local sets = {
         Neck = 'Spike Necklace',
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Ring1 = 'Courage Ring',
-        Ring2 = 'San d\'Orian Ring',
+        Rings = { 'Courage Ring', 'San d\'Orian Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Wonder Clomps',
@@ -463,17 +455,15 @@ local sets = {
 	['WS_STRAGI'] = {
         Head = 'Mrc.Cpt. Headgear',
         Neck = 'Spike Necklace',
-        Ear2 = 'Drone Earring',
+        Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Ring1 = 'Courage Ring',
-        Ring2 = 'San d\'Orian Ring',
+        Rings = { 'Courage Ring', 'San d\'Orian Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Bounding Boots',
     },
 	['WS_STRAGI_Conditional'] = {
-		{'Genin Earring','Equip if /nin','EARRING',30,'ALL','SJIS','NIN'},
 	},
 	
 --[[
@@ -490,8 +480,7 @@ local sets = {
         Neck = 'Spike Necklace',
         Body = 'Brigandine',
         Hands = 'Wonder Mitts',
-        Ring1 = 'Balance Ring',
-        Ring2 = 'Courage Ring',
+        Rings = { 'Balance Ring', 'Courage Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Bounding Boots',
@@ -510,8 +499,7 @@ local sets = {
         Neck = 'Spike Necklace',
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Ring1 = 'Courage Ring',
-        Ring2 = 'Tranquility Ring',
+        Rings = { 'Courage Ring', 'Tranquility Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Wonder Clomps',
@@ -531,8 +519,7 @@ local sets = {
         Neck = 'Justice Badge',
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Ring1 = 'Courage Ring',
-        Ring2 = 'Tranquility Ring',
+        Rings = { 'Courage Ring', 'Tranquility Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Wonder Clomps',
@@ -551,14 +538,13 @@ local sets = {
 
 	['WS_AGI'] = {
         Head = 'Empress Hairpin',
-        Ear2 = 'Drone Earring',
+        Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },
         Body = 'Mrc.Cpt. Doublet',
-        Ring1 = 'Windurstian Ring',
+        Rings = 'Windurstian Ring',
         Waist = 'Mrc.Cpt. Belt',
         Feet = 'Bounding Boots',
     },
 	['WS_AGI_Conditional'] = {
-		{'Genin Earring','Equip if /nin','EARRING',30,'ALL','SJIS','NIN'},
 	},
 	
 --[[
@@ -585,8 +571,7 @@ local sets = {
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
         Body = 'Brigandine',
-        Ring1 = 'Balance Ring',
-        Ring2 = 'Bastokan Ring',
+        Rings = { 'Balance Ring', 'Bastokan Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Feet = 'Bounding Boots',
     },
@@ -602,15 +587,13 @@ local sets = {
 	['WS_DEXAGI'] = {
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
-        Ear2 = 'Drone Earring',
+        Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },
         Body = 'Brigandine',
-        Ring1 = 'Balance Ring',
-        Ring2 = 'Bastokan Ring',
+        Rings = { 'Balance Ring', 'Bastokan Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Feet = 'Bounding Boots',
     },
 	['WS_DEXAGI_Conditional'] = {
-		{'Genin Earring','Equip if /nin','EARRING',30,'ALL','SJIS','NIN'},
 	},
 	
 --[[
@@ -623,7 +606,7 @@ local sets = {
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
         Body = 'Mrc.Cpt. Doublet',
-        Ring1 = 'Balance Ring',
+        Rings = 'Balance Ring',
         Waist = 'Corsette',
         Feet = 'Bounding Boots',
     },
@@ -640,8 +623,7 @@ local sets = {
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
         Body = 'Brigandine',
-        Ring1 = 'Tamas Ring',
-        Ring2 = 'Balance Ring',
+        Rings = { 'Tamas Ring', 'Balance Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Feet = 'Bounding Boots',
     },
@@ -657,8 +639,7 @@ local sets = {
 	['WS_MND'] = {
         Neck = 'Justice Badge',
         Body = 'Brigandine',
-        Ring1 = 'Tamas Ring',
-        Ring2 = 'Balance Ring',
+        Rings = { 'Tamas Ring', 'Balance Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Mannequin Pumps',
@@ -676,7 +657,7 @@ local sets = {
 
 	['WS_VIT'] = {
         Body = 'Brigandine',
-        Ring2 = 'Bastokan Ring',
+        Rings = 'Bastokan Ring',
         Waist = 'Warrior\'s Belt',
         Legs = 'Wonder Braccae',
     },
@@ -695,15 +676,14 @@ local sets = {
 --]]
 
 	['WS_HP'] = {
-        Head = 'Beast Helm',				-- +15 HP
-        Ear1 = 'Ethereal Earring',			-- +15 HP
-        Ear2 = 'Physical Earring',			-- +25 HP
-        Body = 'Wonder Kaftan',				-- +36 HP
-        Hands = 'Wonder Mitts',				-- +12 HP
-        Ring1 = 'Toreador\'s Ring',			-- +10 HP
-        Waist = 'Powerful Rope',			-- +20 HP
-        Legs = 'Wonder Braccae',			-- +21 HP
-        Feet = 'Creek F Clomps',			-- +35 HP
+        Head = 'Beast Helm',
+        Ears = 'Physical Earring',
+        Body = 'Wonder Kaftan',
+        Hands = 'Wonder Mitts',
+        Rings = 'Toreador\'s Ring',
+        Waist = 'Powerful Rope',
+        Legs = 'Wonder Braccae',
+        Feet = 'Creek F Clomps',
     },
 	['WS_HP_Conditional'] = {
 	},
@@ -731,8 +711,7 @@ local sets = {
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
         Body = 'Brigandine',
-        Ring1 = 'Balance Ring',
-        Ring2 = 'Bastokan Ring',
+        Rings = { 'Balance Ring', 'Bastokan Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Feet = 'Bounding Boots',	
 	},
@@ -743,14 +722,13 @@ local sets = {
 	},
 	['TrickAttack'] = {
         Head = 'Empress Hairpin',
-        Ear1 = 'Drone Earring',
+        Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },
         Body = 'Mrc.Cpt. Doublet',
         Ring1 = 'Windurstian Ring',
         Waist = 'Mrc.Cpt. Belt',
         Feet = 'Bounding Boots',	
 	},
 	['TrickAttack_Conditional'] = {
-		{'Genin Earring','Equip if /nin','EARRING',30,'ALL','SJIS','NIN'},
 	},
 	
 	['Mug'] = {
@@ -806,83 +784,19 @@ local sets = {
 	},
 	['Jumps_Conditional'] = {
 	},
-	
---[[
-								*** Custom Sets Go below this comment ***
-								
-	The following "CAP" sets are added as a convenience for playing in level capped areas. The only way for them to be 
-	loaded is via the /gearset command, which will turn GSwap off. If you're level syncing, pick the set that's closest 
-	to the sync level and adjust accordingly.
---]]
 
-	['CAP20'] = {
-        Neck = 'Justice Badge',
-        Ear2 = 'Physical Earring',
-        Body = 'Lgn. Harness',
-        Hands = 'Battle Gloves',
-        Ring1 = 'Balance Ring',
-        Ring2 = 'Bastokan Ring',
-        Waist = 'Warrior\'s Belt',
-        Legs = 'Ryl.Ftm. Trousers',
-        Feet = 'Bounding Boots',
-    },
-	
-	['CAP25'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ear1 = 'Beetle Earring',
-        Ear2 = 'Beetle Earring',
-        Body = 'Beetle Harness',
-        Hands = 'Battle Gloves',
-        Ring1 = 'Balance Ring',
-        Ring2 = 'Bastokan Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'San. Trousers',
-        Feet = 'Bounding Boots',
-    },
-	
-	['CAP30'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ear1 = 'Beetle Earring',
-        Ear2 = 'Beetle Earring',
-        Body = 'Mrc.Cpt. Doublet',
-        Hands = 'Battle Gloves',
-        Ring1 = 'Balance Ring',
-        Ring2 = 'Bastokan Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'San. Trousers',
-        Feet = 'Bounding Boots',
-    },
-	
-	['CAP40'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ear1 = 'Beetle Earring',
-        Ear2 = 'Beetle Earring',
-        Body = 'Mrc.Cpt. Doublet',
-        Hands = 'Battle Gloves',
-        Ring1 = 'Balance Ring',
-        Ring2 = 'Bastokan Ring',
-        Back = 'Ram Mantle',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'San. Trousers',
-        Feet = 'Bounding Boots',
-    },
-	
-	['CAP50'] = {
-    },
-
-	['CAP60'] = {
-    },
-	
 --[[
 	The following set is used to dynamically create a gear set to be displayed once rather
 	than in a piecemeal manner. It is hoped that this will cut down on flickering gear and
 	possibly speed up the code. *** This set is to be left empty by the player ***. Please
 	do not modify it.
 --]]	
-	['CurrentGear'] = { },		
+	['CurrentGear'] = { },	
+	
+--[[
+								*** Custom Sets Go below this comment ***
+--]]
+		
 };
 
 profile.Sets = sets;
@@ -958,7 +872,7 @@ profile.OnLoad = function()
     gcinclude.settings.RefreshGearMPP = 60;
 	
 	-- Coded order of operation override
-	gcinclude.settings.priorityEngaged = 'BCEFGH';
+	gcinclude.settings.priorityEngaged = 'CEFGH';
 	gcinclude.settings.priorityMidCast = 'ABCDEFGH';
 	gcinclude.settings.priorityWeaponSkill = 'ABDE';
 	
@@ -1019,8 +933,17 @@ profile.HandleDefault = function()
 	local zone = gData.GetEnvironment();	
 	local eWeap = nil;
 	local cKey;
-
-	-- Make sure that the global magic settings for the player are known.	
+	local myLevel = AshitaCore:GetMemoryManager():GetPlayer():GetMainJobLevel();
+	
+	-- Note the player's current level
+	if (myLevel ~= gcinclude.settings.iCurrentLevel) then
+        gcinclude.settings.iCurrentLevel = myLevel;
+    end
+	
+	-- Make sure that the global magic settings for the player are known. The second clause in
+	-- the if statement takes care of a bizarre case. Turns out if you change the player.MainJob
+	-- from a job where there is not a luashitacast script, it initially remembers the old main
+	-- job. by including the second call, a subsequent invocation occurs getting it right.	
 	if gcinclude.settings.bMagicCheck == false or gcinclude.settings.sMJ ~= player.MainJob then
 		gcinclude.CheckMagic50(player);
 	end
@@ -1060,39 +983,30 @@ profile.HandleDefault = function()
 	-- The default set is the TP gear set. Load it up
 	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
 	gcinclude.ProcessConditional(sets.TP_Conditional,nil,sets.CurrentGear);
-	if gcdisplay.GetCycle('Solo') == true then
-		gcinclude.MoveToCurrent(sets.TP_Solo,sets.CurrentGear);
-		gcinclude.ProcessConditional(sets.TP_Solo_Conditional,nil,sets.CurrentGear);
-	end
-	
-	if gcdisplay.GetToggle('Tank') == true then
-		gcinclude.MoveToCurrent(sets.TP_Tank,sets.CurrentGear);
-		gcinclude.ProcessConditional(sets.TP_Tank_Conditional,nil,sets.CurrentGear);	
-	end
 	
 	-- Now process the player status accordingly
+	gcdisplay.SetLocksAction(gcinclude.LocksNumeric,player.Status);		
 	if player.Status == 'Engaged' then
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
 			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
-			if cKey == 'B' then		-- Pet (if out) is fighting
-				if pet ~= nil and pet.Status == 'Engaged' then
-					gcinclude.MoveToCurrent(sets.TP_Pet,sets.CurrentGear);
-					gcinclude.ProcessConditional(sets.TP_Pet_Conditional,nil,sets.CurrentGear);
-				end		
-			elseif cKey == 'C' then		-- Evasion			
+			if cKey == 'C' then		-- Evasion			
 				if gcdisplay.GetToggle('Eva') == true then
+					if pet ~= nil then			-- Pet has lower priority than player
+						gcinclude.MoveToCurrent(sets.Pet_Evasion,sets.CurrentGear);
+						gcinclude.ProcessConditional(sets.Pet_Evasion_Conditional,nil,sets.CurrentGear);
+					end
 					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 					gcinclude.ProcessConditional(sets.Evasion_Conditional,nil,sets.CurrentGear);
 				end			
 			elseif cKey == 'E' then		-- Accuracy	
 				if gcdisplay.GetToggle('Acc') == true then 
-					gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
-					gcinclude.ProcessConditional(sets.Accuracy_Conditional,nil,sets.CurrentGear);
 					if pet ~= nil and pet.Status == 'Engaged' then
 						gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear);
 						gcinclude.ProcessConditional(sets.Pet_Accuracy_Conditional,nil,sets.CurrentGear);
 					end
+					gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.Accuracy_Conditional,nil,sets.CurrentGear);
 				end
 			elseif cKey == 'F' then		-- Kiting
 				if (gcdisplay.GetToggle('Kite') == true) then
@@ -1117,27 +1031,21 @@ profile.HandleDefault = function()
 			end				
 		end
 	elseif player.Status == 'Resting' then	
-		-- Player kneeling. Priority (low to high): Resting,refresh
-		gcinclude.MoveToCurrent(sets.Resting_Regen,sets.CurrentGear);
-		gcinclude.ProcessConditional(sets.Resting_Regen_Conditional,nil,sets.CurrentGear);
-		if gcinclude.settings.bMagic == true and player.MPP < gcinclude.settings.RefreshGearMPP then
-			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
-			gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional,nil,sets.CurrentGear);
+		-- Player kneeling. Priority (low to high): Resting,refresh	
+		if player.HP < player.MaxHP then
+			gcinclude.MoveToCurrent(sets.Resting_Regen,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.Resting_Regen_Conditional,nil,sets.CurrentGear);
 		end
 		
-		-- Weapon swap to a weapon that refreshes MP if player's subjob uses magic, weapon swapping
-		-- is enabled (/wswap) and their MP is not at maximum
-		if gcinclude.settings.bMagic == true and gcdisplay.GetToggle('WSwap') == true and player.MP < player.MaxMP then
-			if gcinclude.settings.bStave == false then
-				gcinclude.CheckForStaves();
-			end
-			if player.MainJobLevel < 51 then
-				gcinclude.MoveToCurrent(sets.Resting_Refresh_Weapon_Sub51,sets.CurrentGear);
-				gcinclude.ProcessConditional(sets.Resting_Refresh_Weapon_Sub51_Conditional,nil,sets.CurrentGear);
-			else			
+		if gcinclude.settings.bMagic == true and player.MP < player.MaxMP then
+			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional,nil,sets.CurrentGear);
+		
+			if string.find(gcinclude.sMagicJobs,player.SubJob) then
 				gcinclude.SwapToStave('dark',false,sets.CurrentGear);
-			end
+			end	
 		end
+		
 		-- Check for common debuffs
 		gcinclude.CheckCommonDebuffs();
 	else									
@@ -1148,6 +1056,7 @@ profile.HandleDefault = function()
 			gcinclude.MoveToCurrent(sets.Town,sets.CurrentGear);
 			gcinclude.ProcessConditional(gcinclude.sets.Town_Conditional,nil,sets.CurrentGear);
 		end
+		
 		-- if the player's HP is below the threshold setting, equip the idle regen gear
 		if player.HPP < gcinclude.settings.RegenGearHPP then
 			gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
@@ -1161,7 +1070,23 @@ profile.HandleDefault = function()
 		-- Check for common debuffs
 		gcinclude.CheckCommonDebuffs();	
 	end
-		
+	
+	-- Make sure to equip the appropriate elemental staff for the current pet (/smn only)
+	if (pet ~= nil and player.SubJob == 'SMN' and gcdisplay.GetToggle('WSwap') == true) then
+		local pName = string.lower(pet.Name);
+		if string.find(gcinclude.MagicSkill['Summoning'],pName) ~= nil then
+			local pEle = gcinclude.SummonStaves[pet.Name];
+			gcinclude.SwapToStave(pEle,false,sets.CurrentGear);
+		end
+	end
+	
+	-- And make sure a weapon equipped. (Going into a capped area can cause no weapon to be equipped.)
+	local gear = gData.GetEquipment();
+	if gear.Main == nil then
+		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
+		gcinclude.ProcessConditional(sets.Start_Weapons_Conditional,nil,sets.CurrentGear);
+	end
+	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set
 					
 	-- Lastly, update the display, just in case
@@ -1250,8 +1175,20 @@ profile.HandleItem = function()
 		if string.match(item.Name, 'Holy Water') then 
 			gcinclude.MoveToCurrent(gcinclude.sets.Holy_Water,sets.CurrentGear);
 			gcinclude.ProcessConditional(gcinclude.sets.Holy_Water_Conditional,nil,sets.CurrentGear);
-			gcinclude.EquipTheGear(sets.CurrentGear);	-- if more items are added, move this to addess all
-		end			
+			bShow = true;
+		elseif string.match(item.Name, 'Silent Oil') then
+			gcinclude.MoveToCurrent(sets.Sneak,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.Sneak_Conditional,nil,sets.CurrentGear);
+			bShow = true;
+		elseif string.match(item.Name, 'Prism Powder') then
+			gcinclude.MoveToCurrent(sets.Invisible,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.Invisible_Conditional,nil,sets.CurrentGear);
+			bShow = true;
+		end
+		
+		if bShow == true then
+			gcinclude.EquipTheGear(sets.CurrentGear);
+		end		
 	end
 end
 
@@ -1263,22 +1200,27 @@ profile.HandlePrecast = function()
     local spell = gData.GetAction();
 	local obi;
 	local mSet;
+	
+	-- Only gear swap if this flag is true
+	if gcdisplay.GetToggle('GSwap') == false then
+		return;
+	end
+	
+	-- Equip the precast gear set
+	gcinclude.MoveToCurrent(sets.Precast,sets.CurrentGear);
+	gcinclude.ProcessConditional(sets.Precast_Conditional,nil,sets.CurrentGear);
 		
-	-- Normal process
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
-		gFunc.EquipSet(sets.Precast);
-		
-		-- See if an elemental obi should be equipped
-		if gcinclude.settings.bEleObis == false then
-			gcinclude.CheckForObisGorgets();
-		end		
-		if gcinclude.settings.bEleObis == true then
-			obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
-			if obi ~= nil then
-				gFunc.ForceEquip('Waist',obi);
-			end
+	-- See if an elemental obi should be equipped
+	if gcinclude.settings.bEleObis == false then
+		gcinclude.CheckForObisGorgets();
+	end		
+	if gcinclude.settings.bEleObis == true then
+		obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
+		if obi ~= nil then
+			sets.CurrentGear['Waist'] = obi;
 		end
 	end
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end
 
 --[[
@@ -1365,6 +1307,10 @@ profile.HandleMidcast = function()
 			end
 		elseif cKey == 'F' then			-- Spell specific gear			
 			if string.match(spell.Name, 'Stoneskin') then
+				-- Mind has a large affect on Stoneskin, so equip it here
+				gcinclude.MoveToCurrent(sets.MND,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.MND_Conditional,nil,sets.CurrentGear);
+				-- Now load the specific stoneskin set				
 				gcinclude.MoveToCurrent(sets.Stoneskin,sets.CurrentGear);
 				gcinclude.ProcessConditional(sets.Stoneskin_Conditional,nil,sets.CurrentGear);
 			elseif string.match(spell.Name, 'Drain') then
@@ -1417,14 +1363,16 @@ end
 --]]
 
 profile.HandlePreshot = function()
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
-		-- Clear out the CurrentGear in case of leftovers
-		gcinclude.ClearSet(sets.CurrentGear);
-		
-		gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
-		gcinclude.ProcessConditional(sets.Preshot_Conditional,nil,sets.CurrentGear);
-		gcinclude.EquipTheGear(sets.CurrentGear);
+	if gcdisplay.GetToggle('GSwap') == false then
+		return;
 	end
+	
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
+		
+	gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
+	gcinclude.ProcessConditional(sets.Preshot_Conditional,nil,sets.CurrentGear);
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end
 
 --[[
@@ -1453,15 +1401,15 @@ end
 --]]
 
 profile.HandleWeaponskill = function()	
-		local ws = gData.GetAction();
-		local canWS = gcinclude.CheckWsBailout();
+	local ws = gData.GetAction();
+	local canWS = gcinclude.CheckWsBailout();
  
-		-- If conditions would cause the weaponskill to fail, the action will be
-		-- cancelled so you do not lose your tp.
-		if (canWS == false) then 
-			gFunc.CancelAction();
-			return;
-		end
+	-- If conditions would cause the weaponskill to fail, the action will be
+	-- cancelled so you do not lose your tp.
+	if (canWS == false) then 
+		gFunc.CancelAction();
+		return;
+	end
 
 	-- Only gear swap if this flag is true		
 	if gcdisplay.GetToggle('GSwap') == false then

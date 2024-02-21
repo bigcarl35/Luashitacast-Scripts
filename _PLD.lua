@@ -34,15 +34,62 @@ local sets = {
 	of your PLD, whichever is lower. That means you can charm higher level mobs than you would expect with /bst.
 	Just note though that you can't have two pets, so if you have charmed a pet with /bst, you can't summon your
 	avatar and visa versa.
+	
+	Also, unlike true pet jobs like SMN and BST, PLD can only have a pet through a subjob. While associated pet
+	gearsets are available, you equally can just skip them since the pet is at half your level.
 --]]
 
 --[[
-	The "Idle" set is what your character will wear when it is not fighting nor resting nor in town. Whether just 
-	standing out of town or going to a different area, the "Idle" set will be equipped. If you've subbed /SMN,
-	it is strongly recommended that you use gear that has avatar perpetuation cost down attributes on it here. If
-	you've subbed /BST, gear swaps occur during the appropriate ability.
+	The TP sets are used when you or your pet are fighting: "TP" for you and "TP_Pet" for you and your pet 
+	(or just your pet). The accuracy set will be used if ACC is specified and the evasion set if EVA is 
+	specified. Please note that your tanking set should go into TP_Tank and that your DPS or healing set
+	should go into the TP set. This is true for any true tanking jobs.
 --]]
 
+	['TP_Tank'] = {
+	},
+	['TP_Tank_Conditional'] = {
+	},
+	
+	['TP'] = {
+    },
+	['TP_Conditional'] = {
+	},
+	
+	['TP_Pet'] = {
+    },
+	['TP_Pet_Conditional'] = {
+	},
+	
+--[[
+	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
+	(Please note that Pet_Accuracy is applied before Accuracy if you have a pet.)
+--]]
+	
+	['Accuracy'] = {
+    },
+	['Accuracy_Conditional'] = {
+	},
+	
+	['Pet_Accuracy'] = {
+    },
+	['Pet_Accuracy_Conditional'] = {
+	},
+	
+--[[
+	If evasion wanted, equip evasion gear
+--]]
+	
+	['Evasion'] = {
+    },
+	['Evasion_Conditional'] = {
+	},
+
+	['Pet_Evasion'] = {
+    },
+	['Pet_Evasion_Conditional'] = {
+	},
+	
 	--[[
 		The Idle_Regen and Idle_Refresh gear sets are used to restore a player's HP or MP that goes 
 		below a set percentage (defined in gcinclude.lua, but can be overriden in profile.OnLoad
@@ -59,13 +106,13 @@ local sets = {
 	['Idle_Refresh_Conditional'] = {
 	},
 	
-	--[[
-		When you are resting (kneeling down), your HP 'Resting' set will be equipped. If your MP 
-		is below the set threshhold (defined by gcinclude.settings.RefreshGearMP) though, your MP 
-		'Resting_Refresh' gear set will be equipped. Regardless of which set is equipped, if you
-		have a Dark/Pluto staff accessible, you've indicated that weapon swapping is permissible,
-		and your MP is not at maximum, the Dark/Pluto staff will automatically be equipped.
-	--]]
+--[[
+	When you are resting (kneeling down), your HP 'Resting' set will be equipped. If your MP 
+	is below the set threshhold (defined by gcinclude.settings.RefreshGearMP) though, your MP 
+	'Resting_Refresh' gear set will be equipped. Regardless of which set is equipped, if you
+	have a Dark/Pluto staff accessible, you've indicated that weapon swapping is permissible,
+	and your MP is not at maximum, the Dark/Pluto staff will automatically be equipped.
+--]]
 	
 	['Resting_Regen'] = { 
 	},
@@ -77,14 +124,6 @@ local sets = {
 	['Resting_Refresh_Conditional'] = {
 	},
 
-	['Resting_Refresh_Conditional'] = {
-	},
-
-	['Resting_Refresh_Weapon_Sub51'] = {
-	},
-	['Resting_Refresh_Weapon_Sub51_Conditional'] = {
-	},
-	
 	-- If you have any Spell Interruption Rate down gear, put them into the "SIR" gear set.
 	-- This gear set is equipped in the HandleMidcast function that all spells go through.
 	['SIR'] = {
@@ -98,8 +137,6 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-        Main = 'Windurstian Sword',
-        Ammo = 'Fortune Egg',
     },
 	['Start_Weapons_Conditional'] = {
 	},
@@ -138,77 +175,10 @@ local sets = {
 	},
 	
 --[[
-		The TP sets are used when you or your pet are fighting: "TP" for you and "TP_Pet" for you and your pet 
-		(or just your pet). The accuracy set will be used if ACC is specified and the evasion set if EVA is 
-		specified.
---]]
-
-	['TP'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ear1 = 'Beetle Earring',
-        Ear2 = 'Beetle Earring',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'Tamas Ring',
-        Ring2 = 'Jaeger Ring',
-		Back = 'Ram mantle',
-        Waist = 'Tilt Belt',
-		Legs = 'Ryl.Sqr. Breeches',
-        Feet = 'Bounding Boots',
-    },
-	['TP_Conditional'] = {
-	},
-
-	['TP_Solo'] = {
-	},
-	['TP_Solo_Conditional'] = {
-	},
-	
-	['TP_Pet'] = {
-    },
-	['TP_Pet_Conditional'] = {
-	},
-
-	['TP_Tank'] = {
-	},
-	['TP_Tank_Conditional'] = {
-	},
-	
---[[
-	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
-	(Please note that Pet_Accuracy is applied after Accuracy if you have a pet.)
---]]
-	
-	['Accuracy'] = {
-        Ring2 = 'Jaeger Ring',				-- Accuracy +4
-    },
-	['Accuracy_Conditional'] = {
-	},
-	
-	['Pet_Accuracy'] = {
-		Ear2 = 'Beastly Earring',				-- Pet Accuracy +10
-    },
-	['Pet_Accuracy_Conditional'] = {
-	},
-	
---[[
-	If evasion wanted, equip evasion gear
---]]
-	
-	['Evasion'] = {
-        Head = 'Empress Hairpin',			-- Evasion 10
-        Legs = 'San. Trousers',				-- Evasion +2
-    },
-	['Evasion_Conditional'] = {
-	},
-
---[[
 	Magic accuracy gear
 --]]
 
 	['Macc'] = {
-        Ring1 = 'Tamas Ring',			-- Magical Accuracy +5
     },
 	['Macc_Conditional'] = {
 	},
@@ -220,7 +190,6 @@ local sets = {
 	['MAB'] = {
 	},
 	['MAB_Conditional'] = {
-		{'Uggalepih Pendant','MAB +8% if MPP <= 50%','Neck',70,'ALL','MP.LE.50P'},
 	},
 	
 --[[
@@ -229,9 +198,6 @@ local sets = {
 --]]
 
 	['Preshot'] = {
-        Head = 'Optical Hat',
-        Ring1 = 'Jaeger Ring',
-        Back = 'Psilos Mantle',
     },
 	['Preshot_Conditional'] = {
 	},
@@ -340,22 +306,11 @@ local sets = {
 --]]
 
 	['INT'] = {
-        Ring1 = 'Tamas Ring',
-        Ring2 = 'Windurstian Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Feet = 'Mannequin Pumps',
     },
 	['INT_Conditional'] = {
 	},
 	
 	['MND'] = {
-        Neck = 'Justice Badge',				-- +3 MND
-        Body = 'Wonder Kaftan',
-        Ring1 = 'Tamas Ring',
-        Ring2 = 'Tranquility Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Mannequin Pumps',
     },
 	['MND_Conditional'] = {
 	},
@@ -363,18 +318,12 @@ local sets = {
 --[[
 	Some spells are special cases, so they require tailored gears sets.
 --]]
+
 	-- Stoneskin: Stoneskin Enhancement, Mind, and Enhancing Magic Skill. Mind is 3x more important than enhancing
 	-- Magic Skill. The only pieces of gear a PLD can wear to enhance stoneskin is a Stone Gorget and Stone Mufflers. 
 	-- There's no gear that a PLD (or any job) can wear to enhance magic. Note: This gear set has no effect on 
 	-- Titan's Stoneskin blood pact.
 	['Stoneskin'] = {
-		Neck = 'Justice Badge',			-- +3 MND
-        Body = 'Wonder Kaftan',			-- +1 MND
-        Ring1 = 'Tamas Ring',			-- +2~5 MND
-        Ring2 = 'Tranquility Ring',		-- +2 MND
-        Waist = 'Friar\'s Rope',		-- +1 MND
-        Legs = 'Wonder Braccae',		-- +2 MND
-        Feet = 'Mannequin Pumps',		-- +2 MND
 	},	
 	['Stoneskin_Conditional'] = {
 	},
@@ -438,15 +387,6 @@ local sets = {
 -]]
 	
 	['WS_STR'] = {
-	    Head = 'Mrc.Cpt. Headgear',		-- +1 STR
-        Neck = 'Spike Necklace',		-- +3 STR
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'San d\'Orian Ring',
-        Ring2 = 'Courage Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Wonder Clomps',
     },
 	['WS_STR_Conditional'] = {
 	},
@@ -459,16 +399,6 @@ local sets = {
 --]]
 
 	['WS_STRAGI'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ear2 = 'Drone Earring',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'San d\'Orian Ring',
-        Ring2 = 'Courage Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Bounding Boots',
     },
 	['WS_STRAGI_Conditional'] = {
 	},
@@ -481,16 +411,6 @@ local sets = {
 --]]
 
 	['WS_STRDEX'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ear2 = 'Drone Earring',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'Courage Ring',
-        Ring2 = 'Balance Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Bounding Boots',
     },
 	['WS_STRDEX_Conditional'] = {
 	},
@@ -505,15 +425,6 @@ local sets = {
 --]]
 	
 	['WS_STRINT'] = {
-        Neck = 'Spike Necklace',
-        Ear2 = 'Drone Earring',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'Tamas Ring',
-        Ring2 = 'Courage Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Wonder Clomps',
     },
 	['WS_STRINT_Conditional'] = {
 	},
@@ -525,15 +436,6 @@ local sets = {
 --]]
 	
 	['WS_STRINT_30_20'] = {
-        Neck = 'Spike Necklace',
-        Ear2 = 'Drone Earring',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'Tamas Ring',
-        Ring2 = 'Courage Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Wonder Clomps',
     },
 	['WS_STRINT_30_20_Conditional'] = {
 	},
@@ -548,14 +450,6 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
-        Neck = 'Justice Badge',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'Tamas Ring',
-        Ring2 = 'Courage Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Wonder Clomps',
     },
 	['WS_STRMND_Conditional'] = {
 	},
@@ -567,14 +461,6 @@ local sets = {
 --]]
 	
 	['WS_STRVIT'] = {
-        Neck = 'Spike Necklace',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'Bastokan Ring',
-        Ring2 = 'Courage Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Wonder Clomps',
     },
 	['WS_STRVIT_Conditional'] = {
 	},
@@ -586,8 +472,6 @@ local sets = {
 --]]
 	
 	['WS_CHR'] = {
-        Neck = 'Flower Necklace',
-        Waist = 'Mrc.Cpt. Belt',
     },
 	['WS_CHR_Conditional'] = {
 	},
@@ -599,11 +483,6 @@ local sets = {
 --]]
 	
 	['WS_DEX'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ring2 = 'Balance Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Feet = 'Bounding Boots',
     },
 	['WS_DEX_Conditional'] = {
 	},
@@ -615,11 +494,6 @@ local sets = {
 --]]
 	
 	['WS_DEXCHR'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ring2 = 'Balance Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Feet = 'Bounding Boots',
     },
 	['WS_DEXCHR_Conditional'] = {
 	},
@@ -631,11 +505,6 @@ local sets = {
 --]]
 	
 	['WS_DEXINT'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ring2 = 'Balance Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Feet = 'Bounding Boots',
     },
 	['WS_DEXINT_Conditional'] = {
 	},
@@ -669,12 +538,6 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
-        Neck = 'Justice Badge',
-        Body = 'Wonder Kaftan',
-        Ring1 = 'Tamas Ring',
-        Ring2 = 'Tranquility Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
     },
 	['WS_MND_Conditional'] = {
 	},
@@ -689,7 +552,18 @@ local sets = {
     },
 	['WS_Skill_Conditional'] = {
 	},
+	
+--[[
+		* HP based *
+		
+		Sword: Spirits Within
+--]]
 
+	['WS_HP'] = {
+    },
+	['WS_HP_Conditional'] = {
+	},
+	
 --[[
 	Movement tends to be used for kiting. Emphasis should be placed on gear that increases movement speed, but you 
 	might also want gear that has evasion. The choice is yours.
@@ -739,7 +613,6 @@ local sets = {
 --]]
 	--* BST *--
 	['Charm'] = {		-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration)
-		Neck = 'Flower Necklace',			-- Chr +3
     },
 	['Charm_Conditional'] = {
 	},
@@ -770,66 +643,7 @@ local sets = {
 	},
 	['Jumps_Conditional'] = {
 	},
-	
---[[
-								*** Custom Sets Go below this comment ***
-								
-	The following "CAP" sets are added as a convenience for playing in level capped areas. The only way for them to be 
-	loaded is via the /gearset command, which will turn GSwap off. If you're level syncing, pick the set that's closest 
-	to the sync level and adjust accordingly.
---]]
-
-	['CAP20'] = {
-        Head = 'Silver Hairpin',
-        Neck = 'Spike Necklace',
-        Ear1 = 'Beetle Earring',
-        Ear2 = 'Beetle Earring',
-        Body = 'Angler\'s Tunica',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'Courage Ring',
-        Ring2 = 'Balance Ring',
-        Waist = 'Barbarian\'s Belt',
-        Legs = 'Ryl.Ftm. Trousers',
-        Feet = 'Bounding Boots',
-    },
-	
-	['CAP25'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ear1 = 'Beetle Earring',
-        Ear2 = 'Beetle Earring',
-        Body = 'Beetle Harness',
-        Hands = 'Ryl.Ftm. Gloves',
-        Ring1 = 'Beetle Ring +1',
-        Ring2 = 'Beetle Ring +1',
-        Waist = 'Barbarian\'s Belt',
-        Legs = 'San. Trousers',
-        Feet = 'Bounding Boots',
-    },
-	
-	['CAP30'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ear1 = 'Beetle Earring',
-        Ear2 = 'Beetle Earring',
-        Body = 'Beetle Harness',
-        Hands = 'Wonder Mitts',
-        Ring1 = 'Tamas Ring',
-        Ring2 = 'Beetle Ring +1',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'San. Trousers',
-        Feet = 'Bounding Boots',
-    },
-	
-	['CAP40'] = {
-    },
-	
-	['CAP50'] = {
-    },
-
-	['CAP60'] = {
-    },
-	
+		
 --[[
 	The following set is used to dynamically create a gear set to be displayed once rather
 	than in a piecemeal manner. It is hoped that this will cut down on flickering gear and
@@ -837,6 +651,11 @@ local sets = {
 	do not modify it.
 --]]	
 	['CurrentGear'] = { },	
+
+--[[
+								*** Custom Sets Go below this comment ***
+--]]
+	
 };
 
 profile.Sets = sets;
@@ -884,7 +703,7 @@ end
 --]]
 
 local function SetSubjobSet(chkSJ)
-	local subs = {['WAR'] = 2, ['MNK'] = 0, ['WHM'] = 2, ['BLM'] = 3, ['RDM'] = 2, ['THF'] = 3,
+	local subs = {['WAR'] = 1, ['MNK'] = 0, ['WHM'] = 1, ['BLM'] = 1, ['RDM'] = 1, ['THF'] = 1,
 				 ['PLD'] = 0, ['DRK'] = nil, ['BST'] = 0, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = 0,
 				 ['SAM'] = 1, ['NIN'] = 1, ['DRG'] = 1, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
 				 ['DNC'] = 0, ['SCH'] = 0, ['GEO'] = 0, ['RUN'] = 0};
@@ -918,7 +737,7 @@ profile.OnLoad = function()
 	gcdisplay.SerToggle('Tank',true);		-- Assume PLD is a tank
 
 	-- Coded order of operation override
-	gcinclude.settings.priorityEngaged = 'BCEFGH';
+	gcinclude.settings.priorityEngaged = 'CEFGH';
 	gcinclude.settings.priorityMidCast = 'ABCDEFGH';
 	gcinclude.settings.priorityWeaponSkill = 'ABDE';
 	
@@ -926,7 +745,7 @@ profile.OnLoad = function()
 	gcinclude.CheckMagic50(player);
 	
 	-- Set your job macro toolbar defaults here. Which set depends on the subjob
-	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 9');		-- DRK
+	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 9');		-- PLD
 	SetSubjobSet(player.SubJob);
 	
 	-- Load up the weapons bar. (This need only be done once.)
@@ -972,15 +791,24 @@ end
 --]]
 	
 profile.HandleDefault = function()
-	local player = gData.GetPlayer();
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();
+	local player = gData.GetPlayer();
+	local zone = gData.GetEnvironment();
 	local ew = gData.GetEquipment();
-	local zone = gData.GetEnvironment();	
 	local eWeap = nil;
 	local cKey;
-
-	-- Make sure that the global magic settings for the player are known.		
+	local myLevel = AshitaCore:GetMemoryManager():GetPlayer():GetMainJobLevel();
+	
+	-- Note the player's current level
+	if (myLevel ~= gcinclude.settings.iCurrentLevel) then
+        gcinclude.settings.iCurrentLevel = myLevel;
+    end
+	
+	-- Make sure that the global magic settings for the player are known. The second clause in
+	-- the if statement takes care of a bizarre case. Turns out if you change the player.MainJob
+	-- from a job where there is not a luashitacast script, it initially remembers the old main
+	-- job. by including the second call, a subsequent invocation occurs getting it right.		
 	if gcinclude.settings.bMagicCheck == false or gcinclude.settings.sMJ ~= player.MainJob then
 		gcinclude.CheckMagic50(player);
 	end
@@ -1017,13 +845,10 @@ profile.HandleDefault = function()
 		end
 	end
 
-	-- The default set is the TP gear set. Load it up
+	-- The default set is the TP gear set, but if a tanking set is indicated, That
+	-- should take priority.
 	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
 	gcinclude.ProcessConditional(sets.TP_Conditional,nil,sets.CurrentGear);
-	if gcdisplay.GetCycle('Solo') == true then
-		gcinclude.MoveToCurrent(sets.TP_Solo,sets.CurrentGear);
-		gcinclude.ProcessConditional(sets.TP_Solo_Conditional,nil,sets.CurrentGear);
-	end
 	
 	if gcdisplay.GetToggle('Tank') == true then
 		gcinclude.MoveToCurrent(sets.TP_Tank,sets.CurrentGear);
@@ -1031,6 +856,7 @@ profile.HandleDefault = function()
 	end
 		
 	-- Now process the player status accordingly
+	gcdisplay.SetLocksAction(gcinclude.LocksNumeric,player.Status);		
 	if player ~= nil and player.Status == 'Engaged' then
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
@@ -1040,19 +866,25 @@ profile.HandleDefault = function()
 					gcinclude.MoveToCurrent(sets.TP_Pet,sets.CurrentGear);
 					gcinclude.ProcessConditional(sets.TP_Pet_Conditional,nil,sets.CurrentGear);
 				end	
-			elseif cKey == 'C' then		-- Evasion			
+			elseif cKey == 'C' then		-- Evasion	
+				-- The player should have priority over any pets
 				if gcdisplay.GetToggle('Eva') == true then
+					if pet ~= nil then
+						gcinclude.MoveToCurrent(sets.Pet_Evasion,sets.CurrentGear);
+						gcinclude.ProcessConditional(sets.Pet_Evasion_Conditional,nil,sets.CurrentGear);
+					end
 					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 					gcinclude.ProcessConditional(sets.Evasion_Conditional,nil,sets.CurrentGear);
 				end
 			elseif cKey == 'E' then		-- Accuracy	
+				-- The player should have priority over any pets
 				if gcdisplay.GetToggle('Acc') == true then 
-					gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
-					gcinclude.ProcessConditional(sets.Accuracy_Conditional,nil,sets.CurrentGear);
 					if pet ~= nil and pet.Status == 'Engaged' then
 						gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear);
 						gcinclude.ProcessConditional(sets.Pet_Accuracy_Conditional,nil,sets.CurrentGear);
 					end
+					gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
+					gcinclude.ProcessConditional(sets.Accuracy_Conditional,nil,sets.CurrentGear);
 				end
 			elseif cKey == 'F' then		-- Kiting
 				if (gcdisplay.GetToggle('Kite') == true) then
@@ -1078,26 +910,21 @@ profile.HandleDefault = function()
 		end
 	elseif player.Status == 'Resting' then
 		-- Player kneeling. Priority (low to high): regen,refresh
-		gcinclude.MoveToCurrent(sets.Resting_Regen,sets.CurrentGear);
-		gcinclude.ProcessConditional(sets.Resting_Regen_Conditional,nil,sets.CurrentGear);
-		if player.MPP < gcinclude.settings.RefreshGearMPP then
-			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
-			gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional,nil,sets.CurrentGear);
+		
+		if player.HP < player.MaxHP then
+			gcinclude.MoveToCurrent(sets.Resting_Regen,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.Resting_Regen_Conditional,nil,sets.CurrentGear);
 		end
 		
-		-- Weapon swap to a weapon that refreshes MP if player's subjob uses magic, weapon swapping
-		-- is enabled (/wswap) and their MP is not at maximum
-		if gcdisplay.GetToggle('WSwap') == true and player.MP < player.MaxMP then
-			if gcinclude.settings.bStave == false then
-				gcinclude.CheckForStaves();
-			end
-			if player.MainJobLevel < 51 then
-				gcinclude.MoveToCurrent(sets.Resting_Refresh_Weapon_Sub51,sets.CurrentGear);
-				gcinclude.ProcessConditional(sets.Resting_Refresh_Weapon_Sub51_Conditional,nil,sets.CurrentGear);
-			else
+		if gcinclude.settings.bMagic == true and player.MPP < gcinclude.settings.RefreshGearMPP then
+			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional,nil,sets.CurrentGear);
+			
+			if string.find(gcinclude.sMagicJobs,player.SubJob) then
 				gcinclude.SwapToStave('dark',false,sets.CurrentGear);
-			end
+			end				
 		end
+
 		-- Check for common debuffs
 		gcinclude.CheckCommonDebuffs();
 	else
@@ -1108,6 +935,7 @@ profile.HandleDefault = function()
 			gcinclude.MoveToCurrent(sets.Town,sets.CurrentGear);
 			gcinclude.ProcessConditional(gcinclude.sets.Town_Conditional,nil,sets.CurrentGear);
 		end
+		
 		-- if the player's HP is below the threshold setting, equip the idle regen gear
 		if player.HPP < gcinclude.settings.RegenGearHPP then
 			gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
@@ -1118,8 +946,25 @@ profile.HandleDefault = function()
 			gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
 			gcinclude.ProcessConditional(sets.Idle_Refresh_Conditional,nil,sets.CurrentGear);
 		end
+		
 		-- Check for common debuffs
 		gcinclude.CheckCommonDebuffs();		
+	end
+
+	-- Make sure to equip the appropriate elemental staff for the current pet (/smn only)
+	if (pet ~= nil and player.SubJob == 'SMN' and gcdisplay.GetToggle('WSwap') == true) then
+		local pName = string.lower(pet.Name);
+		if string.find(gcinclude.MagicSkill['Summoning'],pName) ~= nil then
+			local pEle = gcinclude.SummonStaves[pet.Name];
+			gcinclude.SwapToStave(pEle,false,sets.CurrentGear);
+		end
+	end
+
+	-- And make sure a weapon equipped. (Going into a capped area can cause no weapon to be equipped.)
+	local gear = gData.GetEquipment();
+	if gear.Main == nil then
+		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
+		gcinclude.ProcessConditional(sets.Start_Weapons_Conditional,nil,sets.CurrentGear);
 	end
 	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set
@@ -1165,7 +1010,6 @@ profile.HandleAbility = function()
 		gcinclude.ProcessConditional(sets.Charm_Conditional,nil,sets.CurrentGear);
 		
 		-- If weapon swapping is allowed, equip a light/apollo staff (if you have one)
-	
 		if gcdisplay.GetToggle('WSwap') == true then
 			if gcinclude.settings.bStave == false then
 				gcinclude.CheckForStaves();
@@ -1173,7 +1017,7 @@ profile.HandleAbility = function()
 			if gcinclude.settings.bStave == true then
 				gcinclude.SwapToStave('light',false,sets.CurrentGear);
 			end
-		end
+		end	
 	elseif string.match(ability.Name, 'Weapon Bash') then		-- assumes /drk
 		gcinclude.MoveToCurrent(sets.WeaponBash,sets.CurrentGear);
 		gcinclude.ProcessConditional(sets.WeaponBash_Conditional,nil,sets.CurrentGear);
@@ -1210,8 +1054,20 @@ profile.HandleItem = function()
 		if string.match(item.Name, 'Holy Water') then 
 			gcinclude.MoveToCurrent(gcinclude.sets.Holy_Water,sets.CurrentGear);
 			gcinclude.ProcessConditional(gcinclude.sets.Holy_Water_Conditional,nil,sets.CurrentGear);
-			gcinclude.EquipTheGear(sets.CurrentGear);	-- if more items are added, move this to addess all
-		end			
+			bShow = true;
+		elseif string.match(item.Name, 'Silent Oil') then
+			gcinclude.MoveToCurrent(sets.Sneak,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.Sneak_Conditional,nil,sets.CurrentGear);
+			bShow = true;
+		elseif string.match(item.Name, 'Prism Powder') then
+			gcinclude.MoveToCurrent(sets.Invisible,sets.CurrentGear);
+			gcinclude.ProcessConditional(sets.Invisible_Conditional,nil,sets.CurrentGear);
+			bShow = true;
+		end
+		
+		if bShow == true then
+			gcinclude.EquipTheGear(sets.CurrentGear);
+		end
 	end
 end
 
@@ -1225,21 +1081,26 @@ profile.HandlePrecast = function()
 	local obi;
 	local mSet;
 		
-	-- Normal process
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
-		gFunc.EquipSet(sets.Precast);
+	-- Only gear swap if this flag is true
+	if gcdisplay.GetToggle('GSwap') == false then
+		return;
+	end
 		
-		-- See if an elemental obi should be equipped
-		if gcinclude.settings.bEleObis == false then
-			gcinclude.CheckForObisGorgets();
-		end		
-		if gcinclude.settings.bEleObis == true then
-			obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
-			if obi ~= nil then
-				gFunc.ForceEquip('Waist',obi);
-			end
+	-- Equip the precast gear set
+	gcinclude.MoveToCurrent(sets.Precast,sets.CurrentGear);
+	gcinclude.ProcessConditional(sets.Precast_Conditional,nil,sets.CurrentGear);
+		
+	-- See if an elemental obi should be equipped
+	if gcinclude.settings.bEleObis == false then
+		gcinclude.CheckForObisGorgets();
+	end		
+	if gcinclude.settings.bEleObis == true then
+		obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
+		if obi ~= nil then
+			sets.CurrentGear['Waist'] = obi;
 		end
 	end
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end
 
 --[[
@@ -1326,6 +1187,10 @@ profile.HandleMidcast = function()
 			end
 		elseif cKey == 'F' then			-- Spell specific gear			
 			if string.match(spell.Name, 'Stoneskin') then
+				-- Mind has a large affect on Stoneskin, so equip it here
+				gcinclude.MoveToCurrent(sets.MND,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.MND_Conditional,nil,sets.CurrentGear);
+				-- Now load the specific stoneskin set				
 				gcinclude.MoveToCurrent(sets.Stoneskin,sets.CurrentGear);
 				gcinclude.ProcessConditional(sets.Stoneskin_Conditional,nil,sets.CurrentGear);
 			elseif string.match(spell.Name, 'Drain') then
@@ -1482,6 +1347,9 @@ profile.HandleWeaponskill = function()
 			elseif sWS == 'WS_Skill' then
 				gcinclude.MoveToCurrent(sets.WS_Skill,sets.CurrentGear);
 				gcinclude.ProcessConditional(sets.WS_Skill_Conditional,nil,sets.CurrentGear);
+			elseif sWS == 'WS_HP' then
+				gcinclude.MoveToCurrent(sets.WS_HP,sets.CurrentGear);			
+				gcinclude.ProcessConditional(sets.WS_HP_Conditional,nil,sets.CurrentGear);				
 			end
 		elseif cKey == 'B' then		-- elemental gorget	
 			if gcinclude.settings.bEleGorgets == false then

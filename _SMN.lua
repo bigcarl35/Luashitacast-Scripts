@@ -37,6 +37,84 @@ local sets = {
 --]]
 
 --[[
+	Unlike most jobs, summoner's emphasis is fighting with your avatar. For consistency with other
+	jobs, ['Accuracy'] is for the player's accuracy and ['Pet_Accuracy'] is for the pet. I originally
+	implemented the two combined, but it is now separated. The same is for ['Evasion']/['Pet Evasion'].
+	['Macc'] is for the player since pet Macc is applied during a blood pact and ['TP'] is still 
+	combined though and emphasizes the pet since summoner's are bad fighters.
+--]]
+
+	['TP'] = {
+        Head  = { 'Austere Hat', 'Shep. Bonnet', 'Silver Hairpin' },
+		Neck  = { 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
+		Ears  = { 'Loquac. Earring', 'Bat Earring', 'Black Earring', 'Onyx Earring' },
+        Body  = { 'Vermillion Cloak//CARBY','Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' }, 
+        Hands = 'Carbuncle Mitts',		-- if this becomes list, add //CARBY to the mitts
+		Rings = { 'Evoker\'s Ring', 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
+        Back  = { 'Blue Cape', 'White Cape' },
+        Waist = { 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
+        Legs  = { 'Evoker\'s Spats', 'Shep. Hose', 'Fisherman\'s Hose' }, 
+        Feet  = { 'Summoner\'s Pgch.', 'Mannequin Pumps', 'Seer\'s Pumps', 'Waders'},
+    },
+	['TP_Conditional'] = {
+		{'Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
+		{'Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},	
+	},
+	
+	['TP_No_Pet'] = {
+		Body  = { 'Vermillion Cloak', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
+	},
+	['TP_No_Pet_Conditional'] = {
+		{'Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
+		{'Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},	
+	},
+
+--[[
+	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
+--]]
+	
+	['Accuracy'] = {
+        Head  = 'Optical Hat',
+		Neck  = 'Peacock Amulet',
+		Body  = 'Austere Robe',			-- Needed to offset the "possible" Vermillion Cloak		
+		Hands = 'Battle Gloves',
+		Rings = { 'Toreador\'s Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
+		Waist = { 'Life Belt', 'Tilt Belt' },
+    },
+	['Accuracy_Conditional'] = {
+	},
+
+	['Pet_Accuracy'] = {
+        Head  = 'Shep. Bonnet',
+		Ears  = 'Beastly Earring',
+		Body  = 'Austere Robe',			-- Needed to offset the "possible" Vermillion Cloak	
+		Legs  = 'Evoker\'s Spats',
+    },
+	['Pet_Accuracy_Conditional'] = {
+	},
+	
+--[[
+	If evasion wanted, equip evasion gear
+--]]
+	
+	['Evasion'] = {
+		Head  = { 'Optical Hat', 'Empress Hairpin' },
+		Ears  = { 'Bat Earring//BLIND', 'Ethereal Earring', 'Genin Earring//SJNIN', 'Drone Earring', 'Windurstian Earring' },
+		Neck  =  'Spirit Torque',
+		Body  = 'Austere Robe',			-- Needed to offset the "possible" Vermillion Cloak	
+		Hands = 'Battle Gloves',
+		Legs  = 'Evoker\'s Spats',	
+    },
+	['Evasion_Conditional'] = {
+	},
+	
+	['Pet_Evasion'] = {
+		Legs  = 'Shep. Hose',
+    },
+	['Pet_Evasion_Conditional'] = {
+	},
+	
+--[[
 	The Idle_Regen and Idle_Refresh gear sets are used to restore a player's HP or MP that	goes below
 	a set percentage (defined in gcinclude.lua, but can be overriden in profile.OnLoad 	function).
 --]]
@@ -50,10 +128,10 @@ local sets = {
 	['Idle_With_Pet_Conditional'] = {			-- Conjurer's ring seems the only possibility
 	},
 	
-	--[[
-		The Idle_Regen and Idle_Refresh gear sets replace the normal Idle set when the player's HP or MP
-		go below a set percentage (defined in gcinclude.lua, but can be overriden in profile.OnLoad function).
-	--]]
+--[[
+	The Idle_Regen and Idle_Refresh gear sets replace the normal Idle set when the player's HP or MP
+	go below a set percentage (defined in gcinclude.lua, but can be overriden in profile.OnLoad function).
+--]]
 	
 	['Idle_Regen'] = {
 	},
@@ -66,14 +144,14 @@ local sets = {
 	['Idle_Refresh_Conditional'] = {
 	},
 	
-	--[[
-		When you are resting (kneeling down), your HP 'Resting' set will be equipped. If your subjob
-		uses MP and your MP is below the set threshhold (defined by gcinclude.settings.RefreshGearMP), 
-		your MP 'Resting_Refresh' gear set will be equipped. Regardless of which set is equipped, 
-		assuming that your subjob uses magic, you have a Dark/Pluto staff accessible, weapon swapping 
-		is enabled (/wswap), and your MP is not at maximum, the Dark/Pluto staff will automatically be 
-		equipped.
-	--]]
+--[[
+	When you are resting (kneeling down), your HP 'Resting' set will be equipped. If your subjob
+	uses MP and your MP is below the set threshhold (defined by gcinclude.settings.RefreshGearMP), 
+	your MP 'Resting_Refresh' gear set will be equipped. Regardless of which set is equipped, 
+	assuming that your subjob uses magic, you have a Dark/Pluto staff accessible, weapon swapping 
+	is enabled (/wswap), and your MP is not at maximum, the Dark/Pluto staff will automatically be 
+	equipped.
+--]]
 	
 	['Resting_Regen'] = {
         Waist = 'Hierarch Belt',
@@ -113,13 +191,13 @@ local sets = {
 	['BP_Conditional'] = {
 	},
 	
-	--[[
-		Rage blood pacts are devided by type: physical, magical, summoning skill, accuracy, 
-		and hybrid. (Ward blood pacts do not have this type of distiction.) Each blood pact 
-		though is of a fixed type and can be looked up. The following gear sets named
-		SmnXXX where XXX is the type define the gear to be equipped when the blood pact
-		goes off. Look to the specific gear set type for what gear stats are wanted.
-	--]]
+--[[
+	Rage blood pacts are devided by type: physical, magical, summoning skill, accuracy, 
+	and hybrid. (Ward blood pacts do not have this type of distiction.) Each blood pact 
+	though is of a fixed type and can be looked up. The following gear sets named
+	SmnXXX where XXX is the type define the gear to be equipped when the blood pact
+	goes off. Look to the specific gear set type for what gear stats are wanted.
+--]]
 	
 	-- Physical rage blood pact: pet attack, pet accuracy, pet critical hit, blood pact 
 	-- physical damage
@@ -215,84 +293,6 @@ local sets = {
 	},
 	['DT_Breath_Conditional'] = {
 	},	
-	
---[[
-		Unlike most jobs, summoner's emphasis is fighting with your avatar. For consistency with other
-		jobs, ['Accuracy'] is for the player's accuracy and ['Pet_Accuracy'] is for the pet. I originally
-		implemented the two combined, but it is now separated. The same is for ['Evasion']/['Pet Evasion'].
-		['Macc'] is for the player since pet Macc is applied during a blood pact and ['TP'] is still 
-		combined though and emphasizes the pet since summoner's are bad fighters.
---]]
-
-	['TP'] = {
-        Head  = { 'Austere Hat', 'Shep. Bonnet', 'Silver Hairpin' },
-		Neck  = { 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
-		Ears  = { 'Loquac. Earring', 'Bat Earring', 'Black Earring', 'Onyx Earring' },
-        Body  = { 'Vermillion Cloak//CARBY','Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' }, 
-        Hands = 'Carbuncle Mitts',		-- if this becomes list, add //CARBY to the mitts
-		Rings = { 'Evoker\'s Ring', 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
-        Back  = { 'Blue Cape', 'White Cape' },
-        Waist = { 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
-        Legs  = { 'Evoker\'s Spats', 'Shep. Hose', 'Fisherman\'s Hose' }, 
-        Feet  = { 'Summoner\'s Pgch.', 'Mannequin Pumps', 'Seer\'s Pumps', 'Waders'},
-    },
-	['TP_Conditional'] = {
-		{'Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
-		{'Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},	
-	},
-	
-	['TP_No_Pet'] = {
-		Body  = { 'Vermillion Cloak', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
-	},
-	['TP_No_Pet_Conditional'] = {
-		{'Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
-		{'Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},	
-	},
-		
---[[
-	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
---]]
-	
-	['Accuracy'] = {
-        Head  = 'Optical Hat',
-		Neck  = 'Peacock Amulet',
-		Body  = 'Austere Robe',			-- Needed to offset the "possible" Vermillion Cloak		
-		Hands = 'Battle Gloves',
-		Rings = { 'Toreador\'s Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
-		Waist = { 'Life Belt', 'Tilt Belt' },
-    },
-	['Accuracy_Conditional'] = {
-	},
-
-	['Pet_Accuracy'] = {
-        Head  = 'Shep. Bonnet',
-		Ears  = 'Beastly Earring',
-		Body  = 'Austere Robe',			-- Needed to offset the "possible" Vermillion Cloak	
-		Legs  = 'Evoker\'s Spats',
-    },
-	['Pet_Accuracy_Conditional'] = {
-	},
-	
---[[
-		If evasion wanted, equip evasion gear
---]]
-	
-	['Evasion'] = {
-		Head  = { 'Optical Hat', 'Empress Hairpin' },
-		Ears  = { 'Bat Earring//BLIND', 'Ethereal Earring', 'Genin Earring//SJNIN', 'Drone Earring', 'Windurstian Earring' },
-		Neck  =  'Spirit Torque',
-		Body  = 'Austere Robe',			-- Needed to offset the "possible" Vermillion Cloak	
-		Hands = 'Battle Gloves',
-		Legs  = 'Evoker\'s Spats',	
-    },
-	['Evasion_Conditional'] = {
-	},
-	
-	['Pet_Evasion'] = {
-		Legs  = 'Shep. Hose',
-    },
-	['Pet_Evasion_Conditional'] = {
-	},
 	
 --[[
 	Magic accuracy gear
@@ -773,18 +773,20 @@ local sets = {
 	},
 	['Jumps_Conditional'] = {
 	},
-	
---[[
-								*** Custom Sets Go below this comment ***
---]]
 
 --[[
 	The following set is used to dynamically create a gear set to be displayed once rather
 	than in a piecemeal manner. It is hoped that this will cut down on flickering gear and
 	possibly speed up the code. *** This set is to be left empty by the player ***. Please
 	do not modify it.
---]]	
+--]]
+
 	['CurrentGear'] = { },
+	
+--[[
+								*** Custom Sets Go below this comment ***
+--]]
+
 };
 
 profile.Sets = sets;
@@ -1159,7 +1161,7 @@ profile.HandleDefault = function()
 	-- And make sure a weapon equipped. (Going into a capped area can cause no weapon to be equipped.)
 	local gear = gData.GetEquipment();
 	if gear.Main == nil then
-		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
 		gcinclude.ProcessConditional(sets.Start_Weapons_Conditional,nil,sets.CurrentGear);
 	end
 	

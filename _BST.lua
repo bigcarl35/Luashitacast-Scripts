@@ -36,11 +36,87 @@ local sets = {
 	Just an FYI.
 --]]
 
-	--[[
-		The Idle_Regen and Idle_Refresh gear sets are used to restore a player's HP or MP that goes 
-		below a set percentage (defined in gcinclude.lua, but can be overriden in profile.OnLoad
-		function).
-	--]]
+--[[
+	The TP sets are used when you or your pet are fighting: "TP" for you and "TP_Pet" for you and your pet (or just your pet). 
+	The accuracy set will be used if ACC is specified and the evasion set if EVA is specified.
+--]]
+
+	['TP'] = {
+        Head  = { 'Panther Mask', 'Beast Helm', 'Shep. Bonnet', 'Empress Hairpin', 'Silver Hairpin//MSJ' },
+        Neck  = { 'Peacock Amulet', 'Spike Necklace' },
+		Ears  = { 'Ethereal Earring', 'Beastly Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Bat Earring//MSJ', 'Black Earring//MSJ', 'Physical Earring//SJNIN', 'Reraise Earring', 'Physical Earring', 'Onyx Earring//MSJ' },
+        Body  = { 'Narasimha\'s Vest', 'Beast Jackcoat', 'Gaudy Harness//MSJ', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
+        Hands = { 'Thick Mufflers', 'Beast Gloves', 'Wonder Mitts', 'Battle Gloves', 'Ryl.Ftm. Gloves' },
+        Rings = { 'Sun Ring', 'Tamas Ring//MSJ', 'Sun Ring', 'Courage Ring', 'Balance Ring', 'San d\'Orian Ring' },
+        Back  = { 'Psilos Mantle', 'Raptor Mantle', 'Ram Mantle' },
+        Waist = { 'Swift Belt', 'Tilt Belt', 'Warrior\'s Belt' },
+        Legs  = { 'Thick Breeches', 'Beast Trousers', 'Shep. Hose', 'San. Trousers', 'Ryl.Ftm. Trousers' },
+        Feet  = { 'Thick Sollerets', 'Beast Gaiters', 'Wonder Clomps', 'Bounding Boots' },
+    },
+	['TP_Conditional'] = {
+		{'Gaudy Harness','Adds refresh if MP < 50','Body',50,'BST','MP.LT.50'},
+	},
+	
+	['TP_Pet'] = {
+        Head = 'Shep. Bonnet',
+		Legs = 'Shep. Hose',
+    },
+	['TP_Pet_Conditional'] = {
+	},
+	
+--[[
+	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
+	(Please note that Pet_Accuracy is applied after Accuracy if you have a pet.)
+--]]
+
+	['Accuracy'] = {
+        Head  = 'Optical Hat',
+        Neck  = 'Peacock Amulet',
+        Body  = { 'Narasimha\'s Vest', 'Beast Jackcoat' },
+        Hands = { 'Thick Mufflers', 'Battle Gloves' },
+		Ears  = { 'Pilferer\'s Earring//SJTHF' },
+		Rings = { 'Toreador\'s Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
+        Back = 'Psilos Mantle',
+        Waist = { 'Life Belt', 'Tilt Belt' },
+        Legs = 'Thick Breeches',
+        Feet = 'Thick Sollerets',
+    },	
+	['Accuracy_Conditional'] = {
+	},
+
+	['Pet_Accuracy'] = {
+	    Head = 'Shep. Bonnet',
+		Ears = 'Beastly Earring',
+    },
+	['Pet_Accuracy_Conditional'] = {
+	},
+
+--[[
+	If evasion wanted, equip evasion gear
+--]]
+
+	['Evasion'] = {
+        Head  = { 'Optical Hat', 'Empress Hairpin' },
+		Ears  = { 'Bat Earring//BLIND', 'Ethereal Earring', 'Reraise Earring' },
+        Body = 'Narasimha\'s Vest',	
+		Hands = 'Battle Gloves',
+        Legs = 'San. Trousers',
+		Feet = 'Bounding Boots',	-- default gear is thick sollerets which are -2 eva
+    },
+	['Evasion_Conditional'] = {		-- bat earring should go here. Need buff check
+	},
+
+	['Pet_Evasion'] = {
+		Legs  = 'Shep. Hose',
+    },
+	['Pet_Evasion_Conditional'] = {
+	},
+	
+--[[
+	The Idle_Regen and Idle_Refresh gear sets are used to restore a player's HP or MP that goes 
+	below a set percentage (defined in gcinclude.lua, but can be overriden in profile.OnLoad
+	function).
+--]]
 	
 	['Idle_Regen'] = {
 	},
@@ -53,14 +129,14 @@ local sets = {
 		{'Gaudy Harness','Adds refresh if MP < 50','Body',50,'BST','MP.LT.50'},
 	},
 	
-	--[[
-		When you are resting (kneeling down), your HP 'Resting' set will be equipped. If your subjob
-		uses MP and your MP is below the set threshhold (defined by gcinclude.settings.RefreshGearMP), 
-		your MP 'Resting_Refresh' gear set will be equipped. Regardless of which set is equipped, 
-		assuming that your subjob uses magic, you have a Dark/Pluto staff accessible, weapon swapping 
-		is enabled (/wswap), and your MP is not at maximum, the Dark/Pluto staff will automatically be 
-		equipped.
-	--]]
+--[[
+	When you are resting (kneeling down), your HP 'Resting' set will be equipped. If your subjob
+	uses MP and your MP is below the set threshhold (defined by gcinclude.settings.RefreshGearMP), 
+	your MP 'Resting_Refresh' gear set will be equipped. Regardless of which set is equipped, 
+	assuming that your subjob uses magic, you have a Dark/Pluto staff accessible, weapon swapping 
+	is enabled (/wswap), and your MP is not at maximum, the Dark/Pluto staff will automatically be 
+	equipped.
+--]]
 	
 	['Resting_Regen'] = { 
 		Legs = 'Monster trousers',
@@ -129,82 +205,6 @@ local sets = {
 	['DT_Breath'] = { 
 	},
 	['DT_Breath_Conditional'] = {
-	},
-	
---[[
-		The TP sets are used when you or your pet are fighting: "TP" for you and "TP_Pet" for you and your pet (or just your pet). 
-		The accuracy set will be used if ACC is specified and the evasion set if EVA is specified.
---]]
-
-	['TP'] = {
-        Head  = { 'Panther Mask', 'Beast Helm', 'Shep. Bonnet', 'Empress Hairpin', 'Silver Hairpin//MSJ' },
-        Neck  = { 'Peacock Amulet', 'Spike Necklace' },
-		Ears  = { 'Ethereal Earring', 'Beastly Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Bat Earring//MSJ', 'Black Earring//MSJ', 'Physical Earring//SJNIN', 'Reraise Earring', 'Physical Earring', 'Onyx Earring//MSJ' },
-        Body  = { 'Narasimha\'s Vest', 'Beast Jackcoat', 'Gaudy Harness//MSJ', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
-        Hands = { 'Thick Mufflers', 'Beast Gloves', 'Wonder Mitts', 'Battle Gloves', 'Ryl.Ftm. Gloves' },
-        Rings = { 'Sun Ring', 'Tamas Ring//MSJ', 'Sun Ring', 'Courage Ring', 'Balance Ring', 'San d\'Orian Ring' },
-        Back  = { 'Psilos Mantle', 'Raptor Mantle', 'Ram Mantle' },
-        Waist = { 'Swift Belt', 'Tilt Belt', 'Warrior\'s Belt' },
-        Legs  = { 'Thick Breeches', 'Beast Trousers', 'Shep. Hose', 'San. Trousers', 'Ryl.Ftm. Trousers' },
-        Feet  = { 'Thick Sollerets', 'Beast Gaiters', 'Wonder Clomps', 'Bounding Boots' },
-    },
-	['TP_Conditional'] = {
-		{'Gaudy Harness','Adds refresh if MP < 50','Body',50,'BST','MP.LT.50'},
-	},
-	
-	['TP_Pet'] = {
-        Head = 'Shep. Bonnet',
-		Legs = 'Shep. Hose',
-    },
-	['TP_Pet_Conditional'] = {
-	},
-	
---[[
-	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
-	(Please note that Pet_Accuracy is applied after Accuracy if you have a pet.)
---]]
-
-	['Accuracy'] = {
-        Head  = 'Optical Hat',
-        Neck  = 'Peacock Amulet',
-        Body  = { 'Narasimha\'s Vest', 'Beast Jackcoat' },
-        Hands = { 'Thick Mufflers', 'Battle Gloves' },
-		Ears  = { 'Pilferer\'s Earring//SJTHF' },
-		Rings = { 'Toreador\'s Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
-        Back = 'Psilos Mantle',
-        Waist = { 'Life Belt', 'Tilt Belt' },
-        Legs = 'Thick Breeches',
-        Feet = 'Thick Sollerets',
-    },	
-	['Accuracy_Conditional'] = {
-	},
-
-	['Pet_Accuracy'] = {
-	    Head = 'Shep. Bonnet',
-		Ears = 'Beastly Earring',
-    },
-	['Pet_Accuracy_Conditional'] = {
-	},
-
---[[
-		If evasion wanted, equip evasion gear
---]]
-
-	['Evasion'] = {
-        Head  = { 'Optical Hat', 'Empress Hairpin' },
-		Ears  = { 'Bat Earring//BLIND', 'Ethereal Earring', 'Reraise Earring' },
-        Body = 'Narasimha\'s Vest',	
-		Hands = 'Battle Gloves',
-        Legs = 'San. Trousers',
-		Feet = 'Bounding Boots',	-- default gear is thick sollerets which are -2 eva
-    },
-	['Evasion_Conditional'] = {		-- bat earring should go here. Need buff check
-	},
-
-	['Pet_Evasion'] = {
-		Legs  = 'Shep. Hose',
-    },
-	['Pet_Evasion_Conditional'] = {
 	},
 	
 --[[
@@ -742,11 +742,7 @@ local sets = {
 	['Movement'] = { 
 	},
 	['Movement_Conditional'] = {
-	},
-
---[[
-								*** Custom Sets Go below this comment ***
---]]								
+	},								
 	
 --[[
 	The following set is used to dynamically create a gear set to be displayed once rather
@@ -755,6 +751,11 @@ local sets = {
 	do not modify it.
 --]]	
 	['CurrentGear'] = { },	
+
+--[[
+								*** Custom Sets Go below this comment ***
+--]]
+	
 };
 -- list of all jug pets available on HorizonXI.
 -- what,name,min level,max level,duration,have,favored
@@ -1142,6 +1143,10 @@ profile.HandleDefault = function()
 		if gcinclude.settings.bMagic == true and player.MP < player.MaxMP then		
 			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
 			gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional,nil,sets.CurrentGear);
+			
+			if string.find(gcinclude.sMagicJobs,player.SubJob) then
+				gcinclude.SwapToStave('dark',false,sets.CurrentGear);
+			end
 		end
 
 		-- Check for common debuffs
@@ -1168,10 +1173,19 @@ profile.HandleDefault = function()
 		gcinclude.CheckCommonDebuffs();
 	end
 	
+	-- In case the pet is a summoned pet, /smn, make sure to equip the appropriate elemental staff
+	if (pet ~= nil and player.SubJob == 'SMN' and gcdisplay.GetToggle('WSwap') == true) then
+		local pName = string.lower(pet.Name);
+		if string.find(gcinclude.MagicSkill['Summoning'],pName) ~= nil then
+			local pEle = gcinclude.SummonStaves[pet.Name];
+			gcinclude.SwapToStave(pEle,false,sets.CurrentGear);
+		end
+	end
+	
 	-- And make sure a weapon equipped. (Going into a capped area can cause no weapon to be equipped.)
 	local gear = gData.GetEquipment();
 	if gear.Main == nil then
-		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
 		gcinclude.ProcessConditional(sets.Start_Weapons_Conditional,nil,sets.CurrentGear);
 	end
 	
@@ -1439,6 +1453,10 @@ profile.HandleMidcast = function()
 			end
 		elseif cKey == 'F' then			-- Spell specific gear
 		if string.match(spell.Name, 'Stoneskin') then
+				-- Mind has a large affect on Stoneskin, so equip it here
+				gcinclude.MoveToCurrent(sets.MND,sets.CurrentGear);
+				gcinclude.ProcessConditional(sets.MND_Conditional,nil,sets.CurrentGear);
+				-- Now load the specific stoneskin set			
 				gcinclude.MoveToCurrent(sets.Stoneskin,sets.CurrentGear);
 				gcinclude.ProcessConditional(sets.Stoneskin_Conditional,nil,sets.CurrentGear);				
 			elseif string.match(spell.Name, 'Drain') then
