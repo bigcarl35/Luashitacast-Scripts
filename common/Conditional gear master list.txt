@@ -1,18 +1,70 @@
-Master list of conditional gear entries. 
+I think it's important to understand conditionals in regards to this implementation of
+Luashitacast before getting to the "nit-gritty" details. Conditionals started out as a
+way to support gear that had a conditional aspect to them like "... if your nation controls
+the area your in". Initially I created a master list for all gear that has that type of
+wording, but soon I discovered that there were conditionals that were Player defined. Things
+like "if it's nighttime" even though that phrase was not to be found on the item's description.
+Basically the player was coming up with circumstances that they wanted an item equipped that
+had nothing to do with gear descriptions. Shortly thereafter came the concept of inline
+conditionals and I had to rethink the concept all together.
 
-** Note **
-A big change has been done to this list. Instead of storing a list of known conditional
-entries in gcinclude.lua, all the conditionals have been converted to a form of the User-
-Defined conditional. That means that the portion stored in the program no longer needs to
-be there making load times a bit faster.
+This implementation supports two types of conditionals: "Block" and "Inline". What you put
+where depends on what you want. A block conditional is an overriding definition. If the
+conditional aspect is found to be true, that piece of gear is loaded regardless of what
+was specified in the associated gear set. You use a block conditional when you want an
+item equipped regardless of any other considerations. ^Caveat: block conditionals are
+currently also used when multiple conditions must be met. Inline currently doesn't support
+multiple conditions. WIP^
 
-Listed below are the conditionals for all appropriate gear in the current era. Also included,
-where appropriate, are User-Defined conditionals (pieces of gear that don't inherently have
-any conditional triggers associated with them, but have had a User-Defined event associated
-with them instead.) Just copy and paste the entries from here if you want that piece of 
-equipment loaded in the associated conditional set. Please note that the same piece of 
-gear can have multiple definitions, reflecting different circumstances. Pick the one that
-makes sense in the context you wish it to be equipped in.
+An inline conditional puts a question on a specific piece in the priority order of gear
+for a specific slot. Unlike the block conditional which is in it's own separate set block,
+inline is attached to the gear's name via a "//" (e.g., //SJNIN, which checks to see if
+the player's subjob in ninja.)
+
+How about an example? The following shows the same thing, but uses an inline versus a 
+block conditional, but one is actually more versatile than the other. This is from a 
+BST job file:
+
+['Start_Weapons'] = {
+	Main = { 'Maneater', 'Barbaroi Axe', 'Ryl.Arc. Sword' },	-- Sword added for low level option
+    Sub  = { 'Tabarzin//SJNIN', 'War Pick//SJNIN', 'Tatami Shield' },
+    Ammo = 'S. Herbal Broth',
+},
+['Start_Weapons_Conditional'] = {
+},
+
+or 
+
+['Start_Weapons'] = {
+    Main = { 'Maneater', 'Barbaroi Axe', 'Ryl.Arc. Sword' },	-- Sword added for low level option
+    Sub  = 'Tatami Shield',
+    Ammo = 'S. Herbal Broth',
+},
+['Start_Weapons_Conditional'] = {
+	{'War Pick','Equip if /nin or /dnc','Sub',31,'WAR/DRK/BST/RUN','SJIS','NIN/DNC'},
+	{'Tabarzin','Equip if /nin or /dnc','Sub',71,'WAR/DRK/BST/RUN','SJIS','NIN/DNC'},
+},
+
+in both cases you're equipping an axe in the offhand slot if the player's subjob is either
+/nin or /dnc. The first example says that the offhand will be an axe (which depends on your
+main job's level) if you're /nin or /dnc. Otherwise a tatami shield will be equipped (unless
+your level is too low.) The second example says that the tatami shield will be equipped
+unless one of the block conditionals are found to be true. Note that you want the higher 
+level entried to be below the lower level entries. It will equip the last entry where the
+condition is met.
+
+Now, this example has the same behavior either way, but in some cases you'll want to avoid
+using the overriding block conditional. (Say you want the tatami shield equipped if you can't
+equip the tabarzin axe. Just flip flop the "war pick" and the "tatami shield" entries in
+the inline example. The block example cannot do that specific behavior without omitting
+the "war pick" entry.)
+
+Conditional block entries consist of the following fields:
+gear name,description,slot name,minimum level,"/" delimited list of jobs that can equip
+said item or ALL,conditional code word,value(s) to match,... potentially other fields if
+multi-conditional. I've listed most of the conditional gear entries that mention conditions
+in their descriptions as well as some of the pler defined conditionals I have used. Just
+copy and paste the ones you want to use into your gear sets.
 
 Main
 ------
@@ -20,7 +72,7 @@ Main
 
 Sub
 ---
-	-- User-Defined --
+	-- Player-Defined --
 {'Mrc.Cpt. Kukri','Equip if /nin or /dnc','Sub',30,'WAR/THF/DRK/RNG/COR/PUP/DNC','SJIS','NIN/DNC'},
 {'Tabarzin','Equip if /nin or /dnc','Sub',71,'WAR/DRK/BST/RUN','SJIS','NIN/DNC'},
 	
@@ -45,7 +97,7 @@ Neck
 {'Brisingamen +1','+5 to primary stats depending on day or HP/MP +10 depending on time','Neck',71,'ALL','DAY|TIME',nil}, -- replace nil with list of days and/or nighttime/daytime
 {'Uggalepih Pendant','+8 magic attack bonus when MP <= 50%','Neck',70,'ALL','MPP.LE.50P'},
 	
-	-- User-Defined
+	-- Player-Defined
 {'Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
 {'Uggalepih Pendant','MAB +8% if MPP <= 50%','Neck',70,'ALL','MPP.LE.50P'},
 {'Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},
@@ -106,7 +158,7 @@ Rings
 {'Wind Ring','-15% HP/15 evasion on windsday','RING',65,'ALL','DAY','Windsday'},
 {'Shadow Ring','magic defense bonus on darksday','RING',75,'ALL','DAY','Darksday'},
 	
-	-- User-Defined --
+	-- Player-Defined --
 {'Conjurer\'s Ring','Avatar perpetuation cost -1 while player HP <= 75% and TP <= 100%','RING',50,'SMN','HPP|TPP.LE.',75,1000},
 
 Back
@@ -161,25 +213,8 @@ Feet
 {'Ninja Kyahan +1','+25% movement speed between dusk and dawn','Feet',74,'NIN','TIME','DUSK2DAWN},
 {'Koga Kyahan +1','+7 DEX between dusk and dawn','Feet',74,'NIN','TIME','DUSK2DAWN},
 
-The difference between a regular conditional and a user-defined conditional is that a
-regular condinional has the condition specified right on the item whereas the user-defined
-conditional specifies a condition that's contextual. (It is not mentioned on the item.
-Rather, it is a condition that matches the player's intent for when the item should be
-equipped.)
-
-Example:
-
-{'Uggalepih Pendant','+8 magic attack bonus when MP <= 50%','Neck',70,'ALL','MPP.LE.50P'},
-{'Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
-
-The first example is a regular condinional. It is invoked when the latent's criteria
-is me. (The player's MP <= 50%.) Now, even though the second example is for the same
-piece of gear, the latent is not even considered. This example defines a criteria that
-the player wants matched (it is nighttime) and if the latent's criteria is also matched,
-that was completely happenstance. The player decides which conditional to use.
-
-Listed below are the keyword conditional operators currently supported. If you need
-something that's not on this list, please let me know.
+Listed below are all the keyword conditional operators currently supported in block 
+conditionals. If you need something that's not on this list, please let me know.
 
 List of known keyword conditionals,	meaning, and how many pieces of data expected
 ---------------------------------------------------------------------------------
@@ -204,13 +239,8 @@ SJISN			Subjob is not			One	(one or a / delimited list, e.g., THF/NIN)
 PJIS			Player in party is job	One (one or a / delimited list, e.g., THF/NIN)
 WEAPON			Equips weapon			None (if /wswap on or a smn)
 
-Inline conditionals are simple codes attached to the piece of gear that require a check
-to occur before the piece is equipped. For example, this is a way to intersperse mp gear
-onto a physical job with a magical subjob. You denote an inline conditional with a "//"
-on the end of the piece of gear followed by the code. Please note that a key difference
-between an inline conditional and the separate "_Conditional" block is that the latter
-is always equpped if the condition is met whereas the former is equipped if the level
-is appropriate and then the condition is met.
+As for inline conditionals, the following are all of the codes currently supported. Let
+me know if you want me to add any more.
 
 //MSJ			Equip if player's subjob is magical
 //SJ"job"		Equip if player's subjob is "job" (i.e., THF, NIN, etc)

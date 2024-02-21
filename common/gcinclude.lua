@@ -153,7 +153,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','tank','solo','test','lock','unlock','validate'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','tank','test','lock','unlock','validate'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T {'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T {'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -938,17 +938,24 @@ function gcinclude.SetVariables()
 	gcdisplay.CreateToggle('Kite', false);
 	gcdisplay.CreateToggle('Acc', false);
 	gcdisplay.CreateToggle('Eva', false);
-	gcdisplay.CreateToggle('WSwap',false);
-	gcdisplay.CreateToggle('Tank',false);
-	gcdisplay.CreateToggle('Solo',false);
 	
-	-- Job specific toggles
+	gcdisplay.CreateToggle('WSwap',(player.MainJob == 'WHM'));
+
+	-- Job specific toggles	
+	if player.MainJob == 'PLD' or player.MainJob == 'NIN' or player.MainJob == 'RUN' then
+		gcdisplay.CreateToggle('Tank',true);
+	elseif player.MainJob == 'DRK' or player.MainJob == 'WAR' then
+		gcdisplay.CreateToggle('Tank',false);
+	end
+	
 	if player.MainJob == 'THF' then
 		gcdisplay.CreateToggle('TH',false);
 	end	
+	
 	if player.MainJob == 'BST' then
 		gcdisplay.CreateToggle('AJug',true);
 	end
+	
 	if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
 		gcdisplay.CreateToggle('sBP',true);
 	end
@@ -1345,51 +1352,54 @@ function gcinclude.CheckInline(gear)
 	local sj = player.SubJob;
 	local pet = gData.GetPet();
 	local spell = gData.GetAction();
+	local bGood = true;
 	
 	if gear == nil then
 		return false,gear;
 	end
 	
 	iPos = string.find(gear,'//');
-	if iPos ~= nil then
-		suCode = string.upper(string.sub(gear,iPos+2,-1));
-		sGear = string.sub(gear,1,iPos-1);
 
-		if suCode == 'MSJ' then
-			return (string.find(gcinclude.sMagicJobs,sj) ~= nil),sGear;	
-		elseif string.sub(suCode,1,2) == 'SJ' and string.len(suCode) == 5 then	-- //SJ"job"
-			return (string.sub(suCode,3,-1) == sj),sGear;
-		elseif string.sub(suCode,1,2) == 'PJ' and string.len(suCode) == 5 then	-- //PJ"job"
-			local s string.sub(suCode,3,-1);
-			return (gcinclude.CheckPartyJob(s)),sGear;			
-		elseif suCode == 'CARBY' then
-			return (gcinclude.isPetNamed('Carbuncle')),sGear;
-		elseif suCode == 'BLIND' then
-			local blind = gData.GetBuffCount('Blind');
-			return (blind >= 1),sGear;
-		elseif suCode == 'OWN' then
-			return (gcdisplay.GetCycle('Region') == 'Owned'),sGear;
-		elseif suCode == 'NOT_OWN' then
-			return (gcdisplay.GetCycle('Region') ~= 'Owned'),sGear;
-		elseif suCode == 'MP.SUB.50P' then
-			return (player.MPP <= 50),sGear;
-		elseif suCode == 'WSWAP' then
-			return (gcdisplay.GetToggle('WSwap') == true),sGear;
-		elseif suCode == 'PET' then
-			return (pet ~= nil),sGear;
-		elseif suCode == 'PETF' then
-			return (pet ~= nil and pet.Status == 'Engaged'),sGear;
-		elseif suCode == 'PETFNPF' then
-			return (pet ~= nil and pet.Status == 'Engaged' and player.Status ~= 'Engaged'),sGear;
-		elseif suCode == 'ELEAVA' then
-			return (string.find(gcinclude.Spirits,spell.Name) ~= nil),sGear;
-		else
-			print(chat.header('CheckInline'):append(chat.message('Warning: Unknown code = ' .. suCode .. '. Ignoring piece of gear.')));
-			return false,sGear;
-		end
-	else
+	if iPos == nil then
 		return true,gear;
+	else
+		sGear = string.sub(gear,1,iPos-1);
+		suCode = string.sub(gear,iPos+2,-1);
 	end
+
+	if suCode == 'MSJ' then
+		bGood = (string.find(gcinclude.sMagicJobs,sj) ~= nil);
+	elseif string.sub(suCode,1,2) == 'SJ' and string.len(suCode) == 5 then	-- //SJ"job"
+		bGood = (string.sub(suCode,3,-1) == sj);
+	elseif string.sub(suCode,1,2) == 'PJ' and string.len(suCode) == 5 then	-- //PJ"job"
+		local s string.sub(suCode,3,-1);
+		bGood=(gcinclude.CheckPartyJob(s));
+	elseif suCode == 'CARBY' then
+		bGood = (gcinclude.isPetNamed('Carbuncle'));
+	elseif suCode == 'BLIND' then
+		local blind = gData.GetBuffCount('Blind');
+		bGood = (blind >= 1);
+	elseif suCode == 'OWN' then
+		bGood = (gcdisplay.GetCycle('Region') == 'Owned');
+	elseif suCode == 'NOT_OWN' then
+		bGood = (gcdisplay.GetCycle('Region') ~= 'Owned');
+	elseif suCode == 'MP.SUB.50P' then
+		bGood = (player.MPP <= 50);
+	elseif suCode == 'WSWAP' then
+		bGood = (gcdisplay.GetToggle('WSwap') == true);
+	elseif suCode == 'PET' then
+		bGood = (pet ~= nil);
+	elseif suCode == 'PETF' then
+		bGood = (pet ~= nil and pet.Status == 'Engaged');
+	elseif suCode == 'PETFNPF' then
+		bGood = (pet ~= nil and pet.Status == 'Engaged' and player.Status ~= 'Engaged');
+	elseif suCode == 'ELEAVA' then
+		bGood = (string.find(gcinclude.Spirits,spell.Name) ~= nil);
+	else
+		print(chat.header('CheckInline'):append(chat.message('Warning: Unknown code = ' .. suCode .. '. Ignoring piece of gear.')));
+		bGood = false;
+	end
+	return bGood,sGear;
 end		-- gcinclude.CheckInline
 
 --[[
@@ -1398,10 +1408,11 @@ end		-- gcinclude.CheckInline
 	inline conditional check
 --]]
 
-function gcinclude.MoveToCurrent(tSet,tMaster)
+function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
+	local player = gData.GetPlayer();
 	local item = {};
 	local root,sK,vRoot,vConditional;
-	local bContinue,iNum,bGood;
+	local bContinue,iNum,bGood,bSkip;
 
 	if tSet == nil then
 		return;
@@ -1419,58 +1430,70 @@ function gcinclude.MoveToCurrent(tSet,tMaster)
 			bContinue = true;
 		end
 		
-		-- If definition is a table, then multiple pieces identified. Determine
-		-- appropriate one to use.
+		-- Quick check: if the slot to be populated is the 'Main', make sure
+		-- that /WSWAP is true or that gcinclude.settings.bSummoner is true.
+		-- This should have been caught earlier, but just in case...
+		if k == 'Main' then
+			bSkip = not (gcdisplay.GetToggle('WSwap') == true 
+						 or gcinclude.settings.bSummoner == true
+						 or (bOverride ~= nil and bOverride == true));
+		else
+			bSkip = false;
+		end
+	
+		if bSkip == false then
+			-- If definition is a table, then multiple pieces identified. Determine
+			-- appropriate one to use.
 		
-		if type(v) == 'table' then
-			iNum = 1;
-			-- Walk list of items and equip level appropriate one
-			for kk,vv in pairs(v) do
-				-- See if there's an inline conditional to be checked
-				bGood,vRoot = gcinclude.CheckInline(vv);
-			
-				if bGood then
-					item = AshitaCore:GetResourceManager():GetItemByName(vRoot,2);
+			if type(v) == 'table' then
+				iNum = 1;
 
-					if item == nil then
-						if string.find(gcinclude.GearWarnings,vv) == nil then
-							print(chat.header('MoveToCurrent'):append(chat.message('Warning: ' .. vv .. ' not a valid piece of gear. Ignoring.')));
-							gcinclude.GearWarnings = gcinclude.GearWarnings .. vv .. ',';
-						end
-					else
-						-- Check level of item vs level of player
-						if item.Level <= gcinclude.settings.iCurrentLevel then
-							-- Either an actual or a pseudo slot name: Ears or Rings. 
-							-- Build slot name and equip item there. Bump counter for 
-							--next of pair
-							if bContinue then
-								sK = root .. tostring(iNum);
-								tMaster[sK] = vRoot;
-								iNum = iNum + 1;
-							else
-								-- Normal single slot
-								tMaster[k] = vRoot;
+				-- Walk list of items and equip level appropriate one
+				for kk,vv in pairs(v) do
+					-- See if there's an inline conditional to be checked
+					bGood,vRoot = gcinclude.CheckInline(vv);
+					if bGood then
+						item = AshitaCore:GetResourceManager():GetItemByName(vRoot,2);
+						if item == nil then
+							if string.find(gcinclude.GearWarnings,vv) == nil then
+								print(chat.header('MoveToCurrent'):append(chat.message('Warning: ' .. vv .. ' not a valid piece of gear. Ignoring.')));
+								gcinclude.GearWarnings = gcinclude.GearWarnings .. vv .. ',';
+							end
+						else
+							-- Check level of item vs level of player					
+							if item.Level <= player.MainJobSync then				
+								-- Either an actual or a pseudo slot name: Ears or Rings. 
+								-- Build slot name and equip item there. Bump counter for 
+								--next of pair
+								if bContinue then
+									sK = root .. tostring(iNum);
+									tMaster[sK] = vRoot;
+									iNum = iNum + 1;						
+								else
+									-- Normal single slot
+									tMaster[k] = vRoot;						
+									break;
+								end
+							end
+						
+							-- When iNum > 2, all special slots of "root" populated
+							if iNum > 2 then					
 								break;
 							end
 						end
-						
-						-- When iNum > 2, all special slots of "root" populated
-						if iNum > 2 then
-							break;
-						end
 					end
-				end
-			end	
-		else
-			-- See if there's an inline conditional to be checked
-			bGood,vRoot = gcinclude.CheckInline(v);
-			if bGood then
-				-- No table, but specified as Ears or Rings
-				if bContinue then
-					sK = root .. tostring(iNum);
-					tMaster[sK] = vRoot;
-				else
-					tMaster[k] = vRoot;
+				end	
+			else
+				-- See if there's an inline conditional to be checked
+				bGood,vRoot = gcinclude.CheckInline(v);
+				if bGood then
+					-- No table, but specified as Ears or Rings
+					if bContinue then
+						sK = root .. tostring(iNum);
+						tMaster[sK] = vRoot;
+					else
+						tMaster[k] = vRoot;
+					end
 				end
 			end
 		end
@@ -1932,17 +1955,13 @@ function gcinclude.HandleCommands(args)
 		gcdisplay.AdvanceToggle('Kite');
 		toggle = 'Kite Set';
 		status = gcdisplay.GetToggle('Kite');
-	elseif (args[1] == 'solo') then			-- Turns on/off whether movement gear is equipped
-		gcdisplay.AdvanceToggle('Solo');
-		toggle = 'Solo Set';
-		status = gcdisplay.GetToggle('Solo');		
 	elseif (args[1] == 'tank') then			-- Turns on/off whether tanking gear is equipped
-		if player.MainJob ~= 'SMN' then
+		if string.find('PLD,NIN,RUN,DRK,WAR',player.MainJob) ~= nil then
 			gcdisplay.AdvanceToggle('Tank');
 			toggle = 'Tank Set';
 			status = gcdisplay.GetToggle('Tank');
 		else
-			print(chat.header('HandleCommands'):append(chat.message('Error: SMN does not support tanking. Ignoring command')))
+			print(chat.header('HandleCommands'):append(chat.message('Error: Your job does not support the tanking option. Ignoring command')))
 		end				
 	elseif (args[1] == 'acc') then			-- Turns on/off whether accuracy gear should be equipped
 		gcdisplay.AdvanceToggle('Acc');
