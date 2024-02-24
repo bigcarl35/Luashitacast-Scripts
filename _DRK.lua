@@ -331,7 +331,7 @@ local sets = {
         Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
-        Feet = { 'Chaos Sollerets' 'Mannequin Pumps' },
+        Feet = { 'Chaos Sollerets', 'Mannequin Pumps' },
     },
 	['MND_Conditional'] = {
 	},

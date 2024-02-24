@@ -45,22 +45,17 @@ local sets = {
 
 	['TP'] = {
         Head  = 'Empress Hairpin',
-        Neck  = 'Spike Necklace',
-        Ears  = { 'Beetle Earring', 'Beetle Earring' },
-        Body  = 'Brigandine',
+        Neck  = { 'Peacock Amulet', 'Spike Necklace' },
+        Ears  = { 'Physical Earring', 'Reraise Earring' },
+        Body  = { 'Brigandine', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
         Hands = 'Battle Gloves',
         Rings = { 'Balance Ring', 'Bastokan Ring' },
         Back  = 'Ram Mantle',
         Waist = 'Mrc.Cpt. Belt',
-        Legs  = 'San. Trousers',
+        Legs  = { 'Wonder Braccae', 'San. Trousers', 'Ryl.Ftm. Trousers' },
         Feet  = 'Bounding Boots',
     },
 	['TP_Conditional'] = {
-	},
-
-	['TP_Pet'] = {
-    },
-	['TP_Pet_Conditional'] = {
 	},
 	
 --[[
@@ -70,19 +65,17 @@ local sets = {
 	
 	['Accuracy'] = {
         Head  = 'Empress Hairpin',
-        Neck  = 'Spike Necklace',
-        Body  = 'Brigandine',
+        Neck  = { 'Peacock Amulet', 'Spike Necklace' },
+        Body  = { 'Brigandine', 'Mrc.Cpt. Doublet' },
         Hands = 'Battle Gloves',
-        Ring1 = 'Balance Ring',
-        Ring2 = 'Jaeger Ring',
-        Waist = 'Tilt Belt',
+        Rings = { 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
+        Waist = { 'Tilt Belt', 'Mrc.Cpt. Belt' },
         Feet  = 'Bounding Boots',
     },
 	['Accuracy_Conditional'] = {
 	},
 	
 	['Pet_Accuracy'] = {
-		Head = 'Shep. Bonnet',
     },
 	['Pet_Accuracy_Conditional'] = {
 	},
@@ -93,10 +86,10 @@ local sets = {
 	
 	['Evasion'] = {
         Head  = 'Empress Hairpin',
-        Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },
+        Ears  = { 'Reraise Earring', 'Genin Earring//SJNIN', 'Drone Earring' },
         Body  = 'Mrc.Cpt. Doublet',
         Hands = 'Battle Gloves',
-        Ring1 = 'Windurstian Ring',
+        Rings = 'Windurstian Ring',
         Waist = 'Mrc.Cpt. Belt',
         Legs  = 'San. Trousers',
         Feet  = 'Bounding Boots',
@@ -105,7 +98,6 @@ local sets = {
 	},
 
 	['Pet_Evasion'] = {
-		Legs  = 'Shep. Hose',
     },
 	['Pet_Evasion_Conditional'] = {
 	},
@@ -142,11 +134,6 @@ local sets = {
 	['Resting_Refresh'] = {
 	},
 	['Resting_Refresh_Conditional'] = {
-	},
-
-	['Resting_Refresh_Weapon_Sub51'] = {
-	},
-	['Resting_Refresh_Weapon_Sub51_Conditional'] = {
 	},
 	
 	-- If you have any Spell Interruption Rate down gear, put them into the "SIR" gear set.
@@ -499,7 +486,7 @@ local sets = {
         Neck = 'Spike Necklace',
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Rings = { 'Courage Ring', 'Tranquility Ring' },
+        Rings = { 'Courage Ring', 'Windurstian Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Wonder Clomps',
@@ -676,14 +663,11 @@ local sets = {
 --]]
 
 	['WS_HP'] = {
-        Head = 'Beast Helm',
         Ears = 'Physical Earring',
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Rings = 'Toreador\'s Ring',
         Waist = 'Powerful Rope',
         Legs = 'Wonder Braccae',
-        Feet = 'Creek F Clomps',
     },
 	['WS_HP_Conditional'] = {
 	},
@@ -710,7 +694,7 @@ local sets = {
 	['SneakAttack'] = {
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
-        Body = 'Brigandine',
+        Body = { 'Brigandine', 'Mrc.Cpt. Soublet' },
         Rings = { 'Balance Ring', 'Bastokan Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Feet = 'Bounding Boots',	

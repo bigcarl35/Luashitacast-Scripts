@@ -45,6 +45,15 @@ local sets = {
 --]]
 
 	['TP'] = {
+		Head = 'Empress Hairpin',
+		Neck = 'Spike Necklace',
+		Ears = { 'Physical Earring', 'Reraise Earring' },
+		Body = { 'Beetle  Harness', 'Angler\'s Tunica' },
+		Hands = 'Ryl.Ftm. Gloves',
+		Rings = { 'Courage Ring', 'Balance Ring' },
+		Waist = 'Warrior\'s Belt',
+		Legs = { 'San. Trousers', 'Ryl.Ftm. Trousers' },
+		Feet = 'Bounding Boots',
     },
 	['TP_Conditional'] = {
 	},
@@ -60,6 +69,10 @@ local sets = {
 --]]
 	
 	['Accuracy'] = {
+		Head = 'Empress Hairpin',
+		Neck = 'Spike Necklace',
+		Rings = 'Balance Ring',
+		Feet = 'Bounding Boots',
     },
 	['Accuracy_Conditional'] = {
 	},
@@ -74,6 +87,8 @@ local sets = {
 --]]
 	
 	['Evasion'] = {
+		Head = 'Empress Hairpin',
+		Feet = 'Bounding Boots',
     },
 	['Evasion_Conditional'] = {
 	},
@@ -116,11 +131,6 @@ local sets = {
 	},
 	['Resting_Refresh_Conditional'] = {
 	},
-
-	['Resting_Refresh_Weapon_Sub51'] = {
-	},
-	['Resting_Refresh_Weapon_Sub51_Conditional'] = {
-	},
 		
 	-- If you have any Spell Interruption Rate down gear, put them into the "SIR" gear set.
 	-- This gear set is equipped in the HandleMidcast function that all spells go through.
@@ -138,6 +148,8 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
+		Main = { 'Neckchopper', 'Moth Axe' },
+		Range = 'Lgn. Crossbow',
     },
 	['Start_Weapons_Conditional'] = {
 	},

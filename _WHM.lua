@@ -44,11 +44,11 @@ local sets = {
 --]]
 
 	['TP'] = {
-        Head = 'Mrc.Cpt. Headgear',
+        Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
-        Ears = { 'Beetle Earring', 'Beetle Earring' },
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
+        Ears = { 'Black Earring', 'Onyx Earring' },
+        Body = { 'Wonder Kaftan', 'Seer\'s Tunic', 'Angler\'s Tunica' },
+        Hands = 'Battle Gloves',
         Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
@@ -71,7 +71,6 @@ local sets = {
 	},
 	
 	['Pet_Accuracy'] = {
-        Head = 'Shep. Bonnet',	
     },
 	['Pet_Accuracy_Conditional'] = {
 	},
@@ -88,7 +87,6 @@ local sets = {
 	},
 
 	['Pet_Evasion'] = {
-		Legs  = 'Shep. Hose',
     },
 	['Pet_Evasion_Conditional'] = {
 	},

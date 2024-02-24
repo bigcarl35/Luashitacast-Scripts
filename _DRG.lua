@@ -534,7 +534,7 @@ local sets = {
 	['WS_DEX'] = {
         Head = { 'Empress Hairpin', 'Mrc.Cpt. Headgear' },
         Neck = 'Spike Necklace',
-		Body = { 'Brigandine Armor', 'Mrc.Cpt. Doublet',
+		Body = { 'Brigandine Armor', 'Mrc.Cpt. Doublet' },
         Rings = 'Balance Ring',
         Feet = 'Bounding Boots',
     },
@@ -550,7 +550,7 @@ local sets = {
 	['WS_DEXINT'] = {
         Head = { 'Empress Hairpin', 'Mrc.Cpt. Headgear' },
         Neck = 'Spike Necklace',
-		Body = { 'Brigandine Armor', 'Mrc.Cpt. Doublet',
+		Body = { 'Brigandine Armor', 'Mrc.Cpt. Doublet' },
         Rings = 'Balance Ring',
         Feet = 'Bounding Boots',
     },

@@ -734,7 +734,7 @@ profile.OnLoad = function()
 	gcinclude.Initialize();
 	gcinclude.settings.RegenGearHPP = 50;
     gcinclude.settings.RefreshGearMPP = 60;
-	gcdisplay.SerToggle('Tank',true);		-- Assume PLD is a tank
+	gcdisplay.SetToggle('Tank',true);		-- Assume PLD is a tank
 
 	-- Coded order of operation override
 	gcinclude.settings.priorityEngaged = 'CEFGH';
