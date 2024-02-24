@@ -49,7 +49,7 @@ local sets = {
 		Neck  = { 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
 		Ears  = { 'Loquac. Earring', 'Bat Earring', 'Black Earring', 'Onyx Earring' },
         Body  = { 'Vermillion Cloak//CARBY','Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' }, 
-        Hands = 'Carbuncle Mitts',		-- if this becomes list, add //CARBY to the mitts
+        Hands = { 'Carbuncle Mitts//CARBY', 'Errant Cuffs', 'Carbuncle Mitts' },
 		Rings = { 'Evoker\'s Ring', 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
         Back  = { 'Blue Cape', 'White Cape' },
         Waist = { 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
@@ -122,7 +122,7 @@ local sets = {
 	['Idle_With_Pet'] = {
         Head  = { 'Austere Hat', 'Shep. Bonnet', 'Silver Hairpin' },
 		Body  = { 'Vermillion Cloak//CARBY', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
-        Hands = 'Carbuncle Mitts',				-- add //CARBY to mitts if this becomes a list
+        Hands = 'Carbuncle Mitts',
         Rings = 'Evoker\'s Ring',
     },
 	['Idle_With_Pet_Conditional'] = {			-- Conjurer's ring seems the only possibility
@@ -436,7 +436,7 @@ local sets = {
 --]]
 
 	['INT'] = {
-        Hands = 'Seer\'s Mitts',
+        Hands = { 'Errant Cuffs', 'Seer\'s Mitts' },
         Rings = { 'Tamas Ring', 'Windurstian Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs  = 'Seer\'s Slacks',
