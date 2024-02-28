@@ -255,3 +255,4 @@ me know if you want me to add any more.
 //PETF			Equip if player has pet and it is fighting
 //PETFNPF		Equip if player has pet and it is fighting but the player is not fighting
 //ELEAVA		Equip if player summoning an elemental avatar
+//MP.LT.50		Equip if player's MP is below 50

@@ -1385,6 +1385,8 @@ function gcinclude.CheckInline(gear)
 		bGood = (gcdisplay.GetCycle('Region') ~= 'Owned');
 	elseif suCode == 'MP.SUB.50P' then
 		bGood = (player.MPP <= 50);
+	elseif suCode == 'MP.LT.50' then
+		bGood = (player.MP < 50 and player.MaxMP >= 50);		
 	elseif suCode == 'WSWAP' then
 		bGood = (gcdisplay.GetToggle('WSwap') == true);
 	elseif suCode == 'PET' then
