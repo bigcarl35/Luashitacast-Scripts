@@ -37,8 +37,8 @@ local sets = {
 --]]
 
 --[[
-	The TP sets are used when you or your pet are fighting: "TP" for you and "TP_Pet" for you and your pet (or just your pet). 
-	The accuracy set will be used if ACC is specified and the evasion set if EVA is specified.
+	The TP sets are used when you are fighting.	The accuracy set will be used if ACC is specified 
+	and the evasion set if EVA is specified.
 --]]
 
 	['TP'] = {
@@ -146,7 +146,7 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-        Main = 'Glorious Sword',
+        Main = { 'Zweihander', 'Glorious Sword' },
         Ammo = 'Fortune Egg',
     },
 	['Start_Weapons_Conditional'] = {
