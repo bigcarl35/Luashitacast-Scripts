@@ -61,6 +61,12 @@ local sets = {
 		{'Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},	
 	},
 	
+--[[
+	While it is concievable that other pet jobs might fight w/o a pet, it's unusual
+	for a smn to fight alone. What's more likely is that your pet died. The TP_No_Pet
+	gearset is if you want to change gear in that specific situation.
+--]]
+	
 	['TP_No_Pet'] = {
 		Body  = { 'Vermillion Cloak', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
 	},
@@ -71,6 +77,8 @@ local sets = {
 
 --[[
 	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
+	Remember that DEX converts to accuracy: for every 1 point of DEX you get 0.75 points
+	of accuracy.
 --]]
 	
 	['Accuracy'] = {
@@ -94,12 +102,13 @@ local sets = {
 	},
 	
 --[[
-	If evasion wanted, equip evasion gear
+	If evasion wanted, equip evasion gear. Remember that AGI converts to evasion: for every
+	2 points of AGI you get 1 point of evasion
 --]]
 	
 	['Evasion'] = {
 		Head  = { 'Optical Hat', 'Empress Hairpin' },
-		Ears  = { 'Bat Earring//BLIND', 'Ethereal Earring', 'Genin Earring//SJNIN', 'Drone Earring', 'Windurstian Earring' },
+		Ears  = { 'Bat Earring//BLIND', 'Ethereal Earring', 'Genin Earring//SJNIN', 'Drone Earring' },
 		Neck  =  'Spirit Torque',
 		Body  = 'Austere Robe',			-- Needed to offset the "possible" Vermillion Cloak	
 		Hands = 'Battle Gloves',
@@ -815,9 +824,9 @@ local function HandlePetAction(Pet,PetAction)
 		if (profile.sPetAction == nil or profile.sPetAction ~= PetAction.Name) and gcdisplay.GetToggle('sBP') == true then
 			local sMsg;
 			if string.find(gcinclude.SmnBPRageList,PetAction.Name) ~= nil then
-				sMsg = '/p  Blood Pact [' .. Pet.Name .. ']:  ' .. PetAction.Name .. ' >> <t>.';
+				sMsg = '/p  Blood Pact [<pet>]:  ' .. PetAction.Name .. ' >> <t>.';
 			else
-				sMsg = '/echo [' .. Pet.Name .. ']: Blood Pact - ' .. PetAction.Name;
+				sMsg = '/echo [<pet>]: Blood Pact - ' .. PetAction.Name;
 			end
 			AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
 			profile.sPetAction = PetAction.Name;
