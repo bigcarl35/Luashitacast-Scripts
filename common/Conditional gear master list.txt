@@ -256,3 +256,5 @@ me know if you want me to add any more.
 //PETFNPF		Equip if player has pet and it is fighting but the player is not fighting
 //ELEAVA		Equip if player summoning an elemental avatar
 //MP.LT.50		Equip if player's MP is below 50
+//AVAWTHR		Equip if player's pet's element matches current weather
+//AVADAY		Equip if player's pet's element matches element of the day

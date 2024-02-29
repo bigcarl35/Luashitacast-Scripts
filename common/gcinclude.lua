@@ -1183,11 +1183,11 @@ function gcinclude.ProcessConditional(tTest,sType,tMaster)
 							bMatch = gcinclude.BuildGear(tMatched);
 						end
 					elseif tMatched[5] == 'MOON' then
-						if lower(environ.MoonPhase) == lower(tMatched[6]) then
+						if string.lower(environ.MoonPhase) == string.lower(tMatched[6]) then
 							bMatch = gcinclude.BuildGear(tMatched);
 						end
 					elseif tMatched[5] == 'DAY' then
-						if string.find(lower(v[6]),lower(environ.Day)) ~= nil then
+						if string.find(string.lower(v[6]),string.lower(environ.Day)) ~= nil then
 							bMatch = gcinclude.BuildGear(tMatched);
 						end
 					elseif tMatched[5] == 'TIME' then
@@ -1229,7 +1229,7 @@ function gcinclude.ProcessConditional(tTest,sType,tMaster)
 							bMatch = gcinclude.BuildGear(tMatched);
 						end
 					elseif tMatched[5] == 'WEATHER' then
-						if string.find(lower(tMatched[6]),lower(environ.RawWeather)) ~= nil then 
+						if string.find(string.lower(tMatched[6]),string.lower(environ.RawWeather)) ~= nil then 
 							bMatch = gcinclude.BuildGear(tMatched);
 						end
 					elseif tMatched[5] == 'MOON:DAY:NIGHT' then
@@ -1352,6 +1352,7 @@ function gcinclude.CheckInline(gear)
 	local sj = player.SubJob;
 	local pet = gData.GetPet();
 	local spell = gData.GetAction();
+	local environ = gData.GetEnvironment();	
 	local bGood = true;
 	
 	if gear == nil then
@@ -1397,6 +1398,20 @@ function gcinclude.CheckInline(gear)
 		bGood = (pet ~= nil and pet.Status == 'Engaged' and player.Status ~= 'Engaged');
 	elseif suCode == 'ELEAVA' then
 		bGood = (string.find(gcinclude.Spirits,spell.Name) ~= nil);
+	elseif suCode == 'AVADAY' then
+		if pet ~= nil then
+			local sElement = gcinclude.SummonStaves[string.lower(pet.Name)];	
+			bGood = (sElement ~= nil and string.find(string.lower(environ.Day),string.lower(sElement)) ~= nil);
+		else
+			bGood = false;
+		end
+	elseif suCode == 'AVAWTHR' then
+		if pet ~= nil then
+			local sElement = gcinclude.SummonStaves[string.lower(pet.Name)];
+			bGood = (sElement ~= nil and string.find(string.lower(environ.RawWeather),string.lower(sElement)) ~= nil);
+		else
+			bGood = false;
+		end		
 	else
 		print(chat.header('CheckInline'):append(chat.message('Warning: Unknown code = ' .. suCode .. '. Ignoring piece of gear.')));
 		bGood = false;
