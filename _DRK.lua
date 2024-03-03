@@ -42,7 +42,7 @@ local sets = {
 --]]
 
 	['TP'] = {
-        Head  = 'Empress Hairpin',
+        Head  = { 'chaos Burgeonet','Empress Hairpin' },
         Neck  = { 'Parade Gorget', 'Peacock Amulet' },
         Ear2  = { 'Genin Earring//SJNIN', 'Drone Earring', 'Physical Earring' },
         Body  = { 'Chaos Cuirass', 'Brigandine' },
@@ -50,7 +50,7 @@ local sets = {
         Rings = { 'Tamas Ring','Jaeger Ring' },
         Back  = 'Raptor Mantle',
         Waist = 'Swift Belt',
-        Legs  = 'Ryl.Sqr. Breeches',
+        Legs  = { 'Chaos Flanchard', 'Ryl.Sqr. Breeches' },
         Feet  = { 'Chaos Sollerets', 'Bounding Boots' },
     },
 	['TP_Conditional'] = {
@@ -987,7 +987,7 @@ profile.HandleDefault = function()
 			gcinclude.ProcessConditional(sets.Resting_Regen_Conditional,nil,sets.CurrentGear);
 		end
 		
-		if player.MPP < player.MaxMP then
+		if player.MP < player.MaxMP then
 			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
 			gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional,nil,sets.CurrentGear);
 			gcinclude.SwapToStave('dark',false,sets.CurrentGear);

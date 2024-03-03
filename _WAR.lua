@@ -939,13 +939,10 @@ profile.HandleDefault = function()
 			gcinclude.ProcessConditional(sets.Resting_Regen_Conditional,nil,sets.CurrentGear);
 		end
 		
-		if gcinclude.settings.bSJ == true and player.MPP < player.MaxMP then
+		if string.find(gcinclude.sMagicJobs,player.SubJob) ~= nil and player.MP < player.MaxMP then
 			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
 			gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional,nil,sets.CurrentGear);
-			
-			if string.find(gcinclude.sMagicJobs,player.SubJob) then
-				gcinclude.SwapToStave('dark',false,sets.CurrentGear);
-			end		
+			gcinclude.SwapToStave('dark',false,sets.CurrentGear);
 		end
 		
 		-- Check for common debuffs

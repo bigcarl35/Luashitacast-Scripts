@@ -986,7 +986,7 @@ profile.HandleDefault = function()
 			gcinclude.ProcessConditional(sets.Resting_Regen_Conditional,nil,sets.CurrentGear);
 		end
 		
-		if player.MPP < player.MaxMP then
+		if player.MP < player.MaxMP then
 			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
 			gcinclude.ProcessConditional(sets.Resting_Refresh_Conditional,nil,sets.CurrentGear);
 			gcinclude.SwapToStave('dark',false,sets.CurrentGear);
