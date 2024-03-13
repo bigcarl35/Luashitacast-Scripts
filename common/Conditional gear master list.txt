@@ -258,3 +258,5 @@ me know if you want me to add any more.
 //MP.LT.50		Equip if player's MP is below 50
 //AVAWTHR		Equip if player's pet's element matches current weather
 //AVADAY		Equip if player's pet's element matches element of the day
+//HORN			Equip if wind setting is true
+//STRING		Equip if wind setting is false
