@@ -79,6 +79,12 @@ function gcdisplay.ShowHelp()
 		print(chat.header('Help'):append(chat.message('Command(s) specific for SMN/ or /SMN:')));
 		print(chat.header('Help'):append(chat.message('/sbp -- Toggles whether offensive blood pacts will show a message in party chat. Default is True.')));
 	end
+	if Main == 'BRD' then
+		print(chat.header('Help'):append(chat.message(' ')));
+		print(chat.header('Help'):append(chat.message('Command(s) specific for BRD/:')));
+		print(chat.header('Help'):append(chat.message('/horn -- Indicates that the instrument should be a wind instrument.')));	
+		print(chat.header('Help'):append(chat.message('/string -- Indicates that the instrument should be a stringed instrument.')));			
+	end
 	print(chat.header('Help'):append(chat.message(' ')));
 	print(chat.header('Help'):append(chat.message('Some /lac commands of note:')));
 	print(chat.header('Help'):append(chat.message('/lac disable --Disables all gear slots so that no automatic gear changes can occur.')));
