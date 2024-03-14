@@ -177,9 +177,7 @@ local sets = {
 	},
 
 --[[
-	The main Town gearset is in gcinclude.lua. Since that is generic as in, only gear
-	equippable by all jobs should go there, there may be times wheen you want specific
-	gear for a specific job. This is where you define that.
+	Specify what you want to wear around town.
 --]]
 	
 	['Town'] = {
@@ -187,6 +185,7 @@ local sets = {
     },
 	
 	['Town_Conditional'] = {
+		{'Federation Aketon','Movement gain in home nation city','Body',1,'ALL','AKETON','Windy'},	
 	},
 	
 --[[
@@ -1162,8 +1161,6 @@ profile.HandleDefault = function()
 		
 		-- See if in a town
 		if (zone.Area ~= nil and table.find(gcinclude.Towns,zone.Area)) then
-			gcinclude.MoveToCurrent(gcinclude.sets.Town,sets.CurrentGear);
-			gcinclude.ProcessConditional(gcinclude.sets.Town_Conditional,nil,sets.CurrentGear);
 			gcinclude.MoveToCurrent(sets.Town,sets.CurrentGear);
 			gcinclude.ProcessConditional(sets.Town_Conditional,nil,sets.CurrentGear);		
 		end

@@ -138,16 +138,15 @@ local sets = {
 	},
 	
 --[[
-	The main Town gearset is in gcinclude.lua. Since that is generic as in, only gear
-	equippable by all jobs should go there, there may be times wheen you want specific
-	gear for a specific job. This is where you define that.
+	Specify what you want to wear around town.
 --]]
 	
 	['Town'] = {
-		Body = 'Austere Robe',
+		Head = 'Lilac Corsage',	
     },
 	
 	['Town_Conditional'] = {
+		{'Federation Aketon','Movement gain in home nation city','Body',1,'ALL','AKETON','Windy'},		
 	},	
 	
 --[[
@@ -301,6 +300,7 @@ local sets = {
 	},
 	
 	['Minuet'] = {
+		Range = 'Flute//HORN',
 	},
 	['Minuet_Conditional'] = {
 	},
@@ -772,20 +772,19 @@ profile.SongSkill = T{
 
 local function BardSongToSet(sType)
 	local sTypeC;
-	local tType = T{}, tTypeC = T{};
+	local tType,tTypeC;
 	
 	if sType == nil then
 		print(chat.header('StringToSet'):append(chat.message('Missing type. Skipping.')));
 		return nil,nil;
 	end
 	sTypeC = sType .. '_Conditional';
-	
 	-- Loop through all the defined sets
-	for k,_ in pairs(Sets) do
+	for k,_ in pairs(sets) do
 		if k == sType then
-			tType = Sets[k];
+			tType = sets[k];
 		elseif k == sTypeC then
-			tTypeC == Sets[k];
+			tTypeC = sets[k];
 		end
 		if tType ~= nil and tTypeC ~= nil then
 			break;
@@ -860,7 +859,6 @@ profile.OnLoad = function()
 	gcinclude.Initialize();
 	gcinclude.settings.RegenGearHPP = 50;
     gcinclude.settings.RefreshGearMPP = 60;
-	gcdisplay.SetToggle('WSWAP',true);
 	
 	-- Coded order of operation override
 	gcinclude.settings.priorityEngaged = 'CEFGH';
@@ -1042,8 +1040,6 @@ profile.HandleDefault = function()
 
 		-- See if in a town		
 		if (zone.Area ~= nil and table.find(gcinclude.Towns,zone.Area)) then		
-			gcinclude.MoveToCurrent(gcinclude.sets.Town,sets.CurrentGear);
-			gcinclude.ProcessConditional(gcinclude.sets.Town_Conditional,nil,sets.CurrentGear);
 			gcinclude.MoveToCurrent(sets.Town,sets.CurrentGear);
 			gcinclude.ProcessConditional(sets.Town_Conditional,nil,sets.CurrentGear);
 		end
@@ -1234,8 +1230,8 @@ end		-- gcinclude.HandleMidcast
 
 function profile.HandleSongMidcast()
 	local spell = gData.GetAction();
-	
-	profile.prioritySongMidCast = string.upper(priority.prioritySongMidCast);
+
+	profile.prioritySongMidCast = string.upper(profile.prioritySongMidCast);
 	for i = 1,string.len(profile.prioritySongMidCast),1 do
 		cKey = string.sub(profile.prioritySongMidCast,i,i);
 		
@@ -1243,10 +1239,10 @@ function profile.HandleSongMidcast()
 			gcinclude.MoveToCurrent(sets.Midcast,sets.CurrentGear);
 			gcinclude.ProcessConditional(sets.Midcast_Conditional,nil,sets.CurrentGear);
 		elseif cKey == 'B' then			-- Enfeeble/Enhancing gear
-			if string.find(profile.SongSkill['Enhancing'],spell.Name) ~= nil then
+			if string.find(profile.SongSkill['Enhancing'],spell.Name) ~= nil then		
 				gcinclude.MoveToCurrent(sets.Enhancing,sets.CurrentGear);
 				gcinclude.ProcessConditional(sets.Enhancing_Conditional,nil,sets.CurrentGear);			
-			elseif string.find(profile.SongSkill['Enfeebling'],spell.Name) ~= nil then
+			elseif string.find(profile.SongSkill['Enfeebling'],spell.Name) ~= nil then	
 				gcinclude.MoveToCurrent(sets.Enfeebling,sets.CurrentGear);
 				gcinclude.ProcessConditional(sets.Enfeebling_Conditional,nil,sets.CurrentGear);	
 			end
@@ -1260,15 +1256,14 @@ function profile.HandleSongMidcast()
 					break;
 				end
 			end
-			
+		
 			if sType ~= nil then
 				local tTbl,tTblC;
-				tTbl,tTblC = BardSongToSet(sType);
+				tTbl,tTblC = BardSongToSet(sType);			
 				gcinclude.MoveToCurrent(tTbl,sets.CurrentGear);
 				gcinclude.ProcessConditional(tTblC,nil,sets.CurrentGear);
-				end
 			else
-				print(chat.header('HandleSongMidcast'):append(chat.message('Unrecognized song: ' .. spell.Name);
+				print(chat.header('HandleSongMidcast'):append(chat.message('Unrecognized song: ' .. spell.Name)));
 			end			
 		elseif cKey == 'D' then			-- Magical accuracy
 			if gcdisplay.GetToggle('acc') == true then
