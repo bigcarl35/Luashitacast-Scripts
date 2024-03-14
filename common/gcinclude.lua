@@ -49,22 +49,6 @@ gcinclude.sets = {
 	},
 
 --[[
-	What do you want to wear around town? You can define a full set or just an item or two, 
-	it is up to you. (Please note that a nation's aketon is considered conditional gear, so 
-	no need to place here unless you want the aketon equipped regardless if it is your home 
-	nation's city or not.)
---]]
-	
-	['Town'] = {
-        Head = 'Lilac Corsage',
-		Body = 'Choc. Jack Coat',	-- Switched from Austere Robe to piece equipable by all jobs
-    },	
-
-	['Town_Conditional'] = {
-		{'Federation Aketon','Movement gain in home nation city','Body',1,'ALL','AKETON','Windy'},
-	},
-
---[[
 	There are currently eight crafts: alchemy, bonecraft, clothcraft, cooking, goldsmithing, leathercraft,
 	smithing, and woodworking. It's possible that a player will have gear for more than one craft. The 
 	"crafting" set is for any crafting gear that's used regardless of the type of crafting. All other
@@ -160,7 +144,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','tank','test','lock','unlock','wind','validate'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','tank','test','lock','unlock','horn','string','validate'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T {'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T {'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -250,11 +234,13 @@ gcinclude.PHY = 'Physical';
 gcinclude.MAG = 'Magical';
 gcinclude.BRE = 'Breath';
 
+-- define constants for Instrument so typos aren't made
+gcinclude.HORN = 'Horn';
+gcinclude.STRING = 'String';
+
 -- Define constants dealing with magic gear and jobs
 gcinclude.ELEMENT = 'ele';
 gcinclude.OBI = 'obi';
-gcinclude.aketon = {['Sandy'] = {'Kingdom Aketon',false}, ['Windy'] = {'Federation Aketon',false}, 
-					['Bastok'] = {'Republic Aketon',false},['Omni'] = {'Ducal Aketon',false}};
 gcinclude.sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,SCH,GEO,RUN';
 gcinclude.sVisibleGear = 'Main,Sub,Head,Body,Hands,Legs,Feet';
 
@@ -676,12 +662,6 @@ function gcinclude.DB_ShowIt(sType)
 		for k,v in pairs(gcinclude.elemental_gorgets) do
 			print(chat.message('['..k..'] ' .. v[1] .. ' = ' .. tostring(v[2]) ));	
 		end
-	elseif string.lower(sType) == 'aketon' then
-		print(chat.message('Aketon'));
-		print(chat.message('------'));
-		for k,v in pairs(gcinclude.aketon) do
-			print(chat.message('[' .. k .. ']: ' .. v[1] .. ' = ' .. tostring(v[2])));
-		end
 	elseif string.lower(sType) == 'settings' then
 		print(chat.message('Settings'));
 		print(chat.message('--------'));
@@ -783,54 +763,6 @@ function gcinclude.LockUnlock(sType,sWhich)
 		end
 	end
 end
-
---[[
-	CheckForAllNationalAketons determines if the player owns any of the national aketons
---]]
-
-function gcinclude.CheckForAllNationalAketons()
-	local inventory = AshitaCore:GetMemoryManager():GetInventory();
-	local resources = AshitaCore:GetResourceManager();
-	local tStorage = gcinclude.EQUIPABLE;
-	local iTmp = 0;
-	
-	-- First, set all the entries to false, do not assume that what's there is correct
-	for k,_ in pairs(gcinclude.aketon) do
-		gcinclude.aketon[k][2] = false;
-	end
-	
-	iCnt = 0;
-	for _ in pairs(tStorage) do 
-		iCnt = iCnt + 1;
-	end
-	
-	-- now, loop through the passed storage containers
-	for i = 1,iCnt,1 do
-		containerID = tStorage[i][1];
-
-		-- then loop through the container
-		for j = 1,inventory:GetContainerCountMax(containerID),1 do
-			local itemEntry = inventory:GetContainerItem(containerID, j);
-			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
-                local item = resources:GetItemById(itemEntry.Id);
-				local sIN = string.lower(item.Name[1]);		
-				iTmp = iTmp + 1;
-				b,c = string.find(sIN,'aketon');
-				if b ~= nil then			
-					for k,_ in pairs(gcinclude.aketon) do
-						if sIN == string.lower(gcinclude.aketon[k][1]) then
-							gcinclude.aketon[k][2] = true;
-							break;
-						end
-					end
-				end
-			end
-		end
-	end
-
-	-- Below indicates that the inventories really were check and it's not a loading issue
-	gcinclude.settings.bAketon = (iTmp > 10);
-end		-- gcinclude.CheckForAllNationalAketons
 
 --[[
 	CheckForStaves determines if the player has any elemental staves and updates the master listing
@@ -951,7 +883,7 @@ function gcinclude.SetVariables()
 	gcdisplay.CreateToggle('Acc', false);
 	gcdisplay.CreateToggle('Eva', false);
 	
-	gcdisplay.CreateToggle('WSwap',(player.MainJob == 'WHM'));
+	gcdisplay.CreateToggle('WSwap',(string.find('WHM,BRD',player.MainJob) ~= nil));
 
 	-- Job specific toggles	
 	if player.Maintob == 'PLD' or player.MainJob == 'NIN' or player.MainJob == 'RUN' then
@@ -969,7 +901,7 @@ function gcinclude.SetVariables()
 	end
 	
 	if player.MainJob == 'BRD' then
-		gcdisplay.CreateToggle('Wind',true);
+		gcdisplay.CreateCycle('Instrument', {[1] = 'Horn', [2] = 'String'});
 	end
 	
 	if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
@@ -1210,11 +1142,7 @@ function gcinclude.ProcessConditional(tTest,sType,tMaster)
 						if (gcinclude.CheckTime(timestamp.hour,tMatched[6],true)) then
 							bMatch = gcinclude.BuildGear(tMatched);
 						end			
-					elseif tMatched[5] == 'AKETON' then
-						if gcinclude.settings.bAketon == false then		-- Make sure all nation aketon's are tracked.
-							gcinclude.CheckForAllNationalAketons();
-						end
-					
+					elseif tMatched[5] == 'AKETON' then					
 						-- Checks for the nation of the aketon, whether the zone is in that nation, and if the player is 
 						-- from that nation (Sandy = 0, Bastok = 1, and Windy = 2). (player was not used to check nationality
 						-- since luashitacast does not carry the home nation setting that is found in AshitaCore. Alse, I found 
@@ -1223,24 +1151,21 @@ function gcinclude.ProcessConditional(tTest,sType,tMaster)
 						if (tMatched[6] == 'Windy' 
 								and zone.Area ~= nil 
 								and gcinclude.Windy:contains(zone.Area) 
-								and pNation == 2 
-								and gcinclude.aketon['Windy'][2] == true) or
-							(tMatched[6] == 'Sandy' and zone.Area ~= nil 
+								and pNation == 2) or
+							(tMatched[6] == 'Sandy' 
+								and zone.Area ~= nil 
 								and gcinclude.Sandy:contains(zone.Area) 
-								and pNation == 0 
-								and gcinclude.aketon['Sandy'][2] == true) or
+								and pNation == 0) or
 							(tMatched[6] == 'Bastok' 
 								and zone.Area ~= nil 
 								and gcinclude.Bastok:contains(zone.Area) 
-								and pNation == 1 
-								and gcinclude.aketon['Bastok'][2] == true) or
+								and pNation == 1) or
 							(tMatched[6] == 'Omni' 
 								and zone.Area ~= nil 
 								and ((gcinclude.Windy:contains(zone.Area) 
 								or gcinclude.Sandy:contains(zone.Area) 
 								or gcinclude.Bastok:contains(zone.Area) 
-								or gcinclude.Jeuno:contains(zone.Area)) 
-								and gcinclude.aketon['Omni'][2] == true))
+								or gcinclude.Jeuno:contains(zone.Area))))
 						then					
 							bMatch = gcinclude.BuildGear(tMatched);
 						end
@@ -1414,13 +1339,13 @@ function gcinclude.CheckInline(gear)
 		bGood = (pet ~= nil and pet.Status == 'Engaged' and player.Status ~= 'Engaged');
 	elseif suCode == 'HORN' then
 		if player.MainJob == 'BRD' then
-			bGood = gcdisplay.GetToggle('Wind');
+			bGood = (gcdisplay.GetCycle('Instrument') == 'Horn');
 		else
 			bGood = false;
-		end
+		end	
 	elseif suCode == 'STRING' then
 		if player.MainJob == 'BRD' then
-			bGood = not gcdisplay.GetToggle('Wind');
+			bGood = (gcdisplay.GetCycle('Instrument') == 'String');
 		else
 			bGood = false;
 		end	
@@ -2134,6 +2059,18 @@ function gcinclude.HandleCommands(args)
 		else
 			print(chat.header('HandleCommands'):append(chat.message('Error: No set specified for /gearset. Command ignored.')));
 		end	
+	elseif (args[1] == 'horn' or args[1] == 'string') then
+		if player.MainJob == 'BRD' then
+			if args[1] == 'horn' then
+				gcdisplay.SetCycle('Instrument',gcinclude.HORN);
+			else
+				gcdisplay.SetCycle('Instrument',gcinclude.STRING);
+			end
+			toggle = 'Toggle Instrument';
+			status = gcdisplay.GetCycle('Instrument');
+		else
+			print(chat.header('HandleCommands'):append(chat.message('Your job does not support that command. Ignoring.')));
+		end
 	elseif (args[1] == 'maxspell') then			-- Determines highest level spell to cast
 		if #args >= 2 then
 			gcinclude.MaxSpell(args[2],true);
