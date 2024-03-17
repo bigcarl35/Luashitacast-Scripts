@@ -260,3 +260,20 @@ me know if you want me to add any more.
 //AVADAY		Equip if player's pet's element matches element of the day
 //HORN			Equip if wind setting is true
 //STRING		Equip if wind setting is false
+//CR:"craft"	Equip if the crafting code passed matches the master crafting setting
+//GA:"gather"	Equip if the gathering code passed matches the master gathering setting
+//"day"			Equip if the day's name matches the specified day, eg. //FIRESDAY
+//NOT_LGT-DRK	Equip if day isn't lightsday or darksday
+//WTH:"weather"	Equip iff the specified weather matches the current weather
+//WTH-DAY		Equip if the weather's element matches the day's element
+//AK:"nation"	Equip national aketon if player in their nation's city
+//HP75P|TP100P	Equip if player's HP <= 75% and player's TP <= 100%
+//NEWMOON		Equip if moon phase is new moon
+//FULLMOON		Equip if moon phase is full moon
+//NIGHTTIME		Equip if it's nighttime
+//DAYTIME		Equip if it's daytime
+//DUSK2DAWN		Equip if it's between dusk and dawn
+
+
+gcinclude.Crafting_Types = 'ALC,BONE,CLOTH,COOK,GSM,LTH,BSM,WW';
+gcinclude.Gathering_Types = 'HELM,DIG,CLAM,FISH';
