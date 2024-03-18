@@ -551,7 +551,7 @@ local sets = {
 	
 	--* /DRK *--
 	['WeaponBash'] = {
-	},/
+	},
 	
 	--* /DRG *--
 	['Jumps'] = {		-- Jump and High Jump, Super is too high a level

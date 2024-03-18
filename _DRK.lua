@@ -250,7 +250,8 @@ local sets = {
 	-- Ninjitsu: There is no gear that a DRK can wear to add Ninjitsu skill. Leave the following two
 	-- gear sets empty.	
 	['Ninjitsu'] = {			-- Ninjitsu Skill, magic burst bonus, magic attack bonus
-	}	
+	},
+	
 	-- Summoning: Summoning Magic Skill and Avatar Perpetuation Cost. Currently only gear equippable by any job gives
 	-- is applicable here. There's no gear that's specific for DRK that gives any summoning skill. Note: currently on 
 	-- HorizonXI summoning skills are ignored. Any gear piece that only gives summoning skill will be commented out	
@@ -969,7 +970,8 @@ profile.HandleItem = function()
 		elseif string.match(item.Name, 'Prism Powder') then
 			gcinclude.MoveToCurrent(sets.Invisible,sets.CurrentGear);
 			bShow = true;
-			
+		end
+		
 		if bShow == true then
 			gcinclude.EquipTheGear(sets.CurrentGear);
 		end		
