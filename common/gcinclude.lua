@@ -1153,11 +1153,9 @@ function gcinclude.AccessibleLevel(sName)
 	end
 	
 	-- Now, determine if the item can be accessed
-	iCnt = 0;
-	for _ in pairs(gcinclude.EQUIPABLE) do iCnt = iCnt + 1 end
 
 	sName = string.lower(sName);
-	for i = 1,iCnt,1 do
+	for i,j in pairs(gcinclude.EQUIPABLE) do
 		containerID = gcinclude.EQUIPABLE[i][1];
 		-- then loop through the container
 		for j = 1,inventory:GetContainerCountMax(containerID),1 do
@@ -1902,22 +1900,22 @@ function gcinclude.CheckCommonDebuffs(tCur)
 	local shiningRuby = gData.GetBuffCount('Shining Ruby');
 
 	if (sleep >= 1) then
-		gcinclude.MoveToCurrent(sets.Sleeping,tCur,true);	
+		gcinclude.MoveToCurrent(gcinclude.sets.Sleeping,tCur,true);	
 	end
 	if (doom >= 1) then	
-		gcinclude.MoveToCurrent(sets.Doomed,tCur,true);
+		gcinclude.MoveToCurrent(gcinclude.sets.Doomed,tCur,true);
 	end
 	if (weakened >= 1) then
-		gcinclude.MoveToCurrent(sets.Weakened,tCur,true);	
+		gcinclude.MoveToCurrent(gcinclude.sets.Weakened,tCur,true);	
 	end;
 	if (blind >= 1) then
-		gcinclude.MoveToCurrent(sets.Blind,tCur,true);		
+		gcinclude.MoveToCurrent(gcinclude.sets.Blind,tCur,true);		
 	end
 	if (para >= 1) then
-		gcinclude.MoveToCurrent(sets.Paralyzed,tCur,true);
+		gcinclude.MoveToCurrent(gcinclude.sets.Paralyzed,tCur,true);
 	end	
 	if (shiningRuby >= 1) then
-		gcinclude.MoveToCurrent(sets.Shining_Ruby,tCur,true);
+		gcinclude.MoveToCurrent(gcinclude.sets.Shining_Ruby,tCur,true);
 	end
 end		-- gcinclude.CheckCommonDebuffs
 
