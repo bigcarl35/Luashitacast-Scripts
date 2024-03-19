@@ -193,7 +193,7 @@ local sets = {
 --]]
 
 	['MAB'] = {
-		Neck = 'Uggalepih Pendant//MP.SUB.50P',
+		Neck = 'Uggalepih Pendant//MP.LT.50P',
 	},
 	
 --[[
