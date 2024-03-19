@@ -605,7 +605,21 @@ gcinclude.EQUIPABLE = {gcinclude.STORAGES[1],		-- Inventory
 					   gcinclude.STORAGES[9],		-- Wardrobe
 					   gcinclude.STORAGES[11],		-- Wardrobe 2
 					   gcinclude.STORAGES[17]};		-- Wardrobe 8
-					   
+
+-- This is the job masks for gear that can be equipped. I have included all jobs
+-- including those not yet in the game on Horizon XI and the place holder jobs
+-- for future new jobs so that I don't have to keep the complete list around... lol.
+gcinclude.JobMask = { ['None'] = 0x0,
+		['WAR'] = 0x2, ['MNK'] = 0x4, ['WHM'] = 0x8, ['BLM'] = 0x10,
+		['RDM'] = 0x20, ['THF'] = 0x40, ['PLD'] = 0x80, ['DRK'] = 0x100,
+		['BST'] = 0x200, ['BRD'] = 0x400, ['RNG'] = 0x800, ['SAM'] = 0x1000,
+		['NIN'] = 0x2000, ['DRG'] = 0x4000, ['SMN'] = 0x8000, ['BLU'] = 0x10000,
+		['COR'] = 0x20000, ['PUP'] = 0x40000, ['DNC'] = 0x80000, ['SCH'] = 0x100000,
+		['GEO'] = 0x200000, ['RUN'] = 0x400000, ['MON'] = 0x800000, 
+		['JOB24'] = 0x1000000, ['JOB25'] = 0x2000000, ['JOB26'] = 0x4000000,
+		['JOB27'] = 0x8000000, ['JOB28'] = 0x10000000, ['JOB29'] = 0x20000000,
+		['JOB30'] = 0x30000000, ['JOB31'] = 0x80000000, ['Alljobs'] = 0x007FFFFE };
+
 gcinclude.Sets = gcinclude.sets;
 
 --[[
@@ -1127,23 +1141,28 @@ end		-- gcinclude.CheckInline
 function gcinclude.t1()
 	local item,v;
 	
-	v = 'Summoner\'s Pgch.';
+	v = 'Thick Mufflers';
 	item = AshitaCore:GetResourceManager():GetItemByName(v,2);
 	print(v..': ID='..tostring(item.ItemId)..', Job=' .. tostring(item.Jobs) .. ', Level='..tostring(item.Level));
 	print(item.Name[1],item.Description[1]);
-	v = 'Evoker\'s Spats';
-	item = AshitaCore:GetResourceManager():GetItemByName(v,2);
-	print(v..': ID='..tostring(item.ItemId)..', Job=' .. tostring(item.Jobs) .. ', Level='..tostring(item.Level));
+	if bit.band(item.Jobs,0x7FFFFE) == 0x7FFFFE then
+		print('All valid');
+	else
+		print('All invalid');
+	end
+	print(gcinclude.AccessibleLevel(v));
+	print(gcinclude.AccessibleLevel('Guespiere'));
 end
 
 --[[
 	AccessibleLevel checks to see if the passed item is accessible to the player in the field and
 	that the level of the item isn't too high.
 --]]
---[[
+
 function gcinclude.AccessibleLevel(sName)
+	local inventory = AshitaCore:GetMemoryManager():GetInventory();
+	local resources = AshitaCore:GetResourceManager();
 	local player = gData.GetPlayer();
-	local bGood = false;
 	local item,containerID;
 	
 	-- Retrieve the item's detals
@@ -1155,25 +1174,22 @@ function gcinclude.AccessibleLevel(sName)
 	-- Now, determine if the item can be accessed
 
 	sName = string.lower(sName);
-	for i,j in pairs(gcinclude.EQUIPABLE) do
+	for i,_ in pairs(gcinclude.EQUIPABLE) do
 		containerID = gcinclude.EQUIPABLE[i][1];
 		-- then loop through the container
 		for j = 1,inventory:GetContainerCountMax(containerID),1 do
 			local itemEntry = inventory:GetContainerItem(containerID, j);
 			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
 				local item1 = resources:GetItemById(itemEntry.Id);
-				local sIN = string.lower(item1.Name[1])
-				if sIN == sName then
-				
+				if string.lower(item1.Name[1]) == sName then
+					return true;
 				end
 			end
 		end
 	end
 	
-	
-	return bGood
-end
---]]
+	return false;
+end		-- gcinclude.AccessibleLevel
 
 --[[
 	MoveToCurrent copies the gear defined in the passed set to current master
@@ -1190,7 +1206,12 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 	if tSet == nil then
 		return;
 	end
-
+	
+	-- Make sure player's transition between zones is complete
+	if player.MainJob == 'NON' then
+		return;
+	end
+	
 	-- Walk the gear set slots
 	for k,v in pairs(tSet) do
 		bContinue = false;
@@ -1227,29 +1248,49 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 					-- See if there's an inline conditional to be checked
 					bGood,vRoot = gcinclude.CheckInline(vv);					
 					if bGood then
-						item = AshitaCore:GetResourceManager():GetItemByName(vRoot,2);
+						item = AshitaCore:GetResourceManager():GetItemByName(vRoot,2);					
 						if item == nil then
-							if string.find(gcinclude.GearWarnings,vv) == nil then
-								print(chat.header('MoveToCurrent'):append(chat.message('Warning: ' .. vv .. ' not a valid piece of gear. Ignoring.')));
-								gcinclude.GearWarnings = gcinclude.GearWarnings .. vv .. ',';
+							if string.find(gcinclude.GearWarnings,vRoot) == nil then
+								print(chat.header('MoveToCurrent'):append(chat.message('Warning: ' .. vRoot .. ' not a valid piece of gear. Skipping.')));
+								gcinclude.GearWarnings = gcinclude.GearWarnings .. vRoot .. ',';
 							end
 						else
-							-- Check level of item vs level of player					
-							if item.Level <= player.MainJobSync then				
-								-- Either an actual or a pseudo slot name: Ears or Rings. 
-								-- Build slot name and equip item there. Bump counter for 
-								--next of pair
-								if bContinue then
-									sK = root .. tostring(iNum);
-									tMaster[sK] = vRoot;
-									iNum = iNum + 1;						
+							-- Make sure item is accessible.
+--							if gcinclude.AccessibleLevel(vRoot) then
+								-- Check that the item can be equipped by the player's current job
+								if bit.band(item.Jobs,gcinclude.JobMask[player.MainJob]) ~= gcinclude.JobMask[player.MainJob] then
+									-- Check to see if you need to report the problem
+									if string.find(gcinclude.GearWarnings,vRoot) == nil then
+										print(chat.header('MoveToCurrent'):append(chat.message('Warning: ' .. vRoot .. ' cannot be equipped by your job. Skipping')));
+										gcinclude.GearWarnings = gcinclude.GearWarnings .. vRoot .. ',';
+									end
 								else
-									-- Normal single slot
-									tMaster[k] = vRoot;						
-									break;
+									-- Check level of item vs level of player
+									if item.Level <= player.MainJobSync then				
+										-- Either an actual or a pseudo slot name: Ears or Rings. 
+										-- Build slot name and equip item there. Bump counter for 
+										--next of pair
+										if bContinue then
+											sK = root .. tostring(iNum);
+											tMaster[sK] = vRoot;
+											iNum = iNum + 1;						
+										else
+											-- Normal single slot
+											tMaster[k] = vRoot;						
+											break;
+										end
+									end
+								end
+--[[
+	This reports issues when zoning. Commenting out for now.	-- CCF, 3/19/24
+	
+							else
+								if string.find(gcinclude.GearWarnings,vRoot) == nil then
+									print(chat.header('MoveToCurrent'):append(chat.message('Warning: ' .. vRoot .. ' is inaccessable. Skipping')));
+									gcinclude.GearWarnings = gcinclude.GearWarnings .. vRoot .. ',';
 								end
 							end
-						
+--]]							
 							-- When iNum > 2, all special slots of "root" populated
 							if iNum > 2 then					
 								break;
@@ -1258,17 +1299,44 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 					end
 				end	
 			else
-				-- See if there's an inline conditional to be checked
+				-- Single value. See if there's an inline conditional to be checked
 				bGood,vRoot = gcinclude.CheckInline(v);
 				if bGood then
 					item = AshitaCore:GetResourceManager():GetItemByName(vRoot,2);
-					if item ~= nil and item.Level <= player.MainJobSync then
-						if bContinue then
-							sK = root .. tostring(iNum);
-							tMaster[sK] = vRoot;
-						else
-							tMaster[k] = vRoot;
+					if item == nil then
+						if string.find(gcinclude.GearWarnings,vRoot) == nil then
+							print(chat.header('MoveToCurrent'):append(chat.message('Warning: ' .. vRoot .. ' not a valid piece of gear. Skipping.')));
+							gcinclude.GearWarnings = gcinclude.GearWarnings .. vRoot .. ',';
 						end
+					else
+						-- Make sure item is accessible.
+						--if gcinclude.AccessibleLevel(vRoot) then
+							if bit.band(item.Jobs,gcinclude.JobMask[player.MainJob]) ~= gcinclude.JobMask[player.MainJob] then
+								if string.find(gcinclude.GearWarnings,vRoot) == nil then
+									print(chat.header('MoveToCurrent'):append(chat.message('Warning: ' .. vRoot .. ' cannot be equipped by your job. Skipping')));
+									gcinclude.GearWarnings = gcinclude.GearWarnings .. vRoot .. ',';
+								end
+							else	
+								-- Check level of item vs level of player
+								if item ~= nil and item.Level <= player.MainJobSync then
+									if bContinue then
+										sK = root .. tostring(iNum);
+										tMaster[sK] = vRoot;
+									else
+										tMaster[k] = vRoot;
+									end
+								end
+							end
+--[[
+	This reports issues when zoning. Commenting out for now.	-- CCF. 3/19/24
+	
+						else
+							if string.find(gcinclude.GearWarnings,vRoot) == nil then
+								print(chat.header('MoveToCurrent'):append(chat.message('Warning: ' .. vRoot .. ' is inaccessable. Skipping')));
+								gcinclude.GearWarnings = gcinclude.GearWarnings .. vRoot .. ',';
+							end
+						end
+--]]
 					end
 				end
 			end
