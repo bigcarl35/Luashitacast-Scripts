@@ -620,7 +620,238 @@ gcinclude.JobMask = { ['None'] = 0x0,
 		['JOB27'] = 0x8000000, ['JOB28'] = 0x10000000, ['JOB29'] = 0x20000000,
 		['JOB30'] = 0x30000000, ['JOB31'] = 0x80000000, ['Alljobs'] = 0x007FFFFE };
 
+-- structure used to check the validity of the gear piece in a gear set
+Integrity = { ['Name'] = nil, 			-- Name of item to be checked
+			  ['Item'] = nil,			-- Actual item structure
+			  ['Code'] = nil,			-- What (if any) inline code is attached
+			  ['ValidCode'] = false,	-- Is the inline code valid
+			  ['Have'] = false,			-- Does the player own it
+			  ['Count'] = 0,			-- How many do they have
+			  ['Accessible'] = false,	-- Can it be equipped in the field
+			  ['Equipable'] = false,	-- Can the player's job use It
+			  ['Where'] = ',',			-- Where is the item found
+};
+
+InlineCodes = { '//MSJ','//SJWAR','//SJMNK','//SJWHM','//SJBLM','//SJRDM','//SJTHF',
+				'//SJPLD','//SJDRK','//SJBST','//SJBRD','//SJRNG','//SJSAM','//SJNIN',
+				'//SJDRG','//SJSMN','//SJBLU','//SJCOR','//SJPUP','//SJDNC','//SJSCH',
+				'//SJGEO','//SJRUN','//CARBY','//BLIND','//OWN','//NOT_OWN',
+				'//MPP.LE.50P','//PJWAR','//PJMNK','//PJWHM','//PJBLM','//PJRDM',
+				'//PJTHF','//PJPLD','//PJDRK','//PJBST','//PJBRD','//PJRNG','//PJSAM',
+				'//PJNIN','//PJDRG','//PJSMN','//PJBLU','//PJCOR','//PJPUP','//PJDNC',
+				'//PJSCH','//PJGEO','//PJRUN','//WSWAP','//PET','//PETF','//PETFNPF',
+				'//ELEAVA','//MP.LT.50','//AVAWTHR','//AVADAY','//HORN','STRING',
+				'//CR:ALC','//CR:BONE','//CR:CLOTH','//CR:COOK','//CR:GSM','//CR:LTH',
+				'//CR:BSM','//CR:WW','//GA:HELM','//GA:DIG','//GA:CLAM','//GA:FISH',
+				'//FIRESDAY','//EARTHSDAY','//WATERSDAY','//WINDSDAY','//ICEDAY',
+				'//LIGHTNINGDAY','//LIGHTSDAY','//DARKSDAY','//NOT_LGT-DRK',
+				'//WTH:CLEAR','//WTH:SUNSHINE','//WTH:CLOUDS','//WTH:FOG','//WTH:FIRE',
+				'//WTH:WATER','//WTH:EARTH','//WTH:WIND','//WTH:ICE','//WTH:THUNDER',
+				'//WTH:LIGHT','//WTH:DARK','//WTH-DAY','//AK:WINDY','//AK:SANDY',
+				'//AK:BASTOK','//AK:OMNI','//HP75P|TP100P','//NEWMOON','//FULLMOON',
+				'//NIGHTTIME','//DAYTIME','//DUSK2DAWN','//FM-DRK-NIGHT','//NM-LGT-DAY' };				
+
 gcinclude.Sets = gcinclude.sets;
+
+--[[
+	ClearIntegrityBlock reinitializes the validation structure
+--]]
+
+function ClearIntegrityBlock()
+	Integrity['Name'] = nil;
+	Integrity['Item'] = nil;
+	Integrity['Code'] = nil;
+	Integrity['ValidCode'] = false;
+	Integrity['Have'] = false;
+	Integrity['Count'] = 0;
+	Integrity['Accessible'] = false;
+	Integrity['Equipable'] = false;
+	Integrity['Where'] = ',';
+end
+
+--[[
+	CheckGearIntegrity populates the Integrity structure for the passed piece of
+	gear. The function is used in the Validate function.
+--]]
+
+function CheckGearIntegrity(GearName)
+	local inventory = AshitaCore:GetMemoryManager():GetInventory();
+	local resources = AshitaCore:GetResourceManager();
+	local player = gData.GetPlayer();
+	local iPos;
+	
+	if GearName == nil then
+		return false;
+	end
+	
+	-- Initialize the tracking structure
+	ClearIntegrityBlock();
+	
+	-- Look for an inline code
+	iPos = string.find(GearName,'//');
+	if iPos ~= nil then
+		Integrity['Name'] = string.sub(GearName,1,iPos-1);
+		Integrity['Code'] = string.upper(string.sub(GearName,iPos,-1));
+	else
+		Integrity['Name'] = GearName;
+	end
+	
+	Integrity['Item'] = AshitaCore:GetResourceManager():GetItemByName(Integrity['Name'],2);
+	
+	-- Regardless of the validity of the item, if there's an inline conditional,
+	-- that portion can be checked.
+	if Integrity['Code'] ~= nil then
+		Integrity['ValidCode'] = (table.find(InlineCodes,Integrity['Code']) ~= nil);
+	end
+	
+	if Integrity['Item'] ~= nil then
+		Integrity['Equipable'] = (bit.band(Integrity['Item'].Jobs,gcinclude.JobMask[player.MainJob]) == gcinclude.JobMask[player.MainJob]);
+
+		for i,desc in ipairs(gcinclude.STORAGES) do
+			containerID = gcinclude.STORAGES[i][1];
+			-- then loop through the container
+			for j = 1,inventory:GetContainerCountMax(containerID),1 do
+				local itemEntry = inventory:GetContainerItem(containerID, j);
+				if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
+					local item = resources:GetItemById(itemEntry.Id);
+					if string.lower(item.Name[1]) == string.lower(Integrity['Name']) then
+						Integrity['Have'] = true;
+						Integrity['Count'] = Integrity['Count'] + 1;
+
+						-- Check accessibility
+						local bGood = false;
+						for ii = 1,#gcinclude.EQUIPABLE,1 do
+							if gcinclude.EQUIPABLE[ii][1] == gcinclude.STORAGES[i][1] then
+								Integrity['Accessible'] = true;	
+								bGood = true;
+							end
+						end
+						
+						-- Record where it was found. (no repeats)
+						local stmp = string.lower(Integrity['Where']);
+						local stmp2 = ',' .. desc[2] .. ',';
+						if string.find(stmp,stmp2) == nil then
+							Integrity['Where'] = Integrity['Where'] .. desc[2] .. ',';
+						end						
+					end
+				end
+			end
+		end
+		if Integrity['Where'] == ',' then
+			Integrity['Where'] = '';
+		else
+			Integrity['Where'] = string.sub(Integrity['Where'],2,-2);
+		end
+	end
+	return true;
+end		-- CheckGearIntegrity
+
+--[[
+	DisplayValidity translates the validate structure into a display representation
+	of the validate pass
+--]]
+
+function gcinclude.DisplayValidity()
+	local sLine = '   ' .. Integrity['Name'] .. ' ';						
+	
+	-- Is item a known piece of gear
+	if Integrity['Item'] ~= nil then
+		sLine = sLine .. chat.color1(2,'Valid') .. ',';
+	
+		-- Does player own one
+		if Integrity['Have'] == true then
+			if Integrity['Count'] > 1 then
+				sLine = sLine .. chat.color1(2,'Own') .. '(' .. chat.color1(3,tostring(Integrity['Count'])) ..') in: ' .. chat.color1(107,Integrity['Where']) .. ',';
+			else
+				sLine = sLine .. chat.color1(2,'Own') .. '(' .. tostring(Integrity['Count']) ..') in: ' .. chat.color1(107,Integrity['Where']) .. ',';
+			end
+		else
+			sLine = sLine .. chat.color1(8,'Own') .. ',';
+		end
+							
+		-- Is it Accessible
+		if Integrity['Accessible'] == true then
+			sLine = sLine .. chat.color1(2,'Access') .. ',';
+		else
+			sLine = sLine .. chat.color1(8,'Access') .. ',';
+		end
+							
+		-- Is it equipable by your job (level and job restrictions)
+		if Integrity['Equipable'] == true then
+			sLine = sLine .. chat.color1(2,'Equip') .. ',' .. chat.color1(107, 'Code=');
+		else
+			sLine = sLine .. chat.color1(8,'Equip') .. ',' .. chat.color1(107, 'Code=');
+		end
+							
+		-- Is there a code and is it valid
+		if Integrity['Code'] ~= nil then
+			if Integrity['ValidCode'] == true then
+				sLine = sLine .. chat.color1(2,Integrity['Code']);
+			else
+				sLine = sLine .. chat.color1(8,Integrity['Code']);
+			end
+		end
+	else
+		sLine = sLine .. chat.color1(8,'Invalid');
+	end
+					
+	return(sLine);
+end		-- DisplayValidity
+
+--[[
+	Validate checks the passed gear set, determining if the definition is valid.
+	It produces a report, color coded, showing what is valid and what needs fixing.
+--]]
+
+function gcinclude.ValidateGearSet(gsName)
+	local gs,bgcinclude,sWhere;
+	local sLine,bGood;
+	
+	if gsName == nil then
+		print(chat.header('Validate'):append(chat.message('Warning: No gearset specified.')));
+		return;
+	end
+	
+	gs,bgcinclude = gcinclude.GetTableByName(gsName);
+	
+	if gs == nil then
+		print(chat.header('Validate'):append(chat.message('Gearset: ' .. string.upper(gsName) .. ' not found.')));
+		return;
+	else
+		if bgcinclude == true then
+			sWhere = 'gcinclude';
+		else
+			sWhere = 'Profile';
+		end
+		print(chat.color1(107,'Gear set - ') .. chat.color1(2,string.upper(gsName)) .. chat.color1(1,' (' .. sWhere .. ')'));
+		
+		for i,j in pairs(gs) do
+			print(chat.color1(107,i .. ':'));
+			
+			if type(j) == 'table' then
+				for ii,jj in pairs(j) do
+					bGood = CheckGearIntegrity(jj);
+					if bGood ~= true then
+						print('   Problem with processing: ' .. jj.. '. Skipping.');
+					else
+						sLine = gcinclude.DisplayValidity();
+						print(chat.message(sLine));
+					end					
+				end
+			else
+				bGood = CheckGearIntegrity(j);
+				if bGood ~= true then
+					print('   Problem with processing: ' .. j.. '. Skipping.');
+				else
+					sLine = gcinclude.DisplayValidity();
+					print(chat.message(sLine));
+				end
+			end
+		end
+	end
+	
+	return;
+end		-- gcinclude.ValidateGearSet
 
 --[[
 	DB_ShowIt will display debug details about the type passed.
@@ -998,6 +1229,9 @@ end		-- gcinclude.ClearSet
 	CheckInline checks for a simple conditional on the item passed into it.
 	Returned is whether the condition is met and the item's name (minus the
 	conditional.
+	
+	NoGear is an optional parameter. It indicates that the gear name should 
+	not be returned
 --]]
 
 function gcinclude.CheckInline(gear)
@@ -1138,58 +1372,9 @@ function gcinclude.CheckInline(gear)
 	return bGood,sGear;
 end		-- gcinclude.CheckInline
 
-function gcinclude.t1()
-	local item,v;
-	
-	v = 'Thick Mufflers';
-	item = AshitaCore:GetResourceManager():GetItemByName(v,2);
-	print(v..': ID='..tostring(item.ItemId)..', Job=' .. tostring(item.Jobs) .. ', Level='..tostring(item.Level));
-	print(item.Name[1],item.Description[1]);
-	if bit.band(item.Jobs,0x7FFFFE) == 0x7FFFFE then
-		print('All valid');
-	else
-		print('All invalid');
-	end
-	print(gcinclude.AccessibleLevel(v));
-	print(gcinclude.AccessibleLevel('Guespiere'));
+function gcinclude.t1(gs)
+	gcinclude.ValidateGearSet(gs);
 end
-
---[[
-	AccessibleLevel checks to see if the passed item is accessible to the player in the field and
-	that the level of the item isn't too high.
---]]
-
-function gcinclude.AccessibleLevel(sName)
-	local inventory = AshitaCore:GetMemoryManager():GetInventory();
-	local resources = AshitaCore:GetResourceManager();
-	local player = gData.GetPlayer();
-	local item,containerID;
-	
-	-- Retrieve the item's detals
-	item = AshitaCore:GetResourceManager():GetItemByName(sName,2);
-	if item == nil then
-		return false;
-	end
-	
-	-- Now, determine if the item can be accessed
-
-	sName = string.lower(sName);
-	for i,_ in pairs(gcinclude.EQUIPABLE) do
-		containerID = gcinclude.EQUIPABLE[i][1];
-		-- then loop through the container
-		for j = 1,inventory:GetContainerCountMax(containerID),1 do
-			local itemEntry = inventory:GetContainerItem(containerID, j);
-			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
-				local item1 = resources:GetItemById(itemEntry.Id);
-				if string.lower(item1.Name[1]) == sName then
-					return true;
-				end
-			end
-		end
-	end
-	
-	return false;
-end		-- gcinclude.AccessibleLevel
 
 --[[
 	MoveToCurrent copies the gear defined in the passed set to current master
@@ -1255,42 +1440,24 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 								gcinclude.GearWarnings = gcinclude.GearWarnings .. vRoot .. ',';
 							end
 						else
-							-- Make sure item is accessible.
---							if gcinclude.AccessibleLevel(vRoot) then
-								-- Check that the item can be equipped by the player's current job
-								if bit.band(item.Jobs,gcinclude.JobMask[player.MainJob]) ~= gcinclude.JobMask[player.MainJob] then
-									-- Check to see if you need to report the problem
-									if string.find(gcinclude.GearWarnings,vRoot) == nil then
-										print(chat.header('MoveToCurrent'):append(chat.message('Warning: ' .. vRoot .. ' cannot be equipped by your job. Skipping')));
-										gcinclude.GearWarnings = gcinclude.GearWarnings .. vRoot .. ',';
-									end
-								else
-									-- Check level of item vs level of player
-									if item.Level <= player.MainJobSync then				
-										-- Either an actual or a pseudo slot name: Ears or Rings. 
-										-- Build slot name and equip item there. Bump counter for 
-										--next of pair
-										if bContinue then
-											sK = root .. tostring(iNum);
-											tMaster[sK] = vRoot;
-											iNum = iNum + 1;						
-										else
-											-- Normal single slot
-											tMaster[k] = vRoot;						
-											break;
-										end
+							if (bit.band(item.Jobs,gcinclude.JobMask[player.MainJob]) == gcinclude.JobMask[player.MainJob]) or
+							   (bit.band(item.Jobs,gcinclude.JobMask['Alljobs']) == gcinclude.JobMask['Alljobs']) then
+								-- Check level of item vs level of player
+								if item.Level <= player.MainJobSync then				
+									-- Either an actual or a pseudo slot name: Ears or Rings. 
+									-- Build slot name and equip item there. Bump counter for 
+									--next of pair
+									if bContinue then
+										sK = root .. tostring(iNum);
+										tMaster[sK] = vRoot;
+										iNum = iNum + 1;						
+									else
+										-- Normal single slot
+										tMaster[k] = vRoot;						
+										break;
 									end
 								end
---[[
-	This reports issues when zoning. Commenting out for now.	-- CCF, 3/19/24
-	
-							else
-								if string.find(gcinclude.GearWarnings,vRoot) == nil then
-									print(chat.header('MoveToCurrent'):append(chat.message('Warning: ' .. vRoot .. ' is inaccessable. Skipping')));
-									gcinclude.GearWarnings = gcinclude.GearWarnings .. vRoot .. ',';
-								end
-							end
---]]							
+							end							
 							-- When iNum > 2, all special slots of "root" populated
 							if iNum > 2 then					
 								break;
@@ -1309,34 +1476,18 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 							gcinclude.GearWarnings = gcinclude.GearWarnings .. vRoot .. ',';
 						end
 					else
-						-- Make sure item is accessible.
-						--if gcinclude.AccessibleLevel(vRoot) then
-							if bit.band(item.Jobs,gcinclude.JobMask[player.MainJob]) ~= gcinclude.JobMask[player.MainJob] then
-								if string.find(gcinclude.GearWarnings,vRoot) == nil then
-									print(chat.header('MoveToCurrent'):append(chat.message('Warning: ' .. vRoot .. ' cannot be equipped by your job. Skipping')));
-									gcinclude.GearWarnings = gcinclude.GearWarnings .. vRoot .. ',';
+						if (bit.band(item.Jobs,gcinclude.JobMask[player.MainJob]) == gcinclude.JobMask[player.MainJob]) or
+						   (bit.band(item.Jobs,gcinclude.JobMask['Alljobs']) == gcinclude.JobMask['Alljobs']) then
+							-- Check level of item vs level of player
+							if item ~= nil and item.Level <= player.MainJobSync then
+								if bContinue then
+									sK = root .. tostring(iNum);
+									tMaster[sK] = vRoot;
+								else
+									tMaster[k] = vRoot;
 								end
-							else	
-								-- Check level of item vs level of player
-								if item ~= nil and item.Level <= player.MainJobSync then
-									if bContinue then
-										sK = root .. tostring(iNum);
-										tMaster[sK] = vRoot;
-									else
-										tMaster[k] = vRoot;
-									end
-								end
-							end
---[[
-	This reports issues when zoning. Commenting out for now.	-- CCF. 3/19/24
-	
-						else
-							if string.find(gcinclude.GearWarnings,vRoot) == nil then
-								print(chat.header('MoveToCurrent'):append(chat.message('Warning: ' .. vRoot .. ' is inaccessable. Skipping')));
-								gcinclude.GearWarnings = gcinclude.GearWarnings .. vRoot .. ',';
 							end
 						end
---]]
 					end
 				end
 			end
@@ -1944,8 +2095,7 @@ function gcinclude.HandleCommands(args)
 		toggle = 'Region';
 		status = gcdisplay.GetCycle('Region');
 	elseif (args[1] == 'validate') then
-		--gcinclude.ValidateGear(args[2]);
-		print(chat.message('Validate gear is not implemented yet'));
+		gcinclude.ValidateGearSet(args[2]);
     end
 
 	if gcinclude.settings.Messages then
