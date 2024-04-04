@@ -632,6 +632,22 @@ Integrity = { ['Name'] = nil, 			-- Name of item to be checked
 			  ['Where'] = ',',			-- Where is the item found
 };
 
+HPMP_Adjusted = { ['MaxHP'] = nil,		-- Default maximum HP
+				  ['MaxMP'] = nil,		-- Default maximum MP
+				  ['SeenHP'] = 0,		-- Total amount HP boosted from gear (HP +/-#)
+				  ['SeenMP'] = 0,		-- Total amount MP boosted from gear (MP +/-#)
+				  ['UnseenHP'] = 0,		-- Total amount HP boosted from unseen gear 
+				  ['UnseenMP'] = 0,		-- Total amount MP boosted from unseen gear 
+				  ['ConvertHP'] = 0,	-- Total amount of HP from converted MP
+				  ['ConvertMP'] = 0,	-- Total amount of MP from converted HP
+				  ['PctHP'] = 0,		-- Total percent HP boosted from gear ( HP #%)
+				  ['PctMP'] = 0,		-- Total percent MP boosted from gear ( MP #%)
+				  ['BaseHP'] = 0,		-- Calculated max HP minus all gear bonuses
+				  ['BaseMP'] = 0,		-- Calculated max MP minus all gear bonuses
+				  ['BaseHPV'] = 0,		-- Calculated max HP w/gear minus invisible gear
+				  ['BaseMPV'] = 0,		-- Calculated max MP w/gear minus invisible gear
+};
+
 InlineCodes = { '//MSJ','//SJWAR','//SJMNK','//SJWHM','//SJBLM','//SJRDM','//SJTHF',
 				'//SJPLD','//SJDRK','//SJBST','//SJBRD','//SJRNG','//SJSAM','//SJNIN',
 				'//SJDRG','//SJSMN','//SJBLU','//SJCOR','//SJPUP','//SJDNC','//SJSCH',
@@ -649,7 +665,8 @@ InlineCodes = { '//MSJ','//SJWAR','//SJMNK','//SJWHM','//SJBLM','//SJRDM','//SJT
 				'//WTH:WATER','//WTH:EARTH','//WTH:WIND','//WTH:ICE','//WTH:THUNDER',
 				'//WTH:LIGHT','//WTH:DARK','//WTH-DAY','//AK:WINDY','//AK:SANDY',
 				'//AK:BASTOK','//AK:OMNI','//HP75P|TP100P','//NEWMOON','//FULLMOON',
-				'//NIGHTTIME','//DAYTIME','//DUSK2DAWN','//FM-DRK-NIGHT','//NM-LGT-DAY' };				
+				'//NIGHTTIME','//DAYTIME','//DUSK2DAWN','//FM-DRK-NIGHT','//NM-LGT-DAY',
+				'//HP.GE.85PV' };				
 
 gcinclude.Sets = gcinclude.sets;
 
@@ -1132,6 +1149,99 @@ function gcinclude.SetVariables()
 end		-- gcinclude.SetVariables
 
 --[[
+	Clear_HPMP_Adjusted initializes the aforementioned structure
+--]]
+
+function Clear_HPMP_Adjusted()
+	HPMP_Adjusted['MaxHP'] = nil;
+	HPMP_Adjusted['MaxMP'] = nil;
+	HPMP_Adjusted['SeenHP'] = 0;
+	HPMP_Adjusted['SeenMP'] = 0;
+	HPMP_Adjusted['UnseenHP'] = 0;
+	HPMP_Adjusted['UnseenMP'] = 0;
+	HPMP_Adjusted['ConvertHP'] = 0;
+	HPMP_Adjusted['ConvertMP'] = 0;
+	HPMP_Adjusted['PctHP'] = 0;
+	HPMP_Adjusted['PctMP'] = 0;
+	HPMP_Adjusted['BaseHP'] = 0;
+	HPMP_Adjusted['BaseMP'] = 0;
+	HPMP_Adjusted['BaseHPV'] = 0;
+	HPMP_Adjusted['BaseMPV'] = 0;
+end		-- Clear_HPMP_Adjusted
+
+--[[
+	ParseDescription determines the type of entries that are found on the passed line
+	and extracts the HP/MP accordingly.
+	
+	Note: unseen gear slots - neck, ears, rings, back and belt
+--]]
+
+function ParseDescription(slot,item)
+	local player = gData.GetPlayer();
+	local iPosHP,iPosMP,pPos;
+	
+	if item ~= nil then
+		iPosHP = string.find(item.Description[1],'HP');
+		iPosMP = string.find(item.Description[1],'MP');
+		cvPos = string.find(item.Description[1],'Convert');
+		pPos = string.find(item.Description[1],'%%',iPos);
+		if cvPos ~= nil then
+		
+		end
+		print('::['..slot..'] = '..item.Description[1]..'::');
+		print('iPosHP: '..tostring(iPosHP));
+		print('iPosMP: '..tostring(iPosMP));
+		print('cvPos: '..tostring(cvPos));
+		print('pPos: '..tostring(pPos));
+	end
+end
+
+--[[
+	Ajusted will return the HP or MP maximum value (depending on what was requested)
+	for the player less any trait boosts or gear enhancements. What is returned is
+	either a flat value or a percent.
+--]]
+
+function gcinclude.Adjusted(bPct)
+	local player = gData.GetPlayer();
+	local current = gData.GetCurrentSet();
+	local dLevel = player.MainJobSync - 30;
+	
+	Clear_HPMP_Adjusted();
+	
+	HPMP_Adjusted['MaxHP'] = player.MaxHP;
+	HPMP_Adjusted['MaxMP'] = player.MaxMP;
+	
+	if current ~= nil then
+		for i,j in pairs(current) do
+			local item = AshitaCore:GetResourceManager():GetItemByName(j,2)
+			if item ~= nil then
+				-- Let's take care of the exceptions first. Tamas Ring and Sattva
+				-- ring have a range aspect to their boost. Parsing sounds bad, so
+				-- just look for the names. 15 + (level-30/3) rounded down
+				if item.Name == 'Sattva Ring' then
+					if dLevel > 0 then
+						HPMP_Adjusted['UnseenHP'] = HPMP_Adjusted['UnseenHP'] + (15 + math.floor(dLevel/3));
+					end
+				elseif item.Name == 'Tamas Ring' then
+					if dLevel > 0 then
+						HPMP_Adjusted['UnseenMP'] = HPMP_Adjusted['UnseenMP'] + (15 + math.floor(dLevel/3));
+					end				
+				else
+					-- Both HP and MP can be in a single description. Process accordingly
+					if string.find(item.Description[1],'HP') ~= nil or
+						string.find(item.Description[1],'MP') ~= nil then
+						ParseDescription(i,item);
+					end
+				end
+			end
+		end
+	end
+	
+	return true;
+end
+
+--[[
 	isPetNamed determines if that passed pet has the passed name
 --]]
 
@@ -1364,6 +1474,9 @@ function gcinclude.CheckInline(gear)
 			gcinclude.CheckTime(timestamp.hour,'Daytime',false));
 	elseif suCode == 'HP75P|TP100P' then				-- Player's HP <= 75% and TP <= 100%
 		bGood = (player.HPP <= 75 and player.TP <= 1000);
+	elseif suCode == '//HP.GE.85PV' then				-- Player's HP >= 85%
+		gcinclude.Adjusted(true);
+		bGood = (HPMP_Adjusted['MaxHP']/100 >= 85);		-- temporary answer
 	else
 		print(chat.header('CheckInline'):append(chat.message('Warning: Unknown code = ' .. suCode .. '. Ignoring piece of gear.')));
 		bGood = false;			
@@ -1372,8 +1485,8 @@ function gcinclude.CheckInline(gear)
 	return bGood,sGear;
 end		-- gcinclude.CheckInline
 
-function gcinclude.t1(gs)
-	gcinclude.ValidateGearSet(gs);
+function gcinclude.t1()
+	gcinclude.Adjusted(true);
 end
 
 --[[
