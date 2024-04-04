@@ -264,7 +264,7 @@ me know if you want me to add any more.
 //GA:"gather"	Equip if the gathering code passed matches the master gathering setting
 //"day"			Equip if the day's name matches the specified day, eg. //FIRESDAY
 //NOT_LGT-DRK	Equip if day isn't lightsday or darksday
-//WTH:"weather"	Equip iff the specified weather matches the current weather
+//WTH:"weather"	Equip if the specified weather matches the current weather
 //WTH-DAY		Equip if the weather's element matches the day's element
 //AK:"nation"	Equip national aketon if player in their nation's city
 //HP75P|TP100P	Equip if player's HP <= 75% and player's TP <= 100%
@@ -273,7 +273,11 @@ me know if you want me to add any more.
 //NIGHTTIME		Equip if it's nighttime
 //DAYTIME		Equip if it's daytime
 //DUSK2DAWN		Equip if it's between dusk and dawn
+//FM-DRK-NIGHT	Equip if it's a full moon, darksday and nighttime
+//NM-LGT-DAY	Equip if it's a new moon, lightsday and daytime
+//HP.GE.85PV	Equip if HP >= 85% excluding invisible accessories
 
 
 gcinclude.Crafting_Types = 'ALC,BONE,CLOTH,COOK,GSM,LTH,BSM,WW';
 gcinclude.Gathering_Types = 'HELM,DIG,CLAM,FISH';
+
