@@ -8,18 +8,12 @@ Basically the player was coming up with circumstances that they wanted an item e
 had nothing to do with gear descriptions. Shortly thereafter came the concept of inline
 conditionals and I had to rethink the concept all together.
 
-This implementation supports two types of conditionals: "Block" and "Inline". What you put
-where depends on what you want. A block conditional is an overriding definition. If the
-conditional aspect is found to be true, that piece of gear is loaded regardless of what
-was specified in the associated gear set. You use a block conditional when you want an
-item equipped regardless of any other considerations. ^Caveat: block conditionals are
-currently also used when multiple conditions must be met. Inline currently doesn't support
-multiple conditions. WIP^
-
-An inline conditional puts a question on a specific piece in the priority order of gear
-for a specific slot. Unlike the block conditional which is in it's own separate set block,
-inline is attached to the gear's name via a "//" (e.g., //SJNIN, which checks to see if
-the player's subjob in ninja.)
+For awhile there were two types of conditions supported: "Block" and "Inline", but block
+has since been removed. Only "Inline" conditionals are now supported. An "Inline"
+conditional asks a question that can be answered with Yes or No. Is it night time? Is your
+subjob a ninja? Is anyone in your party a bard? etc. There's a master list of conditional
+types found below. You designate an "Inline" conditional by appending a "//" and the code
+to the piece of gear in your gear set.
 
 How about an example? The following shows the same thing, but uses an inline versus a 
 block conditional, but one is actually more versatile than the other. This is from a 
@@ -30,217 +24,13 @@ BST job file:
     Sub  = { 'Tabarzin//SJNIN', 'War Pick//SJNIN', 'Tatami Shield' },
     Ammo = 'S. Herbal Broth',
 },
-['Start_Weapons_Conditional'] = {
-},
 
-or 
+In this case the Tabarzin would be loaded in your sub gear slot if your main job is high 
+enough level and your subjob is Ninja. If the Tabarzin is too high a level, the War Pick's
+level will be checked.
 
-['Start_Weapons'] = {
-    Main = { 'Maneater', 'Barbaroi Axe', 'Ryl.Arc. Sword' },	-- Sword added for low level option
-    Sub  = 'Tatami Shield',
-    Ammo = 'S. Herbal Broth',
-},
-['Start_Weapons_Conditional'] = {
-	{'War Pick','Equip if /nin or /dnc','Sub',31,'WAR/DRK/BST/RUN','SJIS','NIN/DNC'},
-	{'Tabarzin','Equip if /nin or /dnc','Sub',71,'WAR/DRK/BST/RUN','SJIS','NIN/DNC'},
-},
-
-in both cases you're equipping an axe in the offhand slot if the player's subjob is either
-/nin or /dnc. The first example says that the offhand will be an axe (which depends on your
-main job's level) if you're /nin or /dnc. Otherwise a tatami shield will be equipped (unless
-your level is too low.) The second example says that the tatami shield will be equipped
-unless one of the block conditionals are found to be true. Note that you want the higher 
-level entried to be below the lower level entries. It will equip the last entry where the
-condition is met.
-
-Now, this example has the same behavior either way, but in some cases you'll want to avoid
-using the overriding block conditional. (Say you want the tatami shield equipped if you can't
-equip the tabarzin axe. Just flip flop the "war pick" and the "tatami shield" entries in
-the inline example. The block example cannot do that specific behavior without omitting
-the "war pick" entry.)
-
-Conditional block entries consist of the following fields:
-gear name,description,slot name,minimum level,"/" delimited list of jobs that can equip
-said item or ALL,conditional code word,value(s) to match,... potentially other fields if
-multi-conditional. I've listed most of the conditional gear entries that mention conditions
-in their descriptions as well as some of the pler defined conditionals I have used. Just
-copy and paste the ones you want to use into your gear sets.
-
-Main
-------
-{'Caduceus','+1 Alchemy Skill','Main',1,'ALL','CRAFT','AL'},
-
-Sub
----
-	-- Player-Defined --
-{'Mrc.Cpt. Kukri','Equip if /nin or /dnc','Sub',30,'WAR/THF/DRK/RNG/COR/PUP/DNC','SJIS','NIN/DNC'},
-{'Tabarzin','Equip if /nin or /dnc','Sub',71,'WAR/DRK/BST/RUN','SJIS','NIN/DNC'},
-	
-Head
-----
-{'Protective Spectacles','+1 Bonecraft skill','Head',1,'ALL','CRAFT','BON'},
-{'Magnifying Spectacles','+1 Clothcraft skill','Head',1,'ALL','CRAFT','CTH'},
-{'Chef\'s Hat','+1 Cooking skill','Head',1,'ALL','CRAFT','COOK'},
-{'Shaded Spectacles','+1 Goldsmithing skill','Head',1,'ALL','CRAFT','GSM'},
-{'Horror Head','-50 emnity if full moon, darksday and nighttime','Head',1,'ALL','MOON:DAY:NIGHT','Full Moon','Darksday','Nighttime'},
-{'Horror Head II','+50 emnity if new moon, lightsday, and daytime','Head',1,'ALL','MOON:DAY:NIGHT','New Moon','Lightsday','Daytime'},
-{'Rubius Crown','+2 evasion on earthsday and windsday','Head',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday,Windsday'},
-{'Rain Hat','adds regen in rainy weather','Head',41,'ALL','WEATHER','Water'},
-{'Monsoon Jinpachi','+8 evasion in rainy weather','Head',53,'MNK/SAM/NIN','WEATHER','Water'},
-{'Mushroom Helm','adds regen on watersday and darksday','Head',62,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','DAY','Watersday,Darksday'},
-{'Presidential Hairpin','adds regen when in areas not controlled by home nation','Head',65,'MNK/WHM/RDM/THF/BST/BRD/NIN/DRG/DNC','NATION',true},
-
-Neck
-----
-{'Harakdr\'s Muffler','+5 store TP during ice weather','Neck',40,'ALL','WEATHER','Ice'},
-{'Brisingamen','+5 to primary stats depending on day or HP/MP +10 depending on time','Neck',71,'ALL','DAY|TIME',nil}, -- replace nil with list of days and/or nighttime/daytime
-{'Brisingamen +1','+5 to primary stats depending on day or HP/MP +10 depending on time','Neck',71,'ALL','DAY|TIME',nil}, -- replace nil with list of days and/or nighttime/daytime
-{'Uggalepih Pendant','+8 magic attack bonus when MP <= 50%','Neck',70,'ALL','MPP.LE.50P'},
-	
-	-- Player-Defined
-{'Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
-{'Uggalepih Pendant','MAB +8% if MPP <= 50%','Neck',70,'ALL','MPP.LE.50P'},
-{'Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},
-
-Earring
--------
-{'Diabolos's Earring','-3 accuracy/+3 magic accuracy in dark weather','EARRING',65,'ALL','WEATHER','Dark'},
-{'Vampire Earring','+4 STR/+4 VIT at nighttime','EARRING',67,'WAR/PLD/DRK/BST/SAM/NIN','TIME','Nighttime'},
-	
-Body
-----
-{'Gaudy Harness','Adds refresh if MP < 50','Body',50,'BST','MP.LT.50'},
-{'Federation Aketon','Movement gain in home nation city','Body',1,'ALL','AKETON','Windy'},
-{'Alchemist\'s Apron','+1 Alchemy skill','Body',1,'ALL','CRAFT','ALC'},
-{'Bonecrafter\'s Apron','+1 Bonecraft skill','Body',1,'ALL','CRAFT','BON'},
-{'Weaver\'s Apron','+1 Clothcraft skill','Body',1,'ALL','CRAFT','CTH'},
-{'Culinarian\'s Apron','+1 Cooking skill','Body',1,'ALL','CRAFT','COOK'},
-{'Goldsmith\'s Apron','+1 Goldsmithing skill','Body',1,'ALL','CRAFT','GSM'},
-{'Tanner\'s Apron','+1 Leathercraft skill','Body',1,'ALL','CRAFT','LTH'},
-{'Blacksmith\'s Apron','+1 Smithing skill','Body',1,'ALL','CRAFT','SMT'},
-{'Carpenter\'s Apron','+1 Woodworking skill','Body',1,'ALL','CRAFT','WW'},
-{'Field Tunica','Improves mining, logging and harvesting','Body',1,'ALL','GATHER','HELM'},
-{'Worker Tunica','Improves mining, logging and harvesting','Body',15,'ALL','GATHER','HELM'},
-{'Tarutaru Top +1','Reduces clamming incidents for female tarutarus','Body',1,'ALL','GATHER','CLAM'},
-{'Choc. Jack Coat','Chocobo riding time +5 minutes','Body',1,'ALL','GATHER','DIG'},
-{'Rider\'s Jack Coat','Chocobo riding time +5 minutes','Body',15,'ALL','GATHER','DIG'},
-{'Garish Tunic','+2 evasion on earthsday and windsday','Body',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday'},
-{'Mist Tunic','+2 evasion on earthsday','Body',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday'},
-{'Rubious Tunic','+2 evasion on earthsday and windsday','Body',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday,Windsday'},
-{'Kingdom Aketon','Movement gain in home nation city','Body',1,'ALL','AKETON','Sandy'},
-{'Republic Aketon','Movement gain in home nation city','Body',1,'ALL','AKETON','Bastok'},
-{'Ducal Aketon','Movement gain in all nation cities','Body',1,'ALL','AKETON','Omni'},
-
-Hands
------
-{'Tanner\'s Gloves','+1 Leathercraft skill','Hands',1,'ALL','CRAFT','LTH'},
-{'Smithy\'s Gloves','+1 Smithing skill','Hands',1,'ALL','CRAFT','SMT'},
-{'Carpenter\'s Gloves','+1 Woodworking skill','Hands',1,'ALL','CRAFT','WW'},
-{'Field Gloves','Improves mining and logging','Hands',1,'ALL','GATHER','HELM'},
-{'Worker Gloves','Improves mining and logging','Hands',15,'ALL','GATHER','HELM},
-{'Chocobo Gloves','Chocobo riding time +3 minutes','Hands',1,'ALL','GATHER','DIG'},
-{'Rider\'s Gloves','Chocobo riding time +3 minutes','Hands',15,'ALL','GATHER','DIG'},
-{'Sennight Bangles','+10 MP in areas controlled by home nation','Hands',36,'ALL','DAY','Firesday,Earthsday,Watersday,Windsday,Iceday,Lightningday'},
-{'Monsoon Tekko','+8 accuracy when raining','Hands',43,'MNK/SAM/NIN','WEATHER','Water'},
-{'Hailstorm Tekko','+9 accuracy when raining','Hands',58,'MNK/SAM/NIN','WEATHER','Water'},
-{'Hailstorm Tekko +1','+10 accuracy when raining','Hands',58,'MNK/SAM/NIN','WEATHER','Water'},
-{'Sand Gloves','+7 evasion when sandstorm','Hands',58,'WAR/RDM/THF/PLD/DRK/BST/BRD/RNG/SAM/NIN/DRG','WEATHER','Earth'},
-{'Feronia\'s Bangles','adds regen during daytime','Hands',63,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','TIME','Daytime'},
-{'Garden Bangles','adds regen during daytime','Hands',63,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','TIME','Daytime'},
-
-Rings
------
-{'Diabolos\'s Ring','-15% MP/15 dark magic skill on darksday','RING',65,'ALL','DAY','Darksday'},
-{'Earth Ring','-15% HP/15 defense on earthsday','RING',65,'ALL','DAY','Earthsday'},
-{'Fire Ring','-15% HP/15 attack/15 ranged attack of firesday','RING',65,'ALL','DAY','Firesday'},
-{'Lightning Ring','-15% HP/15 accuracy/15 ranged accuracy on lightningsday','RING',65,'ALL','DAY','Lightningday'},
-{'Water Ring','-15% MP/15 conserve MP on watersday','RING',65,'ALL','DAY','Watersday'},
-{'Wind Ring','-15% HP/15 evasion on windsday','RING',65,'ALL','DAY','Windsday'},
-{'Shadow Ring','magic defense bonus on darksday','RING',75,'ALL','DAY','Darksday'},
-	
-	-- Player-Defined --
-{'Conjurer\'s Ring','Avatar perpetuation cost -1 while player HP <= 75% and TP <= 100%','RING',50,'SMN','HPP|TPP.LE.',75,1000},
-
-Back
-----
-{'Desert Mantle','+2 AGI in sandstorms','Back',62,'ALL','WEATHER','Earth'},
-{'Desert Mantle +1','+3 AGI in sandstorms','Back',62,'ALL','WEATHER','Earth'},
-
-Waist
------
-{'Alchemist\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','ALC'},
-{'Bonecraft\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','BON'},
-{'Weaver\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','CTH'},
-{'Culinarian\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','COOK'},
-{'Goldsmith\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','GSM'},
-{'Tanner\'s Belt','Advanced s-ynthesis image support enchantment','Waist',1,'ALL','CRAFT','LTH'},
-{'Blacksmith\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','SMT'},
-{'Carpenter\'s Belt','Advanced synthesis image support enchantment','Waist',1,'ALL','CRAFT','WW'},
-{'Water Belt','+3 MND on watersday','Waist',65,'ALL','DAY','Watersday'},
-{'Wind Belt','+3 AGI on windsday','Waist',65,'ALL','DAY','Windsday'},
-
-Legs
-----
-{'Field Hose','Improves logging and harvesting','Legs',1,'ALL','GATHER','HELM'},
-{'Worker Hose','Improves logging and harvesting','Legs',15,'ALL','GATHER','HELM'},
-{'Taru. Shorts +1','Imnproves clamming results for female tarutarus','Legs',1,'ALL','GATHER','CLAM'},
-{'Chocobo Hose','Chocobo riding time +4 minutes','Legs',1,'ALL','GATHER','DIG'},
-{'Rider\'s Hose','Chocobo riding time +4 minutes','Legs',15,'ALL','GATHER','DIG'},
-{'Dinner Hose','+1 CHR at nighttime','Legs',1,'ALL','TIME','Nighttime'},
-{'Custom Shorts +1','+20 HP in sunny weather','Legs',1,'ALL','WEATHER','Sunshine'},
-{'Custom Trunks +1','+20 HP in sunny weather','Legs',1,'ALL','WEATHER','Sunshine'},
-{'Elder Trunks +1','+20 HP in sunny weather','Legs',1,'ALL','WEATHER','Sunshine'},
-{'Magna Shorts +1','+20 HP in sunny weather','Legs',1,'ALL','WEATHER','Sunshine'},
-{'Magna Trunks +1','+20 HP in sunny weather','Legs',1,'ALL','WEATHER','Sunshine'},
-{'Savage Shorts +1','+20 HP in sunny weather','Legs',1,'ALL','WEATHER','Sunshine'},
-{'Wonder Trunks +1','+20 HP in sunny weather','Legs',1,'ALL','WEATHER','Sunshine'},
-{'Garish Slacks','+2 evasion on earthsday','Legs',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday'},
-{'Rubious Slacks','+2 evasion on earthsday or windsday','Legs',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday,Windsday'},
-{'Koga Hakama','+10 evasion at nighttime','Legs',71,'NIN','TIME','Nighttime'},
-
-Feet
-----
-{'Field Boots','Improves mining and harvesting','Feet',1,'ALL','GATHER','HELM'},
-{'Worker Boots','Improves mining and harvesting','Feet',15,'ALL','GATHER','HELM'},
-{'Chocobo Boots','Chocobo riding time +3 minutes','Feet',1,'ALL','GATHER','DIG'},
-{'Rider\'s Boots','Chocobo riding time +3 minutes','Feet',15,'ALL','GATHER','DIG'},
-{'Garish Pumps','+2 evasion on earthsday','Feet',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday'},
-{'Rubious Pumps','+2 evasion on earthsday and windsday','Feet',30,'MNK/RDM/PLD/BRD/RNG/BLU/RUN','DAY','Earthsday,Windsday'},
-{'Inferno Sabots','+1 INT/3 dark magic skill during new moon','Feet',41,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','MOON','New Moon'},
-{'Inferno Sabots +1','+2 INT/5 dark magic skill during new moon','Feet',41,'MNK/WHM/BLM/RDM/THF/DRK/BRD/RNG/SMN/BLU/COR/PUP/DNC/SCH/GEO/RUN','MOON','New Moon'},
-{'Monsoon Kyahan','+8 evasion in rain','Feet',47,'MNK/SAM/NIN','WEATHER','Water'},
-{'Vampire Boots','+10 evasion at nighttime','Feet',59,'MNK/WHM/BLM/RDM/PLD/BRD/RNG/SMN/BLU/PUP/SCH/GEO/RUN','TIME','Nighttime'},
-{'Ninja Kyahan +1','+25% movement speed between dusk and dawn','Feet',74,'NIN','TIME','DUSK2DAWN},
-{'Koga Kyahan +1','+7 DEX between dusk and dawn','Feet',74,'NIN','TIME','DUSK2DAWN},
-
-Listed below are all the keyword conditional operators currently supported in block 
-conditionals. If you need something that's not on this list, please let me know.
-
-List of known keyword conditionals,	meaning, and how many pieces of data expected
----------------------------------------------------------------------------------
-CRAFT			Crafting piece			One (type of craft: ALC,BON,CTH,COOK,GSM,SMT,LTH,WW)
-GATHER			Gathering piece			One (type of gathering: HELM,DIG,CLAM)
-MOON			Moon phase				One (Full Moon, New Moon, etc)
-DAY				Week day				One (Firesday, Iceday, etc)
-TIME			Time range				One (Nighttime,Daytime,DUSK2DAWN,Dawn,Day,Dusk,Evening,DEADOFNIGHT)
-AKETON			Nation aketon			One (Windy, Sandy, Bastok)
-WEATHER			Weather					One (Clear, Clouds, Thunder, etc)
-MOON:DAY:NIGHT	Moon phase/day/time		Three (MOON, DAY, TIME), see above for details
-DAY|TIME		Days or time			One (List of days or "Daytime"/"Nighttime")
-OWN				Region control			None (Is player in region controlled by their nation)
-MSJ				Magical subjob			None
-MP.LT.50		MP less than 50			None (SJ must be magical)
-MPP.LE.50P		MP <= 50%				None (Sees if your MP is below 50%)
-HPP|TPP.LE.		HP <= 50% and MP <= 50%	Two (one for each each percentage check, e.g., 50,70)
-PET_NAME		Specific pet name		One (one or a / delimited list, e.g., Carbuncle)
-NOT_PET_NAME	Any pet except			One (one or a / delimited list, e.g., Ifrit/Ramuh)
-SJIS			Subjob is				One	(one or a / delimited list, e.g., THF/NIN)
-SJISN			Subjob is not			One	(one or a / delimited list, e.g., THF/NIN)
-PJIS			Player in party is job	One (one or a / delimited list, e.g., THF/NIN)
-WEAPON			Equips weapon			None (if /wswap on or a smn)
-
-As for inline conditionals, the following are all of the codes currently supported. Let
-me know if you want me to add any more.
+Here's a list of all the "Inline" conditionals currently supported. Let me know if you 
+want me to add any more.
 
 //MSJ			Equip if player's subjob is magical
 //SJ"job"		Equip if player's subjob is "job" (i.e., THF, NIN, etc)
