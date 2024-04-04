@@ -48,14 +48,14 @@ local sets = {
 --]]
 
 	['TP'] = {
-        Head  = { 'chaos Burgeonet','Empress Hairpin' },
+        Head  = { 'Chaos Burgeonet','Empress Hairpin' },
         Neck  = { 'Parade Gorget', 'Peacock Amulet' },
-        Ear2  = { 'Genin Earring//SJNIN', 'Drone Earring', 'Physical Earring' },
+        Ear2  = { 'Genin Earring//SJNIN', 'Fang Earring', 'Drone Earring', 'Physical Earring' },
         Body  = { 'Chaos Cuirass', 'Brigandine' },
         Hands = { 'Chaos Gauntlets', 'Wonder Mitts' },
-        Rings = { 'Tamas Ring','Jaeger Ring' },
-        Back  = 'Raptor Mantle',
-        Waist = 'Swift Belt',
+        Rings = { 'Tamas Ring', 'Sun Ring', 'Sun Ring' },
+        Back  = { 'Amemet Mantle', 'Raptor Mantle', 'Ram Mantle' },
+        Waist = { 'Swift Belt', 'Friar\'s Rope' },
         Legs  = { 'Chaos Flanchard', 'Ryl.Sqr. Breeches' },
         Feet  = { 'Chaos Sollerets', 'Bounding Boots' },
     },
@@ -70,8 +70,8 @@ local sets = {
 		
 	['Accuracy'] = {
 		Neck = 'Peacock Amulet',
-        Rings = { 'Toreador Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
-		Waist = 'Tilt Belt',
+        Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
+		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt' },
 		Feet = { 'Chaos Sollerets', 'Bounding Boots' },
     },
 	
