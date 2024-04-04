@@ -15,9 +15,7 @@ subjob a ninja? Is anyone in your party a bard? etc. There's a master list of co
 types found below. You designate an "Inline" conditional by appending a "//" and the code
 to the piece of gear in your gear set.
 
-How about an example? The following shows the same thing, but uses an inline versus a 
-block conditional, but one is actually more versatile than the other. This is from a 
-BST job file:
+How about an example? This is from a BST job file:
 
 ['Start_Weapons'] = {
 	Main = { 'Maneater', 'Barbaroi Axe', 'Ryl.Arc. Sword' },	-- Sword added for low level option
