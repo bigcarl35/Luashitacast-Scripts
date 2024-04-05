@@ -2,9 +2,9 @@ local profile = {};
 gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 
 --[[
-	This file contains all the gear sets associated with the WAR job. While it isn't outside of the realm of 
+	This file contains all the gear sets associated with the SAM job. While it isn't outside of the realm of 
 	possibility that the subjob might be able to use gear sets too, that is not the emphasis of this program. 
-	It is tailored to handle all the aspects of WAR. If you desire a gear set change to strengthen an ability
+	It is tailored to handle all the aspects of SAM. If you desire a gear set change to strengthen an ability
 	from your subjob that is not supported by this program, you probably will have to make a custom gear set 
 	and use the /gearset command to use it.
 --]]
@@ -319,8 +319,7 @@ local sets = {
 	you will need to use every weapon skill that your job can do. The leading comment defines what weapon/weapon
 	skill combination the set applies to.
 	
-	WAR can use the following weapons: Great Axe (A+), Axe (A-), Great Sword (B+), Scythe (B+), Staff (B),
-	Sword (B), Club (B-), Dagger (B-), Polearm (B-), Hand to Hand (D), Archery (D), Marksmanship (D)
+	SAM can use the following weapons: Great Katana (A+), Polearm (B-), Sword (C+), Club (E), Dagger (E)
 	
 	Any other weapon will have no weaponskill available. Weapon skill sets are named based on stat(s) used, 
 	regardless of weapon
@@ -329,27 +328,21 @@ local sets = {
 --[[
 		* Strength based or just skill based *
 
-		Great Axe: Iron Tempest,Sturmwind,Keen Edge,Raging Rush,Metatron Torment
-		Axe: Raging Axe,Smash Axe,Gale Axe,Avalanche Axe,Spinning Axe,Rampage,Mistral Axe,Decimation,Onslaught
-		Great Sword: Hard Slash,Crescent Moon
-		Scythe: Slice,Spinning Scythe,Vorpal Scythe
-		Staff: Heavy Swing,Shell Crusher,Full Swing
+		Great Katana: Tachi: Empi,Tachi: Hobaku,Tachi: Goten,Tachi: Kagero,Tachi: Jinpu,Tachi: Yakikaze,
+			Tachi: Gekko,Tachi: Kasha
+		Polearm: Double Thrust,Leg Sweep,Impulse Drive
 		Sword: Flat Blade,Circle Blade,Vorpal Blade
 		Club: Brainshaker,Skullbreaker,True Strike
-		Polearm: Double Thrust,Leg Sweep,Impulse Drive
-		H2H: Spinning Attack
 -]]
 	
 	['WS_STR'] = {
     },
 
 --[[
-		* Strength and Agility based *
+-		* Strength and Agility based *
 
 		Polearm: Vorpal Thrust
-		Archery: Flaming Arrow^,Piercing Arrow^,Dulling Arrow^,Sidewinder^,Namas Arrow
-		
-		^ Sub must be RNG
+
 --]]
 
 	['WS_STRAGI'] = {
@@ -359,10 +352,6 @@ local sets = {
 		* Strength and Dexterity based, even weighting *
 		
 		Sword: Fast Blade
-		Polearm: Penta Thrust
-		H2H: Combo,Backhand Blow,Raging Fist^
-		
-		^ Sub must be MNK
 --]]
 
 	['WS_STRDEX'] = {
@@ -371,9 +360,6 @@ local sets = {
 --[[
 		* Strength and Intelligence based, even weighting *
 		
-		Great Sword: Frostbite,Freezebite,Ground Strike
-		Scythe: Dark Harvest,Shadow of Death,Nightmare Scythe,Spiral Hell,Catastrophe
-		Staff: Rock Crusher,Earth Crusher
 		Sword: Burning Blade
 		Polearm: Thunder Thrust
 --]]
@@ -394,39 +380,14 @@ local sets = {
 --[[
 		* Strength and Mind based, even weighting *
 
-		Great Sword: Shockwave,
-		Scythe: Guillotine,Cross Reaper
-		Staff: Starburst,Sunburst,Retribution
-		Sword: Shining Blade,Seraph Blade,Swift Blade,Savage Blade,Knights of Round
-		Club: Shining Strike,Seraph Strike,Judgement,Black Halo,Randgrith
+		Great Katana: Tachi: Koki
+		Sword: Shining Blade,Seraph Blade,Swift Blade,Knights of the Round
+		Club: Shining Strike,Seraph Strike,Judgement,Randgrith
 --]]
 
 	['WS_STRMND'] = {
     },
-
---[[
-		* Strength and Vitality based, even weighting *
-
-		Great Axe: Shield Break,Armor Break,Weapon Break,Full Break,Steel Cyclone
-		Axe: Calamity
-		Great Sword: Power Slash,Scourge
---]]
-
-	['WS_STRVIT'] = {
-    },
-	
---[[
-		* Agility based *
-
-		Polearm: Geirkogul
-		Marksmanship: Hot Shot^,Split Shot^,Sniper Shot^,Slug Shot^
 		
-		^ Sub must be RNG
---]]
-
-	['WS_AGI'] = {
-    },
-	
 --[[
 		* Charisma based *
 		
@@ -434,24 +395,6 @@ local sets = {
 --]]
 	
 	['WS_CHR'] = {
-    },
-
---[[
-		* Intelligence based *
-		
-		Staff: Gates of Tartarus
---]]
-	
-	['WS_INT'] = {
-    },
-	
---[[
-		* Intelligence and Mind based, even balance *
-		
-		Staff: Spirit Taker
---]]
-	
-	['WS_INTMND'] = {
     },
 	
 --[[
@@ -461,16 +404,6 @@ local sets = {
 --]]
 	
 	['WS_DEX'] = {
-    },
-
---[[
-		* Dexterity and Agility based *
-
-		Marksmanship: Coronach
-		
---]]
-	
-	['WS_DEXAGI'] = {
     },
 	
 --[[
@@ -521,13 +454,13 @@ local sets = {
 	The following are abilities affected by gear
 --]]
 	
-	['Berserk'] = {
+	['WardingCircle'] = {
 	},
 	
-	['Warcry'] = {
+	['ThirdEye'] = {
 	},
 	
-	['Aggressor'] = {
+	['Meditate'] = {
 	},
 	
 --[[
@@ -535,7 +468,7 @@ local sets = {
 	have gear that can be equipped by a PLD are included here.
 	
 	The following sub jobs have no skills with equippable gear by a THF: WAR,DRG,BLM,MNK,WHM,RDM,RNG,NIN,
-	SMN,BRD,SAM,PLD
+	SMN,BRD,PLD
 --]]
 	--* BST *--
 	-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration)
@@ -609,9 +542,9 @@ end
 --]]
 
 local function SetSubjobSet(chkSJ)
-	local subs = {['WAR'] = nil, ['MNK'] = 0, ['WHM'] = 1, ['BLM'] = 0, ['RDM'] = 0, ['THF'] = nil,
+	local subs = {['WAR'] = 1, ['MNK'] = 0, ['WHM'] = 0, ['BLM'] = 0, ['RDM'] = 0, ['THF'] = nil,
 				 ['PLD'] = 0, ['DRK'] = 0, ['BST'] = 0, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = 0,
-				 ['SAM'] = 0, ['NIN'] = 1, ['DRG'] = 0, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
+				 ['SAM'] = nil, ['NIN'] = 1, ['DRG'] = 1, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
 				 ['DNC'] = 0, ['SCH'] = 0, ['GEO'] = 0, ['RUN'] = 0};
 	local sj = nil;
 
@@ -650,7 +583,7 @@ profile.OnLoad = function()
 	gcinclude.CheckMagic50(player);
 	
 	-- Set your job macro toolbar defaults here. Which set depends on the subjob
-	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 15');		-- WAR
+	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 15');		-- SAM
 	SetSubjobSet(player.SubJob);
 	
 	-- Load up the weapons bar. (This need only be done once.)
@@ -864,12 +797,12 @@ profile.HandleAbility = function()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Now process the appropriate job ability. Start with abilities associated with WAR
-	if string.match(ability.Name, 'Berserk') then
-		gcinclude.MoveToCurrent(sets.Berserk,sets.CurrentGear);
-	elseif string.match(ability.Name, 'Warcry') then
-		gcinclude.MoveToCurrent(sets.Warcry,sets.CurrentGear);		
-	elseif string.match(ability.Name, 'Aggressor') then
-		gcinclude.MoveToCurrent(sets.Aggressor,sets.CurrentGear);
+	if string.match(ability.Name, 'Warding Circle') then
+		gcinclude.MoveToCurrent(sets.WardingCircle,sets.CurrentGear);
+	elseif string.match(ability.Name, 'Third Eye') then
+		gcinclude.MoveToCurrent(sets.ThirdEye,sets.CurrentGear);		
+	elseif string.match(ability.Name, 'Meditate') then
+		gcinclude.MoveToCurrent(sets.Meditate,sets.CurrentGear);
 		
 	-- And now the subjob abilities
 	elseif string.contains(ability.Name, 'Charm') then			-- assumes /bst	
