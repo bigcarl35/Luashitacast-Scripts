@@ -60,7 +60,7 @@ local sets = {
 		Rings = { 'Evoker\'s Ring', 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
         Back  = { 'Blue Cape', 'White Cape' },
         Waist = { 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
-        Legs  = { 'Evoker\'s Spats', 'Shep. Hose', 'Fisherman\'s Hose' }, 
+        Legs  = { 'Evoker\'s Spats//PETF', 'Summoner\'s Spats', 'Evoker\'s Spats', 'Shep. Hose', 'Fisherman\'s Hose' }, 
         Feet  = { 'Summoner\'s Pgch.', 'Mannequin Pumps', 'Seer\'s Pumps', 'Waders'},
     },
 	
@@ -120,6 +120,7 @@ local sets = {
 		Body  = { 'Vermillion Cloak//CARBY', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
         Hands = 'Carbuncle Mitts//CARBY',
         Rings = 'Evoker\'s Ring',
+		Legs = 'Summoner\'s Spats',
     },
 	
 --[[
@@ -167,6 +168,7 @@ local sets = {
         Body  = 'Austere Robe',
         Hands = 'Carbuncle Mitts//CARBY',
         Rings = 'Evoker\'s Ring',
+		Legs  = 'Summoner\'s Spats',
 		Feet = 'Summoner\'s Pgch.',
     },
 	
@@ -184,7 +186,7 @@ local sets = {
         Head  = 'Shep. Bonnet',
 		Ears  = 'Beastly Earring',
 		Body  = 'Austere Robe',			-- Needed to offset the "possible" Vermillion Cloak	
-		Legs  = 'Evoker\'s Spats',
+		Legs  = 'Evoker\'s Spats',		--  for pet accuracy
     },
 
 	-- Magical rage blood pact: pet magic attack burst, pet magical attack, pet magical
@@ -265,7 +267,7 @@ local sets = {
 --]]
 
 	['MAB'] = {
-		Neck = 'Uggalepih Pendant//MP.SUB.50P',
+		Neck = 'Uggalepih Pendant//MPP.LE.50P',
 	},
 	
 --[[
@@ -357,6 +359,7 @@ local sets = {
 		Body  = 'Austere Robe',
 		Hands = { 'Errant Cuffs', 'Carbuncle Mitts' },
         Rings = 'Evoker\'s Ring',
+		Legs = { 'Summoner\'s Spats//SPIRIT:ES', 'Evoker\'s Spats' },
     },
 	
 --[[
@@ -378,7 +381,7 @@ local sets = {
 		Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
         Back  = 'White Cape',
         Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
-        Legs  = 'Wonder Braccae',
+        Legs  = { 'Summoner\'s Spats', 'Wonder Braccae' },
         Feet  = { 'Mannequin Pumps', 'Seer\'s Pumps' },
     },
 	
@@ -483,7 +486,7 @@ local sets = {
 		Rings = { 'Tamas Ring', 'Sun Ring', 'Courage Ring', 'Tranquility Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
         Back  = 'White Cape',
         Waist = 'Mrc.Cpt. Belt',
-        Legs  = 'Wonder Braccae',
+        Legs  = { 'Summoner\'s Spats', 'Wonder Braccae' },
         Feet  = { 'Creek F Clomps', 'Wonder Clumps' },
     },
 
@@ -501,7 +504,7 @@ local sets = {
 		Rings = { 'Tamas Ring', 'Sun Ring', 'Courage Ring', 'Tranquility Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
         Back  = 'White Cape',
         Waist = 'Mrc.Cpt. Belt',
-        Legs  = 'Wonder Braccae',
+        Legs  = { 'Summoner\'s Spats', 'Wonder Braccae' },
         Feet  = { 'Creek F Clomps', 'Wonder Clumps' },
     },
 	
@@ -566,7 +569,7 @@ local sets = {
         Hands = 'Seer\'s Mitts',
 		Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
         Waist = 'Mrc.Cpt. Belt',
-        Legs  = 'Wonder Braccae',
+        Legs  = {'Summoner\'s Spats', 'Wonder Braccae' },
         Feet  = 'Mannequin Pumps',
     },
 	
@@ -599,7 +602,7 @@ local sets = {
 		Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
         Back  = 'White Cape',
         Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
-        Legs  = 'Wonder Braccae',
+        Legs  = { 'Summoner\'s Spats', 'Wonder Braccae' },
         Feet  = 'Mannequin Pumps',
     },
 	
@@ -693,9 +696,9 @@ local function HandlePetAction(Pet,PetAction)
 		if (profile.sPetAction == nil or profile.sPetAction ~= PetAction.Name) and gcdisplay.GetToggle('sBP') == true then
 			local sMsg;
 			if string.find(gcinclude.SmnBPRageList,PetAction.Name) ~= nil then
-				sMsg = '/p  Blood Pact [<pet>]:  ' .. PetAction.Name .. ' >> <t>.';
+				sMsg = '/p  [<pet>] [Blood Pact:  ' .. PetAction.Name .. '] >> <t>.';
 			else
-				sMsg = '/echo [<pet>]: Blood Pact - ' .. PetAction.Name;
+				sMsg = '/echo [<pet>] [Blood Pact: ' .. PetAction.Name .. ']';
 			end
 			AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
 			profile.sPetAction = PetAction.Name;
@@ -799,9 +802,6 @@ profile.OnLoad = function()
 	gcinclude.settings.priorityMidCast = 'ABCDEFGH';
 	gcinclude.settings.priorityWeaponSkill = 'ABDE';	
 	
-	-- Determine if subjob uses magic and if the maximum MP is > 50.
-	gcinclude.CheckMagic50(player);
-	
 	-- Set which macro book should be displayed. Which macro set within the macro book to
 	-- display depends on what your subjob is.
 	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 13');		-- SMN macro book
@@ -855,21 +855,7 @@ profile.HandleDefault = function()
 	local zone = gData.GetEnvironment();
 	local ew = gData.GetEquipment();
 	local eWeap = nil;
-	local cKey;
-	local myLevel = AshitaCore:GetMemoryManager():GetPlayer():GetMainJobLevel();
-	
-	-- Note the player's current level
-	if (myLevel ~= gcinclude.settings.iCurrentLevel) then
-        gcinclude.settings.iCurrentLevel = myLevel;
-    end
-		
-	-- Make sure that the global magic settings for the player are known. The secoond clause in
-	-- the if statement takes care of a bizarre case. Turns out if you change the player.MainJob
-	-- from a job where there is not a luashitacast script, it initially remembers the old main
-	-- job. by including the second call, a subsequent invocation occurs getting it right.
-	if gcinclude.settings.bMagicCheck == false or gcinclude.settings.sMJ ~= player.MainJob then
-		gcinclude.CheckMagic50(player);
-	end
+	local cKey,sGear;
 	
 	-- A pet action takes priority over a player's action. Only SMN avatar actions supported
 	if pet ~= nil then
@@ -906,7 +892,8 @@ profile.HandleDefault = function()
 		local pEle = gcinclude.SummonStaves[pName];
 
 		if string.find(gcinclude.SummonSkill,pet.Name) ~= nil then
-			if eWeap ~= nil and (eWeap ~= gcinclude.elemental_staves[pEle][1] or eWeap ~= gcinclude.elemental_staves[pEle][3]) then
+			sGear = gcinclude.CheckForEleGear('staff',pEle);
+			if eWeap ~= nil and eWeap ~= sGear then
 				gcinclude.SwapToStave(pEle,true,sets.CurrentGear);
 			end
 		end
@@ -1134,14 +1121,9 @@ profile.HandlePrecast = function()
 	gcinclude.MoveToCurrent(sets.Precast,sets.CurrentGear);	
 		
 	-- See if an elemental obi should be equipped
-	if gcinclude.settings.bEleObis == false then
-		gcinclude.CheckForObisGorgets();
-	end	
-	if gcinclude.settings.bEleObis == true then
-		obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
-		if obi ~= nil then
-			sets.CurrentGear['Waist'] = obi;
-		end
+	obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
+	if obi ~= nil then
+		sets.CurrentGear['Waist'] = obi;
 	end	
 	gcinclude.EquipTheGear(sets.CurrentGear);
 end
