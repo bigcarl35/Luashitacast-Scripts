@@ -705,9 +705,6 @@ profile.OnLoad = function()
 	gcinclude.settings.priorityMidCast = 'ABCDEFGH';
 	gcinclude.settings.priorityWeaponSkill = 'ABDE';
 	
-	-- Determine if subjob uses magic and if the maximum MP is > 50.
-	gcinclude.CheckMagic50(player);
-	
 	-- Set your job macro toolbar defaults here. Which set depends on the subjob
 	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 2');		-- WHM
 	SetSubjobSet(player.SubJob);
@@ -761,20 +758,6 @@ profile.HandleDefault = function()
 	local ew = gData.GetEquipment();
 	local eWeap = nil;
 	local cKey;
-	local myLevel = AshitaCore:GetMemoryManager():GetPlayer():GetMainJobLevel();
-	
-	-- Note the player's current level
-	if (myLevel ~= gcinclude.settings.iCurrentLevel) then
-        gcinclude.settings.iCurrentLevel = myLevel;
-    end
-	
-	-- Make sure that the global magic settings for the player are known. The second clause in
-	-- the if statement takes care of a bizarre case. Turns out if you change the player.MainJob
-	-- from a job where there is not a luashitacast script, it initially remembers the old main
-	-- job. by including the second call, a subsequent invocation occurs getting it right.	
-	if gcinclude.settings.bMagicCheck == false or gcinclude.settings.sMJ ~= player.MainJob then
-		gcinclude.CheckMagic50(player);
-	end
 
 	-- Only pet actions from BST are supported.
 	if (petAction ~= nil and player.SubJob == 'BST') then
@@ -925,17 +908,7 @@ profile.HandleAbility = function()
 	-- And now the subjob abilities
 	elseif string.contains(ability.Name, 'Charm') then			-- assumes /bst	
 		gcinclude.MoveToCurrent(sets.Charm,sets.CurrentGear);
-		
-		-- If weapon swapping is allowed, equip a light/apollo staff (if you have one)
-	
-		if gcdisplay.GetToggle('WSwap') == true then
-			if gcinclude.settings.bStave == false then
-				gcinclude.CheckForStaves();
-			end	
-			if gcinclude.settings.bStave == true then
-				gcinclude.SwapToStave('light',false,sets.CurrentGear);
-			end
-		end
+		gcinclude.SwapToStave('light',false,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Weapon Bash') then		-- assumes /drk
 		gcinclude.MoveToCurrent(sets.WeaponBash,sets.CurrentGear);
 	elseif string.find(ability.Name, 'Jump') then		-- assumes /drk
@@ -1002,14 +975,9 @@ profile.HandlePrecast = function()
 	gcinclude.MoveToCurrent(sets.Precast,sets.CurrentGear);
 		
 	-- See if an elemental obi should be equipped
-	if gcinclude.settings.bEleObis == false then
-		gcinclude.CheckForObisGorgets();
-	end		
-	if gcinclude.settings.bEleObis == true then
-		obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
-		if obi ~= nil then
-			sets.CurrentGear['Waist'] = obi;
-		end
+	obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
+	if obi ~= nil then
+		sets.CurrentGear['Waist'] = obi;
 	end
 	gcinclude.EquipTheGear(sets.CurrentGear);
 end

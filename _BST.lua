@@ -48,7 +48,7 @@ local sets = {
 --]]
 
 	['TP'] = {
-        Head  = { 'Panther Mask', 'Beast Helm', 'Shep. Bonnet', 'Empress Hairpin', 'Silver Hairpin//MSJ' },
+        Head  = { 'Panther Mask', 'Monster Helm', 'Beast Helm', 'Shep. Bonnet', 'Empress Hairpin', 'Silver Hairpin//MSJ' },
         Neck  = { 'Peacock Amulet', 'Spike Necklace' },
 		Ears  = { 'Ethereal Earring', 'Beastly Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Bat Earring//MSJ', 'Black Earring//MSJ', 'Physical Earring//SJNIN', 'Reraise Earring', 'Physical Earring', 'Onyx Earring//MSJ' },
         Body  = { 'Gaudy Harness//MP.LT.50', 'Narasimha\'s Vest', 'Beast Jackcoat', 'Gaudy Harness', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
@@ -193,7 +193,7 @@ local sets = {
 --]]
 
 	['MAB'] = {
-		Neck = 'Uggalepih Pendant//MP.LT.50P',
+		Neck = 'Uggalepih Pendant//MPP.LE.50P',
 	},
 	
 --[[
@@ -559,7 +559,7 @@ local sets = {
 --]]
 
 	['WS_HP'] = {
-        Head = 'Beast Helm',
+        Head = 'Monster Helm',
         Ears = { 'Ethereal Earring', 'Physical Earring' },
         Body = 'Monster Jackcoat',	
         Hands = 'Wonder Mitts',	
@@ -594,7 +594,7 @@ local sets = {
 	
 	-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration
 	['Charm'] = {
-        Head = 'Beast Helm',
+        Head = 'Monster Helm',
         Neck = 'Flower Necklace',
         Ears = 'Beastly Earring',
         Body = 'Monster Jackcoat',
@@ -759,9 +759,6 @@ profile.OnLoad = function()
 	gcinclude.settings.priorityMidCast = 'ABCDEFGH';
 	gcinclude.settings.priorityWeaponSkill = 'ABDE';	
 	
-	-- Determine if subjob uses magic and if the maximum MP is > 50.
-	gcinclude.CheckMagic50(player);
-	
 	-- Set which macro book should be displayed. Which macro set within the macro book to
 	-- display depends on what your subjob is.
 	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 10');		-- BST macro book
@@ -898,20 +895,6 @@ profile.HandleDefault = function()
 	local ew = gData.GetEquipment();
 	local eWeap = nil;
 	local cKey;
-	local myLevel = AshitaCore:GetMemoryManager():GetPlayer():GetMainJobLevel();
-	
-	-- Note the player's current level
-	if (myLevel ~= gcinclude.settings.iCurrentLevel) then
-        gcinclude.settings.iCurrentLevel = myLevel;
-    end
-	
-	-- Make sure that the global magic settings for the player are known. The secoond clause in
-	-- the if statement takes care of a bizarre case. Turns out if you change the player.MainJob
-	-- from a job where there is not a luashitacast script, it initially remembers the old main
-	-- job. by including the second call, a subsequent invocation occurs getting it right.
-	if gcinclude.settings.bMagicCheck == false  or gcinclude.settings.sMJ ~= player.MainJob then
-		gcinclude.CheckMagic50(player);
-	end
 	
 	-- A pet action takes priority over a player's action as long as it is a BST pet action.
 	-- /SMN pet's actions are ignored.
@@ -1012,13 +995,10 @@ profile.HandleDefault = function()
 		if player.HP < player.MaxHP then
 			gcinclude.MoveToCurrent(sets.Resting_Regen,sets.CurrentGear);
 		end
-		
-		if gcinclude.settings.bMagic == true and player.MP < player.MaxMP then		
+
+		if gcinclude.MagicalJob('S') == true and player.MP < player.MaxMP then	
 			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
-			
-			if string.find(gcinclude.sMagicJobs,player.SubJob) then
-				gcinclude.SwapToStave('dark',false,sets.CurrentGear);
-			end
+			gcinclude.SwapToStave('dark',false,sets.CurrentGear);
 		end
 
 		-- Check for common debuffs
@@ -1035,7 +1015,7 @@ profile.HandleDefault = function()
 			gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
 		end
 		-- if the player's MP is below the threshold setting, equip the idle refresh gear				
-		if gcinclude.settings.bSJ == true and player.MPP < gcinclude.settings.RefreshGearMPP then		-- if the player's MP is below the threshold setting, equip the idle refresh gear
+		if gcinclude.MagicalJob('S') == true and player.MPP < gcinclude.settings.RefreshGearMPP then		-- if the player's MP is below the threshold setting, equip the idle refresh gear
 			gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
 		end
 		-- Check for common debuffs
@@ -1137,17 +1117,7 @@ profile.HandleAbility = function()
 	elseif string.match(ability.Name, 'Charm') then
 		-- Trying to charm a beast. 
 		gcinclude.MoveToCurrent(sets.Charm,sets.CurrentGear);
-		
-		-- If weapon swapping is allowed, equip a light/apollo staff (if you have one)
-	
-		if gcdisplay.GetToggle('WSwap') == true then
-			if gcinclude.settings.bStave == false then
-				gcinclude.CheckForStaves();
-			end	
-			if gcinclude.settings.bStave == true then
-				gcinclude.SwapToStave('light',false,sets.CurrentGear);
-			end
-		end
+		gcinclude.SwapToStave('light',false,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Weapon Bash') then		-- assumes /drk
 		gcinclude.MoveToCurrent(sets.WeaponBash,sets.CurrentGear);		
 	elseif string.find(ability.Name, 'Jump') then		-- assumes /drk
@@ -1214,14 +1184,9 @@ profile.HandlePrecast = function()
 	gcinclude.MoveToCurrent(sets.Precast,sets.CurrentGear);
 		
 	-- See if an elemental obi should be equipped
-	if gcinclude.settings.bEleObis == false then
-		gcinclude.CheckForObisGorgets();
-	end	
-	if gcinclude.settings.bEleObis == true then
-		obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
-		if obi ~= nil then
-			sets.CurrentGear['Waist'] = obi;
-		end
+	obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
+	if obi ~= nil then
+		sets.CurrentGear['Waist'] = obi;
 	end
 	gcinclude.EquipTheGear(sets.CurrentGear);	
 end
