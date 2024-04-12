@@ -50,7 +50,7 @@ gcinclude.sets = {
 
 	['Gathering'] = {
 		Range = 'Lu Shang\'s F. Rod//GA:FISH',
-		Ammo  = 'Shrimp Lure//GA:FISH',
+		Ammo  = 'Fly Lure//GA:FISH',
 		Body  = { 'Field Tunica//GA:HELM', 'Choc. Jack Coat//GA:DIG', 'Tarutaru Top +1//GA:CLAM', 'Angler\'s Tunica//GA:FISH' },
 		Hands = { 'Field Gloves//GA:HELM', 'Fsh. Gloves//GA:FISH' },
 		Legs  = { 'Field Hose//GA:HELM', 'Taru. Shorts +1//GA:CLAM', 'Fisherman\'s Hose//GA:FISH' },
@@ -73,6 +73,7 @@ gcinclude.sets = {
 --]]
 	['Dispense'] = {
 		Head = 'Dream Hat +1',
+		Sub  = 'Hatchling Shield',
 	},
 	
 --[[
@@ -95,20 +96,8 @@ gcinclude.settings = {
 	WSdistance = 4.7; 	 -- default max distance (yalms) to allow non-ranged WS to go off at if the above WScheck is true
 	RegenGearHPP = 60; 	 -- idle regen set gets loaded if player's max HP is <= 60%
 	RefreshGearMPP = 70; -- idle refresh set gets loaded if player's max MP <= 70%. Refresh takes priority over regen
-	bMagic = false;		 -- does job combination support magic.
-	sMJ = nil;			 -- What is the main job
-	sSJ = nil;			 -- What is the sub job
-	bMJ = false;		 -- does the main job use magic
-	bSJ = false;		 -- does the sub job use magic
-	bEleStaves = false;	 -- does the player have any elemental staves. 
-	bEleObis = false;	 -- does the player have any elemental obis. 
-	bEleGorgets = false; -- does the player have any elemental gorgets.
 	bWSOverride = false; -- is the player playing a job where weapon swapping always happens, it is not optional?
-	bStave = false;		 -- indicates if the auto-detection of elemental staves has successfully occurred
-	bObiGorget = false;	 -- indicates if the auto-detection of elemental obis/gorgets has successfully occurred
-	bMagicCheck = false; -- indicates if the check on magic support has occurred
 	--
-	iCurrentLevel = 0;	-- indicates the current level (capped or otherwise)
 	priorityEngaged = 'BCEFGH'; 	-- indicates order of steps for engagement
 	priorityMidCast = 'ABCDEFGH';	-- indicates order of steps for spell midcast
 	priorityWeaponSkill = 'ABDE';	-- indicates order of steps for a weapon skill
@@ -118,7 +107,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','tank','lock','unlock','horn','string','validate','t1'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','gs','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','tank','lock','unlock','horn','string','validate','t1'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T {'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T {'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -232,35 +221,58 @@ gcinclude.Locks = { [1] = {'main', false}, [2] = {'sub',false}, [3] = {'range',f
 					[16] = {'feet',false}};
 gcinclude.LocksNumeric = 'None';
 
--- Below indicates all the staves you own. (The settings are programmatically determined.)
-gcinclude.elemental_staves = T{['fire'] = {'Fire staff',false,'Vulcan\'s staff',false},
-							   ['ice'] = {'Ice staff',false,'Aquilo\'s staff',false},
-							   ['wind'] = {'Wind staff',false,'Auster\'s staff',false},
-							   ['earth'] = {'Earth staff',false,'Terra\'s staff',false},
-							   ['thunder'] = {'Thunder staff',false,'Jupiter\'s staff',false},
-							   ['water'] = {'Water staff',false,'Neptune\'s staff',false},
-							   ['light'] = {'Light staff',false,'Apollo\'s staff',false},
-							   ['dark'] = {'Dark staff',false,'Pluto\'s staff',false}};
-							  
--- Below indicate all the elemental obis you own or elemental gorgets. (This is determined programmatically.)
-gcinclude.elemental_obis = T{['fire'] = {'Karin obi',false},
-							 ['earth'] = {'Dorin obi',false},
-							 ['water'] = {'Suirin obi',false},
-							 ['wind'] = {'Furin obi',false},
-						     ['ice'] = {'Hyorin obi',false},
-							 ['thunder'] = {'Rairin obi',false},
-							 ['light'] = {'Korin obi',false},
-							 ['dark'] = {'Anrin obi',false}};
-							 
-gcinclude.elemental_gorgets = T{['fire'] = {'Flame gorget',false},
-								['earth'] = {'Soil gorget',false},
-								['water'] = {'Aqua gorget',false},
-								['wind'] = {'Breeze gorget',false},
-							    ['ice'] = {'Snow gorget',false},
-								['thunder'] = {'Thunder gorget',false},
-								['light'] = {'Light gorget',false},
-								['dark'] = {'Shadow gorget',false}}
-
+-- Structure for tracking elemental gear. The "Job" entry is used to make sure the current Job matches
+-- the job where the status was recorded.
+gcinclude.elemental_gear = T{['job'] = 'NON',
+							 ['staff'] = {
+									['fire']    = { ['NQ'] = {['Name'] = 'Fire staff', ['Where'] = nil},
+												    ['HQ'] = {['Name'] = 'Vulcan\'s staff', ['Where'] = nil}, 
+													['Searched'] = false },
+									['ice']     = { ['NQ'] = {['Name'] = 'Ice staff', ['Where'] = nil},
+												    ['HQ'] = {['Name'] = 'Aquilo\'s staff', ['Where'] = nil},
+													['Searched'] = false },
+									['wind']    = { ['NQ'] = {['Name'] = 'Wind staff', ['Where'] = nil},
+												    ['HQ'] = {['Name'] = 'Auster\'s staff', ['Where'] = nil},
+													['Searched'] = false },
+									['earth']   = { ['NQ'] = {['Name'] = 'Earth staff', ['Where'] = nil},
+												    ['HQ'] = {['Name'] = 'Terra\'s staff', ['Where'] = nil},
+													['Searched'] = false },
+									['thunder'] = { ['NQ'] = {['Name'] = 'Thunder staff', ['Where'] = nil},
+												    ['HQ'] = {['Name'] = 'Jupiter\'s staff', ['Where'] = nil},
+													['Searched'] = false },
+									['water']   = { ['NQ'] = {['Name'] = 'Water staff', ['Where'] = nil},
+												    ['HQ'] = {['Name'] = 'Neptune\'s staff', ['Where'] = nil},
+													['Searched'] = false },
+									['light']   = { ['NQ'] = {['Name'] = 'Light staff', ['Where'] = nil},
+												    ['HQ'] = {['Name'] = 'Apollo\'s staff', ['Where'] = nil},
+													['Searched'] = false },
+									['dark']    = { ['NQ'] = {['Name'] = 'Dark staff', ['Where'] = nil},
+												    ['HQ'] = {['Name'] = 'Pluto\'s staff', ['Where'] = nil},
+													['Searched'] = false } 
+									},
+													
+							 ['obi'] = {
+									['fire']    = { ['Name'] = 'Karin obi', ['Where'] = nil, ['Searched'] = false },
+									['ice']     = { ['Name'] = 'Hyorin obi', ['Where'] = nil, ['Searched'] = false },												 
+									['wind']    = { ['Name'] = 'Furin obi', ['Where'] = nil, ['Searched'] = false },												 
+									['earth']   = { ['Name'] = 'Dorin obi', ['Where'] = nil, ['Searched'] = false },
+									['thunder'] = { ['Name'] = 'Rairin obi', ['Where'] = nil, ['Searched'] = false },
+									['water']   = { ['Name'] = 'Suirin obi', ['Where'] = nil, ['Searched'] = false },
+									['light']   = { ['Name'] = 'Korin obi', ['Where'] = nil, ['Searched'] = false },
+									['dark']    = { ['Name'] = 'Anrin obi', ['Where'] = nil, ['Searched'] = false }
+									},
+									
+							 ['gorget'] = {
+									['fire']    = { ['Name'] = 'Flame gorget', ['Where'] = nil, ['Searched'] = false },
+									['ice']     = { ['Name'] = 'Snow gorget', ['Where'] = nil, ['Searched'] = false },
+									['wind']    = { ['Name'] = 'Breeze gorget', ['Where'] = nil, ['Searched'] = false },
+									['earth']   = { ['Name'] = 'Soil gorget', ['Where'] = nil, ['Searched'] = false },
+									['thunder'] = { ['Name'] = 'Thunder gorget', ['Where'] = nil, ['Searched'] = false },
+									['water']   = { ['Name'] = 'Aqua gorget', ['Where'] = nil, ['Searched'] = false },
+									['light']   = { ['Name'] = 'Light gorget', ['Where'] = nil, ['Searched'] = false },
+									['dark']    = { ['Name'] = 'Shadow gorget', ['Where'] = nil, ['Searched'] = false }
+									} 
+};
 --[[
 	The "root" of spells is the first word in the spell name, all in lower case. 
 	
@@ -666,7 +678,7 @@ InlineCodes = { '//MSJ','//SJWAR','//SJMNK','//SJWHM','//SJBLM','//SJRDM','//SJT
 				'//WTH:LIGHT','//WTH:DARK','//WTH-DAY','//AK:WINDY','//AK:SANDY',
 				'//AK:BASTOK','//AK:OMNI','//HP75P|TP100P','//NEWMOON','//FULLMOON',
 				'//NIGHTTIME','//DAYTIME','//DUSK2DAWN','//FM-DRK-NIGHT','//NM-LGT-DAY',
-				'//HP.GE.85PV' };				
+				'//HP.GE.85PV','//SPIRIT:ES','//SPIRIT:EP' };				
 
 gcinclude.Sets = gcinclude.sets;
 
@@ -871,54 +883,24 @@ function gcinclude.ValidateGearSet(gsName)
 end		-- gcinclude.ValidateGearSet
 
 --[[
-	DB_ShowIt will display debug details about the type passed.
+	DB_ShowIt will display debug details
 --]]
 
-function gcinclude.DB_ShowIt(sType)
+function gcinclude.DB_ShowIt()
+	local player = gData.GetPlayer();
+	
 	print(chat.message(' '));
-	if sType == nil or string.lower(sType) == 'staff' then
-		print(chat.message('Staff'));
-		print(chat.message('-----'));
-		print(chat.message('bStave = ' .. tostring(gcinclude.settings.bStave)));
-		print(chat.message('bEleStaves = ' .. tostring(gcinclude.settings.bEleStaves)));
-		print(chat.message(' '));
-		for k,v in pairs(gcinclude.elemental_staves) do
-			print(chat.message('['..k..'] ' .. v[1] .. ' = ' .. tostring(v[2]) .. ', ' .. v[3] .. ' = ' .. tostring(v[4])));	
-		end
-	elseif string.lower(sType) == 'obi' then
-		print(chat.message('Obis and Gorgets'));
-		print(chat.message('----------------'));
-		print(chat.message('bObiGorget = ' .. tostring(gcinclude.settings.bObiGorget)));
-		print(chat.message('bEleObis = ' .. tostring(gcinclude.settings.bEleObis)));
-		print(chat.message('bEleGorgets = ' .. tostring(gcinclude.settings.bEleGorgets)));
-		print(chat.message(' '));
-		for k,v in pairs(gcinclude.elemental_obis) do
-			print(chat.message('['..k..'] ' .. v[1] .. ' = ' .. tostring(v[2]) ));	
-		end
-		print(chat.message(' '));
-		for k,v in pairs(gcinclude.elemental_gorgets) do
-			print(chat.message('['..k..'] ' .. v[1] .. ' = ' .. tostring(v[2]) ));	
-		end
-	elseif string.lower(sType) == 'settings' then
-		print(chat.message('Settings'));
-		print(chat.message('--------'));
-		print(chat.message('WScheck: ' .. tostring(gcinclude.settings.WScheck)));
-		print(chat.message('WSdistance: ' .. tostring(gcinclude.settings.WSdistance)));
-		print(chat.message('RegenGearHPP: ' .. tostring(gcinclude.settings.RegenGearHPP)));
-		print(chat.message('RefreshGearMPP: ' .. tostring(gcinclude.settings.RefreshGearMPP)));
-		print(chat.message('bMagic: ' .. tostring(gcinclude.settings.bMagic)));
-		print(chat.message('sMJ: :' .. tostring(gcinclude.settings.sMJ)));
-		print(chat.message('sSJ: :' .. tostring(gcinclude.settings.sSJ)));		
-		print(chat.message('bMJ: ' .. tostring(gcinclude.settings.bMJ)));
-		print(chat.message('bSJ: ' .. tostring(gcinclude.settings.bSJ)));
-		print(chat.message('bEleStaves: ' .. tostring(gcinclude.settings.bEleStaves)));
-		print(chat.message('bEleObis: ' .. tostring(gcinclude.settings.bEleObis)));
-		print(chat.message('bEleGorgets: ' .. tostring(gcinclude.settings.bEleGorgets)));
-		print(chat.message('bWSOverride: ' .. tostring(gcinclude.settings.bWSOverride)));
-		print(chat.message('bStave: ' .. tostring(gcinclude.settings.bStave)));
-		print(chat.message('bObiGorget: ' .. tostring(gcinclude.settings.bObiGorget)));
-		print(chat.message('bMagicCheck: ' .. tostring(gcinclude.settings.bMagicCheck)));
-	end
+	print(chat.message('Settings'));
+	print(chat.message('--------'));
+	print(chat.message('Job: ' .. player.MainJob .. '/' .. player.SubJob));
+	print(chat.message('Level: ' .. tostring(player.MainJobSync) .. '(' .. tostring(player.MainJobLevel) .. ')'));	
+	print(chat.message(' '));
+	print(chat.message('WScheck: ' .. tostring(gcinclude.settings.WScheck)));
+	print(chat.message('WSdistance: ' .. tostring(gcinclude.settings.WSdistance)));
+	print(chat.message('RegenGearHPP: ' .. tostring(gcinclude.settings.RegenGearHPP)));
+	print(chat.message('RefreshGearMPP: ' .. tostring(gcinclude.settings.RefreshGearMPP)));
+	print(chat.message('MagicJob: ' .. tostring(gcinclude.MagicalJob('S'))));
+	print(chat.message('bWSOverride: ' .. tostring(gcinclude.settings.bWSOverride)));
 end		-- gcinclude.DB_ShowIt
 	
 --[[
@@ -979,6 +961,7 @@ end
 	Unlock removes the specified (or all) the locked slots. Supported are either the
 	slot name or the slot number.
 --]]
+
 function gcinclude.LockUnlock(sType,sWhich)
 
 	sWhich = ',' .. string.lower(sWhich) .. ',';
@@ -1000,110 +983,168 @@ function gcinclude.LockUnlock(sType,sWhich)
 end
 
 --[[
-	CheckForStaves determines if the player has any elemental staves and updates the master listing
-	accordingly.
+	InitializeEleStructure initializes the elemental gear structure
 --]]
 
-function gcinclude.CheckForStaves()
+function InitializeEleStructure()
+	local player = gData.GetPlayer();
+	
+	-- Job
+	gcinclude.elemental_gear['Job'] = player.MainJob;
+
+	-- Staves
+	gcinclude.elemental_gear['staff']['fire']['NQ']['Where'] = nil;
+	gcinclude.elemental_gear['staff']['fire']['HQ']['Where'] = nil;
+	gcinclude.elemental_gear['staff']['ice']['NQ']['Where'] = nil;
+	gcinclude.elemental_gear['staff']['ice']['HQ']['Where'] = nil;	
+	gcinclude.elemental_gear['staff']['wind']['NQ']['Where'] = nil;
+	gcinclude.elemental_gear['staff']['wind']['HQ']['Where'] = nil;
+	gcinclude.elemental_gear['staff']['earth']['NQ']['Where'] = nil;
+	gcinclude.elemental_gear['staff']['earth']['HQ']['Where'] = nil;
+	gcinclude.elemental_gear['staff']['thunder']['NQ']['Where'] = nil;
+	gcinclude.elemental_gear['staff']['thunder']['HQ']['Where'] = nil;	
+	gcinclude.elemental_gear['staff']['water']['NQ']['Where'] = nil;
+	gcinclude.elemental_gear['staff']['water']['HQ']['Where'] = nil;
+	gcinclude.elemental_gear['staff']['light']['NQ']['Where'] = nil;
+	gcinclude.elemental_gear['staff']['light']['HQ']['Where'] = nil;
+	gcinclude.elemental_gear['staff']['dark']['NQ']['Where'] = nil;
+	gcinclude.elemental_gear['staff']['dark']['HQ']['Where'] = nil;
+
+	gcinclude.elemental_gear['staff']['fire']['searched'] = false;
+	gcinclude.elemental_gear['staff']['ice']['searched'] = false;
+	gcinclude.elemental_gear['staff']['wind']['searched'] = false;
+	gcinclude.elemental_gear['staff']['earth']['searched'] = false;
+	gcinclude.elemental_gear['staff']['thunder']['searched'] = false;
+	gcinclude.elemental_gear['staff']['water']['searched'] = false;
+	gcinclude.elemental_gear['staff']['light']['searched'] = false;
+	gcinclude.elemental_gear['staff']['dark']['searched'] = false;	
+
+	-- Obis
+	gcinclude.elemental_gear['obi']['fire']['Where'] = nil;
+	gcinclude.elemental_gear['obi']['ice']['Where'] = nil;
+	gcinclude.elemental_gear['obi']['wind']['Where'] = nil;
+	gcinclude.elemental_gear['obi']['earth']['Where'] = nil;
+	gcinclude.elemental_gear['obi']['thunder']['Where'] = nil;
+	gcinclude.elemental_gear['obi']['water']['Where'] = nil;
+	gcinclude.elemental_gear['obi']['light']['Where'] = nil;
+	gcinclude.elemental_gear['obi']['dark']['Where'] = nil;
+
+	gcinclude.elemental_gear['obi']['fire']['searched'] = false;
+	gcinclude.elemental_gear['obi']['ice']['searched'] = false;
+	gcinclude.elemental_gear['obi']['wind']['searched'] = false;
+	gcinclude.elemental_gear['obi']['earth']['searched'] = false;
+	gcinclude.elemental_gear['obi']['thunder']['searched'] = false;
+	gcinclude.elemental_gear['obi']['water']['searched'] = false;
+	gcinclude.elemental_gear['obi']['light']['searched'] = false;
+	gcinclude.elemental_gear['obi']['dark']['searched'] = false;	
+	
+	-- Gorgets
+	gcinclude.elemental_gear['gorget']['fire']['Where'] = nil;
+	gcinclude.elemental_gear['gorget']['ice']['Where'] = nil;
+	gcinclude.elemental_gear['gorget']['wind']['Where'] = nil;
+	gcinclude.elemental_gear['gorget']['earth']['Where'] = nil;
+	gcinclude.elemental_gear['gorget']['thunder']['Where'] = nil;
+	gcinclude.elemental_gear['gorget']['water']['Where'] = nil;
+	gcinclude.elemental_gear['gorget']['light']['Where'] = nil;
+	gcinclude.elemental_gear['gorget']['dark']['Where'] = nil;
+	
+	gcinclude.elemental_gear['gorget']['fire']['searched'] = false;
+	gcinclude.elemental_gear['gorget']['ice']['searched'] = false;
+	gcinclude.elemental_gear['gorget']['wind']['searched'] = false;
+	gcinclude.elemental_gear['gorget']['earth']['searched'] = false;
+	gcinclude.elemental_gear['gorget']['thunder']['searched'] = false;
+	gcinclude.elemental_gear['gorget']['water']['searched'] = false;
+	gcinclude.elemental_gear['gorget']['light']['searched'] = false;
+	gcinclude.elemental_gear['gorget']['dark']['searched'] = false;	
+end
+
+--[[
+	CheckForEleGear determines if the player has accessible the piece of gear indicated by type
+--]]
+
+function gcinclude.CheckForEleGear(sType,sElement)
 	local inventory = AshitaCore:GetMemoryManager():GetInventory();
 	local resources = AshitaCore:GetResourceManager();
+	local player = gData.GetPlayer();
 	local tStorage = gcinclude.EQUIPABLE;
-	local iTmp = 0;
 	
-	-- First, set all the entries to false, do not assume that what's there is correct
-	for k,_ in pairs(gcinclude.elemental_staves) do
-		gcinclude.elemental_staves[k][2] = false;
-		gcinclude.elemental_staves[k][4] = false;
-	end
-	
-	iCnt = 0;
-	for _ in pairs(tStorage) do iCnt = iCnt + 1 end
-
-	-- now, loop through the passed storage containers
-	for i = 1,iCnt,1 do
-		containerID = tStorage[i][1];
-
-		-- then loop through the container
-		for j = 1,inventory:GetContainerCountMax(containerID),1 do
-			local itemEntry = inventory:GetContainerItem(containerID, j);
-			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
-                local item = resources:GetItemById(itemEntry.Id);
-				local sIN = string.lower(item.Name[1])
-				iTmp = iTmp + 1;
-				b,c = string.find(sIN,'staff');
-				if b ~= nil then
-					for k,_ in pairs(gcinclude.elemental_staves) do
-						if sIN == string.lower(gcinclude.elemental_staves[k][1]) then
-							gcinclude.elemental_staves[k][2] = true;
-							gcinclude.settings.bEleStaves = true
-						elseif sIN == string.lower(gcinclude.elemental_staves[k][3]) then
-							gcinclude.elemental_staves[k][4] = true;
-							gcinclude.settings.bEleStaves = true
-						end
-					end
-				end
+	-- Make sure structure initialized for the right job
+	if player.MainJob ~= gcinclude.elemental_gear['job'] then
+		InitializeEleStructure();
+	-- Check to see if that Type/Element has been searched for already
+	elseif gcinclude.elemental_gear[sType]['Searched'] == true then
+		-- For staff, check for HQ before looking at NQ
+		if sType == 'staff' then
+			if gcinclude.elemental_gear[sType][sElement]['HQ']['Where'] ~= nil then
+				return gcinclude.elemental_gear[sType][sElement]['HQ']['Name'];
+			elseif gcinclude.elemental_gear[sType][sElement]['NQ']['Where'] ~= nil then
+				return gcinclude.elemental_gear[sType][sElement]['NQ']['Name'];
+			else
+				return nil;
+			end
+		-- Obi and Gorget can be handled by one routine. Return the name if
+		-- the location is identified
+		else
+			if gcinclude.elemental_gear[sType][sElement]['Where'] ~= nil then
+				return gcinclude.elemental_gear[sType][sElement]['Name'];
+			else
+				return nil;
 			end
 		end
 	end
-	-- Below indicates that the inventories really were check and it's not a loading issue
-	gcinclude.settings.bStave = (iTmp > 10);
-end		-- gcinclude.CheckForStaves
 
---[[
-	CheckForObisGorgets determines if the player has any elemental obis/gorgets and updates the master listing
-	accordingly.
---]]
-
-function gcinclude.CheckForObisGorgets()
-	local inventory = AshitaCore:GetMemoryManager():GetInventory();
-	local resources = AshitaCore:GetResourceManager();
-	local tStorage = gcinclude.EQUIPABLE;
-	local iTmp = 0;
-	
-	-- First, set all the entries to false. Both obis and gorgets have same number of elements
-	for k,_ in pairs(gcinclude.elemental_obis) do
-		gcinclude.elemental_obis[k][2] = false;
-		gcinclude.elemental_gorgets[k][2] = false;
-	end
-	
-	iCnt = 0;
-	for _ in pairs(tStorage) do iCnt = iCnt + 1 end
-	
-	-- now, loop through the passed storage containers
-	for i = 1,iCnt,1 do
+	-- If you got here, then the sType/sElement combo has not been searched for yet
+	-- Loop through all the accessible storages
+	for i = 1,#tStorage,1 do
 		containerID = tStorage[i][1];
-
+		
 		-- then loop through the container
 		for j = 1,inventory:GetContainerCountMax(containerID),1 do
 			local itemEntry = inventory:GetContainerItem(containerID, j);
 			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
                 local item = resources:GetItemById(itemEntry.Id);
 				local sIN = string.lower(item.Name[1]);
-				iTmp = iTmp + 1;
-						
-				-- Start with the obis
-				for k,_ in pairs(gcinclude.elemental_obis) do
-					local sOIN = string.lower(gcinclude.elemental_obis[k][1]);
-					if sIN == sOIN then
-						gcinclude.elemental_obis[k][2] = true;
-						gcinclude.settings.bEleObis = true;
+	
+				-- Then, depending on type, see if the item has been found
+				if sType == 'staff' then
+					if sIN == string.lower(gcinclude.elemental_gear['staff'][sElement]['HQ']['Name']) then
+						gcinclude.elemental_gear['staff'][sElement]['HQ']['Where'] = tStorage[i][2];
+					elseif sIN == string.lower(gcinclude.elemental_gear['staff'][sElement]['NQ']['Name']) then
+						gcinclude.elemental_gear['staff'][sElement]['NQ']['Where'] = tStorage[i][2];
+					end	
+				elseif sType == 'obi' then
+					if sIN == string.lower(gcinclude.elemental_gear['obi'][sElement]['Name']) then
+						gcinclude.elemental_gear['obi'][sElement]['Where'] = tStorage[i][2];
 					end
-				end
-				
-				-- Then check the gorgets
-				for k,_ in pairs(gcinclude.elemental_gorgets) do
-					local sOIN = string.lower(gcinclude.elemental_gorgets[k][1]);
-					if sIN == sOIN then
-						gcinclude.elemental_gorgets[k][2] = true;
-						gcinclude.settings.bEleGorgets = true;
-					end
+				elseif sType == 'gorget' then
+					if sIN == string.lower(gcinclude.elemental_gear['gorget'][sElement]['Name']) then
+						gcinclude.elemental_gear['gorget'][sElement]['Where'] = tStorage[i][2];
+					end				
 				end
 			end
 		end
 	end
-	
-	gcinclude.settings.bObiGorget = (iTmp > 10);
-end		-- gcinclude.CheckForObisGorgets
+
+	-- Here's where you mark that the item has been searched for. Returned is whether
+	-- it was found or nil
+	if sType == 'staff' then
+		gcinclude.elemental_gear['staff'][sElement]['Searched'] = true;
+		if gcinclude.elemental_gear['staff'][sElement]['HQ']['Where'] ~= nil then
+			return gcinclude.elemental_gear['staff'][sElement]['HQ']['Name'];
+		elseif gcinclude.elemental_gear['staff'][sElement]['NQ']['Where'] ~= nil then
+			return gcinclude.elemental_gear['staff'][sElement]['NQ']['Name'];
+		else
+			return nil;
+		end
+	else	-- handles both "obi" and "gorget"
+		gcinclude.elemental_gear[sType][sElement]['Searched'] = true;
+		if gcinclude.elemental_gear[sType][sElement]['Where'] ~= nil then
+			return gcinclude.elemental_gear[sType][sElement]['Name'];
+		else
+			return nil;
+		end
+	end
+end
 
 --[[
 	SetVariables defines run settings for luashitacast
@@ -1217,7 +1258,7 @@ function gcinclude.Adjusted(bPct)
 			local item = AshitaCore:GetResourceManager():GetItemByName(j,2)
 			if item ~= nil then
 				-- Let's take care of the exceptions first. Tamas Ring and Sattva
-				-- ring have a range aspect to their boost. Parsing sounds bad, so
+				-- Ring have a range aspect to their boost. Parsing sounds bad, so
 				-- just look for the names. 15 + (level-30/3) rounded down
 				if item.Name == 'Sattva Ring' then
 					if dLevel > 0 then
@@ -1336,6 +1377,23 @@ function gcinclude.ClearSet(gSet)
 end		-- gcinclude.ClearSet
 
 --[[
+	MagicalJob just determines if the main job or the sub job can do magic
+--]]
+
+function gcinclude.MagicalJob(sWhich)
+	local player = gData.GetPlayer();
+	local mj = player.MainJob;
+	local sj = player.SubJob;
+	local sList = gcinclude.sMagicJobs;
+	
+	if string.lower(sWhich) == 'T' then
+		sList = gcinclude.TieredMagicJobs;
+	end
+	
+	return (string.find(sList,mj) ~= nil or string.find(sList,sj) ~= nil);
+end		-- gcinclude.MagicalJob
+
+--[[
 	CheckInline checks for a simple conditional on the item passed into it.
 	Returned is whether the condition is met and the item's name (minus the
 	conditional.
@@ -1347,6 +1405,7 @@ end		-- gcinclude.ClearSet
 function gcinclude.CheckInline(gear)
 	local iPos,suCode;
 	local player = gData.GetPlayer();
+	local mj = player.MainJob;
 	local sj = player.SubJob;
 	local pet = gData.GetPet();
 	local spell = gData.GetAction();
@@ -1383,10 +1442,10 @@ function gcinclude.CheckInline(gear)
 		bGood = (gcdisplay.GetCycle('Region') == 'Owned');
 	elseif suCode == 'NOT_OWN' then				-- Player in area not controlled by their nation
 		bGood = (gcdisplay.GetCycle('Region') ~= 'Owned');
-	elseif suCode == 'MP.LT.50P' then			-- Player's MP < 50% of their maximum MP
-		bGood = (player.MPP <= 50);
-	elseif suCode == 'MP.LT.50' then			-- Player's MP < 50
-		bGood = (player.MP < 50 and player.MaxMP >= 50);		
+	elseif suCode == 'MPP.LE.50P' then			-- Player's MJ/SJ can do magic and their MP < 50% of their maximum MP
+		bGood = (gcinclude.MagicalJob('S') == true and player.MPP <= 50);
+	elseif suCode == 'MP.LT.50' then			-- Player's MJ/SJ can do magic and their MP < 50
+		bGood = (gcinclude.MagicalJob('S') == true and player.MP < 50 and player.MaxMP >= 50);		
 	elseif suCode == 'WSWAP' then				-- Weapon swapping enabledB
 		bGood = (gcinclude.settings.bWSOverride == true or gcdisplay.GetToggle('WSwap') == true);
 	elseif suCode == 'PET' then					-- Does player have a pet
@@ -1408,7 +1467,7 @@ function gcinclude.CheckInline(gear)
 			bGood = false;
 		end	
 	elseif suCode == 'ELEAVA' then				-- Is the player summoning an elemental spirit
-		bGood = (string.find(gcinclude.Spirits,spell.Name) ~= nil);
+		bGood = (string.find(gcinclude.Spirits,string.lower(spell.Name)) ~= nil);
 	elseif suCode == 'AVADAY' then				-- Does the player's pet's element match the day's element
 		if pet ~= nil then
 			local sElement = gcinclude.SummonStaves[string.lower(pet.Name)];	
@@ -1474,9 +1533,13 @@ function gcinclude.CheckInline(gear)
 			gcinclude.CheckTime(timestamp.hour,'Daytime',false));
 	elseif suCode == 'HP75P|TP100P' then				-- Player's HP <= 75% and TP <= 100%
 		bGood = (player.HPP <= 75 and player.TP <= 1000);
-	elseif suCode == '//HP.GE.85PV' then				-- Player's HP >= 85%
+	elseif suCode == 'HP.GE.85PV' then					-- Player's HP >= 85%
 		gcinclude.Adjusted(true);
 		bGood = (HPMP_Adjusted['MaxHP']/100 >= 85);		-- temporary answer
+	elseif suCode == 'SPIRIT:ES' then					-- Pet being summoned is a spirit
+		bGood = (string.find(gcinclude.Spirits,string.lower(spell.Name)) ~= nil);
+	elseif suCode == 'SPIRIT:EP' then					-- Current pet is a spirit
+		bGood = (pet ~= nil and string.find(gcinclude.Spirits,string.lower(pet.Name)) ~= nil);
 	else
 		print(chat.header('CheckInline'):append(chat.message('Warning: Unknown code = ' .. suCode .. '. Ignoring piece of gear.')));
 		bGood = false;			
@@ -1486,7 +1549,16 @@ function gcinclude.CheckInline(gear)
 end		-- gcinclude.CheckInline
 
 function gcinclude.t1()
-	gcinclude.Adjusted(true);
+	local sGear;
+	--gcinclude.Adjusted(true);
+	sGear = gcinclude.CheckForEleGear('staff','fire');
+	print(sGear);
+	print(gcinclude.elemental_gear['Job']);
+	print(gcinclude.elemental_gear['staff']['fire']['Searched']);
+	print(gcinclude.elemental_gear['staff']['fire']['HQ']['Name']);
+	print(gcinclude.elemental_gear['staff']['fire']['HQ']['Where']);
+	print(gcinclude.elemental_gear['staff']['fire']['NQ']['Name']);	
+	print(gcinclude.elemental_gear['staff']['fire']['NQ']['Where']);
 end
 
 --[[
@@ -1529,7 +1601,7 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 		if string.find('Main,Sub,Range,Ammo',k) ~= nil then
 			bSkip = not (gcdisplay.GetToggle('WSwap') == true 
 						 or gcinclude.settings.bWSOverride == true
-						 or (bOverride ~= nil and bOverride == true));
+						 or (bOverride ~= nil and bOverride == true));					 
 		else
 			bSkip = false;
 		end
@@ -1680,7 +1752,7 @@ function gcinclude.MaxSong(root,bBack,bCast)
 	local player = gData.GetPlayer();
 	local sMain = player.MainJob;
 	local sSub = player.SubJob;
-	local MainLvl = gcinclude.settings.iCurrentLevel;
+	local MainLvl = player.MainJobSync;
 	local SubLvl = player.SubJobSync;
 	local mp = player.MP;
 	local iLvl;
@@ -1779,7 +1851,7 @@ function gcinclude.MaxSpell(root,bCast)
 	local player = gData.GetPlayer();
 	local sMain = player.MainJob;
 	local sSub = player.SubJob;
-	local MainLvl = gcinclude.settings.iCurrentLevel;
+	local MainLvl = player.MainJobSync;
 	local SubLvl = player.SubJobSync;
 	local mp = player.MP;
 
@@ -1787,8 +1859,8 @@ function gcinclude.MaxSpell(root,bCast)
 		bCast = false;
 	end
 	
-	-- Make sure either the main job or sub job can cast magic (according to our table)
-	if string.find(gcinclude.TieredMagicJobs,sMain) == nil and string.find(gcinclude.TieredMagicJobs, sSub) == nil then
+	-- Make sure either the main job or sub job can cast magic
+	if gcinclude.MagicalJob('T') == false then
 		print(chat.header('MaxSpell'):append(chat.message('Current job does not support macic.')));
 		return;
 	end
@@ -1861,32 +1933,6 @@ function gcinclude.MaxSpell(root,bCast)
 end		-- gcinclude.MaxSpell
 
 --[[
-	CheckMagic50 determines if the player's mainjob and subjob uses MP and whether the maximum 
-	MP the player has is greater than 50.
---]]
-
-function gcinclude.CheckMagic50(player)
-
-	-- First make sure player data is not in transition
-	if gcinclude.settings.bMagicCheck == false and (player.MainJob == nil or player.SubJob == nil or player.MaxMP == nil) then
-		return;
-	end
-	
-	gcinclude.settings.sMJ = player.MainJob;
-	gcinclude.settings.sSJ = player.SubJob;
-	if (string.find(gcinclude.sMagicJobs,player.MainJob) ~= nil) then
-		gcinclude.settings.bMJ = true;
-
-	end
-	if (string.find(gcinclude.sMagicJobs,player.SubJob) ~= nil) then
-		gcinclude.settings.bSJ = true;
-	end
-	gcinclude.settings.bMagic = gcinclude.settings.bMJ or gcinclude.settings.bSJ;
-	gcinclude.settings.bMagicCheck = true;
-	return;
-end		-- gcinclude.CheckMagic50
-
---[[
 	SwapToStave determines if swapping your weapon out for one of the elemental staves makes
 	sense and does it for you while remembering what weapon/offhand you had equipped.
 	
@@ -1898,6 +1944,8 @@ end		-- gcinclude.CheckMagic50
 
 function gcinclude.SwapToStave(sStave,noSave,cs)
 	local ew = gData.GetEquipment();
+	local player = gData.GetPlayer();
+	local sGear;
 	local eWeap = nil;
 	local eOff = nil;
 
@@ -1914,29 +1962,23 @@ function gcinclude.SwapToStave(sStave,noSave,cs)
 		return;
 	end
 	
-	if ((gcdisplay.GetToggle('WSwap') == true or gcinclude.settings.bWSOverride) and 
-		(gcinclude.elemental_staves[sStave][2] == true or gcinclude.elemental_staves[sStave][4] == true)) then
-
+	if (gcdisplay.GetToggle('WSwap') == true or gcinclude.settings.bWSOverride) then	
+		sGear = gcinclude.CheckForEleGear('staff',sStave);		
 		-- See if a current weapon is the one of the targetted staves
-		if not (eWeap == nil or
-				string.lower(eWeap) == string.lower(gcinclude.elemental_staves[sStave][1]) or 
-				string.lower(eWeap) == string.lower(gcinclude.elemental_staves[sStave][3])) then
+		if not (eWeap == nil or string.lower(eWeap) == string.lower(sGear)) then
 			-- save the weapon so it can be equipped again
 			if eWeap ~= gcinclude.weapon and noSave == false and gcinclude.settings.bWSOverride == false then
 				gcinclude.weapon = eWeap;
 				gcinclude.offhand = eOff;
 			end
 		end
-
-		-- Now, try the HQ and then the NQ
-		if gcinclude.elemental_staves[sStave][4] == true then
-			pos = 3;
-		else
-			pos = 1;
-		end
 		
-		if gcinclude.settings.iCurrentLevel >= 51 and gcinclude.Locks[1][2] == false then	-- Locks[1] is 'Main'
-			cs['Main'] = gcinclude.elemental_staves[sStave][pos];
+		if sGear ~= nil then
+			-- All elemental staves are level 51. Check versus level of player and that the
+			-- position isn't locked.
+			if player.MainJobSync >= 51 and gcinclude.Locks[1][2] == false then	-- Locks[1] is 'Main'
+				cs['Main'] = sGear;		
+			end
 		end
 	end
 end		-- gcinclude.SwapToStave
@@ -2146,9 +2188,9 @@ function gcinclude.HandleCommands(args)
 			end
 		end
 		sList = gcinclude.GetLockedList();
-	elseif (args[1] == 'showit') then			-- Shows debug info for specified type
-		gcinclude.DB_ShowIt(args[2]);
-	elseif (args[1] == 'gearset') then			-- Forces a gear set to be loaded and turns GSWAP off
+	elseif (args[1] == 'showit') then						-- Shows debug info for specified type
+		gcinclude.DB_ShowIt();
+	elseif (args[1] == 'gearset' or args[1] == 'gs') then	-- Forces a gear set to be loaded and turns GSWAP off
 		if #args > 1 then
 			local sArg = string.upper(args[2]);
 			local sTmp = ',' .. gcinclude.Crafting_Types .. ',';
@@ -2377,36 +2419,6 @@ function gcinclude.CheckObiDW(ele)
 end		-- gcinclude.CheckObiDW
 
 --[[
-	CheckEleGorget determines if the passed weaponskill is elemental and whether the player
-	owns the appropriate elemental gorget. Some weaponskills have multiple elements associated
-	with them, so the first match where the player has the gorget will be used. One gorget is
-	not considered stronger than another.
---]]
-
-function gcinclude.CheckEleGorget(ws)
-	
-	if ws == nil then
-		print(chat.header('CheckEleGorget'):append(chat.message('Error: weaponskill name is nil')));
-		return;
-	end
-	
-	-- Loop through the list of elemental gorgets to see what the player owns
-	for i,v in pairs(gcinclude.elemental_gorgets) do
-		-- The second value indicates ownership
-		if v[2] == true then
-			local swss = string.lower(gcinclude.eleWS[i]);
-			local sws = string.lower(ws);
-			-- Seach for the weaponskill in the weaponskill list associated with the element
-			if string.find(swss,sws) ~= nil then
-				-- Since found return the gorget's name
-				return v[1];
-			end
-		end
-	end	
-	return;	
-end		-- gcinclude.CheckEleGorget
-
---[[
 	GetRoot determines the "base" of a spell name. (The base is the first word in the spell name.)
 	
 	An optional parameter, bVersion, indicates if only the version should be cut off. (i.e., remove
@@ -2456,12 +2468,15 @@ function gcinclude.CheckEleSpells(spellName,listName,sWhat)
 	end
 
 	root = gcinclude.GetRoot(string.lower(spellName));
-	for k, str in pairs(listName) do							-- search the list
-		if string.find(str,root) ~= nil then					-- if not nil then the "root" was found
-			if sWhat == gcinclude.OBI and gcinclude.elemental_obis[k][2] then		
-				pctDay,pctWeather = gcinclude.CheckObiDW(k);	-- determine if the day/weather is advantageous
-				if (pctDay + pctWeather) > 0 then
-					return gcinclude.elemental_obis[k][1];		-- return the obi's name
+	for k, str in pairs(listName) do								-- search the list
+		if string.find(str,root) ~= nil then						-- if not nil then the "root" was found
+			if sWhat == gcinclude.OBI then		
+				local sGear = gcinclude.CheckForEleGear('obi',k);
+				if sGear ~= nil then
+					pctDay,pctWeather = gcinclude.CheckObiDW(k);	-- determine if the day/weather is advantageous
+					if (pctDay + pctWeather) > 0 then
+						return sGear;						-- return the obi's name
+					end
 				end
 			elseif sWhat == gcinclude.ELEMENT then
 				return k;
@@ -2841,25 +2856,15 @@ function gcinclude.HandleMidcast()
 				gcinclude.MoveToCurrent(gProfile.Sets.Invisible,gProfile.Sets.CurrentGear);
 			end
 		elseif cKey == 'G' then				-- Elemental Obi
-			if gcinclude.settings.bEleObis == false then
-				gcinclude.CheckForObisGorgets();
-			end	
-			if gcinclude.settings.bEleObis == true then
-				obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.OBI);
-				if obi ~= nil then
-					gProfile.Sets.CurrentGear['Waist'] = obi;
-				end
+			obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.OBI);
+			if obi ~= nil then
+				gProfile.Sets.CurrentGear['Waist'] = obi;
 			end
 		elseif cKey == 'H' then				-- Elemental Stave
-			if gcinclude.settings.bStave == false then
-				gcinclude.CheckForStaves();
-			end
-			if gcinclude.settings.bEleStaves == true then
-				if spell.Skill == 'Summoning' then
-					stat = gcinclude.CheckSummons(spell.Name);
-				else
-					stat = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.ELEMENT);
-				end
+			if spell.Skill == 'Summoning' then
+				stat = gcinclude.CheckSummons(spell.Name);
+			else
+				stat = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.ELEMENT);
 			end
 		
 			if stat ~= nil then
@@ -2925,15 +2930,16 @@ function gcinclude.HandleWeaponskill()
 				gcinclude.MoveToCurrent(gProfile.Sets.WS_Skill,gProfile.Sets.CurrentGear);	
 			end
 		elseif cKey == 'B' then		-- elemental gorget	
-			if gcinclude.settings.bEleGorgets == false then
-				gcinclude.CheckForObisGorgets();
-			end			
-			if gcinclude.settings.bEleGorgets == true then
-				local sGorget = gcinclude.CheckEleGorget(ws.Name);
-				if sGorget ~= nil then
-					gProfile.Sets.CurrentGear['Neck'] = sGorget;
+			local bFound = false;
+			for ii,jj in pairs(gcinclude.eleWS) do
+				if string.find(jj,ws.Name) ~= nil then
+					local sGorget = gcinclude.CheckForEleGear('gorget',ii);
+					if sGorget ~= nil and bFound == false then
+						gProfile.Sets.CurrentGear['Neck'] = sGorget;
+						bFound = true;
+					end
 				end
-			end			
+			end		
 		elseif cKey == 'D' then		-- accuracy	
 			if gcdisplay.GetToggle('acc') == true then
 				gcinclude.MoveToCurrent(gProfile.Sets.Accuracy,gProfile.Sets.CurrentGear);
