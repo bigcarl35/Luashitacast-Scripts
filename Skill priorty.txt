@@ -8,9 +8,9 @@ gear sets in the sequence be fairly complete so you don't end up with empty slot
 unnecessarily. There's nothing stopping you from omitting steps, that is up to the player. The
 sequence is stored in gcinclude.lua:
 
-				gcinclude.settings.priorityEngaged = 'ABCDEFGH';
+				gcinclude.settings.priorityEngaged = 'CEFGH';
 				gcinclude.settings.priorityMidCast = 'ABCDEFGH';
-				gcinclude.settings.priorityWeaponSkill = 'ABCDE';
+				gcinclude.settings.priorityWeaponSkill = 'ABDE';
 				
 If you want a different order, just change the sequence order in the job file under the OnLoad
 function to the order you want.
@@ -23,15 +23,12 @@ Engaged (you and/or pet fighting)
 
 Code	Meaning
 ----	-------
- A		Player is fighting
  B		Pet is fighting
  C		Evasion set (if /eva set on)
- D		Enmity set (depends on setting of /enmity)
  E		Accuracy set (if /acc set on, applies to both player and pet)
  F		Movement set (if /kite set on)
  G		Common debuffs/buffs set (depends on what's on your player character)
  H		Damage Taken set (depends on setting of /dt_type and if /dt enabled)
- I		Haste
  
 Spell MidCast
 =============
@@ -54,6 +51,5 @@ Code	Meaning
 ----	------- 
  A		WeaponSkill set (determined by program which is appropriate set)
  B		Elemental gorget
- C		Enmity set (depends on setting of /enmity)
  D		Accuracy set (if /acc set on, applies to both player and pet)
  (E		Elemental Obi) -- Currently not implemented

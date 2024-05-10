@@ -44,38 +44,40 @@ local sets = {
 
 --[[
 	The TP sets are used when you are fighting.	The accuracy set will be used if ACC is specified 
-	and the evasion set if EVA is specified.
+	and the evasion set if EVA is specified. TP_Tank is equipped if indicated. It's a means for
+	the DRK to equip more defensive gear if they find themselves tanking.
 --]]
 
 	['TP'] = {
-        Head  = { 'Chaos Burgeonet','Empress Hairpin' },
-        Neck  = { 'Parade Gorget', 'Peacock Amulet' },
-        Ear2  = { 'Genin Earring//SJNIN', 'Fang Earring', 'Drone Earring', 'Physical Earring' },
-        Body  = { 'Chaos Cuirass', 'Brigandine' },
-        Hands = { 'Chaos Gauntlets', 'Wonder Mitts' },
-        Rings = { 'Tamas Ring', 'Sun Ring', 'Sun Ring' },
-        Back  = { 'Amemet Mantle', 'Raptor Mantle', 'Ram Mantle' },
-        Waist = { 'Swift Belt', 'Friar\'s Rope' },
-        Legs  = { 'Chaos Flanchard', 'Ryl.Sqr. Breeches' },
-        Feet  = { 'Chaos Sollerets', 'Bounding Boots' },
+        Head  = { 'Chaos Burgeonet//ACCESSIBLE','Empress Hairpin' },
+        Neck  = { 'Parade Gorget//HP.GE.85PV', 'Peacock Amulet', 'Spike Necklace' },
+        Ear2  = { 'Coral Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Pilferer\'s Earring//SJTHF', 'Drone Earring', 'Physical Earring' },
+        Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Brigandine' },
+        Hands = { 'Thick Mufflers', 'Chaos Gauntlets//ACCESSIBLE', 'Wonder Mitts' },
+        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tamas Ring', 'Balance Ring' },
+        Back  = { 'Psilos Mantle', 'Amemet Mantle', 'Raptor Mantle', 'Ram Mantle' },
+        Waist = { 'Swift Belt', 'Powerful Rope', 'Friar\'s Rope' },
+        Legs  = { 'Thick Breeches', 'Chaos Flanchard//ACCESSIBLE', 'Ryl.Sqr. Breeches' },
+        Feet  = { 'Thick Sollerets', 'Chaos Sollerets//ACCESSIBLE', 'Bounding Boots' },
     },
 
 	['TP_Tank'] = {
+		Legs = 'Chaos Flanchard//ACCESSIBLE',
 	},
 	
 --[[
 	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
-	(Please note that Pet_Accuracy is applied after Accuracy if you have a pet.)
+	Remember that DEX converts to accuracy: for every 1 point of DEX you get 0.75 points
+	of accuracy.
 --]]
 		
 	['Accuracy'] = {
-		Neck = 'Peacock Amulet',
+		Neck  = 'Peacock Amulet',
         Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
+		Hands = 'Thick Mufflers',
 		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt' },
-		Feet = { 'Chaos Sollerets', 'Bounding Boots' },
-    },
-	
-	['Pet_Accuracy'] = {
+		Legs  = 'Thick Breeches',
+		Feet  = { 'Chaos Sollerets//ACCESSIBLE', 'Bounding Boots' }, -- Needed to override the default Thick Sollerets
     },
 	
 --[[
@@ -85,11 +87,20 @@ local sets = {
 	['Evasion'] = {
         Head = 'Empress Hairpin',
 		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring', 'Windurstian Earring' },		
-        Legs = 'San. Trousers',
+        Legs = { 'Chaos Flanchard//ACCESSIBLE', 'San. Trousers' },
     },
 
-	['Pet_Evasion'] = {
-    },
+--[[
+	The "Travel" gear set is what is worn when you're not fighting (either
+	you or your pet), you're not resting. It's a good place to put gear 
+	that increases your movement speed. (Not to be confused with the 
+	['Movement'] gear set which is used when you're kiting.) This is also 
+	where you put gear that is adventageous if you have a pet present 
+	(i.e., lower perpetuation cost, etc.)
+--]]
+		
+	['Travel'] = {
+	},
 	
 --[[
 	The Idle_Regen and Idle_Refresh gear sets replace the normal Idle set when the player's HP or MP
@@ -100,6 +111,7 @@ local sets = {
 	},
 	
 	['Idle_Refresh'] = {
+		Neck = 'Parade Gorget',
 	},
 
 --[[
@@ -114,6 +126,7 @@ local sets = {
 	},
 	
 	['Resting_Refresh'] = {
+		Neck = 'Parade Gorget',	
 	},
 	
 	-- If you have any Spell Interruption Rate down gear, put them into the "SIR" gear set.
@@ -130,7 +143,7 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-        Main = { 'Zweihander', 'Glorious Sword' },
+        Main = 'Zweihander',
         Ammo = 'Fortune Egg',
     },
 	
@@ -154,6 +167,7 @@ local sets = {
 	},
 	
 	['DT_Magical'] = {
+		Ears  = 'Coral Earring',
     },
 	
 	['DT_Breath'] = { 
@@ -181,7 +195,7 @@ local sets = {
 
 	['Preshot'] = {
 		Neck  = 'Peacock Amulet',
-		Rings = { 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	
+		Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	
     },
 	
 --[[
@@ -201,7 +215,7 @@ local sets = {
 	cast gear, and spell interruption rate
 --]]
 
-	['Precast'] = {							
+	['Precast'] = {	
 	},
 
 --[[
@@ -227,6 +241,7 @@ local sets = {
 	
 	-- Dark: Dark Magic Skill.	
 	['Dark'] = {
+		Head = 'Chaos Burgeonet//ACCESSIBLE',
     },
 
 	-- Divine: Divine Magic Skill.	
@@ -236,6 +251,7 @@ local sets = {
 	-- Enfeebling Magic Skill.	Currently only gear equippable by any job gives is applicable here. There's no gear that's 
 	-- specific for DRK that gives any dark magic skill.	
 	['Enfeebling'] = {
+		Body = 'Chaos Cuirass//ACCESSIBLE',
 	},
 	
 	-- Enhancing: There is no gear that a DRK can wear to enhance any magic spell. Leave the Enhancing gear sets empty.
@@ -274,8 +290,10 @@ local sets = {
         Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
-        Feet = { 'Chaos Sollerets', 'Mannequin Pumps' },
-    },--[[
+        Feet = { 'Chaos Sollerets//ACCESSIBLE', 'Mannequin Pumps' },
+    },
+
+--[[
 	And some spells are special cases, so they have individual gears sets.
 --]]
 	-- Stoneskin: Stoneskin Enhancement, Mind, and Enhancing Magic Skill. Mind is 3x more important than enhancing
@@ -342,13 +360,15 @@ local sets = {
 -]]
 	
 	['WS_STR'] = {
-        Neck = 'Spike Necklace',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Rings = { 'San d\'Orian Ring', 'Courage Ring' },
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Wonder Clomps',
+		Head  = 'Chaos Burgeonet//ACCESSIBLE',
+        Neck  = 'Spike Necklace',
+		Ears  = { 'Coral Earring', 'Fang Earring' },
+        Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Wonder Kaftan' },
+        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring' },
+        Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
+        Legs  = { 'Thick Breeches' ,'Wonder Braccae' },
+        Feet  = { 'Creek F Clomps', 'Wonder Clomps' },
     },
 
 --[[
@@ -358,15 +378,15 @@ local sets = {
 --]]
 
 	['WS_STRAGI'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ears = 'Drone Earring',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Rings = {'Courage Ring', 'San d\'Orian Ring' },
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Bounding Boots',
+        Head  = { 'Chaos Burgeonet//ACCESSIBLE', 'Empress Hairpin' },
+        Neck  = 'Spike Necklace',
+        Ears  = { 'Genin Earring//SJNIN', 'Drone Earring', 'Coral Earring', 'Fang Earring' },
+        Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Wonder Kaftan' },
+        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
+        Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
+        Legs  = { 'Thick Breeches', 'Ryl.Sqr. Breeches', 'Wonder Braccae' },
+        Feet  = { 'Creek F Clomps', 'Bounding Boots' },
     },
 	
 --[[
@@ -376,15 +396,15 @@ local sets = {
 --]]
 
 	['WS_STRDEX'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Rings = { 'Courage Ring', 'Balance Ring' },
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Bounding Boots',
+        Head  = { 'Chaos Burgeonet//ACCESSIBLE', 'Empress Hairpin' },
+        Neck  = 'Spike Necklace',
+        Ears  = { 'Genin Earring//SJNIN', 'Drone Earring', 'Coral Earring', 'Fang Earring' },
+        Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Brigandine', 'Wonder Kaftan' },
+        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Balance Ring', 'San d\'Orian Ring', 'Bastokan Ring' },
+        Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
+        Legs  = { 'Thick Breeches', 'Ryl.Sqr. Breeches', 'Wonder Braccae' },
+        Feet  = { 'Creek F Clomps', 'Bounding Boots' },
     },
 
 --[[
@@ -396,13 +416,14 @@ local sets = {
 --]]
 	
 	['WS_STRINT'] = {
+		Head  = 'Chaos Burgeonet//ACCESSIBLE', 
         Neck  = 'Spike Necklace',
-        Ears  = { 'Genin Earring//SJNIN','Drone Earring' },
-        Body  = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Rings = { 'Tamas Ring', 'Courage Ring' },
-        Waist = 'Mrc.Cpt. Belt',
-        Legs  = 'Wonder Braccae',
+        Ears  = { 'Coral Earring', 'Fang Earring' },
+        Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Wonder Kaftan' },
+        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+        Rings = { 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring' },
+        Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
+        Legs  = { 'Thick Breeches', 'Wonder Braccae' },
         Feet  = 'Wonder Clomps',
     },
 
@@ -413,14 +434,15 @@ local sets = {
 --]]
 	
 	['WS_STRINT_30_20'] = {
-        Neck = 'Spike Necklace',
-        Ears = 'Drone Earring',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Rings = { 'Tamas Ring', 'Courage Ring' },
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Wonder Clomps',
+		Head  = 'Chaos Burgeonet//ACCESSIBLE',
+        Neck  = 'Spike Necklace',
+        Ears  = { 'Coral Earring', 'Fang Earring' },
+        Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Wonder Kaftan' },
+        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+        Rings = { 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring' },
+        Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
+        Legs  = { 'Thick Breeches', 'Wonder Braccae' },
+        Feet  = 'Wonder Clomps',
     },
 
 --[[
@@ -433,13 +455,15 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
-        Neck = 'Justice Badge',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Rings = { 'Tamas Ring', 'Courage Ring' },
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Wonder Clomps',
+		Head  = 'Chaos Sollerets//ACCESSIBLE',
+        Neck  = 'Justice Badge',
+		Ears  = { 'Coral Earring', 'Fang Earring' },
+        Body  = 'Wonder Kaftan',
+        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY' },
+        Rings = { 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tranquility Ring' },
+        Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
+        Legs  = 'Wonder Braccae',
+        Feet  = { 'Chaos Sollerets//ACCESSIBLE', 'Wonder Clomps' },
     },
 
 --[[
@@ -451,13 +475,15 @@ local sets = {
 --]]
 	
 	['WS_STRVIT'] = {
-        Neck = 'Spike Necklace',
-        Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
-        Rings = { 'Courage Ring', 'Bastokan Ring' },
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Wonder Clomps',
+		Head  = 'Chaos Sollerets//ACCESSIBLE',
+        Neck  = 'Spike Necklace',
+		Ears  = { 'Coral Earring', 'Fang Earring' },
+        Body  = 'Wonder Kaftan',
+        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY' },
+        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Bastokan Ring' },
+        Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
+        Legs  = { 'Wonder Braccae', 'San. Trousers' },
+        Feet  = 'Wonder Clomps',
     },
 
 --[[
@@ -467,8 +493,10 @@ local sets = {
 --]]
 	
 	['WS_CHR'] = {
-        Neck = 'Flower Necklace',
-        Waist = 'Mrc.Cpt. Belt',
+        Neck  = { 'Star Necklace', 'Flower Necklace' },
+		Body  = 'Chaos Cuirass//ACCESSIBLE',
+		Rings = 'Moon Ring',
+        Waist = { 'Corsette', 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
     },
 	
 --[[
@@ -480,11 +508,13 @@ local sets = {
 --]]
 	
 	['WS_DEX'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Rings = 'Balance Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Feet = 'Bounding Boots',
+        Head  = 'Empress Hairpin',
+        Neck  = 'Spike Necklace',
+		Body  = 'Brigandine',
+		Hands = { 'Chaos Gauntlets//ACCESSIBLE', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+        Rings = { 'Balance Ring', 'Bastokan Ring' },
+        Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
+        Feet  = 'Bounding Boots',
     },
 
 --[[
@@ -494,11 +524,14 @@ local sets = {
 --]]
 	
 	['WS_DEXINT'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Rings = 'Balance Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Feet = 'Bounding Boots',
+        Head  = 'Empress Hairpin',
+        Neck  = 'Spike Necklace',
+		Body  = 'Brigandine',
+		Hands = { 'Chaos Gauntlets//ACCESSIBLE', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+        Rings = { 'Balance Ring', 'Bastokan Ring' },
+		Legs  = 'Chaos Flanchard//ACCESSIBLE',
+        Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
+        Feet  = 'Bounding Boots',
     },
 
 --[[
@@ -510,9 +543,10 @@ local sets = {
 	['WS_MND'] = {
         Neck = 'Justice Badge',
         Body = 'Wonder Kaftan',
-        Rings = { 'Tamas Ring', 'Tranquility Ring' },
+        Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
+		Feet = { 'Chaos Sollerets//ACCESSIBLE', 'Mannequin Pumps' },
     },
 
 --[[
@@ -531,13 +565,14 @@ local sets = {
 --]]
 
 	['WS_HP'] = {
-        Ears = 'Physical Earring',
-        Body = { 'Brigandine', 'Wonder Kaftan' },
+		Head  = 'Chaos Burgeonet//ACCESSIBLE',
+        Ears  = 'Physical Earring',
+        Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Brigandine', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
         Rings = 'Toreador\'s Ring',
         Waist = 'Powerful Rope',
-        Legs = 'Wonder Braccae',
-        Feet = 'Creek F Clomps',
+        Legs  = 'Wonder Braccae',
+        Feet  = { 'Creek F Clomps', 'Chaos Sollerets//ACCESSIBLE' },
     },
 	
 --[[
@@ -553,16 +588,18 @@ local sets = {
 --]]
 
 	['ArcaneCircle'] = {
-		Feet = 'Chaos Sollerets',
+		Feet = 'Chaos Sollerets//ACCESSIBLE',
     },
 	
 	['LastResort'] = {
     },
 	
 	['Souleater'] = {
+		Head = 'Chaos Burgeonet//ACCESSIBLE',
     },
 	
 	['WeaponBash'] = {
+		Hands = 'Chaos Gauntlets//ACCESSIBLE',
     },
 	
 --[[
@@ -629,10 +666,6 @@ local function HandlePetAction(PetAction)
 	-- level of your BST level
 	if (gcinclude.BstPetAttack:contains(PetAction.Name)) then				-- Pet Attack
 		gcinclude.MoveToCurrent(sets.Pet_Attack,sets.CurrentGear);
-		-- If /acc enabled equip pet accuracy gear
-		if gcdisplay.GetToggle('acc') == true then
-			gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear);
-		end
 	elseif (gcinclude.BstPetMagicAttack:contains(PetAction.Name)) then		-- Pet Magical Attack
 		gcinclude.MoveToCurrent(sets.Pet_Matt,sets.CurrentGear);
 	elseif (gcinclude.BstPetMagicAccuracy:contains(PetAction.Name)) then	-- Pet Magical Accuracy Attack
@@ -743,7 +776,7 @@ profile.HandleDefault = function()
 	local zone = gData.GetEnvironment();
 	local ew = gData.GetEquipment();
 	local eWeap = nil;
-	local cKey;
+	local cKey,sGear;
 
 	-- A /bst charmed pet action takes priority over a player's action.
 	if petAction ~= nil and player.SubJob == 'BST' then
@@ -792,17 +825,11 @@ profile.HandleDefault = function()
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
 			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
 			if cKey == 'C' then		-- Evasion			
-				if gcdisplay.GetToggle('Eva') == true then
-					if pet ~= nil then
-						gcinclude.MoveToCurrent(sets.Pet_Evasion,sets.CurrentGear);
-					end				
+				if gcdisplay.GetToggle('Eva') == true then			
 					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 				end
 			elseif cKey == 'E' then		-- Accuracy	
-				if gcdisplay.GetToggle('Acc') == true then 
-					if pet ~= nil and pet.Status == 'Engaged' then
-						gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear);
-					end				
+				if gcdisplay.GetToggle('Acc') == true then 		
 					gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
 				end	
 			elseif cKey == 'F' then		-- Kiting
@@ -842,18 +869,24 @@ profile.HandleDefault = function()
 		-- See if in a town
 		if (zone.Area ~= nil and table.find(gcinclude.Towns,zone.Area)) then
 			gcinclude.MoveToCurrent(sets.Town,sets.CurrentGear);
-		end
+		else
+			if gcdisplay.GetToggle('Idle') == true then
+				gcinclude.MoveToCurrent(sets.Travel,sets.CurrentGear);
+					
+				-- if the player's HP is below the threshold setting, equip the idle regen gear
+				if player.HPP < gcinclude.settings.RegenGearHPP then
+					gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
+				end
 		
-		-- if the player's HP is below the threshold setting, equip the idle regen gear
-		if player.HPP < gcinclude.settings.RegenGearHPP then
-			gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
+				-- if the player's MP is below the threshold setting, equip the idle refresh gear
+				if player.MPP < gcinclude.settings.RefreshGearMPP then
+					gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
+				end
+				
+				-- Check for common debuffs
+				gcinclude.CheckCommonDebuffs(sets.CurrentGear);	
+			end
 		end
-		-- if the player's MP is below the threshold setting, equip the idle refresh gear
-		if player.MPP < gcinclude.settings.RefreshGearMPP then
-			gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
-		end
-		-- Check for common debuffs
-		gcinclude.CheckCommonDebuffs(sets.CurrentGear);			
 	end
 	
 	-- Make sure to equip the appropriate elemental staff for the current pet (/smn only)
@@ -929,6 +962,7 @@ end
 
 profile.HandleItem = function()
 	local item = gData.GetAction();
+	local bShow = false;
 
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
@@ -984,7 +1018,8 @@ end
 --]]
 
 profile.HandleMidcast = function()
-
+	local bTank = gcdisplay.GetToggle('Tank');
+	
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
 		return;
 	end
@@ -993,7 +1028,7 @@ profile.HandleMidcast = function()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Call the common HandleMidcast now
-	gcinclude.HandleMidcast();
+	gcinclude.HandleMidcast(bTank);
 	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited midcast set
 end		-- gcinclude.HandleMidcast
@@ -1040,6 +1075,7 @@ profile.HandleWeaponskill = function()
 	local ws = gData.GetAction();
 	local canWS = gcinclude.CheckWsBailout();
 	local cKey;
+	local bTank = gcdisplay.GetToggle('Tank');
 	
 	-- If conditions would cause the weaponskill to fail, the action will be
 	-- cancelled so you do not lose your tp.
@@ -1057,7 +1093,7 @@ profile.HandleWeaponskill = function()
 	gcinclude.ClearSet(gProfile.Sets.CurrentGear);
 
 	-- Call the common weaponskill handler
-	gcinclude.HandleWeaponskill();
+	gcinclude.HandleWeaponskill(bTank);
 	
 	-- Equip the composited weaponskill set		
 	gcinclude.EquipTheGear(sets.CurrentGear);

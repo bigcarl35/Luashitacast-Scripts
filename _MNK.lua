@@ -696,19 +696,20 @@ profile.HandleDefault = function()
 		-- See if in a town		
 		if (zone.Area ~= nil and table.find(gcinclude.Towns,zone.Area)) then		
 			gcinclude.MoveToCurrent(sets.Town,sets.CurrentGear);
-		end
+		else		
+			-- if the player's HP is below the threshold setting, equip the idle regen gear
+			if player.HPP < gcinclude.settings.RegenGearHPP then
+				gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
+			end
+			
+			-- if the player's MP is below the threshold setting, equip the idle refresh gear
+			if gcinclude.settings.bSJ == true and player.MPP < gcinclude.settings.RefreshGearMPP then
+				gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
+			end	
 		
-		-- if the player's HP is below the threshold setting, equip the idle regen gear
-		if player.HPP < gcinclude.settings.RegenGearHPP then
-			gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
+			-- Check for common debuffs
+			gcinclude.CheckCommonDebuffs(sets.CurrentGear);	
 		end
-		-- if the player's MP is below the threshold setting, equip the idle refresh gear
-		if gcinclude.settings.bSJ == true and player.MPP < gcinclude.settings.RefreshGearMPP then
-			gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
-		end	
-		
-		-- Check for common debuffs
-		gcinclude.CheckCommonDebuffs(sets.CurrentGear);	
 	end
 	
 	-- Make sure to equip the appropriate elemental staff for the current pet (/smn only)
@@ -848,7 +849,7 @@ profile.HandleMidcast = function()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Call the common HandleMidcast now
-	gcinclude.HandleMidcast();
+	gcinclude.HandleMidcast(false);
 	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited midcast set
 end		-- gcinclude.HandleMidcast
@@ -914,7 +915,7 @@ profile.HandleWeaponskill = function()
 	gcinclude.ClearSet(gProfile.Sets.CurrentGear);
 
 	-- Call the common weaponskill handler
-	gcinclude.HandleWeaponskill();
+	gcinclude.HandleWeaponskill(false);
 	
 	-- Equip the composited weaponskill set		
 	gcinclude.EquipTheGear(sets.CurrentGear);

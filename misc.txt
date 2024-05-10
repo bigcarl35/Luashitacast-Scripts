@@ -1,0 +1,19 @@
+in PreCast
+
+local spell = gData.GetAction()
+    local fastCastValue = 0.19 
+    local latency = 0.250 
+    local minimumBuffer = 0.2
+    local packetDelay = 0.25
+    local castDelay = ((spell.CastTime * (1 - fastCastValue)) / 1000) + latency - minimumBuffer
+    if (castDelay >= packetDelay) then
+        gFunc.SetMidDelay(castDelay)
+    end
+    local castTimeSeconds = math.floor((spell.CastTime * (1 - fastCastValue)) / 1000)
+    local castTimeDecimal = ((spell.CastTime * (1 - fastCastValue)) / 1000) % 1
+    local formattedCastTime = string.format("%.2f", castTimeSeconds + castTimeDecimal)
+    AshitaCore:GetChatManager():QueueCommand(8, '/echo Cast Time: ' .. formattedCastTime .. ' seconds')
+	
+	
+	208.67.222.222
+	208.67.220.220

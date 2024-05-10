@@ -1,0 +1,53 @@
+['TP'] = {
+	['Base'] = {			-- Just the player
+	    Ear1 = 'Black Earring',					-- +4 MP
+        Ear2 = 'Bat Earring',					-- +5 MP, blinded: evasion +15
+        Body = 'Vermillion Cloak',				-- No head allowed, adds "refresh" effect
+        Hands = 'Carbuncle Mitts',				-- +14 MP, 1/2 perpetuation cost on carbuncle
+        Ring1 = 'Evoker\'s Ring',				-- summoning magic skill +10, avatar perpetuation cost -1
+		Ring2 = 'Tamas Ring',					-- magic accuracy +5, enmity -5
+        Back = 'Blue Cape',
+		Waist = 'Hierarch Belt',				-- +2 MP while healing, +2 hp while healing
+        Legs = 'Evoker\'s Spats',				-- +15 MP, avatar: enhances accuracy, enmity -2
+        Feet = 'Mannequin Pumps',				-- +12 MP
+	},
+	['Accuracy'] = {
+		Head = 'Optical Hat',					-- +10 Accuracy
+		Neck = 'Peacock Amulet',				-- +10 Accuracy
+		Ring1 = 'Toreador\'s Ring',				--  +7 Accuracy
+		Ring2 = 'Jaeger ring',					--  +4 Accuract
+		Waist = 'Life Belt',					-- +10 Accuracy
+	},
+	['Evasion'] = {
+		Head = 'Optical Hat',					-- +10 Evasion
+		Neck = 'Spirit Torque',					--  +5 Evasion
+	},
+	['Pet'] = {				-- Has a pet
+		['Base'] = {
+			Head = 'Shep. Bonnet',
+			Ear1 = 'Black Earring',				--  +4 MP
+			Ear2 = 'Beastly Earring',			-- 	+5 MP, blinded: +15 evasion
+			Body = 'Austere Robe',				-- avatar perpetuation cost -1, ability delay -3 
+			Hands = 'Carbuncle Mitts',			-- +14 MP, 1/2 perpetuation cost for carbuncle
+			Ring1 = 'Evoker\'s Ring',			-- +25 MP, +10 summoning magic skill,-1 avatar perpetuation cost
+			Ring2 = 'Tamas Ring',				--  +5 magic accuracy, -5 enmity
+			Back = 'Blue Cape',					-- +15 MP, convert 15 HP to MP
+			Waist = 'Hierarch Belt',			-- +48 MP, +2 HP while healing, +2 MP while healing
+			Legs = 'Evoker\'s Spats',			-- +15 MP, avatar: enhances accuracy, -2 enmity 
+			Feet = 'Mannequin Pumps',			-- +12 MP
+		},
+		['Carbuncle'] = {		-- Specific pet
+			Body = 'Vermillion Cloak',			-- No head allowed, adds "refresh" effect
+			Hands = 'Carbuncle Mitts',			-- +14 MP, 1/2 perpetuation cost on carbuncle
+		},
+		['Accuracy'] = {		-- Accuracy for all pets
+			Head = 'Shep. Bonnet',				-- Pet Accuracy +5
+			Ear2 = 'Beastly Earring',			-- Pet Accuracy +10
+			Legs = 'Evoker\'s Spats',			-- Enhances avatar accuracy
+		},
+	},
+	['Conditional'] = {		-- Applies to all parts of TP
+		{'Uggalepih Pendant','Equip at night','Neck',70,'ALL','TIME','Nighttime'},
+		{'Fenrir\'s Torque','Equip during day','Neck',70,'ALL','TIME','Daytime'},
+	},
+},

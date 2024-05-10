@@ -42,19 +42,19 @@ local sets = {
 	No gear that supports bard songs can be worn by any job except a bard, no there's no support given here for
 	/BRD.
 --]]
-
+	
 --[[
-	Unlike most jobs, summoner's emphasis is fighting with your avatar. For consistency with other
-	jobs, ['Accuracy'] is for the player's accuracy and ['Pet_Accuracy'] is for the pet. I originally
-	implemented the two combined, but it is now separated. The same is for ['Evasion']/['Pet Evasion'].
+	Unlike most jobs, summoner's emphasis is fighting with your avatar. The ['TP'] set is combined
+	for both you and your pet fighting. Make sure to use appropriate inline conditionals to 
+	emphasize gear accordingly. ['Accuracy'] and ['Evasion'] also represent both pets and players.
 	['Macc'] is for the player since pet Macc is applied during a blood pact and ['TP'] is still 
 	combined though and emphasizes the pet since summoner's are bad fighters.
 --]]
 
 	['TP'] = {
-        Head  = { 'Austere Hat', 'Shep. Bonnet', 'Silver Hairpin' },
+        Head  = { 'Shep. Bonnet//PET', 'Austere Hat', 'Silver Hairpin' },
 		Neck  = { 'Uggalepih Pendant//NIGHTTIME', 'Fenrir\'s Torque//DAYTIME', 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
-		Ears  = { 'Loquac. Earring', 'Bat Earring', 'Black Earring', 'Onyx Earring' },
+		Ears  = { 'Loquac. Earring', 'Bat Earring', 'Black Earring', 'Onyx Earring', 'Reraise Earring' },
         Body  = { 'Vermillion Cloak//CARBY','Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' }, 
         Hands = { 'Carbuncle Mitts//CARBY', 'Errant Cuffs', 'Carbuncle Mitts' },
 		Rings = { 'Evoker\'s Ring', 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
@@ -63,17 +63,6 @@ local sets = {
         Legs  = { 'Evoker\'s Spats//PETF', 'Summoner\'s Spats', 'Evoker\'s Spats', 'Shep. Hose', 'Fisherman\'s Hose' }, 
         Feet  = { 'Summoner\'s Pgch.', 'Mannequin Pumps', 'Seer\'s Pumps', 'Waders'},
     },
-	
---[[
-	While it is concievable that other pet jobs might fight w/o a pet, it's unusual
-	for a smn to fight alone. What's more likely is that your pet died. The TP_No_Pet
-	gearset is if you want to change gear in that specific situation.
---]]
-	
-	['TP_No_Pet'] = {
-		Neck  = { 'Uggalepih Pendant//NIGHTTIME', 'Fenrir\'s Torque//DAYTIME' },
-		Body  = { 'Vermillion Cloak', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
-	},
 
 --[[
 	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
@@ -82,19 +71,14 @@ local sets = {
 --]]
 	
 	['Accuracy'] = {
-        Head  = 'Optical Hat',
+        Head  = { 'Shep. Bonnet//PETF', 'Optical Hat' },
+		Ears  = 'Beastly Earring//PETF',
 		Neck  = 'Peacock Amulet',
 		Body  = 'Austere Robe',			-- Needed to offset the "possible" Vermillion Cloak		
 		Hands = 'Battle Gloves',
-		Rings = { 'Toreador\'s Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
+		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
 		Waist = { 'Life Belt', 'Tilt Belt' },
-    },
-
-	['Pet_Accuracy'] = {
-        Head  = 'Shep. Bonnet',
-		Ears  = 'Beastly Earring',
-		Body  = 'Austere Robe',			-- Needed to offset the "possible" Vermillion Cloak	
-		Legs  = 'Evoker\'s Spats',
+		Legs  = 'Evoker\'s Spats//PETF',
     },
 	
 --[[
@@ -108,20 +92,23 @@ local sets = {
 		Neck  =  'Spirit Torque',
 		Body  = 'Austere Robe',			-- Needed to offset the "possible" Vermillion Cloak	
 		Hands = 'Battle Gloves',
-		Legs  = 'Evoker\'s Spats',	
+		Legs  = { 'Shep. Hose//PETF', 'Evoker\'s Spats' },
     },
-	
-	['Pet_Evasion'] = {
-		Legs  = 'Shep. Hose',
-    },
-	
-	['Idle_With_Pet'] = {
-        Head  = { 'Austere Hat', 'Shep. Bonnet', 'Silver Hairpin' },
-		Body  = { 'Vermillion Cloak//CARBY', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
-        Hands = 'Carbuncle Mitts//CARBY',
-        Rings = 'Evoker\'s Ring',
-		Legs = 'Summoner\'s Spats',
-    },
+
+--[[
+	The "Travel" gear set is what is worn when you're not fighting (either
+	you or your pet), you're not resting. It's a good place to put gear 
+	that increases your movement speed. (Not to be confused with the 
+	['Movement'] gear set which is used when you're kiting.) This is also 
+	where you put gear that is adventageous if you have a pet present 
+	(i.e., lower perpetuation cost, etc.)
+--]]
+		
+	['Travel'] = {
+		Body  = 'Vermillion Cloak//CARBY', 
+		Rings = 'Evoker\'s Ring//SMNPET',
+        Hands = 'Carbuncle Mitts//CARBY',	
+	},
 	
 --[[
 	The Idle_Regen and Idle_Refresh gear sets replace the normal Idle set when the player's HP or MP
@@ -148,7 +135,7 @@ local sets = {
 	
 	['Resting_Refresh'] = {
 		Main  = { 'Dark Staff', 'Kukulcan\'s Staff', 'Pilgrim\'s Wand' },
-        Body  = { 'Vermillion Cloak', 'Seer\'s Tunic' },
+        Body  = { 'Errant Hpl.', 'Vermillion Cloak', 'Seer\'s Tunic' },
 		Waist = 'Hierarch Belt',
 	},
 	
@@ -279,7 +266,7 @@ local sets = {
         Head  = 'Optical Hat',
 		Neck  = 'Peacock Amulet',
 		Body  = 'Austere Robe',
-        Rings = { 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
+        Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
 	},
 	
 --[[
@@ -301,6 +288,7 @@ local sets = {
 
 	['Precast'] = {	
 		Ears = 'Loquac. Earring',
+		Feet = 'Rostrum Pumps',
 	},
 	
 --[[
@@ -369,20 +357,21 @@ local sets = {
 	['INT'] = {
         Hands = { 'Errant Cuffs', 'Seer\'s Mitts' },
         Rings = { 'Tamas Ring', 'Windurstian Ring' },
+		Body  = 'Errant Hpl.',
         Waist = 'Mrc.Cpt. Belt',
         Legs  = 'Seer\'s Slacks',
-        Feet  = 'Mannequin Pumps',
+        Feet  = { 'Rostrum Pumps', 'Mannequin Pumps' },
     },
 	
 	['MND'] = {
         Neck  = 'Justice Badge',
-        Body  = 'Wonder Kaftan',
+        Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Seer\'s Mitts',
 		Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
         Back  = 'White Cape',
         Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
         Legs  = { 'Summoner\'s Spats', 'Wonder Braccae' },
-        Feet  = { 'Mannequin Pumps', 'Seer\'s Pumps' },
+        Feet  = { 'Rostrum Pumps', 'Mannequin Pumps', 'Seer\'s Pumps' },
     },
 	
 --[[
@@ -463,7 +452,7 @@ local sets = {
 	['WS_STRINT'] = {
         Head  = 'Mrc.Cpt. Headgear',
         Neck  = 'Spike Necklace',
-        Body  = 'Wonder Kaftan',
+        Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
 		Rings = { 'Tamas Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring' },
         Waist = 'Mrc.Cpt. Belt',
@@ -481,7 +470,7 @@ local sets = {
 	['WS_STRMND'] = {
         Head  = 'Mrc.Cpt. Headgear',
         Neck  = 'Justice Badge',
-        Body  = 'Wonder Kaftan',
+        Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
 		Rings = { 'Tamas Ring', 'Sun Ring', 'Courage Ring', 'Tranquility Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
         Back  = 'White Cape',
@@ -499,7 +488,7 @@ local sets = {
 	['WS_STRMND_30_50'] = {
         Head  = 'Mrc.Cpt. Headgear',
         Neck  = 'Justice Badge',
-        Body  = 'Wonder Kaftan',
+        Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
 		Rings = { 'Tamas Ring', 'Sun Ring', 'Courage Ring', 'Tranquility Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
         Back  = 'White Cape',
@@ -535,12 +524,12 @@ local sets = {
 	['WS_DEXINT'] = {
         Head  = 'Empress Hairpin',
         Neck  = 'Spike Necklace',
-        Body  = 'Mrc.Cpt. Doublet',
+        Body  = { 'Errant Hpl.', 'Mrc.Cpt. Doublet' },
         Hands = 'Seer\'s Mitts',
 		Rings  = { 'Tamas Ring', 'Balance Ring', 'Bastokan Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs  = 'Seer\'s Slacks',
-        Feet  = 'Mannequin Pumps',
+        Feet  = { 'Rostrum Pumps', 'Mannequin Pumps' },
     },
 
 --[[
@@ -552,9 +541,10 @@ local sets = {
 	['WS_INT'] = {
         Hands = 'Seer\'s Mitts',
         Rings = { 'Tamas Ring', 'Windurstian Ring' },
+		Body  = 'Errant Hpl.',
         Waist = 'Mrc.Cpt. Belt',
         Legs  = 'Seer\'s Slacks',
-        Feet  = 'Mannequin Pumps',
+        Feet  = { 'Rostrum Pumps', 'Mannequin Pumps' },
     },
 	
 --[[
@@ -565,12 +555,12 @@ local sets = {
 	
 	['WS_INTMND'] = {
         Neck  = 'Justice Badge',
-        Body  = 'Wonder Kaftan',
+        Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Seer\'s Mitts',
 		Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
         Waist = 'Mrc.Cpt. Belt',
-        Legs  = {'Summoner\'s Spats', 'Wonder Braccae' },
-        Feet  = 'Mannequin Pumps',
+        Legs  = { 'Summoner\'s Spats', 'Wonder Braccae' },
+        Feet  = { 'Rostrum Pumps', 'Mannequin Pumps' },
     },
 	
 --[[
@@ -583,6 +573,7 @@ local sets = {
         Head  = 'Entrancing Ribbon',
         Neck  = 'Flower Necklace',
 		Ears  = 'Beastly Earring',
+		Body  = 'Errant Hpl.',
         Rings = { 'Moon Ring', 'Moon Ring' },
         Waist = { 'Corsette', 'Mrc.Cpt. Belt' },
     },
@@ -597,13 +588,13 @@ local sets = {
 
 	['WS_MND'] = {
         Neck  = 'Justice Badge',
-        Body  = 'Wonder Kaftan',
+        Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Seer\'s Mitts',
 		Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
         Back  = 'White Cape',
         Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
         Legs  = { 'Summoner\'s Spats', 'Wonder Braccae' },
-        Feet  = 'Mannequin Pumps',
+        Feet  = { 'Rostrum Pumps', 'Mannequin Pumps' },
     },
 	
 --[[
@@ -633,6 +624,7 @@ local sets = {
 	    Head  = 'Entrancing Ribbon',
         Neck  = 'Flower Necklace',
 		Ears  = 'Beastly Earring',
+		Body  = 'Errant Hpl.',
         Rings = { 'Moon Ring', 'Moon Ring' },
         Waist = { 'Corsette', 'Mrc.Cpt. Belt' },
     },
@@ -738,10 +730,6 @@ local function HandlePetAction(Pet,PetAction)
 		-- Must be a /BST charmed pet.
 		if (gcinclude.BstPetAttack:contains(PetAction.Name)) then				-- Pet Attack
 			gcinclude.MoveToCurrent(sets.Pet_Attack,sets.CurrentGear);		
-			-- If /acc enabled equip pet accuracy gear
-			if gcdisplay.GetToggle('acc') == true then
-				gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear);
-			end
 		elseif (gcinclude.BstPetMagicAttack:contains(PetAction.Name)) then		-- Pet Magical Attack
 			gcinclude.MoveToCurrent(sets.Pet_Matt,sets.CurrentGear);		
 		elseif (gcinclude.BstPetMagicAccuracy:contains(PetAction.Name)) then	-- Pet Magical Accuracy Attack
@@ -898,14 +886,10 @@ profile.HandleDefault = function()
 			end
 		end
 	end
-	
+
 	-- The default set is the TP gear set. Load it up
 	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
-	
-	if pet == nil then
-		gcinclude.MoveToCurrent(sets.TP_No_Pet,sets.CurrentGear);
-	end
-	
+		
 	-- Now process the pet/player statuses accordingly.
 	gcdisplay.SetLocksAction(gcinclude.LocksNumeric,player.Status);	
 	if (pet ~= nil and pet.Status == 'Engaged') or (player ~= nil and player.Status == 'Engaged') then
@@ -914,19 +898,11 @@ profile.HandleDefault = function()
 			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
 			if cKey == 'C' then		-- Evasion
 				if gcdisplay.GetToggle('Eva') == true then
-					if pet ~= nil and pet.Status == 'Engaged' then
-						gcinclude.MoveToCurrent(sets.Pet_Evasion,sets.CurrentGear);
-					else
-						gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
-					end
+					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 				end
 			elseif cKey == 'E' then		-- Accuracy
 				if gcdisplay.GetToggle('Acc') == true then 
-					if pet ~= nil and pet.Status == 'Engaged' then
-						gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear);					
-					else
-						gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
-					end
+					gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
 				end
 			elseif cKey == 'F' then		-- Kiting
 				if (gcdisplay.GetToggle('Kite') == true) then
@@ -964,27 +940,23 @@ profile.HandleDefault = function()
 		
 		-- See if in a town
 		if (zone.Area ~= nil and table.find(gcinclude.Towns,zone.Area)) then
-			gcinclude.MoveToCurrent(sets.Town,sets.CurrentGear);			
+			gcinclude.MoveToCurrent(sets.Town,sets.CurrentGear);
 		else
-			-- Check to see if there's an avatar							
-			if pet ~= nil then	
-				pet.Name = string.lower(pet.Name);		
-				if string.find(gcinclude.SummonSkill,pet.Name) ~= nil then
-					gcinclude.MoveToCurrent(sets.Idle_With_Pet,sets.CurrentGear);
-				end
+			gcinclude.MoveToCurrent(sets.Travel,sets.CurrentGear);
+						
+			-- if the player's HP is below the threshold setting, equip the idle regen gear
+			if player.HPP < gcinclude.settings.RegenGearHPP then
+				gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
 			end
-		end
 		
-		-- if the player's HP is below the threshold setting, equip the idle regen gear
-		if player.HPP < gcinclude.settings.RegenGearHPP then
-			gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
+			-- if the player's MP is below the threshold setting, equip the idle refresh gear
+			if player.MPP < gcinclude.settings.RefreshGearMPP then
+				gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
+			end
+		
+			-- Check for common debuffs
+			gcinclude.CheckCommonDebuffs(sets.CurrentGear);
 		end
-		-- if the player's MP is below the threshold setting, equip the idle refresh gear
-		if player.MPP < gcinclude.settings.RefreshGearMPP then
-			gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
-		end
-		-- Check for common debuffs
-		gcinclude.CheckCommonDebuffs(sets.CurrentGear);
 	end
 	
 	-- Make sure to equip the appropriate elemental staff for the current pet
@@ -1209,7 +1181,7 @@ profile.HandleWeaponskill = function()
 	gcinclude.ClearSet(sets.CurrentGear);
 
 	-- Call the common weaponskill handler
-	gcinclude.HandleWeaponskill();
+	gcinclude.HandleWeaponskill(false);
 	
 	-- Equip the composited weaponskill set
 	gcinclude.EquipTheGear(sets.CurrentGear);

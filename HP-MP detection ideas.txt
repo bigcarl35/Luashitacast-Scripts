@@ -1,0 +1,42 @@
+HP comparison to maxHP:
+
+- Invisible gear's added/subtracted HP should be excluded from the maxHP
+  (ears,rings,neck,waist,back).
+- Gear with % increases need to be calculated as follows:
+	- Base HP is maxHP - gear bonus HP - trait boosted HP; merits count.
+	- This value is multiplied by the % increase. That gives you how much added/subtracted.
+- Gear with conversion, MP to HP
+- To determine the value to compare:
+	maxHP - % increase from equipped gear - flat HP bonuses from gear - trait HP=base
+	Calculation of ratio is then current HP/base HP. (Note that this could be above
+	100%.)
+- Gear w/range for HP/MP, like with a Tamas ring. (Value based on your level)
+	
+Order of process:
+	- Remove flat bonuses
+	- Remove conversions (i.e., convert 25 MP to HP)
+	- Remove % boost (how to determine what the base is?)
+		(base x % boost) + base = current base
+		x * .01 + x = 909			900 * .01 + 900 = 909
+		
+		x = 909/1.01 or 900
+		
+Structure:
+	- Current maxHP
+	- Flat HP
+	- Conversion HP
+	- % Boost HP
+	- Base maxHP
+	
+	HPMP_Adjusted = { ['MaxHP'] = nil,		-- Default maximum HP
+				  ['MaxMP'] = nil,		-- Default maximum MP
+				  ['FlatHP'] = 0,		-- Total amount HP boosted from gear ( HP +/-#)
+				  ['FlatMP'] = 0,		-- Total amount MP boosted from gear ( MP +/-#)
+				  ['ConvertHP'] = 0,	-- Total amount of HP from converted MP
+				  ['ConvertMP'] = 0,	-- Total amount of MP from converted HP
+				  ['PctHP'] = 0,		-- Total percent HP boosted from gear ( HP #%)
+				  ['PctMP'] = 0,		-- Total percent MP boosted from gear ( MP #%)
+				  ['BaseHP'] = 0,		-- Calculated max HP minus all gear bonuses
+				  ['BaseMP'] = 0,		-- Calculated max MP minus all gear bonuses
+				  ['BaseHPV'] = 0,		-- Calculated max HP w/gear minus invisible gear
+				  ['BaseMPV'] = 0,		-- Calculated max MP w/gear minus invisible gear

@@ -796,19 +796,22 @@ profile.HandleDefault = function()
 		-- See if in a town		
 		if (zone.Area ~= nil and table.find(gcinclude.Towns,zone.Area)) then		
 			gcinclude.MoveToCurrent(sets.Town,sets.CurrentGear);
-		end
+		else
+			if gcdisplay.GetToggle('Idle') == true then
+				-- if the player's HP is below the threshold setting, equip the idle regen gear
+				if player.HPP < gcinclude.settings.RegenGearHPP then
+					gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
+				end
+				
+				-- if the player's MP is below the threshold setting, equip the idle refresh gear
+				if gcinclude.settings.bSJ == true and player.MPP < gcinclude.settings.RefreshGearMPP then
+					gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
+				end	
 		
-		-- if the player's HP is below the threshold setting, equip the idle regen gear
-		if player.HPP < gcinclude.settings.RegenGearHPP then
-			gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
+				-- Check for common debuffs
+				gcinclude.CheckCommonDebuffs(sets.CurrentGear);	
+			end
 		end
-		-- if the player's MP is below the threshold setting, equip the idle refresh gear
-		if gcinclude.settings.bSJ == true and player.MPP < gcinclude.settings.RefreshGearMPP then
-			gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
-		end	
-		
-		-- Check for common debuffs
-		gcinclude.CheckCommonDebuffs(sets.CurrentGear);	
 	end
 	
 	-- Make sure to equip the appropriate elemental staff for the current pet (/smn only)
@@ -932,7 +935,8 @@ end
 --]]
 
 profile.HandleMidcast = function()
-
+	local bTank = gcdisplay.GetToggle('Tank');
+	
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
 		return;
 	end
@@ -941,7 +945,7 @@ profile.HandleMidcast = function()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Call the common HandleMidcast now
-	gcinclude.HandleMidcast();
+	gcinclude.HandleMidcast(bTank);
 	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited midcast set
 end		-- gcinclude.HandleMidcast
@@ -990,6 +994,7 @@ profile.HandleWeaponskill = function()
 	local ws = gData.GetAction();
 	local canWS = gcinclude.CheckWsBailout();
 	local cKey;
+	local bTank = gcdisplay.GetToggle('Tank');
 	
 	-- If conditions would cause the weaponskill to fail, the action will be
 	-- cancelled so you do not lose your tp.
@@ -1007,7 +1012,7 @@ profile.HandleWeaponskill = function()
 	gcinclude.ClearSet(gProfile.Sets.CurrentGear);
 
 	-- Call the common weaponskill handler
-	gcinclude.HandleWeaponskill();
+	gcinclude.HandleWeaponskill(bTank);
 	
 	-- Equip the composited weaponskill set		
 	gcinclude.EquipTheGear(sets.CurrentGear);

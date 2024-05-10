@@ -46,14 +46,10 @@ local sets = {
 --]]
 
 --[[
-	The TP sets are used when you or your pet are fighting: "TP" for you and "TP_Pet" for you and your pet 
-	(or just your pet). The accuracy set will be used if ACC is specified and the evasion set if EVA is 
-	specified. Please note that your tanking set should go into TP_Tank and that your DPS or healing set
-	should go into the TP set. This is true for any true tanking jobs.
+	The TP sets are used when you are fighting.	The accuracy set will be used if ACC is specified 
+	and the evasion set if EVA is specified. TP_Tank is equipped if indicated. It's a means for
+	the PLS to equip more defensive gear if they find themselves tanking.
 --]]
-
-	['TP_Tank'] = {
-	},
 	
 	['TP'] = {
 		Head  = 'Mandra. Masque',
@@ -64,35 +60,40 @@ local sets = {
 		Feet  = 'Waders',
     },
 	
-	['TP_Pet'] = {
-    },
+	['TP_Tank'] = {
+	},
 	
 --[[
 	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
-	(Please note that Pet_Accuracy is applied before Accuracy if you have a pet.)
+	Remember that DEX converts to accuracy: for every 1 point of DEX you get 0.75 points
+	of accuracy. Tank_Accuracy is a subset of Accuracy. It lets you specify what accuracy
+	gear to equip that doesn't compromise your tanking set as much as a full-blown accuracy
+	set would.
 --]]
 	
 	['Accuracy'] = {
     },
 	
-	['Pet_Accuracy'] = {
-    },
+	['Tank_Accuracy'] = {
+	},
 	
 --[[
-	If evasion wanted, equip evasion gear
+	If evasion wanted, equip evasion gear. Tank_Evasion is a subset of Evasion. It lets you 
+	specify what evasion gear to equip that doesn't compromise your tanking set as much as 
+	a full-blown evasion set would.
 --]]
 	
 	['Evasion'] = {
     },
 
-	['Pet_Evasion'] = {
-    },
+	['Tank_Evasion'] = {
+	},
 	
-	--[[
-		The Idle_Regen and Idle_Refresh gear sets are used to restore a player's HP or MP that goes 
-		below a set percentage (defined in gcinclude.lua, but can be overriden in profile.OnLoad
-		function).
-	--]]
+--[[
+	The Idle_Regen and Idle_Refresh gear sets are used to restore a player's HP or MP that goes 
+	below a set percentage (defined in gcinclude.lua, but can be overriden in profile.OnLoad
+	function).
+--]]
 	
 	['Idle_Regen'] = {
 	},
@@ -135,6 +136,18 @@ local sets = {
 		Head = 'Lilac Corsage',
 		Body = 'Ducal Aketon//AK:OMNI',	
     },
+
+--[[
+	The "Travel" gear set is what is worn when you're not fighting (either
+	you or your pet), you're not resting. It's a good place to put gear 
+	that increases your movement speed. (Not to be confused with the 
+	['Movement'] gear set which is used when you're kiting.) This is also 
+	where you put gear that is adventageous if you have a pet present 
+	(i.e., lower perpetuation cost, etc.)
+--]]
+		
+	['Travel'] = {
+	},
 	
 --[[
 	Damage reduction gear depends on the type of damage. The most common is physical, but there's times when
@@ -252,15 +265,23 @@ local sets = {
 	},
 	
 --[[
-	Next is stat-based gear for spells: intelligence (INT) and mind (MND)
+	Next is stat-based gear for spells: intelligence (INT) and mind (MND). Tank_INT and Tank_MND are subsets of the 
+	simalarly names gear sets. The intent is to boost the appropriate attribute-based skill/spell without compromising
+	your tanking gear.
 --]]
 
 	['INT'] = {
     },
 	
+	['Tank_INT'] = {
+	},
+	
 	['MND'] = {
     },
-
+	
+	['Tank_MND'] = {
+	},
+	
 --[[
 	Some spells are special cases, so they require tailored gears sets.
 --]]
@@ -559,10 +580,6 @@ local function HandlePetAction(PetAction)
 	-- level of your BST level
 	if (gcinclude.BstPetAttack:contains(PetAction.Name)) then				-- Pet Attack
 		gcinclude.MoveToCurrent(sets.Pet_Attack,sets.CurrentGear);
-		-- If /acc enabled equip pet accuracy gear
-		if gcdisplay.GetToggle('acc') == true then
-			gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear);
-		end
 	elseif (gcinclude.BstPetMagicAttack:contains(PetAction.Name)) then		-- Pet Magical Attack
 		gcinclude.MoveToCurrent(sets.Pet_Matt,sets.CurrentGear);
 	elseif (gcinclude.BstPetMagicAccuracy:contains(PetAction.Name)) then	-- Pet Magical Accuracy Attack
@@ -599,7 +616,7 @@ local function SetSubjobSet(chkSJ)
 end
 
 --[[
-	OnLoad is run whenever you log into your BST or change your job to BST
+	OnLoad is run whenever you log into your PLD or change your job to PLD
 --]]
 
 profile.OnLoad = function()
@@ -668,7 +685,8 @@ profile.HandleDefault = function()
 	local zone = gData.GetEnvironment();
 	local ew = gData.GetEquipment();
 	local eWeap = nil;
-	local cKey;
+	local cKey,sGear;
+	local bTank = gcdisplay.GetToggle('Tank');
 	
 	-- Only pet actions from BST are supported.
 	if (petAction ~= nil and player.SubJob == 'BST') then
@@ -689,7 +707,7 @@ profile.HandleDefault = function()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
-
+	
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 	
@@ -706,7 +724,7 @@ profile.HandleDefault = function()
 	-- should take priority.
 	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
 	
-	if gcdisplay.GetToggle('Tank') == true then
+	if bTank == true then
 		gcinclude.MoveToCurrent(sets.TP_Tank,sets.CurrentGear);	
 	end
 		
@@ -716,25 +734,23 @@ profile.HandleDefault = function()
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
 			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
-			if cKey == 'B' then			-- Pet (if out) is fighting
-				if pet ~= nil and pet.Status == 'Engaged' then
-					gcinclude.MoveToCurrent(sets.TP_Pet,sets.CurrentGear);
-				end	
-			elseif cKey == 'C' then		-- Evasion	
+			if cKey == 'C' then		-- Evasion	
 				-- The player should have priority over any pets
 				if gcdisplay.GetToggle('Eva') == true then
-					if pet ~= nil then
-						gcinclude.MoveToCurrent(sets.Pet_Evasion,sets.CurrentGear);
+					if bTank == true then
+						gcinclude.MoveToCurrent(sets.Tank_Evasion,sets.CurrentGear);
+					else
+						gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 					end
-					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 				end
 			elseif cKey == 'E' then		-- Accuracy	
 				-- The player should have priority over any pets
 				if gcdisplay.GetToggle('Acc') == true then 
-					if pet ~= nil and pet.Status == 'Engaged' then
-						gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear);
+					if bTank == true then
+						gcinclude.MoveToCurrent(sets.Tank_Accuracy,sets.CurrentGear);
+					else
+						gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
 					end
-					gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
 				end
 			elseif cKey == 'F' then		-- Kiting
 				if (gcdisplay.GetToggle('Kite') == true) then
@@ -761,12 +777,9 @@ profile.HandleDefault = function()
 			gcinclude.MoveToCurrent(sets.Resting_Regen,sets.CurrentGear);
 		end
 		
-		if gcinclude.settings.bMagic == true and player.MP < player.MaxMP then
+		if player.MP < player.MaxMP then
 			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
-			
-			if string.find(gcinclude.sMagicJobs,player.SubJob) then
-				gcinclude.SwapToStave('dark',false,sets.CurrentGear);
-			end				
+			gcinclude.SwapToStave('dark',false,sets.CurrentGear);			
 		end
 
 		-- Check for common debuffs
@@ -777,19 +790,24 @@ profile.HandleDefault = function()
 		-- See if in a town
 		if (zone.Area ~= nil and table.find(gcinclude.Towns,zone.Area)) then
 			gcinclude.MoveToCurrent(sets.Town,sets.CurrentGear);
+		else
+			if gcdisplay.GetToggle('Idle') == true then
+				gcinclude.MoveToCurrent(sets.Travel,sets.CurrentGear);
+			
+				-- if the player's HP is below the threshold setting, equip the idle regen gear
+				if player.HPP < gcinclude.settings.RegenGearHPP then
+					gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
+				end
+			
+				-- if the player's MP is below the threshold setting, equip the idle refresh gear
+				if player.MPP < gcinclude.settings.RefreshGearMPP then
+					gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
+				end		
+			
+				-- Check for common debuffs
+				gcinclude.CheckCommonDebuffs(sets.CurrentGear);
+			end
 		end
-		
-		-- if the player's HP is below the threshold setting, equip the idle regen gear
-		if player.HPP < gcinclude.settings.RegenGearHPP then
-			gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
-		end
-		-- if the player's MP is below the threshold setting, equip the idle refresh gear
-		if player.MPP < gcinclude.settings.RefreshGearMPP then
-			gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
-		end
-		
-		-- Check for common debuffs
-		gcinclude.CheckCommonDebuffs(sets.CurrentGear);		
 	end
 
 	-- Make sure to equip the appropriate elemental staff for the current pet (/smn only)
@@ -923,7 +941,8 @@ end
 --]]
 
 profile.HandleMidcast = function()
-
+	local bTank = gcdisplay.GetToggle('Tank');
+	
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
 		return;
 	end
@@ -932,7 +951,7 @@ profile.HandleMidcast = function()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Call the common HandleMidcast now
-	gcinclude.HandleMidcast();
+	gcinclude.HandleMidcast(bTank);
 	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited midcast set
 end		-- gcinclude.HandleMidcast
@@ -980,6 +999,7 @@ profile.HandleWeaponskill = function()
 	local ws = gData.GetAction();
 	local canWS = gcinclude.CheckWsBailout();
 	local cKey;
+	local bTank = gcdisplay.GetToggle('Tank');
 	
 	-- If conditions would cause the weaponskill to fail, the action will be
 	-- cancelled so you do not lose your tp.
@@ -997,7 +1017,7 @@ profile.HandleWeaponskill = function()
 	gcinclude.ClearSet(gProfile.Sets.CurrentGear);
 
 	-- Call the common weaponskill handler
-	gcinclude.HandleWeaponskill();
+	gcinclude.HandleWeaponskill(bTank);
 	
 	-- Equip the composited weaponskill set		
 	gcinclude.EquipTheGear(sets.CurrentGear);

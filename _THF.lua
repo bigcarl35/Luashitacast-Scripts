@@ -138,7 +138,7 @@ local sets = {
 	['Start_Weapons'] = {
 		Main  = 'Marauder\'s Knife',
 		Sub   = { 'Mrc.Cpt. Kukri//SJNIN', 'Mrc.Cpt. Kukri//SJDNC' },
-		Range = 'Thug\'s Zambrak',
+		Range = 'Thug\'s Zamburak',
     },
 	
 --[[
@@ -882,18 +882,22 @@ profile.HandleDefault = function()
 		-- See if in a town		
 		if (zone.Area ~= nil and table.find(gcinclude.Towns,zone.Area)) then	
 			gcinclude.MoveToCurrent(sets.Town,sets.CurrentGear);
-		end
+		else
+			if gcdisplay.GetToggle('Idle') == true then
+				-- if the player's HP is below the threshold setting, equip the idle regen gear
+				if player.HPP < gcinclude.settings.RegenGearHPP then
+					gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
+				end
 		
-		-- if the player's HP is below the threshold setting, equip the idle regen gear
-		if player.HPP < gcinclude.settings.RegenGearHPP then
-			gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
+				-- if the player's MP is below the threshold setting, equip the idle refresh gear
+				if gcinclude.settings.bSJ == true and player.MPP < gcinclude.settings.RefreshGearMPP then
+					gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
+				end		
+		
+				-- Check for common debuffs
+				gcinclude.CheckCommonDebuffs(sets.CurrentGear);	
+			end
 		end
-		-- if the player's MP is below the threshold setting, equip the idle refresh gear
-		if gcinclude.settings.bSJ == true and player.MPP < gcinclude.settings.RefreshGearMPP then
-			gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
-		end		
-		-- Check for common debuffs
-		gcinclude.CheckCommonDebuffs(sets.CurrentGear);	
 	end
 	
 	-- Make sure to equip the appropriate elemental staff for the current pet (/smn only)
@@ -1102,7 +1106,7 @@ profile.HandleWeaponskill = function()
 	gcinclude.ClearSet(gProfile.Sets.CurrentGear);
 
 	-- Call the common weaponskill handler
-	gcinclude.HandleWeaponskill();
+	gcinclude.HandleWeaponskill(false);
 	
 	-- Equip the composited weaponskill set		
 	gcinclude.EquipTheGear(sets.CurrentGear);

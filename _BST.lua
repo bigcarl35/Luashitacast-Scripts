@@ -43,12 +43,12 @@ local sets = {
 --]]
 
 --[[
-	The TP sets are used when you or your pet are fighting: "TP" for you and "TP_Pet" for you and your pet (or just your pet). 
-	The accuracy set will be used if ACC is specified and the evasion set if EVA is specified.
+	The TP sets are used when you and/or your pet are fighting,	The accuracy set will be used if ACC is specified 
+	and the evasion set if EVA is specified.
 --]]
 
 	['TP'] = {
-        Head  = { 'Panther Mask', 'Monster Helm', 'Beast Helm', 'Shep. Bonnet', 'Empress Hairpin', 'Silver Hairpin//MSJ' },
+        Head  = { 'Shep. Bonnet//PET', 'Panther Mask', 'Monster Helm', 'Beast Helm', 'Shep. Bonnet', 'Empress Hairpin', 'Silver Hairpin//MSJ' },
         Neck  = { 'Peacock Amulet', 'Spike Necklace' },
 		Ears  = { 'Ethereal Earring', 'Beastly Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Bat Earring//MSJ', 'Black Earring//MSJ', 'Physical Earring//SJNIN', 'Reraise Earring', 'Physical Earring', 'Onyx Earring//MSJ' },
         Body  = { 'Gaudy Harness//MP.LT.50', 'Narasimha\'s Vest', 'Beast Jackcoat', 'Gaudy Harness', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
@@ -60,33 +60,23 @@ local sets = {
         Feet  = { 'Thick Sollerets', 'Beast Gaiters', 'Wonder Clomps', 'Bounding Boots' },
     },
 	
-	['TP_Pet'] = {
-        Head = 'Shep. Bonnet',
-		Legs = 'Shep. Hose',
-    },
-	
 --[[
 	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
 	(Please note that Pet_Accuracy is applied after Accuracy if you have a pet.)
 --]]
 
 	['Accuracy'] = {
-        Head  = 'Optical Hat',
+        Head  = { 'Shep. Bonnet//PETF', 'Optical Hat' },
         Neck  = 'Peacock Amulet',
         Body  = { 'Narasimha\'s Vest', 'Beast Jackcoat' },
         Hands = { 'Thick Mufflers', 'Battle Gloves' },
-		Ears  = { 'Pilferer\'s Earring//SJTHF' },
+		Ears  = { 'Beastly Earring//PETF', 'Pilferer\'s Earring//SJTHF' },
 		Rings = { 'Toreador\'s Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
         Back = 'Psilos Mantle',
-        Waist = { 'Life Belt', 'Tilt Belt' },
+        Waist = { 'Life Belt', 'Monster Belt', 'Tilt Belt' },
         Legs = 'Thick Breeches',
         Feet = 'Thick Sollerets',
     },	
-
-	['Pet_Accuracy'] = {
-	    Head = 'Shep. Bonnet',
-		Ears = 'Beastly Earring',
-    },
 
 --[[
 	If evasion wanted, equip evasion gear
@@ -95,15 +85,23 @@ local sets = {
 	['Evasion'] = {
         Head  = { 'Optical Hat', 'Empress Hairpin' },
 		Ears  = { 'Bat Earring//BLIND', 'Ethereal Earring', 'Reraise Earring' },
-        Body = 'Narasimha\'s Vest',	
+        Body  = 'Narasimha\'s Vest',	
 		Hands = 'Battle Gloves',
-        Legs = 'San. Trousers',
-		Feet = 'Bounding Boots',	-- default gear is thick sollerets which are -2 eva
+        Legs  = { 'San. Trousers', 'Shep. Hose//PETF' },
+		Feet  = 'Bounding Boots',	-- default gear is thick sollerets which are -2 eva
     },
 
-	['Pet_Evasion'] = {
-		Legs  = 'Shep. Hose',
-    },
+--[[
+	The "Travel" gear set is what is worn when you're not fighting (either
+	you or your pet), you're not resting. It's a good place to put gear 
+	that increases your movement speed. (Not to be confused with the 
+	['Movement'] gear set which is used when you're kiting.) This is also 
+	where you put gear that is adventageous if you have a pet present 
+	(i.e., lower perpetuation cost, etc.)
+--]]
+		
+	['Travel'] = {
+	},
 	
 --[[
 	The Idle_Regen and Idle_Refresh gear sets are used to restore a player's HP or MP that goes 
@@ -204,7 +202,7 @@ local sets = {
 	['Preshot'] = {
         Head = 'Optical Hat',
 		Neck = 'Peacock Amulet',
-        Rings = 'Jaeger Ring',
+        Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
         Back = 'Psilos Mantle',
     },
 	
@@ -521,7 +519,7 @@ local sets = {
 		Ears = 'Beastly earring',
 		Body = 'Gaudy harness',
 		Rings = { 'Moon ring', 'Moon ring' },
-		Waist = 'Corsette',
+		Waist = { 'Monster Belt', 'Corsette' },
 		Legs = 'Beast trousers',
 		Feet = 'Beast gaiters',
 	},
@@ -579,17 +577,20 @@ local sets = {
 	-- Reward potency, reward augment, reward enhancement, and MND gear
 	['Reward'] = {
         Neck = 'Justice Badge',
-        Body = 'Monster Jackcoat',
+        Body = { 'Monster Jackcoat//DB:WSS', 'Beast Jackcoat//DB:BPP', 'Monster Jackcoat','Beast Jackcoat' },
         Hands = 'Ogre Gloves',
         Rings = { 'Tamas Ring',	'Tranquility Ring' },
         Waist = 'Friar\'s Rope',
         Legs = 'Wonder Braccae',
-        Feet = 'Beast Gaiters',
+        Feet = { 'Beast Gaiters', 'Mannequin Pumps' },
 	},
 	
 	-- Tame success rate
 	['Tame'] = {
         Head = 'Beast Helm',
+		Body = 'Monster Jackcoat',
+		Rings = 'Tamas Ring',
+		Feet = 'Mannequin Pumps',
     },
 	
 	-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration
@@ -600,7 +601,7 @@ local sets = {
         Body = 'Monster Jackcoat',
         Hands = 'Beast Gloves',
         Rings = { 'Moon Ring', 'Moon Ring' },
-        Waist = 'Corsette',	
+        Waist = { 'Monster Belt', 'Corsette' },
         Legs = 'Beast Trousers',
         Feet = 'Beast Gaiters',
     },
@@ -700,10 +701,6 @@ local function HandlePetAction(PetAction)
 	-- level of your BST level
 	if (gcinclude.BstPetAttack:contains(PetAction.Name)) then				-- Pet Attack
 		gcinclude.MoveToCurrent(sets.Pet_Attack,sets.CurrentGear);
-		-- If /acc enabled equip pet accuracy gear
-		if gcdisplay.GetToggle('acc') == true then
-			gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear);			
-		end
 	elseif (gcinclude.BstPetMagicAttack:contains(PetAction.Name)) then		-- Pet Magical Attack
 		gcinclude.MoveToCurrent(sets.Pet_Matt,sets.CurrentGear);		
 	elseif (gcinclude.BstPetMagicAccuracy:contains(PetAction.Name)) then	-- Pet Magical Accuracy Attack
@@ -948,9 +945,6 @@ profile.HandleDefault = function()
 
 	-- The default set is the TP gear set. Load it up
 	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
-	if pet ~= nil and pet.Status == 'Engaged' and player.Status ~= 'Engaged' then
-		gcinclude.MoveToCurrent(sets.TP_Pet,sets.CurrentGear);
-	end
 				
 	-- Now process the player status accordingly
 	gcdisplay.SetLocksAction(gcinclude.LocksNumeric,player.Status);
@@ -961,16 +955,10 @@ profile.HandleDefault = function()
 			if cKey == 'C' then		-- Evasion			
 				if gcdisplay.GetToggle('Eva') == true then
 					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
-					if pet ~= nil and player.Status ~= 'Engaged' then
-						gcinclude.MoveToCurrent(sets.Pet_Evasion,sets.CurrentGear);
-					end
 				end
 			elseif cKey == 'E' then		-- Accuracy	
 				if gcdisplay.GetToggle('Acc') == true then 				
 					gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
-					if pet ~= nil and pet.Status == 'Engaged' and player.Status ~= 'Engaged' then
-						gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear);					
-					end
 				end
 			elseif cKey == 'F' then		-- Kiting
 				if (gcdisplay.GetToggle('Kite') == true) then
@@ -1009,17 +997,22 @@ profile.HandleDefault = function()
 		-- See if in a town
 		if (zone.Area ~= nil and table.find(gcinclude.Towns,zone.Area)) then
 			gcinclude.MoveToCurrent(sets.Town,sets.CurrentGear);	
+		else
+			gcinclude.MoveToCurrent(sets.Travel,sets.CurrentGear);
+			
+			-- if the player's HP is below the threshold setting, equip the idle regen gear
+			if player.HPP < gcinclude.settings.RegenGearHPP then
+				gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
+			end
+			
+			-- if the player's MP is below the threshold setting, equip the idle refresh gear				
+			if gcinclude.MagicalJob('S') == true and player.MPP < gcinclude.settings.RefreshGearMPP then		-- if the player's MP is below the threshold setting, equip the idle refresh gear
+				gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
+			end
+			
+			-- Check for common debuffs
+			gcinclude.CheckCommonDebuffs(sets.CurrentGear);
 		end
-		-- if the player's HP is below the threshold setting, equip the idle regen gear
-		if player.HPP < gcinclude.settings.RegenGearHPP then
-			gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
-		end
-		-- if the player's MP is below the threshold setting, equip the idle refresh gear				
-		if gcinclude.MagicalJob('S') == true and player.MPP < gcinclude.settings.RefreshGearMPP then		-- if the player's MP is below the threshold setting, equip the idle refresh gear
-			gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
-		end
-		-- Check for common debuffs
-		gcinclude.CheckCommonDebuffs(sets.CurrentGear);
 	end
 	
 	-- In case the pet is a summoned pet, /smn, make sure to equip the appropriate elemental staff
@@ -1105,12 +1098,7 @@ profile.HandleAbility = function()
 		if profile.sAmmo == nil or string.find(string.lower(profile.sAmmo),'pet f') == nil then		-- something else equipped
 			profile.bAmmo = gcinclude.doPetFood('max',nil);
 		end
-		gcinclude.MoveToCurrent(sets.Reward,sets.CurrentGear);	
-	elseif string.match(ability.Name, 'Ready') or string.match(ability.Name, 'Sic') then
-		-- Pet "Ready!" or "Sic!" command invoked. Check to see if /acc enabled
-		if gcdisplay.GetToggle('acc') == true then
-			gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear);			
-		end
+		gcinclude.MoveToCurrent(sets.Reward,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Tame') then
 		-- Trying to tame a beast. (Someone's charm failed.)
 		gcinclude.MoveToCurrent(sets.Tame,sets.CurrentGear);		
@@ -1272,7 +1260,7 @@ profile.HandleWeaponskill = function()
 	gcinclude.ClearSet(gProfile.Sets.CurrentGear);
 
 	-- Call the common weaponskill handler
-	gcinclude.HandleWeaponskill();
+	gcinclude.HandleWeaponskill(false);
 	
 	-- Equip the composited weaponskill set		
 	gcinclude.EquipTheGear(sets.CurrentGear);

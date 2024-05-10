@@ -64,19 +64,15 @@ local sets = {
 	
 --[[
 	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
-	(Please note that Pet_Accuracy is applied after Accuracy if you have a pet.)
 --]]
 	
 	['Accuracy'] = {
+		Head = 'Shep. Bonnet//PET',
 		Neck = 'Peacock Amulet',
         Hands = 'Battle Gloves',
 		Rings = { 'Woodsman Ring','Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
 		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt' },
 		Feet = 'Bounding Boots',
-    },
-	
-	['Pet_Accuracy'] = {
-        Head = 'Shep. Bonnet',
     },
 	
 --[[
@@ -87,13 +83,21 @@ local sets = {
         Head = 'Empress Hairpin',
 		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring', 'Windurstian Earring' },
         Hands = 'Battle Gloves',
-        Legs = 'San. Trousers',
+        Legs = { 'Shep. Hose//PET','San. Trousers' },
 		Feet = 'Bounding Boots',
     },
-	
-	['Pet_Evasion'] = {
-		Legs  = 'Shep. Hose',
-    },
+
+--[[
+	The "Travel" gear set is what is worn when you're not fighting (either
+	you or your pet), you're not resting. It's a good place to put gear 
+	that increases your movement speed. (Not to be confused with the 
+	['Movement'] gear set which is used when you're kiting.) This is also 
+	where you put gear that is adventageous if you have a pet present 
+	(i.e., lower perpetuation cost, etc.)
+--]]
+		
+	['Travel'] = {
+	},
 	
 --[[
 	The Idle_Regen and Idle_Refresh gear sets replace the normal Idle set when the player's HP or MP
@@ -170,7 +174,9 @@ local sets = {
 
 	['Macc'] = {
 		Rings = 'Tamas Ring',
-    },--[[
+    },
+
+--[[
 	Magic Attack Bonus (MAB) is used for more than just spells, so it is broken out
 --]]
 
@@ -184,7 +190,7 @@ local sets = {
 
 	['Preshot'] = {
 		Neck  = 'Peacock Amulet',
-		Rings = { 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
+		Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
     },
 	
 --[[
@@ -611,9 +617,6 @@ local function HandlePetAction(PetAction)
 	-- level of your BST level
 	if (gcinclude.BstPetAttack:contains(PetAction.Name)) then				-- Pet Attack
 		gcinclude.MoveToCurrent(sets.Pet_Attack,sets.CurrentGear);
-		-- If /acc enabled equip pet accuracy gear
-		if gcdisplay.GetToggle('acc') == true then
-			gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear)		end
 	elseif (gcinclude.BstPetMagicAttack:contains(PetAction.Name)) then		-- Pet Magical Attack
 		gcinclude.MoveToCurrent(sets.Pet_Matt,sets.CurrentGear);
 	elseif (gcinclude.BstPetMagicAccuracy:contains(PetAction.Name)) then	-- Pet Magical Accuracy Attack
@@ -763,16 +766,10 @@ profile.HandleDefault = function()
 			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
 			if cKey == 'C' then		-- Evasion			
 				if gcdisplay.GetToggle('Eva') == true then
-					if pet ~= nil then			-- Assuming Wyvern
-						gcinclude.MoveToCurrent(sets.Pet_Evasion,sets.CurrentGear);
-					end
 					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 				end		
 			elseif cKey == 'E' then		-- Accuracy	
-				if gcdisplay.GetToggle('Acc') == true then
-					if pet ~= nil then			-- Assuming Wyvern
-						gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear);
-					end			
+				if gcdisplay.GetToggle('Acc') == true then	
 					gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
 				end
 			elseif cKey == 'F' then		-- Kiting
@@ -799,12 +796,9 @@ profile.HandleDefault = function()
 			gcinclude.MoveToCurrent(sets.Resting_Regen,sets.CurrentGear);
 		end
 		
-		if gcinclude.settings.bMagic == true and player.MP < player.MaxMP then
+		if gcinclude.MagicalJob('S') == true and player.MP < player.MaxMP then
 			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
-			
-			if string.find(gcinclude.sMagicJobs,player.SubJob) then
-				gcinclude.SwapToStave('dark',false,sets.CurrentGear);
-			end			
+			gcinclude.SwapToStave('dark',false,sets.CurrentGear);		
 		end
 		
 		-- Check for common debuffs
@@ -815,19 +809,22 @@ profile.HandleDefault = function()
 		-- See if in a town		
 		if (zone.Area ~= nil and table.find(gcinclude.Towns,zone.Area)) then
 			gcinclude.MoveToCurrent(sets.Town,sets.CurrentGear);	
+		else
+			gcinclude.MoveToCurrent(sets.Travel,sets.CurrentGear);
+			
+			-- if the player's HP is below the threshold setting, equip the idle regen gear
+			if player.HPP < gcinclude.settings.RegenGearHPP then
+				gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
+			end
+			
+			-- if the player's MP is below the threshold setting, equip the idle refresh gear
+			if player.MPP < gcinclude.settings.RefreshGearMPP then
+				gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
+			end	
+			
+			-- Check for common debuffs
+			gcinclude.CheckCommonDebuffs(sets.CurrentGear);	
 		end
-		
-		-- if the player's HP is below the threshold setting, equip the idle regen gear
-		if player.HPP < gcinclude.settings.RegenGearHPP then
-			gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
-		end
-		-- if the player's MP is below the threshold setting, equip the idle refresh gear
-		if player.MPP < gcinclude.settings.RefreshGearMPP then
-			gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
-		end	
-		
-		-- Check for common debuffs
-		gcinclude.CheckCommonDebuffs(sets.CurrentGear);	
 	end
 	
 	-- Make sure to equip the appropriate elemental staff for the current pet (/smn only)
@@ -1030,7 +1027,7 @@ profile.HandleWeaponskill = function()
 	gcinclude.ClearSet(gProfile.Sets.CurrentGear);
 
 	-- Call the common weaponskill handler
-	gcinclude.HandleWeaponskill();
+	gcinclude.HandleWeaponskill(false);
 	
 	-- Equip the composited weaponskill set		
 	gcinclude.EquipTheGear(sets.CurrentGear);
