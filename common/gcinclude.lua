@@ -107,12 +107,12 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','gs','th','help','wswap','petfood','maxspell','maxsong','region','ajug','sbp','showit','equipit','tank','lock','unlock','horn','string','validate','t1'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','gs','th','help','wswap','petfood','maxspell','maxsong','region','ajug','db','sbp','showit','equipit','tank','idle','lock','unlock','slot','horn','string','validate','base','t1'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
-gcinclude.Windy = T {'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
-gcinclude.Sandy = T {'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
-gcinclude.Bastok = T {'Bastok Markets [S]','Bastok Mines','Bastok Markets','Port Bastok','Metalworks'};
-gcinclude.Jeuno = T {'Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno'};
+gcinclude.Windy = T{'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
+gcinclude.Sandy = T{'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
+gcinclude.Bastok = T{'Bastok Markets [S]','Bastok Mines','Bastok Markets','Port Bastok','Metalworks'};
+gcinclude.Jeuno = T{'Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno'};
 gcinclude.DistanceWS = T{'Flaming Arrow','Piercing Arrow','Dulling Arrow','Sidewinder','Blast Arrow','Arching Arrow','Empyreal Arrow','Refulgent Arrow','Apex Arrow','Namas Arrow','Jishnu\'s Randiance','Hot Shot','Split Shot','Sniper Shot','Slug Shot','Blast Shot','Heavy Shot','Detonator','Numbing Shot','Last Stand','Coronach','Wildfire','Trueflight','Leaden Salute','Myrkr','Dagan','Moonlight','Starlight','Mistral Axe'};
 gcinclude.BstPetAttack = T{'Foot Kick','Whirl Claws','Big Scissors','Tail Blow','Blockhead','Sensilla Blades','Tegmina Buffet','Lamb Chop','Sheep Charge','Pentapeck','Recoil Dive','Frogkick','Queasyshroom','Numbshroom','Shakeshroom','Nimble Snap','Cyclotail','Somersault','Tickling Tendrils','Sweeping Gouge','Grapple','Double Claw','Spinning Top','Suction','Tortoise Stomp','Power Attack','Rhino Attack','Razor Fang','Claw Cyclone','Crossthrash','Scythe Tail','Ripper Fang','Chomp Rush','Pecking Flurry','Sickle Slash','Mandibular Bite','Wing Slap','Beak Lunge','Head Butt','Wild Oats','Needle Shot','Disembowel','Extirpating Salvo','Mega Scissors','Back Heel','Hoof Volley','Fluid Toss','Fluid Spread'};
 gcinclude.BstPetMagicAttack = T{'Gloom Spray','Fireball','Acid Spray','Molting Plumage','Cursed Sphere','Nectarous Deluge','Charged Whisker','Nepenthic Plunge'};
@@ -553,6 +553,9 @@ gcinclude.TieredSongs = T{
 gcinclude.weapon = nil;
 gcinclude.offhand = nil;
 
+-- Holding array for the base HP/MP totals
+gcinclude.Base = T { ['MaxHP'] = 0, ['MaxMP'] = 0, ['Food'] = false };
+
 -- Table of all BST pet food including the minimum level needed to equip. 
 -- The last column is programmatically populated, so don't change it.
 gcinclude.petfood = {
@@ -678,7 +681,9 @@ InlineCodes = { '//MSJ','//SJWAR','//SJMNK','//SJWHM','//SJBLM','//SJRDM','//SJT
 				'//WTH:LIGHT','//WTH:DARK','//WTH-DAY','//AK:WINDY','//AK:SANDY',
 				'//AK:BASTOK','//AK:OMNI','//HP75P|TP100P','//NEWMOON','//FULLMOON',
 				'//NIGHTTIME','//DAYTIME','//DUSK2DAWN','//FM-DRK-NIGHT','//NM-LGT-DAY',
-				'//HP.GE.85PV','//SPIRIT:ES','//SPIRIT:EP' };				
+				'//SPIRIT:ES','//SMNPET','//SPIRIT:EP','//DB:BPP','//DB:WSS',
+				'//DB:ALL','//ACCESSIBLE','//ACCURACY' };
+InLineSpecialCodes = { {'//HP.GE.', 'PV' }, {'//MP.GE.', 'PV' }};
 
 gcinclude.Sets = gcinclude.sets;
 
@@ -731,6 +736,16 @@ function CheckGearIntegrity(GearName)
 	-- that portion can be checked.
 	if Integrity['Code'] ~= nil then
 		Integrity['ValidCode'] = (table.find(InlineCodes,Integrity['Code']) ~= nil);
+		
+		-- Check for special codes if not found in the main table
+		if Integrity['ValidCode'] == false then
+			for i,j in pairs(InLineSpecialCodes) do
+				if string.find(Integrity['Code'],j[1]) ~= nil and 
+				   j[2] == string.sub(Integrity['Code'],0 - string.len(j[2]),-1) then
+					Integrity['ValidCode'] = true;
+				end
+			end
+		end
 	end
 	
 	if Integrity['Item'] ~= nil then
@@ -1162,10 +1177,12 @@ function gcinclude.SetVariables()
 	gcdisplay.CreateToggle('WSwap',(string.find('WHM,BRD',player.MainJob) ~= nil));
 
 	-- Job specific toggles	
-	if player.Maintob == 'PLD' or player.MainJob == 'NIN' or player.MainJob == 'RUN' then
+	if string.find('PLD,NIN,RUN',player.MainJob) ~= nil then
 		gcdisplay.CreateToggle('Tank',true);
-	elseif player.MainJob == 'DRK' or player.MainJob == 'WAR' then
+		gcdisplay.CreateToggle('Idle',true);
+	elseif string.find('DRK,WAR,THF',player.MainJob) ~= nil then
 		gcdisplay.CreateToggle('Tank',false);
+		gcdisplay.CreateToggle('Idle',true);
 	end
 	
 	if player.MainJob == 'THF' then
@@ -1174,6 +1191,7 @@ function gcinclude.SetVariables()
 	
 	if player.MainJob == 'BST' then
 		gcdisplay.CreateToggle('AJug',true);
+		gcdisplay.CreateCycle('DB', {[1] = 'None', [2] = 'BPP', [3] = 'WSS', [4] = 'All'});
 	end
 	
 	if player.MainJob == 'BRD' then
@@ -1229,50 +1247,58 @@ function ParseDescription(slot,item)
 		if cvPos ~= nil then
 		
 		end
-		print('::['..slot..'] = '..item.Description[1]..'::');
+		--[[print('::['..slot..'] = '..item.Description[1]..'::');
 		print('iPosHP: '..tostring(iPosHP));
 		print('iPosMP: '..tostring(iPosMP));
 		print('cvPos: '..tostring(cvPos));
 		print('pPos: '..tostring(pPos));
+		--]]
 	end
 end
 
 --[[
-	Ajusted will return the HP or MP maximum value (depending on what was requested)
-	for the player less any trait boosts or gear enhancements. What is returned is
-	either a flat value or a percent.
+	ProcessHiddenGear will process the hidden gear, tallying the changes in HP and
+	HP. Further, if the passed piece of gear is from the visible portion of the
+	gear set, will adjust the maximum HP/MP accordingly. Returned is True or False
+	indicatinging if the procerssing was successful.
 --]]
 
-function gcinclude.Adjusted(bPct)
+function gcinclude.ProcessHiddenGear(gear,slot)
+	local hGear = T {'Neck','Ear1','Ear2','Ears','Ring1','Ring2','Back','Belt'};
 	local player = gData.GetPlayer();
 	local current = gData.GetCurrentSet();
+	local item;
 	local dLevel = player.MainJobSync - 30;
 	
+	-- Clear out the tally structure
 	Clear_HPMP_Adjusted();
 	
+	-- Note the current maximum values (some adjustment might be needed)
 	HPMP_Adjusted['MaxHP'] = player.MaxHP;
 	HPMP_Adjusted['MaxMP'] = player.MaxMP;
 	
 	if current ~= nil then
 		for i,j in pairs(current) do
-			local item = AshitaCore:GetResourceManager():GetItemByName(j,2)
-			if item ~= nil then
-				-- Let's take care of the exceptions first. Tamas Ring and Sattva
-				-- Ring have a range aspect to their boost. Parsing sounds bad, so
-				-- just look for the names. 15 + (level-30/3) rounded down
-				if item.Name == 'Sattva Ring' then
-					if dLevel > 0 then
-						HPMP_Adjusted['UnseenHP'] = HPMP_Adjusted['UnseenHP'] + (15 + math.floor(dLevel/3));
-					end
-				elseif item.Name == 'Tamas Ring' then
-					if dLevel > 0 then
-						HPMP_Adjusted['UnseenMP'] = HPMP_Adjusted['UnseenMP'] + (15 + math.floor(dLevel/3));
-					end				
-				else
-					-- Both HP and MP can be in a single description. Process accordingly
-					if string.find(item.Description[1],'HP') ~= nil or
-						string.find(item.Description[1],'MP') ~= nil then
-						ParseDescription(i,item);
+			if table.find(hGear,i) ~= nil then
+				item = AshitaCore:GetResourceManager():GetItemByName(j,2)
+				if item ~= nil then
+					-- Let's take care of the exceptions first. Tamas Ring and Sattva
+					-- Ring have a range aspect to their boost. Parsing sounds bad, so
+					-- just look for the names. 15 + (level-30/3) rounded down
+					if item.Name == 'Sattva Ring' then
+						if dLevel > 0 then
+							HPMP_Adjusted['UnseenHP'] = HPMP_Adjusted['UnseenHP'] + (15 + math.floor(dLevel/3));
+						end
+					elseif item.Name == 'Tamas Ring' then
+						if dLevel > 0 then
+							HPMP_Adjusted['UnseenMP'] = HPMP_Adjusted['UnseenMP'] + (15 + math.floor(dLevel/3));
+						end				
+					else
+						-- Both HP and MP can be in a single description. Process accordingly
+						if string.find(item.Description[1],'HP') ~= nil or
+							string.find(item.Description[1],'MP') ~= nil then
+							ParseDescription(i,item);
+						end
 					end
 				end
 			end
@@ -1402,7 +1428,7 @@ end		-- gcinclude.MagicalJob
 	not be returned
 --]]
 
-function gcinclude.CheckInline(gear)
+function gcinclude.CheckInline(gear,sSlot)
 	local iPos,suCode;
 	local player = gData.GetPlayer();
 	local mj = player.MainJob;
@@ -1431,7 +1457,7 @@ function gcinclude.CheckInline(gear)
 	elseif string.sub(suCode,1,2) == 'SJ' and string.len(suCode) == 5 then	-- subjob is: //SJ"job"
 		bGood = (string.sub(suCode,3,-1) == sj);
 	elseif string.sub(suCode,1,2) == 'PJ' and string.len(suCode) == 5 then	-- party has job: //PJ"job"
-		local s string.sub(suCode,3,-1);
+		local s = string.sub(suCode,3,-1);
 		bGood=(gcinclude.CheckPartyJob(s));
 	elseif suCode == 'CARBY' then				-- Pet is carbuncle
 		bGood = (gcinclude.isPetNamed('Carbuncle'));
@@ -1454,6 +1480,8 @@ function gcinclude.CheckInline(gear)
 		bGood = (pet ~= nil and pet.Status == 'Engaged');
 	elseif suCode == 'PETFNPF' then				-- Is player's pet fighting, but not the player
 		bGood = (pet ~= nil and pet.Status == 'Engaged' and player.Status ~= 'Engaged');
+	elseif suCode == 'SMNPET' then				-- Is player's pet a summoned avatar
+		bGood = (pet ~= nil and string.find(gcinclude.SummonSkill,string.lower(pet.Name)));
 	elseif suCode == 'HORN' then				-- Is the bard's instrument a horn
 		if player.MainJob == 'BRD' then
 			bGood = (gcdisplay.GetCycle('Instrument') == 'Horn');
@@ -1533,13 +1561,35 @@ function gcinclude.CheckInline(gear)
 			gcinclude.CheckTime(timestamp.hour,'Daytime',false));
 	elseif suCode == 'HP75P|TP100P' then				-- Player's HP <= 75% and TP <= 100%
 		bGood = (player.HPP <= 75 and player.TP <= 1000);
-	elseif suCode == 'HP.GE.85PV' then					-- Player's HP >= 85%
-		gcinclude.Adjusted(true);
-		bGood = (HPMP_Adjusted['MaxHP']/100 >= 85);		-- temporary answer
+	elseif string.find('HM',string.sub(suCode,1,1)) ~= nil and string.sub(suCode,-2,-1) == 'PV' then
+		local ival = tonumber(string.sub(suCode,7,-3));
+		if gcinclude.ProcessHiddenGear(sGear,sSlot) == true then
+			if string.sub(suCode,1,1) == 'H' then
+				bGood = ((player.HP/HPMP_Adjusted['MaxHP'])*100 >= ival);
+			elseif string.sub(suCode,1,1) == 'M' then
+				bGood = ((player.MP/HPMP_Adjusted['MaxMP'])*100 >= ival);
+			else
+				print(chat.header('CheckInline'):append(chat.message('Something went wrong with ' .. suCode)));
+				bGood = false;
+			end
+		else
+			print(chat.header('CheckInline'):append(chat.message('Something went wrong parsing ' .. gear)));
+			bGood = false;
+		end
 	elseif suCode == 'SPIRIT:ES' then					-- Pet being summoned is a spirit
 		bGood = (string.find(gcinclude.Spirits,string.lower(spell.Name)) ~= nil);
 	elseif suCode == 'SPIRIT:EP' then					-- Current pet is a spirit
 		bGood = (pet ~= nil and string.find(gcinclude.Spirits,string.lower(pet.Name)) ~= nil);
+	elseif string.sub(suCode,1,3) == 'DB:' then
+		bGood = (player.MainJob == 'BST' and string.upper(string.sub(suCode,4,-1)) == string.upper(gcdisplay.GetCycle('DB')));
+	elseif suCode == 'ACCESSIBLE' then
+		if CheckGearIntegrity(gear) == true then
+			bGood = Integrity['Accessible'];
+		else
+			bGood = false;
+		end	
+	elseif suCode == 'ACCURACY' then
+		bGood = (gcdisplay.GetToggle('Acc') == true);
 	else
 		print(chat.header('CheckInline'):append(chat.message('Warning: Unknown code = ' .. suCode .. '. Ignoring piece of gear.')));
 		bGood = false;			
@@ -1615,8 +1665,14 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 
 				-- Walk list of items and equip level appropriate one
 				for kk,vv in pairs(v) do
-					-- See if there's an inline conditional to be checked
-					bGood,vRoot = gcinclude.CheckInline(vv);					
+					-- See if there's an inline conditional to be checked.
+					-- Note the need to distinguish which "ear" or "ring"
+					if bContinue then
+						sK = root .. tostring(iNum);
+						bGood,vRoot = gcinclude.CheckInline(vv,sk);
+					else
+						bGood,vRoot = gcinclude.CheckInline(vv,k);
+					end
 					if bGood then
 						item = AshitaCore:GetResourceManager():GetItemByName(vRoot,2);					
 						if item == nil then
@@ -1652,7 +1708,13 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 				end	
 			else
 				-- Single value. See if there's an inline conditional to be checked
-				bGood,vRoot = gcinclude.CheckInline(v);
+				if bContinue then
+					sK = root .. tostring(iNum);
+					bGood,vRoot = gcinclude.CheckInline(vv,sk);
+				else				
+					bGood,vRoot = gcinclude.CheckInline(v,k);
+				end
+				
 				if bGood then
 					item = AshitaCore:GetResourceManager():GetItemByName(vRoot,2);
 					if item == nil then
@@ -1861,7 +1923,7 @@ function gcinclude.MaxSpell(root,bCast)
 	
 	-- Make sure either the main job or sub job can cast magic
 	if gcinclude.MagicalJob('T') == false then
-		print(chat.header('MaxSpell'):append(chat.message('Current job does not support macic.')));
+		print(chat.header('MaxSpell'):append(chat.message('Current job does not support magic.')));
 		return;
 	end
 		
@@ -1965,7 +2027,7 @@ function gcinclude.SwapToStave(sStave,noSave,cs)
 	if (gcdisplay.GetToggle('WSwap') == true or gcinclude.settings.bWSOverride) then	
 		sGear = gcinclude.CheckForEleGear('staff',sStave);		
 		-- See if a current weapon is the one of the targetted staves
-		if not (eWeap == nil or string.lower(eWeap) == string.lower(sGear)) then
+		if not (eWeap == nil or (eWeap ~= nil and string.lower(eWeap) == string.lower(sGear))) then
 			-- save the weapon so it can be equipped again
 			if eWeap ~= gcinclude.weapon and noSave == false and gcinclude.settings.bWSOverride == false then
 				gcinclude.weapon = eWeap;
@@ -2029,7 +2091,6 @@ function gcinclude.EquipItem(args)
 		gFunc.ForceEquip(iSlot,iName);
 		gcinclude.LockUnlock('lock',iSlot);
 		local sList = gcinclude.GetLockedList();
-		print(chat.message(iSlot .. ' has been locked'));
 		gcdisplay.SetLocksAction(gcinclude.LocksNumeric,nil);	
 	else
 		print(chat.header('EquipIt'):append(chat.message('Error: incomplete /equipit command: /equipit code|name slot|#. Command ignored.')));
@@ -2068,6 +2129,35 @@ function gcinclude.GetTableByName(sName)
 	end
 	
 	return nil,false;
+end		-- GetTableByName
+
+--[[
+	WhichSlot takes the passed slot #/name/code and converts it to a correctly
+	formatted equipment slot name. If unable to determine, nil is returned.
+--]]
+
+function WhichSlot(sSlot)
+	if sSlot == nil then
+		return nil;
+	end
+	
+	sSlot = string.lower(sSlot);
+	
+	-- First look for special cases, then determine if a slot name or
+	-- number is specified
+	if sSlot == 'rings' then
+		return 'Ring1';
+	elseif sSlot == 'ears' then
+		return 'Ear1';
+	else
+		-- Locks are a convenient list to use to identify the slot name/number
+		for j,k in ipairs(gcinclude.Locks) do
+			if k[1] == sSlot or tostring(j) == sSlot then
+				return string.upper(string.sub(k[1],1,1)) .. string.sub(k[1],2,-1);
+			end
+		end
+		return nil;
+	end
 end
 
 --[[
@@ -2131,6 +2221,14 @@ function gcinclude.HandleCommands(args)
 		gcdisplay.AdvanceToggle('Kite');
 		toggle = 'Kite Set';
 		status = gcdisplay.GetToggle('Kite');
+	elseif (args[1] == 'idle') then			-- Turns on/off whether movement gear is equipped
+		if string.find('PLD,NIN,RUN,DRK,WAR,THF',player.MainJob) ~= nil then
+			gcdisplay.AdvanceToggle('Idle');
+			toggle = 'Idle';
+			status = gcdisplay.GetToggle('Idle');
+		else
+			print(chat.header('HandleCommands'):append(chat.message('Error: Your job does not support the idle command. Ignoring')));
+		end
 	elseif (args[1] == 'tank') then			-- Turns on/off whether tanking gear is equipped
 		if string.find('PLD,NIN,RUN,DRK,WAR',player.MainJob) ~= nil then
 			gcdisplay.AdvanceToggle('Tank');
@@ -2161,12 +2259,32 @@ function gcinclude.HandleCommands(args)
 			toggle = 'Show Blood Pact';
 			status = gcdisplay.GetToggle('sBP');
 		else
-			print(chat.header('HandleCommands'):append(chat.message('Error: /sBP is only available to summoners. Ignoring command')))
+			print(chat.header('HandleCommands'):append(chat.message('Error: /sBP is only available to summoners. Ignoring command')));
 		end
+	elseif (args[1] == 'ajug') then			-- Turns on/off whether Automatic Jug assignment enabled
+		if player.MainJob == 'BST' then
+			gcdisplay.AdvanceToggle('AJug');
+			toggle = 'Automated Jug Management';
+			status = gcdisplay.GetToggle('AJug');
+		else
+			print(chat.header('HandleCommands'):append(chat.message('Error: /AJug is only available to beastmasters. Ignoring command')));
+		end	
 	elseif (args[1] == 'th') then			-- Turns on/off whether TH gear should be equipped
 		gcdisplay.AdvanceToggle('TH');
 		toggle = 'Treasure Hunter';
 		status = gcdisplay.GetToggle('TH');
+	elseif (args[1] == 'db') then
+		if player.MainJob == 'BST' then
+			if args[2] ~= nil then
+				gcdisplay.SetCycle('DB',string.upper(args[2]));
+			else
+				gcdisplay.AdvanceCycle('DB');
+			end
+		else
+			print(chat.header('HandleCommands'):append(chat.message('Your job does not support that command. Ignoring.')));
+		end
+		toggle = 'Debuf';
+		status = gcdisplay.GetCycle('DB');
 	elseif (args[1] == 'lock') then
 		if args[2] ~= nil then
 			gcinclude.LockUnlock('lock',args[2]);
@@ -2188,6 +2306,19 @@ function gcinclude.HandleCommands(args)
 			end
 		end
 		sList = gcinclude.GetLockedList();
+	elseif (args[1] == 'slot') then					-- Locks specified slot and equips piece
+		if #args == 3 then
+			local sSlot = WhichSlot(args[2]);
+
+			if sSlot ~= nil then		
+				gcinclude.LockUnlock('lock',sSlot);
+				local sList = gcinclude.GetLockedList();			
+				gFunc.ForceEquip(sSlot,args[3]);
+				print(chat.message(args[3] .. ' equipped in ' .. sSlot));
+			else
+				print(chat.message('Invalid slot specified in /slot command. Ignoring'));
+			end
+		end
 	elseif (args[1] == 'showit') then						-- Shows debug info for specified type
 		gcinclude.DB_ShowIt();
 	elseif (args[1] == 'gearset' or args[1] == 'gs') then	-- Forces a gear set to be loaded and turns GSWAP off
@@ -2251,7 +2382,35 @@ function gcinclude.HandleCommands(args)
 		status = gcdisplay.GetCycle('Region');
 	elseif (args[1] == 'validate') then
 		gcinclude.ValidateGearSet(args[2]);
-    end
+	elseif (args[1] == 'base') then
+		print(chat.header('HandleCommands'):append(chat.message('Current Max HP = ' .. tostring(player.MaxHP))));
+		print(chat.header('HandleCommands'):append(chat.message('Current Max MP = ' .. tostring(player.MaxMP))));
+		print('HPP = ' .. tostring(player.HPP));
+		print('MPP = ' .. tostring(player.MPP));
+		gcinclude.LockUnlock('lock','all');
+		-- Empty all equipment slots
+		for ii,jj in pairs(gData.Constants.EquipSlots) do	
+			gEquip.UnequipSlot(jj);
+		end
+		
+		print('Max HP = ' .. tostring(AshitaCore:GetMemoryManager():GetPlayer():GetHPMax()));
+		print('Max MP = ' .. tostring(AshitaCore:GetMemoryManager():GetPlayer():GetMPMax()));
+		
+		print('HP = ' .. tonumber(player.HP));
+		print('-HP = ' .. tostring(AshitaCore:GetMemoryManager():GetParty():GetMemberHP(0)));
+		print('MP = ' .. tonumber(player.MP));
+		print('-MP = ' .. tostring(AshitaCore:GetMemoryManager():GetParty():GetMemberMP(0)));		
+		print('HPP = ' .. tostring(player.HPP));
+		print('MPP = ' .. tostring(player.MPP));
+		print('mHP = ' .. tostring(player.MaxHP));
+		print('mMP = ' .. tostring(player.MaxMP));
+		--gcinclude.Base['MaxHP'] = player.MaxHP;
+		--gcinclude.Base['MaxMP'] = player.MaxMP;
+		--gcinclude.LockUnlock('unlock','all');
+		--print(chat.header('HandleCommands'):append(chat.message('Base HP = ' .. tostring(gcinclude.Base['MaxHP']))));
+		--print(chat.header('HandleCommands'):append(chat.message('Base MP = ' .. tostring(gcinclude.Base['MaxMP']))));		
+		
+	end
 
 	if gcinclude.settings.Messages then
 		gcinclude.Message(toggle, status)
@@ -2783,13 +2942,17 @@ end
 	function of the same name in the job file.
 --]]
 
-function gcinclude.HandleMidcast()
+function gcinclude.HandleMidcast(bTank)
 	local player = gData.GetPlayer();
 	local spell = gData.GetAction();
 	local obi;
 	local sSet;
 	local cKey;
 
+	if bTank == nil then		-- Need to check because of transition state of change
+		bTank = false;
+	end
+	
 	gcinclude.settings.priorityMidCast = string.upper(gcinclude.settings.priorityMidCast);
 	for i = 1,string.len(gcinclude.settings.priorityMidCast),1 do
 		cKey = string.sub(gcinclude.settings.priorityMidCast,i,i);
@@ -2802,9 +2965,17 @@ function gcinclude.HandleMidcast()
 			sSet = gcinclude.WhichStat(spell.Name);
 			if sSet ~= nil then
 				if sSet == 'MND' then
-					gcinclude.MoveToCurrent(gProfile.Sets.MND,gProfile.Sets.CurrentGear);
+					if bTank == true then
+						gcinclude.MoveToCurrent(gProfile.Sets.Tank_MND,gProfile.Sets.CurrentGear);
+					else
+						gcinclude.MoveToCurrent(gProfile.Sets.MND,gProfile.Sets.CurrentGear);
+					end
 				elseif sSet == 'INT' then
-					gcinclude.MoveToCurrent(gProfile.Sets.INT,gProfile.Sets.CurrentGear);
+					if bTank == true then
+						gcinclude.MoveToCurrent(gProfile.Sets.Tank_INT,gProfile.Sets.CurrentGear);
+					else
+						gcinclude.MoveToCurrent(gProfile.Sets.INT,gProfile.Sets.CurrentGear);
+					end
 				end
 			end
 		elseif cKey == 'D' then			-- Magic Skill Type		
@@ -2843,7 +3014,11 @@ function gcinclude.HandleMidcast()
 		elseif cKey == 'F' then			-- Spell specific gear
 			if string.match(spell.Name, 'Stoneskin') then
 				-- Mind has a large affect on Stoneskin, so equip it here
-				gcinclude.MoveToCurrent(gProfile.Sets.MND,gProfile.Sets.CurrentGear);
+				if bTank == true then
+					gcinclude.MoveToCurrent(gProfile.Sets.TANK_MND,gProfile.Sets.CurrentGear);
+				else				
+					gcinclude.MoveToCurrent(gProfile.Sets.MND,gProfile.Sets.CurrentGear);
+				end
 				-- Now load the specific stoneskin set	
 				gcinclude.MoveToCurrent(gProfile.Sets.Stoneskin,gProfile.Sets.CurrentGear);
 			elseif string.match(spell.Name, 'Drain') then
@@ -2879,9 +3054,13 @@ end		-- gcinclude.HandleMidcast
 	HandleWeaponskill loads the gear appropriately for the weapon skill you're doing
 --]]
 
-function gcinclude.HandleWeaponskill()
+function gcinclude.HandleWeaponskill(bTank)
 	local ws = gData.GetAction();
 	
+	if bTank == nil then	-- Need to check because of transition state of change
+		bTank = false;
+	end
+		
  	gcinclude.settings.priorityWeaponSkill = string.upper(gcinclude.settings.priorityWeaponSkill);
 	for i = 1,string.len(gcinclude.settings.priorityWeaponSkill),1 do
 		cKey = string.sub(gcinclude.settings.priorityWeaponSkill,i,i);
@@ -2942,8 +3121,12 @@ function gcinclude.HandleWeaponskill()
 			end		
 		elseif cKey == 'D' then		-- accuracy	
 			if gcdisplay.GetToggle('acc') == true then
-				gcinclude.MoveToCurrent(gProfile.Sets.Accuracy,gProfile.Sets.CurrentGear);
-			end	
+				if bTank == true then
+					gcinclude.MoveToCurrent(gProfile.Sets.Tank_Accuracy,gProfile.Sets.CurrentGear);
+				else
+					gcinclude.MoveToCurrent(gProfile.Sets.Accuracy,gProfile.Sets.CurrentGear);
+				end	
+			end
 		elseif cKey == 'E' then		-- elemental obi
 --[[
 			If the weaponskill is elemental and is closing a skillchain, then if the

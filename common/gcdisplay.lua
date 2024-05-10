@@ -21,10 +21,12 @@ local JobBar = T{['GSwap'] = {'ALL','MS'},
 				 ['Kite'] = {'ALL','MS'},
 				 ['Acc'] = {'ALL','MS'},
 				 ['Eva'] = {'ALL','MS'},
-				 ['Tank'] = {'PLD,NIN,RUN,WAR,DRK','M'},
+				 ['Tank'] = {'PLD,NIN,RUN,WAR,DRK,THF','M'},
+				 ['Idle'] = {'PLD,NIN,RUN,WAR,DRK,THF','M'},
 				 ['WSwap'] = {'-SMN,BLM','M'},		-- Some jobs swap weapons all the time
 				 ['TH'] = {'THF','M'},				-- THF field, only valid if THF is main job
 				 ['AJug'] = {'BST','M'},			-- BST field, only valid if BST is main job
+				 ['DB'] = {'BST','M'},				-- BST field, only valid if BST is main job
 				 ['Region'] = {'ALL','MS'},
 				 ['Instrument'] = {'BRD','M'},
 				 ['sBP'] = {'SMN','MS'}};
@@ -67,6 +69,7 @@ function gcdisplay.ShowHelp()
 	print(chat.header('Help'):append(chat.message('/enmity [OFF|PLUS|MINUS] --Determines if/type of enmity gear to equip. Default is OFF')));
 	print(chat.header('Help'):append(chat.message('/equipit code|name [slot] [1|2] --Equips specified item in the specified slot and turns off /gswap.')));
 	print(chat.header('Help'):append(chat.message('/dowep code|name --Equips specified weapon and turns off /gswap.')));
+	print(chat.header('Help'):append(chat.message('/slot name|pos gear --Locks the specified gear slot and loads the passed gear into said slot')));
 	print(chat.header('Help'):append(chat.message('/help [command] --Display this listing or specific details on the specified command.')));
 	if Main == 'BST' then
 		print(chat.header('Help'):append(chat.message(' ')));

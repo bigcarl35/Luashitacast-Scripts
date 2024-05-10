@@ -63,8 +63,17 @@ want me to add any more.
 //DUSK2DAWN		Equip if it's between dusk and dawn
 //FM-DRK-NIGHT	Equip if it's a full moon, darksday and nighttime
 //NM-LGT-DAY	Equip if it's a new moon, lightsday and daytime
-//HP.GE.85PV	Equip if HP >= 85% excluding invisible accessories
-
+//SPIRIT:ES		Equip if avatar being summoned is an elemental spirit
+//SPIRIT:EP		Equip if current pet is an elemental spirit
+//DB:BPP		Equip if debuff cycle set to BPP (blind,poison,paralyze)
+//DB:WSS		Equip if debuff cycle set to WSS (weight,slow,silence)
+//DB:ALL		Equip if debuff cycle set to ALL (blind,poison,paralyze,weight,slow,silence)
+//SMNPET		Equip if player has a summoner's avatar out
+//ACCESSIBLE	Equip the item if it is found in an accessible storage area
+//ACCURACY		Equip if 'Acc' enabled
+//EVASION		Equip if 'Eva' enabled
+//HP.GE.##PV	Equip if HP% >= passed percentage HP%
+--//MP.GE.##PV	Equip if MP% >= passed percentage MP%
 
 gcinclude.Crafting_Types = 'ALC,BONE,CLOTH,COOK,GSM,LTH,BSM,WW';
 gcinclude.Gathering_Types = 'HELM,DIG,CLAM,FISH';
