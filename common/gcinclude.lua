@@ -2886,12 +2886,12 @@ function gcinclude.doPetFood(action, sType)
 		if sAction == 'max' then
 			ilvl = 0;
 		else
-			ilvl = player.MainJobLevel;
+			ilvl = player.MainJobSync;
 		end
 		
 		for k,tpf in pairs(gcinclude.petfood) do
 			if sAction == 'max' then
-				if tpf[4] and (tpf[3] > ilvl) and (tpf[3] <= player.MainJobLevel) then
+				if tpf[4] and (tpf[3] > ilvl) and (tpf[3] <= player.MainJobSync) then
 					ilvl = tpf[3];
 					sName = tpf[2];
 				end
