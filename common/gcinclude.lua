@@ -169,6 +169,7 @@ gcinclude.WS_STRVIT = 'Calamity,Slice,Spinning Scythe,Vorpal Scythe,Howling Fist
 gcinclude.WS_VIT = 'Shoulder Tackle,One Inch Punch,Final Heaven';
 gcinclude.WS_Skill = 'Starlight,Moonlight';
 gcinclude.WS_HP = 'Spirits Within';
+gcinclude.Special = { ['Parade Gorget'] = {}};
 
 --[[
 	Define all weapon skills that are elemental in nature
@@ -1420,6 +1421,40 @@ function gcinclude.MagicalJob(sWhich)
 end		-- gcinclude.MagicalJob
 
 --[[
+	TemporaryCheckHP is a work around to determine if the player's current HP
+	meets the condition it is being tested for. Once I have the parsing of an
+	item's description completed this routine will be removed.
+--]]
+
+function gcinclude.TemporaryCheckHP(sGear,ival)
+	local player = gData.GetPlayer();
+	local x,bFound = false;
+	
+	-- Make sure passed parameters are defined
+	if sGear == nil then
+		return false;
+	end
+		
+	if ival == nil then
+		ival = 100;
+	end
+
+	if gcinclude.Special[sGear][player.MainJobSync] ~= nil then
+		-- Just remove the hp associated with the invisible gear slots
+		if gcdisplay.GetToggle('Acc') == true then
+			x = gcinclude.Special[sGear][player.MainJobSync][2];
+		else
+			x = gcinclude.Special[sGear][player.MainJobSync][1];
+		end
+
+		return ((player.HP / (player.MaxHP - x)) * 100 >= ival and player.MPP <= 97);
+	else
+		-- Just check current hp vs max hp
+		return (((player.HP/player.MaxHP) * 100) >= ival and player.MPP <= 97);
+	end
+end
+
+--[[
 	CheckInline checks for a simple conditional on the item passed into it.
 	Returned is whether the condition is met and the item's name (minus the
 	conditional.
@@ -1563,6 +1598,8 @@ function gcinclude.CheckInline(gear,sSlot)
 		bGood = (player.HPP <= 75 and player.TP <= 1000);
 	elseif string.find('HM',string.sub(suCode,1,1)) ~= nil and string.sub(suCode,-2,-1) == 'PV' then
 		local ival = tonumber(string.sub(suCode,7,-3));
+		bGood = gcinclude.TemporaryCheckHP(sGear,ival);
+--[[		
 		if gcinclude.ProcessHiddenGear(sGear,sSlot) == true then
 			if string.sub(suCode,1,1) == 'H' then
 				bGood = ((player.HP/HPMP_Adjusted['MaxHP'])*100 >= ival);
@@ -1576,6 +1613,7 @@ function gcinclude.CheckInline(gear,sSlot)
 			print(chat.header('CheckInline'):append(chat.message('Something went wrong parsing ' .. gear)));
 			bGood = false;
 		end
+--]]
 	elseif suCode == 'SPIRIT:ES' then					-- Pet being summoned is a spirit
 		bGood = (string.find(gcinclude.Spirits,string.lower(spell.Name)) ~= nil);
 	elseif suCode == 'SPIRIT:EP' then					-- Current pet is a spirit
@@ -1631,14 +1669,14 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 	if player.MainJob == 'NON' then
 		return;
 	end
-	
+
 	-- Walk the gear set slots
 	for k,v in pairs(tSet) do
 		bContinue = false;
 		sK = string.lower(k);
 		
 		-- Check for special case, Ears or Rings
-		if string.find('ears,rings',sK) ~= nil then
+		if string.find('ears,rings',sK) ~= nil then	
 			root = string.sub(k,1,-2);
 			iNum = 1;
 			bContinue = true;
@@ -1664,7 +1702,7 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 				iNum = 1;
 
 				-- Walk list of items and equip level appropriate one
-				for kk,vv in pairs(v) do
+				for kk,vv in pairs(v) do			
 					-- See if there's an inline conditional to be checked.
 					-- Note the need to distinguish which "ear" or "ring"
 					if bContinue then
