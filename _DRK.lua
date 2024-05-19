@@ -51,12 +51,12 @@ local sets = {
 	['TP'] = {
         Head  = { 'Chaos Burgeonet//ACCESSIBLE','Empress Hairpin' },
         Neck  = { 'Parade Gorget//HP.GE.85PV', 'Peacock Amulet', 'Spike Necklace' },
-        Ear2  = { 'Coral Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Pilferer\'s Earring//SJTHF', 'Drone Earring', 'Physical Earring' },
-        Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Brigandine' },
+        Ears  = { 'Coral Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Pilferer\'s Earring//SJTHF', 'Drone Earring', 'Black Earring', 'Energy Earring +1' },
+        Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Scorpion Harness', 'Brigandine' },
         Hands = { 'Thick Mufflers', 'Chaos Gauntlets//ACCESSIBLE', 'Wonder Mitts' },
         Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tamas Ring', 'Balance Ring' },
         Back  = { 'Psilos Mantle', 'Amemet Mantle', 'Raptor Mantle', 'Ram Mantle' },
-        Waist = { 'Swift Belt', 'Powerful Rope', 'Friar\'s Rope' },
+        Waist = { 'Swift Belt', 'Axe Belt//SJWAR', 'Powerful Rope', 'Friar\'s Rope' },
         Legs  = { 'Thick Breeches', 'Chaos Flanchard//ACCESSIBLE', 'Ryl.Sqr. Breeches' },
         Feet  = { 'Thick Sollerets', 'Chaos Sollerets//ACCESSIBLE', 'Bounding Boots' },
     },
@@ -73,7 +73,8 @@ local sets = {
 		
 	['Accuracy'] = {
 		Neck  = 'Peacock Amulet',
-        Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
+        Body  = 'Scorpion Harness',
+		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
 		Hands = 'Thick Mufflers',
 		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt' },
 		Legs  = 'Thick Breeches',
@@ -86,6 +87,7 @@ local sets = {
 
 	['Evasion'] = {
         Head = 'Empress Hairpin',
+		Body = 'Scorpion Harness',
 		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring', 'Windurstian Earring' },		
         Legs = { 'Chaos Flanchard//ACCESSIBLE', 'San. Trousers' },
     },
@@ -111,7 +113,7 @@ local sets = {
 	},
 	
 	['Idle_Refresh'] = {
-		Neck = 'Parade Gorget',
+		Neck = 'Parade Gorget//HP.GE.85PV',
 	},
 
 --[[
@@ -126,7 +128,7 @@ local sets = {
 	},
 	
 	['Resting_Refresh'] = {
-		Neck = 'Parade Gorget',	
+		Neck = 'Parade Gorget//HP.GE.85PV',	
 	},
 	
 	-- If you have any Spell Interruption Rate down gear, put them into the "SIR" gear set.
@@ -178,7 +180,7 @@ local sets = {
 --]]
 
 	['Macc'] = {
-        Ring1 = 'Tamas Ring',
+        Rings = 'Tamas Ring',
     },
 
 --[[
@@ -739,6 +741,9 @@ profile.OnLoad = function()
 	else
 		gcinclude.offhand = sets.CurrentGear['Sub'];
 	end	
+	
+	-- Special inits for "checking HP" gear
+	gcinclude.Special['Parade Gorget'][72] = { 0, 10 };		-- HP on invisible gear, HP on ACC invisible gear
 end
 
 --[[
