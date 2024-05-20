@@ -97,6 +97,7 @@ gcinclude.settings = {
 	RegenGearHPP = 60; 	 -- idle regen set gets loaded if player's max HP is <= 60%
 	RefreshGearMPP = 70; -- idle refresh set gets loaded if player's max MP <= 70%. Refresh takes priority over regen
 	bWSOverride = false; -- is the player playing a job where weapon swapping always happens, it is not optional?
+	Tolerance = 97;		 -- Comparison value %, cut-off for certain comparisons
 	--
 	priorityEngaged = 'BCEFGH'; 	-- indicates order of steps for engagement
 	priorityMidCast = 'ABCDEFGH';	-- indicates order of steps for spell midcast
@@ -1330,10 +1331,10 @@ function gcinclude.CheckInvisibleHP(sGear,ival)
 			end		
 		end
 
-		return ((player.HP / (player.MaxHP - x)) * 100 >= ival and player.MPP <= 97);
+		return ((player.HP / (player.MaxHP - x)) * 100 >= ival and player.MPP <= gcinclude.settings.Tolerance);
 	else
 		-- Just check current hp vs max hp
-		return (((player.HP/player.MaxHP) * 100) >= ival and player.MPP <= 97);
+		return (((player.HP/player.MaxHP) * 100) >= ival and player.MPP <= gcinclude.settings.Tolerance);
 	end
 end		-- gcinclude.CheckInvisibleHP
 
@@ -1542,7 +1543,7 @@ function gcinclude.t1()
 	if item == nil then
 		print(chat.header('T1'):append(chat.message('Warning: \'Perpetual Hrglass.\' not a valid item. Skipping.')));
 	else
-		print(chat.header('T1'):append(chat.message(item.Description[1])));
+		print(chat.header('T1'):append(chat.message(item.Description[2])));
 	end
 end
 
