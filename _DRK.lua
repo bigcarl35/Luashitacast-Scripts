@@ -51,7 +51,7 @@ local sets = {
 	['TP'] = {
         Head  = { 'Chaos Burgeonet//ACCESSIBLE','Empress Hairpin' },
         Neck  = { 'Parade Gorget//HP.GE.85PV', 'Peacock Amulet', 'Spike Necklace' },
-        Ears  = { 'Coral Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Pilferer\'s Earring//SJTHF', 'Drone Earring', 'Black Earring', 'Energy Earring +1' },
+        Ears  = { 'Coral Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Pilferer\'s Earring//SJTHF', 'Drone Earring', 'Energy Earring +1', 'Energy Earring +1' },
         Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Scorpion Harness', 'Brigandine' },
         Hands = { 'Thick Mufflers', 'Chaos Gauntlets//ACCESSIBLE', 'Wonder Mitts' },
         Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tamas Ring', 'Balance Ring' },
@@ -192,20 +192,20 @@ local sets = {
 	
 --[[
 	Preshot is the first stage of when a ranged shot is being performed. This is where you place any 
-	Ranged Accuracy or Ranged Attack Speed gear. 
+	gear that reduces the time it takes to shoot (snap shot, rapid shot, haste).
 --]]
 
-	['Preshot'] = {
-		Neck  = 'Peacock Amulet',
-		Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	
+	['Preshot'] = {	
     },
 	
 --[[
-	Midshot is the second stage of a ranged shot. This is where you place Ranged Attack or Ranged 
-	Damage gear
+	Midshot is the second stage of a ranged shot. This is where you place Ranged Accuracy, Ranged 
+	Attack or Ranged Damage gear.
 --]]
 
 	['Midshot'] = {
+		Neck  = 'Peacock Amulet',
+		Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	
     },
 	
 --[[
@@ -674,7 +674,7 @@ local function HandlePetAction(PetAction)
 		gcinclude.MoveToCurrent(sets.Pet_Macc,sets.CurrentGear);
     end
 	gcinclude.EquipTheGear(sets.CurrentGear);
-end
+end		-- HandlePetAction
 
 --[[
 	SetSubjobSet is used to pick the appropriate set for the loaded macrobook based on
@@ -719,6 +719,7 @@ profile.OnLoad = function()
 	gcinclude.Initialize();
 	gcinclude.settings.RegenGearHPP = 50;
     gcinclude.settings.RefreshGearMPP = 60;
+	gcdisplay.SetToggle('Tank',false);		-- Assume DRK is not a tank
 
 	-- Coded order of operation override
 	gcinclude.settings.priorityEngaged = 'CEFGH';
@@ -743,7 +744,7 @@ profile.OnLoad = function()
 	end	
 	
 	-- Special inits for "checking HP" gear
-	gcinclude.Special['Parade Gorget'][72] = { 0, 10 };		-- HP on invisible gear, HP on ACC invisible gear
+	gcinclude.Special['Parade Gorget'][72] = { 0, 0, 10, 10 };		-- HP on invisible gear: TP, TP_Tank, Acc, TP_Tank + Acc
 end
 
 --[[
@@ -767,7 +768,7 @@ profile.HandleCommand = function(args)
 	else
 		gcinclude.HandleCommands(args);
 	end
-end
+end		-- HandleCommand
 	
 --[[
 	HandleDefault is run when some action happens. This includes both actions by the player and by
@@ -781,7 +782,7 @@ profile.HandleDefault = function()
 	local zone = gData.GetEnvironment();
 	local ew = gData.GetEquipment();
 	local eWeap = nil;
-	local cKey,sGear;
+	local cKey;
 
 	-- A /bst charmed pet action takes priority over a player's action.
 	if petAction ~= nil and player.SubJob == 'BST' then
@@ -809,11 +810,11 @@ profile.HandleDefault = function()
 	-- If player is not resting and has MP and has swapped weapons, set the weapon back to what 
 	-- they had before the switch
 	if player.Status ~= 'Resting' and 
-		gcdisplay.GetToggle('WSwap') == true and 
-		gcinclude.weapon ~= nil and 
-		eWeap ~= gcinclude.weapon then
-			sets.CurrentGear['Main'] = gcinclude.weapon;
-			sets.CurrentGear['Sub'] = gcinclude.offhand;	
+			gcinclude.weapon ~= nil and
+			gcdisplay.GetToggle('WSwap') == true and 
+			eWeap ~= gcinclude.weapon then
+		sets.CurrentGear['Main'] = gcinclude.weapon;
+		sets.CurrentGear['Sub'] = gcinclude.offhand;	
 	end
 		
 	-- The default set is the TP gear set. Load it up
@@ -895,7 +896,7 @@ profile.HandleDefault = function()
 	end
 	
 	-- Make sure to equip the appropriate elemental staff for the current pet (/smn only)
-	if (pet ~= nil and player.SubJob == 'SMN' and gcdisplay.GetToggle('WSwap') == true) then
+	if (pet ~= nil and player.SubJob == 'SMN') then
 		local pName = string.lower(pet.Name);
 		if string.find(gcinclude.SummonSkill,pName) ~= nil then
 			local pEle = gcinclude.SummonStaves[pet.Name];
@@ -972,21 +973,23 @@ profile.HandleItem = function()
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 	
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
-		if string.match(item.Name, 'Holy Water') then 
-			gcinclude.MoveToCurrent(gcinclude.sets.Holy_Water,sets.CurrentGear);
-			bShow = true;
-		elseif string.match(item.Name, 'Silent Oil') then
-			gcinclude.MoveToCurrent(sets.Sneak,sets.CurrentGear);
-			bShow = true;
-		elseif string.match(item.Name, 'Prism Powder') then
-			gcinclude.MoveToCurrent(sets.Invisible,sets.CurrentGear);
-			bShow = true;
-		end
+	if gcdisplay.GetToggle('GSwap') == false then
+		return;
+	end
+	
+	if string.match(item.Name, 'Holy Water') then 
+		gcinclude.MoveToCurrent(gcinclude.sets.Holy_Water,sets.CurrentGear);
+		bShow = true;
+	elseif string.match(item.Name, 'Silent Oil') then
+		gcinclude.MoveToCurrent(sets.Sneak,sets.CurrentGear);
+		bShow = true;
+	elseif string.match(item.Name, 'Prism Powder') then
+		gcinclude.MoveToCurrent(sets.Invisible,sets.CurrentGear);
+		bShow = true;
+	end
 		
-		if bShow == true then
-			gcinclude.EquipTheGear(sets.CurrentGear);
-		end		
+	if bShow == true then
+		gcinclude.EquipTheGear(sets.CurrentGear);
 	end
 end
 
@@ -1028,9 +1031,6 @@ profile.HandleMidcast = function()
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
 		return;
 	end
-
-	-- Clear out the CurrentGear in case of leftovers
-	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Call the common HandleMidcast now
 	gcinclude.HandleMidcast(bTank);
@@ -1044,13 +1044,15 @@ end		-- gcinclude.HandleMidcast
 --]]
 
 profile.HandlePreshot = function()
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
-		-- Clear out the CurrentGear in case of leftovers
-		gcinclude.ClearSet(sets.CurrentGear);
-		
-		gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
-		gcinclude.EquipTheGear(sets.CurrentGear);
+	if gcdisplay.GetToggle('GSwap') == false then
+		return;
 	end
+	
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
+		
+	gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end
 
 --[[
@@ -1062,9 +1064,6 @@ profile.HandleMidshot = function()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
-
-	-- Clear out the CurrentGear in case of leftovers
-	gcinclude.ClearSet(sets.CurrentGear);
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
 	

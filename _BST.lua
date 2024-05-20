@@ -50,8 +50,8 @@ local sets = {
 	['TP'] = {
         Head  = { 'Shep. Bonnet//PET', 'Panther Mask', 'Monster Helm', 'Beast Helm', 'Shep. Bonnet', 'Empress Hairpin', 'Silver Hairpin//MSJ' },
         Neck  = { 'Peacock Amulet', 'Spike Necklace' },
-		Ears  = { 'Ethereal Earring', 'Beastly Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Bat Earring//MSJ', 'Black Earring//MSJ', 'Physical Earring//SJNIN', 'Reraise Earring', 'Physical Earring', 'Onyx Earring//MSJ' },
-        Body  = { 'Gaudy Harness//MP.LT.50', 'Narasimha\'s Vest', 'Beast Jackcoat', 'Gaudy Harness', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
+		Ears  = { 'Ethereal Earring', 'Beastly Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Bat Earring//MSJ', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ', 'Physical Earring//SJNIN', 'Reraise Earring', 'Physical Earring' },
+        Body  = { 'Gaudy Harness//MP.LT.50', 'Narasimha\'s Vest', 'Scorpion Harness', 'Gaudy Harness', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
         Hands = { 'Thick Mufflers', 'Beast Gloves', 'Wonder Mitts', 'Battle Gloves', 'Ryl.Ftm. Gloves' },
         Rings = { 'Sun Ring', 'Tamas Ring//MSJ', 'Sun Ring', 'Courage Ring', 'Balance Ring', 'San d\'Orian Ring' },
         Back  = { 'Psilos Mantle', 'Raptor Mantle', 'Ram Mantle' },
@@ -66,9 +66,9 @@ local sets = {
 --]]
 
 	['Accuracy'] = {
-        Head  = { 'Shep. Bonnet//PETF', 'Optical Hat' },
+        Head  = { 'Optical Hat', 'Shep. Bonnet//PETF' } ,
         Neck  = 'Peacock Amulet',
-        Body  = { 'Narasimha\'s Vest', 'Beast Jackcoat' },
+        Body  = { 'Gaudy Harness//MP.LT.50', 'Scorpion Harness', 'Narasimha\'s Vest' },
         Hands = { 'Thick Mufflers', 'Battle Gloves' },
 		Ears  = { 'Beastly Earring//PETF', 'Pilferer\'s Earring//SJTHF' },
 		Rings = { 'Toreador\'s Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
@@ -85,7 +85,7 @@ local sets = {
 	['Evasion'] = {
         Head  = { 'Optical Hat', 'Empress Hairpin' },
 		Ears  = { 'Bat Earring//BLIND', 'Ethereal Earring', 'Reraise Earring' },
-        Body  = 'Narasimha\'s Vest',	
+        Body  = { 'Scorpion Harness', 'Narasimha\'s Vest' },
 		Hands = 'Battle Gloves',
         Legs  = { 'San. Trousers', 'Shep. Hose//PETF' },
 		Feet  = 'Bounding Boots',	-- default gear is thick sollerets which are -2 eva
@@ -196,22 +196,21 @@ local sets = {
 	
 --[[
 	Preshot is the first stage of when a ranged shot is being performed. This is where you place any 
-	Ranged Accuracy or Ranged Attack Speed gear. 
+	gear that reduces the time it takes to shoot (snap shot, rapid shot, haste).
 --]]
 
 	['Preshot'] = {
-        Head = 'Optical Hat',
-		Neck = 'Peacock Amulet',
-        Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
-        Back = 'Psilos Mantle',
     },
 	
 --[[
-	Midshot is the second stage of a ranged shot. This is where you place Ranged Attack or Ranged 
-	Damage gear
+	Midshot is the second stage of a ranged shot. This is where you place Ranged Accuracy, Ranged 
+	Attack or Ranged Damage gear.
 --]]
 
 	['Midshot'] = {
+		Head  = 'Optical Hat',
+		Neck  = 'Peacock Amulet',
+		Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	
         Back = 'Psilos Mantle',
     },
 
@@ -707,7 +706,7 @@ local function HandlePetAction(PetAction)
 		gcinclude.MoveToCurrent(sets.Pet_Macc,sets.CurrentGear);		
     end
 	gcinclude.EquipTheGear(sets.CurrentGear);
-end
+end		-- HandlePetAction
 
 --[[
 	SetSubjobSet is used to pick the appropriate set for the loaded macrobook based on
@@ -750,6 +749,8 @@ profile.OnLoad = function()
 
 	gSettings.AllowAddSet = true;
 	gcinclude.Initialize();
+	gcinclude.settings.RegenGearHPP = 50;
+    gcinclude.settings.RefreshGearMPP = 60;
 	
 	-- Coded order of operation override
 	gcinclude.settings.priorityEngaged = 'CEFGH';
@@ -763,7 +764,6 @@ profile.OnLoad = function()
 	
 	-- Load up the weapons bar. (This need only be done once.)
 	gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear);
-
 	gcinclude.EquipTheGear(sets.CurrentGear);
 	
 	-- Make sure the saved weapons are the starting weapons
@@ -827,7 +827,7 @@ profile.findJugPets = function()
 	
 	-- assuming any were found, return true or false
 	return (iCount > 0);
-end
+end		-- findJugPets
 
 --[[
 	findMaxEquipableJugPet determines what is the best jug pet to load and equips it. The success is returned.
@@ -860,7 +860,7 @@ profile.findMaxEquipableJugPet = function()
 		print(chat.header('findMaxEquipableJugPet'):append(chat.message('Error: No jug pets found to equip')));
 		return false;
 	end
-end
+end		-- findMaxEquipableJugPet
 
 --[[
 	HandleCommand is run when you type in a command defined in LUASHITACAST. The commands handled here instead
@@ -877,7 +877,7 @@ profile.HandleCommand = function(args)
 	else
 		gcinclude.HandleCommands(args);
 	end
-end
+end		-- HandleCommand
 
 --[[
 	HandleDefault is run when some action happens. This includes both actions by the player and by
@@ -936,9 +936,9 @@ profile.HandleDefault = function()
 	-- they had before the switch
 
 	if player.Status ~= 'Resting' and 
-		gcdisplay.GetToggle('WSwap') == true and 	
-		gcinclude.weapon ~= nil and 
-		eWeap ~= gcinclude.weapon then
+			gcinclude.weapon ~= nil and 
+			gcdisplay.GetToggle('WSwap') == true and 
+			eWeap ~= gcinclude.weapon then
 		sets.CurrentGear['Main'] = gcinclude.weapon;
 		sets.CurrentGear['Sub'] = gcinclude.offhand;
 	end
@@ -1016,7 +1016,7 @@ profile.HandleDefault = function()
 	end
 	
 	-- In case the pet is a summoned pet, /smn, make sure to equip the appropriate elemental staff
-	if (pet ~= nil and player.SubJob == 'SMN' and gcdisplay.GetToggle('WSwap') == true) then
+	if (pet ~= nil and player.SubJob == 'SMN') then
 		local pName = string.lower(pet.Name);
 		if string.find(gcinclude.SummonSkill,pName) ~= nil then
 			local pEle = gcinclude.SummonStaves[pet.Name];
@@ -1055,7 +1055,7 @@ profile.bAmmoIsJug = function(sAmmo)
 		end		
 	end
 	return bFound;
-end
+end		-- bAmmoIsJug
 
 --[[
 	HandleAbility is used to change the player's gear appropriately for the specified pet ability.
@@ -1081,8 +1081,7 @@ profile.HandleAbility = function()
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 	
-	-- Now process the appropriate job ability. 
-	-- Start with abilities associated with BST
+	-- Now process the appropriate job ability. Start with abilities associated with BST
 	if string.match(ability.Name, 'Call Beast') or string.match(ability.Name, 'Bestial Loyalty') then
 		-- First make sure player wants the automated jug pet funtionality
 		if gcdisplay.GetToggle('AJug') == true then
@@ -1106,6 +1105,8 @@ profile.HandleAbility = function()
 		-- Trying to charm a beast. 
 		gcinclude.MoveToCurrent(sets.Charm,sets.CurrentGear);
 		gcinclude.SwapToStave('light',false,sets.CurrentGear);
+		
+	-- And now the subjob abilities
 	elseif string.match(ability.Name, 'Weapon Bash') then		-- assumes /drk
 		gcinclude.MoveToCurrent(sets.WeaponBash,sets.CurrentGear);		
 	elseif string.find(ability.Name, 'Jump') then		-- assumes /drk
@@ -1135,21 +1136,23 @@ profile.HandleItem = function()
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 	
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
-		if string.match(item.Name, 'Holy Water') then 
-			gcinclude.MoveToCurrent(gcinclude.sets.Holy_Water,sets.CurrentGear);
-			bShow = true;
-		elseif string.match(item.Name, 'Silent Oil') then
-				gcinclude.MoveToCurrent(sets.Sneak,sets.CurrentGear);
-				bShow = true;
-		elseif string.match(item.Name, 'Prism Powder') then
-				gcinclude.MoveToCurrent(sets.Invisible,sets.CurrentGear);
-				bShow = true;
-		end
+	if gcdisplay.GetToggle('GSwap') == false then
+		return;
+	end
+	
+	if string.match(item.Name, 'Holy Water') then 
+		gcinclude.MoveToCurrent(gcinclude.sets.Holy_Water,sets.CurrentGear);
+		bShow = true;
+	elseif string.match(item.Name, 'Silent Oil') then
+		gcinclude.MoveToCurrent(sets.Sneak,sets.CurrentGear);
+		bShow = true;
+	elseif string.match(item.Name, 'Prism Powder') then
+		gcinclude.MoveToCurrent(sets.Invisible,sets.CurrentGear);
+		bShow = true;
+	end
 		
-		if bShow == true then
-			gcinclude.EquipTheGear(sets.CurrentGear);
-		end
+	if bShow == true then
+		gcinclude.EquipTheGear(sets.CurrentGear);
 	end
 end
 
@@ -1190,9 +1193,6 @@ profile.HandleMidcast = function()
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
 		return;
 	end
-
-	-- Clear out the CurrentGear in case of leftovers
-	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Call the common HandleMidcast now
 	gcinclude.HandleMidcast();
@@ -1206,13 +1206,15 @@ end		-- gcinclude.HandleMidcast
 --]]
 
 profile.HandlePreshot = function()
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
-		-- Clear out the CurrentGear in case of leftovers
-		gcinclude.ClearSet(sets.CurrentGear);
-		
-		gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
-		gcinclude.EquipTheGear(sets.CurrentGear);
+	if gcdisplay.GetToggle('GSwap') == false then
+		return;
 	end
+	
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
+		
+	gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end
 
 --[[
@@ -1225,9 +1227,6 @@ profile.HandleMidshot = function()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
-
-	-- Clear out the CurrentGear in case of leftovers
-	gcinclude.ClearSet(sets.CurrentGear);
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
 

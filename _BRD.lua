@@ -157,15 +157,15 @@ local sets = {
 
 --[[
 	Preshot is the first stage of when a ranged shot is being performed. This is where you place any 
-	Ranged Accuracy or Ranged Attack Speed gear. 
+	gear that reduces the time it takes to shoot (snap shot, rapid shot, haste).
 --]]
 
 	['Preshot'] = {
     },
 	
 --[[
-	Midshot is the second stage of a ranged shot. This is where you place Ranged Attack or Ranged 
-	Damage gear
+	Midshot is the second stage of a ranged shot. This is where you place Ranged Accuracy, Ranged 
+	Attack or Ranged Damage gear.
 --]]
 
 	['Midshot'] = {
@@ -643,10 +643,6 @@ local function HandlePetAction(PetAction)
 	-- level of your BST level
 	if (gcinclude.BstPetAttack:contains(PetAction.Name)) then				-- Pet Attack
 		gcinclude.MoveToCurrent(sets.Pet_Attack,sets.CurrentGear);
-		-- If /acc enabled equip pet accuracy gear
-		if gcdisplay.GetToggle('acc') == true then
-			gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear);
-		end
 	elseif (gcinclude.BstPetMagicAttack:contains(PetAction.Name)) then		-- Pet Magical Attack
 		gcinclude.MoveToCurrent(sets.Pet_Matt,sets.CurrentGear);
 	elseif (gcinclude.BstPetMagicAccuracy:contains(PetAction.Name)) then	-- Pet Magical Accuracy Attack
@@ -779,11 +775,12 @@ profile.HandleDefault = function()
 	
 	-- If player is not resting and has MP and has swapped weapons, set the weapon back to what 
 	-- they had before the switch
-	if player.Status ~= 'Resting' and gcdisplay.GetToggle('WSwap') == true then
-		if gcinclude.weapon ~= nil and eWeap ~= gcinclude.weapon then
-			gFunc.ForceEquip('Main', gcinclude.weapon);	
-			gFunc.ForceEquip('Sub', gcinclude.offhand);	
-		end
+	if player.Status ~= 'Resting' and
+			gcinclude.weapon ~= nil and
+			gcdisplay.GetToggle('WSwap') == true and
+			eWeap ~= gcinclude.weapon then
+		sets.CurrentGear['Main'] = gcinclude.weapon;
+		sets.CurrentGear['Sub'] = gcinclude.offhand;
 	end
 	
 	-- The default set is the TP gear set. Load it up
@@ -796,17 +793,11 @@ profile.HandleDefault = function()
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
 			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
 			if cKey == 'C' then		-- Evasion			
-				if gcdisplay.GetToggle('Eva') == true then
-					if pet ~= nil then
-						gcinclude.MoveToCurrent(sets.Pet_Evasion,sets.CurrentGear);
-					end				
+				if gcdisplay.GetToggle('Eva') == true then		
 					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 				end			
 			elseif cKey == 'E' then		-- Accuracy	
 				if gcdisplay.GetToggle('Acc') == true then 
-					if pet ~= nil and pet.Status == 'Engaged' then
-						gcinclude.MoveToCurrent(sets.Pet_Accuracy,sets.CurrentGear);
-					end
 					gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
 				end
 			elseif cKey == 'F' then		-- Kiting
@@ -833,7 +824,7 @@ profile.HandleDefault = function()
 			gcinclude.MoveToCurrent(sets.Resting_Regen,sets.CurrentGear);
 		end
 		
-		if string.find(gcinclude.sMagicJobs,player.SubJob) ~= nil and player.MP < player.MaxMP then
+		if gcinclude.MagicalJob('S') == true and player.MP < player.MaxMP then	
 			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
 			gcinclude.SwapToStave('dark',false,sets.CurrentGear);
 		end
@@ -847,15 +838,17 @@ profile.HandleDefault = function()
 		if (zone.Area ~= nil and table.find(gcinclude.Towns,zone.Area)) then		
 			gcinclude.MoveToCurrent(sets.Town,sets.CurrentGear);
 		else
+			gcinclude.MoveToCurrent(sets.Travel,sets.CurrentGear);
+			
 			-- if the player's HP is below the threshold setting, equip the idle regen gear
 			if player.HPP < gcinclude.settings.RegenGearHPP then
 				gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
 			end
 			
 			-- if the player's MP is below the threshold setting, equip the idle refresh gear
-			if gcinclude.settings.bSJ == true and player.MPP < gcinclude.settings.RefreshGearMPP then
+			if gcinclude.MagicalJob('S') == true and player.MPP < gcinclude.settings.RefreshGearMPP then		-- if the player's MP is below the threshold setting, equip the idle refresh gear
 				gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
-			end	
+			end
 		
 			-- Check for common debuffs
 			gcinclude.CheckCommonDebuffs(sets.CurrentGear);	
@@ -863,7 +856,7 @@ profile.HandleDefault = function()
 	end
 	
 	-- Make sure to equip the appropriate elemental staff for the current pet (/smn only)
-	if (pet ~= nil and player.SubJob == 'SMN' and gcdisplay.GetToggle('WSwap') == true) then
+	if (pet ~= nil and player.SubJob == 'SMN') then
 		local pName = string.lower(pet.Name);
 		if string.find(gcinclude.SummonSkill,pName) ~= nil then
 			local pEle = gcinclude.SummonStaves[pet.Name];
@@ -925,21 +918,23 @@ profile.HandleItem = function()
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 	
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
-		if string.match(item.Name, 'Holy Water') then 
-			gcinclude.MoveToCurrent(gcinclude.sets.Holy_Water,sets.CurrentGear);
-			bShow = true;
-		elseif string.match(item.Name, 'Silent Oil') then
-			gcinclude.MoveToCurrent(sets.Sneak,sets.CurrentGear);
-			bShow = true;
-		elseif string.match(item.Name, 'Prism Powder') then
-			gcinclude.MoveToCurrent(sets.Invisible,sets.CurrentGear);
-			bShow = true;
-		end
+	if gcdisplay.GetToggle('GSwap') == false then
+		return;
+	end
+	
+	if string.match(item.Name, 'Holy Water') then 
+		gcinclude.MoveToCurrent(gcinclude.sets.Holy_Water,sets.CurrentGear);
+		bShow = true;
+	elseif string.match(item.Name, 'Silent Oil') then
+		gcinclude.MoveToCurrent(sets.Sneak,sets.CurrentGear);
+		bShow = true;
+	elseif string.match(item.Name, 'Prism Powder') then
+		gcinclude.MoveToCurrent(sets.Invisible,sets.CurrentGear);
+		bShow = true;
+	end
 		
-		if bShow == true then
-			gcinclude.EquipTheGear(sets.CurrentGear);
-		end		
+	if bShow == true then
+		gcinclude.EquipTheGear(sets.CurrentGear);
 	end
 end
 
@@ -985,9 +980,6 @@ profile.HandleMidcast = function()
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
 		return;
 	end
-
-	-- Clear out the CurrentGear in case of leftovers
-	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- If we're dealing with a song, a different midcast routine should be called
 	
@@ -1074,9 +1066,6 @@ profile.HandleMidshot = function()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
-	
-	-- Clear out the CurrentGear in case of leftovers
-	gcinclude.ClearSet(sets.CurrentGear);
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
 
