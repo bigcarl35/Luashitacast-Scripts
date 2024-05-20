@@ -517,6 +517,7 @@ gcinclude.TieredMagic = T {
 	has multiple tiers. It's split out to handle different parameters.
 	
 --]]
+
 gcinclude.TieredSongIndices = T {['SN'] = 1, ['ID'] = 2, ['RT'] = 3, ['TI'] = 4, ['LVL'] = 5, ['BUF'] = 6};	
 gcinclude.TieredSongs = T{
 	{'Foe Requiem',368,'foe',1,1,'requiem'},
@@ -553,9 +554,6 @@ gcinclude.TieredSongs = T{
 -- Temporary holding variables for the MH and OH weapons
 gcinclude.weapon = nil;
 gcinclude.offhand = nil;
-
--- Holding array for the base HP/MP totals
-gcinclude.Base = T { ['MaxHP'] = 0, ['MaxMP'] = 0, ['Food'] = false };
 
 -- Table of all BST pet food including the minimum level needed to equip. 
 -- The last column is programmatically populated, so don't change it.
@@ -648,22 +646,6 @@ Integrity = { ['Name'] = nil, 			-- Name of item to be checked
 			  ['Where'] = ',',			-- Where is the item found
 };
 
-HPMP_Adjusted = { ['MaxHP'] = nil,		-- Default maximum HP
-				  ['MaxMP'] = nil,		-- Default maximum MP
-				  ['SeenHP'] = 0,		-- Total amount HP boosted from gear (HP +/-#)
-				  ['SeenMP'] = 0,		-- Total amount MP boosted from gear (MP +/-#)
-				  ['UnseenHP'] = 0,		-- Total amount HP boosted from unseen gear 
-				  ['UnseenMP'] = 0,		-- Total amount MP boosted from unseen gear 
-				  ['ConvertHP'] = 0,	-- Total amount of HP from converted MP
-				  ['ConvertMP'] = 0,	-- Total amount of MP from converted HP
-				  ['PctHP'] = 0,		-- Total percent HP boosted from gear ( HP #%)
-				  ['PctMP'] = 0,		-- Total percent MP boosted from gear ( MP #%)
-				  ['BaseHP'] = 0,		-- Calculated max HP minus all gear bonuses
-				  ['BaseMP'] = 0,		-- Calculated max MP minus all gear bonuses
-				  ['BaseHPV'] = 0,		-- Calculated max HP w/gear minus invisible gear
-				  ['BaseMPV'] = 0,		-- Calculated max MP w/gear minus invisible gear
-};
-
 InlineCodes = { '//MSJ','//SJWAR','//SJMNK','//SJWHM','//SJBLM','//SJRDM','//SJTHF',
 				'//SJPLD','//SJDRK','//SJBST','//SJBRD','//SJRNG','//SJSAM','//SJNIN',
 				'//SJDRG','//SJSMN','//SJBLU','//SJCOR','//SJPUP','//SJDNC','//SJSCH',
@@ -742,7 +724,7 @@ function CheckGearIntegrity(GearName)
 		if Integrity['ValidCode'] == false then
 			for i,j in pairs(InLineSpecialCodes) do
 				if string.find(Integrity['Code'],j[1]) ~= nil and 
-				   j[2] == string.sub(Integrity['Code'],0 - string.len(j[2]),-1) then
+						j[2] == string.sub(Integrity['Code'],0 - string.len(j[2]),-1) then
 					Integrity['ValidCode'] = true;
 				end
 			end
@@ -1209,107 +1191,6 @@ function gcinclude.SetVariables()
 end		-- gcinclude.SetVariables
 
 --[[
-	Clear_HPMP_Adjusted initializes the aforementioned structure
---]]
-
-function Clear_HPMP_Adjusted()
-	HPMP_Adjusted['MaxHP'] = nil;
-	HPMP_Adjusted['MaxMP'] = nil;
-	HPMP_Adjusted['SeenHP'] = 0;
-	HPMP_Adjusted['SeenMP'] = 0;
-	HPMP_Adjusted['UnseenHP'] = 0;
-	HPMP_Adjusted['UnseenMP'] = 0;
-	HPMP_Adjusted['ConvertHP'] = 0;
-	HPMP_Adjusted['ConvertMP'] = 0;
-	HPMP_Adjusted['PctHP'] = 0;
-	HPMP_Adjusted['PctMP'] = 0;
-	HPMP_Adjusted['BaseHP'] = 0;
-	HPMP_Adjusted['BaseMP'] = 0;
-	HPMP_Adjusted['BaseHPV'] = 0;
-	HPMP_Adjusted['BaseMPV'] = 0;
-end		-- Clear_HPMP_Adjusted
-
---[[
-	ParseDescription determines the type of entries that are found on the passed line
-	and extracts the HP/MP accordingly.
-	
-	Note: unseen gear slots - neck, ears, rings, back and belt
---]]
-
-function ParseDescription(slot,item)
-	local player = gData.GetPlayer();
-	local iPosHP,iPosMP,pPos;
-	
-	if item ~= nil then
-		iPosHP = string.find(item.Description[1],'HP');
-		iPosMP = string.find(item.Description[1],'MP');
-		cvPos = string.find(item.Description[1],'Convert');
-		pPos = string.find(item.Description[1],'%%',iPos);
-		if cvPos ~= nil then
-		
-		end
-		--[[print('::['..slot..'] = '..item.Description[1]..'::');
-		print('iPosHP: '..tostring(iPosHP));
-		print('iPosMP: '..tostring(iPosMP));
-		print('cvPos: '..tostring(cvPos));
-		print('pPos: '..tostring(pPos));
-		--]]
-	end
-end
-
---[[
-	ProcessHiddenGear will process the hidden gear, tallying the changes in HP and
-	HP. Further, if the passed piece of gear is from the visible portion of the
-	gear set, will adjust the maximum HP/MP accordingly. Returned is True or False
-	indicatinging if the procerssing was successful.
---]]
-
-function gcinclude.ProcessHiddenGear(gear,slot)
-	local hGear = T {'Neck','Ear1','Ear2','Ears','Ring1','Ring2','Back','Belt'};
-	local player = gData.GetPlayer();
-	local current = gData.GetCurrentSet();
-	local item;
-	local dLevel = player.MainJobSync - 30;
-	
-	-- Clear out the tally structure
-	Clear_HPMP_Adjusted();
-	
-	-- Note the current maximum values (some adjustment might be needed)
-	HPMP_Adjusted['MaxHP'] = player.MaxHP;
-	HPMP_Adjusted['MaxMP'] = player.MaxMP;
-	
-	if current ~= nil then
-		for i,j in pairs(current) do
-			if table.find(hGear,i) ~= nil then
-				item = AshitaCore:GetResourceManager():GetItemByName(j,2)
-				if item ~= nil then
-					-- Let's take care of the exceptions first. Tamas Ring and Sattva
-					-- Ring have a range aspect to their boost. Parsing sounds bad, so
-					-- just look for the names. 15 + (level-30/3) rounded down
-					if item.Name == 'Sattva Ring' then
-						if dLevel > 0 then
-							HPMP_Adjusted['UnseenHP'] = HPMP_Adjusted['UnseenHP'] + (15 + math.floor(dLevel/3));
-						end
-					elseif item.Name == 'Tamas Ring' then
-						if dLevel > 0 then
-							HPMP_Adjusted['UnseenMP'] = HPMP_Adjusted['UnseenMP'] + (15 + math.floor(dLevel/3));
-						end				
-					else
-						-- Both HP and MP can be in a single description. Process accordingly
-						if string.find(item.Description[1],'HP') ~= nil or
-							string.find(item.Description[1],'MP') ~= nil then
-							ParseDescription(i,item);
-						end
-					end
-				end
-			end
-		end
-	end
-	
-	return true;
-end
-
---[[
 	isPetNamed determines if that passed pet has the passed name
 --]]
 
@@ -1421,30 +1302,32 @@ function gcinclude.MagicalJob(sWhich)
 end		-- gcinclude.MagicalJob
 
 --[[
-	TemporaryCheckHP is a work around to determine if the player's current HP
+	CheckInvisibleHP is a work around to determine if the player's current HP
 	meets the condition it is being tested for. Once I have the parsing of an
 	item's description completed this routine will be removed.
 --]]
 
-function gcinclude.TemporaryCheckHP(sGear,ival)
+function gcinclude.CheckInvisibleHP(sGear,ival)
 	local player = gData.GetPlayer();
 	local x,bFound = false;
 	
 	-- Make sure passed parameters are defined
-	if sGear == nil then
+	if sGear == nil or ival == nil then
 		return false;
-	end
-		
-	if ival == nil then
-		ival = 100;
 	end
 
 	if gcinclude.Special[sGear][player.MainJobSync] ~= nil then
 		-- Just remove the hp associated with the invisible gear slots
-		if gcdisplay.GetToggle('Acc') == true then
-			x = gcinclude.Special[sGear][player.MainJobSync][2];
+		x = gcinclude.Special[sGear][player.MainJobSync][1];			-- TP
+		if gcdisplay.GetToggle('Tank') == true then
+			x = gcinclude.Special[sGear][player.MainJobSync][2];		-- TP_Tank
+			if gcdisplay.GetToggle('Acc') == true then
+				x = gcinclude.Special[sGear][player.MainJobSync][4];	-- TP_Tank + Accuracy
+			end
 		else
-			x = gcinclude.Special[sGear][player.MainJobSync][1];
+			if gcdisplay.GetToggle('Acc') == true then
+				x = gcinclude.Special[sGear][player.MainJobSync][3];	-- Accuracy
+			end		
 		end
 
 		return ((player.HP / (player.MaxHP - x)) * 100 >= ival and player.MPP <= 97);
@@ -1452,6 +1335,28 @@ function gcinclude.TemporaryCheckHP(sGear,ival)
 		-- Just check current hp vs max hp
 		return (((player.HP/player.MaxHP) * 100) >= ival and player.MPP <= 97);
 	end
+end		-- gcinclude.CheckInvisibleHP
+
+--[[
+	MakeCodeTable takes the passed, // delimited list and returns the
+	individual codes in a table
+--]]
+
+function gcinclude.MakeCodeTable(sList)
+	local sTbl = { };
+	local iPos;
+
+	iPos = 1;		-- Assume start at first position
+	while iPos ~= nil do
+		iPos = string.find(string.sub(sList,3,-1),'//');
+		if iPos ~= nil then		
+			table.insert(sTbl,string.sub(sList,3,iPos+2-1));	-- skip the //, include up to next //
+			sList = string.sub(sList,iPos+2,-1);		-- save portion from next // onwards
+		else
+			table.insert(sTbl,string.sub(sList,3,-1));		-- skip the //
+		end
+	end
+	return sTbl;
 end
 
 --[[
@@ -1464,7 +1369,7 @@ end
 --]]
 
 function gcinclude.CheckInline(gear,sSlot)
-	local iPos,suCode;
+	local iPos,ii,suCode;
 	local player = gData.GetPlayer();
 	local mj = player.MainJob;
 	local sj = player.SubJob;
@@ -1472,6 +1377,7 @@ function gcinclude.CheckInline(gear,sSlot)
 	local spell = gData.GetAction();
 	local environ = gData.GetEnvironment();
 	local timestamp = gData.GetTimestamp();
+	local suCodeTbl = { };
 	local bGood = true;
 	
 	if gear == nil then
@@ -1482,171 +1388,162 @@ function gcinclude.CheckInline(gear,sSlot)
 
 	if iPos == nil then
 		return true,gear;
-	else
-		sGear = string.sub(gear,1,iPos-1);
-		suCode = string.upper(string.sub(gear,iPos+2,-1));
 	end
+	
+	sGear = string.sub(gear,1,iPos-1);
 
-	if suCode == 'MSJ' then			-- Magical subjob
-		bGood = (string.find(gcinclude.sMagicJobs,sj) ~= nil);
-	elseif string.sub(suCode,1,2) == 'SJ' and string.len(suCode) == 5 then	-- subjob is: //SJ"job"
-		bGood = (string.sub(suCode,3,-1) == sj);
-	elseif string.sub(suCode,1,2) == 'PJ' and string.len(suCode) == 5 then	-- party has job: //PJ"job"
-		local s = string.sub(suCode,3,-1);
-		bGood=(gcinclude.CheckPartyJob(s));
-	elseif suCode == 'CARBY' then				-- Pet is carbuncle
-		bGood = (gcinclude.isPetNamed('Carbuncle'));
-	elseif suCode == 'BLIND' then				-- Player is blind
-		local blind = gData.GetBuffCount('Blind');
-		bGood = (blind >= 1);
-	elseif suCode == 'OWN' then					-- Player in area controlled by their nation
-		bGood = (gcdisplay.GetCycle('Region') == 'Owned');
-	elseif suCode == 'NOT_OWN' then				-- Player in area not controlled by their nation
-		bGood = (gcdisplay.GetCycle('Region') ~= 'Owned');
-	elseif suCode == 'MPP.LE.50P' then			-- Player's MJ/SJ can do magic and their MP < 50% of their maximum MP
-		bGood = (gcinclude.MagicalJob('S') == true and player.MPP <= 50);
-	elseif suCode == 'MP.LT.50' then			-- Player's MJ/SJ can do magic and their MP < 50
-		bGood = (gcinclude.MagicalJob('S') == true and player.MP < 50 and player.MaxMP >= 50);		
-	elseif suCode == 'WSWAP' then				-- Weapon swapping enabledB
-		bGood = (gcinclude.settings.bWSOverride == true or gcdisplay.GetToggle('WSwap') == true);
-	elseif suCode == 'PET' then					-- Does player have a pet
-		bGood = (pet ~= nil);
-	elseif suCode == 'PETF' then				-- Is player's pet fighting
-		bGood = (pet ~= nil and pet.Status == 'Engaged');
-	elseif suCode == 'PETFNPF' then				-- Is player's pet fighting, but not the player
-		bGood = (pet ~= nil and pet.Status == 'Engaged' and player.Status ~= 'Engaged');
-	elseif suCode == 'SMNPET' then				-- Is player's pet a summoned avatar
-		bGood = (pet ~= nil and string.find(gcinclude.SummonSkill,string.lower(pet.Name)));
-	elseif suCode == 'HORN' then				-- Is the bard's instrument a horn
-		if player.MainJob == 'BRD' then
-			bGood = (gcdisplay.GetCycle('Instrument') == 'Horn');
-		else
-			bGood = false;
-		end	
-	elseif suCode == 'STRING' then				-- Is the bard's instrument a string instrument
-		if player.MainJob == 'BRD' then
-			bGood = (gcdisplay.GetCycle('Instrument') == 'String');
-		else
-			bGood = false;
-		end	
-	elseif suCode == 'ELEAVA' then				-- Is the player summoning an elemental spirit
-		bGood = (string.find(gcinclude.Spirits,string.lower(spell.Name)) ~= nil);
-	elseif suCode == 'AVADAY' then				-- Does the player's pet's element match the day's element
-		if pet ~= nil then
-			local sElement = gcinclude.SummonStaves[string.lower(pet.Name)];	
-			bGood = (sElement ~= nil and string.find(string.lower(environ.Day),string.lower(sElement)) ~= nil);
-		else
-			bGood = false;
-		end
-	elseif suCode == 'AVAWTHR' then				-- Does the player's pet's element match the weather
-		if pet ~= nil then
-			local sElement = gcinclude.SummonStaves[string.lower(pet.Name)];
-			bGood = (sElement ~= nil and string.find(string.lower(environ.RawWeather),string.lower(sElement)) ~= nil);
-		else
-			bGood = false;
-		end
-	elseif string.sub(suCode,1,3) == 'CR:' then		-- Crafting
-		bGood = (gcinclude.Craft == string.sub(suCode,4,-1));
-	elseif string.sub(suCode,1,3) == 'GA:' then		-- Gathering
-		bGood = (gcinclude.Gather == string.sub(suCode,4,-1));
-	elseif string.find('FIRESDAY,EARTHSDAY,WATERSDAY,WINDSDAY,ICEDAY,LIGHTNINGDAY,LIGHTSDAY,DARKSDAY',suCode) ~= nil then
-		bGood = (suCode == string.upper(environ.Day));	-- Is it the specified day
-	elseif suCode == 'NOT_LGT-DRK' then
-		bGood = (string.find('LIGHTSDAY,DARKSDAY',string.upper(environ.Day)) == nil);
-	elseif string.sub(suCode,1,4) == 'WTH:' then		-- Does the weather match
-		bGood = (string.find(string.upper(environ.Weather),string.sub(suCode,5,-1)) ~= nil);
-	elseif suCode == 'WTH-DAY' then						-- Weather matches day's element
-		local sEle = string.upper(environ.DayElement) .. ',NONE';
-		bGood = (string.find(sEle,string.upper(environ.WeatherElement)) ~= nil);
-	elseif string.sub(suCode,1,3) == 'AK:' then			-- National Aketon
-		local pNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation();
-		local sWhich = string.sub(suCode,4,-1);
-		if sWhich == 'WINDY' then
-			bGood = (environ.Area ~= nil and gcinclude.Windy:contains(environ.Area) and pNation == 2);
-		elseif sWhich == 'SANDY' then
-			bGood = (environ.Area ~= nil and gcinclude.Sandy:contains(environ.Area) and pNation == 0);
-		elseif sWhich == 'BASTOK' then
-			bGood = (environ.Area ~= nil and gcinclude.Bastok:contains(environ.Area) and pNation == 1);
-		elseif sWhich == 'OMNI' then
-			bGood = (environ.Area ~= nil and 
+	--suCode = string.upper(string.sub(gear,iPos+2,-1));
+	suCodeTbl = gcinclude.MakeCodeTable(string.upper(string.sub(gear,iPos,-1)));
+
+	for ii,suCode in pairs(suCodeTbl) do
+		if suCode == 'MSJ' then			-- Magical subjob
+			bGood = (string.find(gcinclude.sMagicJobs,sj) ~= nil);
+		elseif string.sub(suCode,1,2) == 'SJ' and string.len(suCode) == 5 then	-- subjob is: //SJ"job"
+			bGood = (string.sub(suCode,3,-1) == sj);
+		elseif string.sub(suCode,1,2) == 'PJ' and string.len(suCode) == 5 then	-- party has job: //PJ"job"
+			local s = string.sub(suCode,3,-1);
+			bGood=(gcinclude.CheckPartyJob(s));
+		elseif suCode == 'CARBY' then				-- Pet is carbuncle
+			bGood = (gcinclude.isPetNamed('Carbuncle'));
+		elseif suCode == 'BLIND' then				-- Player is blind
+			local blind = gData.GetBuffCount('Blind');
+			bGood = (blind >= 1);
+		elseif suCode == 'OWN' then					-- Player in area controlled by their nation
+			bGood = (gcdisplay.GetCycle('Region') == 'Owned');
+		elseif suCode == 'NOT_OWN' then				-- Player in area not controlled by their nation
+			bGood = (gcdisplay.GetCycle('Region') ~= 'Owned');
+		elseif suCode == 'MPP.LE.50P' then			-- Player's MJ/SJ can do magic and their MP < 50% of their maximum MP
+			bGood = (gcinclude.MagicalJob('S') == true and player.MPP <= 50);
+		elseif suCode == 'MP.LT.50' then			-- Player's MJ/SJ can do magic and their MP < 50
+			bGood = (gcinclude.MagicalJob('S') == true and player.MP < 50 and player.MaxMP >= 50);		
+		elseif suCode == 'WSWAP' then				-- Weapon swapping enabledB
+			bGood = (gcinclude.settings.bWSOverride == true or gcdisplay.GetToggle('WSwap') == true);
+		elseif suCode == 'PET' then					-- Does player have a pet
+			bGood = (pet ~= nil);
+		elseif suCode == 'PETF' then				-- Is player's pet fighting
+			bGood = (pet ~= nil and pet.Status == 'Engaged');
+		elseif suCode == 'PETFNPF' then				-- Is player's pet fighting, but not the player
+			bGood = (pet ~= nil and pet.Status == 'Engaged' and player.Status ~= 'Engaged');
+		elseif suCode == 'SMNPET' then				-- Is player's pet a summoned avatar
+			bGood = (pet ~= nil and string.find(gcinclude.SummonSkill,string.lower(pet.Name)));
+		elseif suCode == 'HORN' then				-- Is the bard's instrument a horn
+			if player.MainJob == 'BRD' then
+				bGood = (gcdisplay.GetCycle('Instrument') == 'Horn');
+			else
+				bGood = false;
+			end	
+		elseif suCode == 'STRING' then				-- Is the bard's instrument a string instrument
+			if player.MainJob == 'BRD' then
+				bGood = (gcdisplay.GetCycle('Instrument') == 'String');
+			else
+				bGood = false;
+			end	
+		elseif suCode == 'ELEAVA' then				-- Is the player summoning an elemental spirit
+			bGood = (string.find(gcinclude.Spirits,string.lower(spell.Name)) ~= nil);
+		elseif suCode == 'AVADAY' then				-- Does the player's pet's element match the day's element
+			if pet ~= nil then
+				local sElement = gcinclude.SummonStaves[string.lower(pet.Name)];	
+				bGood = (sElement ~= nil and string.find(string.lower(environ.Day),string.lower(sElement)) ~= nil);
+			else
+				bGood = false;
+			end
+		elseif suCode == 'AVAWTHR' then				-- Does the player's pet's element match the weather
+			if pet ~= nil then
+				local sElement = gcinclude.SummonStaves[string.lower(pet.Name)];
+				bGood = (sElement ~= nil and string.find(string.lower(environ.RawWeather),string.lower(sElement)) ~= nil);
+			else
+				bGood = false;
+			end
+		elseif string.sub(suCode,1,3) == 'CR:' then		-- Crafting
+			bGood = (gcinclude.Craft == string.sub(suCode,4,-1));
+		elseif string.sub(suCode,1,3) == 'GA:' then		-- Gathering
+			bGood = (gcinclude.Gather == string.sub(suCode,4,-1));
+		elseif string.find('FIRESDAY,EARTHSDAY,WATERSDAY,WINDSDAY,ICEDAY,LIGHTNINGDAY,LIGHTSDAY,DARKSDAY',suCode) ~= nil then
+			bGood = (suCode == string.upper(environ.Day));	-- Is it the specified day
+		elseif suCode == 'NOT_LGT-DRK' then
+			bGood = (string.find('LIGHTSDAY,DARKSDAY',string.upper(environ.Day)) == nil);
+		elseif string.sub(suCode,1,4) == 'WTH:' then		-- Does the weather match
+			bGood = (string.find(string.upper(environ.Weather),string.sub(suCode,5,-1)) ~= nil);
+		elseif suCode == 'WTH-DAY' then						-- Weather matches day's element
+			local sEle = string.upper(environ.DayElement) .. ',NONE';
+			bGood = (string.find(sEle,string.upper(environ.WeatherElement)) ~= nil);
+		elseif string.sub(suCode,1,3) == 'AK:' then			-- National Aketon
+			local pNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation();
+			local sWhich = string.sub(suCode,4,-1);
+			if sWhich == 'WINDY' then
+				bGood = (environ.Area ~= nil and gcinclude.Windy:contains(environ.Area) and pNation == 2);
+			elseif sWhich == 'SANDY' then
+				bGood = (environ.Area ~= nil and gcinclude.Sandy:contains(environ.Area) and pNation == 0);
+			elseif sWhich == 'BASTOK' then
+				bGood = (environ.Area ~= nil and gcinclude.Bastok:contains(environ.Area) and pNation == 1);
+			elseif sWhich == 'OMNI' then
+				bGood = (environ.Area ~= nil and 
 						(gcinclude.Windy:contains(environ.Area) or
 						 gcinclude.Sandy:contains(environ.Area) or 
 						 gcinclude.Bastok:contains(environ.Area) or 
 						 gcinclude.Jeuno:contains(environ.Area)));
-		else
-			bGood = false;
-		end
-	elseif suCode == 'DAYTIME' then						-- Time is daytime
-		bGood = gcinclude.CheckTime(timestamp.hour,'Daytime',false);
-	elseif suCode == 'NIGHTTIME' then					-- Time is nighttime
-		bGood = gcinclude.CheckTime(timestamp.hour,'Nighttime',false);
-	elseif suCode == 'DUSK2DAWN' then					-- Time between dusk and dawn
-		bGood = gcinclude.CheckTime(timestamp.hour,DUSK2DAWN,false);
-	elseif suCode == 'NEWMOON' then						-- Moon phase: New Moon
-		bGood = (environ.MoonPhase == 'New Moon');
-	elseif suCode == 'FULLMOON' then					-- Moon phase: Full Moon
-		bGood = (environ.MoonPhase == 'Full Moon');
-	elseif suCode == 'FM-DRK-NIGHT' then				-- Full moon-darksday-nighttime
-		bGood = (environ.MoonPhase == 'Full Moon' and 
-			environ.Day == 'Darksday' and 
-			gcinclude.CheckTime(timestamp.hour,'Nighttime',false));
-	elseif suCode == 'NM-LGT-DAY' then					-- New moon-lightsdday-daytime
-		bGood = (environ.MoonPhase == 'New Moon' and 
-			environ.Day == 'Lightsday' and 
-			gcinclude.CheckTime(timestamp.hour,'Daytime',false));
-	elseif suCode == 'HP75P|TP100P' then				-- Player's HP <= 75% and TP <= 100%
-		bGood = (player.HPP <= 75 and player.TP <= 1000);
-	elseif string.find('HM',string.sub(suCode,1,1)) ~= nil and string.sub(suCode,-2,-1) == 'PV' then
-		local ival = tonumber(string.sub(suCode,7,-3));
-		bGood = gcinclude.TemporaryCheckHP(sGear,ival);
---[[		
-		if gcinclude.ProcessHiddenGear(sGear,sSlot) == true then
-			if string.sub(suCode,1,1) == 'H' then
-				bGood = ((player.HP/HPMP_Adjusted['MaxHP'])*100 >= ival);
-			elseif string.sub(suCode,1,1) == 'M' then
-				bGood = ((player.MP/HPMP_Adjusted['MaxMP'])*100 >= ival);
 			else
-				print(chat.header('CheckInline'):append(chat.message('Something went wrong with ' .. suCode)));
 				bGood = false;
 			end
+		elseif suCode == 'DAYTIME' then						-- Time is daytime
+			bGood = gcinclude.CheckTime(timestamp.hour,'Daytime',false);
+		elseif suCode == 'NIGHTTIME' then					-- Time is nighttime
+			bGood = gcinclude.CheckTime(timestamp.hour,'Nighttime',false);
+		elseif suCode == 'DUSK2DAWN' then					-- Time between dusk and dawn
+			bGood = gcinclude.CheckTime(timestamp.hour,DUSK2DAWN,false);
+		elseif suCode == 'NEWMOON' then						-- Moon phase: New Moon
+			bGood = (environ.MoonPhase == 'New Moon');
+		elseif suCode == 'FULLMOON' then					-- Moon phase: Full Moon
+			bGood = (environ.MoonPhase == 'Full Moon');
+		elseif suCode == 'FM-DRK-NIGHT' then				-- Full moon-darksday-nighttime
+			bGood = (environ.MoonPhase == 'Full Moon' and 
+				environ.Day == 'Darksday' and 
+				gcinclude.CheckTime(timestamp.hour,'Nighttime',false));
+		elseif suCode == 'NM-LGT-DAY' then					-- New moon-lightsdday-daytime
+			bGood = (environ.MoonPhase == 'New Moon' and 
+				environ.Day == 'Lightsday' and 
+				gcinclude.CheckTime(timestamp.hour,'Daytime',false));
+		elseif suCode == 'HP75P|TP100P' then				-- Player's HP <= 75% and TP <= 100%
+			bGood = (player.HPP <= 75 and player.TP <= 1000);
+		elseif string.find('HM',string.sub(suCode,1,1)) ~= nil and string.sub(suCode,-2,-1) == 'PV' then
+			local ival = tonumber(string.sub(suCode,7,-3));
+			bGood = gcinclude.CheckInvisibleHP(sGear,ival);
+		elseif suCode == 'SPIRIT:ES' then					-- Pet being summoned is a spirit
+			bGood = (string.find(gcinclude.Spirits,string.lower(spell.Name)) ~= nil);
+		elseif suCode == 'SPIRIT:EP' then					-- Current pet is a spirit
+			bGood = (pet ~= nil and string.find(gcinclude.Spirits,string.lower(pet.Name)) ~= nil);
+		elseif string.sub(suCode,1,3) == 'DB:' then
+			bGood = (player.MainJob == 'BST' and string.upper(string.sub(suCode,4,-1)) == string.upper(gcdisplay.GetCycle('DB')));
+		elseif suCode == 'ACCESSIBLE' then
+			if CheckGearIntegrity(gear) == true then
+				bGood = Integrity['Accessible'];
+			else
+				bGood = false;
+			end	
+		elseif suCode == 'ACCURACY' then
+			bGood = (gcdisplay.GetToggle('Acc') == true);
 		else
-			print(chat.header('CheckInline'):append(chat.message('Something went wrong parsing ' .. gear)));
+			print(chat.header('CheckInline'):append(chat.message('Warning: Unknown code = ' .. suCode .. '. Ignoring piece of gear.')));
 			bGood = false;
 		end
---]]
-	elseif suCode == 'SPIRIT:ES' then					-- Pet being summoned is a spirit
-		bGood = (string.find(gcinclude.Spirits,string.lower(spell.Name)) ~= nil);
-	elseif suCode == 'SPIRIT:EP' then					-- Current pet is a spirit
-		bGood = (pet ~= nil and string.find(gcinclude.Spirits,string.lower(pet.Name)) ~= nil);
-	elseif string.sub(suCode,1,3) == 'DB:' then
-		bGood = (player.MainJob == 'BST' and string.upper(string.sub(suCode,4,-1)) == string.upper(gcdisplay.GetCycle('DB')));
-	elseif suCode == 'ACCESSIBLE' then
-		if CheckGearIntegrity(gear) == true then
-			bGood = Integrity['Accessible'];
-		else
-			bGood = false;
-		end	
-	elseif suCode == 'ACCURACY' then
-		bGood = (gcdisplay.GetToggle('Acc') == true);
-	else
-		print(chat.header('CheckInline'):append(chat.message('Warning: Unknown code = ' .. suCode .. '. Ignoring piece of gear.')));
-		bGood = false;			
+		
+		if bGood == false then
+			return false,sGear;
+		end
 	end
 	
-	return bGood,sGear;
+	return true,sGear;
 end		-- gcinclude.CheckInline
 
 function gcinclude.t1()
-	local sGear;
-	--gcinclude.Adjusted(true);
-	sGear = gcinclude.CheckForEleGear('staff','fire');
-	print(sGear);
-	print(gcinclude.elemental_gear['Job']);
-	print(gcinclude.elemental_gear['staff']['fire']['Searched']);
-	print(gcinclude.elemental_gear['staff']['fire']['HQ']['Name']);
-	print(gcinclude.elemental_gear['staff']['fire']['HQ']['Where']);
-	print(gcinclude.elemental_gear['staff']['fire']['NQ']['Name']);	
-	print(gcinclude.elemental_gear['staff']['fire']['NQ']['Where']);
+	local item;
+	
+	item = AshitaCore:GetResourceManager():GetItemByName('Perpetual Hrglass.',2);					
+	if item == nil then
+		print(chat.header('T1'):append(chat.message('Warning: \'Perpetual Hrglass.\' not a valid item. Skipping.')));
+	else
+		print(chat.header('T1'):append(chat.message(item.Description[1])));
+	end
 end
 
 --[[
@@ -2442,12 +2339,6 @@ function gcinclude.HandleCommands(args)
 		print('MPP = ' .. tostring(player.MPP));
 		print('mHP = ' .. tostring(player.MaxHP));
 		print('mMP = ' .. tostring(player.MaxMP));
-		--gcinclude.Base['MaxHP'] = player.MaxHP;
-		--gcinclude.Base['MaxMP'] = player.MaxMP;
-		--gcinclude.LockUnlock('unlock','all');
-		--print(chat.header('HandleCommands'):append(chat.message('Base HP = ' .. tostring(gcinclude.Base['MaxHP']))));
-		--print(chat.header('HandleCommands'):append(chat.message('Base MP = ' .. tostring(gcinclude.Base['MaxMP']))));		
-		
 	end
 
 	if gcinclude.settings.Messages then
