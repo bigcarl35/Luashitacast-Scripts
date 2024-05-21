@@ -650,24 +650,31 @@ Integrity = { ['Name'] = nil, 			-- Name of item to be checked
 InlineCodes = { '//MSJ','//SJWAR','//SJMNK','//SJWHM','//SJBLM','//SJRDM','//SJTHF',
 				'//SJPLD','//SJDRK','//SJBST','//SJBRD','//SJRNG','//SJSAM','//SJNIN',
 				'//SJDRG','//SJSMN','//SJBLU','//SJCOR','//SJPUP','//SJDNC','//SJSCH',
-				'//SJGEO','//SJRUN','//CARBY','//BLIND','//OWN','//NOT_OWN',
-				'//MPP.LE.50P','//PJWAR','//PJMNK','//PJWHM','//PJBLM','//PJRDM',
-				'//PJTHF','//PJPLD','//PJDRK','//PJBST','//PJBRD','//PJRNG','//PJSAM',
-				'//PJNIN','//PJDRG','//PJSMN','//PJBLU','//PJCOR','//PJPUP','//PJDNC',
-				'//PJSCH','//PJGEO','//PJRUN','//WSWAP','//PET','//PETF','//PETFNPF',
-				'//ELEAVA','//MP.LT.50','//AVAWTHR','//AVADAY','//HORN','STRING',
-				'//CR:ALC','//CR:BONE','//CR:CLOTH','//CR:COOK','//CR:GSM','//CR:LTH',
-				'//CR:BSM','//CR:WW','//GA:HELM','//GA:DIG','//GA:CLAM','//GA:FISH',
-				'//FIRESDAY','//EARTHSDAY','//WATERSDAY','//WINDSDAY','//ICEDAY',
-				'//LIGHTNINGDAY','//LIGHTSDAY','//DARKSDAY','//NOT_LGT-DRK',
-				'//WTH:CLEAR','//WTH:SUNSHINE','//WTH:CLOUDS','//WTH:FOG','//WTH:FIRE',
-				'//WTH:WATER','//WTH:EARTH','//WTH:WIND','//WTH:ICE','//WTH:THUNDER',
-				'//WTH:LIGHT','//WTH:DARK','//WTH-DAY','//AK:WINDY','//AK:SANDY',
-				'//AK:BASTOK','//AK:OMNI','//HP75P|TP100P','//NEWMOON','//FULLMOON',
-				'//NIGHTTIME','//DAYTIME','//DUSK2DAWN','//FM-DRK-NIGHT','//NM-LGT-DAY',
+				'//SJGEO','//SJRUN','//CARBY','//BLIND','//OWN','//NOT_OWN','//PJWAR',
+				'//PJMNK','//PJWHM','//PJBLM','//PJRDM','//PJTHF','//PJPLD','//PJDRK',
+				'//PJBST','//PJBRD','//PJRNG','//PJSAM','//PJNIN','//PJDRG','//PJSMN',
+				'//PJBLU','//PJCOR','//PJPUP','//PJDNC','//PJSCH','//PJGEO','//PJRUN',
+				'//WSWAP','//PET','//PETF','//PETFNPF','//ELEAVA','//AVAWTHR',
+				'//AVADAY','//HORN','STRING','//CR:ALC','//CR:BONE','//CR:CLOTH',
+				'//CR:COOK','//CR:GSM','//CR:LTH','//CR:BSM','//CR:WW','//GA:HELM',
+				'//GA:DIG','//GA:CLAM','//GA:FISH','//FIRESDAY','//EARTHSDAY',
+				'//WATERSDAY','//WINDSDAY','//ICEDAY','//LIGHTNINGDAY','//LIGHTSDAY',
+				'//DARKSDAY','//NOT_FIRESDAY','//NOT_EARTHSDAY','//NOT_WATERSDAY',
+				'//NOT_WINDSDAY','//NOT_ICEDAY','//NOT_LIGHTNINGDAY','//NOT_LIGHTSDAY',
+				'//NOT_DARKSDAY','//WTH:CLEAR','//WTH:SUNSHINE','//WTH:CLOUDS',
+				'//WTH:FOG','//WTH:FIRE','//WTH:WATER','//WTH:EARTH','//WTH:WIND',
+				'//WTH:ICE','//WTH:THUNDER','//WTH:LIGHT','//WTH:DARK','//WTH-DAY',
+				'//NOT_WTH:CLEAR','//NOT_WTH:SUNSHINE','//NOT_WTH:CLOUDS','//NOT_WTH:FOG',
+				'//NOT_WTH:FIRE','//NOT_WTH:WATER','//NOT_WTH:EARTH','//NOT_WTH:WIND',
+				'//NOT_WTH:ICE','//NOT_WTH:THUNDER','//NOT_WTH:LIGHT','//NOT_WTH:DARK',
+				'//WTH-DAY','//AK:WINDY','//AK:SANDY','//AK:BASTOK','//AK:OMNI',
+				'//NEWMOON','//FULLMOON','//NIGHTTIME','//DAYTIME','//DUSK2DAWN',
 				'//SPIRIT:ES','//SMNPET','//SPIRIT:EP','//DB:BPP','//DB:WSS',
-				'//ACCESSIBLE','//ACCURACY' };
-InLineSpecialCodes = { {'//HP.GE.', 'PV' }, {'//MP.GE.', 'PV' }};
+				'//ACCESSIBLE','//ACCURACY','//EVASION','//NOT_WTH-DAY' };
+InLineSpecialCodes = { 
+						{ '//HP.GE.', 'PV' }, { '//TP.LE.','P' }, { '//HP.LE.','P' },
+						{ '////MPP.LE.', 'P'}, {//MP.LT.', nil },
+					 };
 
 gcinclude.Sets = gcinclude.sets;
 
@@ -1421,10 +1428,12 @@ function gcinclude.CheckInline(gear,sSlot)
 			bGood = (gcdisplay.GetCycle('Region') == 'Owned');
 		elseif suCode == 'NOT_OWN' then				-- Player in area not controlled by their nation
 			bGood = (gcdisplay.GetCycle('Region') ~= 'Owned');
-		elseif suCode == 'MPP.LE.50P' then			-- Player's MJ/SJ can do magic and their MP < 50% of their maximum MP
-			bGood = (gcinclude.MagicalJob('S') == true and player.MPP <= 50);
-		elseif suCode == 'MP.LT.50' then			-- Player's MJ/SJ can do magic and their MP < 50
-			bGood = (gcinclude.MagicalJob('S') == true and player.MP < 50 and player.MaxMP >= 50);		
+		elseif string.sub(suCode,1,7) == 'MPP.LE.' and string.sub(suCode,-1) == 'P' then
+			local ival = tonumber(string.sub(suCode,8,-2));
+			bGood = (gcinclude.MagicalJob('S') == true and player.MPP <= ival);
+		elseif strin.sub(suCode,1,6) == 'MP.LT.' then
+			local ival = tonumber(string.sub(suCode,7,-1));
+			bGood = (gcinclude.MagicalJob('S') == true and player.MP < ival and player.MaxMP >= ival);		
 		elseif suCode == 'WSWAP' then				-- Weapon swapping enabledB
 			bGood = (gcinclude.settings.bWSOverride == true or gcdisplay.GetToggle('WSwap') == true);
 		elseif suCode == 'PET' then					-- Does player have a pet
@@ -1469,13 +1478,20 @@ function gcinclude.CheckInline(gear,sSlot)
 			bGood = (gcinclude.Gather == string.sub(suCode,4,-1));
 		elseif string.find('FIRESDAY,EARTHSDAY,WATERSDAY,WINDSDAY,ICEDAY,LIGHTNINGDAY,LIGHTSDAY,DARKSDAY',suCode) ~= nil then
 			bGood = (suCode == string.upper(environ.Day));	-- Is it the specified day
+		elseif string.find('NOT_FIRESDAY,NOT_EARTHSDAY,NOT_WATERSDAY,NOT_WINDSDAY,NOT_ICEDAY,NOT_LIGHTNINGDAY,NOT_LIGHTSDAY,NOT_DARKSDAY',suCode) ~= nil then
+			bGood = (string.sub(suCode,5,-1) ~= string.upper(environ.Day));	-- Is it not the specified day
 		elseif suCode == 'NOT_LGT-DRK' then
 			bGood = (string.find('LIGHTSDAY,DARKSDAY',string.upper(environ.Day)) == nil);
 		elseif string.sub(suCode,1,4) == 'WTH:' then		-- Does the weather match
 			bGood = (string.find(string.upper(environ.Weather),string.sub(suCode,5,-1)) ~= nil);
+		elseif string.sub(suCode,1,4) == 'NOT_WTH:' then	-- Does the weather not match
+			bGood = (string.find(string.upper(environ.Weather),string.sub(suCode,9,-1)) == nil);			
 		elseif suCode == 'WTH-DAY' then						-- Weather matches day's element
 			local sEle = string.upper(environ.DayElement) .. ',NONE';
 			bGood = (string.find(sEle,string.upper(environ.WeatherElement)) ~= nil);
+		elseif suCode == 'NOT_WTH-DAY' then					-- Weather does not match day's element
+			local sEle = string.upper(environ.DayElement) .. ',NONE';
+			bGood = (string.find(sEle,string.upper(environ.WeatherElement)) == nil);
 		elseif string.sub(suCode,1,3) == 'AK:' then			-- National Aketon
 			local pNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation();
 			local sWhich = string.sub(suCode,4,-1);
@@ -1504,17 +1520,7 @@ function gcinclude.CheckInline(gear,sSlot)
 			bGood = (environ.MoonPhase == 'New Moon');
 		elseif suCode == 'FULLMOON' then					-- Moon phase: Full Moon
 			bGood = (environ.MoonPhase == 'Full Moon');
-		elseif suCode == 'FM-DRK-NIGHT' then				-- Full moon-darksday-nighttime
-			bGood = (environ.MoonPhase == 'Full Moon' and 
-				environ.Day == 'Darksday' and 
-				gcinclude.CheckTime(timestamp.hour,'Nighttime',false));
-		elseif suCode == 'NM-LGT-DAY' then					-- New moon-lightsdday-daytime
-			bGood = (environ.MoonPhase == 'New Moon' and 
-				environ.Day == 'Lightsday' and 
-				gcinclude.CheckTime(timestamp.hour,'Daytime',false));
-		elseif suCode == 'HP75P|TP100P' then				-- Player's HP <= 75% and TP <= 100%
-			bGood = (player.HPP <= 75 and player.TP <= 1000);
-		elseif string.find('HM',string.sub(suCode,1,1)) ~= nil and string.sub(suCode,-2,-1) == 'PV' then
+		elseif string.sub(suCode,1,1)) ==  'H' and string.sub(suCode,-2,-1) == 'PV' then
 			local ival = tonumber(string.sub(suCode,7,-3));
 			bGood = gcinclude.CheckInvisibleHP(sGear,ival);
 		elseif suCode == 'SPIRIT:ES' then					-- Pet being summoned is a spirit
@@ -1531,6 +1537,14 @@ function gcinclude.CheckInline(gear,sSlot)
 			end	
 		elseif suCode == 'ACCURACY' then
 			bGood = (gcdisplay.GetToggle('Acc') == true);
+		elseif suCode == 'EVASION' then
+			bGood = (gcdisplay.GetToggle('Eva') == true);
+		elseif string.find(suCode,'TP.LE.') == 1 and string.sub(suCode,-1) == 'P' then
+			local ival = tonumber(string.sub(suCode,7,-2));
+			bGood = ((player.TP/10) <= ival);	-- 1000 TP is 100% TP
+		elseif string.find(suCode,'HP.LE.') == 1 and string.sub(suCode,-1) == 'P' then
+			local ival = tonumber(string.sub(suCode,7,-2));
+			bGood = (player.HPP <= ival);
 		else
 			print(chat.header('CheckInline'):append(chat.message('Warning: Unknown code = ' .. suCode .. '. Ignoring piece of gear.')));
 			bGood = false;
