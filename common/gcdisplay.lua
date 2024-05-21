@@ -66,6 +66,7 @@ function gcdisplay.ShowHelp()
 	print(chat.header('Help'):append(chat.message('/maxspell name -- Determines the highest level spell your current jobs can cast that has the passed name')));
 	print(chat.header('Help'):append(chat.message('/maxsong name [back] -- Determines the highest level song your current jobs can cast that has the passed name or next to highest')));
 	print(chat.header('Help'):append(chat.message('/equipit code|name [slot] [1|2] --Equips specified item in the specified slot and turns off /gswap.')));
+	print(chat.header('Help'):append(chat.message('/petfood [name|ALL|MAX|MIN] --Equips the specified pet food or determines best food and equips it.')));
 	print(chat.header('Help'):append(chat.message('/slot name|pos gear --Locks the specified gear slot and loads the passed gear into said slot')));
 
 	if string.find('SMN,BLM') == nil then
@@ -81,7 +82,6 @@ function gcdisplay.ShowHelp()
 		print(chat.header('Help'):append(chat.message(' ')));
 		print(chat.header('Help'):append(chat.message('Command(s) specific for BST/ or /BST:')));
 		print(chat.header('Help'):append(chat.message('/ajug -- Toggles whether the automated jug pet system is enabled. Default is TRUE. (BST/ only)'))); 
-		print(chat.header('Help'):append(chat.message('/petfood [name|ALL|MAX|MIN] --Equips the specified pet food or determines best food and equips it.')));
 		print(chat.header('Help'):append(chat.message('/db [Norm|BPP|WSS] --Indicates body piece wanted for for debuffing your pet.')));
 	end
 	
