@@ -596,7 +596,7 @@ local function HandlePetAction(PetAction)
 		gcinclude.MoveToCurrent(sets.Pet_Macc,sets.CurrentGear);
     end
 	gcinclude.EquipTheGear(sets.CurrentGear);
-end
+end		-- HandlePetAction
 
 --[[
 	SetSubjobSet is used to pick the appropriate set for the loaded macrobook based on
@@ -623,7 +623,7 @@ local function SetSubjobSet(chkSJ)
 			profile.sjb = chkSJ;
 		end
 	end
-end
+end		-- SetSubjobSet
 
 --[[
 	OnLoad is run whenever you log into your BST or change your job to BST
@@ -658,7 +658,7 @@ profile.OnLoad = function()
 	else
 		gcinclude.offhand = sets.CurrentGear['Sub'];
 	end	
-end
+end		-- OnLoad
 
 --[[
 	OnUnload is run when you change to another job
@@ -666,7 +666,7 @@ end
 
 profile.OnUnload = function()
 	gcinclude.Unload();
-end
+end		-- OnUnload
 
 --[[
 	HandleCommand is run when you type in a command defined in LUASHITACAST. The commands handled here instead
@@ -681,7 +681,7 @@ profile.HandleCommand = function(args)
 	else
 		gcinclude.HandleCommands(args);
 	end
-end
+end		-- HandleCommand
 
 --[[
 	HandleDefault is run when some action happens. This includes both actions by the player and by
@@ -827,7 +827,7 @@ profile.HandleDefault = function()
 					
 	-- Lastly, update the display, just in case
 	gcdisplay.Update();
-end
+end		-- HandleDefault
 
 --[[
 	HandleAbility is used to change the player's gear appropriately.
@@ -866,7 +866,7 @@ profile.HandleAbility = function()
 --]]	
 	end
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleAbility set
-end
+end		-- HandleAbility
 	
 --[[
 	HandleItem is the place to equip gear when a special item is used. Currently only 'Holy Water' 
@@ -897,7 +897,7 @@ profile.HandleItem = function()
 	if bShow == true then
 		gcinclude.EquipTheGear(sets.CurrentGear);
 	end
-end
+end		-- HandleItem
 
 --[[
 	HandlePrecast loads Fast Cast, cast time reduction, and quick cast gear in anticipation of a spell
@@ -913,6 +913,9 @@ profile.HandlePrecast = function()
 		return;
 	end
 	
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(gProfile.Sets.CurrentGear);
+	
 	-- Equip the precast gear set
 	gcinclude.MoveToCurrent(sets.Precast,sets.CurrentGear);
 		
@@ -922,7 +925,7 @@ profile.HandlePrecast = function()
 		sets.CurrentGear['Waist'] = obi;
 	end
 	gcinclude.EquipTheGear(sets.CurrentGear);	
-end
+end		-- HandlePrecast
 
 --[[
 	HandleMidcast is the second function invoked when a player casts a spell. It equips gear appropriate for 
@@ -936,12 +939,15 @@ profile.HandleMidcast = function()
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
 		return;
 	end
+
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(gProfile.Sets.CurrentGear);
 	
 	-- Call the common HandleMidcast now
 	gcinclude.HandleMidcast(bTank);
 	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited midcast set
-end		-- gcinclude.HandleMidcast
+end		-- HandleMidcast
 
 --[[
 	HandlePreshot is similar to HandlePrecast, but for ranged actions. It loads Ranged Accuracy 
@@ -952,12 +958,13 @@ profile.HandlePreshot = function()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
+	
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);	
 		
 	gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
 	gcinclude.EquipTheGear(sets.CurrentGear);
-end
+end		-- HandlePreshot
 
 --[[
 	HandleMidshot is similar to HandleMidcast, but for ranged actions. It loads Ranged Attack 
@@ -969,12 +976,15 @@ profile.HandleMidshot = function()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
+
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(gProfile.Sets.CurrentGear);
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
 
 	-- Equip the composited Midshot set
 	gcinclude.EquipTheGear(sets.CurrentGear);	
-end
+end		-- HandleMidshot
 
 --[[
 	HandleWeaponskill loads the gear appropriately for the weapon skill you're doing
@@ -999,7 +1009,7 @@ profile.HandleWeaponskill = function()
 	end
 
 	-- Clear out the CurrentGear in case of leftovers
-	gcinclude.ClearSet(gProfile.Sets.CurrentGear);
+	gcinclude.ClearSet(sets.CurrentGear);
 
 	-- Call the common weaponskill handler
 	gcinclude.HandleWeaponskill(bTank);
