@@ -50,8 +50,8 @@ Turns off /GSWAP.
 **/sBP**: Toggles on/off whether Blood Pact message should be set to /p. SMN only.  
 **/AJug**: Toggles on/off whether automatic jug pet routine should be enabled. BST only.  
 **/DB: Norm|BPP|WSS**: Indicates which debuff reward should clear on pet. BST only.  
-**/Horn**: Indicates Horn instrument should be equipped. BRD only.  
-**/String**: Indicates String instrument should be equipped. BRD only.  
+**/Horn**: Indicates a horn instrument is equipped. BRD only.  
+**/String**: Indicates a string instrument is equipped. BRD only.  
 
 ## Useful luashitacast commands
 
