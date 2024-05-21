@@ -108,7 +108,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','gs','th','help','wswap','petfood','maxspell','maxsong','region','ajug','db','sbp','showit','equipit','tank','idle','lock','unlock','slot','horn','string','validate','base','t1'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','gs','th','help','wswap','petfood','maxspell','maxsong','region','ajug','db','sbp','showit','equipit','tank','idle','lock','unlock','slot','horn','string','validate','t1'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T{'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T{'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -666,7 +666,7 @@ InlineCodes = { '//MSJ','//SJWAR','//SJMNK','//SJWHM','//SJBLM','//SJRDM','//SJT
 				'//AK:BASTOK','//AK:OMNI','//HP75P|TP100P','//NEWMOON','//FULLMOON',
 				'//NIGHTTIME','//DAYTIME','//DUSK2DAWN','//FM-DRK-NIGHT','//NM-LGT-DAY',
 				'//SPIRIT:ES','//SMNPET','//SPIRIT:EP','//DB:BPP','//DB:WSS',
-				'//DB:ALL','//ACCESSIBLE','//ACCURACY' };
+				'//ACCESSIBLE','//ACCURACY' };
 InLineSpecialCodes = { {'//HP.GE.', 'PV' }, {'//MP.GE.', 'PV' }};
 
 gcinclude.Sets = gcinclude.sets;
@@ -685,7 +685,7 @@ function ClearIntegrityBlock()
 	Integrity['Accessible'] = false;
 	Integrity['Equipable'] = false;
 	Integrity['Where'] = ',';
-end
+end		-- ClearIntegrityBlock
 
 --[[
 	CheckGearIntegrity populates the Integrity structure for the passed piece of
@@ -719,10 +719,20 @@ function CheckGearIntegrity(GearName)
 	-- Regardless of the validity of the item, if there's an inline conditional,
 	-- that portion can be checked.
 	if Integrity['Code'] ~= nil then
-		Integrity['ValidCode'] = (table.find(InlineCodes,Integrity['Code']) ~= nil);
+		local codeTbl = gcinclude.MakeCodeTable(Integrity['Code']);
+		local bValid;
 		
-		-- Check for special codes if not found in the main table
-		if Integrity['ValidCode'] == false then
+		Integrity['ValidCode'] = true;
+		for ii,jj in pairs(codeTbl) do
+			bValid = (table.find(InlineCodes,'//'..jj) ~= nil);
+			if bValid == false then
+				Integrity['ValidCode'] = false;
+			end
+		end
+		
+		-- Check for special codes if not found in the main table. 
+		-- Only works for single conditionals
+		if Integrity['ValidCode'] == false and #codeTbl == 1 then
 			for i,j in pairs(InLineSpecialCodes) do
 				if string.find(Integrity['Code'],j[1]) ~= nil and 
 						j[2] == string.sub(Integrity['Code'],0 - string.len(j[2]),-1) then
@@ -954,7 +964,7 @@ function gcinclude.GetLockedList()
 		gcinclude.LocksNumeric = 'None';
 	end
 	return sList;
-end
+end		-- gcinclude.GetLockedList
 
 --[[
 	Unlock removes the specified (or all) the locked slots. Supported are either the
@@ -979,7 +989,7 @@ function gcinclude.LockUnlock(sType,sWhich)
 			gcinclude.Locks[i][2] = (string.lower(sType) == 'lock');
 		end
 	end
-end
+end		-- gcinclude.LockUnlock
 
 --[[
 	InitializeEleStructure initializes the elemental gear structure
@@ -1055,7 +1065,7 @@ function InitializeEleStructure()
 	gcinclude.elemental_gear['gorget']['water']['searched'] = false;
 	gcinclude.elemental_gear['gorget']['light']['searched'] = false;
 	gcinclude.elemental_gear['gorget']['dark']['searched'] = false;	
-end
+end			-- InitializeEleStructure
 
 --[[
 	CheckForEleGear determines if the player has accessible the piece of gear indicated by type
@@ -1143,7 +1153,7 @@ function gcinclude.CheckForEleGear(sType,sElement)
 			return nil;
 		end
 	end
-end
+end		-- gcinclude.CheckForEleGear
 
 --[[
 	SetVariables defines run settings for luashitacast
@@ -1175,7 +1185,7 @@ function gcinclude.SetVariables()
 	
 	if player.MainJob == 'BST' then
 		gcdisplay.CreateToggle('AJug',true);
-		gcdisplay.CreateCycle('DB', {[1] = 'None', [2] = 'BPP', [3] = 'WSS', [4] = 'All'});
+		gcdisplay.CreateCycle('DB', {[1] = 'Norm', [2] = 'BPP', [3] = 'WSS'});
 	end
 	
 	if player.MainJob == 'BRD' then
@@ -1234,7 +1244,7 @@ function gcinclude.CheckPartyJob(jobs)
 		end
 	end
 	return bFound;
-end
+end		-- gcinclude.CheckPartyJob
 
 --[[
 	CheckTime determines if the current server time is found in the passed name time range.
@@ -1358,7 +1368,7 @@ function gcinclude.MakeCodeTable(sList)
 		end
 	end
 	return sTbl;
-end
+end		-- gcinclude.MakeCodeTable
 
 --[[
 	CheckInline checks for a simple conditional on the item passed into it.
@@ -1392,8 +1402,6 @@ function gcinclude.CheckInline(gear,sSlot)
 	end
 	
 	sGear = string.sub(gear,1,iPos-1);
-
-	--suCode = string.upper(string.sub(gear,iPos+2,-1));
 	suCodeTbl = gcinclude.MakeCodeTable(string.upper(string.sub(gear,iPos,-1)));
 
 	for ii,suCode in pairs(suCodeTbl) do
@@ -1545,7 +1553,7 @@ function gcinclude.t1()
 	else
 		print(chat.header('T1'):append(chat.message(item.Description[2])));
 	end
-end
+end		-- gcinclude.t1
 
 --[[
 	MoveToCurrent copies the gear defined in the passed set to current master
@@ -2094,7 +2102,7 @@ function WhichSlot(sSlot)
 		end
 		return nil;
 	end
-end
+end		-- WhichSlot
 
 --[[
 	HandleCommands processes any commands typed into luashitacast as defined in this file
@@ -2206,9 +2214,13 @@ function gcinclude.HandleCommands(args)
 			print(chat.header('HandleCommands'):append(chat.message('Error: /AJug is only available to beastmasters. Ignoring command')));
 		end	
 	elseif (args[1] == 'th') then			-- Turns on/off whether TH gear should be equipped
-		gcdisplay.AdvanceToggle('TH');
-		toggle = 'Treasure Hunter';
-		status = gcdisplay.GetToggle('TH');
+		if player.MainJob == 'THF' then
+			gcdisplay.AdvanceToggle('TH');
+			toggle = 'Treasure Hunter';
+			status = gcdisplay.GetToggle('TH');
+		else
+			print(chat.header('HandleCommands'):append(chat.message('Error: /TH is only available to thieves. Ignoring command')));
+		end			
 	elseif (args[1] == 'db') then
 		if player.MainJob == 'BST' then
 			if args[2] ~= nil then
@@ -2231,7 +2243,6 @@ function gcinclude.HandleCommands(args)
 		else
 			print(chat.message('All slots are unlocked'));
 		end
-		--gcdisplay.SetLocksAction(gcinclude.LocksNumeric,player.Status);
 	elseif (args[1] == 'unlock') then
 		if args[2] ~= nil then
 			gcinclude.LockUnlock('unlock',args[2]);
@@ -2318,28 +2329,6 @@ function gcinclude.HandleCommands(args)
 		status = gcdisplay.GetCycle('Region');
 	elseif (args[1] == 'validate') then
 		gcinclude.ValidateGearSet(args[2]);
-	elseif (args[1] == 'base') then
-		print(chat.header('HandleCommands'):append(chat.message('Current Max HP = ' .. tostring(player.MaxHP))));
-		print(chat.header('HandleCommands'):append(chat.message('Current Max MP = ' .. tostring(player.MaxMP))));
-		print('HPP = ' .. tostring(player.HPP));
-		print('MPP = ' .. tostring(player.MPP));
-		gcinclude.LockUnlock('lock','all');
-		-- Empty all equipment slots
-		for ii,jj in pairs(gData.Constants.EquipSlots) do	
-			gEquip.UnequipSlot(jj);
-		end
-		
-		print('Max HP = ' .. tostring(AshitaCore:GetMemoryManager():GetPlayer():GetHPMax()));
-		print('Max MP = ' .. tostring(AshitaCore:GetMemoryManager():GetPlayer():GetMPMax()));
-		
-		print('HP = ' .. tonumber(player.HP));
-		print('-HP = ' .. tostring(AshitaCore:GetMemoryManager():GetParty():GetMemberHP(0)));
-		print('MP = ' .. tonumber(player.MP));
-		print('-MP = ' .. tostring(AshitaCore:GetMemoryManager():GetParty():GetMemberMP(0)));		
-		print('HPP = ' .. tostring(player.HPP));
-		print('MPP = ' .. tostring(player.MPP));
-		print('mHP = ' .. tostring(player.MaxHP));
-		print('mMP = ' .. tostring(player.MaxMP));
 	end
 
 	if gcinclude.settings.Messages then
@@ -2853,7 +2842,7 @@ end		-- gcinclude.doPetFood
 function gcinclude.Unload()
 	gcinclude.ClearAlias();
 	gcdisplay.Unload();
-end
+end		-- gcinclude.Unload
 
 --[[
 	Initialize gives luashitacast it's initial settings
@@ -2863,7 +2852,7 @@ function gcinclude.Initialize()
 	gcdisplay.Initialize:once(2);
 	gcinclude.SetVariables:once(2);
 	gcinclude.SetAlias:once(2);
-end
+end		-- gcinclude.Initialize
 
 --[[
 	HandleMidcast is the second function invoked when a player casts a spell. It equips gear appropriate for 
