@@ -673,7 +673,7 @@ InlineCodes = { '//MSJ','//SJWAR','//SJMNK','//SJWHM','//SJBLM','//SJRDM','//SJT
 				'//ACCESSIBLE','//ACCURACY','//EVASION','//NOT_WTH-DAY' };
 InLineSpecialCodes = { 
 						{ '//HP.GE.', 'PV' }, { '//TP.LE.','P' }, { '//HP.LE.','P' },
-						{ '////MPP.LE.', 'P'}, {//MP.LT.', nil },
+						{ '////MPP.LE.', 'P'}, {'//MP.LT.', nil },
 					 };
 
 gcinclude.Sets = gcinclude.sets;
@@ -742,7 +742,7 @@ function CheckGearIntegrity(GearName)
 		if Integrity['ValidCode'] == false and #codeTbl == 1 then
 			for i,j in pairs(InLineSpecialCodes) do
 				if string.find(Integrity['Code'],j[1]) ~= nil and 
-						j[2] == string.sub(Integrity['Code'],0 - string.len(j[2]),-1) then
+						(j[2] == nil or j[2] == string.sub(Integrity['Code'],0 - string.len(j[2]),-1)) then
 					Integrity['ValidCode'] = true;
 				end
 			end
@@ -1431,7 +1431,7 @@ function gcinclude.CheckInline(gear,sSlot)
 		elseif string.sub(suCode,1,7) == 'MPP.LE.' and string.sub(suCode,-1) == 'P' then
 			local ival = tonumber(string.sub(suCode,8,-2));
 			bGood = (gcinclude.MagicalJob('S') == true and player.MPP <= ival);
-		elseif strin.sub(suCode,1,6) == 'MP.LT.' then
+		elseif string.sub(suCode,1,6) == 'MP.LT.' then
 			local ival = tonumber(string.sub(suCode,7,-1));
 			bGood = (gcinclude.MagicalJob('S') == true and player.MP < ival and player.MaxMP >= ival);		
 		elseif suCode == 'WSWAP' then				-- Weapon swapping enabledB
@@ -1480,8 +1480,6 @@ function gcinclude.CheckInline(gear,sSlot)
 			bGood = (suCode == string.upper(environ.Day));	-- Is it the specified day
 		elseif string.find('NOT_FIRESDAY,NOT_EARTHSDAY,NOT_WATERSDAY,NOT_WINDSDAY,NOT_ICEDAY,NOT_LIGHTNINGDAY,NOT_LIGHTSDAY,NOT_DARKSDAY',suCode) ~= nil then
 			bGood = (string.sub(suCode,5,-1) ~= string.upper(environ.Day));	-- Is it not the specified day
-		elseif suCode == 'NOT_LGT-DRK' then
-			bGood = (string.find('LIGHTSDAY,DARKSDAY',string.upper(environ.Day)) == nil);
 		elseif string.sub(suCode,1,4) == 'WTH:' then		-- Does the weather match
 			bGood = (string.find(string.upper(environ.Weather),string.sub(suCode,5,-1)) ~= nil);
 		elseif string.sub(suCode,1,4) == 'NOT_WTH:' then	-- Does the weather not match
@@ -1520,7 +1518,7 @@ function gcinclude.CheckInline(gear,sSlot)
 			bGood = (environ.MoonPhase == 'New Moon');
 		elseif suCode == 'FULLMOON' then					-- Moon phase: Full Moon
 			bGood = (environ.MoonPhase == 'Full Moon');
-		elseif string.sub(suCode,1,1)) ==  'H' and string.sub(suCode,-2,-1) == 'PV' then
+		elseif string.sub(suCode,1,1) ==  'H' and string.sub(suCode,-2,-1) == 'PV' then
 			local ival = tonumber(string.sub(suCode,7,-3));
 			bGood = gcinclude.CheckInvisibleHP(sGear,ival);
 		elseif suCode == 'SPIRIT:ES' then					-- Pet being summoned is a spirit
