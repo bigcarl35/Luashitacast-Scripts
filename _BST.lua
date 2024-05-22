@@ -273,9 +273,9 @@ local sets = {
 	['Elemental'] = {
 	},
 	
-	-- Ninjitsu: There is no gear that a BST can wear to add Ninjitsu skill. Leave the following two
+	-- Ninjutsu: There is no gear that a BST can wear to add Ninjutsu skill. Leave the following two
 	-- gear sets empty.	
-	['Ninjitsu'] = {
+	['Ninjutsu'] = {
 	},
 	
 	-- Summoning: Summoning Magic Skill and Avatar Perpetuation Cost. Currently only gear equippable by any job gives

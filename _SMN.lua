@@ -334,9 +334,9 @@ local sets = {
 	['Elemental'] = {
 	},
 	
-	-- Ninjitsu: There is no gear that a SMN can wear to add Ninjitsu skill. Leave the following two
+	-- Ninjutsu: There is no gear that a SMN can wear to add Ninjutsu skill. Leave the following two
 	-- gear sets empty.
-	['Ninjitsu'] = {
+	['Ninjutsu'] = {
 	},
 	
 	-- Summoning: Summoning Magic Skill, Avatar Perpetuation Cost, Blood Pact Ability Delay.

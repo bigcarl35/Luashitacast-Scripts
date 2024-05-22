@@ -248,9 +248,9 @@ local sets = {
 	['Elemental'] = {
 	},
 
-	-- Ninjitsu: There is no gear that a WAR can wear to add Ninjitsu skill. Leave the following two
+	-- Ninjutsu: There is no gear that a WAR can wear to add Ninjutsu skill. Leave the following two
 	-- gear sets empty.	
-	['Ninjitsu'] = {			-- Ninjitsu Skill, magic burst bonus, magic attack bonus
+	['Ninjutsu'] = {			-- Ninjutsu Skill, magic burst bonus, magic attack bonus
 	},
 	
 	-- Summoning: Summoning Magic Skill and Avatar Perpetuation Cost. Currently only gear equippable by any job gives
@@ -319,7 +319,8 @@ local sets = {
 	you will need to use every weapon skill that your job can do. The leading comment defines what weapon/weapon
 	skill combination the set applies to.
 	
-	SAM can use the following weapons: Great Katana (A+), Polearm (B-), Sword (C+), Club (E), Dagger (E)
+	SAM can use the following weapons: Great Katana (A+), Polearm (B-), Sword (C+), Club (E), Dagger (E),
+	Archery (C+), Throwing (C+)
 	
 	Any other weapon will have no weaponskill available. Weapon skill sets are named based on stat(s) used, 
 	regardless of weapon
@@ -342,6 +343,7 @@ local sets = {
 -		* Strength and Agility based *
 
 		Polearm: Vorpal Thrust
+		Archery: Namas Arrow
 
 --]]
 

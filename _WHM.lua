@@ -250,9 +250,9 @@ local sets = {
 	['Elemental'] = {
 	},
 
-	-- Ninjitsu: There is no gear that a WHM can wear to add Ninjitsu skill. Leave the following two
+	-- Ninjutsu: There is no gear that a WHM can wear to add Ninjutsu skill. Leave the following two
 	-- gear sets empty.	
-	['Ninjitsu'] = {			-- Ninjitsu Skill, magic burst bonus, magic attack bonus
+	['Ninjutsu'] = {			-- Ninjutsu Skill, magic burst bonus, magic attack bonus
 	},
 	
 	-- Summoning: Summoning Magic Skill and Avatar Perpetuation Cost. Currently only gear equippable by any job gives

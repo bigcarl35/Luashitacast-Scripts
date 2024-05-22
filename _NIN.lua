@@ -2,9 +2,9 @@ local profile = {};
 gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 
 --[[
-	This file contains all the gear sets associated with the PLD job. While it isn't outside of the realm of 
+	This file contains all the gear sets associated with the NIN job. While it isn't outside of the realm of 
 	possibility that the subjob might be able to use gear sets too, that is not the emphasis of this program. 
-	It is tailored to handle all the aspects of PLD. If you desire a gear set change to strengthen an ability
+	It is tailored to handle all the aspects of NIN. If you desire a gear set change to strengthen an ability
 	from your subjob that is not supported by this program, you probably will have to make a custom gear set 
 	and use the /gearset command to use it.
 --]]
@@ -33,11 +33,11 @@ local sets = {
 		
 	*** Note ***
 	Unlike when summoner is used as a subjob, /bst's pets are charmed at the max level of your BST or the level
-	of your PLD, whichever is lower. That means you can charm higher level mobs than you would expect with /bst.
+	of your NIN, whichever is lower. That means you can charm higher level mobs than you would expect with /bst.
 	Just note though that you can't have two pets, so if you have charmed a pet with /bst, you can't summon your
 	avatar and visa versa.
 	
-	Also, unlike true pet jobs like SMN and BST, PLD can only have a pet through a subjob. While associated pet
+	Also, unlike true pet jobs like SMN and BST, NIN can only have a pet through a subjob. While associated pet
 	gearsets are available, you equally can just skip them since the pet is at half your level.
 
 	*** Note 2 ***
@@ -52,12 +52,6 @@ local sets = {
 --]]
 	
 	['TP'] = {
-		Head  = 'Mandra. Masque',
-		Body  = 'Choc. Jack Coat',
-		Hands = 'Fsh. Gloves',
-		Rings = { 'San d\'Orian Ring', 'Bastokan Ring' },
-		Legs  = 'Fisherman\'s Hose',
-		Feet  = 'Waders',
     },
 	
 	['TP_Tank'] = {
@@ -122,7 +116,7 @@ local sets = {
 	
 --[[
 	Start weapons are where you define what you want the first row of equipment to look like when you
-	either log in as a PLD or you switch your main job to PLD. 
+	either log in as a NIN or you switch your main job to NIN. 
 --]]
 
 	['Start_Weapons'] = {
@@ -201,7 +195,11 @@ local sets = {
 	include elemental gear which is	dependent on day/weather/weapon skill.
 
 	The first stage is Precast. This is where you place any Fast Cast, cast time reduction, quick 
-	cast gear, and spell interruption rate
+	cast gear, and spell interruption rate.
+	
+	Since NIN uses Ninjutsu, you may question the use of the Pre- and Mid- cast sets. While it is
+	true that Ninjutsu does not expend MP, all the other factors hold true. Populate the sets 
+	accordingly.
 --]]
 
 	['Precast'] = {							
@@ -218,49 +216,56 @@ local sets = {
 --[[
 	Further, there is a break out for each type of spell. I've included a comment on the type of attributes
 	the piece of gear should have. While the spell might have other attributes than those listed, the ones I have
-	listed have gear that a PLD or anyone can wear.
+	listed have gear that a NIN or anyone can wear.
 --]]
 
 	-- Healing: Healing Magic Skill, cure potency. Currently only a Healing Earring affects healing spells from 
 	-- a sub job. No other gear gives bonuses to Healing magic from a sub job. Also, gear with MND bonuses will 
 	-- boost cure spell's potency, but MND gear is automatically equipped prior to the Healing set being equipped 
 	-- in the HandleMidcast function. There's no need to include MND gear here. As to items that add cure potency 
-	-- directly there are a few pieces both for pld and "all jobs". So, include healing magic skill items and 
-	--cure potency items here.
+	-- directly there are a few pieces that are equipable by "all jobs". So, include healing magic skill items and 
+	--cure potency items here. Note that no Ninjutsu can heal.
 	['Healing'] = {
     },
 	
-	-- Dark: Dark Magic Skill. Currently only gear equippable by any job gives is applicable here. There's no gear that's 
-	-- specific for PLD that gives any dark magic skill.	
+	-- Dark: Dark Magic Skill. Currently only gear equippable by any job gives is applicable here. There's no gear 
+	-- that's specific for NIN that gives any dark magic skill. Note: Like healing, no Ninjutsu can do dark magic.
+	-- So, only populate if you're using a subjob that can do dark magic.
 	['Dark'] = {
     },
 	
-	-- Divine: Divine Magic Skill.
+	-- Divine: Divine Magic Skill. Currently only gear equippable by any job gives is applicable here. There's no gear 
+	-- that's specific for NIN that gives any divine magic skill. Note: Like healing, no Ninjutsu can do divine magic.
+	-- So, only populate if you're using a subjob that can do divine magic.
 	['Divine'] = {
 	},
 	
-	-- Enfeebling: Enfeebling Magic Skill.
+	-- Enfeebling: Enfeebling Magic Skill. Currently only gear equippable by any job gives is applicable here. There's no gear 
+	-- that's specific for NIN that gives any enfeebling magic skill. Note: While there are enfeebling Ninjutsu, it does not
+	-- take advantage of Enfeebling magic skill. So, only populate if you're using a subjob that can do enfeebling magic.	
 	['Enfeebling'] = {
 	},
 	
-	-- Enhancing: Enhancing Magic Skill. There is no gear that a PLD can wear to enhance any magic spell. 
-	-- Leave the Enhancing gear sets empty.
+	-- Enhancing: Enhancing Magic Skill. There is no gear that a NIN can wear to boost enhancing magic and there's no
+	-- Ninjutsu that enhances. So, only populate if you're using a subjob that can do enhancing magic.	
 	['Enhancing'] = {
 	},
 	
 	-- Elemental: Elemental Magic Skill. Note: don't include elemental staves or elemental obis/gorgets here, 
-	-- that is done automatically in the HandlePrecast/HandleMidcast functions (if /wswap is enabled).
+	-- that is done automatically in the HandlePrecast/HandleMidcast functions (if /wswap is enabled). There is no 
+	-- gear that a NIN can wear that boosts elemental magic. Currently only gear equippable by any job gives is
+	--- applicable here. So, only populate if you're using a subjob that can do elemental magic.
 	['Elemental'] = {
 	},
 
-	-- Ninjutsu: There is no gear that a PLD can wear to add Ninjutsu skill. Leave the following two
-	-- gear sets empty.	
+	-- Ninjutsu: There's some gear specific to NIN and a few for "all jobs" that boosts your Ninjutsu skill. They should
+	-- be designated here.
 	['Ninjutsu'] = {
 	},
 	
-	-- Summoning: Summoning Magic Skill and Avatar Perpetuation Cost. Currently only gear equippable by any job gives
-	-- is applicable here. There's no gear that's specific for PLD that gives any summoning skill. Note: currently on 
-	-- HorizonXI summoning skills are ignored. Any gear piece that only gives summoning skill will be commented out		
+	-- Summoning: Summoning Magic Skill and Avatar Perpetuation Cost. Currently only gear equippable by any job 
+	-- is applicable here. There's no gear that's specific for NIN that gives any summoning skill. So, only
+	-- populate if your subjob is SMN.
 	['Summoning'] = {
 	},
 	
@@ -287,8 +292,8 @@ local sets = {
 --]]
 
 	-- Stoneskin: Stoneskin Enhancement, Mind, and Enhancing Magic Skill. Mind is 3x more important than enhancing
-	-- Magic Skill. The only pieces of gear a PLD can wear to enhance stoneskin is a Stone Gorget and Stone Mufflers. 
-	-- There's no gear that a PLD (or any job) can wear to enhance magic. Note: This gear set has no effect on 
+	-- Magic Skill. The only pieces of gear a NIN can wear to enhance stoneskin is a Stone Gorget and Stone Mufflers. 
+	-- There's no gear that a NIN (or any job) can wear to enhance magic. Note: This gear set has no effect on 
 	-- Titan's Stoneskin blood pact.
 	['Stoneskin'] = {
 	},	
@@ -301,7 +306,7 @@ local sets = {
     },
 	
 	-- Aspir: Aspir Enhancement, Dark Magic Skill, Dark Magic Accuracy. Currently no gear equippable by a
-	-- PLD enhances Aspir. Aspir is part of Dark Magic, so potency which is based on dark magic skill will
+	-- NIN enhances Aspir. Aspir is part of Dark Magic, so potency which is based on dark magic skill will
 	-- already be loaded in HandleMidcast function and need not be repeated here. No current gear supports
 	-- dark magic accuracy for any job. Magic attack bonus and magic critical hit have no effect on potency.
 	-- Leave the two Aspir gear sets empty.
@@ -328,39 +333,29 @@ local sets = {
 	you will need to use every weapon skill that your job can do. The leading comment defines what weapon/weapon
 	skill combination the set applies to.
 	
-	PLD can use the following weapons: Sword (A+), Club (A-), Staff (A-), Great Sword (B), Dagger (C-), Polearm (E).
-	Any other weapon will have no weaponskill available. Weapon skill sets are named based on stat(s) used, regardless 
-	of weapon
+	NIN can use the following weapons: Katana (A-), Dagger (C+), Sword (C), Great Katana (C-), Club (E), H2H (E),
+	Throwing (A-), Marksmanship (C), Archery (E). Any other weapon will have no weaponskill available. Weapon 
+	skill sets are named based on stat(s) used, regardless of weapon
 --]]
 
 --[[	
 		* Strength based or just skill based *
 
-		Sword: Flat Blade,Circle Blade,Vorpal Blade		
-		Club: Starlight,Brainshaker,Moonlight,Skullbreaker,True Strike
-		Staff: Heavy Swing,Shell Crusher,Full Swing
-		Great Sword: Hard Slash,Crescent Moon
-		Polearm: Double Thrust,Leg Sweep
+		Sword: Flat Blade,Circle Blade,Vorpal Blade	
+		Great Katana: Tachi: Enpi,Tachi: Hobaku,Tachi: Goten,Tachi: Kagero,
+					  Tachi: Jinpu,Tachi: Yukikaze
 -]]
 	
 	['WS_STR'] = {
-    },
-
---[[
-		* Strength and Agility based, even weighting *
-		
-		Great Sword: Sickle Moon
-		Polearm: Vorpal Thrust
---]]
-
-	['WS_STRAGI'] = {
     },
 	
 --[[
 		* Strength and Dexterity based, even weighting *
 		
+		Katana: Blade: Rin,Blade: Retsu,Blade: Jin,Blade: Ten,Blade: Ku
 		Sword: Fast Blade
-		Polearm: Penta Thrust
+		H2H: Combo,Backhand Blow
+
 --]]
 
 	['WS_STRDEX'] = {
@@ -369,10 +364,8 @@ local sets = {
 --[[
 		* Strength and Intelligence based, even weighting *
 		
+		Katana: Blade: Teki,Blade: To,Blade: Chi,Blade: Ei
 		Sword: Burning Blade
-		Staff: Rock Crusher,Earth Crusher,Cataclysm
-		Great Sword: Frostbite,Freezebite,Spinning Slash,Ground Strike
-		Polearm: Thunder Thrust,Raiden Thrust
 --]]
 	
 	['WS_STRINT'] = {
@@ -389,24 +382,25 @@ local sets = {
 --[[
 		* Strength and Mind based, even weighting *
 		
-		Sword: Shining Blade,Seraph Blade,Swift Blade,Savage Blade,Knights of Round
-		Club: Shining Strike,Seraph Strike,Judgement,Black Halo,Randgrith
-		Staff: Starburst,Sunburst,Retribution
-		Great Sword: Shockwave,
+		Sword: Shining Blade,Seraph Blade,Swift Blade
+		Great Katana: Tachi: Koki		
+		Club: Shining Strike
 --]]
 
 	['WS_STRMND'] = {
     },
 
 --[[
-		* Strength and Vitality based, even weighting *
+		* Agility based *
 		
-		Great Sword: Power Slash,Scourge
+		Marksmanship: Hot Shot^,Split Shot^,Sniper Shot^,Slug Shot^
+		
+		^ Ranger must be subjob
 --]]
 	
-	['WS_STRVIT'] = {
+	['WS_AGI'] = {
     },
-
+	
 --[[
 		* Charisma based *
 		
@@ -419,57 +413,40 @@ local sets = {
 --[[
 		* Dexterity based *
 		
-		Dagger: Wasp Sting
+		Katana: Blade: Metsu
+		Dagger: Wasp Sting,Viper Bite,Evisceration
 --]]
 	
 	['WS_DEX'] = {
     },
 
 --[[
-		* Dexterity and Charisma based *
-		
-		Dagger: Dancing Edge
---]]
-	
-	['WS_DEXCHR'] = {
-    },
-	
---[[
 		* Dexterity and Intelligence based *
 		
-		Dagger: Gust Slash
+		Dagger: Gust Slash,Cyclone
 --]]
 	
 	['WS_DEXINT'] = {
-    },
-
---[[
-		* Intelligence based *
-		
-		Staff: Gate of Tartarus
---]]
-	
-	['WS_INT'] = {
     },
 	
 --[[
 		* Intelligence and Mind based *
 		
-		Staff: Spirit Taker
+		Dagger: Energy Steal,Energy Drain,
 --]]
 	
 	['WS_DEXMND'] = {
     },
-	
---[[
-		* Mind based *
 
-		Dagger: Energy Steal
+--[[
+		* Vitality based *
+
+		H2H: Shoulder Tackle
 --]]
 
-	['WS_MND'] = {
+	['WS_VIT'] = {
     },
-
+	
 --[[
 		* Skill based *
 		
@@ -477,15 +454,6 @@ local sets = {
 --]]
 
 	['WS_Skill'] = {
-    },
-	
---[[
-		* HP based *
-		
-		Sword: Spirits Within
---]]
-
-	['WS_HP'] = {
     },
 	
 --[[
@@ -497,30 +465,14 @@ local sets = {
 	},
 	
 --[[
-	The following are abilities affected by gear. Please note that currently there's no gear
-	that affects Chivalry.
+	There are no NIN specific skills that have gear.
 --]]
-
-	['HolyCircle'] = {
-    },
-	
-	['ShieldBash'] = {
-    },
-	
-	['Sentinel'] = {
-    },
-
-	['Cover'] = {
-    },
-
-	['Rampart'] = {
-    },
 		
 --[[
 	Some subjobs really make no sense when combined with paladin, but all abilities across all jobs that
-	have gear that can be equipped by a PLD are included here.
+	have gear that can be equipped by a NIN are included here.
 	
-	The following sub jobs have no skills with equippable gear by a PLD: WAR,THF,BLM,MNK,WHM,RDM,RNG,NIN,
+	The following sub jobs have no skills with equippable gear by a NIN: WAR,THF,BLM,MNK,WHM,RDM,RNG,NIN,
 	SMN,BRD,SAM
 --]]
 	--* BST *--
@@ -595,9 +547,9 @@ end		-- HandlePetAction
 --]]
 
 local function SetSubjobSet(chkSJ)
-	local subs = {['WAR'] = 1, ['MNK'] = 0, ['WHM'] = 1, ['BLM'] = 1, ['RDM'] = 1, ['THF'] = 1,
-				 ['PLD'] = 0, ['DRK'] = nil, ['BST'] = 0, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = 0,
-				 ['SAM'] = 1, ['NIN'] = 1, ['DRG'] = 1, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
+	local subs = {['WAR'] = 1, ['MNK'] = 0, ['WHM'] = 0, ['BLM'] = 0, ['RDM'] = 0, ['THF'] = 1,
+				 ['PLD'] = 0, ['DRK'] = 0, ['BST'] = 0, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = 0,
+				 ['SAM'] = 0, ['NIN'] = nil, ['DRG'] = 0, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
 				 ['DNC'] = 0, ['SCH'] = 0, ['GEO'] = 0, ['RUN'] = 0};
 	local sj = nil;
 
@@ -616,7 +568,7 @@ local function SetSubjobSet(chkSJ)
 end		-- SetSubjobSet
 
 --[[
-	OnLoad is run whenever you log into your PLD or change your job to PLD
+	OnLoad is run whenever you log into your NIN or change your job to NIN
 --]]
 
 profile.OnLoad = function()
@@ -626,7 +578,7 @@ profile.OnLoad = function()
 	gcinclude.Initialize();
 	gcinclude.settings.RegenGearHPP = 50;
     gcinclude.settings.RefreshGearMPP = 60;
-	gcdisplay.SetToggle('Tank',true);		-- Assume PLD is a tank
+	gcdisplay.SetToggle('Tank',true);		-- Assume NIN is a tank
 
 	-- Coded order of operation override
 	gcinclude.settings.priorityEngaged = 'CEFGH';
@@ -634,7 +586,7 @@ profile.OnLoad = function()
 	gcinclude.settings.priorityWeaponSkill = 'ABDE';
 	
 	-- Set your job macro toolbar defaults here. Which set depends on the subjob
-	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 9');		-- PLD
+	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 9');		-- NIN
 	SetSubjobSet(player.SubJob);
 	
 	-- Load up the weapons bar. (This need only be done once.)
@@ -648,9 +600,6 @@ profile.OnLoad = function()
 	else
 		gcinclude.offhand = sets.CurrentGear['Sub'];
 	end
-	
-	-- Special inits for "checking HP" gear
-	gcinclude.Special['Parade Gorget'][72] = { 0, 0, 10, 10 };		-- HP on invisible gear: TP, TP_Tank, Acc, TP_Tank + Acc
 end		-- OnLoad
 
 --[[
@@ -663,7 +612,7 @@ end		-- OnUnload
 
 --[[
 	HandleCommand is run when you type in a command defined in LUASHITACAST. The commands handled here instead
-	of in gcinclude.HandleCommands are specific to PLD or the help system.
+	of in gcinclude.HandleCommands are specific to NIN or the help system.
 --]]
 
 profile.HandleCommand = function(args)
@@ -778,7 +727,7 @@ profile.HandleDefault = function()
 			gcinclude.MoveToCurrent(sets.Resting_Regen,sets.CurrentGear);
 		end
 		
-		if player.MP < player.MaxMP then
+		if gcinclude.MagicalJob('S') == true and player.MP < player.MaxMP then
 			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
 			gcinclude.SwapToStave('dark',false,sets.CurrentGear);			
 		end
@@ -800,8 +749,9 @@ profile.HandleDefault = function()
 					gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
 				end
 			
-				-- if the player's MP is below the threshold setting, equip the idle refresh gear
-				if player.MPP < gcinclude.settings.RefreshGearMPP then
+				-- if the player's MP is below the threshold setting and they have a magical subjob,
+				-- equip the idle refresh gear
+				if gcinclude.MagicalJob('S') == true and player.MPP < gcinclude.settings.RefreshGearMPP then
 					gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
 				end		
 			
@@ -846,20 +796,10 @@ profile.HandleAbility = function()
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 	
-	-- Now process the appropriate job ability. Start with abilities associated with PLD
-	if string.match(ability.Name, 'Holy Circle') then
-		gcinclude.MoveToCurrent(sets.HolyCircle,sets.CurrentGear);
-	elseif string.match(ability.Name, 'Shield Bash') then
-		gcinclude.MoveToCurrent(sets.ShieldBash,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Sentinel') then
-		gcinclude.MoveToCurrent(sets.Sentinel,sets.CurrentGear);	
-	elseif string.contains(ability.Name, 'Cover') then
-		gcinclude.MoveToCurrent(sets.Cover,sets.CurrentGear);	
-	elseif string.contains(ability.Name, 'Rampart') then
-		gcinclude.MoveToCurrent(sets.Rampart,sets.CurrentGear);	
+	-- There are no equipment sets associated with NIN abilities.
 
 	-- And now the subjob abilities
-	elseif string.contains(ability.Name, 'Charm') then			-- assumes /bst	
+	if string.contains(ability.Name, 'Charm') then				-- assumes /bst	
 		gcinclude.MoveToCurrent(sets.Charm,sets.CurrentGear);
 		gcinclude.SwapToStave('light',false,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Weapon Bash') then		-- assumes /drk
