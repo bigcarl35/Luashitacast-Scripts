@@ -2188,6 +2188,10 @@ function gcinclude.HandleCommands(args)
 	elseif (args[1] == 'tank') then			-- Turns on/off whether tanking gear is equipped
 		if string.find('PLD,NIN,RUN,DRK,WAR',player.MainJob) ~= nil then
 			gcdisplay.AdvanceToggle('Tank');
+			if gcdisplay.GetToggle('Tank') == false then
+				gcdisplay.SetToggle('Idle',true);
+				print(chat.header('HandleCommands'):append(chat.message('FYI: Since you disabled \'Tank\', \'Idle\' has been turned on.')));
+			end
 			toggle = 'Tank Set';
 			status = gcdisplay.GetToggle('Tank');
 		else
@@ -2923,8 +2927,8 @@ function gcinclude.HandleMidcast(bTank)
 				gcinclude.MoveToCurrent(gProfile.Sets.Enhancing,gProfile.Sets.CurrentGear);
 			elseif spell.Skill == 'Elemental Magic' then
 				gcinclude.MoveToCurrent(gProfile.Sets.Elemental,gProfile.Sets.CurrentGear);
-			elseif spell.Skill == 'Ninjitsu' then
-				gcinclude.MoveToCurrent(gProfile.Sets.Ninjitsu,gProfile.Sets.CurrentGear);
+			elseif spell.Skill == 'Ninjutsu' then
+				gcinclude.MoveToCurrent(gProfile.Sets.Ninjutsu,gProfile.Sets.CurrentGear);
 			elseif spell.Skill == 'Summoning' then	
 				gcinclude.MoveToCurrent(gProfile.Sets.Summoning,gProfile.Sets.CurrentGear);
 			end
@@ -2935,7 +2939,7 @@ function gcinclude.HandleMidcast(bTank)
 			-- easy ones even though, in certain circumstances, some of these would be positively
 			-- affected by MAB.
 			
-			if string.find('Healing Magic,Enfeebling Magic,Enhancing Magic,Ninjitsu,Summoning,Singing',spell.Skill) == nil then
+			if string.find('Healing Magic,Enfeebling Magic,Enhancing Magic,Ninjutsu,Summoning,Singing',spell.Skill) == nil then
 				gcinclude.MoveToCurrent(gProfile.Sets.MAB,gProfile.Sets.CurrentGear);
 			end
 		elseif cKey == 'E' then			--Magical accuracy
