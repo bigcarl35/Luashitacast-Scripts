@@ -212,7 +212,7 @@ local sets = {
 
 	['Start_Weapons'] = {
 	    Main = { 'Light Staff', 'Kukulcan\'s Staff', 'Solid Wand', 'Yew Wand' },
-		Ammo = { 'Fortune Egg' },
+		Ammo = { 'Hedgehog Bomb', 'Fortune Egg' },
  	},
 	
 --[[

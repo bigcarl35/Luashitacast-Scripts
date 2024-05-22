@@ -148,8 +148,8 @@ local sets = {
 
 	['Start_Weapons'] = {
         Main = { 'Maneater', 'Barbaroi Axe', 'Ryl.Arc. Sword' },	-- Sword added for low level option
-        Sub = { 'Tabarzin//SJNIN', 'Tatami Shield', 'War Pick//SJNIN' },
-        Ammo = 'S. Herbal Broth',
+        Sub  = { 'Tabarzin//SJNIN', 'Tatami Shield', 'War Pick//SJNIN' },
+        Ammo = { 'Hedgehog Bomb', 'S. Herbal Broth' },
     },
 
 --[[

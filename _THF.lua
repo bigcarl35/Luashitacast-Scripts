@@ -824,7 +824,6 @@ profile.HandleDefault = function()
 			eWeap ~= gcinclude.weapon then
 		sets.CurrentGear['Main'] = gcinclude.weapon;
 		sets.CurrentGear['Sub'] = gcinclude.offhand;
-		end
 	end
 	
 	-- The default set is the TP gear set. Load it up

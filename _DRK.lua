@@ -145,8 +145,8 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-        Main = 'Zweihander',
-        Ammo = 'Fortune Egg',
+        Main = 'Demonslicer',
+        Ammo = { 'Hedgehog Bomb', 'Fortune Egg' },
     },
 	
 --[[
