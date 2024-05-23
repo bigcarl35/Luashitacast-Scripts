@@ -2188,7 +2188,7 @@ function gcinclude.HandleCommands(args)
 	elseif (args[1] == 'tank') then			-- Turns on/off whether tanking gear is equipped
 		if string.find('PLD,NIN,RUN,DRK,WAR',player.MainJob) ~= nil then
 			gcdisplay.AdvanceToggle('Tank');
-			if gcdisplay.GetToggle('Tank') == false then
+			if gcdisplay.GetToggle('Tank') == false and gcdisplay.GetToggle('Idle') == false then
 				gcdisplay.SetToggle('Idle',true);
 				print(chat.header('HandleCommands'):append(chat.message('FYI: Since you disabled \'Tank\', \'Idle\' has been turned on.')));
 			end
