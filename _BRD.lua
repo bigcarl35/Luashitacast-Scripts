@@ -706,30 +706,27 @@ profile.SongSkill = T{
 
 --[[
 	BardSongToSet looks for the passed name (and the three other variants) in profile.sets and returns
-	the 2 matching table references (or nil if not found).
+	the matching table reference (or nil if not found).
 --]]
 
 local function BardSongToSet(sType)
-	local sTypeC;
-	local tType,tTypeC;
+	local tType;
 	
 	if sType == nil then
 		print(chat.header('StringToSet'):append(chat.message('Missing type. Skipping.')));
 		return nil,nil;
 	end
-	sTypeC = sType .. '_Conditional';
+
 	-- Loop through all the defined sets
 	for k,_ in pairs(sets) do
 		if k == sType then
 			tType = sets[k];
-		elseif k == sTypeC then
-			tTypeC = sets[k];
 		end
-		if tType ~= nil and tTypeC ~= nil then
+		if tType ~= nil then
 			break;
 		end
 	end
-	return tType,tTypeC;
+	return tType;
 end		-- BardSongToSet
 
 local function HandlePetAction(PetAction)
@@ -1227,8 +1224,7 @@ function profile.HandleSongMidcast()
 			end
 		
 			if sType ~= nil then
-				local tTbl,tTblC;
-				tTbl,tTblC = BardSongToSet(sType);			
+				local tTbl = BardSongToSet(sType);			
 				gcinclude.MoveToCurrent(tTbl,sets.CurrentGear);
 			else
 				print(chat.header('HandleSongMidcast'):append(chat.message('Unrecognized song: ' .. spell.Name)));

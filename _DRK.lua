@@ -855,8 +855,10 @@ profile.OnLoad = function()
 		gcinclude.offhand = sets.CurrentGear['Sub'];
 	end	
 	
-	-- Special inits for "checking HP" gear
-	gcinclude.Special['Parade Gorget'][72] = { 0, 0, 10, 10 };		-- HP on invisible gear: TP, TP_Tank, Acc, TP_Tank + Acc
+	-- Special inits for "checking HP" gear:
+	-- HP on invisible gear: TP, TP_Tank, Acc, TP_Tank + Acc
+	gcinclude.Special['Parade Gorget'][72] = { 0, 0, 10, 10 };
+	gcinclude.Special['Parade Gorget'][73] = { 0, 0, 10, 10 };	
 end		-- OnLoad
 
 --[[
