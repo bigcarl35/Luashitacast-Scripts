@@ -62,7 +62,8 @@ local sets = {
         Waist = { 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
         Legs  = { 'Evoker\'s Spats//PETF', 'Summoner\'s Spats', 'Evoker\'s Spats', 'Shep. Hose', 'Fisherman\'s Hose' }, 
         Feet  = { 'Summoner\'s Pgch.', 'Mannequin Pumps', 'Seer\'s Pumps', 'Waders'},
-    },
+		Ammo  = { 'Hedgehog Bomb', 'Fortune Egg' },
+	},
 
 --[[
 	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
@@ -75,10 +76,10 @@ local sets = {
 		Ears  = 'Beastly Earring//PETF',
 		Neck  = 'Peacock Amulet',
 		Body  = 'Austere Robe',			-- Needed to offset the "possible" Vermillion Cloak		
-		Hands = 'Battle Gloves',
+		Hands = { 'Carbuncle Mitts//CARBY', 'Battle Gloves' },
 		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
 		Waist = { 'Life Belt', 'Tilt Belt' },
-		Legs  = 'Evoker\'s Spats//PETF',
+		Legs  = { 'Shep. Hose//PETF', 'Evoker\'s Spats' },
     },
 	
 --[[
@@ -273,6 +274,7 @@ local sets = {
 	['Midshot'] = {
 		Head  = 'Optical Hat',
 		Neck  = 'Peacock Amulet',
+		Body  = 'Austere Robe',		-- To bypass the conditions of a v.cloak
 		Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
     },
 	
@@ -1190,9 +1192,7 @@ profile.HandleAbility = function()
 	elseif string.match(ability.Name, 'Weapon Bash') then
 		gcinclude.MoveToCurrent(sets.WeaponBash,sets.CurrentGear);
 	elseif string.contains(ability.Name, 'Souleater') then
-		gcinclude.MoveToCurrent(sets.Souleater,sets.CurrentGear);
-	elseif string.find(ability.Name, 'Jump') then		-- assumes /drk
-		gcinclude.MoveToCurrent(sets.Jumps,sets.CurrentGear);		
+		gcinclude.MoveToCurrent(sets.Souleater,sets.CurrentGear);		
 	-- /RNG
 	elseif string.contains(ability.Name, 'Sharpshot') then
 		gcinclude.MoveToCurrent(sets.Sharpshot,sets.CurrentGear);
@@ -1204,8 +1204,7 @@ profile.HandleAbility = function()
 		gcinclude.MoveToCurrent(sets.Barrage,sets.CurrentGear);	
 	-- /SAM
 	elseif string.contains(ability.Name, 'Warding Circle') then
-		gcinclude.MoveToCurrent(sets.WardingCircle,sets.CurrentGear);
-print('Warding Circle');			
+		gcinclude.MoveToCurrent(sets.WardingCircle,sets.CurrentGear);			
 	elseif string.contains(ability.Name, 'Third Eye') then
 		gcinclude.MoveToCurrent(sets.ThirdEye,sets.CurrentGear);
 	elseif string.contains(ability.Name, 'Hasso') then
@@ -1219,8 +1218,7 @@ print('Warding Circle');
 		gcinclude.MoveToCurrent(sets.Yonin,sets.CurrentGear);
 	-- /DRG
 	elseif string.contains(ability.Name, 'Ancient Circle') then
-		gcinclude.MoveToCurrent(sets.AncientCircle,sets.CurrentGear);
-print('Ancient Circle');			
+		gcinclude.MoveToCurrent(sets.AncientCircle,sets.CurrentGear);			
 	elseif string.contains(ability.Name, 'Jump') then
 		gcinclude.MoveToCurrent(sets.Jumps,sets.CurrentGear);
 	-- /PLD
@@ -1233,8 +1231,7 @@ print('Ancient Circle');
 	elseif string.contains(ability.Name, 'Cover') then
 		gcinclude.MoveToCurrent(sets.Cover,sets.CurrentGear);	
 	-- SMN
-	elseif string.find(ability.Name, 'Astral Flow') then		-- assumes /drk
-		gcinclude.MoveToCurrent(sets.AstralFlow,sets.CurrentGear);
+	elseif string.find(ability.Name, 'Astral Flow') the		gcinclude.MoveToCurrent(sets.AstralFlow,sets.CurrentGear);
 	else
 		-- Since we got here, the action has to be a SMN Blood Pact
 		gcinclude.MoveToCurrent(sets.BP,sets.CurrentGear);

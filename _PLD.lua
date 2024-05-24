@@ -65,10 +65,10 @@ local sets = {
 	
 --[[
 	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
-	Remember that DEX converts to accuracy: for every 1 point of DEX you get 0.75 points
-	of accuracy. Tank_Accuracy is a subset of Accuracy. It lets you specify what accuracy
-	gear to equip that doesn't compromise your tanking set as much as a full-blown accuracy
-	set would.
+	Remember that DEX converts to accuracy: (horizon) for every 1 point of DEX you get 
+	0.70 points of accuracy if wielding a 2H weapon, 0.65 for a 1H weapon, and 0.60 for H2H. 
+	Tank_Accuracy is a subset of Accuracy. It lets you specify what accuracy gear to equip 
+	that doesn't compromise your tanking set as much as a full-blown accuracy set would.
 --]]
 	
 	['Accuracy'] = {
@@ -497,8 +497,7 @@ local sets = {
 	},
 	
 --[[
-	The following are abilities affected by gear. Please note that currently there's no gear
-	that affects Chivalry.
+	The following are abilities affected by gear.
 --]]
 
 	['HolyCircle'] = {
@@ -515,17 +514,31 @@ local sets = {
 
 	['Rampart'] = {
     },
+
+--[[
+	The following are abilities that there's no gear for, but there's gear that you might equip that
+	aids the PLD ability. (Ex: Emnity.)
+--]]
+
+	['Invincible'] = {
+	},
+	
+	['Chivalry'] = {
+	},
 		
 --[[
-	Some subjobs really make no sense when combined with paladin, but all abilities across all jobs that
-	have gear that can be equipped by a PLD are included here.
-	
-	The following sub jobs have no skills with equippable gear by a PLD: WAR,THF,BLM,MNK,WHM,RDM,RNG,NIN,
-	SMN,BRD,SAM
+	Some subjobs really make no sense when combined with paladin, but all abilities across all jobs 
+	are included here.
 --]]
-	--* BST *--
-	['Charm'] = {		-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration)
+	--* /BST *--
+	['Charm'] = {						-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration)
     },
+	
+	['Reward'] = {
+	},
+	
+	['Tame'] = {						-- Remember that higher if your INT is higher than the target's INT, you're less likely to be resisted
+	},
 	
 	['Pet_Attack'] = {					-- Pet's strength, not accuracy
 	},
@@ -536,14 +549,118 @@ local sets = {
 	['Pet_Matt'] = {					-- Pet's Magical Attack
 	},
 	
+	--* /WAR *--
+	['Provoke'] = {
+	},
+	
+	['Berserk'] = {
+	},
+	
+	['Defender'] = {
+	},
+	
+	['Warcry'] = {
+	},
+	
+	--* /MNK *--
+	['Boost'] = {
+	},
+	
+	['Focus'] = {
+	},
+	
+	['Dodge'] = {
+	},
+	
+	['Chakra'] = {
+	},
+	
+	--* /THF *--
+	['Steal'] = {
+	},
+	
+	['SneakAttack'] = {
+	},
+	
+	['Flee'] = {
+	},
+	
+	['TrickAttack'] = {
+	},
+	
+	['Mug'] = {
+	},
+	
+	--* /WHM *--
+	['DivineSeal'] = {
+	},
+	
+	--* /BLM *--
+	['ElementalSeal'] = {
+	},
+	
+	--* /RDM *--
+	-- No skills
+	
 	--* /DRK *--
+	['ArcaneCircle'] = {
+	},
+	
+	['Last_Resort'] = {
+	},
+	
 	['WeaponBash'] = {
 	},
 	
+	['Souleater'] = {
+	},
+	
+	--* /BRD *--
+	-- No skills
+	
+	--* /RNG *--
+	['Sharpshot'] = {
+	},
+	
+	['Scavenge'] = {
+	},
+	
+	['Camouflage'] = {
+	},
+	
+	['Barrage'] = {
+	},
+	
+	--* /SAM *--
+	['WardingCircle'] = {
+	},
+	
+	['Third_Eye'] = {
+	},
+	
+	['Hasso'] = {
+	},
+	
+	['Meditate'] = {
+	},
+	
+	['Seigan'] = {
+	},
+	
+	--* /NIN *--
+	['Yonin'] = {
+	},
+	
 	--* /DRG *--
+	['Ancient_Circle'] = {
+	},
+	
 	['Jumps'] = {		-- Jump and High Jump, Super is too high a level
 	},
-		
+	
+	--* /SMN *--
+	-- No skills
+	
 --[[
 	The following set is used to dynamically create a gear set to be displayed once rather
 	than in a piecemeal manner. It is hoped that this will cut down on flickering gear and
@@ -838,11 +955,23 @@ end		-- HandleDefault
 
 profile.HandleAbility = function()
 	local ability = gData.GetAction();
-			
-	if gcdisplay.GetToggle('GSwap') == false then
-		return;
+	local eq = gData.GetEquipment();
+	
+	if ((gcdisplay.GetToggle('GSwap') == false) or
+		(ability.Name == 'Release') or 
+		(ability.Name == 'Assault') or
+		(ability.Name == 'Retreat')) then 
+		return 
 	end
 
+	-- Store the name of the ammo. This is used when the ammo slot is automatically
+	-- populated so that the original ammo can be re-equipped.
+	if eq.Ammo ~= nil then
+		profile.sAmmo = eq.Ammo.Name;
+	else
+		profile.sAmmo = nil;
+	end
+	
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 	
@@ -857,14 +986,95 @@ profile.HandleAbility = function()
 		gcinclude.MoveToCurrent(sets.Cover,sets.CurrentGear);	
 	elseif string.contains(ability.Name, 'Rampart') then
 		gcinclude.MoveToCurrent(sets.Rampart,sets.CurrentGear);	
-
+	elseif string.contains(ability.Name, 'Invincible') then
+		gcinclude.MoveToCurrent(sets.Invincible,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Chivalry') then
+		gcinclude.MoveToCurrent(sets.Chivalry,sets.CurrentGear);
+		
 	-- And now the subjob abilities
-	elseif string.contains(ability.Name, 'Charm') then			-- assumes /bst	
+	-- /BST
+	elseif string.contains(ability.Name, 'Charm') then
 		gcinclude.MoveToCurrent(sets.Charm,sets.CurrentGear);
 		gcinclude.SwapToStave('light',false,sets.CurrentGear);
-	elseif string.match(ability.Name, 'Weapon Bash') then		-- assumes /drk
+	elseif string.contains(ability.Name, 'Reward') then
+		-- Pet reward. Make sure that pet food already equipped
+		if profile.sAmmo == nil or string.find(string.lower(profile.sAmmo),'pet f') == nil then		-- something else equipped
+			profile.bAmmo = gcinclude.doPetFood('max',nil);
+		end	
+		gcinclude.MoveToCurrent(sets.Reward,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Tame') then
+		gcinclude.MoveToCurrent(sets.Tame,sets.CurrentGear);
+	-- /WAR
+	elseif string.contains(ability.Name, 'Provoke') then
+		gcinclude.MoveToCurrent(sets.Provoke,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Berserk') then
+		gcinclude.MoveToCurrent(sets.Berserk,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Defender') then
+		gcinclude.MoveToCurrent(sets.Defender,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Warcry') then
+		gcinclude.MoveToCurrent(sets.Warcry,sets.CurrentGear);
+	--* /MNK *--
+	elseif string.contains(ability.Name, 'Boost') then
+		gcinclude.MoveToCurrent(sets.Boost,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Focus') then
+		gcinclude.MoveToCurrent(sets.Focus,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Dodge') then
+		gcinclude.MoveToCurrent(sets.Dodge,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Chakra') then
+		gcinclude.MoveToCurrent(sets.Chakra,sets.CurrentGear);
+	-- /THF
+	elseif string.contains(ability.Name, 'Steal') then
+		gcinclude.MoveToCurrent(sets.Steal,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Sneak Attack') then
+		gcinclude.MoveToCurrent(sets.SneakAttack,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Flee') then
+		gcinclude.MoveToCurrent(sets.Flee,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Trick Attack') then
+		gcinclude.MoveToCurrent(sets.TrickAttack,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Mug') then
+		gcinclude.MoveToCurrent(sets.Mug,sets.CurrentGear);
+	-- /WHM
+	elseif string.contains(ability.Name, 'Divine Seal') then
+		gcinclude.MoveToCurrent(sets.DivineSeal,sets.CurrentGear);
+	-- /BLM
+	elseif string.contains(ability.Name, 'Elemental Seal') then
+		gcinclude.MoveToCurrent(sets.ElementalSeal,sets.CurrentGear);
+	-- /DRK
+	elseif string.contains(ability.Name, 'Arcane Circle') then
+		gcinclude.MoveToCurrent(sets.ArcaneCircle,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Last Resort') then
+		gcinclude.MoveToCurrent(sets.Last_Resort,sets.CurrentGear);
+	elseif string.match(ability.Name, 'Weapon Bash') then
 		gcinclude.MoveToCurrent(sets.WeaponBash,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Jump') then			-- assumes /drg
+	elseif string.contains(ability.Name, 'Souleater') then
+		gcinclude.MoveToCurrent(sets.Souleater,sets.CurrentGear);
+	-- /RNG
+	elseif string.contains(ability.Name, 'Sharpshot') then
+		gcinclude.MoveToCurrent(sets.Sharpshot,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Scavenge') then
+		gcinclude.MoveToCurrent(sets.Scavenge,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Camouflage') then
+		gcinclude.MoveToCurrent(sets.Camouflage,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Barrage') then
+		gcinclude.MoveToCurrent(sets.Barrage,sets.CurrentGear);
+	-- /SAM
+	elseif string.contains(ability.Name, 'Warding Circle') then
+		gcinclude.MoveToCurrent(sets.WardingCircle,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Third Eye') then
+		gcinclude.MoveToCurrent(sets.Third_Eye,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Hasso') then
+		gcinclude.MoveToCurrent(sets.Hasso,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Meditate') then
+		gcinclude.MoveToCurrent(sets.Meditate,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Seigan') then
+		gcinclude.MoveToCurrent(sets.Seigan,sets.CurrentGear);
+	-- /NIN
+	elseif string.contains(ability.Name, 'Yonin') then
+		gcinclude.MoveToCurrent(sets.Yonin,sets.CurrentGear);
+	-- /DRG
+	elseif string.contains(ability.Name, 'Ancient Circle') then
+		gcinclude.MoveToCurrent(sets.AncientCircle,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Jump') then
 		gcinclude.MoveToCurrent(sets.Jumps,sets.CurrentGear);		
 	else
 	
