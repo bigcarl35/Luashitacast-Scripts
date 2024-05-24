@@ -84,7 +84,7 @@ want me to add any more.
 //EVASION		Equip if 'Eva' enabled
 //TP.LE.###P	Equip if player's TP <= #%
 //HP.LE.###P	Equip if player's HP <= #%
-
+//TANK			Equip if Tank is toggled on
 
 
 Crafting Types: ALC,BONE,CLOTH,COOK,GSM,LTH,BSM,WW

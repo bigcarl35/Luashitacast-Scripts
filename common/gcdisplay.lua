@@ -69,7 +69,7 @@ function gcdisplay.ShowHelp()
 	print(chat.header('Help'):append(chat.message('/petfood [name|ALL|MAX|MIN] --Equips the specified pet food or determines best food and equips it.')));
 	print(chat.header('Help'):append(chat.message('/slot name|pos gear --Locks the specified gear slot and loads the passed gear into said slot')));
 
-	if string.find('SMN,BLM') == nil then
+	if string.find('SMN,BLM',Main) == nil then
 		print(chat.header('Help'):append(chat.message('/wswap -- Toggles whether automatic weapon swapping is permitted. Default is FALSE.')));
 	end
 

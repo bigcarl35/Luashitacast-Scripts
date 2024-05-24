@@ -209,6 +209,9 @@ gcinclude.BRE = 'Breath';
 gcinclude.HORN = 'Horn';
 gcinclude.STRING = 'String';
 
+-- Define job list that can tank
+gcinclude.JobList = 'PLD,NIN,RUN,DRK,WAR,BLU';
+
 -- Define constants dealing with magic gear and jobs
 gcinclude.ELEMENT = 'ele';
 gcinclude.OBI = 'obi';
@@ -670,7 +673,7 @@ InlineCodes = { '//MSJ','//SJWAR','//SJMNK','//SJWHM','//SJBLM','//SJRDM','//SJT
 				'//WTH-DAY','//AK:WINDY','//AK:SANDY','//AK:BASTOK','//AK:OMNI',
 				'//NEWMOON','//FULLMOON','//NIGHTTIME','//DAYTIME','//DUSK2DAWN',
 				'//SPIRIT:ES','//SMNPET','//SPIRIT:EP','//DB:BPP','//DB:WSS',
-				'//ACCESSIBLE','//ACCURACY','//EVASION','//NOT_WTH-DAY' };
+				'//ACCESSIBLE','//ACCURACY','//EVASION','//NOT_WTH-DAY','//TANK' };
 InLineSpecialCodes = { 
 						{ '//HP.GE.', 'PV' }, { '//TP.LE.','P' }, { '//HP.LE.','P' },
 						{ '////MPP.LE.', 'P'}, {'//MP.LT.', nil },
@@ -1181,7 +1184,7 @@ function gcinclude.SetVariables()
 	if string.find('PLD,NIN,RUN',player.MainJob) ~= nil then
 		gcdisplay.CreateToggle('Tank',true);
 		gcdisplay.CreateToggle('Idle',true);
-	elseif string.find('DRK,WAR,THF',player.MainJob) ~= nil then
+	elseif string.find('DRK,WAR,THF,BLU',player.MainJob) ~= nil then
 		gcdisplay.CreateToggle('Tank',false);
 		gcdisplay.CreateToggle('Idle',true);
 	end
@@ -1543,6 +1546,8 @@ function gcinclude.CheckInline(gear,sSlot)
 		elseif string.find(suCode,'HP.LE.') == 1 and string.sub(suCode,-1) == 'P' then
 			local ival = tonumber(string.sub(suCode,7,-2));
 			bGood = (player.HPP <= ival);
+		elseif suCode == 'TANK' then
+			bGood = (gcdisplay.GetToggle('Tank') == true);			
 		else
 			print(chat.header('CheckInline'):append(chat.message('Warning: Unknown code = ' .. suCode .. '. Ignoring piece of gear.')));
 			bGood = false;
@@ -2178,7 +2183,7 @@ function gcinclude.HandleCommands(args)
 		toggle = 'Kite Set';
 		status = gcdisplay.GetToggle('Kite');
 	elseif (args[1] == 'idle') then			-- Turns on/off whether movement gear is equipped
-		if string.find('PLD,NIN,RUN,DRK,WAR,THF',player.MainJob) ~= nil then
+		if string.find(gcinclude.JobList,player.MainJob) ~= nil then
 			gcdisplay.AdvanceToggle('Idle');
 			toggle = 'Idle';
 			status = gcdisplay.GetToggle('Idle');
@@ -2186,7 +2191,7 @@ function gcinclude.HandleCommands(args)
 			print(chat.header('HandleCommands'):append(chat.message('Error: Your job does not support the idle command. Ignoring')));
 		end
 	elseif (args[1] == 'tank') then			-- Turns on/off whether tanking gear is equipped
-		if string.find('PLD,NIN,RUN,DRK,WAR',player.MainJob) ~= nil then
+		if string.find(gcinclude.JobList,player.MainJob) ~= nil then
 			gcdisplay.AdvanceToggle('Tank');
 			if gcdisplay.GetToggle('Tank') == false and gcdisplay.GetToggle('Idle') == false then
 				gcdisplay.SetToggle('Idle',true);
