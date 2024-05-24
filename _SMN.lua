@@ -67,8 +67,10 @@ local sets = {
 
 --[[
 	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
-	Remember that DEX converts to accuracy: for every 1 point of DEX you get 0.75 points
-	of accuracy.
+	Remember that DEX converts to accuracy: (horizon) for every 1 point of DEX you get 
+	0.70 points of accuracy if wielding a 2H weapon, 0.65 for a 1H weapon, and 0.60 for H2H. 
+	Tank_Accuracy is a subset of Accuracy. It lets you specify what accuracy gear to equip 
+	that doesn't compromise your tanking set as much as a full-blown accuracy set would.
 --]]
 	
 	['Accuracy'] = {
@@ -765,8 +767,7 @@ local sets = {
 	},
 
 	--* /NIN *--
-	['Yonin'] = {
-	},
+	-- No skills
 	
 	--* /DRG *--
 	['AncientCircle'] = {
@@ -997,6 +998,16 @@ profile.HandleDefault = function()
 		return;
 	end
 
+	-- Assuming you're /bst, when you want to reward your pet and you do not have pet food 
+	-- equipped or when you want to summon a pet and a jug is not equipped, the current item 
+	-- in the ammo slot is saved. The following will set it back to what you had before 
+	-- either of those two items were equipped.
+	if player.SubJob == 'BST' and profile.bAmmo then
+		gFunc.ForceEquip('Ammo',profile.sAmmo);
+		profile.sAmmo = nil;
+		profile.bAmmo = false;
+	end
+	
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 	
@@ -1213,9 +1224,6 @@ profile.HandleAbility = function()
 		gcinclude.MoveToCurrent(sets.Meditate,sets.CurrentGear);
 	elseif string.contains(ability.Name, 'Seigan') then
 		gcinclude.MoveToCurrent(sets.Seigan,sets.CurrentGear);
-	-- /NIN
-	elseif string.contains(ability.Name, 'Yonin') then
-		gcinclude.MoveToCurrent(sets.Yonin,sets.CurrentGear);
 	-- /DRG
 	elseif string.contains(ability.Name, 'Ancient Circle') then
 		gcinclude.MoveToCurrent(sets.AncientCircle,sets.CurrentGear);			
@@ -1231,7 +1239,8 @@ profile.HandleAbility = function()
 	elseif string.contains(ability.Name, 'Cover') then
 		gcinclude.MoveToCurrent(sets.Cover,sets.CurrentGear);	
 	-- SMN
-	elseif string.find(ability.Name, 'Astral Flow') the		gcinclude.MoveToCurrent(sets.AstralFlow,sets.CurrentGear);
+	elseif string.find(ability.Name, 'Astral Flow') then
+		gcinclude.MoveToCurrent(sets.AstralFlow,sets.CurrentGear);
 	else
 		-- Since we got here, the action has to be a SMN Blood Pact
 		gcinclude.MoveToCurrent(sets.BP,sets.CurrentGear);

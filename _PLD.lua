@@ -648,8 +648,7 @@ local sets = {
 	},
 	
 	--* /NIN *--
-	['Yonin'] = {
-	},
+	-- No skills
 	
 	--* /DRG *--
 	['Ancient_Circle'] = {
@@ -826,6 +825,16 @@ profile.HandleDefault = function()
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
+	end
+
+	-- Assuming you're /bst, when you want to reward your pet and you do not have pet food 
+	-- equipped or when you want to summon a pet and a jug is not equipped, the current item 
+	-- in the ammo slot is saved. The following will set it back to what you had before 
+	-- either of those two items were equipped.
+	if player.SubJob == 'BST' and profile.bAmmo then
+		gFunc.ForceEquip('Ammo',profile.sAmmo);
+		profile.sAmmo = nil;
+		profile.bAmmo = false;
 	end
 	
 	-- Clear out the CurrentGear in case of leftovers
@@ -1068,24 +1077,11 @@ profile.HandleAbility = function()
 		gcinclude.MoveToCurrent(sets.Meditate,sets.CurrentGear);
 	elseif string.contains(ability.Name, 'Seigan') then
 		gcinclude.MoveToCurrent(sets.Seigan,sets.CurrentGear);
-	-- /NIN
-	elseif string.contains(ability.Name, 'Yonin') then
-		gcinclude.MoveToCurrent(sets.Yonin,sets.CurrentGear);
 	-- /DRG
 	elseif string.contains(ability.Name, 'Ancient Circle') then
 		gcinclude.MoveToCurrent(sets.AncientCircle,sets.CurrentGear);
 	elseif string.contains(ability.Name, 'Jump') then
 		gcinclude.MoveToCurrent(sets.Jumps,sets.CurrentGear);		
-	else
-	
---[[
-		Abilities associated with subjobs go here. The following subjobs have
-		no ability entries because of lack of gear or just doesn't make sense: 
-		SMN,WAR,MNK,WHM,BLM,RDM,BRD,RNG,SAM,THF
-		
-		Note: for /THF, sneak attack gets no bonus from DEX and trick attack gets
-		no bonus from AGI
---]]	
 	end
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleAbility set
 end		-- HandleAbility
