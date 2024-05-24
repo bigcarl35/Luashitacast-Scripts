@@ -429,7 +429,7 @@ local sets = {
 --]]
 
 --[[
-		* Strength based or just skill based *
+		* Strength based *
 		
 		Staff: Heavy Swing,Shell Crusher,Full Swing
 		Club: Brainshaker,Skullbreaker,True Strike

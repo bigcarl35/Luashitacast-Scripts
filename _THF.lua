@@ -78,9 +78,6 @@ local sets = {
         Feet  = 'Bounding Boots',
     },
 	
-	['Pet_Accuracy'] = {
-    },
-	
 --[[
 	If evasion wanted, equip evasion gear
 --]]
@@ -94,9 +91,6 @@ local sets = {
         Waist = 'Mrc.Cpt. Belt',
         Legs  = 'San. Trousers',
         Feet  = 'Bounding Boots',
-    },
-
-	['Pet_Evasion'] = {
     },
 	
 --[[
@@ -345,7 +339,7 @@ local sets = {
 --]]
 
 --[[
-		* Strength based or just skill based *
+		* Strength based *
 		
 		Sword: Flat Blade,Circle Blade,Vorpal Blade,Spirits Within,Mercy Stroke
 		Club: Starlight,Skull Breaker,True Strike

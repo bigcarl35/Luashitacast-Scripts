@@ -334,7 +334,7 @@ local sets = {
 --]]
 
 --[[	
-		* Strength based or just skill based *
+		* Strength based *
 
 		Sword: Flat Blade,Circle Blade,Vorpal Blade		
 		Club: Starlight,Brainshaker,Moonlight,Skullbreaker,True Strike

@@ -2,9 +2,9 @@ local profile = {};
 gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 
 --[[
-	This file contains all the gear sets associated with the BRD job. While it isn't outside of the realm of 
+	This file contains all the gear sets associated with the RNG job. While it isn't outside of the realm of 
 	possibility that the subjob might be able to use gear sets too, that is not the emphasis of this program. 
-	It is tailored to handle all the aspects of BRD. If you desire a gear set change to strengthen an ability
+	It is tailored to handle all the aspects of RNG. If you desire a gear set change to strengthen an ability
 	from your subjob that is not supported by this program, you probably will have to make a custom gear set 
 	and use the /gearset command to use it.
 --]]
@@ -33,10 +33,13 @@ local sets = {
 		
 	*** Note ***
 	Unlike when summoner is used as a subjob, /bst's pets are charmed at the max level of your BST or the level
-	of your BRD, whichever is lower. That means you can charm higher level mobs than you would expect with /bst.
+	of your WAR, whichever is lower. That means you can charm higher level mobs than you would expect with /bst.
 	Just note though that you can't have two pets, so if you have charmed a pet with /bst, you can't summon your
 	avatar and visa versa.
-	
+
+	*** Note 2 ***
+	No gear that supports bard songs can be worn by any job except a bard, no there's no support given here for
+	/BRD.	
 --]]
 
 --[[
@@ -110,6 +113,8 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
+		Main =  'Katayama',
+		Ammo = 'Fortune Egg',		
     },
 	
 --[[
@@ -117,8 +122,8 @@ local sets = {
 --]]
 	
 	['Town'] = {
-		Head = 'Lilac Corsage',	
-		Body = 'Ducal Aketon//AK:OMNI',
+		Head = 'Lilac Corsage',
+		Body = 'Ducal Aketon//AK:OMNI',		
     },
 	
 --[[
@@ -151,7 +156,7 @@ local sets = {
 
 	['MAB'] = {
 	},
-
+	
 --[[
 	Preshot is the first stage of when a ranged shot is being performed. This is where you place any 
 	gear that reduces the time it takes to shoot (snap shot, rapid shot, haste).
@@ -169,86 +174,6 @@ local sets = {
     },
 
 --[[
-	The 'meat and potatos' of being a bard is the songs. The following sets allow the bard to
-	individualize songs based on type plus emulate the precast/midcast of regular spells.
-	
-	Song_Precast is where you specify fastcast and song spellcast time reduction gear.
---]]
-
-	['Song_Precast'] = {							
-	},
-
---[[
-	Song_Midcast is where you specify fastcast for recast reductions and song duration gear.
-	Also included is the default instrumentation gear. Don't forget to use the //HORN and
-	//STRING inline conditionals.
---]]	
-
-	['Song_Midcast'] = {
-	},
-
---[[
-	Each of the sections below are so you can tailor your midcast gear for the specific type
-	of song. The entries use the standard prioritization sequences and support inline and 
-	conditional blocks.
---]]
-
-	['Ballad'] = {
-	},
-	
-	['Carol'] = {
-	},
-	
-	['Elegy'] = {
-	},
-		
-	['Etude'] = {
-	},
-	
-	['Finale'] = {
-	},
-	
-	['Hymnus'] = {
-	},
-	
-	['Lullaby'] = {
-	},
-	
-	['Madrigal'] = {
-	},
-	
-	['Mambo'] = {
-	},
-	
-	['March'] = {
-	},
-	
-	['Mazurka'] = {
-	},
-	
-	['Minne'] = {
-	},
-	
-	['Minuet'] = {
-		Range = 'Flute//HORN',
-	},
-	
-	['Paeon'] = {
-	},	
-	
-	['Prelude'] = {
-	},
-	
-	['Requiem'] = {
-	},
-	
-	['Threnody'] = {
-	},
-	
-	['Virelai'] = {
-	},
-	
---[[
 	Spells are a bit different. Each type of spell can have it's own enhancement gear as well as 
 	stat based gear. (In some cases individual spells have special entries.) These sets do not 
 	include elemental gear which is	dependent on day/weather/weapon skill.
@@ -263,8 +188,6 @@ local sets = {
 --[[
 	The second stage is Midcast. This is where you'll want to equip magic attack, or magic enhancing 
 	gear. (Magic Attack Bonus also happens here, but is broken out into it's own gear set. See MAB.)
-	
-	For songs, fast cast is used for recast reductions. You also include song duration gear here.
 --]]	
 
 	['Midcast'] = {
@@ -293,7 +216,7 @@ local sets = {
 	},
 	
 	-- Enfeebling Magic Skill.	Currently only gear equippable by any job gives is applicable here. There's no gear that's 
-	-- specific for WAR that gives any enfeebling magic skill.	Also consider putting magical accuracy gear here too.
+	-- specific for WAR that gives any enfeebling magic skill.	
 	['Enfeebling'] = {
 	},
 	
@@ -378,7 +301,8 @@ local sets = {
 	you will need to use every weapon skill that your job can do. The leading comment defines what weapon/weapon
 	skill combination the set applies to.
 	
-	BRD can use the following weapons: Dagger (B-), Staff (C+), Sword (C-), Club (D)
+	RNG can use the following weapons: Axe (B-), Dagger (B-), Sword (D), Club (E), Archery (A-),
+									   Marksmanship (A-), Throwing (C-)
 	
 	Any other weapon will have no weaponskill available. Weapon skill sets are named based on stat(s) used, 
 	regardless of weapon
@@ -387,13 +311,22 @@ local sets = {
 --[[
 		* Strength based *
 
-		Dagger: Mercy Stroke
-		Staff: Heavy Swing, Shell Crusher, Full Swing
-		Sword: Flat Blade, Circle Blade, Vorpal Blade
-		Club: Brain Shaker, Skull Breaker, True Strike
+		Axe: Raging Axe,Smash Axe,Gale Axe,Avalanche Axe,Rampage,Decimation
+		Sword: Flat Blade,Circle Blade,Vorpal Blade
+		Club: Brainshaker,Skullbreaker,True Strike
 -]]
 	
 	['WS_STR'] = {
+    },
+
+--[[
+		* Strength and Agility based *
+
+		Archery: Flaming Arrow,Piercing Arrow,Dulling Arrow,Sidewinder,
+				 Blast Arrow,Arching Arrow,Empyreal Arrow,Namas Arrow
+--]]
+
+	['WS_STRAGI'] = {
     },
 	
 --[[
@@ -408,24 +341,42 @@ local sets = {
 --[[
 		* Strength and Intelligence based, even weighting *
 		
-		Staff: Rock Crusher, Earth Crusher
-		Sword: Burning Blade, Red Lotus Blade
+		Sword: Burning Blade
 --]]
 	
 	['WS_STRINT'] = {
     },
 
 --[[
+		* Strength and Intelligence based, 30%/20% weighting *
+
+		Sword: Red Lotus Blade
+--]]
+	
+	['WS_STRINT_30_20'] = {
+    },
+
+
+--[[
 		* Strength and Mind based, even weighting *
 
-		Staff: Starburst, Sunburst, Retribution
-		Sword: Shining Blade
-		Club: Shining Strike, Black Halo
+		Sword: Shining Blade,Seraph Blade
+		Club: Shining Strike	
 --]]
 
 	['WS_STRMND'] = {
     },
 
+--[[
+		* Agility based *
+		
+		Marksmanship: Hot Shot,Split Shot,Sniper Shot,Slug Shot,Blast Shot,Heavy Shot,
+					  Detonator,Coronach
+--]]
+	
+	['WS_AGI'] = {
+    },
+	
 --[[
 		* Charisma based *
 		
@@ -438,37 +389,19 @@ local sets = {
 --[[
 		* Dexterity based *
 		
-		Dagger: Wasp Sting, Eviseration
+		Dagger: Wasp Sting,Viper Bite,Eviseration
 --]]
 	
 	['WS_DEX'] = {
     },
-
+	
 --[[
 		* Dexterity and Intelligence based *
 		
-		Dagger: Gust Slash, Cyclone
+		Dagger: Gust Slash,Cyclone
 --]]
 	
 	['WS_DEXINT'] = {
-    },
-	
---[[
-		* Intelligence based *
-		
-		Staff: Gates of Tartarus
---]]
-	
-	['WS_INT'] = {
-    },
-	
---[[
-		* Intelligence and Mind based, even balance *
-		
-		Staff: Spirit Taker
---]]
-	
-	['WS_INTMND'] = {
     },
 
 --[[
@@ -481,21 +414,21 @@ local sets = {
     },
 
 --[[
-		* HP based *
-		
-		Sword: Spirits Within
---]]
-
-	['WS_HP'] = {
-    },	
-	
---[[
 		* Skill based *
 		
 		Club: Starlight
 --]]
 
 	['WS_Skill'] = {
+    },
+
+--[[
+		* HP based *
+		
+		Sword: Spirits Within
+--]]
+
+	['WS_HP'] = {
     },
 	
 --[[
@@ -509,15 +442,37 @@ local sets = {
 --[[
 	The following are abilities affected by gear
 --]]
-	
-	['SoulVoice'] = {
+
+	['EagleEyeShot'] = {
 	},
+	
+	['Sharpshot'] = {
+	},
+	
+	['Scavenge'] = {
+	},
+	
+	['Camouflage'] = {
+	},
+	
+	['Barrage'] = {
+	},
+	
+	['Shadowbind'] = {
+	},
+	
+	['VelocityShot'] = {
+	},
+	
+	['UnlimitedShot'] = {
+	},
+
 	
 --[[
 	Some subjobs really make no sense when combined with dragoon, but all abilities across all jobs that
 	have gear that can be equipped by a PLD are included here.
 --]]
-	--* /BST *--
+	--* BST *--
 	-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration)
 	['Charm'] = {
     },
@@ -589,19 +544,6 @@ local sets = {
 
 	--* /RDM *--
 	-- No skills
-
-	--* /DRK *--
-	['ArcaneCircle'] = {
-	},
-	
-	['LastResort'] = {
-	},
-	
-	['WeaponBash'] = {
-	},
-
-	['Souleater'] = {
-	},
 	
 	--* /BRD *--
 	-- No skills
@@ -618,19 +560,6 @@ local sets = {
 
 	['Cover'] = {
     },
-
-	--* /RNG *--
-	['Sharpshot'] = {
-	},
-	
-	['Scavenge'] = {
-	},
-	
-	['Camouflage'] = {
-	},
-	
-	['Barrage'] = {
-	},
 
 	--* /SAM *--
 	['WardingCircle'] = {
@@ -658,6 +587,19 @@ local sets = {
 	['Jumps'] = {		-- Jump and High Jump, Super is too high a level
 	},
 	
+	--* /DRK *--
+	['ArcaneCircle'] = {
+	},
+	
+	['LastResort'] = {
+	},
+	
+	['WeaponBash'] = {
+	},
+
+	['Souleater'] = {
+	},
+	
 --[[
 	The following set is used to dynamically create a gear set to be displayed once rather
 	than in a piecemeal manner. It is hoped that this will cut down on flickering gear and
@@ -676,61 +618,6 @@ profile.Sets = sets;
 profile.sjb = nil;
 profile.bAmmo = false;
 profile.sAmmo = nil;
-profile.prioritySongMidCast = 'ABDC';
-profile.songs = T {
-	['Ballad']   = 'Mage\'s Ballad,Mage\'s Ballad II',
-	['Carol']    = 'Light Carol,Earth Carol,Water Carol,Fire Carol,Ice Carol,Lightning Carol,Dark Carol',
-	['Elegy']    = 'Battlefield Elegy,Carnage Elegy',
-	['Etude']    = 'Enchanting Etude,Spirited Etude,Learned Etude,Quick Etude,Vivacious Etude,Dextrous Etude,Sinewy Etude,Bewitching Etude,Logical Etude,Sage Etude,Swift Etude,Vital Etude,Uncanny Etude,Herculean Etude',
-	['Finale']   = 'Magic Finale',
-	['Hymnus']   = 'Goddess\'s Hymnus',
-	['Lullaby']  = 'Foe Lullaby,Horde Lullaby',
-	['Madrigal'] = 'Sword Madrigal,Blade Madrigal',
-	['Mambo']    = 'Sheepfoe Mambo,Dragonfoe Mambo',
-	['March']    = 'Advancing March,Victory March',
-	['Mazurka']  = 'Raptor Mazurka,Chocobo Mazurka',
-	['Minne']    = 'Knight\'s Minne,Knight\'s Minne II,Knight\'s Minne III,Knight\'s Minne IV',
-	['Minuet']   = 'Valor Minuet,Valor Minuet II,Valor Minuet III,Valor Minuet IV',
-	['Paeon']    = 'Army\'s Paeon,Army\'s Paeon II,Army\'s Paeon III,Army\'s Paeon IV,Army\'s Paeon V',
-	['Prelude']  = 'Hunter\'s Prelude,Archer\'s Prelude',
-	['Requiem']  = 'Foe Requiem,Foe Requiem II,Foe Requiem III,Foe Requiem IV,Foe Requiem V,Foe Requiem VI',
-	['Threnody'] = 'Light Threnody,Dark Threnody,Earth Threnody,Water Threnody,Wind Threnody,Fire Threnody,Lightning Threnody',
-	['Virelai']  = 'Maiden\'s Virelai',
-	['Other']    = 'Herb Pastoral,Scop\'s Operetta,Fowl Aubade,Goblin Gavotte,Gold Capriccio,Shining Fantasia,Puppet\'s Operetta,Warding Round',
-};
--- This breaks out all songs based on type of song skill. Please note that only the "base" of the song name is listed
-profile.SongSkill = T{
-	['Enhancing']  = 'Knight\'s Minne,Knight\'s Minne II,Knight\'s Minne III,Knight\'s Minne IV,Valor Minuet,Valor Minuet II,Valor Minuet III,Valor Minuet IV,Army\'s Paeon,Army\'s Paeon II,Army\'s Paeon III,Army\'s Paeon IV,Army\'s Paeon V,Herb Pastoral,Sword Madrigal,Sheepfoe Mambo,Scop\'s Operetta,Spirited Etude,Mage\'s Ballad,Mage\'s Ballad II,Learned Ballad,Quick Etude,Advancing March,Vivacious Etude,Hunter\'s Prelude,Dextrous Etude,Fowl Aubade,Sinewy Etude,Light Carol,Raptor Mazurka,Earth Carol,Wind Carol,Fire Carol,Ice Carol,Lightning Carol,Goblin Gavotte,Dark Carol,Blade Madrigal,Dragonfoe Mambo,Gold Capricco,Shining Fantasia,Victory March,Bewitching Etude,Logical Etude,Sage Etude,Swift Etude,Puppet\'s Operetta,Vital Etude,Archer\'s Prelude,Goddess\'s Hymnus,Uncanny Etude,Warding Round,Chocobo Mazurka,Herculean Etude,Maiden\'s Virelai',
-	['Enfeebling'] = 'Foe Requiem,Foe Requiem II,Foe Requiem III,Foe Requiem IV,Foe Requiem V,Foe Requiem VI,Light Threnody,Dark Threnody,Earth Threnody,Foe Lullaby,Water Threnody,Wind Threnody,Fire Threnody,Ice Threnody,Horde Lullaby,Magic Finale,Carnage Elegy',
-};
-
---[[
-	BardSongToSet looks for the passed name (and the three other variants) in profile.sets and returns
-	the 2 matching table references (or nil if not found).
---]]
-
-local function BardSongToSet(sType)
-	local sTypeC;
-	local tType,tTypeC;
-	
-	if sType == nil then
-		print(chat.header('StringToSet'):append(chat.message('Missing type. Skipping.')));
-		return nil,nil;
-	end
-	sTypeC = sType .. '_Conditional';
-	-- Loop through all the defined sets
-	for k,_ in pairs(sets) do
-		if k == sType then
-			tType = sets[k];
-		elseif k == sTypeC then
-			tTypeC = sets[k];
-		end
-		if tType ~= nil and tTypeC ~= nil then
-			break;
-		end
-	end
-	return tType,tTypeC;
-end		-- BardSongToSet
 
 local function HandlePetAction(PetAction)
 	local pet = gData.GetPet();
@@ -759,9 +646,9 @@ end		-- HandlePetAction
 --]]
 
 local function SetSubjobSet(chkSJ)
-	local subs = {['WAR'] = 0, ['MNK'] = 0, ['WHM'] = 1, ['BLM'] = 1, ['RDM'] = 1, ['THF'] = 0,
-				 ['PLD'] = 0, ['DRK'] = 0, ['BST'] = 0, ['BRD'] = nil, ['RNG'] = 0, ['SMN'] = 0,
-				 ['SAM'] = 0, ['NIN'] = 0, ['DRG'] = 0, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
+	local subs = {['WAR'] = 1, ['MNK'] = 0, ['WHM'] = 0, ['BLM'] = 0, ['RDM'] = 0, ['THF'] = 0,
+				 ['PLD'] = 0, ['DRK'] = 0, ['BST'] = 0, ['BRD'] = 0, ['RNG'] = nil, ['SMN'] = 0,
+				 ['SAM'] = 0, ['NIN'] = 1, ['DRG'] = 0, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
 				 ['DNC'] = 0, ['SCH'] = 0, ['GEO'] = 0, ['RUN'] = 0};
 	local sj = nil;
 
@@ -795,14 +682,13 @@ profile.OnLoad = function()
 	gcinclude.settings.priorityEngaged = 'CEFGH';
 	gcinclude.settings.priorityMidCast = 'ABCDEFGH';
 	gcinclude.settings.priorityWeaponSkill = 'ABDE';
-	profile.prioritySongMidCast = 'ABDC';
 	
 	-- Set your job macro toolbar defaults here. Which set depends on the subjob
-	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 15');		-- BRD
+	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 15');		-- RNG
 	SetSubjobSet(player.SubJob);
 	
 	-- Load up the weapons bar. (This need only be done once.)
-	gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear);	
+	gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear);
 	gcinclude.EquipTheGear(sets.CurrentGear);
 	
 	-- Make sure the saved weapons are the starting weapons
@@ -871,10 +757,10 @@ profile.HandleDefault = function()
 		return;
 	end
 
-	-- Assuming you're /bst, when you want to reward your pet and you do not have pet food 
-	-- equipped or when you want to summon a pet and a jug is not equipped, the current item 
-	-- in the ammo slot is saved. The following will set it back to what you had before 
-	-- either of those two items were equipped.
+	-- Assuming you're /bst, when you want to reward your pet and you do not have pet food equipped 
+	-- or when you want to summon a pet and a jug is not equipped, the current item in the ammo slot 
+	-- is saved. The following will set it back to what you had before either of those two items 
+	-- were equipped.
 	if player.SubJob == 'BST' and profile.bAmmo then
 		gFunc.ForceEquip('Ammo',profile.sAmmo);
 		profile.sAmmo = nil;
@@ -886,7 +772,7 @@ profile.HandleDefault = function()
 	
 	-- If player is not resting and has MP and has swapped weapons, set the weapon back to what 
 	-- they had before the switch
-	if player.Status ~= 'Resting' and
+	if player.Status ~= 'Resting' and 
 			gcinclude.weapon ~= nil and
 			gcdisplay.GetToggle('WSwap') == true and
 			eWeap ~= gcinclude.weapon then
@@ -896,6 +782,10 @@ profile.HandleDefault = function()
 	
 	-- The default set is the TP gear set. Load it up
 	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
+	
+	if gcdisplay.GetToggle('Tank') == true then
+		gcinclude.MoveToCurrent(sets.TP_Tank,sets.CurrentGear);	
+	end
 		
 	-- Now process the player status accordingly
 	gcdisplay.SetLocksAction(gcinclude.LocksNumeric,player.Status);	
@@ -956,7 +846,7 @@ profile.HandleDefault = function()
 				gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
 			end
 			
-			-- if the player's MP is below the threshold setting, equip the idle refresh gear
+			-- if the player's MP is below the threshold setting, equip the idle refresh gear				
 			if gcinclude.MagicalJob('S') == true and player.MPP < gcinclude.settings.RefreshGearMPP then		-- if the player's MP is below the threshold setting, equip the idle refresh gear
 				gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
 			end
@@ -1000,12 +890,27 @@ profile.HandleAbility = function()
 
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
-
-	-- Now process the appropriate job ability. Start with abilities associated with WAR	
-	if string.match(ability.Name, 'Soul Voice') then
-		gcinclude.MoveToCurrent(sets.SoulVoice,sets.CurrentGear);
+	
+	-- Now process the appropriate job ability. Start with abilities associated with WAR
+	if string.match(ability.Name, 'Eagle Eye Shot') then
+		gcinclude.MoveToCurrent(sets.EagleEyeShot,sets.CurrentGear);
+	elseif string.match(ability.Name, 'Sharpshot') then
+		gcinclude.MoveToCurrent(sets.Sharpshot,sets.CurrentGear);
+	elseif string.match(ability.Name, 'Scavenge') then
+		gcinclude.MoveToCurrent(sets.Scavenge,sets.CurrentGear);
+	elseif string.match(ability.Name, 'Camouflage') then
+		gcinclude.MoveToCurrent(sets.Camouflage,sets.CurrentGear);		
+	elseif string.match(ability.Name, 'Barrage') then
+		gcinclude.MoveToCurrent(sets.Barrage,sets.CurrentGear);
+	elseif string.match(ability.Name, 'Shadowbind') then
+		gcinclude.MoveToCurrent(sets.Shadowbind,sets.CurrentGear);
+	elseif string.match(ability.Name, 'VelocityShot') then
+		gcinclude.MoveToCurrent(sets.VelocityShot,sets.CurrentGear);
+	elseif string.match(ability.Name, 'UnlimitedShot') then
+		gcinclude.MoveToCurrent(sets.UnlimitedShot,sets.CurrentGear);
+		
 	-- And now the subjob abilities
-	-- /BST	
+	-- /BST
 	elseif string.contains(ability.Name, 'Charm') then	
 		gcinclude.MoveToCurrent(sets.Charm,sets.CurrentGear);
 		gcinclude.SwapToStave('light',false,sets.CurrentGear);
@@ -1026,7 +931,7 @@ profile.HandleAbility = function()
 		gcinclude.MoveToCurrent(sets.Defender,sets.CurrentGear);
 	elseif string.contains(ability.Name, 'Warcry') then
 		gcinclude.MoveToCurrent(sets.Warcry,sets.CurrentGear);
-	-- /MNK
+	--* /MNK *--
 	elseif string.contains(ability.Name, 'Boost') then
 		gcinclude.MoveToCurrent(sets.Boost,sets.CurrentGear);
 	elseif string.contains(ability.Name, 'Focus') then
@@ -1035,32 +940,12 @@ profile.HandleAbility = function()
 		gcinclude.MoveToCurrent(sets.Dodge,sets.CurrentGear);
 	elseif string.contains(ability.Name, 'Chakra') then
 		gcinclude.MoveToCurrent(sets.Chakra,sets.CurrentGear);
-	-- /THF
-	elseif string.contains(ability.Name, 'Steal') then
-		gcinclude.MoveToCurrent(sets.Steal,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Sneak Attack') then
-		gcinclude.MoveToCurrent(sets.SneakAttack,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Flee') then
-		gcinclude.MoveToCurrent(sets.Flee,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Trick Attack') then
-		gcinclude.MoveToCurrent(sets.TrickAttack,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Mug') then
-		gcinclude.MoveToCurrent(sets.Mug,sets.CurrentGear);
 	-- /WHM
 	elseif string.contains(ability.Name, 'Divine Seal') then
 		gcinclude.MoveToCurrent(sets.DivineSeal,sets.CurrentGear);
 	-- /BLM
 	elseif string.contains(ability.Name, 'Elemental Seal') then
 		gcinclude.MoveToCurrent(sets.ElementalSeal,sets.CurrentGear);
-	-- /RNG
-	elseif string.contains(ability.Name, 'Sharpshot') then
-		gcinclude.MoveToCurrent(sets.Sharpshot,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Scavenge') then
-		gcinclude.MoveToCurrent(sets.Scavenge,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Camouflage') then
-		gcinclude.MoveToCurrent(sets.Camouflage,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Barrage') then
-		gcinclude.MoveToCurrent(sets.Barrage,sets.CurrentGear);	
 	-- /SAM
 	elseif string.contains(ability.Name, 'Warding Circle') then
 		gcinclude.MoveToCurrent(sets.WardingCircle,sets.CurrentGear);
@@ -1080,7 +965,18 @@ profile.HandleAbility = function()
 	elseif string.contains(ability.Name, 'Sentinel') then
 		gcinclude.MoveToCurrent(sets.Sentinel,sets.CurrentGear);	
 	elseif string.contains(ability.Name, 'Cover') then
-		gcinclude.MoveToCurrent(sets.Cover,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Cover,sets.CurrentGear);	
+	-- /THF
+	elseif string.contains(ability.Name, 'Steal') then
+		gcinclude.MoveToCurrent(sets.Steal,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Sneak Attack') then
+		gcinclude.MoveToCurrent(sets.SneakAttack,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Flee') then
+		gcinclude.MoveToCurrent(sets.Flee,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Trick Attack') then
+		gcinclude.MoveToCurrent(sets.TrickAttack,sets.CurrentGear);
+	elseif string.contains(ability.Name, 'Mug') then
+		gcinclude.MoveToCurrent(sets.Mug,sets.CurrentGear);	
 	-- /DRG
 	elseif string.contains(ability.Name, 'Ancient Circle') then
 		gcinclude.MoveToCurrent(sets.AncientCircle,sets.CurrentGear);	
@@ -1094,7 +990,7 @@ profile.HandleAbility = function()
 	elseif string.match(ability.Name, 'Weapon Bash') then
 		gcinclude.MoveToCurrent(sets.WeaponBash,sets.CurrentGear);
 	elseif string.contains(ability.Name, 'Souleater') then
-		gcinclude.MoveToCurrent(sets.Souleater,sets.CurrentGear);		
+		gcinclude.MoveToCurrent(sets.Souleater,sets.CurrentGear);	
 	end
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleAbility set
 end		-- HandleAbility
@@ -1126,7 +1022,7 @@ profile.HandleItem = function()
 	end
 		
 	if bShow == true then
-		gcinclude.EquipTheGear(sets.CurrentGear);
+		gcinclude.EquipTheGear(sets.CurrentGear);		
 	end
 end		-- HandleItem
 
@@ -1148,18 +1044,13 @@ profile.HandlePrecast = function()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Equip the precast gear set
-	if spell.Skill == 'Singing' then
-		gcinclude.MoveToCurrent(sets.Song_Precast,sets.CurrentGear);
-	else
-		gcinclude.MoveToCurrent(sets.Precast,sets.CurrentGear);
-			
-		-- See if an elemental obi should be equipped
-		obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
-		if obi ~= nil then
-			sets.CurrentGear['Waist'] = obi;
-		end
+	gcinclude.MoveToCurrent(sets.Precast,sets.CurrentGear);
+		
+	-- See if an elemental obi should be equipped
+	obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
+	if obi ~= nil then
+		sets.CurrentGear['Waist'] = obi;
 	end
-	
 	gcinclude.EquipTheGear(sets.CurrentGear);	
 end		-- HandlePrecast
 
@@ -1170,8 +1061,7 @@ end		-- HandlePrecast
 --]]
 
 profile.HandleMidcast = function()
-	local spell = gData.GetAction();
-	
+
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
 		return;
 	end
@@ -1179,67 +1069,11 @@ profile.HandleMidcast = function()
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 	
-	-- If we're dealing with a song, a different midcast routine should be called
+	-- Call the common HandleMidcast now
+	gcinclude.HandleMidcast(false);
 	
-	if spell.Skill == 'Singing' then
-		profile.HandleSongMidcast();
-	else
-		-- Call the common HandleMidcast now
-		gcinclude.HandleMidcast(false);
-	end
-	
-	-- Equip the composited midcast set
-	gcinclude.EquipTheGear(sets.CurrentGear);
+	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited midcast set
 end		-- HandleMidcast
-
---[[
-	HandleSongMidcast is like gcinclude.HandleMidcast except it is for songs instead of magic
-	spells.
---]]
-
-function profile.HandleSongMidcast()
-	local spell = gData.GetAction();
-
-	-- Clear out the CurrentGear in case of leftovers
-	gcinclude.ClearSet(sets.CurrentGear);
-	
-	profile.prioritySongMidCast = string.upper(profile.prioritySongMidCast);
-	for i = 1,string.len(profile.prioritySongMidCast),1 do
-		cKey = string.sub(profile.prioritySongMidCast,i,i);
-		
-		if cKey == 'A' then				-- midcast gear	
-			gcinclude.MoveToCurrent(sets.Midcast,sets.CurrentGear);
-		elseif cKey == 'B' then			-- Enfeeble/Enhancing gear
-			if string.find(profile.SongSkill['Enhancing'],spell.Name) ~= nil then		
-				gcinclude.MoveToCurrent(sets.Enhancing,sets.CurrentGear);			
-			elseif string.find(profile.SongSkill['Enfeebling'],spell.Name) ~= nil then	
-				gcinclude.MoveToCurrent(sets.Enfeebling,sets.CurrentGear);	
-			end
-		elseif cKey == 'C' then			-- Song skill type
-			-- Determine the type of song from the song name
-			local sType = nil;
-			
-			for k,str in pairs(profile.songs) do
-				if string.find(str,spell.Name) ~= nil then
-					sType = k;
-					break;
-				end
-			end
-		
-			if sType ~= nil then
-				local tTbl,tTblC;
-				tTbl,tTblC = BardSongToSet(sType);			
-				gcinclude.MoveToCurrent(tTbl,sets.CurrentGear);
-			else
-				print(chat.header('HandleSongMidcast'):append(chat.message('Unrecognized song: ' .. spell.Name)));
-			end			
-		elseif cKey == 'D' then			-- Magical accuracy
-			if gcdisplay.GetToggle('acc') == true then
-				gcinclude.MoveToCurrent(sets.Macc,sets.CurrentGear);
-			end
-		end
-	end			
-end		-- HandleSongMidcast
 
 --[[
 	HandlePreshot is similar to HandlePrecast, but for ranged actions. It loads Ranged Accuracy 
@@ -1250,6 +1084,7 @@ profile.HandlePreshot = function()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
+	
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);	
 		

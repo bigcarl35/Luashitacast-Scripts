@@ -344,7 +344,7 @@ local sets = {
 --]]
 
 --[[
-		* Strength based or just skill based *
+		* Strength based *
 		
 		Polearm: Double Thrust,Leg Sweep,Skewer,Wheeling Thrust,Impulse Drive
 		Staff: Heavy Swing,Shell Crusher,Full Swing

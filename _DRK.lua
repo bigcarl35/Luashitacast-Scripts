@@ -353,7 +353,7 @@ local sets = {
 --]]
 
 --[[
-		* Strength based or just skill based *
+		* Strength based *
 		
 		Scythe: Slice,Spinning Scythe,Vorpal Scythe
 		Great Sword: Hard Slash,Crescent Moon

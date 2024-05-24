@@ -79,9 +79,6 @@ local sets = {
 		Feet = 'Bounding Boots',
     },
 	
-	['Pet_Accuracy'] = {
-    },
-	
 --[[
 	If evasion wanted, equip evasion gear
 --]]
@@ -89,9 +86,6 @@ local sets = {
 	['Evasion'] = {
 		Head = 'Empress Hairpin',
 		Feet = 'Bounding Boots',
-    },
-	
-	['Pet_Evasion'] = {
     },
 	
 --[[
@@ -327,7 +321,7 @@ local sets = {
 --]]
 
 --[[
-		* Strength based or just skill based *
+		* Strength based *
 
 		H2H: Spinning Attack
 		Staff: Heavy Swing, Shell Crusher, Full Swing

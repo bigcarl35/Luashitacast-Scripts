@@ -339,7 +339,7 @@ local sets = {
 --]]
 
 --[[	
-		* Strength based or just skill based *
+		* Strength based *
 
 		Sword: Flat Blade,Circle Blade,Vorpal Blade	
 		Great Katana: Tachi: Enpi,Tachi: Hobaku,Tachi: Goten,Tachi: Kagero,

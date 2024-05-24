@@ -76,9 +76,6 @@ local sets = {
 		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring' },
     },
 	
-	['Pet_Accuracy'] = {
-    },
-	
 --[[
 	If evasion wanted, equip evasion gear
 --]]
@@ -86,9 +83,6 @@ local sets = {
 	['Evasion'] = {
         Head = 'Empress Hairpin',
         Hands = 'Battle Gloves',
-    },
-
-	['Pet_Evasion'] = {
     },
 	
 --[[
@@ -339,7 +333,7 @@ local sets = {
 --]]
 
 --[[
-		* Strength based or just skill based *
+		* Strength based *
 		
 		Sword: Flat Blade,Circle Blade,Vorpal Blade,Spirits Within,Mercy Stroke
 		Club: Starlight,Skull Breaker,True Strike

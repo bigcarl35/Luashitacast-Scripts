@@ -358,7 +358,7 @@ local sets = {
 --]]
 
 --[[
-		* Strength based or just skill based *
+		* Strength based *
 		
 		Axe: Raging Axe,Smash Axe,Gale Axe,Avalanche Axe,Spinning Axe,Rampage,
 			 Mistral Axe,Decimation
@@ -568,6 +568,15 @@ local sets = {
         Legs = 'Wonder Braccae',
         Feet = 'Creek F Clomps',
     },
+
+--[[
+	Movement tends to be used for kiting. Emphasis should be placed on gear that increases movement speed, but you 
+	might also want gear that has evasion. The choice is yours.
+--]]
+
+	-- Movement speed gear, does not include nation aketons which are found in conditional gear for home town
+	['Movement'] = { 
+	},
 	
 --[[
 	The following sets are used with pet abilities/pet commands
@@ -732,15 +741,6 @@ local sets = {
 	},
 	
 	['Jumps'] = {		-- Jump and High Jump, Super is too high a level
-	},
-	
---[[
-	Movement tends to be used for kiting. Emphasis should be placed on gear that increases movement speed, but you 
-	might also want gear that has evasion. The choice is yours.
---]]
-
-	-- Movement speed gear, does not include nation aketons which are found in conditional gear for home town
-	['Movement'] = { 
 	},				
 	
 --[[

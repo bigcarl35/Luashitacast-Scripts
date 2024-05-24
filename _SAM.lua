@@ -79,9 +79,6 @@ local sets = {
 		Feet = 'Bounding Boots',
     },
 	
-	['Pet_Accuracy'] = {
-    },
-	
 --[[
 	If evasion wanted, equip evasion gear
 --]]
@@ -90,9 +87,18 @@ local sets = {
 		Head = 'Empress Hairpin',
 		Feet = 'Bounding Boots',
     },
-	
-	['Pet_Evasion'] = {
-    },
+
+--[[
+	The "Travel" gear set is what is worn when you're not fighting (either
+	you or your pet), you're not resting. It's a good place to put gear 
+	that increases your movement speed. (Not to be confused with the 
+	['Movement'] gear set which is used when you're kiting.) This is also 
+	where you put gear that is adventageous if you have a pet present 
+	(i.e., lower perpetuation cost, etc.)
+--]]
+		
+	['Travel'] = {
+	},
 	
 --[[
 	The Idle_Regen and Idle_Refresh gear sets replace the normal Idle set when the player's HP or MP
@@ -330,7 +336,7 @@ local sets = {
 --]]
 
 --[[
-		* Strength based or just skill based *
+		* Strength based *
 
 		Great Katana: Tachi: Empi,Tachi: Hobaku,Tachi: Goten,Tachi: Kagero,Tachi: Jinpu,Tachi: Yakikaze,
 			Tachi: Gekko,Tachi: Kasha
@@ -343,7 +349,7 @@ local sets = {
     },
 
 --[[
--		* Strength and Agility based *
+		* Strength and Agility based *
 
 		Polearm: Vorpal Thrust
 		Archery: ^Flaming Arrow,^Piercing Arrow,^Dulling Arrow,^Sidewinder,Namas Arrow
@@ -393,7 +399,7 @@ local sets = {
 
 	['WS_STRMND'] = {
     },
-		
+	
 --[[
 		* Charisma based *
 		
@@ -653,7 +659,7 @@ end		-- HandlePetAction
 --]]
 
 local function SetSubjobSet(chkSJ)
-	local subs = {['WAR'] = 1, ['MNK'] = 0, ['WHM'] = 0, ['BLM'] = 0, ['RDM'] = 0, ['THF'] = nil,
+	local subs = {['WAR'] = 1, ['MNK'] = 0, ['WHM'] = 0, ['BLM'] = 0, ['RDM'] = 0, ['THF'] = 0,
 				 ['PLD'] = 0, ['DRK'] = 0, ['BST'] = 0, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = 0,
 				 ['SAM'] = nil, ['NIN'] = 1, ['DRG'] = 1, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
 				 ['DNC'] = 0, ['SCH'] = 0, ['GEO'] = 0, ['RUN'] = 0};
