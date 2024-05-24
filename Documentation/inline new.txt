@@ -1,0 +1,117 @@
+Inline answers for all block conditionals:
+Main
+	Caduceus					//CRAFT:ALC
+	
+Sub
+	Mrc.Cpt. Kukri				//SJNIN or //SJDNC
+	Tabarzin					//SJNIN or //SJDNC
+	
+Head
+	Protective Spectacles		//CRAFT:BON
+	Magnifying Spectacles		//CRAFT:CLH
+	Chef\'s Hat					//CRAFT:COO
+	Shaded Spectacles			//CRAFT:GSB
+	Horror Head					//FM-DARK-NIGHT
+	Horror Head II				//NM-LIGHT-DAY
+	Rubius Crown				//EARTHSDAY and //WINDSDAY
+	Rain Hat					//WTH:WATER
+	Monsoon Jinpachi			//WTH:WATER
+	Mushroom Helm				//WATERSDAY and //DARKSDAY
+	Presidential Hairpin		//NOT_OWN
+	
+Neck
+	Harakdr\'s Muffler			//WTH:ICE
+	Uggalepih Pendant			//MPP.LE.50P
+	Uggalepih Pendant			//NIGHTTIME
+	Fenrir\'s Torque			//DAYTIME
+	
+Earring
+	Diabolos's Earring			//WTH:DARK
+	Vampire Earring				//NIGHTTIME
+	
+Body
+	Gaudy Harness				//MP.LT.50
+	Federation Aketon			//AK:WINDY
+	Alchemist\'s Apron			//CRAFT:ALC
+	Bonecrafter\'s Apron		//CRAFT:BONE
+	Weaver\'s Apron				//CRAFT:CLOTH
+	Culinarian\'s Apron			//CRAFT:COOK
+	Goldsmith\'s Apron			//CRAFT:GSM
+	Tanner\'s Apron				//CRAFT:LTH
+	Blacksmith\'s Apron			//CRAFT:BSM
+	Carpenter\'s Apron			//CRAFT:WW
+	Field Tunica				//GATHER:HELM
+	Worker Tunica				//GATHER:HELM
+	Tarutaru Top +1				//GATHER:CLAM
+	Choc. Jack Coat				//GATHER:DIG
+	Rider\'s Jack Coat			//GATHER:DIG
+	Garish Tunic				//EARTHSDAY
+	Mist Tunic					//EARTHSDAY
+	Rubious Tunic				//EARTHSDAY or //WINDSDAY
+	Kingdom Aketon				//AK:SANDY
+	Republic Aketon				//AK:BASTOK
+	Ducal Aketon				//AK:OMNI
+	
+Hands
+	Tanner\'s Gloves			//CRAFT:LEATHER
+	Smithy\'s Gloves			//CRAFT:SMITH
+	Carpenter\'s Gloves			//CRAFT:WOOD
+	Field Gloves				//GATHER:HELM
+	Worker Gloves				//GATHER:HELM
+	Chocobo Gloves				//GATHER:DIG
+	Rider\'s Gloves				//GATHER:DIG
+	Sennight Bangles			//NOT_LIGHT-DARK
+	Monsoon Tekko				//WTH:WATER
+	Hailstorm Tekko				//WTH:WATER
+	Hailstorm Tekko +1			//WTH:WATER
+	Sand Gloves					//WTH:EARTH
+	Feronia\'s Bangles			//DAYTIME
+	Garden Bangles				//DAYTIME
+	
+Can't handle:
+	Brisingamen
+	Brisingamen +1
+	*Conjurer\'s Ring (need to think on this one)
+	
+New Conditionals
+	//CR:ALC
+	//CR:BON
+	//CR:COOK
+	//CR:GSM
+	//CR:SMT
+	//CR:CLH
+	//CR:LTH
+	//CR:WW
+	//GA:HELM
+	//GA:DIG
+	//GA:CLAM
+	//FIRESDAY
+	//EARTHSDAY
+	//WATERSDAY
+	//WINDSDAY
+	//ICEDAY
+	//LIGHTNINGDAY
+	//LIGHTSDAY
+	//DARKSDAY
+	//FM-DRK-NIGHT			-- Full Moon/Darksday/Nighttime
+	//NM-LGT-DAY			-- New Moon/Lightsday/Daytime
+	//WTH:WATER
+	//WTH:ICE
+	//WTH:DARK
+	//WTH:FIRE
+	//WTH:WIND
+	//WTH:EARTH
+	//WTH:THUNDER
+	//WTH:LIGHT
+	//WTH:CLEAR
+	//WTH:SUN
+	//WTH:CLOUD
+	//DAYTIME
+	//NIGHTTIME
+	//DUSK2DAWN
+	//AK:WINDY				-- Aketon - Windhurst
+	//AK:SANDY
+	//AK:BASTOK
+	//AK:OMNI
+	//NOT_LGT-DRK			-- Not Lightsday nor Darksday
+	//WTH-DAY				-- Weather matches element of day
