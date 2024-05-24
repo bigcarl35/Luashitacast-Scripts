@@ -1730,7 +1730,6 @@ function gcinclude.EquipTheGear(tSet)
 		tSet['Main']  = ''; 
 		tSet['Sub']   = ''; 
 		tSet['Range'] = ''; 
-		tSet['Ammo']  = '';
 	end
 		
 	--[[
