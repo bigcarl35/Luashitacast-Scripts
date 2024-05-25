@@ -1184,7 +1184,7 @@ function gcinclude.SetVariables()
 	if string.find('PLD,NIN,RUN',player.MainJob) ~= nil then
 		gcdisplay.CreateToggle('Tank',true);
 		gcdisplay.CreateToggle('Idle',true);
-	elseif string.find('DRK,WAR,THF,BLU',player.MainJob) ~= nil then
+	elseif string.find('DRK,WAR,THF,RDM,BLU',player.MainJob) ~= nil then
 		gcdisplay.CreateToggle('Tank',false);
 		gcdisplay.CreateToggle('Idle',true);
 	end
@@ -1324,8 +1324,7 @@ end		-- gcinclude.MagicalJob
 
 --[[
 	CheckInvisibleHP is a work around to determine if the player's current HP
-	meets the condition it is being tested for. Once I have the parsing of an
-	item's description completed this routine will be removed.
+	meets the condition it is being tested for.
 --]]
 
 function gcinclude.CheckInvisibleHP(sGear,ival)
@@ -1341,9 +1340,9 @@ function gcinclude.CheckInvisibleHP(sGear,ival)
 		-- Just remove the hp associated with the invisible gear slots
 		x = gcinclude.Special[sGear][player.MainJobSync][1];			-- TP
 		if gcdisplay.GetToggle('Tank') == true then
-			x = gcinclude.Special[sGear][player.MainJobSync][2];		-- TP_Tank
+			x = gcinclude.Special[sGear][player.MainJobSync][2];		-- Tank_TP
 			if gcdisplay.GetToggle('Acc') == true then
-				x = gcinclude.Special[sGear][player.MainJobSync][4];	-- TP_Tank + Accuracy
+				x = gcinclude.Special[sGear][player.MainJobSync][4];	-- Tank_TP + Accuracy
 			end
 		else
 			if gcdisplay.GetToggle('Acc') == true then
