@@ -47,14 +47,14 @@ local sets = {
 
 --[[
 	The TP sets are used when you are fighting.	The accuracy set will be used if ACC is specified 
-	and the evasion set if EVA is specified. TP_Tank is equipped if indicated. It's a means for
+	and the evasion set if EVA is specified. Tank_TP is equipped if indicated. It's a means for
 	the PLS to equip more defensive gear if they find themselves tanking.
 --]]
 	
 	['TP'] = {
     },
 	
-	['TP_Tank'] = {
+	['Tank_TP'] = {
 	},
 	
 --[[
@@ -612,9 +612,12 @@ local sets = {
 	['AncientCircle'] = {
 	},
 	
-	['Jumps'] = {		-- Jump and High Jump, Super is too high a level
+	['Jump'] = {
 	},
-		
+	
+	['HighJump'] = {
+	},
+	
 --[[
 	The following set is used to dynamically create a gear set to be displayed once rather
 	than in a piecemeal manner. It is hoped that this will cut down on flickering gear and
@@ -701,7 +704,7 @@ profile.OnLoad = function()
 
 	-- Coded order of operation override
 	gcinclude.settings.priorityEngaged = 'CEFGH';
-	gcinclude.settings.priorityMidCast = 'ABCDEFGH';
+	--gcinclude.settings.priorityMidCast = 'ABCDEFGH';
 	gcinclude.settings.priorityWeaponSkill = 'ABDE';
 	
 	-- Set your job macro toolbar defaults here. Which set depends on the subjob
@@ -807,7 +810,7 @@ profile.HandleDefault = function()
 	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
 	
 	if bTank == true then
-		gcinclude.MoveToCurrent(sets.TP_Tank,sets.CurrentGear);	
+		gcinclude.MoveToCurrent(sets.Tank_TP,sets.CurrentGear);	
 	end
 		
 	-- Now process the player status accordingly
@@ -931,94 +934,96 @@ profile.HandleAbility = function()
 		gcinclude.MoveToCurrent(sets.Yonin,sets.CurrentGear);		
 	-- And now the subjob abilities
 	-- /BST
-	elseif string.contains(ability.Name, 'Charm') then	
+	elseif string.match(ability.Name, 'Charm') then	
 		gcinclude.MoveToCurrent(sets.Charm,sets.CurrentGear);
 		gcinclude.SwapToStave('light',false,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Reward') then
+	elseif string.match(ability.Name, 'Reward') then
 		-- Pet reward. Make sure that pet food already equipped
 		if profile.sAmmo == nil or string.find(string.lower(profile.sAmmo),'pet f') == nil then		-- something else equipped
 			profile.bAmmo = gcinclude.doPetFood('max',nil);
 		end	
 		gcinclude.MoveToCurrent(sets.Reward,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Tame') then
+	elseif string.match(ability.Name, 'Tame') then
 		gcinclude.MoveToCurrent(sets.Tame,sets.CurrentGear);
 	-- /WAR
-	elseif string.contains(ability.Name, 'Provoke') then
+	elseif string.match(ability.Name, 'Provoke') then
 		gcinclude.MoveToCurrent(sets.Provoke,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Berserk') then
+	elseif string.match(ability.Name, 'Berserk') then
 		gcinclude.MoveToCurrent(sets.Berserk,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Defender') then
+	elseif string.match(ability.Name, 'Defender') then
 		gcinclude.MoveToCurrent(sets.Defender,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Warcry') then
+	elseif string.match(ability.Name, 'Warcry') then
 		gcinclude.MoveToCurrent(sets.Warcry,sets.CurrentGear);
 	-- /MNK
-	elseif string.contains(ability.Name, 'Boost') then
+	elseif string.match(ability.Name, 'Boost') then
 		gcinclude.MoveToCurrent(sets.Boost,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Focus') then
+	elseif string.match(ability.Name, 'Focus') then
 		gcinclude.MoveToCurrent(sets.Focus,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Dodge') then
+	elseif string.match(ability.Name, 'Dodge') then
 		gcinclude.MoveToCurrent(sets.Dodge,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Chakra') then
+	elseif string.match(ability.Name, 'Chakra') then
 		gcinclude.MoveToCurrent(sets.Chakra,sets.CurrentGear);
 	-- /WHM
-	elseif string.contains(ability.Name, 'Divine Seal') then
+	elseif string.match(ability.Name, 'Divine Seal') then
 		gcinclude.MoveToCurrent(sets.DivineSeal,sets.CurrentGear);
 	-- /BLM
-	elseif string.contains(ability.Name, 'Elemental Seal') then
+	elseif string.match(ability.Name, 'Elemental Seal') then
 		gcinclude.MoveToCurrent(sets.ElementalSeal,sets.CurrentGear);
 	-- /RNG
-	elseif string.contains(ability.Name, 'Sharpshot') then
+	elseif string.match(ability.Name, 'Sharpshot') then
 		gcinclude.MoveToCurrent(sets.Sharpshot,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Scavenge') then
+	elseif string.match(ability.Name, 'Scavenge') then
 		gcinclude.MoveToCurrent(sets.Scavenge,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Camouflage') then
+	elseif string.match(ability.Name, 'Camouflage') then
 		gcinclude.MoveToCurrent(sets.Camouflage,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Barrage') then
+	elseif string.match(ability.Name, 'Barrage') then
 		gcinclude.MoveToCurrent(sets.Barrage,sets.CurrentGear);	
 	-- /SAM
-	elseif string.contains(ability.Name, 'Warding Circle') then
+	elseif string.match(ability.Name, 'Warding Circle') then
 		gcinclude.MoveToCurrent(sets.WardingCircle,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Third Eye') then
+	elseif string.match(ability.Name, 'Third Eye') then
 		gcinclude.MoveToCurrent(sets.ThirdEye,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Hasso') then
+	elseif string.match(ability.Name, 'Hasso') then
 		gcinclude.MoveToCurrent(sets.Hasso,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Meditate') then
+	elseif string.match(ability.Name, 'Meditate') then
 		gcinclude.MoveToCurrent(sets.Meditate,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Seigan') then
+	elseif string.match(ability.Name, 'Seigan') then
 		gcinclude.MoveToCurrent(sets.Seigan,sets.CurrentGear);
 	-- /PLD
 	elseif string.match(ability.Name, 'Holy Circle') then
 		gcinclude.MoveToCurrent(sets.HolyCircle,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Shield Bash') then
 		gcinclude.MoveToCurrent(sets.ShieldBash,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Sentinel') then
+	elseif string.match(ability.Name, 'Sentinel') then
 		gcinclude.MoveToCurrent(sets.Sentinel,sets.CurrentGear);	
-	elseif string.contains(ability.Name, 'Cover') then
+	elseif string.match(ability.Name, 'Cover') then
 		gcinclude.MoveToCurrent(sets.Cover,sets.CurrentGear);	
 	-- /THF
-	elseif string.contains(ability.Name, 'Steal') then
+	elseif string.match(ability.Name, 'Steal') then
 		gcinclude.MoveToCurrent(sets.Steal,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Sneak Attack') then
+	elseif string.match(ability.Name, 'Sneak Attack') then
 		gcinclude.MoveToCurrent(sets.SneakAttack,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Flee') then
+	elseif string.match(ability.Name, 'Flee') then
 		gcinclude.MoveToCurrent(sets.Flee,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Trick Attack') then
+	elseif string.match(ability.Name, 'Trick Attack') then
 		gcinclude.MoveToCurrent(sets.TrickAttack,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Mug') then
+	elseif string.match(ability.Name, 'Mug') then
 		gcinclude.MoveToCurrent(sets.Mug,sets.CurrentGear);	
 	-- /DRG
-	elseif string.contains(ability.Name, 'Ancient Circle') then
+	elseif string.match(ability.Name, 'Ancient Circle') then
 		gcinclude.MoveToCurrent(sets.AncientCircle,sets.CurrentGear);	
-	elseif string.contains(ability.Name, 'Jump') then
-		gcinclude.MoveToCurrent(sets.Jumps,sets.CurrentGear);
+	elseif string.match(ability.Name, 'Jump') then
+		gcinclude.MoveToCurrent(sets.Jump,sets.CurrentGear);
+	elseif string.match(ability.Name, 'High Jump') then
+		gcinclude.MoveToCurrent(sets.HighJump,sets.CurrentGear);
 	-- /DRK
-	elseif string.contains(ability.Name, 'Arcane Circle') then
+	elseif string.match(ability.Name, 'Arcane Circle') then
 		gcinclude.MoveToCurrent(sets.ArcaneCircle,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Last Resort') then
+	elseif string.match(ability.Name, 'Last Resort') then
 		gcinclude.MoveToCurrent(sets.LastResort,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Weapon Bash') then
 		gcinclude.MoveToCurrent(sets.WeaponBash,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Souleater') then
+	elseif string.match(ability.Name, 'Souleater') then
 		gcinclude.MoveToCurrent(sets.Souleater,sets.CurrentGear);	
 	end
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleAbility set
@@ -1100,6 +1105,12 @@ profile.HandleMidcast = function()
 
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
+
+	if bTank then
+		gcinclude.settings.priorityMidCast = 'ACBDEFGH';
+	else
+		gcinclude.settings.priorityMidCast = 'ABCDEFGH';	
+	end
 	
 	-- Call the common HandleMidcast now
 	gcinclude.HandleMidcast(bTank);

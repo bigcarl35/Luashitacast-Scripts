@@ -48,16 +48,16 @@ local sets = {
 --]]
 
 	['TP'] = {
-        Head  = { 'Shep. Bonnet//PET', 'Panther Mask', 'Monster Helm', 'Beast Helm', 'Shep. Bonnet', 'Empress Hairpin', 'Silver Hairpin//MSJ' },
+        Head  = { 'Shep. Bonnet//PET', 'Panther Mask', 'Monster Helm//ACCESSIBLE', 'Beast Helm//ACCESSIBLE', 'Shep. Bonnet', 'Empress Hairpin', 'Silver Hairpin//MSJ' },
         Neck  = { 'Peacock Amulet', 'Spike Necklace' },
 		Ears  = { 'Ethereal Earring', 'Beastly Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Bat Earring//MSJ', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ', 'Physical Earring//SJNIN', 'Reraise Earring', 'Physical Earring' },
         Body  = { 'Gaudy Harness//MP.LT.50', 'Narasimha\'s Vest', 'Scorpion Harness', 'Gaudy Harness', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
-        Hands = { 'Thick Mufflers', 'Beast Gloves', 'Wonder Mitts', 'Battle Gloves', 'Ryl.Ftm. Gloves' },
+        Hands = { 'Thick Mufflers', 'Beast Gloves//ACCESSIBLE', 'Wonder Mitts', 'Battle Gloves', 'Ryl.Ftm. Gloves' },
         Rings = { 'Sun Ring', 'Tamas Ring//MSJ', 'Sun Ring', 'Courage Ring', 'Balance Ring', 'San d\'Orian Ring' },
         Back  = { 'Psilos Mantle', 'Raptor Mantle', 'Ram Mantle' },
         Waist = { 'Swift Belt', 'Tilt Belt', 'Warrior\'s Belt' },
-        Legs  = { 'Thick Breeches', 'Beast Trousers', 'Shep. Hose', 'San. Trousers', 'Ryl.Ftm. Trousers' },
-        Feet  = { 'Thick Sollerets', 'Beast Gaiters', 'Wonder Clomps', 'Bounding Boots' },
+        Legs  = { 'Thick Breeches', 'Beast Trousers//ACCESSIBLE', 'Shep. Hose', 'San. Trousers', 'Ryl.Ftm. Trousers' },
+        Feet  = { 'Thick Sollerets', 'Beast Gaiters//ACCESSIBLE', 'Wonder Clomps', 'Bounding Boots' },
     },
 	
 --[[
@@ -129,7 +129,7 @@ local sets = {
 --]]
 	
 	['Resting_Regen'] = { 
-		Legs = 'Monster trousers',
+		Legs = 'Monster trousers//ACCESSIBLE',
 	},
 
 	['Resting_Refresh'] = {
@@ -292,8 +292,8 @@ local sets = {
 --]]
 
 	['INT'] = {
-        Head  = 'Beast helm',
-		Body  = 'Monster Jackcoat',
+        Head  = 'Beast helm//ACCESSIBLE',
+		Body  = 'Monster Jackcoat//ACCESSIBLE',
         Rings = { 'Tamas Ring', 'Windurstian Ring' },
         Feet = 'Mannequin Pumps',
     },
@@ -408,7 +408,7 @@ local sets = {
 		Head  = 'Beast helm',
 		Neck  = 'Spike necklace',
 		Ears  = 'Beastly Earring',		-- Should be conditional: using an axe
-		Body  = { 'Monster Jackcoat', 'Narasimha\'s vest' },
+		Body  = { 'Monster Jackcoat//ACCESSIBLE', 'Narasimha\'s vest' },
 		Hands = 'Ogre gloves',
 		Rings = { 'Sun Ring', 'Sun Ring' },
 		Waist = 'Barbarian\'s belt',
@@ -423,10 +423,10 @@ local sets = {
 --]]
 	
 	['WS_STRINT_30_20'] = {
-		Head  = 'Beast helm',
+		Head  = 'Beast helm//ACCESSIBLE',
 		Neck  = 'Spike necklace',
 		Ears  = 'Beastly Earring',		-- Should be conditional: using an axe
-		Body  = { 'Monster Jackcoat', 'Narasimha\'s vest' },
+		Body  = { 'Monster Jackcoat//ACCESSIBLE', 'Narasimha\'s vest' },
 		Hands = 'Ogre gloves',
 		Rings = { 'Sun Ring', 'Sun Ring' },
 		Waist = 'Barbarian\'s belt',
@@ -486,7 +486,7 @@ local sets = {
         Neck = 'Spike Necklace',
         Ears = 'Beastly Earring',
         Body = 'Brigandine',
-        Hands = 'Beast Gloves',
+        Hands = 'Beast Gloves//ACCESSIBLE',
         Rings = { 'Balance Ring', 'Bastokan Ring' },
         Feet = 'Bounding Boots',
     },
@@ -500,11 +500,11 @@ local sets = {
 --]]
 	
 	['WS_DEXINT'] = {
-        Head = 'Beast Helm',
+        Head = 'Beast Helm//ACCESSIBLE',
         Neck = 'Spike Necklace',
         Ears = 'Beastly Earring',
-        Body = { 'Monster Jackcoat', 'Brigandine' },
-        Hands = 'Beast Gloves',
+        Body = { 'Monster Jackcoat//ACCESSIBLE', 'Brigandine' },
+        Hands = 'Beast Gloves//ACCESSIBLE',
         Rings = 'Balance Ring',
         Feet = 'Bounding Boots',
     },
@@ -522,8 +522,8 @@ local sets = {
 		Body = 'Gaudy harness',
 		Rings = { 'Moon ring', 'Moon ring' },
 		Waist = { 'Monster Belt', 'Corsette' },
-		Legs = 'Beast trousers',
-		Feet = 'Beast gaiters',
+		Legs = 'Beast trousers//ACCESSIBLE',
+		Feet = 'Beast gaiters//ACCESSIBLE',
 	},
 
 --[[
@@ -559,9 +559,9 @@ local sets = {
 --]]
 
 	['WS_HP'] = {
-        Head = 'Monster Helm',
+        Head = 'Monster Helm//ACCESSIBLE',
         Ears = { 'Ethereal Earring', 'Physical Earring' },
-        Body = 'Monster Jackcoat',	
+        Body = 'Monster Jackcoat//ACCESSIBLE',	
         Hands = 'Wonder Mitts',	
         Rings = 'Toreador\'s Ring',	
         Waist = 'Powerful Rope',
@@ -594,7 +594,7 @@ local sets = {
 	-- Reward potency, reward augment, reward enhancement, and MND gear
 	['Reward'] = {
         Neck = 'Justice Badge',
-        Body = { 'Monster Jackcoat//DB:WSS', 'Beast Jackcoat//DB:BPP', 'Monster Jackcoat','Beast Jackcoat' },
+        Body = { 'Monster Jackcoat//DB:WSS//ACCESSIBLE', 'Beast Jackcoat//DB:BPP/ACCESSIBLE', 'Monster Jackcoat//ACCESSIBLE','Beast Jackcoat//ACCESSIBLE' },
         Hands = 'Ogre Gloves',
         Rings = { 'Tamas Ring',	'Tranquility Ring' },
         Waist = 'Friar\'s Rope',
@@ -604,23 +604,23 @@ local sets = {
 	
 	-- Tame success rate. Resistence depends on your INT vs target's INT
 	['Tame'] = {
-        Head = 'Beast Helm',
-		Body = 'Monster Jackcoat',
+        Head = 'Beast Helm//ACCESSIBLE',
+		Body = 'Monster Jackcoat//ACCESSIBLE',
 		Rings = 'Tamas Ring',
 		Feet = 'Mannequin Pumps',
     },
 	
 	-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration
 	['Charm'] = {
-        Head = 'Monster Helm',
+        Head = 'Monster Helm//ACCESSIBLE',
         Neck = 'Flower Necklace',
         Ears = 'Beastly Earring',
-        Body = 'Monster Jackcoat',
-        Hands = 'Beast Gloves',
+        Body = 'Monster Jackcoat//ACCESSIBLE',
+        Hands = 'Beast Gloves//ACCESSIBLE',
         Rings = { 'Moon Ring', 'Moon Ring' },
         Waist = { 'Monster Belt', 'Corsette' },
-        Legs = 'Beast Trousers',
-        Feet = 'Beast Gaiters',
+        Legs = 'Beast Trousers//ACCESSIBLE',
+        Feet = 'Beast Gaiters//ACCESSIBLE',
     },
 	
 	['Pet_Attack'] = {					-- Pet's strength, not accuracy
@@ -698,9 +698,6 @@ local sets = {
 	['Souleater'] = {
 	},
 	
-	['Jumps'] = {		-- Jump and High Jump, Super is too high a level
-	},
-	
 	--* /BRD *--
 	-- No skills
 	
@@ -740,8 +737,11 @@ local sets = {
 	['AncientCircle'] = {
 	},
 	
-	['Jumps'] = {		-- Jump and High Jump, Super is too high a level
-	},				
+	['Jump'] = {
+	},
+
+	['HighJump'] = {
+	},			
 	
 --[[
 	The following set is used to dynamically create a gear set to be displayed once rather
@@ -1206,9 +1206,9 @@ profile.HandleAbility = function()
 			end
 		end
 		gcinclude.MoveToCurrent(sets.CallBeast,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Familiar') then
+	elseif string.match(ability.Name, 'Familiar') then
 		gcinclude.MoveToCurrent(sets.Familiar,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Gauge') then
+	elseif string.match(ability.Name, 'Gauge') then
 		gcinclude.MoveToCurrent(sets.Gauge,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Reward') then
 		-- Pet reward. Make sure that pet food already equipped
@@ -1225,82 +1225,84 @@ profile.HandleAbility = function()
 		gcinclude.SwapToStave('light',false,sets.CurrentGear);
 	-- And now the subjob abilities
 	-- /WAR
-	elseif string.contains(ability.Name, 'Provoke') then
+	elseif string.match(ability.Name, 'Provoke') then
 		gcinclude.MoveToCurrent(sets.Provoke,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Berserk') then
+	elseif string.match(ability.Name, 'Berserk') then
 		gcinclude.MoveToCurrent(sets.Berserk,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Defender') then
+	elseif string.match(ability.Name, 'Defender') then
 		gcinclude.MoveToCurrent(sets.Defender,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Warcry') then
+	elseif string.match(ability.Name, 'Warcry') then
 		gcinclude.MoveToCurrent(sets.Warcry,sets.CurrentGear);
 	--* /MNK *--
-	elseif string.contains(ability.Name, 'Boost') then
+	elseif string.match(ability.Name, 'Boost') then
 		gcinclude.MoveToCurrent(sets.Boost,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Focus') then
+	elseif string.match(ability.Name, 'Focus') then
 		gcinclude.MoveToCurrent(sets.Focus,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Dodge') then
+	elseif string.match(ability.Name, 'Dodge') then
 		gcinclude.MoveToCurrent(sets.Dodge,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Chakra') then
+	elseif string.match(ability.Name, 'Chakra') then
 		gcinclude.MoveToCurrent(sets.Chakra,sets.CurrentGear);
 	-- /THF
-	elseif string.contains(ability.Name, 'Steal') then
+	elseif string.match(ability.Name, 'Steal') then
 		gcinclude.MoveToCurrent(sets.Steal,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Sneak Attack') then
+	elseif string.match(ability.Name, 'Sneak Attack') then
 		gcinclude.MoveToCurrent(sets.SneakAttack,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Flee') then
+	elseif string.match(ability.Name, 'Flee') then
 		gcinclude.MoveToCurrent(sets.Flee,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Trick Attack') then
+	elseif string.match(ability.Name, 'Trick Attack') then
 		gcinclude.MoveToCurrent(sets.TrickAttack,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Mug') then
+	elseif string.match(ability.Name, 'Mug') then
 		gcinclude.MoveToCurrent(sets.Mug,sets.CurrentGear);
 	-- /WHM
-	elseif string.contains(ability.Name, 'Divine Seal') then
+	elseif string.match(ability.Name, 'Divine Seal') then
 		gcinclude.MoveToCurrent(sets.DivineSeal,sets.CurrentGear);
 	-- /BLM
-	elseif string.contains(ability.Name, 'Elemental Seal') then
+	elseif string.match(ability.Name, 'Elemental Seal') then
 		gcinclude.MoveToCurrent(sets.ElementalSeal,sets.CurrentGear);
 	-- /DRK
-	elseif string.contains(ability.Name, 'Arcane Circle') then
+	elseif string.match(ability.Name, 'Arcane Circle') then
 		gcinclude.MoveToCurrent(sets.ArcaneCircle,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Last Resort') then
+	elseif string.match(ability.Name, 'Last Resort') then
 		gcinclude.MoveToCurrent(sets.LastResort,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Weapon Bash') then
 		gcinclude.MoveToCurrent(sets.WeaponBash,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Souleater') then
+	elseif string.match(ability.Name, 'Souleater') then
 		gcinclude.MoveToCurrent(sets.Souleater,sets.CurrentGear);	
 	-- /RNG
-	elseif string.contains(ability.Name, 'Sharpshot') then
+	elseif string.match(ability.Name, 'Sharpshot') then
 		gcinclude.MoveToCurrent(sets.Sharpshot,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Scavenge') then
+	elseif string.match(ability.Name, 'Scavenge') then
 		gcinclude.MoveToCurrent(sets.Scavenge,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Camouflage') then
+	elseif string.match(ability.Name, 'Camouflage') then
 		gcinclude.MoveToCurrent(sets.Camouflage,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Barrage') then
+	elseif string.match(ability.Name, 'Barrage') then
 		gcinclude.MoveToCurrent(sets.Barrage,sets.CurrentGear);	
 	-- /SAM
-	elseif string.contains(ability.Name, 'Warding Circle') then
+	elseif string.match(ability.Name, 'Warding Circle') then
 		gcinclude.MoveToCurrent(sets.WardingCircle,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Third Eye') then
+	elseif string.match(ability.Name, 'Third Eye') then
 		gcinclude.MoveToCurrent(sets.Third_Eye,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Hasso') then
+	elseif string.match(ability.Name, 'Hasso') then
 		gcinclude.MoveToCurrent(sets.Hasso,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Meditate') then
+	elseif string.match(ability.Name, 'Meditate') then
 		gcinclude.MoveToCurrent(sets.Meditate,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Seigan') then
+	elseif string.match(ability.Name, 'Seigan') then
 		gcinclude.MoveToCurrent(sets.Seigan,sets.CurrentGear);
 	-- /DRG
-	elseif string.contains(ability.Name, 'Ancient Circle') then
+	elseif string.match(ability.Name, 'Ancient Circle') then
 		gcinclude.MoveToCurrent(sets.AncientCircle,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Jump') then
-		gcinclude.MoveToCurrent(sets.Jumps,sets.CurrentGear);
+	elseif string.match(ability.Name, 'Jump') then
+		gcinclude.MoveToCurrent(sets.Jump,sets.CurrentGear);
+	elseif string.match(ability.Name, 'High Jump') then
+		gcinclude.MoveToCurrent(sets.HighJump,sets.CurrentGear);		
 	-- /PLD
 	elseif string.match(ability.Name, 'Holy Circle') then
 		gcinclude.MoveToCurrent(sets.HolyCircle,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Shield Bash') then
 		gcinclude.MoveToCurrent(sets.ShieldBash,sets.CurrentGear);
-	elseif string.contains(ability.Name, 'Sentinel') then
+	elseif string.match(ability.Name, 'Sentinel') then
 		gcinclude.MoveToCurrent(sets.Sentinel,sets.CurrentGear);	
-	elseif string.contains(ability.Name, 'Cover') then
+	elseif string.match(ability.Name, 'Cover') then
 		gcinclude.MoveToCurrent(sets.Cover,sets.CurrentGear);
 	end
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleAbility set
