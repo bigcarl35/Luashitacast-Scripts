@@ -53,7 +53,7 @@ local sets = {
         Neck  = { 'Parade Gorget//HP.GE.85PV', 'Peacock Amulet', 'Spike Necklace' },
         Ears  = { 'Coral Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Pilferer\'s Earring//SJTHF', 'Drone Earring', 'Energy Earring +1', 'Energy Earring +1' },
         Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Scorpion Harness', 'Brigandine' },
-        Hands = { 'Thick Mufflers', 'Chaos Gauntlets//ACCESSIBLE', 'Wonder Mitts' },
+        Hands = { 'Abyss Gauntlets//ACCESSIBLE', 'Chaos Gauntlets//ACCESSIBLE', 'Thick Mufflers', 'Wonder Mitts' },
         Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tamas Ring', 'Balance Ring' },
         Back  = { 'Psilos Mantle', 'Amemet Mantle', 'Raptor Mantle', 'Ram Mantle' },
         Waist = { 'Swift Belt', 'Axe Belt//SJWAR', 'Powerful Rope', 'Friar\'s Rope' },
@@ -251,7 +251,9 @@ local sets = {
 	
 	-- Dark: Dark Magic Skill.	
 	['Dark'] = {
-		Head = 'Chaos Burgeonet//ACCESSIBLE',
+		Head  = 'Chaos Burgeonet//ACCESSIBLE',
+		Hands = 'Abyss Gauntlets//ACCESSIBLE',
+		Legs  = 'Abyss Flanchard//ACCESSIBLE',
     },
 
 	-- Divine: Divine Magic Skill.	
@@ -262,6 +264,7 @@ local sets = {
 	-- specific for DRK that gives any dark magic skill.	
 	['Enfeebling'] = {
 		Body = 'Chaos Cuirass//ACCESSIBLE',
+		Feet = 'Abyss Sollerets//ACCESSIBLE',
 	},
 	
 	-- Enhancing: There is no gear that a DRK can wear to enhance any magic spell. Leave the Enhancing gear sets empty.
@@ -290,7 +293,9 @@ local sets = {
 
 	['INT'] = {
         Rings = { 'Tamas Ring', 'Windurstian Ring' },
+		Hands = 'Abyss Gauntlets//ACCESSIBLE',
         Waist = 'Mrc.Cpt. Belt',
+		Legs  = 'Chaos Flanchard//ACCESSIBLE',
         Feet = 'Mannequin Pumps',
     },
 
@@ -302,7 +307,7 @@ local sets = {
         Body = 'Wonder Kaftan',
         Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
         Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
+        Legs = { 'Abyss Flanchard//ACCESSIBLE', 'Wonder Braccae' },
         Feet = { 'Chaos Sollerets//ACCESSIBLE', 'Mannequin Pumps' },
     },
 
@@ -611,6 +616,7 @@ local sets = {
     },
 	
 	['LastResort'] = {
+		Feet = 'Abyss Sollerets//ACCESSIBLE',
     },
 	
 	['Souleater'] = {
