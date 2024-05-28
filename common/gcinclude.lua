@@ -1323,11 +1323,61 @@ function gcinclude.MagicalJob(sWhich)
 end		-- gcinclude.MagicalJob
 
 --[[
-	CheckInvisibleHP is a work around to determine if the player's current HP
+	TallyFromConvert will search the specified type of gear (visible, invisible,
+	all) for conversion attributes and tally them. How much of each is returned.
+	sType = I (invisible), and V (visible)
+--]]
+
+function TallyFromConvert(sType)
+	local tVisible = {'Main','Sub','Range','Ammo','Head','Body','Hands','Legs','Feet'};
+	local tInvisible = {'Neck','Ear1','Ear2','Ring1','Ring2','Back','Waist'};
+	local cur = gData.GetEquipment();
+	local tHP = 0;
+	local tMP = 0;
+	local iposMP,iposHP;
+	local tTemp = { };
+
+	sType = string.upper(sType);
+	if string.find('IV',sType) == nil then
+		print(chat.header('TallyFromConvert'):append(chat.message('Error: Unknown sType: ' .. sType.. '. Assuming: V')));
+		sType = 'V';
+	end
+	
+	if sType == 'V' then
+		tTemp = tVisible;
+	else
+		tTemp = tInvisible;
+	end
+	
+	for ii,jj in pairs(cur) do
+		iposMP = string.find(jj.Resource.Description[1],' HP to MP');
+		iposHP = string.find(jj.Resource.Description[1],' MP to HP');
+	
+		if iposMP ~= nil then
+			-- Found hp to mp conversion
+			if table.find(tTemp,ii) ~= nil then
+				if (jj.Name ~= 'Tortoise Shield') then
+					tMP = tMP + tonumber(string.sub(jj.Resource.Description[1],iposMP-2,iposMP-1));
+				end
+			end
+		end
+		
+		if iposHP ~= nil then
+			-- Found mp to hp conversion
+			if table.find(tTemp,ii) ~= nil then				
+				tHP = tHP + tonumber(string.sub(jj.Resource.Description[1],iposHP-2,iposHP-1));
+			end
+		end	
+	end
+	return tHP,tMP;
+end		-- TallyFromConvert
+
+--[[
+	CheckInvisible is a work around to determine if the player's current HP/MP
 	meets the condition it is being tested for.
 --]]
 
-function gcinclude.CheckInvisibleHP(sGear,ival)
+function gcinclude.CheckInvisible(sGear,ival,Code)
 	local player = gData.GetPlayer();
 	local x,bFound = false;
 	
@@ -1338,24 +1388,32 @@ function gcinclude.CheckInvisibleHP(sGear,ival)
 
 	if gcinclude.Special[sGear][player.MainJobSync] ~= nil then
 		-- Just remove the hp associated with the invisible gear slots
-		x = gcinclude.Special[sGear][player.MainJobSync][1];			-- TP
+		x = gcinclude.Special[sGear][player.MainJobSync][1];			-- TP set
 		if gcdisplay.GetToggle('Tank') == true then
-			x = gcinclude.Special[sGear][player.MainJobSync][2];		-- Tank_TP
+			x = gcinclude.Special[sGear][player.MainJobSync][2];		-- Tank_TP set
 			if gcdisplay.GetToggle('Acc') == true then
-				x = gcinclude.Special[sGear][player.MainJobSync][4];	-- Tank_TP + Accuracy
+				x = gcinclude.Special[sGear][player.MainJobSync][4];	-- Tank_TP set + Accuracy set
 			end
 		else
 			if gcdisplay.GetToggle('Acc') == true then
-				x = gcinclude.Special[sGear][player.MainJobSync][3];	-- Accuracy
+				x = gcinclude.Special[sGear][player.MainJobSync][3];	-- Accuracy set
 			end		
 		end
 
-		return ((player.HP / (player.MaxHP - x)) * 100 >= ival and player.MPP <= gcinclude.settings.Tolerance);
+		if code  == 'HP.GE.PV' then
+			return (player.HP / (player.MaxHP - x) * 100 >= ival and player.MPP <= gcinclude.settings.Tolerance);
+		elseif code == 'MPP.LE.PV' then
+			return ((player.MP - x) / player.Max.MP);
+		end
 	else
-		-- Just check current hp vs max hp
-		return (((player.HP/player.MaxHP) * 100) >= ival and player.MPP <= gcinclude.settings.Tolerance);
+		if code  == 'HP.GE.PV' then
+			-- Just check current hp vs max hp
+			return (player.HPP >= ival and player.MPP <= gcinclude.settings.Tolerance);
+		elseif code == 'MPP.LE.PV' then
+			return (player.MPP <= ival);		
+		end
 	end
-end		-- gcinclude.CheckInvisibleHP
+end		-- gcinclude.CheckInvisible
 
 --[[
 	MakeCodeTable takes the passed, // delimited list and returns the
@@ -1520,9 +1578,10 @@ function gcinclude.CheckInline(gear,sSlot)
 			bGood = (environ.MoonPhase == 'New Moon');
 		elseif suCode == 'FULLMOON' then					-- Moon phase: Full Moon
 			bGood = (environ.MoonPhase == 'Full Moon');
-		elseif string.sub(suCode,1,1) ==  'H' and string.sub(suCode,-2,-1) == 'PV' then
+		elseif string.sub(suCode,1,6) ==  'HP.GE.' and string.sub(suCode,-2,-1) == 'PV' then
 			local ival = tonumber(string.sub(suCode,7,-3));
-			bGood = gcinclude.CheckInvisibleHP(sGear,ival);
+			local mSuCode = string.sub(suCode,1,6) .. string.sub(suCode,-2,-1);
+			bGood = gcinclude.CheckInvisible(sGear,ival,mSuCode);
 		elseif suCode == 'SPIRIT:ES' then					-- Pet being summoned is a spirit
 			bGood = (string.find(gcinclude.Spirits,string.lower(spell.Name)) ~= nil);
 		elseif suCode == 'SPIRIT:EP' then					-- Current pet is a spirit
@@ -1562,13 +1621,19 @@ end		-- gcinclude.CheckInline
 
 function gcinclude.t1()
 	local item;
+	local hp,mp;
 	
+	hp,mp = TallyFromConvert('I');
+	print('HP from Invisible = ' .. tostring(hp));
+	print('MP from Invisible = ' .. tostring(mp));
+--[[
 	item = AshitaCore:GetResourceManager():GetItemByName('Perpetual Hrglass.',2);					
 	if item == nil then
 		print(chat.header('T1'):append(chat.message('Warning: \'Perpetual Hrglass.\' not a valid item. Skipping.')));
 	else
 		print(chat.header('T1'):append(chat.message(item.Description[2])));
 	end
+--]]
 end		-- gcinclude.t1
 
 --[[
@@ -2898,7 +2963,9 @@ function gcinclude.HandleMidcast(bTank)
 		if cKey == 'A' then				-- midcast gear
 			gcinclude.MoveToCurrent(gProfile.Sets.Midcast,gProfile.Sets.CurrentGear);
 		elseif cKey == 'B' then			-- Spell Interruption Rate gear
-			gcinclude.MoveToCurrent(gProfile.Sets.SIR,gProfile.Sets.CurrentGear);
+			if spell.Skill ~= 'Singing' then
+				gcinclude.MoveToCurrent(gProfile.Sets.SIR,gProfile.Sets.CurrentGear);
+			end
 		elseif cKey == 'C' then			-- INT/MND gear?
 			sSet = gcinclude.WhichStat(spell.Name);
 			if sSet ~= nil then

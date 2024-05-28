@@ -73,8 +73,8 @@ function gcdisplay.ShowHelp()
 		print(chat.header('Help'):append(chat.message('/wswap -- Toggles whether automatic weapon swapping is permitted. Default is FALSE.')));
 	end
 
-	if string.find('PLD,NIN,DRK,WAR,THF,RUN',Main) ~= nil then
-		print(chat.header('Help'):append(chat.message('/tank -- Toggles whether tanking TP gear set should be equipped. Default is TRUE for PLD,NIN,RUN and FALSE for DRK,WAR,THF.')));
+	if string.find('PLD,NIN,DRK,WAR,THF,RDM,RUN',Main) ~= nil then
+		print(chat.header('Help'):append(chat.message('/tank -- Toggles whether tanking TP gear set should be equipped. Default is TRUE for PLD,NIN,RUN and FALSE for DRK,WAR,THF,RDM.')));
 		print(chat.header('Help'):append(chat.message('/idle -- Toggles whether \'Travel\' gear is equipped when idle. Default is TRUE.')));
 	end
 	
