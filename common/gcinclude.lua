@@ -11,26 +11,43 @@ require 'common'
 	losing your tp.
 -]]
 gcinclude.sets = {
-	['Doomed'] = { 					-- this set will equip any time you have the doom status
+	['Blind'] = {			-- Equip set if you're blind. Note: BLIND is a conditional too
+	},
+
+	['Bound'] = {			-- Equip set if you are bound
+	},
+	
+	['Cursed'] = {			-- Equip set if you are cursed
+	},
+	
+	['Doomed'] = { 			-- Equip set any time you have the doom/bane status
     },
 	
-	['Holy_Water'] = { 				-- update with whatever gear you use for the Holy Water item
+	['Holy_Water'] = { 		-- Equip set with whatever gear you use for the Holy Water item
     },
+
+	['Paralyzed'] = {		-- Equip set if you are paralyzed
+	},
+
+	['Petrified'] = {		-- Equip set if you are petrified
+	},
 	
-	['Sleeping'] = { 				-- this set will auto equip if you are asleep
+	['Poisoned'] = {		-- Equip set if you are poisoned
+	},
+	
+	['Silenced'] = {		-- Equip set if you are silenced
+	},
+	
+	['Sleeping'] = { 		-- Equip set if you are asleep
 		Neck = 'Opo-opo necklace',	-- might as well gain tp
     },
 	
-	['Blind'] = {					-- this will autoequip if you're blind. Note: bat earring found in job file under evasion w/inline condition
+	['Weakened'] = {  		-- Equip set if you are weakened
 	},
 	
-	['Weakened'] = {  				-- this set will try to auto equip if you are weakened
-	},
+	-- Some buffs are not debuffs
 	
-	['Paralyzed'] = {				-- this set will equip if you are paralyzed
-	},
-	
-	['Shining_Ruby'] = {			-- this will auto-equip when you have the shining ruby buff
+	['Shining_Ruby'] = {	-- Equip set when you have the shining ruby buff
 		--Hands = 'Carbuncle\'s Cuffs',
 	},
 
@@ -108,7 +125,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','gs','th','help','wswap','petfood','maxspell','maxsong','region','ajug','db','sbp','showit','equipit','tank','idle','lock','unlock','slot','horn','string','validate','t1'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','gs','th','help','wswap','petfood','maxspell','maxsong','region','ajug','db','sbp','showit','equipit','ei','tank','idle','lock','unlock','slot','horn','string','validate','t1'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T{'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T{'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -638,7 +655,7 @@ gcinclude.JobMask = { ['None'] = 0x0,
 		['JOB27'] = 0x8000000, ['JOB28'] = 0x10000000, ['JOB29'] = 0x20000000,
 		['JOB30'] = 0x30000000, ['JOB31'] = 0x80000000, ['Alljobs'] = 0x007FFFFE };
 
--- structure used to check the validity of the gear piece in a gear set
+-- Structure used to check the validity of the gear piece in a gear set
 Integrity = { ['Name'] = nil, 			-- Name of item to be checked
 			  ['Item'] = nil,			-- Actual item structure
 			  ['Code'] = nil,			-- What (if any) inline code is attached
@@ -650,33 +667,70 @@ Integrity = { ['Name'] = nil, 			-- Name of item to be checked
 			  ['Where'] = ',',			-- Where is the item found
 };
 
-InlineCodes = { '//MSJ','//SJWAR','//SJMNK','//SJWHM','//SJBLM','//SJRDM','//SJTHF',
-				'//SJPLD','//SJDRK','//SJBST','//SJBRD','//SJRNG','//SJSAM','//SJNIN',
-				'//SJDRG','//SJSMN','//SJBLU','//SJCOR','//SJPUP','//SJDNC','//SJSCH',
-				'//SJGEO','//SJRUN','//CARBY','//BLIND','//OWN','//NOT_OWN','//PJWAR',
-				'//PJMNK','//PJWHM','//PJBLM','//PJRDM','//PJTHF','//PJPLD','//PJDRK',
-				'//PJBST','//PJBRD','//PJRNG','//PJSAM','//PJNIN','//PJDRG','//PJSMN',
-				'//PJBLU','//PJCOR','//PJPUP','//PJDNC','//PJSCH','//PJGEO','//PJRUN',
-				'//WSWAP','//PET','//PETF','//PETFNPF','//ELEAVA','//AVAWTHR',
-				'//AVADAY','//HORN','STRING','//CR:ALC','//CR:BONE','//CR:CLOTH',
-				'//CR:COOK','//CR:GSM','//CR:LTH','//CR:BSM','//CR:WW','//GA:HELM',
-				'//GA:DIG','//GA:CLAM','//GA:FISH','//FIRESDAY','//EARTHSDAY',
-				'//WATERSDAY','//WINDSDAY','//ICEDAY','//LIGHTNINGDAY','//LIGHTSDAY',
-				'//DARKSDAY','//NOT_FIRESDAY','//NOT_EARTHSDAY','//NOT_WATERSDAY',
-				'//NOT_WINDSDAY','//NOT_ICEDAY','//NOT_LIGHTNINGDAY','//NOT_LIGHTSDAY',
-				'//NOT_DARKSDAY','//WTH:CLEAR','//WTH:SUNSHINE','//WTH:CLOUDS',
-				'//WTH:FOG','//WTH:FIRE','//WTH:WATER','//WTH:EARTH','//WTH:WIND',
-				'//WTH:ICE','//WTH:THUNDER','//WTH:LIGHT','//WTH:DARK','//WTH-DAY',
-				'//NOT_WTH:CLEAR','//NOT_WTH:SUNSHINE','//NOT_WTH:CLOUDS','//NOT_WTH:FOG',
-				'//NOT_WTH:FIRE','//NOT_WTH:WATER','//NOT_WTH:EARTH','//NOT_WTH:WIND',
-				'//NOT_WTH:ICE','//NOT_WTH:THUNDER','//NOT_WTH:LIGHT','//NOT_WTH:DARK',
-				'//WTH-DAY','//AK:WINDY','//AK:SANDY','//AK:BASTOK','//AK:OMNI',
-				'//NEWMOON','//FULLMOON','//NIGHTTIME','//DAYTIME','//DUSK2DAWN',
-				'//SPIRIT:ES','//SMNPET','//SPIRIT:EP','//DB:BPP','//DB:WSS',
-				'//ACCESSIBLE','//ACCURACY','//EVASION','//NOT_WTH-DAY','//TANK' };
+-- Structure used to tally the MP +/-, HP +/-, and convert affects for all gear
+-- whether invisible or visible.
+TallyGear = {
+	Visible      = { 'Main','Sub','Range','Ammo','Head','Body','Hands','Legs','Feet' },
+	Invisible    = { 'Neck','Ear1','Ear2','Ring1','Ring2','Back','Waist' },
+	VMP			 = 0,		-- Tally of MP +/- from visible gear
+	IMP			 = 0,		-- Tally of MP +/- from invisible gear
+	VMPP		 = 0,		-- Tally of MP +/- % from visible gear
+	IMPP		 = 0,		-- Tally of MP +/- % from invisible gear
+	VHP			 = 0,		-- Tally of HP +/- from visible gear
+	IHP			 = 0,		-- Tally of HP +/- from invisible gear
+	VHPP		 = 0,		-- Tally of HP +/- % from visible gear
+	IHPP		 = 0,		-- Tally of HP +/- % from invisible gear
+	VCHPMP 		 = 0,		-- Tally of Convert HP to MP from visible gear
+	ICHPMP		 = 0,		-- Tally of Convert HP to MP from invisible gear
+	VCMPHP		 = 0,		-- Tally of Convert MP to HP from visible gear
+	ICMPHP		 = 0,		-- Tally of Convert MP to HP from invisible gear
+};
+
+-- The following is a list of all valid conditional operators used in the following
+-- inline codes: //MP, //MPP, //HP, //HPP, //TP, and //TPP.
+InlineConditionals = { '.EQ.', '.GT.', '.GE.', '.LT.', '.LE.', '.NE.' };
+
+InlineCodes = { '//ACCESSIBLE', '//ACCURACY', '//AK:BASTOK', '//AK:OMNI', 
+				'//AK:SANDY', '//AK:WINDY', '//ARCHERY', '//AXE', '//BLIND',
+				'//CARBY', '//CLUB', '//CR:ALC', '//CR:BONE', '//CR:CLOTH',
+				'//CR:COOK', '//CR:GSM', '//CR:LTH', '//CR:BSM', '//CR:WW',
+				'//DAGGER', '//DARKSDAY', '//DAYTIME', '//DB:BPP', '//DB:WSS', 
+				'//DUSK2DAWN', '//EARTHSDAY', '//EVASION', '//FIRESDAY', 
+				'//FULLMOON', '//GA:CLAM', '//GA:DIG', '//GA:FISH', '//GA:HELM',
+				'//GAXE', '//GKATANA', '//GSWORD', 'H2H', '//HORN', '//ICEDAY', 
+				'//KATANA', '//LIGHTNINGDAY', '//LIGHTSDAY', '//MARKSMANSHIP', 
+				'//MSJ', '//NEWMOON', '//NIGHTTIME', '//NOT_DARKSDAY', 
+				'//NOT_EARTHSDAY', 	'//NOT_FIRESDAY', '//NOT_ICEDAY', 
+				'//NOT_LIGHTNINGDAY', '//NOT_LIGHTSDAY', '//NOT_WATERSDAY',
+				'//NOT_WINDSDAY', '//WATERSDAY', '//WINDSDAY', '//NOT_OWN',
+				'//NOT_WTH:CLEAR', '//NOT_WTH:CLOUDS', '//NOT_WTH:DARK',
+				'//NOT_WTH:EARTH', '//NOT_WTH:FIRE', '//NOT_WTH:FOG', 
+				'//NOT_WTH:ICE', '//NOT_WTH:LIGHT', '//NOT_WTH:SUNSHINE', 
+				'//NOT_WTH:THUNDER', '//NOT_WTH:WATER', '//NOT_WTH:WIND',
+				'//NOT_WTH-DAY', '//OWN', '//PET', '//PETF', '//PETFNPF',
+				'//PJPBLM', '//PJPBLU', '//PJPBRD', '//PJPBST', '//PJPCOR',
+				'//PJPDNC', '//PJPDRG', '//PJPDRK', '//PJPGEO', '//PJPMNK', 
+				'//PJPNIN', '//PJPPLD', '//PJPPUP', '//PJPRNG', '//PJPRDM', 
+				'//PJPRUN', '//PJPSAM', '//PJPSCH', '//PJPSMN', '//PJPTHF', 
+				'//PJPWAR', '//PJPWHM', '//POLEARM', '//SCYTHE', '//SJBLM',
+				'//SJBLU', '//SJBRD', '//SJBST', '//SJCOR', '//SJDNC', 
+				'//SJDRG', '//SJDRK', '//SJGEO', '//SJMNK', '//SJNIN', 
+				'//SJPLD', '//SJPUP', '//SJRNG', '//SJRDM', '//SJRUN', 
+				'//SJSAM', '//SJSCH', '//SJSMN', '//SJTHF', '//SJWAR',
+				'//SJWHM','//SMN:CARBUNCLE', '//SMN:DIABOLOS', '//SMN:FENRIR',
+				'//SMN:GARUDA', '//SMN:IFRIT', '//SMN:LEVIATHAN', '//SMN:RAMUH', 
+				'//SMN:SHIVA', '//SMN:TITAN', '//SMNPET', '//SMNPETMD',
+				'//SMNPETMW', '//SPECIAL', '//SPIRIT:EP', '//SPIRIT:ES',
+				'//STAVE', '//STRING', '//SWORD', '//TANK', '//THROWING',
+				'//WSWAP', '//WTH:CLEAR', '//WTH:CLOUDS', '//WTH:DARK',
+				'//WTH:EARTH', '//WTH:FIRE', '//WTH:FOG', '//WTH:ICE',
+				'//WTH:LIGHT', '//WTH:SUNSHINE', '//WTH:THUNDER', '//WTH:WATER',
+				'//WTH:WIND', '//WTH-DAY',				
+				};
 InLineSpecialCodes = { 
-						{ '//HP.GE.', 'PV' }, { '//TP.LE.','P' }, { '//HP.LE.','P' },
-						{ '////MPP.LE.', 'P'}, {'//MP.LT.', nil },
+						{'//TP.', nil }, { '//TPP.', nil }, {'//MP.', nil }, 
+						{'//MPP.'}, {'//HP.', nil }, {'//HPP', nil}, 
+						{'PARTY', nil},
 					 };
 
 gcinclude.Sets = gcinclude.sets;
@@ -1323,97 +1377,291 @@ function gcinclude.MagicalJob(sWhich)
 end		-- gcinclude.MagicalJob
 
 --[[
-	TallyFromConvert will search the specified type of gear (visible, invisible,
-	all) for conversion attributes and tally them. How much of each is returned.
-	sType = I (invisible), and V (visible)
+	ClearTallyGear zeroes out the tally indicators of the TallyGear structure
 --]]
 
-function TallyFromConvert(sType)
-	local tVisible = {'Main','Sub','Range','Ammo','Head','Body','Hands','Legs','Feet'};
-	local tInvisible = {'Neck','Ear1','Ear2','Ring1','Ring2','Back','Waist'};
-	local cur = gData.GetEquipment();
-	local tHP = 0;
-	local tMP = 0;
-	local iposMP,iposHP;
-	local tTemp = { };
+function ClearTallyGear()
+	TallyGear.VMP    = 0;
+	TallyGear.IMP    = 0;
+	TallyGear.VMPP   = 0;
+	TallyGear.IMPP   = 0;
+	TallyGear.VHP    = 0;
+	TallyGear.IHP    = 0;
+	TallyGear.VHPP   = 0;
+	TallyGear.IHPP   = 0;
+	TallyGear.VCHPMP = 0;
+	TallyGear.ICHPMP = 0;
+	TallyGear.VCMPHP = 0;
+	TallyGear.ICMPHP = 0;
+end		-- ClearTallyGear
 
-	sType = string.upper(sType);
-	if string.find('IV',sType) == nil then
-		print(chat.header('TallyFromConvert'):append(chat.message('Error: Unknown sType: ' .. sType.. '. Assuming: V')));
-		sType = 'V';
-	end
-	
-	if sType == 'V' then
-		tTemp = tVisible;
-	else
-		tTemp = tInvisible;
-	end
-	
+--[[
+	TallyMP tallies all the MP increases and decreases across both visible and
+	invisible gear. This include raw +'s and -'s and percentages. The appropriate
+	fields in the TallyGear structure are updated if anything found.
+--]]
+
+function TallyMP()
+	local cur = gData.GetEquipment();
+	local player = gData.GetPlayer();
+	local iposMP,iposMP;
+	local ioff,bPlus;
+	local sType,ival;
+	local iStart,iEnd;
+		
 	for ii,jj in pairs(cur) do
-		iposMP = string.find(jj.Resource.Description[1],' HP to MP');
-		iposHP = string.find(jj.Resource.Description[1],' MP to HP');
-	
-		if iposMP ~= nil then
-			-- Found hp to mp conversion
-			if table.find(tTemp,ii) ~= nil then
-				if (jj.Name ~= 'Tortoise Shield') then
-					tMP = tMP + tonumber(string.sub(jj.Resource.Description[1],iposMP-2,iposMP-1));
+		-- determine which grouping the current gear piece is in
+		
+		if table.find(TallyGear.Visible,ii) ~= nil then
+			sType = 'V';
+		elseif table.find(TallyGear.Invisible,ii) ~= nil then
+			sType = 'I';
+		else		-- This should never occur!!!
+			print(chat.header('TallyMP'):append(chat.message('Error: Unrecognized Slot: ' .. ii .. '. Ignoring.')));
+			sType = nil;
+		end
+		
+		-- First deal with exceptions: Check for Tamas ring first
+		if jj.Resource.Name[1] == 'Tamas Ring' then
+			ival = math.floor((player.MainJobSync - 30)/15)*5 + 15;
+			TallyGear.IMP = TallyGear.IMP + ival;
+		else
+			-- Now determine if there's an MP +/- qualifier in the description.
+			-- bPlus tracks if the value is positive or negative. ioff tracks the
+			-- offset. Since both + and - are basically found in the same manner,
+			-- common code is used.
+			bPlus = nil;
+			ioff = 0;	
+			iposMP = string.find(jj.Resource.Description[1],'MP%+');
+			if iposMP ~= nil then
+				bPlus = true;
+				ioff = 3;
+			end
+		
+			if bPlus == nil then
+				iposMP = string.find(jj.Resource.Description[1],'MP%-');
+
+				if iposMP ~= nil then
+					bPlus = false;
+					ioff = 3;
+				end
+			end
+			
+			-- If bPlus is true or false, an MP+/- was found and all that has to be
+			-- determined is if the value is a percentage or a flat value
+			if bPlus ~= nil then
+				ipct = string.find(jj.Resource.Description[1],'%%',iposMP+ioff);		
+				if ipct ~= nil and ipct - (iposMP+ioff) <= 2 then
+					-- It's a percentage. In the 75 era, percentages are only
+					-- single digits for MP
+					ival = tonumber(string.sub(jj.Resource.Description[1],iposMP+ioff,ipct-1));
+					if bPlus == true then
+						-- MP+#%
+						if sType == 'V' then
+							TallyGear.VMPP = TallyGear.VMPP + ival;
+						elseif sType == 'I' then
+							TallyGear.IMPP = TallyGear.IMPP + ival;
+						end
+					elseif bPlus == false then
+						-- MP-#%
+						if sType == 'V' then
+							TallyGear.VMPP = TallyGear.VMPP - ival;
+						elseif sType == 'I' then
+							TallyGear.IMPP = TallyGear.IMPP - ival;
+						end
+					end
+				else
+					-- Flat value
+					iStart = iposMP + ioff;
+					if iStart == string.len(jj.Resource.Description[1]) or
+						string.find(string.sub(jj.Resource.Description[1],iStart+1,iStart+1),'%d') == nil then
+						iEnd = iStart;
+					else
+						iEnd = iStart + 2;
+					end
+						
+					ival = tonumber(string.sub(jj.Resource.Description[1],iStart,iEnd));
+
+					if bPlus == true then
+						-- MP +###
+						if sType == 'V' then
+							TallyGear.VMP = TallyGear.VMP + ival;
+						elseif sType == 'I' then
+							TallyGear.IMP = TallyGear.IMP + ival;
+						end
+					elseif bPlus == false then
+						-- MP -###
+						if sType == 'V' then
+							TallyGear.VMP = TallyGear.VMP - ival;
+						elseif sType == 'I' then
+							TallyGear.IMP = TallyGear.IMP - ival;
+						end
+					end					
 				end
 			end
 		end
+	end
+end		-- TallyMP
+
+--[[
+	TallyHP tallies all the HP increases and decreases across both visible and
+	invisible gear. This include raw +'s and -'s and percentages. The appropriate
+	fields in the TallyGear structure are updated if anything found.
+--]]
+
+function TallyHP()
+	local cur = gData.GetEquipment();
+	local player = gData.GetPlayer();
+	local iposHP,iposHP;
+	local ioff,bPlus;
+	local sType,ival;
+	local iStart,iEnd;
 		
-		if iposHP ~= nil then
-			-- Found mp to hp conversion
-			if table.find(tTemp,ii) ~= nil then				
-				tHP = tHP + tonumber(string.sub(jj.Resource.Description[1],iposHP-2,iposHP-1));
+	for ii,jj in pairs(cur) do
+		-- determine which grouping the current gear piece is in
+		
+		if table.find(TallyGear.Visible,ii) ~= nil then
+			sType = 'V';
+		elseif table.find(TallyGear.Invisible,ii) ~= nil then
+			sType = 'I';
+		else		-- This should never occur!!!
+			print(chat.header('TallyMP'):append(chat.message('Error: Unrecognized Slot: ' .. ii .. '. Ignoring.')));
+			sType = nil;
+		end
+		
+		-- First deal with exceptions: Check for Tamas ring first
+		if jj.Resource.Name[1] == 'Sattva Ring' then
+			ival = math.floor((player.MainJobSync - 30)/15)*5 + 15;
+			TallyGear.IHP = TallyGear.IHP + ival;
+		else
+			-- Now determine if there's an HP +/- qualifier in the description.
+			-- bPlus tracks if the value is positive or negative. ioff tracks the
+			-- offset. Since both + and - are basically found in the same manner,
+			-- common code is used.
+			bPlus = nil;
+			ioff = 0;	
+			iposHP = string.find(jj.Resource.Description[1],'HP%+');
+			if iposHP ~= nil then
+				bPlus = true;
+				ioff = 3;
+			end
+		
+			if bPlus == nil then
+				iposHP = string.find(jj.Resource.Description[1],'HP%-');
+
+				if iposHP ~= nil then
+					bPlus = false;
+					ioff = 3;
+				end
+			end
+			
+			-- If bPlus is true or false, an HP+/- was found and all that has to be
+			-- determined is if the value is a percentage or a flat value
+			if bPlus ~= nil then
+				ipct = string.find(jj.Resource.Description[1],'%%',iposHP+ioff);		
+				if ipct ~= nil and ipct - (iposHP+ioff) <= 2 then
+					-- It's a percentage. In the 75 era, percentages are only
+					-- single digits for HP
+					ival = tonumber(string.sub(jj.Resource.Description[1],iposHP+ioff,ipct-1));
+					if bPlus == true then
+						-- HP+#%
+						if sType == 'V' then
+							TallyGear.VHPP = TallyGear.VHPP + ival;
+						elseif sType == 'I' then
+							TallyGear.IHPP = TallyGear.IHPP + ival;
+						end
+					elseif bPlus == false then
+						-- HP-#%
+						if sType == 'V' then
+							TallyGear.VHPP = TallyGear.VHPP - ival;
+						elseif sType == 'I' then
+							TallyGear.IHPP = TallyGear.IHPP - ival;
+						end
+					end
+				else
+					-- Flat value
+					iStart = iposHP + ioff;
+					if iStart == string.len(jj.Resource.Description[1]) or
+						string.find(string.sub(jj.Resource.Description[1],iStart+1,iStart+1),'%d') == nil then
+						iEnd = iStart;
+					else
+						iEnd = iStart + 2;
+					end
+						
+					ival = tonumber(string.sub(jj.Resource.Description[1],iStart,iEnd));
+
+					if bPlus == true then
+						-- HP +###
+						if sType == 'V' then
+							TallyGear.VHP = TallyGear.VHP + ival;
+						elseif sType == 'I' then
+							TallyGear.IHP = TallyGear.IHP + ival;
+						end
+					elseif bPlus == false then
+						-- HP -###
+						if sType == 'V' then
+							TallyGear.VHP = TallyGear.VHP - ival;
+						elseif sType == 'I' then
+							TallyGear.IHP = TallyGear.IHP - ival;
+						end
+					end					
+				end
+			end
+		end
+	end
+end		-- TallyHP
+	
+--[[
+	TallyFromConvert will search the specified type of gear (visible, invisible) for 
+	conversion attributes and tally them. How much of each is returned.
+	sType = I (invisible), and V (visible)
+--]]
+
+function TallyFromConvert()
+	local cur = gData.GetEquipment();
+	local iposCMP,iposCHP;
+	local sType;
+	local tTemp = { };
+
+	for i = 1,2,1 do
+		if i == 1 then
+			sType = 'V';
+			tTemp = TallyGear.Visible;
+		else
+			sType = 'I';
+			tTemp = TallyGear.Invisible;
+		end
+			
+		for ii,jj in pairs(cur) do
+			iposCMP = string.find(jj.Resource.Description[1],' HP to MP');
+			iposCHP = string.find(jj.Resource.Description[1],' MP to HP');
+			
+			if iposCMP ~= nil then
+				-- Found hp to mp conversion
+				if table.find(tTemp,ii) ~= nil then
+					if (jj.Name ~= 'Tortoise Shield') then		
+						if sType == 'V' then
+							TallyGear.VCHPMP = TallyGear.VCHPMP + tonumber(string.sub(jj.Resource.Description[1],iposCMP-2,iposCMP-1));
+						else
+							TallyGear.ICHPMP = TallyGear.ICHPMP + tonumber(string.sub(jj.Resource.Description[1],iposCMP-2,iposCMP-1));
+						end
+					end
+				end
+			end
+		
+			if iposCHP ~= nil then
+				-- Found mp to hp conversion
+				if table.find(tTemp,ii) ~= nil then	
+					if sType == 'V' then
+						TallyGear.VCMPHP = TallyGear.VCMPHP + tonumber(string.sub(jj.Resource.Description[1],iposCHP-2,iposCHP-1));
+					else
+						TallyGear.ICMPHP = TallyGear.ICMPHP + tonumber(string.sub(jj.Resource.Description[1],iposCHP-2,iposCHP-1));
+					end
+				end
 			end
 		end	
 	end
-	return tHP,tMP;
 end		-- TallyFromConvert
-
---[[
-	CheckInvisible is a work around to determine if the player's current HP/MP
-	meets the condition it is being tested for.
---]]
-
-function gcinclude.CheckInvisible(sGear,ival,Code)
-	local player = gData.GetPlayer();
-	local x,bFound = false;
-	
-	-- Make sure passed parameters are defined
-	if sGear == nil or ival == nil then
-		return false;
-	end
-
-	if gcinclude.Special[sGear][player.MainJobSync] ~= nil then
-		-- Just remove the hp associated with the invisible gear slots
-		x = gcinclude.Special[sGear][player.MainJobSync][1];			-- TP set
-		if gcdisplay.GetToggle('Tank') == true then
-			x = gcinclude.Special[sGear][player.MainJobSync][2];		-- Tank_TP set
-			if gcdisplay.GetToggle('Acc') == true then
-				x = gcinclude.Special[sGear][player.MainJobSync][4];	-- Tank_TP set + Accuracy set
-			end
-		else
-			if gcdisplay.GetToggle('Acc') == true then
-				x = gcinclude.Special[sGear][player.MainJobSync][3];	-- Accuracy set
-			end		
-		end
-
-		if code  == 'HP.GE.PV' then
-			return (player.HP / (player.MaxHP - x) * 100 >= ival and player.MPP <= gcinclude.settings.Tolerance);
-		elseif code == 'MPP.LE.PV' then
-			return ((player.MP - x) / player.Max.MP);
-		end
-	else
-		if code  == 'HP.GE.PV' then
-			-- Just check current hp vs max hp
-			return (player.HPP >= ival and player.MPP <= gcinclude.settings.Tolerance);
-		elseif code == 'MPP.LE.PV' then
-			return (player.MPP <= ival);		
-		end
-	end
-end		-- gcinclude.CheckInvisible
 
 --[[
 	MakeCodeTable takes the passed, // delimited list and returns the
@@ -1438,6 +1686,164 @@ function gcinclude.MakeCodeTable(sList)
 end		-- gcinclude.MakeCodeTable
 
 --[[
+	ValidInlineCode checks that the formatting of the dynamic code is correct.
+	Returned is True or False and the individual pieces
+--]]
+
+function ValidInlineDynamicCode(suCode)
+	local bPct = false;
+	local iOff = 0;	
+	local sOperator,sRoot,ival;
+	local tComparators = { 'EQ', 'LT', 'LE', 'GT', 'GE', 'NE'};
+	
+	if string.find('TP.,TPP,MP.,MPP,HP.,HPP',string.sub(suCode,1,3)) ~= nil then
+		if string.sub(suCode,3,1) ~= '.' then
+			bPct = true;
+			iOff = 1;
+		end
+		
+		sRoot = string.sub(suCode,1,2+iOff);
+		
+		sOperator = string.sub(suCode,4+iOff,5+iOff);
+		if table.find(tComparators,sOperator) ~= nil then
+			if bVisual == true then
+				ival = tonumber(string.sub(suCode,7+iOff,-2));
+			else
+				ival = tonumber(string.sub(suCode,7+iOff,-1));
+			end
+			return true,sRoot,sOperator,ival;
+		else
+			return false;
+		end	
+	else
+		return false;
+	end
+end		-- ValidInlineCode
+
+--[[
+	EvalCodedComparison parses the passed conditional is true or not. Result is
+	passed back
+--]]
+
+function EvalCodedComparison(sRoot,sOperator,ival,sGear)
+	local player = gData.GetPlayer();
+	local bGood = false;
+	
+	if sRoot == 'TP' or sRoot == 'TPP' then		-- TP is straightforward
+		local iTP;
+		if sRoot == 'TPP' then
+			iTP = player.TP/10;
+		else
+			iTP = player.TP;
+		end
+		
+		if sOperator == 'EQ' then
+			bGood = (iTP == ival);
+		elseif sOperator == 'LT' then
+			bGood = (iTP < ival);
+		elseif sOperator == 'LE' then
+			bGood = (iTP <= ival);
+		elseif sOperator == 'GT' then
+			bGood = (iTP > ival);
+		elseif sOperator == 'GE' then
+			bGood = (iTP >= ival);
+		else
+			bGood = (iTP ~= ival);
+		end
+	elseif sCode == 'MP' then	
+		local iMP;
+		if sRoot == 'MPP' then
+			iMP = player.MPP;
+		else
+			iMP = player.MP;
+		end
+			
+		if sOperator == 'EQ' then
+			bGood = (iMP == ival);
+		elseif sOperator == 'LT' then
+			bGood = (iMP < ival);
+		elseif sOperator == 'LE' then
+			bGood = (iMP <= ival);
+		elseif sOperator == 'GT' then
+			bGood = (iMP > ival);
+		elseif sOperator == 'GE' then
+			bGood = (iMP >= ival);
+		else
+			bGood = (iMP ~= ival);
+		end
+	elseif sCode == 'HP' then
+		local iHP;
+		if sRoot == 'HPP' then
+			iMP = player.HPP;
+		else
+			iMP = player.HP;
+		end
+		
+		if sOperator == 'EQ' then
+			bGood = (iHP == ival);
+		elseif sOperator == 'LT' then
+			bGood = (iHP < ival);
+		elseif sOperator == 'LE' then
+			bGood = (iHP <= ival);
+		elseif sOperator == 'GT' then
+			bGood = (iHP > ival);
+		elseif sOperator == 'GE' then
+			bGood = (iHP >= ival);
+		else
+			bGood = (iHP ~= ival);
+		end
+	end
+	return bGood;
+end		-- EvalCodedComparison
+
+--[[
+	ValidSpecial sees if the passed gear's settings are valid. Returned is True
+	or False.
+--]]
+
+function gcinclude.ValidateSpecial(sGear)
+	local player = gData.GetPlayer();
+	local gear;
+	local bGood = false;
+	
+	if sGear == nil then
+		return false;
+	end
+	
+	gear = sGear;
+	sGear = string.lower(sGear);
+	
+	-- The "SPECIAL" qualifier is for specialized gear. Initially run the routines
+	-- that parse the item descriptions looking for MP+/HP+ and Convert attributes
+	
+	ClearTallyGear();
+	TallyFromConvert();
+	TallyMP();
+	TallyHP();
+	
+	-- Now, do specific calculations based on the name of the piece of gear
+	if sGear == 'uggalepih pendant' then
+		-- Condition: MP% < 51. Only visible gear, ignore all "Convert HP to MP"
+		local iMP = player.MP - TallyGear.VCHPMP;
+		local imMP = player.MaxMP - TallyGear.IMP - TallyGear.ICMPHP- TallyGear.ICHPMP;
+		local iaMP = player.MaxMP * (TallyGear.IMPP * 0.01);
+		bGood = (iMP/(imMP - iaMP) < 51);
+	elseif sGear == 'parade gorget' then
+		-- Condition: HP% >= 85. Only visible gear
+		local iHP = player.MaxHP - TallyGear.IHP - TallyGear.ICMPHP;
+		local iaHP = math.floor(iHP * (TallyGear.IHPP * 0.01));
+		bGood = (player.HP/(iHP - iaHP) >= 85);
+	elseif sGear == 'sorcerer\'s ring' then
+		-- Condition: HP% < 76 and TP% < 100. Ignore HP+ (flat and percent) and
+		-- Convert HP to MP gear.
+		print(chat.header('ValidateSpecial'):append(chat.message('Warning: Special check for Sorcerer\'s Ring not implemented yet. Ignoring.')));
+	else
+		print(chat.header('ValidateSpecial'):append(chat.message('Warning: No special code exists for ' .. gear .. '. Ignoring piece.')));		
+	end
+	return bGood;
+end		-- ValidateSpecial
+
+--[[
 	CheckInline checks for a simple conditional on the item passed into it.
 	Returned is whether the condition is met and the item's name (minus the
 	conditional.
@@ -1449,12 +1855,16 @@ end		-- gcinclude.MakeCodeTable
 function gcinclude.CheckInline(gear,sSlot)
 	local iPos,ii,suCode;
 	local player = gData.GetPlayer();
+	local party = gData.GetParty();
 	local mj = player.MainJob;
 	local sj = player.SubJob;
 	local pet = gData.GetPet();
 	local spell = gData.GetAction();
 	local environ = gData.GetEnvironment();
 	local timestamp = gData.GetTimestamp();
+	local gSet = gData.GetCurrentSet();
+	local wTypesM = 'AXE,GAXE,SWORD,GSWORD,SCYTHE,STAVE,CLUB,H2H,DAGGER,KATANA,GKATANA,POLEARM';
+	local wTypesR = 'ARCHERY,MARKSMANSHIP,THROWING';
 	local suCodeTbl = { };
 	local bGood = true;
 	
@@ -1472,84 +1882,22 @@ function gcinclude.CheckInline(gear,sSlot)
 	suCodeTbl = gcinclude.MakeCodeTable(string.upper(string.sub(gear,iPos,-1)));
 
 	for ii,suCode in pairs(suCodeTbl) do
-		if suCode == 'MSJ' then			-- Magical subjob
-			bGood = (string.find(gcinclude.sMagicJobs,sj) ~= nil);
-		elseif string.sub(suCode,1,2) == 'SJ' and string.len(suCode) == 5 then	-- subjob is: //SJ"job"
-			bGood = (string.sub(suCode,3,-1) == sj);
-		elseif string.sub(suCode,1,2) == 'PJ' and string.len(suCode) == 5 then	-- party has job: //PJ"job"
-			local s = string.sub(suCode,3,-1);
-			bGood=(gcinclude.CheckPartyJob(s));
-		elseif suCode == 'CARBY' then				-- Pet is carbuncle
-			bGood = (gcinclude.isPetNamed('Carbuncle'));
-		elseif suCode == 'BLIND' then				-- Player is blind
-			local blind = gData.GetBuffCount('Blind');
-			bGood = (blind >= 1);
-		elseif suCode == 'OWN' then					-- Player in area controlled by their nation
-			bGood = (gcdisplay.GetCycle('Region') == 'Owned');
-		elseif suCode == 'NOT_OWN' then				-- Player in area not controlled by their nation
-			bGood = (gcdisplay.GetCycle('Region') ~= 'Owned');
-		elseif string.sub(suCode,1,7) == 'MPP.LE.' and string.sub(suCode,-1) == 'P' then
-			local ival = tonumber(string.sub(suCode,8,-2));
-			bGood = (gcinclude.MagicalJob('S') == true and player.MPP <= ival);
-		elseif string.sub(suCode,1,6) == 'MP.LT.' then
-			local ival = tonumber(string.sub(suCode,7,-1));
-			bGood = (gcinclude.MagicalJob('S') == true and player.MP < ival and player.MaxMP >= ival);		
-		elseif suCode == 'WSWAP' then				-- Weapon swapping enabledB
-			bGood = (gcinclude.settings.bWSOverride == true or gcdisplay.GetToggle('WSwap') == true);
-		elseif suCode == 'PET' then					-- Does player have a pet
-			bGood = (pet ~= nil);
-		elseif suCode == 'PETF' then				-- Is player's pet fighting
-			bGood = (pet ~= nil and pet.Status == 'Engaged');
-		elseif suCode == 'PETFNPF' then				-- Is player's pet fighting, but not the player
-			bGood = (pet ~= nil and pet.Status == 'Engaged' and player.Status ~= 'Engaged');
-		elseif suCode == 'SMNPET' then				-- Is player's pet a summoned avatar
-			bGood = (pet ~= nil and string.find(gcinclude.SummonSkill,string.lower(pet.Name)));
-		elseif suCode == 'HORN' then				-- Is the bard's instrument a horn
-			if player.MainJob == 'BRD' then
-				bGood = (gcdisplay.GetCycle('Instrument') == 'Horn');
-			else
-				bGood = false;
-			end	
-		elseif suCode == 'STRING' then				-- Is the bard's instrument a string instrument
-			if player.MainJob == 'BRD' then
-				bGood = (gcdisplay.GetCycle('Instrument') == 'String');
-			else
-				bGood = false;
-			end	
-		elseif suCode == 'ELEAVA' then				-- Is the player summoning an elemental spirit
-			bGood = (string.find(gcinclude.Spirits,string.lower(spell.Name)) ~= nil);
-		elseif suCode == 'AVADAY' then				-- Does the player's pet's element match the day's element
-			if pet ~= nil then
-				local sElement = gcinclude.SummonStaves[string.lower(pet.Name)];	
-				bGood = (sElement ~= nil and string.find(string.lower(environ.Day),string.lower(sElement)) ~= nil);
-			else
-				bGood = false;
-			end
-		elseif suCode == 'AVAWTHR' then				-- Does the player's pet's element match the weather
-			if pet ~= nil then
-				local sElement = gcinclude.SummonStaves[string.lower(pet.Name)];
-				bGood = (sElement ~= nil and string.find(string.lower(environ.RawWeather),string.lower(sElement)) ~= nil);
-			else
-				bGood = false;
-			end
-		elseif string.sub(suCode,1,3) == 'CR:' then		-- Crafting
-			bGood = (gcinclude.Craft == string.sub(suCode,4,-1));
-		elseif string.sub(suCode,1,3) == 'GA:' then		-- Gathering
-			bGood = (gcinclude.Gather == string.sub(suCode,4,-1));
-		elseif string.find('FIRESDAY,EARTHSDAY,WATERSDAY,WINDSDAY,ICEDAY,LIGHTNINGDAY,LIGHTSDAY,DARKSDAY',suCode) ~= nil then
-			bGood = (suCode == string.upper(environ.Day));	-- Is it the specified day
+		if string.find('FIRESDAY,EARTHSDAY,WATERSDAY,WINDSDAY,ICEDAY,LIGHTNINGDAY,LIGHTSDAY,DARKSDAY',suCode) ~= nil then
+			bGood = (suCode == string.upper(environ.Day));					-- Is it the specified day
 		elseif string.find('NOT_FIRESDAY,NOT_EARTHSDAY,NOT_WATERSDAY,NOT_WINDSDAY,NOT_ICEDAY,NOT_LIGHTNINGDAY,NOT_LIGHTSDAY,NOT_DARKSDAY',suCode) ~= nil then
 			bGood = (string.sub(suCode,5,-1) ~= string.upper(environ.Day));	-- Is it not the specified day
-		elseif string.sub(suCode,1,4) == 'WTH:' then		-- Does the weather match
-			bGood = (string.find(string.upper(environ.Weather),string.sub(suCode,5,-1)) ~= nil);
-		elseif string.sub(suCode,1,4) == 'NOT_WTH:' then	-- Does the weather not match
-			bGood = (string.find(string.upper(environ.Weather),string.sub(suCode,9,-1)) == nil);			
-		elseif suCode == 'WTH-DAY' then						-- Weather matches day's element
-			local sEle = string.upper(environ.DayElement) .. ',NONE';
-			bGood = (string.find(sEle,string.upper(environ.WeatherElement)) ~= nil);
-		elseif suCode == 'NOT_WTH-DAY' then					-- Weather does not match day's element
-			local sEle = string.upper(environ.DayElement) .. ',NONE';
-			bGood = (string.find(sEle,string.upper(environ.WeatherElement)) == nil);
+		elseif string.find(wTypesM,suCode) ~= nil then						-- Is main weapon specified type
+			bGood = (gSet['Main'] ~= nil and table.find(gProfile.WeaponType[suCode],gSet['Main']) ~= nil);
+		elseif string.find(wTypesR,suCode) ~= nil then						-- Is ranged weapon specified type
+			bGood = (gSet['Range'] ~= nil and table.find(gProfile.WeaponType[suCode],gSet['Range']) ~= nil);
+		elseif suCode == 'ACCESSIBLE' then
+			if CheckGearIntegrity(gear) == true then
+				bGood = Integrity['Accessible'];
+			else
+				bGood = false;
+			end
+		elseif suCode == 'ACCURACY' then
+			bGood = (gcdisplay.GetToggle('Acc') == true);			
 		elseif string.sub(suCode,1,3) == 'AK:' then			-- National Aketon
 			local pNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation();
 			local sWhich = string.sub(suCode,4,-1);
@@ -1568,44 +1916,114 @@ function gcinclude.CheckInline(gear,sSlot)
 			else
 				bGood = false;
 			end
+		elseif suCode == 'BLIND' then						-- Player is blind
+			local blind = gData.GetBuffCount('Blind');
+			bGood = (blind >= 1);
+		elseif suCode == 'CARBY' then						-- Pet is carbuncle
+			bGood = (gcinclude.isPetNamed('Carbuncle'));
+		elseif string.sub(suCode,1,3) == 'CR:' then			-- Crafting
+			bGood = (gcinclude.Craft == string.sub(suCode,4,-1));
 		elseif suCode == 'DAYTIME' then						-- Time is daytime
 			bGood = gcinclude.CheckTime(timestamp.hour,'Daytime',false);
-		elseif suCode == 'NIGHTTIME' then					-- Time is nighttime
-			bGood = gcinclude.CheckTime(timestamp.hour,'Nighttime',false);
+		elseif string.sub(suCode,1,3) == 'DB:' then
+			bGood = (player.MainJob == 'BST' and string.upper(string.sub(suCode,4,-1)) == string.upper(gcdisplay.GetCycle('DB')));	
 		elseif suCode == 'DUSK2DAWN' then					-- Time between dusk and dawn
 			bGood = gcinclude.CheckTime(timestamp.hour,DUSK2DAWN,false);
-		elseif suCode == 'NEWMOON' then						-- Moon phase: New Moon
-			bGood = (environ.MoonPhase == 'New Moon');
+		elseif suCode == 'EVASION' then
+			bGood = (gcdisplay.GetToggle('Eva') == true);	
 		elseif suCode == 'FULLMOON' then					-- Moon phase: Full Moon
 			bGood = (environ.MoonPhase == 'Full Moon');
-		elseif string.sub(suCode,1,6) ==  'HP.GE.' and string.sub(suCode,-2,-1) == 'PV' then
-			local ival = tonumber(string.sub(suCode,7,-3));
-			local mSuCode = string.sub(suCode,1,6) .. string.sub(suCode,-2,-1);
-			bGood = gcinclude.CheckInvisible(sGear,ival,mSuCode);
+		elseif string.sub(suCode,1,3) == 'GA:' then			-- Gathering
+			bGood = (gcinclude.Gather == string.sub(suCode,4,-1));
+		elseif suCode == 'HORN' then						-- Is the bard's instrument a horn
+			if player.MainJob == 'BRD' then
+				bGood = (gcdisplay.GetCycle('Instrument') == 'Horn');
+			else
+				bGood = false;
+			end	
+		elseif suCode == 'MSJ' then							-- Magical subjob
+			bGood = (string.find(gcinclude.sMagicJobs,sj) ~= nil);
+		elseif suCode == 'NEWMOON' then						-- Moon phase: New Moon
+			bGood = (environ.MoonPhase == 'New Moon');
+		elseif suCode == 'NIGHTTIME' then					-- Time is nighttime
+			bGood = gcinclude.CheckTime(timestamp.hour,'Nighttime',false);
+		elseif suCode == 'NOT_OWN' then						-- Player in area not controlled by their nation
+			bGood = (gcdisplay.GetCycle('Region') ~= 'Owned');
+		elseif string.sub(suCode,1,4) == 'NOT_WTH:' then	-- Does the weather not match
+			bGood = (string.find(string.upper(environ.Weather),string.sub(suCode,9,-1)) == nil);
+		elseif suCode == 'NOT_WTH-DAY' then					-- Weather does not match day's element
+			local sEle = string.upper(environ.DayElement) .. ',NONE';
+			bGood = (string.find(sEle,string.upper(environ.WeatherElement)) == nil);
+		elseif suCode == 'OWN' then							-- Player in area controlled by their nation
+			bGood = (gcdisplay.GetCycle('Region') == 'Owned');
+		elseif string.sub(suCode,1,5) == 'PARTY' then	-- is player in a party/alliance
+			if suCode == 'PARTY' then
+				bGood = (party.InParty == true);
+			else
+				-- if a number is specified, it means that number or lower
+				local ival = 0;
+				if string.find(string.sub(suCode,-1),'%d') then
+					ival = tonumber(string.sub(suCode,-1));
+				end
+				bGood = (party.Count <= ival);
+			end
+		elseif suCode == 'PET' then							-- Does player have a pet
+			bGood = (pet ~= nil);
+		elseif suCode == 'PETF' then						-- Is player's pet fighting
+			bGood = (pet ~= nil and pet.Status == 'Engaged');
+		elseif suCode == 'PETFNPF' then						-- Is player's pet fighting, but not the player
+			bGood = (pet ~= nil and pet.Status == 'Engaged' and player.Status ~= 'Engaged');
+		elseif string.sub(suCode,1,3) == 'PJP' and string.len(suCode) == 6 then	
+			local s = string.sub(suCode,3,-1);
+			bGood=(gcinclude.CheckPartyJob(s));				-- party has job: //PJP"job"
+		elseif string.sub(suCode,1,2) == 'SJ' and string.len(suCode) == 5 then	
+			bGood = (string.sub(suCode,4,-1) == sj);		-- subjob is: //SJ"job"
+		elseif string.sub(suCode,1,4) == 'SMN:' then
+			bGood = (string.lower(spell.Name) == string.lower(string.sub(suCode,5,-1)));
+		elseif suCode == 'SMNPET' then						-- Is player's pet a summoned avatar
+			bGood = (pet ~= nil and string.find(gcinclude.SummonSkill,string.lower(pet.Name)));
+		elseif suCode == 'SMNPETMD' then					-- Does the summoner pet's element match the day?
+			if pet ~= nil and string.find(gcinclude.SummonSkill,string.lower(pet.Name)) then
+				bGood = (gcinclude.SummonStaves[string.lower(pet.Name)] == string.lower(environ.DayElement));
+			else
+				bGood = false;
+			end
+		elseif suCode == 'SMNPETMW' then					-- Does the player's pet's element match the weather
+			if pet ~= nil then
+				local sElement = gcinclude.SummonStaves[string.lower(pet.Name)];
+				bGood = (sElement ~= nil and string.find(string.lower(environ.RawWeather),string.lower(sElement)) ~= nil);
+			else
+				bGood = false;
+			end			
+		elseif suCode == 'SPECIAL' then
+			bGood = ValidateSpecial(sGear);
 		elseif suCode == 'SPIRIT:ES' then					-- Pet being summoned is a spirit
 			bGood = (string.find(gcinclude.Spirits,string.lower(spell.Name)) ~= nil);
 		elseif suCode == 'SPIRIT:EP' then					-- Current pet is a spirit
 			bGood = (pet ~= nil and string.find(gcinclude.Spirits,string.lower(pet.Name)) ~= nil);
-		elseif string.sub(suCode,1,3) == 'DB:' then
-			bGood = (player.MainJob == 'BST' and string.upper(string.sub(suCode,4,-1)) == string.upper(gcdisplay.GetCycle('DB')));
-		elseif suCode == 'ACCESSIBLE' then
-			if CheckGearIntegrity(gear) == true then
-				bGood = Integrity['Accessible'];
+		elseif suCode == 'STRING' then						-- Is the bard's instrument a string instrument
+			if player.MainJob == 'BRD' then
+				bGood = (gcdisplay.GetCycle('Instrument') == 'String');
 			else
 				bGood = false;
-			end	
-		elseif suCode == 'ACCURACY' then
-			bGood = (gcdisplay.GetToggle('Acc') == true);
-		elseif suCode == 'EVASION' then
-			bGood = (gcdisplay.GetToggle('Eva') == true);
-		elseif string.find(suCode,'TP.LE.') == 1 and string.sub(suCode,-1) == 'P' then
-			local ival = tonumber(string.sub(suCode,7,-2));
-			bGood = ((player.TP/10) <= ival);	-- 1000 TP is 100% TP
-		elseif string.find(suCode,'HP.LE.') == 1 and string.sub(suCode,-1) == 'P' then
-			local ival = tonumber(string.sub(suCode,7,-2));
-			bGood = (player.HPP <= ival);
+			end
 		elseif suCode == 'TANK' then
-			bGood = (gcdisplay.GetToggle('Tank') == true);			
+			bGood = (gcdisplay.GetToggle('Tank') == true);
+		elseif string.find('TP.,TPP,MP.,MPP,HP.,HPP',string.sub(suCode,1,3)) ~= nil then
+			local sRoot,sOperator,ival;
+			bGood,sRoot,sOperator,ival = ValidInlineDynamicCode(suCode);		
+			if bGood == true then
+				bGood = EvalCodedComparison(sRoot,sOperator,ival,sGear);
+			else
+				bGood = false;
+			end
+		elseif suCode == 'WSWAP' then						-- Weapon swapping enabledB
+			bGood = (gcinclude.settings.bWSOverride == true or gcdisplay.GetToggle('WSwap') == true);
+		elseif string.sub(suCode,1,4) == 'WTH:' then		-- Does the weather match
+			bGood = (string.find(string.upper(environ.Weather),string.sub(suCode,5,-1)) ~= nil);
+		elseif suCode == 'WTH-DAY' then						-- Weather matches day's element
+			local sEle = string.upper(environ.DayElement) .. ',NONE';
+			bGood = (string.find(sEle,string.upper(environ.WeatherElement)) ~= nil);
 		else
 			print(chat.header('CheckInline'):append(chat.message('Warning: Unknown code = ' .. suCode .. '. Ignoring piece of gear.')));
 			bGood = false;
@@ -1623,17 +2041,25 @@ function gcinclude.t1()
 	local item;
 	local hp,mp;
 	
-	hp,mp = TallyFromConvert('I');
-	print('HP from Invisible = ' .. tostring(hp));
-	print('MP from Invisible = ' .. tostring(mp));
---[[
-	item = AshitaCore:GetResourceManager():GetItemByName('Perpetual Hrglass.',2);					
-	if item == nil then
-		print(chat.header('T1'):append(chat.message('Warning: \'Perpetual Hrglass.\' not a valid item. Skipping.')));
-	else
-		print(chat.header('T1'):append(chat.message(item.Description[2])));
-	end
---]]
+	ClearTallyGear();
+	TallyFromConvert();
+	TallyMP();
+	TallyHP();
+	
+	print('Visible:');
+	print('   HP from Convert MP to HP = ' .. tostring(TallyGear.VCMPHP));
+	print('   HP = ' .. tostring(TallyGear.VHP));
+	print('   HP% = ' .. tostring(TallyGear.VHPP));
+	print('   MP from Convert HP to MP = ' .. tostring(TallyGear.VCHPMP));
+	print('   MP = ' .. tostring(TallyGear.VMP));
+	print('   MP% = ' .. tostring(TallyGear.VMPP));	
+	print('Invisible:');
+	print('   HP from Convert MP to HP = ' .. tostring(TallyGear.ICMPHP));
+	print('   HP = ' .. tostring(TallyGear.IHP));
+	print('   HP% = ' .. tostring(TallyGear.IHPP));
+	print('   MP from Convert HP to MP = ' .. tostring(TallyGear.ICHPMP));
+	print('   MP = ' .. tostring(TallyGear.IMP));
+	print('   MP% = ' .. tostring(TallyGear.IMPP));	
 end		-- gcinclude.t1
 
 --[[
@@ -1673,7 +2099,7 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 		-- that /WSWAP is true or that gcinclude.settings.bWSOverride is true.
 		-- This should have been caught earlier, but just in case...
 		
-		if string.find('Main,Sub,Range,Ammo',k) ~= nil then
+		if string.find('Main,Sub,Range',k) ~= nil then
 			bSkip = not (gcdisplay.GetToggle('WSwap') == true 
 						 or gcinclude.settings.bWSOverride == true
 						 or (bOverride ~= nil and bOverride == true));					 
@@ -2115,7 +2541,7 @@ function gcinclude.EquipItem(args)
 		gFunc.ForceEquip(iSlot,iName);
 		gcinclude.LockUnlock('lock',iSlot);
 		local sList = gcinclude.GetLockedList();
-		gcdisplay.SetLocksAction(gcinclude.LocksNumeric,nil);	
+		gcdisplay.SetLocks(gcinclude.LocksNumeric);	
 	else
 		print(chat.header('EquipIt'):append(chat.message('Error: incomplete /equipit command: /equipit code|name slot|#. Command ignored.')));
 	end
@@ -2405,7 +2831,7 @@ function gcinclude.HandleCommands(args)
 	elseif (args[1] == 'maxsong') then			-- Determines highest level song to cast
 		gcinclude.MaxSong(args[2],(#args > 2),true);
 		toggle = 'MaxSong';
-	elseif args[1] == 'equipit' then			-- Equip specified item
+	elseif args[1] == 'equipit' or args[1] == 'ei' then			-- Equip specified item
 		gcinclude.EquipItem(args);
 	elseif (args[1] == 'region') then			-- Toggles the region setting
 		gcdisplay.AdvanceCycle('Region');
@@ -2427,28 +2853,58 @@ end		-- gcinclude.HandleCommands
 --]]
 
 function gcinclude.CheckCommonDebuffs(tCur)
-	local weakened = gData.GetBuffCount('Weakened');
-	local sleep = gData.GetBuffCount('Sleep');
-	local blind = gData.GetBuffCount('Blind');
+	local blinded = gData.GetBuffCount('Blind');
+	local bound = gData.GetBuffCount('Bind');	
+	local cursed = gData.GetBuffCount('Curse');	
+	local doomed = (gData.GetBuffCount('Doom')) + (gData.GetBuffCount('Bane'));
 	local para = gData.GetBuffCount('Paralysis');
-	local doom = (gData.GetBuffCount('Doom'))+(gData.GetBuffCount('Bane'));
+	local petra = gData.GetBuffCount('Petrify');
+	local poisoned = gData.GetBuffCount('Poison');
+	local silenced = gData.GetBuffCount('Silence');
+	local sleep = gData.GetBuffCount('Sleep');
+	local weakened = gData.GetBuffCount('Weakened');	
 	local shiningRuby = gData.GetBuffCount('Shining Ruby');
 
-	if (sleep >= 1) then
-		gcinclude.MoveToCurrent(gcinclude.sets.Sleeping,tCur,true);	
-	end
-	if (doom >= 1) then	
-		gcinclude.MoveToCurrent(gcinclude.sets.Doomed,tCur,true);
-	end
-	if (weakened >= 1) then
-		gcinclude.MoveToCurrent(gcinclude.sets.Weakened,tCur,true);	
-	end;
-	if (blind >= 1) then
+	if (blinded >= 1) then
 		gcinclude.MoveToCurrent(gcinclude.sets.Blind,tCur,true);		
 	end
+	
+	if (bound >= 1) then
+		gcinclude.MoveToCurrent(gcinclude.sets.Bound,tCur,true);		
+	end
+	
+	if (cursed >= 1) then
+		gcinclude.MoveToCurrent(gcinclude.sets.Cursed,tCur,true);		
+	end
+	
+	if (doomed >= 1) then	
+		gcinclude.MoveToCurrent(gcinclude.sets.Doomed,tCur,true);
+	end
+	
 	if (para >= 1) then
 		gcinclude.MoveToCurrent(gcinclude.sets.Paralyzed,tCur,true);
 	end	
+	
+	if (petra >= 1) then
+		gcinclude.MoveToCurrent(gcinclude.sets.Petrified,tCur,true);
+	end
+	
+	if (poisoned >= 1) then
+		gcinclude.MoveToCurrent(gcinclude.sets.Poisoned,tCur,true);
+	end	
+	
+	if (silenced >= 1) then
+		gcinclude.MoveToCurrent(gcinclude.sets.Silenced,tCur,true);
+	end	
+	
+	if (sleep >= 1) then
+		gcinclude.MoveToCurrent(gcinclude.sets.Sleeping,tCur,true);	
+	end
+
+	if (weakened >= 1) then
+		gcinclude.MoveToCurrent(gcinclude.sets.Weakened,tCur,true);	
+	end;
+
 	if (shiningRuby >= 1) then
 		gcinclude.MoveToCurrent(gcinclude.sets.Shining_Ruby,tCur,true);
 	end
@@ -3036,9 +3492,11 @@ function gcinclude.HandleMidcast(bTank)
 				gcinclude.MoveToCurrent(gProfile.Sets.Invisible,gProfile.Sets.CurrentGear);
 			end
 		elseif cKey == 'G' then				-- Elemental Obi
-			obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.OBI);
-			if obi ~= nil then
-				gProfile.Sets.CurrentGear['Waist'] = obi;
+			if spell.Skill ~= 'Summoning' then
+				obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.OBI);
+				if obi ~= nil then
+					gProfile.Sets.CurrentGear['Waist'] = obi;
+				end
 			end
 		elseif cKey == 'H' then				-- Elemental Stave
 			if spell.Skill == 'Summoning' then

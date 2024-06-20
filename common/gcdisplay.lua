@@ -15,7 +15,6 @@ local SubLV = 0;
 local Main = 'FOO';
 local Sub = 'BAR';
 local Locks = 'None';
-local Action = 'Idle';
 local JobBar = T{['GSwap'] = {'ALL','MS'},
 				 ['DT'] = {'ALL','MS'},
 				 ['Kite'] = {'ALL','MS'},
@@ -244,12 +243,9 @@ function gcdisplay.GetCycle(name)
 	end
 end		-- gcdisplay.GetCycle
 
-function gcdisplay.SetLocksAction(sLList,sAction)
+function gcdisplay.SetLocks(sLList)
 
 	Locks = sLList;
-	if sAction ~= nil then
-		Action = sAction;
-	end
 end
 
 --[[
@@ -329,8 +325,6 @@ function gcdisplay.Initialize()
 			display = display .. ' | Locks: ' .. '|cFFFF0000|' .. Locks .. '|r';
 		end
 		
-		-- Current Action
-		display = display .. ' | Action: ' .. '|cFF00FF00|' .. Action .. '|r';
 		gcdisplay.FontObject.text = display;
 	end);
 end		-- gcdisplay.Initialize
