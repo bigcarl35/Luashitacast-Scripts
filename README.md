@@ -43,7 +43,6 @@ area from the last conquest tally. Used with some conditional gear.
 **/slot name|position gear**: Equips the passed piece of gear and locks the equipment slot.  
 **/tank**: Turns on/off equipping TP tank gear. Only available to: PLD,NIN,DRK,WAR,THF,RDM,RUN.  
 **/unlock: [all|#'s|names]**: Unlock equipment slot(s) so luashitacast can change item.  
-**/validate "name"**: Analyses the passed gearset and validates it.  
 **/wsdistance [#]**: Turns on/off distance check on melee weapon skill. Also supports changing the
 the default distance from 4.7 yalms to whatever you want.  
 **/wswap**: Turns on/off whether automatic gear swapping allowed. All jobs except SMN and BLM
