@@ -1,0 +1,572 @@
+All Latent/Hidden effects gear from 75 era. Note: * before name means 
+Tresures of Aht Urghan, + means Wings of the Goddess, @ means Abyssea,
+- means Seekers of Anduin
+
++Amakura
+	Latent: Store TP+10 when HP% < 50
+	//HPP.LT.50
+Bedivere's hose
+	Latent: HP% between 26% and 50%: Acc+10,Att+10, HP% <=25%" Acc+25,Att+25
+	//HPP.GE.26//HPP.LE.50
+*Beserker's Torque
+	Latent: Raises TP if weapon drawn
+Carapace gauntlets/+1
+	Latent: Att+8/9, Def+16/17 if HP% <= 75
+	//HPP.LE.75
+Carapace helm/+1
+	Latent: Att+10/11, Def+23/24 if HP% <= 50		
+	//HPP.LE.50
+Carapace breastplate/+1
+	Latent: Att+12/13, Def+44/45 if HP% <= 25%		
+	//HPP.LE.25
+Hercules Ring
+	Latent: 1MP/tick, 3HP/tick if HP% <= 50%		
+	//HPP.LE.50
+*Horrent Mace
+	Latent: Acc+10,Att+10 when HP% <= 25 and weapon drawn
+	//HPP.LE.25//WSWAP//DRAWN		-- Just have to figure out how to tell the weapon is drawn
+*Kerykeion
+	Latent: 3HP/tick while HP% < 51
+	//HPP.LT.51//WSWAP
+Muscle Belt/+1
+	Latent: 1/2HP/tick, Counter+1/2 if HP% < 50		
+	//HPP.LT.50
+Parade Gorget
+	Latent: Refresh if HP% >= 85, visible gear only
+	//SPECIAL
+@Rasetsu Samue Set - Counter+1 or Couterattack+1 while "HP in red" and possibly TP% < 100
+	Until specific conditions known, result at best is a guess
+	//HPP.LT.25//TPP.LT.100		-- maybe right
+Unicorn cap/+1
+	Latent: STR +4/5 if HP% > 75					
+	//HPP.GT.75
+Unicorn harness/+1
+	Latent: VIT+6/7 when HP% > 70					
+	//HPP.GT.70
+Unicorn mittens/+1
+	Latent: Att+7/8 when HP% > 75					
+	//HPP.GT.75
+Unicorn subligar/+1
+	Latent: Eva+3/4 when HP% > 75					
+	//HPP.GT.75
+Unicorn leggings/+1
+	Latent: Haste+3% when HP% > 75					
+	//HPP.GT.75
+*Zareenkl Jambiya
+	Latent: DMG 36 while HP% <= 75
+	//HPP.LE.75//WSWAP
+*Zareenkl Scythe
+	Latent: Increases rate of Triple Attack while HP% <= 25
+	//HPP.LE.25//WSWAP
+Caitiff's socks
+	Latent: Flee on enemy attack when HP% < 25 and TP% < 100	
+	//HPP.LT.25//TPP.LT.100
+Soldier's ring
+	Latent: Double attack+2% while HP% <= 75 and TP% <=100		
+	//HPP.LT.75//TPP.LE.100
+Soldier's earring
+	Latent: Def+20% while HP% <= 25 and TP% <= 100	
+	//HPP.LE.25//TPP.LE.100
+Kampfer ring
+	Latent: Counter+2 while HP% <= 75 and TP% <= 100	
+	//HPP.LE.75//TPP.LE.100
+Kampfer earring
+	Latent: Counter+5 while HP% <= 25 and TP% <= 100	
+	//HPP.LE.25//TPP.LE.100
+Medicine ring
+	Latent: Cure potency+10% while HP% <= 75 and TP% <= 100	
+	//HPP.LE.75//TPP.LE.100
+Medicine earring
+	Latent: Damage taken-30% while HP% <= 25 and TP% <= 100	
+	//HPP.LE.25//TPP.LE.100
+Sorcerer's ring
+	Latent: MAB+10 while HP% < 76 and TP% < 100. HP+ or Convert HP does not affect
+		the HP threshold
+	This one is complicated. HP+ and Convert HP are ignored, so you need to adjust
+	the HP/Total HP based on gear equipped, but process the check based on a set
+	you're going to load. This needs to be specifically encoded. This should occur
+	in the midcast.
+	//SPECIAL
+Sorcerer's earring
+	Latent: Damage taken-30% while HP% <= 25 and TP% <=100	
+	//HPP.LE.25//TPP.LE.100
+Fencer's ring
+	Latent: Sword enhancement spell damage+5 while HP% <=75 and TP% <= 100	
+	//HPP.LE.75//TPP.LE.100
+Fencer's earring
+	Latent: Magic damage taken-30% while HP% <= 25 and TP% <= 100	
+	//HPP.LE.25//TPP.LE.100
+Rogue's ring
+	Latent: Steal+3 while HP% <= 75 and TP% <= 100
+	//HPP.LE.75//TPP.LE.100
+Rogue's earring
+	Latent: eva+15 while HP% <= 25 and TP% <= 100
+	//HPP.LE.25//TPP.LE.100
+Guardian's ring
+	Latent: Shield Bash+10 while HP% <= 75 and TP% <= 100 (dmg only)
+	//HPP.LE.75//TPP.LE.100
+Guardian's earring
+	Latent: Spell interruption rate down 30% while HP% <= 25 and TP% <= 100
+	//HPP.LE.25//TPP.LE.100
+Slayer's ring
+	Latent: Weapon Bash+10 while HP% <= 75 and TP% <= 100
+	//HPP.LE.75//TPP.LE.100
+Slayer's earring
+	Latent: Physical damage taken-20% while HP% <= 25 and TP% <=100
+	//HPP.LE.25//TPP.LE.100
+Tamer's ring
+	Latent: Killer effects+3 while HP% <= 75 and TP% <=100
+	//HPP.LE.75//TPP.LE.100
+Tamer's earring
+	Latent: Increases Tame success rate while HP% <= 25 and TP% <= 100
+	//HPP.LE.25//TPP.LE.100
+Minstrel's ring
+	Latent: Song spellcasting time-25% while HP% < 76 and TP% < 100
+	Note: This check is done in the precast, not the midcast
+	//HPP.LT.76//TPP.LT.100
+Minstrel's earring
+	Latent: Physical Damage Taken-30% while HP% <= 25 and TP% <= 100
+	//HPP.LE.25//TPP.LE.100
+Tracker's ring
+	Latent: Enmity-2 while HP% <= 75 and TP% <= 100
+	//HPP.LE.75//TPP.LE.100
+Tracker's earring
+	Latent: Physical Damage Taken-30% while HP% <= 25 and TP% <= 100
+	//HPP.LE.25//TPP.LE.100
+Ronin's ring
+	Latent: Acc+5 while HP% <= 75 and TP% <= 100
+	//HPP.LE.75//TPP.LE.100
+Ronin's earring
+	Latent: Magical Damage Taken-20% while HP% <= 25 and TP% <= 100
+	//HPP.LE.25//TPP.LE.100
+Shinobi's ring
+	Latent: Haste+4% while HP% < 76 and TP% < 100
+	//HPP.LT.76//TPP.LT.100
+Shinobi's earring
+	Latent: Haste+20% while HP% <= 25
+	//HPP.LE/25
+Drake's ring
+	Latent: Enhances "Jump" effects while HP% <= 75 and TP% <= 100
+	//HPP.LE.75//TPP.LE.100
+Drake's earring
+	Latent: Double Attack+5% while HP% <= 25 and TP% <= 100
+	//HPP.LE.25//TPP.LE.100
+Conjurer's ring
+	Latent: Avatar Perpetuation Cost-1 while HP% <= 75 and TP% <= 100
+	//HPP.LE.75//TPP.LE.100
+Conjurer's earring
+	Latent: Damage Taken-20% while HP% <= 25 and TP% <= 100
+	//HPP.LE.25//TPP.LE.100
+@Desperado ring
+	Latent: Att+5 while MP% <= 5
+	//MPP.LE.5
+Gaudy Harness
+	Latent: Adds refresh while MP < 49 (seems to be 50 on our server)
+	//MP.LT.50
+Uggalepih Pendant
+	Latent: Magic Attack Bonus+8 while MP% < 51 from visible gear. All convert HP 
+	to MP is ignored.
+	//SPECIAL
+Wagh Baghnakhs
+	Latent: DMG: 18 (Acc+5, Att+14)while TP% < 100
+	//TPP.LT.100//WSWAP
+Blau Dolch
+	Latent: DMG: 33 (Acc+5, Att+16) while TP% < 100
+	//TPP.LT.100//WSWAP
+Maneater
+	Latent: DMG: 49 (Acc+5, Att+18) while TP% < 100
+	//TPP.LT.100//WSWAP
+Stone-splitter
+	Latent: DMG: 71 (Acc+5, Att+24) while TP% < 100
+	//TPP.LT.100//WSWAP
+Onimaru
+	Latent: DMG: 83 (Acc+5, Att+18) while TP% < 100
+	//TPP.LT.100//WSWAP
+*Perdu Hanger
+	Latent: DMG: 44 (Acc+5, Att+15) while TP% < 100
+	//TPP.LT.100//WSWAP
+*Perdu Sickle
+	Latent: DMG: 93 (Acc+5, Att+14) while TP% < 100
+	//TPP.LT.100//WSWAP
+*Perdu Wand
+	Latent: DMG: 39 (Acc+5, Att+14) while TP% < 100
+	//TPP.LT.100//WSWAP
+*Perdu Bow
+	Latent: DMG: 42 (Acc+5, Att+15) while TP% < 100
+	//TPP.LT.100//WSWAP
+*Perdu Blade
+	Latent: DMG: 32 (Acc+5, Att+10) while TP% < 100
+	//TPP.LT.100//WSWAP
+*Perdu Crossbow
+	Latent: DMG: 39 (Acc+5, Att+18) while TP% < 100
+	//TPP.LT.100//WSWAP
+*Perdu Staff
+	Latent: DMG: 66 (Acc+6, Att+10) while TP% < 100
+	//TPP.LT.100//WSWAP
+*Perdu Sword
+	Latent: DMG: 84 (Acc+5, Att+12) while TP% < 100
+	//TPP.LT.100//WSWAP
+*Perdu Voulge
+	Latent: DMG: 96 (Acc+5, Att+10) while TP% < 100
+	//TPP.LT.100//WSWAP
+Hachiman Jinpachi/+1
+	Latent: Double Attack+2/3% while TP% >= 100
+	//TPP.GE.100
+Hachiman Kote/+1
+	Latent: Att+10/12 while TP% >= 100
+	//TPP.GE.100
+Hachiman Hakama/+1
+	Latent: R.Att+7/8 while TP% >= 100
+	//TPP.GE.100
+@Rambler's Cloak
+	Latent: STR+5 while TP% >= 100
+	//TPP.GE.100
+Warrior's earring
+	Latent: VIT+2 while subjob warrior
+	//SJWAR
+Mercenary Mantle
+	Latent: Enmity+1 while subjob warrior
+	//SJWAR
+Axe Belt
+	Latent: Great Axe Skill+5 while subjob warrior
+	//SJWAR
+Mercenary's Targe
+	Latent: HP+5 MP+10 while subjob warrior
+	//SJWAR//WSWAP
+Wrestler's earring
+	Latent: HP+30 while subjob monk
+	//SJMNK
+Wrestler's Mantle
+	Latent: Enhances Martial Arts effect while subjob monk
+	//SJMNK
+Cestus Belt
+	Latent: Hand-to-hand skill+5 while subjob monk
+	//SJMNK
+Wrestler's Aspis
+	Latent: INT+2 while subjob monk
+	//SJMNK//WSWAP
+Dominion Ring
+	Latent: MP+30 while subjob white mage
+	//SJWHM
+Healer's earring
+	Latent: Enmity-1 while subjob white mage
+	//SJWHM
+Healer's Mantle
+	Latent: Magic Defense Bonus while subjob white mage
+	//SJWHM
+Mace Belt
+	Latent: Club Skill+5 while subjob white mage
+	//SJWHM
+Healer's Shield
+	Latent: DEX+2 while subjob white mage
+	//SJWHM//WSWAP
+Wizard's earring
+	Latent: Elemental Magic Skill+5 while subjob black mage
+	//SJBLM
+Wizard's Mantle
+	Latent: MP recovered while healing+1 while subjob black mage
+	//SJBLM
+Staff Belt
+	Latent: Staff Skill+5 while subjob black mage
+	//SJBLM
+Wizard's Shield
+	Latent: STR+2 while subjob black mage
+	//SJBLM
+Templar Hammer
+	Latent: Magic Attack Bonus+2 while subjob black mage
+	//SJBLM//WSWAP
+Warlock's earring
+	Latent: MP recovered while healing+1 while subjob red mage
+	//SJRDM
+Warlock's Mantle
+	Latent: Enhances Fast Cast effect while subjob red mage
+	//SJRDM
+Rapier Belt
+	Latent: Sword Skill+5 while subjob red mage
+	//SJRDM
+Warlock's Shield
+	Latent: HP+7 MP+7 while subjob red mage
+	//SJRDM//WSWAP
+Pilferer's earring
+	Latent: DEX+2 while subjob thief
+	//SJTHF
+Pilferer's Mantle
+	Latent: Eva+4 while subjob thief
+	//SJTHF
+Dagger Belt
+	Latent: Dagger Skill+5 while subjob thief
+	//SJTHF
+Pilferer's Aspis
+	Latent: Shield Skill+5 while subjob thief
+	//SJTHF//WSWAP
+Esquire's earring
+	Latent: DEF+5 while subjob paladin
+	//SJPLD
+Esquire's Mantle
+	Latent: Enhances Undead Killer effect while subjob paladin
+	//SJPLD
+Shield Belt
+	Latent: Shield Skill+5 while subjob paladin
+	//SJPLD
+Varlet's Targe
+	Latent: AGI+2 while subjob paladin
+	//SJPLD//WSWAP
+Killer earring
+	Latent: Att+5 while subjob dark knight
+	//SJDRK
+Killer Mantle
+	Latent: Dark Magic Skill+5 while subjob dark knight
+	//SJDRK
+Scythe Belt
+	Latent: Scythe Skill+5 while subjob dark knight
+	//SJDRK
+Killer Targe
+	Latent: MP+5 CHR+2 while subjob dark knight
+	//SJDRK//WSWAP
+Trimmer's earring
+	Latent: Acc+5 while subjob beastmaster
+	//SJBST
+Trimmer's Mantle
+	Latent: Enhances Resist Slow effect while subjob beastmaster
+	//SJBST
+Pick Belt
+	Latent: Axe Skill+5 while subjob beastmaster
+	//SJBST
+Trimmer's Aspis
+	Latent: MND+2 while subjob beastmaster
+	//SJBST//WSWAP
+Singer's earring
+	Latent: Eva+5 while subjob bard
+	//SJBRD
+Singer's Mantle
+	Latent: Enhances Resist Silence effect while subjob bard
+	//SJBRD
+Song Belt
+	Latent: Singing Skill+5 while subjob bard
+	//SJBRD
+Singer's Shield
+	Latent: Parry Skill+5 while subjob bard
+	//SJBRD//WSWAP
+Beater's earring
+	Latent: R.Acc+3 while subjob ranger
+	//SJRNG
+Beater's Mantle
+	Latent: Increases Rapid Shot Activation Rate while subjob ranger
+	//SJRNG
+Gun Belt
+	Latent: Marksmanship Skill+5 while subjob ranger
+	//SJRNG
+Beater's Aspis
+	Latent: Eva+2 while subjob ranger
+	//SJRNG//WSWAP
+Ashigaru's earring
+	Latent: Parry Skill+5 while subjob samurai
+	//SJSAM
+Ashigaru's Mantle
+	Latent: Enhances Resist Blind effect while subjob samurai
+	//SJSAM
+Katana Obi
+	Latent: Store TP+1 while subjob samurai
+	//SJSAM
+Ashigaru's Targe
+	Latent: Throwing Skill+5 while subjob samurai
+	//SJSAM//WSWAP
+Genin earring
+	Latent: AGI+4 while subjob ninja
+	//SJNIN
+Genin Mantle
+	Latent: Enhances Resist Blind effect while subjob ninja
+	//SJNIN
+Sarashi
+	Latent: Enhances Dual Wield effect while subjob ninja
+	//SJNIN
+Genin Aspis
+	Latent: Att+5 while subjob ninja
+	//SJNIN//WSWAP
+Wyvern earring
+	Latent: Haste+5% while subjob dragoon
+	//SJDRG
+Wyvern Mantle
+	Latent: Att+6 while subjob dragoon
+	//SJDRG
+Lance Belt
+	Latent: Polearm Skill+5 while subjob dragoon
+Wyvern Targe
+	Latent: Haste+1% while subjob dragoon
+	//SJDRG//WSWAP
+Magician's earring
+	Latent: MP+30 while subjob summoner
+	//SJSMN
+Avatar Belt
+	Latent: Avatar Perpetuation Cost-2 while subjob summoner
+	//SJSMN
+Magician's Mantle
+	Latent: Summoning Magic Skill+5 while subjob summoner
+	//SJSMN
+Magician's Shield
+	Latent: HP+10 MP+5 while subjob summoner
+	//SJSMN//WSWAP
+*Immortal's earring
+	Latent: Blue Magic Skill+5 while subjob blue mage
+	//SJBLU
+*Immortal's Cape
+	Latent: Enhances Resist Sleep effect while subjob blue mage
+	//SJBLU
+*Pirate's earring
+	Latent: R.Att+5 while subjob corsair
+	//SJCOR
+*Pirate's Cape
+	Latent: Enhances Resist Paralyze effect while subjob corsair
+	//SJCOR
+*Busker's earring
+	Latent: Guarding Skill+5 while subjob puppetmaster
+	//SJPUP
+*Busker's Cape
+	Latent: Enmity-2 while subjob puppetmaster
+	//SJPUP
+*Mensur Epee
+	Hidden: (DMG:41 in 4 person party, DMG: 43 in 3 person party, DMG: 45 in 2
+	person party, DMG: 47 if solo)
+	//PARTY4/3/2/1
+Frenzy Sallet
+	Latent: Acc+12,Haste+4%,Drain 100HP/tick while weapon drawn
+	//DRAWN
+Mistilteinn
+	Latent: Refresh,drains 30 TP for 1 MP/tick while TP >= 30
+	//TP.GE.30//WSWAP
+Rune Arrow
+	Latent: VIT+1,R.Att+10,drains 1 MP/tick while weapon drawn and MP > 0
+	//DRAWN//MP.GT.0//WSWAP
+Rune Axe
+	Latent: Att+5,Regen 5HP/tick,drain 3MP/tick while weapon drawn and MP > 0
+	//DRAWN//MP.GT.0//WSWAP
+Rune Baghnakhs
+	Latent: STR+7,Counter+1,drain 4MP/tick while weapon drawn and MP > 0
+	//DRAWN//MP.GT.0//WSWAP
+Rune Bangles
+	Latent: Eva+5 DEF+32,drain 4MP/tick while weapon drawn and MP > 0
+	//DRAWN//MP.GT.0
+Rune Blade
+	Latent: DMG:43,DEX+5,drain 4MP/tick while weapon drawn and MP > 0
+	//DRAWN//MP.GT.0//WSWAP
+Rune Bow
+	Latent: R.Acc+5,Enmity-2,drain 4MP/tick while weapon drawn and MP > 0
+	//DRAWN//MP.GT.0//WSWAP
+Rune Chopper
+	Latent: Acc+5,Haste+9%,drain 3MP/tick while weapon drawn and MP > 0
+	//DRAWN//MP.GT.0//WSWAP
+Rune Halberd
+	Latent: DEX+6,Double Attack+5%,drains 3MP/tick while weapon drawn and MP > 0
+	//DRAWN//MP.GT.0//WSWAP
+Rune Rod
+	Latent: Att+10,Healing Magic Skill+6,drain 4MP/tick while weapon drawn and MP > 0
+	//DRAWN//MP.GT.0//WSWAP
+Rune Staff
+	Latent: INT+2,MND+2,CHR+2,Magic Attack Bonus+10,drain 4MP/tick while weapon drawn and MP > 0
+	//DRAWN//MP.GT.0//WSWAP
+*Shark Necklace
+	Latent: Regen,drains 3MP/tick while weapon drawn and MP > 0
+	//DRAWN//MP.GT.0
+Treat Staff
+	Latent: Warp while Harvest Festival event occurring, triggered when fighting, chance
+	
+Kabrakan's Axe
+	Additional Effect: Slow,procs 3-5% or 10-15% if proc'ed effect current, 50% proc
+	on Earthsday
+	
+Tredecim Scythe
+	Hidden Effect: Every 13th swing guarantees a crit hit, missed swings cound unless
+	they happen in a WS. Zoning and unequiping does not reset the count.
+	
++Avis
+	Latent: Acc+6 while Samba effect created by player active
+	//SAMBA//WSWAP
+Chaotic earring
+	Latent: Att+7 while under effect of Arcane Circle
+	//ARC_CIRCLE
+Haten earring
+	Latent: Store TP+2 while under effect of Warding Circle
+	//WARD_CIRCLE
++Poppet Katars
+	Latent: Att+12 while player's automaton active
+	//AUTOMATON//WSWAP
+*Priest's earring
+	Latent: DEF:8 while under effect of Holy Circle
+	//HOLY_CIRCLE
+*Ryumon
+	Latent: Attack Bonus+1.25%,3.75% under besieged, while under effect of utsusemi
+	//UTSUSEMI//WSWAP
+Enhancing Sword
+	Latent: Acc+8,Att+16 while weapon has EN- spell buff
+	//EN_SPELL
+*Scogan's Knuckles
+	Latent: Acc+10 while player's automaton active
+	//AUTOMATON//WSWAP
+Save the Queen
+	Latent: Acc+20 while Cover is active
+	//COVER//WSWAP
+*Volitional Mantle
+	Latent: VIT+10 while Cover is active
+	//COVER
+
+The following proc when the condition is met.
+	
+Bitter earring
+	Curse: R.Acc+5
+Bat earring
+	Blind: Eva+15
+Flagellant's Rope
+	Paralyzed: Haste+8%
+?Hardwood Katana
+	Hidden Effect: Regen and Refresh, 1/tick while asleep, enthunder
+*Kawahori Kabuto
+	Blind: Crit hit rate+5%
+*Nightmare Gloves
+	Asleep: Avatar perpetuation cost -1
+Opi-opo necklace
+	Asleep: Raises TP by 25%/tick
+Root Sabots
+	Bind: Regen 2HP/tick
+Sand Mantle
+	Petrification: Physical Damage Taken-20%
+Scorpion Breastplate/+1
+	Poison: Regen 2HP/tick
+Scorpion Gauntlets/+1
+	Silence: MP recovered while healing+4
+Scorpion Helm/+1
+	Paralyzed: Refresh
+*Snakeeye/+1
+	Latent: STR+5 while poisoned, poisons player on every successful hit, poisoned
+	player takes 20HP/tick damage
++Poison Taster's Cape
+	Poison: Refresh (1MP/tick) while poisoned
+*Sadhu Cuffs
+	No food buff: MP+35
+Kinkobo
+	Pamamas food buff: Delay: 329/319,Acc+10/12
+Primate Staff/+1	
+	Pamamas food buff: Delay: 412,Crit Hit Rate+5%
+Nanban Kariginu
+	Pamamas food buff: Eva+10
+Opo-opo Crown
+	Pamamas and Wild Pamamas food buff: HP+50,MP+50,STR-2,DEX+1,VIT+1,AGI+1,INT+2,
+	MND+1,CHR+7
+	
+Elemental staves have hidden effects re: avatar perpetuation cost, spell potency,
+charm success. None of these are triggered effects beyond having the piece equipped.
+That's why there's no inline qualifier.
+
+Weapon Skill Points gear have a latent effect prior to the weapon breaking. Determining
+if the weapon is "broken" is kind of beyond the scope of luashitacast and will not be
+implemented here.
+
+Some gear has a triggered effect based on a named latent:
+
+Bard's Justaucorps/+1
+	Military Parade: (STR+8, DEX+8, VIT+8, AGI+8, INT-8, MND-8, CHR-8) while weapon
+	is drawn
+	//DRAWN
+Bard's Cannions/+1
+	Courtly Measure: (STR-8, DEX-8, VIT-8, AGI-8, INT+8, MND+8, CHR+8) while weapon
+	is sheathed
+	//NOT_DRAWN

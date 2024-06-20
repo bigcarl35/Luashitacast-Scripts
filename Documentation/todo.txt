@@ -1,33 +1,24 @@
 To do list:
 ----------
-- Determine how to tell weapon type (re: skills)
 - /validate [set] - checks all (or specified) set(s) to see if player owns gear and
 	is accessible, whether codes are known, whether slot names correct
 	(Support ALL)
 - Change ring swap in equipgear to if one found, remove from new set and move position
   for other ring/earring if needed.
-- Check to see if staff swap based on stats out perform based on element
-- See if I can tell what debuff is on a bst pet. (If so, code checkinline to use info)
-- Determine how much acc/eva needed vs opponent and then load enough gear to address
-  what is needed, prioritized by User. Make sure total acc/eva not beyond max possible.
-  Start with accuracy.
+- Implement tiered accuracy system. Separate sets for earch tier. Display on job bar
+  what (if any tier currently equipped.) Add accuracy tier display in bar
 - Need to be able to search storage slips in validate
-- Need to modify CheckGearIntegrity for when checking codes, accept more than one code
-
-Timing Issues
--------------
-- Not loading Tabarzin in Sub, recognized sub NIN. (This is a timing issue. When I zoned, it worked fine.)
-  (Could also be fighting the saved equipped gear that's native to your server.)
-  
+- Need special routine for Sorcerer's Ring. Part of MAB, active if HPP < 76% and TP < 100%.
+- Propogate weapon skill solution in BST job file to other files
+ 
 On Going
 --------
-- Finish job files for the jobs not coded yet: BLM,RDM,RNG
+- Finish job files for the jobs not coded yet: BLM,RDM
 
 Ongoing questions
 -----------------
 - How does the client know that it should display "Downloading Data"?
 - How can I determine who controls the zone the player is in?
-- How can I determine the type of weapon the player is using?
 
 Done
 ----
@@ -81,8 +72,22 @@ Done
 - Added conditional to see if the item you're equipping is accessible.
 - Came up with method to adjust HP with invisible boosts removed.
 - Multiple inline conditionals now supported on an item
-
+- Determine how to tell weapon type (re: skills)
+- Need to modify CheckGearIntegrity for when checking codes, accept more than one code
+- Need routine for MP check on Uggy Pendant. Only visible gear counted and convert HP 
+  to MP on all gear ignored.
+- Remove Status from display bar (and associated support code) from gcdisplay.lua
+- Dynamic codes: //HP,//HPP,//MP,//MPP,//TP,//TPP.
+- Change dynamic inline codes to uniformly support the following operators: .EQ.,.NE.,
+  .GT.,.GE.,.LT.,.LE.
+- Need special routine for Minstrel's Ring. Has to equipped before song started. HPP < 76%
+  and TP < 100%. No special omissions.
+  
 Not Doing
 ---------
 - /equipit needs //inline support. 
 	Very unlikely to be wanted since usually part of a multi-definition line. Skipping
+- See if I can tell what debuff is on a bst pet. (If so, code checkinline to use info)
+	No way to tell. Instead there's a switch in the gcdisplay that shows what type of
+	"Reward" shall be use (equips appropriate chest piece). (Just upgrade either the AF
+	or Relic chestpiece to the +1 version and this complication can go away.)
