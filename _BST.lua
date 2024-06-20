@@ -8,6 +8,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 	from the subjob. If you desire a gear set change to strengthen an ability from your subjob that is not 
 	supported by this program, you probably will have to make a custom gear set and use the /gearset command to
 	use it.
+	
+	Gear Sets last updated: June 11, 2024
 --]]
 
 local sets = {
@@ -48,16 +50,16 @@ local sets = {
 --]]
 
 	['TP'] = {
-        Head  = { 'Shep. Bonnet//PET', 'Panther Mask', 'Monster Helm//ACCESSIBLE', 'Beast Helm//ACCESSIBLE', 'Shep. Bonnet', 'Empress Hairpin', 'Silver Hairpin//MSJ' },
+        Head  = { 'Shep. Bonnet//PET', 'Panther Mask', 'Monster Helm//ACCESSIBLE', 'Beast Helm +1//ACCESSIBLE', 'Shep. Bonnet', 'Empress Hairpin', 'Silver Hairpin//MSJ' },
         Neck  = { 'Peacock Amulet', 'Spike Necklace' },
 		Ears  = { 'Ethereal Earring', 'Beastly Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Bat Earring//MSJ', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ', 'Physical Earring//SJNIN', 'Reraise Earring', 'Physical Earring' },
-        Body  = { 'Gaudy Harness//MP.LT.50', 'Narasimha\'s Vest', 'Scorpion Harness', 'Gaudy Harness', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
+        Body  = { 'Gaudy Harness//MSJ//MP.LT.50', 'Narasimha\'s Vest', 'Scorpion Harness', 'Gaudy Harness', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
         Hands = { 'Thick Mufflers', 'Beast Gloves//ACCESSIBLE', 'Wonder Mitts', 'Battle Gloves', 'Ryl.Ftm. Gloves' },
         Rings = { 'Sun Ring', 'Tamas Ring//MSJ', 'Sun Ring', 'Courage Ring', 'Balance Ring', 'San d\'Orian Ring' },
         Back  = { 'Psilos Mantle', 'Raptor Mantle', 'Ram Mantle' },
         Waist = { 'Swift Belt', 'Tilt Belt', 'Warrior\'s Belt' },
-        Legs  = { 'Thick Breeches', 'Beast Trousers//ACCESSIBLE', 'Shep. Hose', 'San. Trousers', 'Ryl.Ftm. Trousers' },
-        Feet  = { 'Thick Sollerets', 'Beast Gaiters//ACCESSIBLE', 'Wonder Clomps', 'Bounding Boots' },
+        Legs  = { 'Thick Breeches', 'Monster Trousers//ACCESSIBLE', 'Beast Trousers//ACCESSIBLE', 'Shep. Hose', 'San. Trousers', 'Ryl.Ftm. Trousers' },
+        Feet  = { 'Thick Sollerets', 'Monster Gaiters//ACCESSIBLE', 'Beast Gaiters//ACCESSIBLE', 'Wonder Clomps', 'Bounding Boots' },
     },
 	
 --[[
@@ -69,16 +71,17 @@ local sets = {
 --]]
 
 	['Accuracy'] = {
-        Head  = { 'Optical Hat', 'Shep. Bonnet//PETF' } ,
+		Ammo  = 'Orphic Egg//PJPBRD',
+        Head  = { 'Bst. Helm +1//PETFNPF//ACCESSIBLE', 'Optical Hat', 'Shep. Bonnet//PETF' } ,
         Neck  = 'Peacock Amulet',
-        Body  = { 'Gaudy Harness//MP.LT.50', 'Scorpion Harness', 'Narasimha\'s Vest' },
+        Body  = { 'Scorpion Harness', 'Narasimha\'s Vest', 'Beast Jackcoat//ACCESSIBLE' },
         Hands = { 'Thick Mufflers', 'Battle Gloves' },
 		Ears  = { 'Beastly Earring//PETF', 'Pilferer\'s Earring//SJTHF' },
-		Rings = { 'Toreador\'s Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
-        Back = 'Psilos Mantle',
-        Waist = { 'Life Belt', 'Monster Belt', 'Tilt Belt' },
-        Legs = 'Thick Breeches',
-        Feet = 'Thick Sollerets',
+		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
+        Back  = 'Psilos Mantle',		
+        Waist = { 'Life Belt', 'Monster Belt//ACCESSIBLE', 'Tilt Belt', 'Swift Belt' },
+        Legs  = { 'Thick Breeches', 'Monster Trousers//ACCESSIBLE' },
+        Feet  = 'Thick Sollerets',
     },	
 
 --[[
@@ -86,11 +89,12 @@ local sets = {
 --]]
 
 	['Evasion'] = {
+		Ammo  = 'Orphic Egg//PJPBRD',
         Head  = { 'Optical Hat', 'Empress Hairpin' },
 		Ears  = { 'Bat Earring//BLIND', 'Ethereal Earring', 'Reraise Earring' },
         Body  = { 'Scorpion Harness', 'Narasimha\'s Vest' },
 		Hands = 'Battle Gloves',
-        Legs  = { 'San. Trousers', 'Shep. Hose//PETF' },
+        Legs  = { 'Shep. Hose//PETFNPF', 'San. Trousers' },
 		Feet  = 'Bounding Boots',	-- default gear is thick sollerets which are -2 eva
     },
 
@@ -116,7 +120,7 @@ local sets = {
 	},
 	
 	['Idle_Refresh'] = {
-		Body = 'Gaudy Harness//MP.LT.50',
+		Body = 'Gaudy Harness//MSJ//MP.LT.50',
 	},
 	
 --[[
@@ -133,7 +137,7 @@ local sets = {
 	},
 
 	['Resting_Refresh'] = {
-		Body = 'Gaudy Harness//MP.LT.50',	
+		Body = 'Gaudy Harness//MSJ//MP.LT.50',	
 	},
 	
 	-- If you have any Spell Interruption Rate down gear, put them into the "SIR" gear set.
@@ -152,7 +156,7 @@ local sets = {
 	['Start_Weapons'] = {
         Main = { 'Maneater', 'Barbaroi Axe', 'Ryl.Arc. Sword' },	-- Sword added for low level option
         Sub  = { 'Tabarzin//SJNIN', 'Tatami Shield', 'War Pick//SJNIN' },
-        Ammo = { 'Hedgehog Bomb', 'S. Herbal Broth' },
+        Ammo = { 'Hedgehog Bomb//MSJ', 'S. Herbal Broth' },
     },
 
 --[[
@@ -194,7 +198,7 @@ local sets = {
 --]]
 
 	['MAB'] = {
-		Neck = 'Uggalepih Pendant//MPP.LE.50P',
+		Neck = 'Uggalepih Pendant//SPECIAL',
 	},
 	
 --[[
@@ -292,14 +296,15 @@ local sets = {
 --]]
 
 	['INT'] = {
-        Head  = 'Beast helm//ACCESSIBLE',
+        Head  = 'Beast helm +1//ACCESSIBLE',
 		Body  = 'Monster Jackcoat//ACCESSIBLE',
         Rings = { 'Tamas Ring', 'Windurstian Ring' },
-        Feet = 'Mannequin Pumps',
+        Feet  = 'Mannequin Pumps',
     },
 	
 	['MND'] = {
-        Neck  = 'Justice Badge',
+        Head  = 'Beast helm +1//ACCESSIBLE',
+		Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = 'Wonder Kaftan',
         Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
         Waist = 'Friar\'s Rope',
@@ -388,13 +393,12 @@ local sets = {
 	['WS_STRDEX'] = {
         Head  = 'Empress Hairpin',
         Neck  = 'Spike Necklace',
-        Ears  = 'Beastly Earring',		-- Should be conditional: using an axe
         Body  = 'Narasimha\'s Vest',
         Hands = 'Wonder Mitts',
-        Rings = { 'Sun Ring', 'Sun Ring' },
+        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring', 'Bastokan Ring' },
         Back  = 'Amemet Mantle',
-        Legs  = 'Wonder Braccae',
-        Feet  = { 'Creek F Clomps', 'Wonder Clomps' },
+        Legs  = { 'Ryl.Sqr. Breeches', 'Wonder Braccae' },
+        Feet  = { 'Creek F Clomps', 'Bounding Boots' },
     },
 
 --[[
@@ -405,15 +409,13 @@ local sets = {
 --]]
 	
 	['WS_STRINT'] = {
-		Head  = 'Beast helm',
+		Head  = { 'Bst. Helm +1//ACCESSIBLE', 'Mrc.Cpt. Headgear' },
 		Neck  = 'Spike necklace',
-		Ears  = 'Beastly Earring',		-- Should be conditional: using an axe
-		Body  = { 'Monster Jackcoat//ACCESSIBLE', 'Narasimha\'s vest' },
-		Hands = 'Ogre gloves',
-		Rings = { 'Sun Ring', 'Sun Ring' },
-		Waist = 'Barbarian\'s belt',
+		Body  = { 'Monster Jackcoat//ACCESSIBLE', 'Narasimha\'s vest', 'Wonder Kaftan' },
+		Hands = { 'Ogre gloves', 'Wonder Mitts' },
+		Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
 		Legs  = 'Wonder braccae',
-		Feet  = { 'Creek F Clomps', 'Wonder Clomps' },
+		Feet  = 'Wonder Clomps',
 	},
 
 --[[
@@ -423,15 +425,13 @@ local sets = {
 --]]
 	
 	['WS_STRINT_30_20'] = {
-		Head  = 'Beast helm//ACCESSIBLE',
+		Head  = { 'Bst. Helm +1//ACCESSIBLE', 'Mrc.Cpt. Headgear' },
 		Neck  = 'Spike necklace',
-		Ears  = 'Beastly Earring',		-- Should be conditional: using an axe
-		Body  = { 'Monster Jackcoat//ACCESSIBLE', 'Narasimha\'s vest' },
-		Hands = 'Ogre gloves',
-		Rings = { 'Sun Ring', 'Sun Ring' },
-		Waist = 'Barbarian\'s belt',
+		Body  = { 'Monster Jackcoat//ACCESSIBLE', 'Narasimha\'s vest', 'Wonder Kaftan' },
+		Hands = { 'Ogre gloves', 'Wonder Mitts' },
+		Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
 		Legs  = 'Wonder braccae',
-		Feet  = { 'Creek F Clomps', 'Wonder Clomps' },
+		Feet  = 'Wonder Clomps',
 	},
 
 --[[
@@ -443,13 +443,12 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
-		Head  = 'Mrc.Cpt. Headgear',
-		Neck  = 'Justice badge',
-        Ears  = 'Beastly Earring',		-- Should be conditional: using an axe
-		Body  = 'Narasimha\'s vest',
+		Head  = { 'Bst. Helm +1//ACCESSIBLE', 'Mrc.Cpt. Headgear' },
+		Neck  = { 'Promise Badge', 'Justice badge' },
+		Body  = { 'Narasimha\'s vest', 'Wonder Kaftan' },
 		Hands = 'Ogre gloves',
-		Rings = { 'Sun ring', 'Sun ring' },
-		Waist = 'Barbarian\'s belt',
+		Rings = { 'Tamas Ring', 'Sun ring', 'Sun ring', 'Courage Ring', 'San d\'Orian Ring' },
+		Waist = 'Friar\'s Rope',
 		Legs  = 'Wonder braccae',
 		Feet  = { 'Creek F Clomps', 'Wonder Clomps' },
 	},
@@ -463,13 +462,12 @@ local sets = {
 	['WS_STRVIT'] = {
 		Head  = 'Mrc.Cpt. Headgear',	
 		Neck  = 'Spike necklace',
-        Ears  = 'Beastly Earring',		-- Should be conditional: using an axe
-		Body  = 'Narasimha\'s vest',
+		Body  = { 'Narasimha\'s vest', 'Beast Jackcoat//ACCESSIBLE', 'Wonder Kaftan' },
 		Hands = 'Ogre gloves',
-		Ring1 = { 'Sun ring', 'Sun ring' },
-		Waist = 'Barbarian\'s belt',
-		Legs  = 'Wonder braccae',
-		Feet  = 'Creek F clomps',
+		Ring1 = { 'Sun ring', 'Sun ring', 'Courage Ring', 'San d\'Orian Ring' },
+		Waist = 'Warrior\'s belt',
+		Legs  = { 'Wonder braccae', 'Ryl.Ftm. Trousers' },
+		Feet  = { 'Creek F clomps', 'Wonder Clomps' },
 	},
 
 --[[
@@ -482,13 +480,13 @@ local sets = {
 --]]
 	
 	['WS_DEX'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ears = 'Beastly Earring',
-        Body = 'Brigandine',
+        Head  = 'Empress Hairpin',
+        Neck  = 'Spike Necklace',
+        Body  = { 'Brigandine', 'Mrc.Cot. Doublet' },
         Hands = 'Beast Gloves//ACCESSIBLE',
         Rings = { 'Balance Ring', 'Bastokan Ring' },
-        Feet = 'Bounding Boots',
+		Legs  = { 'Monster Trousers//ACCESSIBLE', 'Ryl.Sqr. Breeches' },
+        Feet  = 'Bounding Boots',
     },
 
 --[[
@@ -500,13 +498,13 @@ local sets = {
 --]]
 	
 	['WS_DEXINT'] = {
-        Head = 'Beast Helm//ACCESSIBLE',
-        Neck = 'Spike Necklace',
-        Ears = 'Beastly Earring',
-        Body = { 'Monster Jackcoat//ACCESSIBLE', 'Brigandine' },
+        Head  = { 'Beast Helm +1//ACCESSIBLE', 'Empress Hairpin' },
+        Neck  = 'Spike Necklace',
+        Body  = { 'Monster Jackcoat//ACCESSIBLE', 'Brigandine', 'Mrc.Cpt. Doublet' },
         Hands = 'Beast Gloves//ACCESSIBLE',
-        Rings = 'Balance Ring',
-        Feet = 'Bounding Boots',
+        Rings = { 'Tamas Ring', 'Balance Ring', 'Windurstian Ring', 'Bastokan Ring' },
+		Legs  = { 'Monster Trousers//ACCESSIBLE', 'Ryl.Sqr. Breeches' },
+        Feet  = 'Bounding Boots',
     },
 
 --[[
@@ -516,14 +514,14 @@ local sets = {
 --]]
 	
 	['WS_CHR'] = {
-		Head = 'Panther mask',
-		Neck = 'Flower Necklace',
+		Head = { 'Panther mask', 'Monster Helm//ACCESSIBLE', 'Entrancing Ribbon' },
+		Neck = { 'Star Necklace', 'Flower Necklace' },
 		Ears = 'Beastly earring',
 		Body = 'Gaudy harness',
 		Rings = { 'Moon ring', 'Moon ring' },
 		Waist = { 'Monster Belt', 'Corsette' },
-		Legs = 'Beast trousers//ACCESSIBLE',
-		Feet = 'Beast gaiters//ACCESSIBLE',
+		Legs = 'Beast Trousers//ACCESSIBLE',
+		Feet = 'Beast Gaiters//ACCESSIBLE',
 	},
 
 --[[
@@ -535,12 +533,13 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
-        Neck = 'Justice Badge',
-        Ears = 'Beastly Earring',
-        Body = 'Wonder Kaftan',
-        Rings = { 'Tamas Ring', 'Tranquility Ring' },
+		Head  = 'Bst. Helm +1/ACCESSIBLE',
+        Neck  = { 'Promise Badge', 'Justice Badge' },
+        Body  = 'Wonder Kaftan',
+        Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
         Waist = 'Friar\'s Rope',
-        Legs = 'Wonder Braccae',
+        Legs  = 'Wonder Braccae',
+		Feet  = 'Mannequin Pumps',
     },
 
 --[[
@@ -550,6 +549,7 @@ local sets = {
 --]]
 
 	['WS_Skill'] = {
+		Ears = 'Beastly Earring//AXE',
     },
 
 --[[
@@ -559,14 +559,16 @@ local sets = {
 --]]
 
 	['WS_HP'] = {
-        Head = 'Monster Helm//ACCESSIBLE',
-        Ears = { 'Ethereal Earring', 'Physical Earring' },
-        Body = 'Monster Jackcoat//ACCESSIBLE',	
-        Hands = 'Wonder Mitts',	
+		Ammo  = 'Happy Egg',
+        Head  = { 'Monster Helm//ACCESSIBLE', 'Bst. Helm +1//ACCESSIBLE', 'Shep. Bonnet' },
+		Neck  = 'Promise Badge',
+        Ears  = { 'Physical Earring', 'Ethereal Earring' },
+        Body  = 'Wonder Kaftan',
+        Hands = 'Wonder Mitts', 
         Rings = 'Toreador\'s Ring',	
-        Waist = 'Powerful Rope',
-        Legs = 'Wonder Braccae',
-        Feet = 'Creek F Clomps',
+        Waist = { 'Powerful Rope', 'Warrior\'s Belt' },
+        Legs  = 'Wonder Braccae',
+        Feet  = { 'Creek F Clomps', 'Wonder Clomps' },
     },
 
 --[[
@@ -593,40 +595,42 @@ local sets = {
 	
 	-- Reward potency, reward augment, reward enhancement, and MND gear
 	['Reward'] = {
-        Neck = 'Justice Badge',
+		Head  = 'Bst. Helm +1//ACCESSIBLE',
+        Neck = { 'Promise Badge', 'Justice Badge' },
         Body = { 'Monster Jackcoat//DB:WSS//ACCESSIBLE', 'Beast Jackcoat//DB:BPP/ACCESSIBLE', 'Monster Jackcoat//ACCESSIBLE','Beast Jackcoat//ACCESSIBLE' },
         Hands = 'Ogre Gloves',
-        Rings = { 'Tamas Ring',	'Tranquility Ring' },
+        Rings = { 'Tamas Ring',	'Tranquility Ring', 'San d\'Orian Ring' },
         Waist = 'Friar\'s Rope',
         Legs = 'Wonder Braccae',
-        Feet = { 'Beast Gaiters', 'Mannequin Pumps' },
+        Feet = { 'Monster Gaiters//ACCESSIBLE', 'Beast Gaiters//ACCESSIBLE', 'Mannequin Pumps' },
 	},
 	
 	-- Tame success rate. Resistence depends on your INT vs target's INT
 	['Tame'] = {
-        Head = 'Beast Helm//ACCESSIBLE',
+        Head = 'Beast Helm +1//ACCESSIBLE',
 		Body = 'Monster Jackcoat//ACCESSIBLE',
 		Rings = 'Tamas Ring',
 		Feet = 'Mannequin Pumps',
     },
 	
-	-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration
+	-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration)
 	['Charm'] = {
-        Head = 'Monster Helm//ACCESSIBLE',
+        Head = { 'Monster Helm//ACCESSIBLE', 'Entrancing Ribbon' },
         Neck = 'Flower Necklace',
         Ears = 'Beastly Earring',
-        Body = 'Monster Jackcoat//ACCESSIBLE',
+        Body = { 'Monster Jackcoat//ACCESSIBLE', 'Beast Jackcoat//ACCESSIBLE' },
         Hands = 'Beast Gloves//ACCESSIBLE',
         Rings = { 'Moon Ring', 'Moon Ring' },
         Waist = { 'Monster Belt', 'Corsette' },
         Legs = 'Beast Trousers//ACCESSIBLE',
-        Feet = 'Beast Gaiters//ACCESSIBLE',
+        Feet = { 'Monster Gaiters//ACCESSIBLE', 'Beast Gaiters//ACCESSIBLE' },
     },
 	
 	['Pet_Attack'] = {					-- Pet's strength, not accuracy
 	},
 
 	['Pet_Macc'] = {					-- Pet's Magical Accuracy
+		Head = { 'Beast Helm +1//ACCESSIBLE', 'Shep. Bonnet' },
 	},
 	
 	['Pet_Matt'] = {					-- Pet's Magical Attack
@@ -787,6 +791,18 @@ profile.JugPets = T {
 	['c. blood broth'] = {'Lifedrinker Lars',63,75,60,false,false},
 	['f. antica broth'] = {'Chopsuey Chucky',63,75,60,false,false},
 	['sun water'] = {'Amigo Sabotender',75,75,30,false,false},
+};
+
+-- There's no way to consistently identify the type of weapon you're currently
+-- using by just looking at the name. (Ex: Maneater is an axe. The name does
+-- not give that away.) The following table lists weapons by type that you're
+-- likely to use. Add the weapon names accordingly. You only need the names of
+-- the weapons if you want to conditionally equip an item with a weapon skill
+-- attribute.
+profile.WeaponType = {
+	['AXE']    = { 'Maneater', 'Tabarzin', 'Barbaroi Axe', 'War Pick' },
+	['SWORD']  = { 'Ifrit\'s Blade' },
+	['DAGGER'] = { 'Garuda\'s Dagger' },
 };
 
 profile.Sets = sets;
@@ -1058,7 +1074,6 @@ profile.HandleDefault = function()
 	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
 				
 	-- Now process the player status accordingly
-	gcdisplay.SetLocksAction(gcinclude.LocksNumeric,player.Status);
 	if (player ~= nil and player.Status == 'Engaged') or (pet ~= nil and pet.Status == 'Engaged') then
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
@@ -1130,7 +1145,7 @@ profile.HandleDefault = function()
 	if (pet ~= nil and player.SubJob == 'SMN') then
 		local pName = string.lower(pet.Name);
 		if string.find(gcinclude.SummonSkill,pName) ~= nil then
-			local pEle = gcinclude.SummonStaves[pet.Name];
+			local pEle = gcinclude.SummonStaves[string.lower(pet.Name)];
 			gcinclude.SwapToStave(pEle,false,sets.CurrentGear);
 		end
 	end

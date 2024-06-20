@@ -52,12 +52,12 @@ local sets = {
         Head  = { 'Chaos Burgeonet//ACCESSIBLE','Empress Hairpin' },
         Neck  = { 'Parade Gorget//HP.GE.85PV', 'Peacock Amulet', 'Spike Necklace' },
         Ears  = { 'Coral Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Pilferer\'s Earring//SJTHF', 'Drone Earring', 'Energy Earring +1', 'Energy Earring +1' },
-        Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Scorpion Harness', 'Brigandine' },
-        Hands = { 'Abyss Gauntlets//ACCESSIBLE', 'Chaos Gauntlets//ACCESSIBLE', 'Thick Mufflers', 'Wonder Mitts' },
+        Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Scorpion Harness', 'Brigandine', 'Beetle Harness' },        
+		Hands = { 'Abyss Gauntlets//ACCESSIBLE', 'Thick Mufflers', 'Wonder Mitts' },
         Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tamas Ring', 'Balance Ring' },
         Back  = { 'Psilos Mantle', 'Amemet Mantle', 'Raptor Mantle', 'Ram Mantle' },
         Waist = { 'Swift Belt', 'Axe Belt//SJWAR', 'Powerful Rope', 'Friar\'s Rope' },
-        Legs  = { 'Thick Breeches', 'Chaos Flanchard//ACCESSIBLE', 'Ryl.Sqr. Breeches' },
+        Legs  = { 'Thick Breeches', 'Chaos Flanchard//ACCESSIBLE', 'Ryl.Sqr. Breeches', 'San. Trousers' },
         Feet  = { 'Thick Sollerets', 'Chaos Sollerets//ACCESSIBLE', 'Bounding Boots' },
     },
 
@@ -74,6 +74,7 @@ local sets = {
 --]]
 		
 	['Accuracy'] = {
+		Head  = 'Optical Hat',
 		Neck  = 'Peacock Amulet',
         Body  = 'Scorpion Harness',
 		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
@@ -121,7 +122,7 @@ local sets = {
 	},
 	
 	['Idle_Refresh'] = {
-		Neck = 'Parade Gorget//HP.GE.85PV',
+		Neck = 'Parade Gorget//SPECIAL',
 	},
 
 --[[
@@ -136,7 +137,7 @@ local sets = {
 	},
 	
 	['Resting_Refresh'] = {
-		Neck = 'Parade Gorget//HP.GE.85PV',	
+		Neck = 'Parade Gorget//SPECIAL',	
 	},
 	
 	-- If you have any Spell Interruption Rate down gear, put them into the "SIR" gear set.
@@ -196,6 +197,7 @@ local sets = {
 --]]
 
 	['MAB'] = {
+		Body = 'Abyss Cuirass//ACCESSIBLE',
 	},
 	
 --[[
@@ -303,8 +305,8 @@ local sets = {
 	},
 	
 	['MND'] = {
-        Neck = 'Justice Badge',
-        Body = 'Wonder Kaftan',
+        Neck = { 'Promise Badge', 'Justice Badge' },
+        Body = { 'Abyss Cuirass//ACCESSIBLE', 'Wonder Kaftan' },
         Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = { 'Abyss Flanchard//ACCESSIBLE', 'Wonder Braccae' },
@@ -477,9 +479,9 @@ local sets = {
 
 	['WS_STRMND'] = {
 		Head  = 'Chaos Sollerets//ACCESSIBLE',
-        Neck  = 'Justice Badge',
+        Neck  = { 'Promise Badge','Justice Badge' },
 		Ears  = { 'Coral Earring', 'Fang Earring' },
-        Body  = 'Wonder Kaftan',
+        Body  = { 'Abyss Cuirass//ACCESSIBLE', 'Wonder Kaftan' },
         Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY' },
         Rings = { 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tranquility Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
@@ -562,8 +564,8 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
-        Neck = 'Justice Badge',
-        Body = 'Wonder Kaftan',
+        Neck = { 'Promise Badge', 'Justice Badge' },
+        Body = { 'Abyss Cuirass//ACCESSIBLE', 'Wonder Kaftan' },
         Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
@@ -779,6 +781,15 @@ local sets = {
 	
 };
 
+-- There's no way to consistently identify the type of weapon you're currently
+-- using by just looking at the name. (Ex: Maneater is an axe. The name does
+-- not give that away.) The following table lists weapons by type that you're
+-- likely to use. Add the weapon names accordingly. You only need the names of
+-- the weapons if you want to conditionally equip an item with a weapon skill
+-- attribute.
+profile.WeaponType = {
+};
+
 profile.Sets = sets;
 profile.sjb = nil;
 profile.bAmmo = false;		-- /BST specific. Is ammo equipped?
@@ -821,7 +832,7 @@ local function SetSubjobSet(chkSJ)
 	-- macro book should be displayed. (The value associated with DRK, your current main job, is nil
 	-- since you can't be a smn/smn.) A value of 0 means the subjob is not configured. All other values
 	-- imply that the subjob is expected and shows what macro set to show.
-	local subs = {['WAR'] = 1, ['MNK'] = 0, ['WHM'] = 1, ['BLM'] = 0, ['RDM'] = 0, ['THF'] = 1,
+	local subs = {['WAR'] = 1, ['MNK'] = 0, ['WHM'] = 1, ['BLM'] = 0, ['RDM'] = 0, ['THF'] = 3,
 				 ['PLD'] = 0, ['DRK'] = nil, ['BST'] = 0, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = 0,
 				 ['SAM'] = 1, ['NIN'] = 1, ['DRG'] = 1, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
 				 ['DNC'] = 0, ['SCH'] = 0, ['GEO'] = 0, ['RUN'] = 0};
@@ -878,8 +889,7 @@ profile.OnLoad = function()
 	
 	-- Special inits for "checking HP" gear:
 	-- HP on invisible gear: TP, Tank_TP, Acc, Tank_TP + Acc
-	gcinclude.Special['Parade Gorget'][72] = { 0, 0, 10, 10 };
-	gcinclude.Special['Parade Gorget'][73] = { 0, 0, 10, 10 };	
+	gcinclude.Special['Parade Gorget'][75] = { 0, 0, 10, 10 };	
 end		-- OnLoad
 
 --[[
@@ -970,8 +980,7 @@ profile.HandleDefault = function()
 		gcinclude.MoveToCurrent(sets.Tank_TP,sets.CurrentGear);	
 	end
 		
-	-- Now process the player status accordingly
-	gcdisplay.SetLocksAction(gcinclude.LocksNumeric,player.Status);		
+	-- Now process the player status accordingly		
 	if player ~= nil and player.Status == 'Engaged' then
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
@@ -1053,7 +1062,7 @@ profile.HandleDefault = function()
 	if (pet ~= nil and player.SubJob == 'SMN') then
 		local pName = string.lower(pet.Name);
 		if string.find(gcinclude.SummonSkill,pName) ~= nil then
-			local pEle = gcinclude.SummonStaves[pet.Name];
+			local pEle = gcinclude.SummonStaves[string.lower(pet.Name)];
 			gcinclude.SwapToStave(pEle,false,sets.CurrentGear);
 		end
 	end

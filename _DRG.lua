@@ -58,7 +58,7 @@ local sets = {
         Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Balance Ring', 'San d\'Orian Ring' },
 		Back  = { 'Raptor Mantle', 'Ram Mantle' },
         Waist = { 'Swift Belt', 'Life Belt', 'Tilt Belt', 'Powerful Rope//MSJ', 'Warrior\'s Belt' },
-        Legs  = { 'Wonder Braccae', 'Shep. Hose', 'Ryl.Ftm. Trousers' },
+        Legs  = { 'Drachen Brais//ACCESSIBLE', 'Wonder Braccae', 'Shep. Hose', 'Ryl.Ftm. Trousers' },
         Feet  = { 'Mannequin Pumps//MSJ', 'Bounding Boots' },
     },
 	
@@ -71,11 +71,12 @@ local sets = {
 --]]
 	
 	['Accuracy'] = {
-		Head = 'Shep. Bonnet//PET',
-		Neck = 'Peacock Amulet',
+		Head  = 'Shep. Bonnet//PET',
+		Neck  = 'Peacock Amulet',
         Hands = 'Battle Gloves',
 		Rings = { 'Woodsman Ring','Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
 		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt' },
+		Legs  = 'Drachen Brais//ACCESSIBLE',
 		Feet = 'Bounding Boots',
     },
 	
@@ -271,7 +272,6 @@ local sets = {
 	-- is applicable here. There's no gear that's specific for DRG that gives any summoning skill. Note: currently on 
 	-- HorizonXI summoning skills are ignored. Any gear piece that only gives summoning skill will be commented out	
 	['Summoning'] = {
-		Hands = 'Carbuncle Mitts//CARBY',
 	},
 	
 --[[
@@ -284,7 +284,7 @@ local sets = {
     },
 	
 	['MND'] = {
-        Neck = 'Justice Badge',
+        Neck = { 'Promise Badge', 'Justice Badge' },
 		Body  = 'Wonder Kaftan',
         Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
 		Legs  = 'Wonder Braccae',
@@ -421,7 +421,7 @@ local sets = {
 
 	['WS_STRMND'] = {
 		Head = 'Mrc.Cpt. Headgear',
-        Neck = 'Justice Badge',
+        Neck = { 'Promise Badge', 'Justice Badge' },
         Rings = { 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tranquility Ring' },
 		Waist = 'Friar\'s Rope',
 		Legs = 'Wonder Braccae',
@@ -489,7 +489,7 @@ local sets = {
 --]]
 
 	['WS_INTMND'] = {
-        Neck = 'Justice Badge',
+        Neck = { 'Promise Badge', 'Justice Badge' },
 		Body = 'Wonder Kaftan',
         Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
 		Legs = 'Wonder Braccae',
@@ -503,7 +503,7 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
-        Neck = 'Justice Badge',
+        Neck = { 'Promise Badge', 'Justice Badge' },
 		Body = 'Wonder Kaftan',
         Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
 		Legs = 'Wonder Braccae',
@@ -553,6 +553,7 @@ local sets = {
 	},
 	
 	['AncientCircle'] = {
+		Legs  = 'Drachen Brais//ACCESSIBLE',
     },
 	
 	['Jump'] = {
@@ -721,6 +722,15 @@ local sets = {
 								*** Custom Sets Go below this comment ***
 --]]
 	
+};
+
+-- There's no way to consistently identify the type of weapon you're currently
+-- using by just looking at the name. (Ex: Maneater is an axe. The name does
+-- not give that away.) The following table lists weapons by type that you're
+-- likely to use. Add the weapon names accordingly. You only need the names of
+-- the weapons if you want to conditionally equip an item with a weapon skill
+-- attribute.
+profile.WeaponType = {
 };
 
 profile.Sets = sets;
@@ -898,7 +908,6 @@ profile.HandleDefault = function()
 	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
 		
 	-- Now process the player status accordingly
-	gcdisplay.SetLocksAction(gcinclude.LocksNumeric,player.Status);	
 	if (player ~= nil and player.Status == 'Engaged') then
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
@@ -970,7 +979,7 @@ profile.HandleDefault = function()
 	if (pet ~= nil and player.SubJob == 'SMN') then
 		local pName = string.lower(pet.Name);
 		if string.find(gcinclude.SummonSkill,pName) ~= nil then
-			local pEle = gcinclude.SummonStaves[pet.Name];
+			local pEle = gcinclude.SummonStaves[string.lower(pet.Name)];
 			gcinclude.SwapToStave(pEle,false,sets.CurrentGear);
 		end
 	end

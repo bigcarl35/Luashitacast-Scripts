@@ -53,10 +53,10 @@ local sets = {
         Ears  = { 'Physical Earring', 'Reraise Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
         Body  = { 'Brigandine', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
         Hands = 'Battle Gloves',
-        Rings = { 'Balance Ring', 'Bastokan Ring' },
+        Rings = { 'Kshama Ring No.2', 'Balance Ring', 'Courage Ring', 'Bastokan Ring' },
         Back  = 'Ram Mantle',
         Waist = 'Mrc.Cpt. Belt',
-        Legs  = { 'Wonder Braccae', 'San. Trousers', 'Ryl.Ftm. Trousers' },
+        Legs  = { 'Noct Brais', 'Wonder Braccae', 'San. Trousers', 'Ryl.Ftm. Trousers' },
         Feet  = 'Bounding Boots',
     },
 
@@ -76,7 +76,7 @@ local sets = {
         Neck  = { 'Peacock Amulet', 'Spike Necklace' },
         Body  = { 'Brigandine', 'Mrc.Cpt. Doublet' },
         Hands = 'Battle Gloves',
-        Rings = { 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
+        Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
         Waist = { 'Tilt Belt', 'Mrc.Cpt. Belt' },
         Feet  = 'Bounding Boots',
     },
@@ -142,9 +142,10 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-		Main  = 'Marauder\'s Knife',
-		Sub   = { 'Mrc.Cpt. Kukri//SJNIN', 'Mrc.Cpt. Kukri//SJDNC' },
+		Main  = 'Bone Knife',
+		Sub   = { 'Hornetneedle', 'Marauder\'s Knife//ACCESSIBLE', 'Mrc.Cpt. Kukri//SJNIN', 'Mrc.Cpt. Kukri//SJDNC' },
 		Range = 'Thug\'s Zamburak',
+		Ammo  = 'Acid Bolt',
     },
 	
 --[[
@@ -406,7 +407,7 @@ local sets = {
         Neck = 'Spike Necklace',
         Body = 'Brigandine',
         Hands = 'Wonder Mitts',
-        Rings = { 'Balance Ring', 'Courage Ring' },
+        Rings = { 'Kshama Ring No.2', 'Balance Ring', 'Courage Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Bounding Boots',
@@ -483,12 +484,13 @@ local sets = {
 --]]
 	
 	['WS_DEX'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Body = 'Brigandine',
-        Rings = { 'Balance Ring', 'Bastokan Ring' },
+        Head  = 'Empress Hairpin',
+        Neck  = 'Spike Necklace',
+        Body  = 'Brigandine',
+        Rings = { 'Kshama Ring No.2', 'Balance Ring', 'Bastokan Ring' },
         Waist = 'Mrc.Cpt. Belt',
-        Feet = 'Bounding Boots',
+		Legs  = 'Noct Brais',
+        Feet  = 'Bounding Boots',
     },
 
 --[[
@@ -498,13 +500,14 @@ local sets = {
 --]]
 	
 	['WS_DEXAGI'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },
-        Body = 'Brigandine',
-        Rings = { 'Balance Ring', 'Bastokan Ring' },
+        Head  = 'Empress Hairpin',
+        Neck  = 'Spike Necklace',
+        Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },
+        Body  = 'Brigandine',
+        Rings = { 'Kshama Ring No.2', 'Balance Ring', 'Bastokan Ring' },
         Waist = 'Mrc.Cpt. Belt',
-        Feet = 'Bounding Boots',
+		Legs  = 'Noct Brais',
+        Feet  = 'Bounding Boots',
     },
 	
 --[[
@@ -514,12 +517,13 @@ local sets = {
 --]]
 	
 	['WS_DEXCHR'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Body = 'Mrc.Cpt. Doublet',
-        Rings = 'Balance Ring',
+        Head  = 'Empress Hairpin',
+        Neck  = 'Spike Necklace',
+        Body  = 'Mrc.Cpt. Doublet',
+        Rings = { 'Kshama Ring No.2', 'Balance Ring' },
         Waist = 'Corsette',
-        Feet = 'Bounding Boots',
+		Legs  = 'Noct Brais',
+        Feet  = 'Bounding Boots',
     },
 	
 --[[
@@ -529,12 +533,13 @@ local sets = {
 --]]
 	
 	['WS_DEXINT'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Body = 'Brigandine',
-        Rings = { 'Tamas Ring', 'Balance Ring' },
+        Head  = 'Empress Hairpin',
+        Neck  = 'Spike Necklace',
+        Body  = 'Brigandine',
+        Rings = { 'Tamas Ring', 'Kshama Ring No.2', 'Balance Ring' },
         Waist = 'Mrc.Cpt. Belt',
-        Feet = 'Bounding Boots',
+		Legs  = 'Noct Brais',
+        Feet  = 'Bounding Boots',
     },
 
 --[[
@@ -544,12 +549,12 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
-        Neck = 'Justice Badge',
-        Body = 'Brigandine',
+        Neck  = 'Justice Badge',
+        Body  = 'Brigandine',
         Rings = { 'Tamas Ring', 'Balance Ring' },
         Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Mannequin Pumps',
+        Legs  = 'Wonder Braccae',
+        Feet  = 'Mannequin Pumps',
     },
 	
 --[[
@@ -561,10 +566,10 @@ local sets = {
 --]]
 
 	['WS_VIT'] = {
-        Body = 'Brigandine',
+        Body  = 'Brigandine',
         Rings = 'Bastokan Ring',
         Waist = 'Warrior\'s Belt',
-        Legs = 'Wonder Braccae',
+        Legs  = 'Wonder Braccae',
     },
 
 	['WS_Skill'] = {
@@ -577,11 +582,11 @@ local sets = {
 --]]
 
 	['WS_HP'] = {
-        Ears = 'Physical Earring',
-        Body = 'Wonder Kaftan',
+        Ears  = 'Physical Earring',
+        Body  = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
         Waist = 'Powerful Rope',
-        Legs = 'Wonder Braccae',
+        Legs  = 'Wonder Braccae',
     },
 	
 --[[
@@ -602,12 +607,13 @@ local sets = {
 	},
 	
 	['SneakAttack'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Body = { 'Brigandine', 'Mrc.Cpt. Soublet' },
-        Rings = { 'Balance Ring', 'Bastokan Ring' },
+        Head  = 'Empress Hairpin',
+        Neck  = 'Spike Necklace',
+        Body  = { 'Brigandine', 'Mrc.Cpt. Soublet' },
+        Rings = { 'Kshama Ring No.2', 'Balance Ring', 'Bastokan Ring' },
         Waist = 'Mrc.Cpt. Belt',
-        Feet = 'Bounding Boots',	
+		Legs  = 'Noct Brais',
+        Feet  = 'Bounding Boots',	
 	},
 	
 	['Flee'] = {
@@ -799,6 +805,15 @@ local sets = {
 		
 };
 
+-- There's no way to consistently identify the type of weapon you're currently
+-- using by just looking at the name. (Ex: Maneater is an axe. The name does
+-- not give that away.) The following table lists weapons by type that you're
+-- likely to use. Add the weapon names accordingly. You only need the names of
+-- the weapons if you want to conditionally equip an item with a weapon skill
+-- attribute.
+profile.WeaponType = {
+};
+
 profile.Sets = sets;
 profile.sjb = nil;
 profile.bAmmo = false;
@@ -982,8 +997,7 @@ profile.HandleDefault = function()
 		gcinclude.MoveToCurrent(sets.Tank_TP,sets.CurrentGear);	
 	end
 	
-	-- Now process the player status accordingly
-	gcdisplay.SetLocksAction(gcinclude.LocksNumeric,player.Status);		
+	-- Now process the player status accordingly	
 	if player.Status == 'Engaged' then
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
@@ -1065,7 +1079,7 @@ profile.HandleDefault = function()
 	if (pet ~= nil and player.SubJob == 'SMN') then
 		local pName = string.lower(pet.Name);
 		if string.find(gcinclude.SummonSkill,pName) ~= nil then
-			local pEle = gcinclude.SummonStaves[pet.Name];
+			local pEle = gcinclude.SummonStaves[string.lower(pet.Name)];
 			gcinclude.SwapToStave(pEle,false,sets.CurrentGear);
 		end
 	end

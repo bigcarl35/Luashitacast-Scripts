@@ -55,8 +55,8 @@ local sets = {
         Head  = { 'Shep. Bonnet//PET', 'Austere Hat', 'Silver Hairpin' },
 		Neck  = { 'Uggalepih Pendant//NIGHTTIME', 'Fenrir\'s Torque//DAYTIME', 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
 		Ears  = { 'Loquac. Earring', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1', 'Reraise Earring' },
-        Body  = { 'Vermillion Cloak//CARBY','Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' }, 
-        Hands = { 'Carbuncle Mitts//CARBY', 'Errant Cuffs', 'Carbuncle Mitts' },
+        Body  = { 'Vermillion Cloak//CARBY','Summoner\'s Dblt.//ACCESSIBLE//SMNPETMD', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' }, 
+        Hands = { 'Carbuncle Mitts//CARBY', 'Smn. Bracers +1', 'Errant Cuffs', 'Carbuncle Mitts' },
 		Rings = { 'Evoker\'s Ring', 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
         Back  = { 'Blue Cape', 'White Cape' },
         Waist = { 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
@@ -78,7 +78,7 @@ local sets = {
 		Ears  = 'Beastly Earring//PETF',
 		Neck  = 'Peacock Amulet',
 		Body  = 'Austere Robe',			-- Needed to offset the "possible" Vermillion Cloak		
-		Hands = { 'Carbuncle Mitts//CARBY', 'Battle Gloves' },
+		Hands = { 'Carbuncle Mitts//CARBY', 'Smn. Bracers +1//SMNPET', 'Battle Gloves' },
 		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
 		Waist = { 'Life Belt', 'Tilt Belt' },
 		Legs  = { 'Shep. Hose//PETF', 'Evoker\'s Spats' },
@@ -108,7 +108,7 @@ local sets = {
 --]]
 		
 	['Travel'] = {
-		Body  = 'Vermillion Cloak//CARBY', 
+		Body  = { 'Vermillion Cloak//CARBY', 'Summoner\'s Dblt.//ACCESSIBLE//SMNPETMD', 'Vermillion Cloak' },
 		Rings = 'Evoker\'s Ring//SMNPET',
         Hands = 'Carbuncle Mitts//CARBY',
 	},
@@ -156,7 +156,7 @@ local sets = {
         Head  = 'Austere Hat',
         Neck = 'Smn. Torque',
         Body  = 'Austere Robe',
-        Hands = 'Carbuncle Mitts//CARBY',
+        Hands = { 'Carbuncle Mitts//CARBY', 'Smn. Bracers +1' },
         Rings = 'Evoker\'s Ring',
 		Legs  = 'Summoner\'s Spats',
 		Feet = 'Summoner\'s Pgch.',
@@ -175,7 +175,7 @@ local sets = {
 	['SmnPhysical'] = {
         Head  = 'Shep. Bonnet',
 		Ears  = 'Beastly Earring',
-		Body  = 'Austere Robe',			-- Needed to offset the "possible" Vermillion Cloak	
+		Body  = { 'Summoner\'s Dblt.//ACCESSIBLE', 'Austere Robe' },			-- Needed to offset the "possible" Vermillion Cloak	
 		Legs  = 'Evoker\'s Spats',		--  for pet accuracy
     },
 
@@ -183,6 +183,7 @@ local sets = {
 	-- accuracy, and blood Pact magical damage
 	['SmnMagical'] = {
 	    Head = 'Shep. Bonnet',
+		Body = 'Summoner\'s Dblt.//ACCESSIBLE',
     },
 
 	-- Summoning skill rage blood pact. 
@@ -204,7 +205,7 @@ local sets = {
     ['SmnHybrid'] = {
         Head  = 'Shep. Bonnet',
 		Ears  = 'Beastly Earring',
-		Body  = 'Austere Robe',			-- Needed to offset the "possible" Vermillion Cloak	
+		Body  = { 'Summoner\'s Dblt.//ACCESSIBLE', 'Austere Robe' },	
 		Legs  = 'Evoker\'s Spats',
     },
 	
@@ -253,11 +254,12 @@ local sets = {
     },
 	
 --[[
-	Magic Attack Bonus (MAB) is used for more than just spells, so it is broken out
+	Magic Attack Bonus (MAB) is used for more than just spells, so it is broken out.
+	MAB only affects damage dealing spells and elemental weapon skills
 --]]
 
 	['MAB'] = {
-		Neck = 'Uggalepih Pendant//MPP.LE.50P',
+		Neck = 'Uggalepih Pendant//SPECIAL',
 	},
 	
 --[[
@@ -347,8 +349,8 @@ local sets = {
 	['Summoning'] = {
 		Head  = 'Austere hat',
         Neck = 'Smn. Torque',
-		Body  = 'Austere Robe',
-		Hands = { 'Errant Cuffs', 'Carbuncle Mitts' },
+		Body  = { 'Summoner\'s Dblt.//ACCESSIBLE', 'Austere Robe' },
+		Hands = { 'Smn. Bracers +1', 'Errant Cuffs', 'Carbuncle Mitts' },
         Rings = 'Evoker\'s Ring',
 		Legs = { 'Summoner\'s Spats//SPIRIT:ES', 'Evoker\'s Spats' },
     },
@@ -367,7 +369,7 @@ local sets = {
     },
 	
 	['MND'] = {
-        Neck  = 'Justice Badge',
+        Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Seer\'s Mitts',
 		Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
@@ -472,7 +474,7 @@ local sets = {
 	
 	['WS_STRMND'] = {
         Head  = 'Mrc.Cpt. Headgear',
-        Neck  = 'Justice Badge',
+        Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
 		Rings = { 'Tamas Ring', 'Sun Ring', 'Courage Ring', 'Tranquility Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
@@ -490,7 +492,7 @@ local sets = {
 
 	['WS_STRMND_30_50'] = {
         Head  = 'Mrc.Cpt. Headgear',
-        Neck  = 'Justice Badge',
+        Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
 		Rings = { 'Tamas Ring', 'Sun Ring', 'Courage Ring', 'Tranquility Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
@@ -557,7 +559,7 @@ local sets = {
 --]]
 	
 	['WS_INTMND'] = {
-        Neck  = 'Justice Badge',
+        Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Seer\'s Mitts',
 		Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
@@ -590,7 +592,7 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
-        Neck  = 'Justice Badge',
+        Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Seer\'s Mitts',
 		Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
@@ -792,6 +794,21 @@ local sets = {
 								*** Custom Sets Go below this comment ***
 --]]
 
+};
+
+-- There's no way to consistently identify the type of weapon you're currently
+-- using by just looking at the name. (Ex: Maneater is an axe. The name does
+-- not give that away.) The following table lists weapons by type that you're
+-- likely to use. Add the weapon names accordingly. You only need the names of
+-- the weapons if you want to conditionally equip an item with a weapon skill
+-- attribute.
+profile.WeaponType = {
+	['STAVE'] = { 'Fire Staff', 'Vulcan\'s Staff', 'Ice Staff', 'Aquilo\'s Staff',
+				  'Wind Staff', 'Auster\'s Staff', 'Earth Staff', 'Terra\'s Staff',
+				  'Thunder Staff', 'Jupiter\'s Staff', 'Water Staff', 'Neptune\'s Staff',
+				  'Light Staff', 'Apollo\'s Staff', 'Dark Staff', 'Pluto\'s Staff',
+				  'Kukulcan\'s Staff' },
+	['CLUB'] = { 'Solid Wand', 'Yew Wand', 'Pilgrim\'s Wand' },
 };
 
 profile.Sets = sets;
@@ -1018,7 +1035,7 @@ profile.HandleDefault = function()
 	-- (assuming they own the correct staff)
 	if player.Status ~= 'Resting' and pet ~= nil then
 		local pName = string.lower(pet.Name);
-		local pEle = gcinclude.SummonStaves[pName];
+		local pEle = gcinclude.SummonStaves[string.lower(pName)];
 
 		if string.find(gcinclude.SummonSkill,pet.Name) ~= nil then
 			sGear = gcinclude.CheckForEleGear('staff',pEle);
@@ -1032,7 +1049,6 @@ profile.HandleDefault = function()
 	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
 		
 	-- Now process the pet/player statuses accordingly.
-	gcdisplay.SetLocksAction(gcinclude.LocksNumeric,player.Status);	
 	if (pet ~= nil and pet.Status == 'Engaged') or (player ~= nil and player.Status == 'Engaged') then
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
@@ -1104,7 +1120,7 @@ profile.HandleDefault = function()
 	if (pet ~= nil) then
 		local pName = string.lower(pet.Name);	
 		if string.find(gcinclude.SummonSkill,pName) ~= nil then
-			local pEle = gcinclude.SummonStaves[pet.Name];		
+			local pEle = gcinclude.SummonStaves[string.lower(pet.Name)];	
 			gcinclude.SwapToStave(pEle,false,sets.CurrentGear);
 		end
 	end

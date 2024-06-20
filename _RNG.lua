@@ -113,7 +113,7 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-		Main =  'Katayama',
+		Main = '',
 		Ammo = 'Fortune Egg',		
     },
 	
@@ -617,6 +617,15 @@ local sets = {
 		
 };
 
+-- There's no way to consistently identify the type of weapon you're currently
+-- using by just looking at the name. (Ex: Maneater is an axe. The name does
+-- not give that away.) The following table lists weapons by type that you're
+-- likely to use. Add the weapon names accordingly. You only need the names of
+-- the weapons if you want to conditionally equip an item with a weapon skill
+-- attribute.
+profile.WeaponType = {
+};
+
 profile.Sets = sets;
 profile.sjb = nil;
 profile.bAmmo = false;
@@ -791,7 +800,6 @@ profile.HandleDefault = function()
 	end
 		
 	-- Now process the player status accordingly
-	gcdisplay.SetLocksAction(gcinclude.LocksNumeric,player.Status);	
 	if player.Status == 'Engaged' then
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
@@ -863,7 +871,7 @@ profile.HandleDefault = function()
 	if (pet ~= nil and player.SubJob == 'SMN') then
 		local pName = string.lower(pet.Name);
 		if string.find(gcinclude.SummonSkill,pName) ~= nil then
-			local pEle = gcinclude.SummonStaves[pet.Name];
+			local pEle = gcinclude.SummonStaves[string.lower(pet.Name)];
 			gcinclude.SwapToStave(pEle,false,sets.CurrentGear);
 		end
 	end
