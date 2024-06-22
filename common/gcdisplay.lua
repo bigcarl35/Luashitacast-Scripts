@@ -101,7 +101,6 @@ function gcdisplay.ShowHelp()
 		print(chat.header('Help'):append(chat.message('/string -- Indicates that the instrument should be a stringed instrument.')));			
 	end
 	
-	print(chat.header('Help'):append(chat.message('/validate name -- Details the specified gearset and displays validity.')));
 	print(chat.header('Help'):append(chat.message('/help [command] -- Display this listing or specific details on the specified command.')));	
 	print(chat.header('Help'):append(chat.message(' ')));
 	print(chat.header('Help'):append(chat.message('Some /lac commands of note:')));

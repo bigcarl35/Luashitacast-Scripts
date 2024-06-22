@@ -1,7 +1,7 @@
 local gcinclude = T{};
 
 require 'common'
-
+	
 --[[
 	This file contains routines that are used with Luashitacast across any supported job.
 	Job specific routines are found in the "Username"_job file (ex: Paiine_BST.lua)
@@ -125,7 +125,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','gs','th','help','wswap','petfood','maxspell','maxsong','region','ajug','db','sbp','showit','equipit','ei','tank','idle','lock','unlock','slot','horn','string','validate','t1'};
+gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','gs','th','help','wswap','petfood','maxspell','maxsong','region','ajug','db','sbp','showit','equipit','ei','tank','idle','lock','unlock','slot','horn','string','t1'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T{'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T{'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -156,6 +156,7 @@ gcinclude.NinNukes = T{'Katon: Ichi', 'Katon: Ni', 'Katon: San', 'Hyoton: Ichi',
 gcinclude.Rolls = T{{'Fighter\'s Roll',5,9}, {'Monk\'s Roll',3,7}, {'Healer\'s Roll',3,7}, {'Corsair\'s Roll',5,9}, {'Ninja Roll',4,8},{'Hunter\'s Roll',4,8}, {'Chaos Roll',4,8}, {'Magus\'s Roll',2,6}, {'Drachen Roll',4,8}, {'Choral Roll',2,6},{'Beast Roll',4,8}, {'Samurai Roll',2,6}, {'Evoker\'s Roll',5,9}, {'Rogue\'s Roll',5,9}, {'Warlock\'s Roll',4,8},
 	{'Puppet Roll',3,7}, {'Gallant\'s Roll',3,7}, {'Wizard\'s Roll',5,9}, {'Dancer\'s Roll',3,7}, {'Scholar\'s Roll',2,6},{'Naturalist\'s Roll',3,7}, {'Runeist\'s Roll',4,8}, {'Bolter\'s Roll',3,9}, {'Caster\'s Roll',2,7}, {'Courser\'s Roll',3,9},{'Blitzer\'s Roll',4,9}, {'Tactician\'s Roll',5,8}, {'Allies\' Roll',3,10}, {'Miser\'s Roll',5,7},
 	{'Companion\'s Roll',2,10},{'Avenger\'s Roll',4,8},}; -- {name,lucky,unlucky}
+gcinclude.ExactBuff = T{'enthunder','enstone','enaero','enblizzard','enwater','enlight','endark','arcane circle','holy circle','ward circle'};
 gcinclude.Crafting_Types = 'ALC,BONE,CLOTH,COOK,GSM,LTH,BSM,WW';
 gcinclude.Gathering_Types = 'HELM,DIG,CLAM,FISH';
 
@@ -187,7 +188,6 @@ gcinclude.WS_STRVIT = 'Calamity,Slice,Spinning Scythe,Vorpal Scythe,Howling Fist
 gcinclude.WS_VIT = 'Shoulder Tackle,One Inch Punch,Final Heaven';
 gcinclude.WS_Skill = 'Starlight,Moonlight';
 gcinclude.WS_HP = 'Spirits Within';
-gcinclude.Special = { ['Parade Gorget'] = {}};
 
 --[[
 	Define all weapon skills that are elemental in nature
@@ -655,18 +655,6 @@ gcinclude.JobMask = { ['None'] = 0x0,
 		['JOB27'] = 0x8000000, ['JOB28'] = 0x10000000, ['JOB29'] = 0x20000000,
 		['JOB30'] = 0x30000000, ['JOB31'] = 0x80000000, ['Alljobs'] = 0x007FFFFE };
 
--- Structure used to check the validity of the gear piece in a gear set
-Integrity = { ['Name'] = nil, 			-- Name of item to be checked
-			  ['Item'] = nil,			-- Actual item structure
-			  ['Code'] = nil,			-- What (if any) inline code is attached
-			  ['ValidCode'] = false,	-- Is the inline code valid
-			  ['Have'] = false,			-- Does the player own it
-			  ['Count'] = 0,			-- How many do they have
-			  ['Accessible'] = false,	-- Can it be equipped in the field
-			  ['Equipable'] = false,	-- Can the player's job use It
-			  ['Where'] = ',',			-- Where is the item found
-};
-
 -- Structure used to tally the MP +/-, HP +/-, and convert affects for all gear
 -- whether invisible or visible.
 TallyGear = {
@@ -690,43 +678,6 @@ TallyGear = {
 -- inline codes: //MP, //MPP, //HP, //HPP, //TP, and //TPP.
 InlineConditionals = { '.EQ.', '.GT.', '.GE.', '.LT.', '.LE.', '.NE.' };
 
-InlineCodes = { '//ACCESSIBLE', '//ACCURACY', '//AK:BASTOK', '//AK:OMNI', 
-				'//AK:SANDY', '//AK:WINDY', '//ARCHERY', '//AXE', '//BLIND',
-				'//CARBY', '//CLUB', '//CR:ALC', '//CR:BONE', '//CR:CLOTH',
-				'//CR:COOK', '//CR:GSM', '//CR:LTH', '//CR:BSM', '//CR:WW',
-				'//DAGGER', '//DARKSDAY', '//DAYTIME', '//DB:BPP', '//DB:WSS', 
-				'//DUSK2DAWN', '//EARTHSDAY', '//EVASION', '//FIRESDAY', 
-				'//FULLMOON', '//GA:CLAM', '//GA:DIG', '//GA:FISH', '//GA:HELM',
-				'//GAXE', '//GKATANA', '//GSWORD', 'H2H', '//HORN', '//ICEDAY', 
-				'//KATANA', '//LIGHTNINGDAY', '//LIGHTSDAY', '//MARKSMANSHIP', 
-				'//MSJ', '//NEWMOON', '//NIGHTTIME', '//NOT_DARKSDAY', 
-				'//NOT_EARTHSDAY', 	'//NOT_FIRESDAY', '//NOT_ICEDAY', 
-				'//NOT_LIGHTNINGDAY', '//NOT_LIGHTSDAY', '//NOT_WATERSDAY',
-				'//NOT_WINDSDAY', '//WATERSDAY', '//WINDSDAY', '//NOT_OWN',
-				'//NOT_WTH:CLEAR', '//NOT_WTH:CLOUDS', '//NOT_WTH:DARK',
-				'//NOT_WTH:EARTH', '//NOT_WTH:FIRE', '//NOT_WTH:FOG', 
-				'//NOT_WTH:ICE', '//NOT_WTH:LIGHT', '//NOT_WTH:SUNSHINE', 
-				'//NOT_WTH:THUNDER', '//NOT_WTH:WATER', '//NOT_WTH:WIND',
-				'//NOT_WTH-DAY', '//OWN', '//PET', '//PETF', '//PETFNPF',
-				'//PJPBLM', '//PJPBLU', '//PJPBRD', '//PJPBST', '//PJPCOR',
-				'//PJPDNC', '//PJPDRG', '//PJPDRK', '//PJPGEO', '//PJPMNK', 
-				'//PJPNIN', '//PJPPLD', '//PJPPUP', '//PJPRNG', '//PJPRDM', 
-				'//PJPRUN', '//PJPSAM', '//PJPSCH', '//PJPSMN', '//PJPTHF', 
-				'//PJPWAR', '//PJPWHM', '//POLEARM', '//SCYTHE', '//SJBLM',
-				'//SJBLU', '//SJBRD', '//SJBST', '//SJCOR', '//SJDNC', 
-				'//SJDRG', '//SJDRK', '//SJGEO', '//SJMNK', '//SJNIN', 
-				'//SJPLD', '//SJPUP', '//SJRNG', '//SJRDM', '//SJRUN', 
-				'//SJSAM', '//SJSCH', '//SJSMN', '//SJTHF', '//SJWAR',
-				'//SJWHM','//SMN:CARBUNCLE', '//SMN:DIABOLOS', '//SMN:FENRIR',
-				'//SMN:GARUDA', '//SMN:IFRIT', '//SMN:LEVIATHAN', '//SMN:RAMUH', 
-				'//SMN:SHIVA', '//SMN:TITAN', '//SMNPET', '//SMNPETMD',
-				'//SMNPETMW', '//SPECIAL', '//SPIRIT:EP', '//SPIRIT:ES',
-				'//STAVE', '//STRING', '//SWORD', '//TANK', '//THROWING',
-				'//WSWAP', '//WTH:CLEAR', '//WTH:CLOUDS', '//WTH:DARK',
-				'//WTH:EARTH', '//WTH:FIRE', '//WTH:FOG', '//WTH:ICE',
-				'//WTH:LIGHT', '//WTH:SUNSHINE', '//WTH:THUNDER', '//WTH:WATER',
-				'//WTH:WIND', '//WTH-DAY',				
-				};
 InLineSpecialCodes = { 
 						{'//TP.', nil }, { '//TPP.', nil }, {'//MP.', nil }, 
 						{'//MPP.'}, {'//HP.', nil }, {'//HPP', nil}, 
@@ -734,226 +685,6 @@ InLineSpecialCodes = {
 					 };
 
 gcinclude.Sets = gcinclude.sets;
-
---[[
-	ClearIntegrityBlock reinitializes the validation structure
---]]
-
-function ClearIntegrityBlock()
-	Integrity['Name'] = nil;
-	Integrity['Item'] = nil;
-	Integrity['Code'] = nil;
-	Integrity['ValidCode'] = false;
-	Integrity['Have'] = false;
-	Integrity['Count'] = 0;
-	Integrity['Accessible'] = false;
-	Integrity['Equipable'] = false;
-	Integrity['Where'] = ',';
-end		-- ClearIntegrityBlock
-
---[[
-	CheckGearIntegrity populates the Integrity structure for the passed piece of
-	gear. The function is used in the Validate function.
---]]
-
-function CheckGearIntegrity(GearName)
-	local inventory = AshitaCore:GetMemoryManager():GetInventory();
-	local resources = AshitaCore:GetResourceManager();
-	local player = gData.GetPlayer();
-	local iPos;
-	
-	if GearName == nil then
-		return false;
-	end
-	
-	-- Initialize the tracking structure
-	ClearIntegrityBlock();
-	
-	-- Look for an inline code
-	iPos = string.find(GearName,'//');
-	if iPos ~= nil then
-		Integrity['Name'] = string.sub(GearName,1,iPos-1);
-		Integrity['Code'] = string.upper(string.sub(GearName,iPos,-1));
-	else
-		Integrity['Name'] = GearName;
-	end
-	
-	Integrity['Item'] = AshitaCore:GetResourceManager():GetItemByName(Integrity['Name'],2);
-	
-	-- Regardless of the validity of the item, if there's an inline conditional,
-	-- that portion can be checked.
-	if Integrity['Code'] ~= nil then
-		local codeTbl = gcinclude.MakeCodeTable(Integrity['Code']);
-		local bValid;
-		
-		Integrity['ValidCode'] = true;
-		for ii,jj in pairs(codeTbl) do
-			bValid = (table.find(InlineCodes,'//'..jj) ~= nil);
-			if bValid == false then
-				Integrity['ValidCode'] = false;
-			end
-		end
-		
-		-- Check for special codes if not found in the main table. 
-		-- Only works for single conditionals
-		if Integrity['ValidCode'] == false and #codeTbl == 1 then
-			for i,j in pairs(InLineSpecialCodes) do
-				if string.find(Integrity['Code'],j[1]) ~= nil and 
-						(j[2] == nil or j[2] == string.sub(Integrity['Code'],0 - string.len(j[2]),-1)) then
-					Integrity['ValidCode'] = true;
-				end
-			end
-		end
-	end
-	
-	if Integrity['Item'] ~= nil then
-		Integrity['Equipable'] = (bit.band(Integrity['Item'].Jobs,gcinclude.JobMask[player.MainJob]) == gcinclude.JobMask[player.MainJob]);
-
-		for i,desc in ipairs(gcinclude.STORAGES) do
-			containerID = gcinclude.STORAGES[i][1];
-			-- then loop through the container
-			for j = 1,inventory:GetContainerCountMax(containerID),1 do
-				local itemEntry = inventory:GetContainerItem(containerID, j);
-				if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
-					local item = resources:GetItemById(itemEntry.Id);
-					if string.lower(item.Name[1]) == string.lower(Integrity['Name']) then
-						Integrity['Have'] = true;
-						Integrity['Count'] = Integrity['Count'] + 1;
-
-						-- Check accessibility
-						local bGood = false;
-						for ii = 1,#gcinclude.EQUIPABLE,1 do
-							if gcinclude.EQUIPABLE[ii][1] == gcinclude.STORAGES[i][1] then
-								Integrity['Accessible'] = true;	
-								bGood = true;
-							end
-						end
-						
-						-- Record where it was found. (no repeats)
-						local stmp = string.lower(Integrity['Where']);
-						local stmp2 = ',' .. desc[2] .. ',';
-						if string.find(stmp,stmp2) == nil then
-							Integrity['Where'] = Integrity['Where'] .. desc[2] .. ',';
-						end						
-					end
-				end
-			end
-		end
-		if Integrity['Where'] == ',' then
-			Integrity['Where'] = '';
-		else
-			Integrity['Where'] = string.sub(Integrity['Where'],2,-2);
-		end
-	end
-	return true;
-end		-- CheckGearIntegrity
-
---[[
-	DisplayValidity translates the validate structure into a display representation
-	of the validate pass
---]]
-
-function gcinclude.DisplayValidity()
-	local sLine = '   ' .. Integrity['Name'] .. ' ';						
-	
-	-- Is item a known piece of gear
-	if Integrity['Item'] ~= nil then
-		sLine = sLine .. chat.color1(2,'Valid') .. ',';
-	
-		-- Does player own one
-		if Integrity['Have'] == true then
-			if Integrity['Count'] > 1 then
-				sLine = sLine .. chat.color1(2,'Own') .. '(' .. chat.color1(3,tostring(Integrity['Count'])) ..') in: ' .. chat.color1(107,Integrity['Where']) .. ',';
-			else
-				sLine = sLine .. chat.color1(2,'Own') .. '(' .. tostring(Integrity['Count']) ..') in: ' .. chat.color1(107,Integrity['Where']) .. ',';
-			end
-		else
-			sLine = sLine .. chat.color1(8,'Own') .. ',';
-		end
-							
-		-- Is it Accessible
-		if Integrity['Accessible'] == true then
-			sLine = sLine .. chat.color1(2,'Access') .. ',';
-		else
-			sLine = sLine .. chat.color1(8,'Access') .. ',';
-		end
-							
-		-- Is it equipable by your job (level and job restrictions)
-		if Integrity['Equipable'] == true then
-			sLine = sLine .. chat.color1(2,'Equip') .. ',' .. chat.color1(107, 'Code=');
-		else
-			sLine = sLine .. chat.color1(8,'Equip') .. ',' .. chat.color1(107, 'Code=');
-		end
-							
-		-- Is there a code and is it valid
-		if Integrity['Code'] ~= nil then
-			if Integrity['ValidCode'] == true then
-				sLine = sLine .. chat.color1(2,Integrity['Code']);
-			else
-				sLine = sLine .. chat.color1(8,Integrity['Code']);
-			end
-		end
-	else
-		sLine = sLine .. chat.color1(8,'Invalid');
-	end
-					
-	return(sLine);
-end		-- DisplayValidity
-
---[[
-	Validate checks the passed gear set, determining if the definition is valid.
-	It produces a report, color coded, showing what is valid and what needs fixing.
---]]
-
-function gcinclude.ValidateGearSet(gsName)
-	local gs,bgcinclude,sWhere;
-	local sLine,bGood;
-	
-	if gsName == nil then
-		print(chat.header('Validate'):append(chat.message('Warning: No gearset specified.')));
-		return;
-	end
-	
-	gs,bgcinclude = gcinclude.GetTableByName(gsName);
-	
-	if gs == nil then
-		print(chat.header('Validate'):append(chat.message('Gearset: ' .. string.upper(gsName) .. ' not found.')));
-		return;
-	else
-		if bgcinclude == true then
-			sWhere = 'gcinclude';
-		else
-			sWhere = 'Profile';
-		end
-		print(chat.color1(107,'Gear set - ') .. chat.color1(2,string.upper(gsName)) .. chat.color1(1,' (' .. sWhere .. ')'));
-		
-		for i,j in pairs(gs) do
-			print(chat.color1(107,i .. ':'));
-			
-			if type(j) == 'table' then
-				for ii,jj in pairs(j) do
-					bGood = CheckGearIntegrity(jj);
-					if bGood ~= true then
-						print('   Problem with processing: ' .. jj.. '. Skipping.');
-					else
-						sLine = gcinclude.DisplayValidity();
-						print(chat.message(sLine));
-					end					
-				end
-			else
-				bGood = CheckGearIntegrity(j);
-				if bGood ~= true then
-					print('   Problem with processing: ' .. j.. '. Skipping.');
-				else
-					sLine = gcinclude.DisplayValidity();
-					print(chat.message(sLine));
-				end
-			end
-		end
-	end
-	
-	return;
-end		-- gcinclude.ValidateGearSet
 
 --[[
 	DB_ShowIt will display debug details
@@ -1823,16 +1554,21 @@ function gcinclude.ValidateSpecial(sGear)
 	
 	-- Now, do specific calculations based on the name of the piece of gear
 	if sGear == 'uggalepih pendant' then
-		-- Condition: MP% < 51. Only visible gear, ignore all "Convert HP to MP"
+		-- Condition: MP% < 51. MAB bonus. Only visible gear, ignore all "Convert HP to MP"
 		local iMP = player.MP - TallyGear.VCHPMP;
 		local imMP = player.MaxMP - TallyGear.IMP - TallyGear.ICMPHP- TallyGear.ICHPMP;
 		local iaMP = player.MaxMP * (TallyGear.IMPP * 0.01);
 		bGood = (iMP/(imMP - iaMP) < 51);
 	elseif sGear == 'parade gorget' then
-		-- Condition: HP% >= 85. Only visible gear
+		-- Condition: HP% >= 85. Adds "Refresh". Only visible gear
+		-- Check outright first
+		if player.HP/player.MaxHP >= 85 then
+			return(player.MP/player.MaxMP <= gcinclude.settings.Tolerance);
+		end
+		-- Let's see if the invisible gear will make a difference
 		local iHP = player.MaxHP - TallyGear.IHP - TallyGear.ICMPHP;
 		local iaHP = math.floor(iHP * (TallyGear.IHPP * 0.01));
-		bGood = (player.HP/(iHP - iaHP) >= 85);
+		bGood = (player.HP/(iHP - iaHP) >= 85 and player.MP/player.MaxMP <= gcinclude.settings.Tolerance);
 	elseif sGear == 'sorcerer\'s ring' then
 		-- Condition: HP% < 76 and TP% < 100. Ignore HP+ (flat and percent) and
 		-- Convert HP to MP gear.
@@ -1842,6 +1578,33 @@ function gcinclude.ValidateSpecial(sGear)
 	end
 	return bGood;
 end		-- ValidateSpecial
+
+--[[
+	CheckAccessible is a replacement function for what was found in the "Validate"
+	routines, which have been removed. It determines if the passed gear can be
+	found in a storage container that is accessible out of town
+--]]
+
+function gcinclude.CheckAccessible(sGear)
+	local inventory = AshitaCore:GetMemoryManager():GetInventory();
+	local resources = AshitaCore:GetResourceManager();
+	local containerID,itemEntry,item;
+	
+	for i,desc in pairs(gcinclude.EQUIPABLE) do
+		containerID = desc[1];
+		-- then loop through the container
+		for j = 1,inventory:GetContainerCountMax(containerID),1 do
+			itemEntry = inventory:GetContainerItem(containerID, j);
+			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
+				item = resources:GetItemById(itemEntry.Id);
+				if string.lower(item.Name[1]) == string.lower(sGear) then
+					return true;
+				end
+			end
+		end
+	end
+	return false;
+end		-- CheckAccessible
 
 --[[
 	CheckInline checks for a simple conditional on the item passed into it.
@@ -1886,16 +1649,14 @@ function gcinclude.CheckInline(gear,sSlot)
 			bGood = (suCode == string.upper(environ.Day));					-- Is it the specified day
 		elseif string.find('NOT_FIRESDAY,NOT_EARTHSDAY,NOT_WATERSDAY,NOT_WINDSDAY,NOT_ICEDAY,NOT_LIGHTNINGDAY,NOT_LIGHTSDAY,NOT_DARKSDAY',suCode) ~= nil then
 			bGood = (string.sub(suCode,5,-1) ~= string.upper(environ.Day));	-- Is it not the specified day
+		elseif table.find(gcinclude.ExactBuff,string.lower(suCode)) ~= nil then
+			bGood = (gData.GetBuffCount(suCode) >= 1);
 		elseif string.find(wTypesM,suCode) ~= nil then						-- Is main weapon specified type
 			bGood = (gSet['Main'] ~= nil and table.find(gProfile.WeaponType[suCode],gSet['Main']) ~= nil);
 		elseif string.find(wTypesR,suCode) ~= nil then						-- Is ranged weapon specified type
 			bGood = (gSet['Range'] ~= nil and table.find(gProfile.WeaponType[suCode],gSet['Range']) ~= nil);
 		elseif suCode == 'ACCESSIBLE' then
-			if CheckGearIntegrity(gear) == true then
-				bGood = Integrity['Accessible'];
-			else
-				bGood = false;
-			end
+			bGood = gcinclude.CheckAccessible(sGear); 
 		elseif suCode == 'ACCURACY' then
 			bGood = (gcdisplay.GetToggle('Acc') == true);			
 		elseif string.sub(suCode,1,3) == 'AK:' then			-- National Aketon
@@ -1917,8 +1678,7 @@ function gcinclude.CheckInline(gear,sSlot)
 				bGood = false;
 			end
 		elseif suCode == 'BLIND' then						-- Player is blind
-			local blind = gData.GetBuffCount('Blind');
-			bGood = (blind >= 1);
+			bGood = (gData.GetBuffCount('Blind') >= 1);
 		elseif suCode == 'CARBY' then						-- Pet is carbuncle
 			bGood = (gcinclude.isPetNamed('Carbuncle'));
 		elseif string.sub(suCode,1,3) == 'CR:' then			-- Crafting
@@ -2017,6 +1777,8 @@ function gcinclude.CheckInline(gear,sSlot)
 			else
 				bGood = false;
 			end
+		elseif suCode == 'UTSUSEMI' then
+			bGood = (gData.GetBuffCount('copy image (3)') >= 1);
 		elseif suCode == 'WSWAP' then						-- Weapon swapping enabledB
 			bGood = (gcinclude.settings.bWSOverride == true or gcdisplay.GetToggle('WSwap') == true);
 		elseif string.sub(suCode,1,4) == 'WTH:' then		-- Does the weather match
@@ -2837,8 +2599,6 @@ function gcinclude.HandleCommands(args)
 		gcdisplay.AdvanceCycle('Region');
 		toggle = 'Region';
 		status = gcdisplay.GetCycle('Region');
-	elseif (args[1] == 'validate') then
-		gcinclude.ValidateGearSet(args[2]);
 	end
 
 	if gcinclude.settings.Messages then
@@ -3543,7 +3303,7 @@ function gcinclude.HandleWeaponskill(bTank)
 			elseif sWS == 'WS_STRMND' then
 				gcinclude.MoveToCurrent(gProfile.Sets.WS_STRMND,gProfile.Sets.CurrentGear);
 			elseif sWS == 'WS_STRMND_30_50' then
-				gcinclude.MoveToCurrent(gProfile.Sets.WS_STRMND_30_5,gProfile.Sets.CurrentGear);					
+				gcinclude.MoveToCurrent(gProfile.Sets.WS_STRMND_30_50,gProfile.Sets.CurrentGear);					
 			elseif sWS == 'WS_STRVIT' then
 				gcinclude.MoveToCurrent(gProfile.Sets.WS_STRVIT,gProfile.Sets.CurrentGear);
 			elseif sWS == 'WS_AGI' then
