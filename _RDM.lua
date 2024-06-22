@@ -2,13 +2,13 @@ local profile = {};
 gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 
 --[[
-	This file contains all the gear sets associated with the RNG job. While it isn't outside of the realm of 
+	This file contains all the gear sets associated with the RDM job. While it isn't outside of the realm of 
 	possibility that the subjob might be able to use gear sets too, that is not the emphasis of this program. 
-	It is tailored to handle all the aspects of RNG. If you desire a gear set change to strengthen an ability
+	It is tailored to handle all the aspects of RDM. If you desire a gear set change to strengthen an ability
 	from your subjob that is not supported by this program, you probably will have to make a custom gear set 
 	and use the /gearset command to use it.
 	
-	Gear Sets last updated: June 21, 2024	
+	Gear Sets last updated: June 21, 2024
 --]]
 
 local sets = {
@@ -35,7 +35,7 @@ local sets = {
 		
 	*** Note ***
 	Unlike when summoner is used as a subjob, /bst's pets are charmed at the max level of your BST or the level
-	of your WAR, whichever is lower. That means you can charm higher level mobs than you would expect with /bst.
+	of your RDM, whichever is lower. That means you can charm higher level mobs than you would expect with /bst.
 	Just note though that you can't have two pets, so if you have charmed a pet with /bst, you can't summon your
 	avatar and visa versa.
 
@@ -48,20 +48,24 @@ local sets = {
 	The TP sets are used when you are fighting. The accuracy set will be used if /acc is specified
 	and the evasion set if /eva is specified. Please note that if you have a subjob that can use a
 	pet, none of the abilities are supported here. Only main jobs that have pets (SMN,BST) support
-	pet actions.
+	pet actions. Tank_TP is equipped if indicated.
 --]]
 
 	['TP'] = {
-		Head  = 'Mandra. Masque',
-		Neck  = 'Justice Badge',
-		Ears  = {'Physical Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
-		Body  = 'Angler\'s Tunica',
-		Hands = 'Ryl.Ftm. Gloves',
-		Rings = { 'Courage Ring', 'Balance Ring' },
-		Waist = 'Friar\'s Rope',
-		Legs  = 'Field Hose',
-		Feet  = 'Bounding Boots',
+        Head  = 'Silver Hairpin',
+        Neck  = { 'Spirit Torque', 'Justice Badge' },
+        Ears  = { 'Energy Earring +1', 'Energy Earring +1' },
+        Body  = { 'Seer\'s Tunic', 'Angler\'s Tunica' },
+		Back  = 'White Cape',
+        Hands = 'Seer\'s Mitts',
+        Rings = { 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
+        Waist = { 'Friar\'s Rope', 'Mrc.Cpt. Belt' },
+        Legs  = { 'Seer\'s Slacks', 'Fisherman\'s Hose' },
+        Feet  = { 'Mannequin Pumps', 'Seer\'s Pumps', 'Waders' },
     },
+
+	['Tank_TP'] = {
+	},
 	
 --[[
 	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
@@ -72,8 +76,11 @@ local sets = {
 --]]
 	
 	['Accuracy'] = {
+        Hands = 'Battle Gloves',
 		Rings = 'Balance Ring',
-		Feet  = 'Bounding Boots',
+    },
+
+	['Tank_Accuracy'] = {
 	},
 	
 --[[
@@ -81,7 +88,12 @@ local sets = {
 --]]
 	
 	['Evasion'] = {
+        Head = 'Empress Hairpin',
+        Hands = 'Battle Gloves',
     },
+
+	['Tank_Evasion'] = {
+	},
 	
 --[[
 	The Idle_Regen and Idle_Refresh gear sets replace the normal Idle set when the player's HP or MP
@@ -107,12 +119,12 @@ local sets = {
 	},
 	
 	['Resting_Refresh'] = {
-	},
-		
+    },
+
 	-- If you have any Spell Interruption Rate down gear, put them into the "SIR" gear set.
 	-- This gear set is equipped in the HandleMidcast function that all spells go through.
 	-- Currently only gear equippable by any job is applicable here. There's no gear that's 
-	-- specific for WAR that gives spell interruption rate down.
+	-- specific for RDM that gives spell interruption rate down.
 	['SIR'] = {
 	},
 	
@@ -123,8 +135,9 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-		Main = '',
-		Ammo = 'Fortune Egg',		
+		Main = 'Yew Wand',
+		Sub = 'Fish Scale Shield',
+		Ammo = 'Fortune Egg',
     },
 	
 --[[
@@ -138,9 +151,8 @@ local sets = {
 --[[
 	Damage reduction gear depends on the type of damage. The most common is physical, but there's times when
 	you'll want to reduce magic damage or breath damage. The three gear sets are defined below. The correct
-	one will be equipped depending on whether DT is enabled and which set is equipped depends on the DT_TYPE 
-	selected. Please consider not including gear that doesn't have any damage taken property so other wanted 
-	stats can shine through.
+	one will be equipped depending on how DT is set. Please consider not including gear that doesn't have 
+	any damage taken property so other wanted stats can shine through.
 --]]
 
 	['DT_Physical'] = {
@@ -151,7 +163,7 @@ local sets = {
 	
 	['DT_Breath'] = { 
 	},
-
+	
 --[[
 	Magic accuracy gear
 --]]
@@ -205,7 +217,7 @@ local sets = {
 --[[
 	Further, there is a break out for each type of spell. I've included a comment on the type of attributes
 	the piece of gear should have. While the spell might have other attributes than those listed, the ones I have
-	listed have gear that a WAR or anyone can wear.
+	listed have gear that a RDM or anyone can wear.
 --]]
 
 	-- Healing: Healing Magic Skill. Currently only a Healing Earring affects healing spells from a sub job. No other gear
@@ -216,7 +228,7 @@ local sets = {
     },
 	
 	-- Dark: Dark Magic Skill. Currently only gear equippable by any job gives is applicable here. There's no gear that's 
-	-- specific for WAR that gives any dark magic skill.	
+	-- specific for RDM that gives any dark magic skill.	
 	['Dark'] = {
     },
 
@@ -225,27 +237,27 @@ local sets = {
 	},
 	
 	-- Enfeebling Magic Skill.	Currently only gear equippable by any job gives is applicable here. There's no gear that's 
-	-- specific for WAR that gives any enfeebling magic skill.	
+	-- specific for RDM that gives any enfeebling magic skill.	
 	['Enfeebling'] = {
 	},
 	
-	-- Enhancing: There is no gear that a WAR can wear to enhance any magic spell. Leave the Enhancing gear sets empty.
+	-- Enhancing: There is no gear that a RDM can wear to enhance any magic spell. Leave the Enhancing gear sets empty.
 	['Enhancing'] = {
 	},
 	
 	-- Elemental: Elemental Magic Skill. Currently only gear equippable by any job gives is applicable here. There's no gear
-	-- that's specific for WAR that gives any elemental magic skill. Note: don't include elemental staves or elemental 
+	-- that's specific for RDM that gives any elemental magic skill. Note: don't include elemental staves or elemental 
 	-- obis/gorgets here, that is done automatically in the HandlePrecast/HandleMidcast functions (if /wswap is enabled).
 	['Elemental'] = {
 	},
 
-	-- Ninjutsu: There is no gear that a WAR can wear to add Ninjutsu skill. Leave the following two
+	-- Ninjutsu: There is no gear that a RDM can wear to add Ninjutsu skill. Leave the following two
 	-- gear sets empty.	
 	['Ninjutsu'] = {			-- Ninjutsu Skill, magic burst bonus, magic attack bonus
 	},
 	
 	-- Summoning: Summoning Magic Skill and Avatar Perpetuation Cost. Currently only gear equippable by any job gives
-	-- is applicable here. There's no gear that's specific for WAR that gives any summoning skill. Note: currently on 
+	-- is applicable here. There's no gear that's specific for RDM that gives any summoning skill. Note: currently on 
 	-- HorizonXI summoning skills are ignored. Any gear piece that only gives summoning skill will be commented out	
 	['Summoning'] = {
 	},
@@ -256,19 +268,26 @@ local sets = {
 
 	['INT'] = {
     },
+
+	['Tank_INT'] = {
+	},
 	
 	['MND'] = {
-		Neck  = 'Justice Badge',
-		Rings = 'Tranquility Ring',
+        Neck  = 'Justice Badge',
+        Rings = 'Tranquility Ring',
+        Waist = 'Friar\'s Rope',
     },
 
+	['Tank_MND'] = {
+	},
+	
 --[[
 	And some spells are special cases, so they have individual gears sets.
 --]]
 	
 	-- Stoneskin: Stoneskin Enhancement, Mind, and Enhancing Magic Skill. Mind is 3x more important than enhancing
-	-- Magic Skill. The only piece of gear a WAR can wear to enhance stoneskin is a Stone Gorget. There's no gear
-	-- that a WAR (or any job) can wear to enhance magic. Note: This gear set has no effect on Titan's Stoneskin
+	-- Magic Skill. The only piece of gear a RDM can wear to enhance stoneskin is a Stone Gorget. There's no gear
+	-- that a RDM (or any job) can wear to enhance magic. Note: This gear set has no effect on Titan's Stoneskin
 	-- blood pact.
 	['Stoneskin'] = {
 	},
@@ -281,7 +300,7 @@ local sets = {
     },
 	
 	-- Aspir: Aspir Enhancement, Dark Magic Skill, Dark Magic Accuracy. Currently no gear equippable by a
-	-- WAR enhances Aspir. Aspir is part of Dark Magic, so potency which is based on dark magic skill will
+	-- RDM enhances Aspir. Aspir is part of Dark Magic, so potency which is based on dark magic skill will
 	-- already be loaded in HandleMidcast function and need not be repeated here. No current gear supports
 	-- dark magic accuracy for any job. Magic attack bonus and magic critical hit have no effect on potency.
 	-- Leave the two Aspir gear sets empty.
@@ -304,27 +323,21 @@ local sets = {
 	-- Note: Phalanx does have gear that supports the spell, but it is out of era
 	
 --[[
-	The following are abilities affected by gear
---]]
-	
---[[
 	The following weapon skill gearsets are defined by the stat they emphasize. Listed are all of the sets that
 	you will need to use every weapon skill that your job can do. The leading comment defines what weapon/weapon
 	skill combination the set applies to.
 	
-	RNG can use the following weapons: Axe (B-), Dagger (B-), Sword (D), Club (E), Archery (A-),
-									   Marksmanship (A-), Throwing (C-)
-	
+	RDM can use the following weapons: Dagger (B), Sword (B), Club (D), Archery (E)
 	Any other weapon will have no weaponskill available. Weapon skill sets are named based on stat(s) used, 
 	regardless of weapon
 --]]
 
 --[[
 		* Strength based *
-
-		Axe: Raging Axe,Smash Axe,Gale Axe,Avalanche Axe,Rampage,Decimation
+		
+		Dagger: Mercy Stroke		
 		Sword: Flat Blade,Circle Blade,Vorpal Blade
-		Club: Brainshaker,Skullbreaker,True Strike
+		Club: Starlight,Skull Breaker,True Strike
 -]]
 	
 	['WS_STR'] = {
@@ -333,70 +346,51 @@ local sets = {
 
 --[[
 		* Strength and Agility based *
-
-		Archery: Flaming Arrow,Piercing Arrow,Dulling Arrow,Sidewinder,
-				 Blast Arrow,Arching Arrow,Empyreal Arrow,Namas Arrow
+		
+		Archery: Flaming Arrow^,Piercing Arrow^,Dulling Arrow^,Sidewinder^,Blast Arrow^
+		
+		^ Subjob must be RNG
 --]]
 
 	['WS_STRAGI'] = {
 		Rings = 'Courage Ring',
-		Feet  = 'Bounding Boots',
     },
 	
 --[[
 		* Strength and Dexterity based, even weighting *
 		
 		Sword: Fast Blade
+		
 --]]
 
 	['WS_STRDEX'] = {
 		Rings = { 'Courage Ring', 'Balance Ring' },
-		Feet  = 'Bounding Boots',		
+		Feet  = 'Bounding Boots',
     },
 
 --[[
 		* Strength and Intelligence based, even weighting *
 		
-		Sword: Burning Blade
+		Sword: Burning Blade,Red Lotus Blade
 --]]
 	
 	['WS_STRINT'] = {
-		Rings = 'Courage Ring',	
-    },
-
---[[
-		* Strength and Intelligence based, 30%/20% weighting *
-
-		Sword: Red Lotus Blade
---]]
-	
-	['WS_STRINT_30_20'] = {
-		Rings = 'Courage Ring',	
-    },
-
+		Rings = 'Courage Ring',
+	},
 
 --[[
 		* Strength and Mind based, even weighting *
-
-		Sword: Shining Blade,Seraph Blade
-		Club: Shining Strike	
+		
+		Sword: Shining Blade,Seraph Blade,Swift Blade,Savage Blade,Knights of Round
+		Club: Shining Strike
 --]]
 
 	['WS_STRMND'] = {
-		Rings = 'Courage Ring',	
+		Neck  = 'Justice Badge',
+		Rings = { 'Courage Ring', 'Tranquility Ring' },
+		Waist = 'Friar\'s Rope',
     },
-
---[[
-		* Agility based *
 		
-		Marksmanship: Hot Shot,Split Shot,Sniper Shot,Slug Shot,Blast Shot,Heavy Shot,
-					  Detonator,Coronach
---]]
-	
-	['WS_AGI'] = {
-		Feet  = 'Bounding Boots',
-    },
-	
 --[[
 		* Charisma based *
 		
@@ -404,8 +398,9 @@ local sets = {
 --]]
 	
 	['WS_CHR'] = {
+		Head = 'Entrancing Ribbon'
     },
-	
+
 --[[
 		* Dexterity based *
 		
@@ -414,7 +409,7 @@ local sets = {
 	
 	['WS_DEX'] = {
 		Rings = 'Balance Ring',
-		Feet  = 'Bounding Boots',	
+		Feet = 'Bounding Boots',
     },
 	
 --[[
@@ -425,7 +420,7 @@ local sets = {
 	
 	['WS_DEXINT'] = {
 		Rings = 'Balance Ring',
-		Feet  = 'Bounding Boots',	
+		Feet = 'Bounding Boots',
     },
 
 --[[
@@ -435,9 +430,11 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
-		Neck = 'Justice Badge',
+		Neck  = 'Justice Badge',
+		Rings = 'Tranquility Ring',
+		Waist = 'Friar\'s Rope',
     },
-
+	
 --[[
 		* Skill based *
 		
@@ -454,6 +451,8 @@ local sets = {
 --]]
 
 	['WS_HP'] = {
+		Ears  = 'Physical Earring',
+		Waist = 'Warrior\'s Belt',
     },
 	
 --[[
@@ -467,32 +466,13 @@ local sets = {
 --[[
 	The following are abilities affected by gear
 --]]
-
-	['EagleEyeShot'] = {
+	
+	['Chainspell'] = {
 	},
 	
-	['Sharpshot'] = {
+	['Convert'] = {
 	},
-	
-	['Scavenge'] = {
-	},
-	
-	['Camouflage'] = {
-	},
-	
-	['Barrage'] = {
-	},
-	
-	['Shadowbind'] = {
-	},
-	
-	['VelocityShot'] = {
-	},
-	
-	['UnlimitedShot'] = {
-	},
-
-	
+		
 --[[
 	Some subjobs really make no sense when combined with dragoon, but all abilities across all jobs that
 	have gear that can be equipped by a PLD are included here.
@@ -500,6 +480,7 @@ local sets = {
 	--* BST *--
 	-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration)
 	['Charm'] = {
+	    Head = 'Entrancing Ribbon',
     },
 
 	['Reward'] = {
@@ -516,7 +497,20 @@ local sets = {
 	
 	['Pet_Matt'] = {					-- Pet's Magical Attack
 	},
-
+	
+	--* DRK *--
+	['ArcaneCircle'] = {
+	},
+	
+	['Last_Resort'] = {
+	},
+	
+	['WeaponBash'] = {
+	},
+	
+	['Souleater'] = {
+	},
+	
 	--* /WAR *--
 	['Provoke'] = {
 	},
@@ -559,17 +553,23 @@ local sets = {
 	['Mug'] = {
 	},
 	
-	--* /WHM *--
-	['DivineSeal'] = {
-	},
-	
 	--* /BLM *--
 	['ElementalSeal'] = {
 	},
-
-	--* /RDM *--
-	-- No skills
 	
+	--* /DRK *--
+	['ArcaneCircle'] = {
+	},
+	
+	['LastResort'] = {
+	},
+	
+	['WeaponBash'] = {
+	},
+
+	['Souleater'] = {
+	},
+
 	--* /BRD *--
 	-- No skills
 	
@@ -585,6 +585,19 @@ local sets = {
 
 	['Cover'] = {
     },
+
+	--* /RNG *--
+	['Sharpshot'] = {
+	},
+	
+	['Scavenge'] = {
+	},
+	
+	['Camouflage'] = {
+	},
+	
+	['Barrage'] = {
+	},
 
 	--* /SAM *--
 	['WardingCircle'] = {
@@ -605,27 +618,14 @@ local sets = {
 	--* /NIN *--
 	-- No skills
 	
-	--* /DRG *--
+	--* DRG *--
 	['AncientCircle'] = {
 	},
 	
 	['Jump'] = {
 	},
-
+	
 	['HighJump'] = {
-	},
-	
-	--* /DRK *--
-	['ArcaneCircle'] = {
-	},
-	
-	['LastResort'] = {
-	},
-	
-	['WeaponBash'] = {
-	},
-
-	['Souleater'] = {
 	},
 	
 --[[
@@ -634,12 +634,12 @@ local sets = {
 	possibly speed up the code. *** This set is to be left empty by the player ***. Please
 	do not modify it.
 --]]	
-	['CurrentGear'] = { },
+	['CurrentGear'] = { },	
 	
 --[[
 								*** Custom Sets Go below this comment ***
 --]]
-		
+
 };
 
 -- There's no way to consistently identify the type of weapon you're currently
@@ -683,9 +683,9 @@ end		-- HandlePetAction
 --]]
 
 local function SetSubjobSet(chkSJ)
-	local subs = {['WAR'] = 1, ['MNK'] = 0, ['WHM'] = 0, ['BLM'] = 0, ['RDM'] = 0, ['THF'] = 0,
-				 ['PLD'] = 0, ['DRK'] = 0, ['BST'] = 0, ['BRD'] = 0, ['RNG'] = nil, ['SMN'] = 0,
-				 ['SAM'] = 0, ['NIN'] = 1, ['DRG'] = 0, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
+	local subs = {['WAR'] = 0, ['MNK'] = 0, ['WHM'] = 1, ['BLM'] = 1, ['RDM'] = nil, ['THF'] = 0,
+				 ['PLD'] = 0, ['DRK'] = 0, ['BST'] = 0, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = 0,
+				 ['SAM'] = 0, ['NIN'] = 0, ['DRG'] = 0, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
 				 ['DNC'] = 0, ['SCH'] = 0, ['GEO'] = 0, ['RUN'] = 0};
 	local sj = nil;
 
@@ -721,11 +721,11 @@ profile.OnLoad = function()
 	gcinclude.settings.priorityWeaponSkill = 'ABDE';
 	
 	-- Set your job macro toolbar defaults here. Which set depends on the subjob
-	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 15');		-- RNG
+	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 3');		-- RDM
 	SetSubjobSet(player.SubJob);
 	
 	-- Load up the weapons bar. (This need only be done once.)
-	gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear);
+	gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear);	
 	gcinclude.EquipTheGear(sets.CurrentGear);
 	
 	-- Make sure the saved weapons are the starting weapons
@@ -767,10 +767,11 @@ end		-- HandleCommand
 	
 profile.HandleDefault = function()
 	local pet = gData.GetPet();
-	local petAction = gData.GetPetAction();	
-	local player = gData.GetPlayer();
+	local petAction = gData.GetPetAction();
+	local player = gData.GetPlayer();	
 	local zone = gData.GetEnvironment();
 	local ew = gData.GetEquipment();
+	local bTank = gcdisplay.GetToggle('Tank');	
 	local eWeap = nil;
 	local cKey;
 
@@ -794,10 +795,10 @@ profile.HandleDefault = function()
 		return;
 	end
 
-	-- Assuming you're /bst, when you want to reward your pet and you do not have pet food equipped 
-	-- or when you want to summon a pet and a jug is not equipped, the current item in the ammo slot 
-	-- is saved. The following will set it back to what you had before either of those two items 
-	-- were equipped.
+	-- Assuming you're /bst, when you want to reward your pet and you do not have pet food 
+	-- equipped or when you want to summon a pet and a jug is not equipped, the current item 
+	-- in the ammo slot is saved. The following will set it back to what you had before 
+	-- either of those two items were equipped.
 	if player.SubJob == 'BST' and profile.bAmmo then
 		gFunc.ForceEquip('Ammo',profile.sAmmo);
 		profile.sAmmo = nil;
@@ -810,32 +811,40 @@ profile.HandleDefault = function()
 	-- If player is not resting and has MP and has swapped weapons, set the weapon back to what 
 	-- they had before the switch
 	if player.Status ~= 'Resting' and 
-			gcinclude.weapon ~= nil and
 			gcdisplay.GetToggle('WSwap') == true and
+			gcinclude.weapon ~= nil and 
 			eWeap ~= gcinclude.weapon then
-		sets.CurrentGear['Main'] = gcinclude.weapon;
-		sets.CurrentGear['Sub'] = gcinclude.offhand;
+		gFunc.ForceEquip('Main', gcinclude.weapon);	
+		gFunc.ForceEquip('Sub', gcinclude.offhand);	
 	end
 	
 	-- The default set is the TP gear set. Load it up
 	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
-	
-	if gcdisplay.GetToggle('Tank') == true then
-		gcinclude.MoveToCurrent(sets.TP_Tank,sets.CurrentGear);	
+
+	if bTank == true then
+		gcinclude.MoveToCurrent(sets.Tank_TP,sets.CurrentGear);	
 	end
-		
+	
 	-- Now process the player status accordingly
 	if player.Status == 'Engaged' then
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
 			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
-			if cKey == 'C' then		-- Evasion			
-				if gcdisplay.GetToggle('Eva') == true then		
-					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
-				end			
+			if cKey == 'C' then		-- Evasion
+				if gcdisplay.GetToggle('Eva') == true then	
+					if bTank == true then
+						gcinclude.MoveToCurrent(sets.Tank_Evasion,sets.CurrentGear);
+					else
+						gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
+					end	
+				end
 			elseif cKey == 'E' then		-- Accuracy	
 				if gcdisplay.GetToggle('Acc') == true then 
-					gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
+					if bTank == true then
+						gcinclude.MoveToCurrent(sets.Tank_Accuracy,sets.CurrentGear);
+					else
+						gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
+					end
 				end
 			elseif cKey == 'F' then		-- Kiting
 				if (gcdisplay.GetToggle('Kite') == true) then
@@ -850,22 +859,21 @@ profile.HandleDefault = function()
 					elseif gcdisplay.GetCycle('DT') == 'Magical' then
 						gcinclude.MoveToCurrent(sets.DT_Magical,sets.CurrentGear);
 					elseif gcdisplay.GetCycle('DT') == 'Breath' then
-						gcinclude.MoveToCurrent(sets.DT_Breath,sets.CurrentGear);
-					end
+						gcinclude.MoveToCurrent(sets.DT_Breath,sets.CurrentGear)					end
 				end	
 			end				
 		end
 	elseif player.Status == 'Resting' then	
 		-- Player kneeling. Priority (low to high): regen,refresh
-		if player.HP < player.MaxHP then
+		if player.HP < player.MaxHP then		
 			gcinclude.MoveToCurrent(sets.Resting_Regen,sets.CurrentGear);
 		end
 		
-		if gcinclude.MagicalJob('S') == true and player.MP < player.MaxMP then	
+		if player.MP < player.MaxMP then	
 			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
 			gcinclude.SwapToStave('dark',false,sets.CurrentGear);
 		end
-		
+
 		-- Check for common debuffs
 		gcinclude.CheckCommonDebuffs(sets.CurrentGear);
 	else									
@@ -882,16 +890,16 @@ profile.HandleDefault = function()
 				gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
 			end
 			
-			-- if the player's MP is below the threshold setting, equip the idle refresh gear				
-			if gcinclude.MagicalJob('S') == true and player.MPP < gcinclude.settings.RefreshGearMPP then		-- if the player's MP is below the threshold setting, equip the idle refresh gear
+			-- if the player's MP is below the threshold setting, equip the idle refresh gear
+			if player.MPP < gcinclude.settings.RefreshGearMPP then
 				gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
 			end
-		
+			
 			-- Check for common debuffs
 			gcinclude.CheckCommonDebuffs(sets.CurrentGear);	
 		end
 	end
-	
+		
 	-- Make sure to equip the appropriate elemental staff for the current pet (/smn only)
 	if (pet ~= nil and player.SubJob == 'SMN') then
 		local pName = string.lower(pet.Name);
@@ -905,8 +913,8 @@ profile.HandleDefault = function()
 	local gear = gData.GetEquipment();
 	if gear.Main == nil then
 		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
-	end		
-		
+	end
+	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set
 					
 	-- Lastly, update the display, just in case
@@ -927,23 +935,11 @@ profile.HandleAbility = function()
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 	
-	-- Now process the appropriate job ability. Start with abilities associated with WAR
-	if string.match(ability.Name, 'Eagle Eye Shot') then
-		gcinclude.MoveToCurrent(sets.EagleEyeShot,sets.CurrentGear);
-	elseif string.match(ability.Name, 'Sharpshot') then
-		gcinclude.MoveToCurrent(sets.Sharpshot,sets.CurrentGear);
-	elseif string.match(ability.Name, 'Scavenge') then
-		gcinclude.MoveToCurrent(sets.Scavenge,sets.CurrentGear);
-	elseif string.match(ability.Name, 'Camouflage') then
-		gcinclude.MoveToCurrent(sets.Camouflage,sets.CurrentGear);		
-	elseif string.match(ability.Name, 'Barrage') then
-		gcinclude.MoveToCurrent(sets.Barrage,sets.CurrentGear);
-	elseif string.match(ability.Name, 'Shadowbind') then
-		gcinclude.MoveToCurrent(sets.Shadowbind,sets.CurrentGear);
-	elseif string.match(ability.Name, 'VelocityShot') then
-		gcinclude.MoveToCurrent(sets.VelocityShot,sets.CurrentGear);
-	elseif string.match(ability.Name, 'UnlimitedShot') then
-		gcinclude.MoveToCurrent(sets.UnlimitedShot,sets.CurrentGear);
+	-- Now process the appropriate job ability. Start with abilities associated with RDM
+	if string.match(ability.Name, 'Chainspell') then
+		gcinclude.MoveToCurrent(sets.Chainspell,sets.CurrentGear);
+	elseif string.match(ability.Name, 'Convert') then
+		gcinclude.MoveToCurrent(sets.Convert,sets.CurrentGear);
 		
 	-- And now the subjob abilities
 	-- /BST
@@ -976,12 +972,18 @@ profile.HandleAbility = function()
 		gcinclude.MoveToCurrent(sets.Dodge,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Chakra') then
 		gcinclude.MoveToCurrent(sets.Chakra,sets.CurrentGear);
-	-- /WHM
-	elseif string.match(ability.Name, 'Divine Seal') then
-		gcinclude.MoveToCurrent(sets.DivineSeal,sets.CurrentGear);
 	-- /BLM
 	elseif string.match(ability.Name, 'Elemental Seal') then
 		gcinclude.MoveToCurrent(sets.ElementalSeal,sets.CurrentGear);
+	-- /RNG
+	elseif string.match(ability.Name, 'Sharpshot') then
+		gcinclude.MoveToCurrent(sets.Sharpshot,sets.CurrentGear);
+	elseif string.match(ability.Name, 'Scavenge') then
+		gcinclude.MoveToCurrent(sets.Scavenge,sets.CurrentGear);
+	elseif string.match(ability.Name, 'Camouflage') then
+		gcinclude.MoveToCurrent(sets.Camouflage,sets.CurrentGear);
+	elseif string.match(ability.Name, 'Barrage') then
+		gcinclude.MoveToCurrent(sets.Barrage,sets.CurrentGear);	
 	-- /SAM
 	elseif string.match(ability.Name, 'Warding Circle') then
 		gcinclude.MoveToCurrent(sets.WardingCircle,sets.CurrentGear);
@@ -1002,24 +1004,13 @@ profile.HandleAbility = function()
 		gcinclude.MoveToCurrent(sets.Sentinel,sets.CurrentGear);	
 	elseif string.match(ability.Name, 'Cover') then
 		gcinclude.MoveToCurrent(sets.Cover,sets.CurrentGear);	
-	-- /THF
-	elseif string.match(ability.Name, 'Steal') then
-		gcinclude.MoveToCurrent(sets.Steal,sets.CurrentGear);
-	elseif string.match(ability.Name, 'Sneak Attack') then
-		gcinclude.MoveToCurrent(sets.SneakAttack,sets.CurrentGear);
-	elseif string.match(ability.Name, 'Flee') then
-		gcinclude.MoveToCurrent(sets.Flee,sets.CurrentGear);
-	elseif string.match(ability.Name, 'Trick Attack') then
-		gcinclude.MoveToCurrent(sets.TrickAttack,sets.CurrentGear);
-	elseif string.match(ability.Name, 'Mug') then
-		gcinclude.MoveToCurrent(sets.Mug,sets.CurrentGear);	
 	-- /DRG
 	elseif string.match(ability.Name, 'Ancient Circle') then
 		gcinclude.MoveToCurrent(sets.AncientCircle,sets.CurrentGear);	
 	elseif string.match(ability.Name, 'Jump') then
 		gcinclude.MoveToCurrent(sets.Jump,sets.CurrentGear);
 	elseif string.match(ability.Name, 'High Jump') then
-		gcinclude.MoveToCurrent(sets.HighJump,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.HighJump,sets.CurrentGear);		
 	-- /DRK
 	elseif string.match(ability.Name, 'Arcane Circle') then
 		gcinclude.MoveToCurrent(sets.ArcaneCircle,sets.CurrentGear);
@@ -1028,7 +1019,7 @@ profile.HandleAbility = function()
 	elseif string.match(ability.Name, 'Weapon Bash') then
 		gcinclude.MoveToCurrent(sets.WeaponBash,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Souleater') then
-		gcinclude.MoveToCurrent(sets.Souleater,sets.CurrentGear);	
+		gcinclude.MoveToCurrent(sets.Souleater,sets.CurrentGear);		
 	end
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleAbility set
 end		-- HandleAbility
@@ -1040,14 +1031,15 @@ end		-- HandleAbility
 
 profile.HandleItem = function()
 	local item = gData.GetAction();
-
+	local bShow = false;
+	
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
-	
+		
 	if string.match(item.Name, 'Holy Water') then 
 		gcinclude.MoveToCurrent(gcinclude.sets.Holy_Water,sets.CurrentGear);
 		bShow = true;
@@ -1060,7 +1052,7 @@ profile.HandleItem = function()
 	end
 		
 	if bShow == true then
-		gcinclude.EquipTheGear(sets.CurrentGear);		
+		gcinclude.EquipTheGear(sets.CurrentGear);
 	end
 end		-- HandleItem
 
@@ -1073,15 +1065,15 @@ profile.HandlePrecast = function()
 	local obi;
 	local mSet;
 		
-	-- Only gear swap if this flag is trues
-	if gcdisplay.GetToggle('GSwap') == false then		
+	-- Only gear swap if this flag is true
+	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
 
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 	
-	-- Equip the precast gear set
+	-- Equip the precast gear set	
 	gcinclude.MoveToCurrent(sets.Precast,sets.CurrentGear);
 		
 	-- See if an elemental obi should be equipped
@@ -1089,7 +1081,7 @@ profile.HandlePrecast = function()
 	if obi ~= nil then
 		sets.CurrentGear['Waist'] = obi;
 	end
-	gcinclude.EquipTheGear(sets.CurrentGear);	
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandlePrecast
 
 --[[
@@ -1099,6 +1091,7 @@ end		-- HandlePrecast
 --]]
 
 profile.HandleMidcast = function()
+	local bTank = gcdisplay.GetToggle('Tank');
 
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
 		return;
@@ -1107,8 +1100,14 @@ profile.HandleMidcast = function()
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 	
+	if bTank then
+		gcinclude.settings.priorityMidCast = 'ACBDEFGH';
+	else
+		gcinclude.settings.priorityMidCast = 'ABCDEFGH';	
+	end
+	
 	-- Call the common HandleMidcast now
-	gcinclude.HandleMidcast(false);
+	gcinclude.HandleMidcast();
 	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited midcast set
 end		-- HandleMidcast
@@ -1124,7 +1123,7 @@ profile.HandlePreshot = function()
 	end
 	
 	-- Clear out the CurrentGear in case of leftovers
-	gcinclude.ClearSet(sets.CurrentGear);	
+	gcinclude.ClearSet(sets.CurrentGear);
 		
 	gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
 	gcinclude.EquipTheGear(sets.CurrentGear);
@@ -1147,7 +1146,7 @@ profile.HandleMidshot = function()
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
 
 	-- Equip the composited Midshot set
-	gcinclude.EquipTheGear(sets.CurrentGear);	
+	gcinclude.EquipTheGear(sets.CurrentGear);			
 end		-- HandleMidshot
 
 --[[

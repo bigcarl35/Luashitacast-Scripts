@@ -7,6 +7,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 	It is tailored to handle all the aspects of MNK. If you desire a gear set change to strengthen an ability
 	from your subjob that is not supported by this program, you probably will have to make a custom gear set 
 	and use the /gearset command to use it.
+	
+	Gear Sets last updated: June 21, 2024		
 --]]
 
 local sets = {
@@ -60,10 +62,7 @@ local sets = {
 		Legs = { 'San. Trousers', 'Ryl.Ftm. Trousers', 'Field Hose' },
 		Feet = { 'Waders' },
     },
-	
-	['TP_Tank'] = {
-	},
-	
+		
 --[[
 	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
 	Remember that DEX converts to accuracy: (horizon) for every 1 point of DEX you get 
@@ -262,6 +261,7 @@ local sets = {
     },
 	
 	['MND'] = {
+		Rings = 'Tranquility Ring',
     },
 
 --[[
@@ -306,10 +306,6 @@ local sets = {
 	-- Note: Phalanx does have gear that supports the spell, but it is out of era
 	
 --[[
-	The following are abilities affected by gear
---]]
-	
---[[
 	The following weapon skill gearsets are defined by the stat they emphasize. Listed are all of the sets that
 	you will need to use every weapon skill that your job can do. The leading comment defines what weapon/weapon
 	skill combination the set applies to.
@@ -329,6 +325,7 @@ local sets = {
 -]]
 	
 	['WS_STR'] = {
+		Rings = 'Courage Ring',
     },
 	
 --[[
@@ -338,6 +335,7 @@ local sets = {
 --]]
 
 	['WS_STRDEX'] = {
+		Rings = 'Courage Ring',
     },
 
 --[[
@@ -347,6 +345,7 @@ local sets = {
 --]]
 	
 	['WS_STRINT'] = {
+		Rings = 'Courage Ring',	
     },
 
 --[[
@@ -357,6 +356,8 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
+		Neck  = 'Justice Badge',
+		Rings = { 'Courage Ring', 'Tranquility Ring' },
     },
 
 --[[
@@ -366,6 +367,8 @@ local sets = {
 --]]
 
 	['WS_STRVIT'] = {
+		Rings = 'Courage Ring',	
+		Waist = 'Warrior\'s Belt',
     },
 	
 --[[
@@ -384,6 +387,9 @@ local sets = {
 --]]
 	
 	['WS_INTMND'] = {
+		Neck  = 'Justice Badge',
+		Rings = 'Tranquility Ring',
+		Waist = 'Friar\'s Belt',
     },
 
 --[[

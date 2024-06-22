@@ -7,6 +7,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 	It is tailored to handle all the aspects of WHM. If you desire a gear set change to strengthen an ability
 	from your subjob that is not supported by this program, you probably will have to make a custom gear set 
 	and use the /gearset command to use it.
+	
+	Gear Sets last updated: June 21, 2024	
 --]]
 
 local sets = {
@@ -56,7 +58,7 @@ local sets = {
         Body = { 'Seer\'s Tunic', 'Angler\'s Tunica' },
 		Back = 'White Cape',
         Hands = 'Seer\'s Mitts',
-        Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
+        Rings = { 'Tamas Ring', 'Tranquility Ring' },
         Waist = 'Friar\'s Rope',
         Legs = 'Seer\'s Slacks',
         Feet = { 'Mannequin Pumps', 'Seer\'s Pumps' },
@@ -73,7 +75,7 @@ local sets = {
 	['Accuracy'] = {
         Hands = 'Battle Gloves',
         Waist = 'Tilt Belt',
-		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring' },
+		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },
     },
 	
 --[[
@@ -109,7 +111,7 @@ local sets = {
 	},
 	
 	['Resting_Refresh'] = {
-		Main  = { 'Dark Staff//WSWAP', 'Pilgrim\'s Wand//WSWAP' },
+		Main  = { 'Dark Staff//WSWAP', 'Blessed Hammer//ACCESSIBLE//WSWAP, 'Pilgrim\'s Wand//WSWAP' },
         Body = 'Seer\'s Tunic',
     },
 
@@ -264,21 +266,21 @@ local sets = {
 
 	['INT'] = {
         Hands = 'Seer\'s Mitts',
-        Rings = { 'Tamas Ring', 'Windurstian Ring' },
+        Rings = 'Tamas Ring',
         Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Seer\'s Slacks',
-        Feet = 'Mannequin Pumps',
+        Legs  = 'Seer\'s Slacks',
+        Feet  = 'Mannequin Pumps',
     },
 	
 	['MND'] = {
-        Neck = 'Justice Badge',
-        Body = 'Wonder Kaftan',
+        Neck  = 'Justice Badge',
+        Body  = 'Wonder Kaftan',
         Hands = 'Seer\'s Mitts',
         Rings = { 'Tamas Ring', 'Tranquility Ring' },
-		Back = 'White Cape',
+		Back  = 'White Cape',
         Waist = 'Friar\'s Rope',
-        Legs = 'Wonder Braccae',
-        Feet = 'Mannequin Pumps',
+        Legs  = 'Wonder Braccae',
+        Feet  = 'Mannequin Pumps',
     },
 
 --[[
@@ -382,14 +384,14 @@ local sets = {
 --]]
 
 	['WS_STRDEX'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Body = 'Wonder Kaftan',
+        Head  = 'Empress Hairpin',
+        Neck  = 'Spike Necklace',
+        Body  = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Ring = { 'Courage Ring', 'Bastokan Ring' },
+        Ring  = { 'Kshama Ring No.2', 'Balance Ring', 'Courage Ring' },
         Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Wonder Clomps',
+        Legs  = 'Wonder Braccae',
+        Feet  = 'Wonder Clomps',
     },
 
 --[[
@@ -440,7 +442,6 @@ local sets = {
         Head = 'Empress Hairpin',
         Ear1 = 'Drone Earring',
         Body = 'Mrc.Cpt. Doublet',
-		Rings = 'Windurstian Ring',
         Waist = 'Mrc.Cpt. Belt',
     },
 	
@@ -466,7 +467,7 @@ local sets = {
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
         Body = 'Mrc.Cpt. Doublet',
-        Rings = { 'Balance Ring', 'Bastokan Ring' },
+        Rings = { 'Kshama Ring No.2', 'Balance Ring' },
         Waist = 'Mrc.Cpt. Belt',
     },
 
@@ -481,7 +482,7 @@ local sets = {
         Neck = 'Spike Necklace',
         Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },
         Body = 'Mrc.Cpt. Doublet',
-        Rings = { 'Balance Ring', 'Bastokan Ring' },
+        Rings = { 'Kshama Ring No.2', 'Balance Ring' },
         Waist = 'Mrc.Cpt. Belt',
     },
 	
@@ -495,7 +496,7 @@ local sets = {
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
         Body = 'Mrc.Cpt. Doublet',
-        Rings = { 'Balance Ring', 'Bastokan Ring' },
+        Rings = { 'Kshama Ring No.2', 'Balance Ring' },
         Waist = 'Corsette',
     },
 	
@@ -510,7 +511,7 @@ local sets = {
         Neck = 'Spike Necklace',
         Body = 'Mrc.Cpt. Doublet',
         Hands = 'Seer\'s Mitts',
-        Rings = { 'Balance Ring', 'Bastokan Ring' },
+        Rings = { 'Kshama Ring No.2', 'Balance Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Seer\'s Slacks',
         Feet = 'Mannequin Pumps',
@@ -543,10 +544,15 @@ local sets = {
 
 	['WS_VIT'] = {
         Body = 'Wonder Kaftan',
-        Rings = 'Bastokan Ring',
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
     },
+
+--[[
+		* Skill based *
+		
+		Club: Starlight
+--]]
 
 	['WS_Skill'] = {
     },
@@ -768,6 +774,7 @@ local sets = {
 -- the weapons if you want to conditionally equip an item with a weapon skill
 -- attribute.
 profile.WeaponType = {
+	['CLUB']   = { 'Blessed Hammer', 'Solid Wand', 'Yew Wand', 'Pilgrim\'s Wand', 'Warp Cudgel' },
 };
 
 profile.Sets = sets;

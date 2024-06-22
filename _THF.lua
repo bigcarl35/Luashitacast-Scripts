@@ -7,6 +7,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 	It is tailored to handle all the aspects of THF. If you desire a gear set change to strengthen an ability
 	from your subjob that is not supported by this program, you probably will have to make a custom gear set 
 	and use the /gearset command to use it.
+	
+	Gear Sets last updated: June 21, 2024
 --]]
 
 local sets = {
@@ -51,16 +53,26 @@ local sets = {
         Head  = 'Empress Hairpin',
         Neck  = { 'Peacock Amulet', 'Spike Necklace' },
         Ears  = { 'Physical Earring', 'Reraise Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
-        Body  = { 'Brigandine', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
+        Body  = { 'Rapparee Harness', 'Brigandine', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
         Hands = 'Battle Gloves',
-        Rings = { 'Kshama Ring No.2', 'Balance Ring', 'Courage Ring', 'Bastokan Ring' },
-        Back  = 'Ram Mantle',
-        Waist = 'Mrc.Cpt. Belt',
+        Rings = { 'Kshama Ring No.2', 'Balance Ring', 'Courage Ring' },
+        Back  = { 'Raptor Mantle', 'Ram Mantle' },
+        Waist = { 'Swift Belt', 'Mrc.Cpt. Belt' },
         Legs  = { 'Noct Brais', 'Wonder Braccae', 'San. Trousers', 'Ryl.Ftm. Trousers' },
         Feet  = 'Bounding Boots',
     },
 
 	['Tank_TP'] = {
+        Head  = 'Empress Hairpin',
+        Neck  = { 'Peacock Amulet', 'Spike Necklace' },
+        Ears  = { 'Physical Earring', 'Reraise Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
+        Body  = { 'Rapparee Harness', 'Brigandine', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
+        Hands = 'Battle Gloves',
+        Rings = { 'Kshama Ring No.2', 'Balance Ring', 'Courage Ring' },
+        Back  = { 'Raptor Mantle', 'Ram Mantle' },
+        Waist = { 'Swift Belt', 'Mrc.Cpt. Belt' },
+        Legs  = { 'Noct Brais', 'Wonder Braccae', 'San. Trousers', 'Ryl.Ftm. Trousers' },
+        Feet  = 'Bounding Boots',	
 	},
 	
 --[[
@@ -76,12 +88,19 @@ local sets = {
         Neck  = { 'Peacock Amulet', 'Spike Necklace' },
         Body  = { 'Brigandine', 'Mrc.Cpt. Doublet' },
         Hands = 'Battle Gloves',
-        Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
+        Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },
         Waist = { 'Tilt Belt', 'Mrc.Cpt. Belt' },
         Feet  = 'Bounding Boots',
     },
 
 	['Tank_Accuracy'] = {
+        Head  = 'Empress Hairpin',
+        Neck  = { 'Peacock Amulet', 'Spike Necklace' },
+        Body  = { 'Brigandine', 'Mrc.Cpt. Doublet' },
+        Hands = 'Battle Gloves',
+        Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },
+        Waist = { 'Tilt Belt', 'Mrc.Cpt. Belt' },
+        Feet  = 'Bounding Boots',	
 	},
 	
 --[[
@@ -93,13 +112,19 @@ local sets = {
         Ears  = { 'Reraise Earring', 'Genin Earring//SJNIN', 'Drone Earring' },
         Body  = 'Mrc.Cpt. Doublet',
         Hands = 'Battle Gloves',
-        Rings = 'Windurstian Ring',
         Waist = 'Mrc.Cpt. Belt',
         Legs  = 'San. Trousers',
         Feet  = 'Bounding Boots',
     },
 
 	['Tank_Evasion'] = {
+        Head  = 'Empress Hairpin',
+        Ears  = { 'Reraise Earring', 'Genin Earring//SJNIN', 'Drone Earring' },
+        Body  = 'Mrc.Cpt. Doublet',
+        Hands = 'Battle Gloves',
+        Waist = 'Mrc.Cpt. Belt',
+        Legs  = 'San. Trousers',
+        Feet  = 'Bounding Boots',	
 	},
 	
 --[[
@@ -142,8 +167,8 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-		Main  = 'Bone Knife',
-		Sub   = { 'Hornetneedle', 'Marauder\'s Knife//ACCESSIBLE', 'Mrc.Cpt. Kukri//SJNIN', 'Mrc.Cpt. Kukri//SJDNC' },
+		Main  = { 'Corsair\'s Knife', 'Bone Knife' },
+		Sub   = { 'Hornetneedle', 'Marauder\'s Knife//ACCESSIBLE' },
 		Range = 'Thug\'s Zamburak',
 		Ammo  = 'Acid Bolt',
     },
@@ -203,7 +228,9 @@ local sets = {
 
 	['Midshot'] = {
 		Neck  = 'Peacock Amulet',
-        Rings = { 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	
+		Body  = 'Rapparee Harness',
+		Rings = { 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
+		Legs  = 'Noct Brais',
     },
 
 --[[
@@ -279,24 +306,33 @@ local sets = {
 --]]
 
 	['INT'] = {
-        Rings = { 'Tamas Ring', 'Windurstian Ring' },
+        Rings = 'Tamas Ring',
         Waist = 'Mrc.Cpt. Belt',
         Feet = 'Mannequin Pumps',
     },
 
 	['Tank_INT'] = {
+        Rings = 'Tamas Ring',
+        Waist = 'Mrc.Cpt. Belt',
+        Feet = 'Mannequin Pumps',	
 	},
 	
 	['MND'] = {
-        Neck = 'Justice Badge',
+        Neck = { 'Promise Badge', 'Justice Badge' },
         Body = 'Wonder Kaftan',
-        Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
+        Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Mannequin Pumps',
     },
 
 	['Tank_MND'] = {
+        Neck = { 'Promise Badge', 'Justice Badge' },
+        Body = 'Wonder Kaftan',
+        Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
+        Waist = 'Mrc.Cpt. Belt',
+        Legs = 'Wonder Braccae',
+        Feet = 'Mannequin Pumps',	
 	},
 	
 --[[
@@ -341,10 +377,6 @@ local sets = {
 	-- Note: Phalanx does have gear that supports the spell, but it is out of era
 	
 --[[
-	The following are abilities affected by gear
---]]
-	
---[[
 	The following weapon skill gearsets are defined by the stat they emphasize. Listed are all of the sets that
 	you will need to use every weapon skill that your job can do. The leading comment defines what weapon/weapon
 	skill combination the set applies to.
@@ -367,7 +399,7 @@ local sets = {
         Neck = 'Spike Necklace',
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Rings = { 'Courage Ring', 'San d\'Orian Ring' },
+        Rings = 'Courage Ring',
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Wonder Clomps',
@@ -387,7 +419,7 @@ local sets = {
         Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Rings = { 'Courage Ring', 'San d\'Orian Ring' },
+        Rings = 'Courage Ring',
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Bounding Boots',
@@ -403,14 +435,14 @@ local sets = {
 --]]
 
 	['WS_STRDEX'] = {
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Body = 'Brigandine',
+        Head  = 'Empress Hairpin',
+        Neck  = 'Spike Necklace',
+        Body  = 'Brigandine',
         Hands = 'Wonder Mitts',
         Rings = { 'Kshama Ring No.2', 'Balance Ring', 'Courage Ring' },
         Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Bounding Boots',
+        Legs  = { 'Wonder Braccae', 'Noct Brais' },
+        Feet  = 'Bounding Boots',
     },
 
 --[[
@@ -424,7 +456,7 @@ local sets = {
         Neck = 'Spike Necklace',
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Rings = { 'Courage Ring', 'Windurstian Ring' },
+        Rings = { 'Tamas Ring', 'Courage Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Wonder Clomps',
@@ -439,10 +471,10 @@ local sets = {
 
 	['WS_STRMND'] = {
         Head = 'Mrc.Cpt. Headgear',
-        Neck = 'Justice Badge',
+        Neck = { 'Promise Badge', 'Justice Badge' },
         Body = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-        Rings = { 'Courage Ring', 'Tranquility Ring' },
+        Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Courage Ring', 'Tranquility Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
         Feet = 'Wonder Clomps',
@@ -460,7 +492,6 @@ local sets = {
         Head = 'Empress Hairpin',
         Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },
         Body = 'Mrc.Cpt. Doublet',
-        Rings = 'Windurstian Ring',
         Waist = 'Mrc.Cpt. Belt',
         Feet = 'Bounding Boots',
     },
@@ -487,7 +518,7 @@ local sets = {
         Head  = 'Empress Hairpin',
         Neck  = 'Spike Necklace',
         Body  = 'Brigandine',
-        Rings = { 'Kshama Ring No.2', 'Balance Ring', 'Bastokan Ring' },
+        Rings = { 'Kshama Ring No.2', 'Balance Ring' },
         Waist = 'Mrc.Cpt. Belt',
 		Legs  = 'Noct Brais',
         Feet  = 'Bounding Boots',
@@ -504,7 +535,7 @@ local sets = {
         Neck  = 'Spike Necklace',
         Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },
         Body  = 'Brigandine',
-        Rings = { 'Kshama Ring No.2', 'Balance Ring', 'Bastokan Ring' },
+        Rings = { 'Kshama Ring No.2', 'Balance Ring' },
         Waist = 'Mrc.Cpt. Belt',
 		Legs  = 'Noct Brais',
         Feet  = 'Bounding Boots',
@@ -549,9 +580,9 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
-        Neck  = 'Justice Badge',
+        Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = 'Brigandine',
-        Rings = { 'Tamas Ring', 'Balance Ring' },
+        Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs  = 'Wonder Braccae',
         Feet  = 'Mannequin Pumps',
@@ -567,9 +598,8 @@ local sets = {
 
 	['WS_VIT'] = {
         Body  = 'Brigandine',
-        Rings = 'Bastokan Ring',
         Waist = 'Warrior\'s Belt',
-        Legs  = 'Wonder Braccae',
+        Legs  = { 'Wonder Braccae', 'San. Trousers', 'Ryl.Ftm. Trousers' },
     },
 
 	['WS_Skill'] = {
@@ -610,7 +640,7 @@ local sets = {
         Head  = 'Empress Hairpin',
         Neck  = 'Spike Necklace',
         Body  = { 'Brigandine', 'Mrc.Cpt. Soublet' },
-        Rings = { 'Kshama Ring No.2', 'Balance Ring', 'Bastokan Ring' },
+        Rings = { 'Kshama Ring No.2', 'Balance Ring' },
         Waist = 'Mrc.Cpt. Belt',
 		Legs  = 'Noct Brais',
         Feet  = 'Bounding Boots',	
@@ -623,7 +653,6 @@ local sets = {
         Head = 'Empress Hairpin',
         Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },
         Body = 'Mrc.Cpt. Doublet',
-        Ring1 = 'Windurstian Ring',
         Waist = 'Mrc.Cpt. Belt',
         Feet = 'Bounding Boots',	
 	},
@@ -812,6 +841,12 @@ local sets = {
 -- the weapons if you want to conditionally equip an item with a weapon skill
 -- attribute.
 profile.WeaponType = {
+	['DAGGER'] = { 'Thief\'s Knife', 'Corsair\'s Knife', 'Hornetneedle', 'Bone Knife', 'Marauder\'s Knife' },
+	['CLUB']   = { 'Warp Cudgel' },
+	['STAVE'] =  { 'Fire Staff', 'Vulcan\'s Staff', 'Ice Staff', 'Aquilo\'s Staff',
+				  'Wind Staff', 'Auster\'s Staff', 'Earth Staff', 'Terra\'s Staff',
+				  'Thunder Staff', 'Jupiter\'s Staff', 'Water Staff', 'Neptune\'s Staff',
+				  'Light Staff', 'Apollo\'s Staff', 'Dark Staff', 'Pluto\'s Staff' },	
 };
 
 profile.Sets = sets;

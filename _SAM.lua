@@ -7,6 +7,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 	It is tailored to handle all the aspects of SAM. If you desire a gear set change to strengthen an ability
 	from your subjob that is not supported by this program, you probably will have to make a custom gear set 
 	and use the /gearset command to use it.
+	
+	Gear Sets last updated: June 21, 2024
 --]]
 
 local sets = {
@@ -60,9 +62,6 @@ local sets = {
 		Legs = { 'San. Trousers', 'Ryl.Ftm. Trousers', 'Scale Cuisses' },
 		Feet = 'Bounding Boots',
     },
-	
-	['TP_Tank'] = {
-	},
 	
 --[[
 	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
@@ -140,7 +139,7 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-		Main =  'Katayama',
+		Main =  'Gunromaru',
 		Ammo = 'Fortune Egg',		
     },
 	
@@ -276,6 +275,8 @@ local sets = {
     },
 	
 	['MND'] = {
+		Neck  = 'Justice Badge',
+		Rings = 'Tranquility Ring',		
     },
 
 --[[
@@ -346,6 +347,8 @@ local sets = {
 -]]
 	
 	['WS_STR'] = {
+		Neck  = 'Spike Necklace',
+		Rings = 'Courage Ring',
     },
 
 --[[
@@ -358,6 +361,9 @@ local sets = {
 --]]
 
 	['WS_STRAGI'] = {
+		Neck  = 'Spike Necklace',
+		Rings = 'Courage Ring',	
+		Feet  = 'Bounding Boots',
     },
 	
 --[[
@@ -367,6 +373,9 @@ local sets = {
 --]]
 
 	['WS_STRDEX'] = {
+		Neck  = 'Spike Necklace',
+		Rings = 'Courage Ring',
+		Feet  = 'Bounding Boots',
     },
 
 --[[
@@ -377,6 +386,8 @@ local sets = {
 --]]
 	
 	['WS_STRINT'] = {
+		Neck  = 'Spike Necklace',
+		Rings = 'Courage Ring',	
     },
 
 --[[
@@ -386,6 +397,8 @@ local sets = {
 --]]
 	
 	['WS_STRINT_30_20'] = {
+		Neck  = 'Spike Necklace',
+		Rings = 'Courage Ring',	
     },
 
 
@@ -398,6 +411,8 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
+		Neck  = 'Spike Necklace',
+		Rings = 'Courage Ring',	
     },
 	
 --[[
@@ -416,6 +431,9 @@ local sets = {
 --]]
 	
 	['WS_DEX'] = {
+		Neck  = 'Spike Necklace',
+		Rings = 'Balance Ring',
+		Feet  = 'Bounding Boots',
     },
 	
 --[[
@@ -425,6 +443,9 @@ local sets = {
 --]]
 	
 	['WS_DEXINT'] = {
+		Neck  = 'Spike Necklace',
+		Rings = 'Balance Ring',
+		Feet  = 'Bounding Boots',	
     },
 
 --[[
@@ -434,6 +455,7 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
+		Neck = 'Justice Badge',
     },
 
 --[[
@@ -636,6 +658,7 @@ local sets = {
 -- the weapons if you want to conditionally equip an item with a weapon skill
 -- attribute.
 profile.WeaponType = {
+	['GKATANA'] = { 'Gunromaru', 'Katayama', 'Mumeito' },
 };
 
 profile.Sets = sets;

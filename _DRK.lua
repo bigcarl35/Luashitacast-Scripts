@@ -7,6 +7,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 	It is tailored to handle all the aspects of DRK. If you desire a gear set change to strengthen an ability
 	from your subjob that is not supported by this program, you probably will have to make a custom gear set 
 	and use the /gearset command to use it.
+
+	Gear Sets last updated: June 21, 2024		
 --]]
 
 local sets = {
@@ -54,7 +56,7 @@ local sets = {
         Ears  = { 'Coral Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Pilferer\'s Earring//SJTHF', 'Drone Earring', 'Energy Earring +1', 'Energy Earring +1' },
         Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Scorpion Harness', 'Brigandine', 'Beetle Harness' },        
 		Hands = { 'Abyss Gauntlets//ACCESSIBLE', 'Thick Mufflers', 'Wonder Mitts' },
-        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tamas Ring', 'Balance Ring' },
+        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tamas Ring', 'Kshama Ring No.2', 'Balance Ring' },
         Back  = { 'Psilos Mantle', 'Amemet Mantle', 'Raptor Mantle', 'Ram Mantle' },
         Waist = { 'Swift Belt', 'Axe Belt//SJWAR', 'Powerful Rope', 'Friar\'s Rope' },
         Legs  = { 'Thick Breeches', 'Chaos Flanchard//ACCESSIBLE', 'Ryl.Sqr. Breeches', 'San. Trousers' },
@@ -77,7 +79,7 @@ local sets = {
 		Head  = 'Optical Hat',
 		Neck  = 'Peacock Amulet',
         Body  = 'Scorpion Harness',
-		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
+		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },
 		Hands = 'Thick Mufflers',
 		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt' },
 		Legs  = 'Thick Breeches',
@@ -85,6 +87,14 @@ local sets = {
     },
 
 	['Tank_Accuracy'] = {
+		Head  = 'Optical Hat',
+		Neck  = 'Peacock Amulet',
+        Body  = 'Scorpion Harness',
+		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },
+		Hands = 'Thick Mufflers',
+		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt' },
+		Legs  = 'Thick Breeches',
+		Feet  = { 'Chaos Sollerets//ACCESSIBLE', 'Bounding Boots' }, -- Needed to override the default Thick Sollerets	
 	},
 	
 --[[
@@ -99,6 +109,10 @@ local sets = {
     },
 
 	['Tank_Evasion'] = {
+        Head = 'Empress Hairpin',
+		Body = 'Scorpion Harness',
+		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring', 'Windurstian Earring' },		
+        Legs = { 'Chaos Flanchard//ACCESSIBLE', 'San. Trousers' },	
 	},
 	
 --[[
@@ -154,7 +168,7 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-        Main = 'Demonslicer',
+        Main = 'Suzaku\'s Scythe',
         Ammo = { 'Hedgehog Bomb', 'Fortune Egg' },
     },
 	
@@ -307,7 +321,7 @@ local sets = {
 	['MND'] = {
         Neck = { 'Promise Badge', 'Justice Badge' },
         Body = { 'Abyss Cuirass//ACCESSIBLE', 'Wonder Kaftan' },
-        Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
+        Rings = { 'Tamas Ring', 'Tranquility Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = { 'Abyss Flanchard//ACCESSIBLE', 'Wonder Braccae' },
         Feet = { 'Chaos Sollerets//ACCESSIBLE', 'Mannequin Pumps' },
@@ -388,7 +402,7 @@ local sets = {
 		Ears  = { 'Coral Earring', 'Fang Earring' },
         Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Wonder Kaftan' },
         Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
-        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring' },
+        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
         Legs  = { 'Thick Breeches' ,'Wonder Braccae' },
         Feet  = { 'Creek F Clomps', 'Wonder Clomps' },
@@ -406,7 +420,7 @@ local sets = {
         Ears  = { 'Genin Earring//SJNIN', 'Drone Earring', 'Coral Earring', 'Fang Earring' },
         Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Wonder Kaftan' },
         Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
-        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
+        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
         Legs  = { 'Thick Breeches', 'Ryl.Sqr. Breeches', 'Wonder Braccae' },
         Feet  = { 'Creek F Clomps', 'Bounding Boots' },
@@ -424,7 +438,7 @@ local sets = {
         Ears  = { 'Genin Earring//SJNIN', 'Drone Earring', 'Coral Earring', 'Fang Earring' },
         Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Brigandine', 'Wonder Kaftan' },
         Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
-        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Balance Ring', 'San d\'Orian Ring', 'Bastokan Ring' },
+        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Kshama Ring No.2', 'Balance Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
         Legs  = { 'Thick Breeches', 'Ryl.Sqr. Breeches', 'Wonder Braccae' },
         Feet  = { 'Creek F Clomps', 'Bounding Boots' },
@@ -444,7 +458,7 @@ local sets = {
         Ears  = { 'Coral Earring', 'Fang Earring' },
         Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Wonder Kaftan' },
         Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
-        Rings = { 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring' },
+        Rings = { 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
         Legs  = { 'Thick Breeches', 'Wonder Braccae' },
         Feet  = 'Wonder Clomps',
@@ -462,7 +476,7 @@ local sets = {
         Ears  = { 'Coral Earring', 'Fang Earring' },
         Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Wonder Kaftan' },
         Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
-        Rings = { 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring' },
+        Rings = { 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
         Legs  = { 'Thick Breeches', 'Wonder Braccae' },
         Feet  = 'Wonder Clomps',
@@ -503,7 +517,7 @@ local sets = {
 		Ears  = { 'Coral Earring', 'Fang Earring' },
         Body  = 'Wonder Kaftan',
         Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY' },
-        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Bastokan Ring' },
+        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
         Legs  = { 'Wonder Braccae', 'San. Trousers' },
         Feet  = 'Wonder Clomps',
@@ -518,7 +532,7 @@ local sets = {
 	['WS_CHR'] = {
         Neck  = { 'Star Necklace', 'Flower Necklace' },
 		Body  = 'Chaos Cuirass//ACCESSIBLE',
-		Rings = 'Moon Ring',
+		Rings = { 'Moon Ring', 'Moon Ring' },
         Waist = { 'Corsette', 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
     },
 	
@@ -535,7 +549,7 @@ local sets = {
         Neck  = 'Spike Necklace',
 		Body  = 'Brigandine',
 		Hands = { 'Chaos Gauntlets//ACCESSIBLE', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
-        Rings = { 'Balance Ring', 'Bastokan Ring' },
+        Rings = { 'Kshama Ring No.2', 'Balance Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
         Feet  = 'Bounding Boots',
     },
@@ -551,7 +565,7 @@ local sets = {
         Neck  = 'Spike Necklace',
 		Body  = 'Brigandine',
 		Hands = { 'Chaos Gauntlets//ACCESSIBLE', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
-        Rings = { 'Balance Ring', 'Bastokan Ring' },
+        Rings = { 'Kshama Ring No.2', 'Balance Ring' },
 		Legs  = 'Chaos Flanchard//ACCESSIBLE',
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
         Feet  = 'Bounding Boots',
@@ -566,7 +580,7 @@ local sets = {
 	['WS_MND'] = {
         Neck = { 'Promise Badge', 'Justice Badge' },
         Body = { 'Abyss Cuirass//ACCESSIBLE', 'Wonder Kaftan' },
-        Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
+        Rings = { 'Tamas Ring', 'Tranquility Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
 		Feet = { 'Chaos Sollerets//ACCESSIBLE', 'Mannequin Pumps' },
@@ -788,6 +802,18 @@ local sets = {
 -- the weapons if you want to conditionally equip an item with a weapon skill
 -- attribute.
 profile.WeaponType = {
+	['SCYTHE'] = { 'Suzaku\'s Scythe', 'Raven Scythe' },
+	['DAGGER'] = { 'Heart Snatcher', 'Anubis\'s Knife', 'Garuda\'s Dagger', 'Bone Knife' },
+	['SWORD']  = { 'Ifrit\'s Blade', 'Bee Spatha' },
+	['GSWORD'] = { 'Skofnung', 'Zweihander' },
+	['H2H']    = { 'Lgn. Knuckles' },
+	['AXE']    = { 'Maneater', 'Tabarzin', 'Fransisca', 'Darksteel Axe' },
+	['GAXE']   = { 'Byakko\'s Axe', 'Axe of Trials', 'Rampager', 'Horror Voulge', 'Neckchopper' },
+	['CLUB']   = { 'Warp Cudgel' },
+	['STAVE']  = { 'Fire Staff', 'Vulcan\'s Staff', 'Ice Staff', 'Aquilo\'s Staff',
+				  'Wind Staff', 'Auster\'s Staff', 'Earth Staff', 'Terra\'s Staff',
+				  'Thunder Staff', 'Jupiter\'s Staff', 'Water Staff', 'Neptune\'s Staff',
+				  'Light Staff', 'Apollo\'s Staff', 'Dark Staff', 'Pluto\'s Staff' },	
 };
 
 profile.Sets = sets;
@@ -886,10 +912,6 @@ profile.OnLoad = function()
 	else
 		gcinclude.offhand = sets.CurrentGear['Sub'];
 	end	
-	
-	-- Special inits for "checking HP" gear:
-	-- HP on invisible gear: TP, Tank_TP, Acc, Tank_TP + Acc
-	gcinclude.Special['Parade Gorget'][75] = { 0, 0, 10, 10 };	
 end		-- OnLoad
 
 --[[

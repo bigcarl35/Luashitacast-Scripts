@@ -7,6 +7,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 	It is tailored to handle all the aspects of WAR. If you desire a gear set change to strengthen an ability
 	from your subjob that is not supported by this program, you probably will have to make a custom gear set 
 	and use the /gearset command to use it.
+	
+	Gear Sets last updated: June 21, 2024	
 --]]
 
 local sets = {
@@ -62,6 +64,15 @@ local sets = {
     },
 	
 	['Tank_TP'] = {
+		Head = 'Empress Hairpin',
+		Neck = 'Spike Necklace',
+		Ears = { 'Physical Earring', 'Reraise Earring' },
+		Body = { 'Beetle Harness', 'Angler\'s Tunica' },
+		Hands = 'Ryl.Ftm. Gloves',
+		Rings = { 'Courage Ring', 'Balance Ring' },
+		Waist = 'Warrior\'s Belt',
+		Legs = { 'San. Trousers', 'Ryl.Ftm. Trousers' },
+		Feet = 'Bounding Boots',	
 	},
 	
 --[[
@@ -73,13 +84,17 @@ local sets = {
 --]]
 	
 	['Accuracy'] = {
-		Head = 'Empress Hairpin',
-		Neck = 'Spike Necklace',
-		Rings = 'Balance Ring',
-		Feet = 'Bounding Boots',
+		Head  = 'Empress Hairpin',
+		Neck  = 'Spike Necklace',
+		Rings = { 'Kshama Ring No.2', 'Balance Ring' },
+		Feet  = 'Bounding Boots',
     },
 
 	['Tank_Accuracy'] = {
+		Head  = 'Empress Hairpin',
+		Neck  = 'Spike Necklace',
+		Rings = { 'Kshama Ring No.2', 'Balance Ring' },
+		Feet  = 'Bounding Boots',
 	},
 	
 --[[
@@ -92,6 +107,8 @@ local sets = {
     },
 
 	['Tank_Evasion'] = {
+		Head = 'Empress Hairpin',
+		Feet = 'Bounding Boots',	
 	},
 	
 --[[
@@ -314,10 +331,6 @@ local sets = {
 	-- Note: Phalanx does have gear that supports the spell, but it is out of era
 	
 --[[
-	The following are abilities affected by gear
---]]
-	
---[[
 	The following weapon skill gearsets are defined by the stat they emphasize. Listed are all of the sets that
 	you will need to use every weapon skill that your job can do. The leading comment defines what weapon/weapon
 	skill combination the set applies to.
@@ -344,6 +357,8 @@ local sets = {
 -]]
 	
 	['WS_STR'] = {
+		Neck  = 'Spike Necklace',
+		Rings = 'Courage Ring',
     },
 
 --[[
@@ -356,6 +371,10 @@ local sets = {
 --]]
 
 	['WS_STRAGI'] = {
+		Head  = 'Empress Hairpin',
+		Neck  = 'Spike Necklace',
+		Rings = 'Courage Ring',
+		Feet  = 'Bounding Boots',
     },
 	
 --[[
@@ -369,6 +388,10 @@ local sets = {
 --]]
 
 	['WS_STRDEX'] = {
+		Head  = 'Empress Hairpin',
+		Neck  = 'Spike Necklace',
+		Rings = { 'Courage Ring', 'Balance Ring' },
+		Feet  = 'Bounding Boots',
     },
 
 --[[
@@ -382,6 +405,8 @@ local sets = {
 --]]
 	
 	['WS_STRINT'] = {
+		Neck  = 'Spike Necklace',
+		Rings = 'Courage Ring',	
     },
 
 --[[
@@ -391,6 +416,8 @@ local sets = {
 --]]
 	
 	['WS_STRINT_30_20'] = {
+		Neck  = 'Spike Necklace',
+		Rings = 'Courage Ring',	
     },
 
 
@@ -405,6 +432,7 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
+		Rings = 'Courage Ring',	
     },
 
 --[[
@@ -416,6 +444,8 @@ local sets = {
 --]]
 
 	['WS_STRVIT'] = {
+		Neck  = 'Spike Necklace',
+		Rings = { 'Courage Ring', 'Tranquility Ring' },
     },
 	
 --[[
@@ -428,6 +458,8 @@ local sets = {
 --]]
 
 	['WS_AGI'] = {
+		Head  = 'Empress Hairpin',
+		Boots = 'Bounding Boots',
     },
 	
 --[[
@@ -455,6 +487,8 @@ local sets = {
 --]]
 	
 	['WS_INTMND'] = {
+		Neck  = 'Justice Badge',
+		Rings = 'Tranquility Ring',
     },
 	
 --[[
@@ -464,6 +498,10 @@ local sets = {
 --]]
 	
 	['WS_DEX'] = {
+		Head  = 'Empress Hairpin',
+		Neck  = 'Spike Necklace',
+		Rings = 'Balance Ring',
+		Feet  = 'Bounding Boots',
     },
 
 --[[
@@ -474,6 +512,10 @@ local sets = {
 --]]
 	
 	['WS_DEXAGI'] = {
+		Head  = 'Empress Hairpin',
+		Neck  = 'Spike Necklace',
+		Rings = 'Balance Ring',
+		Feet  = 'Bounding Boots',	
     },
 	
 --[[
@@ -483,6 +525,10 @@ local sets = {
 --]]
 	
 	['WS_DEXINT'] = {
+		Head  = 'Empress Hairpin',
+		Neck  = 'Spike Necklace',
+		Rings = 'Balance Ring',
+		Feet  = 'Bounding Boots',	
     },
 
 --[[
@@ -492,6 +538,7 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
+		Rings = 'Tranquility Ring',
     },
 
 --[[
@@ -699,6 +746,7 @@ local sets = {
 -- the weapons if you want to conditionally equip an item with a weapon skill
 -- attribute.
 profile.WeaponType = {
+	['GAXE'] = { 'Neckchopper' },
 };
 
 profile.Sets = sets;

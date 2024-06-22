@@ -7,6 +7,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 	It is tailored to handle all the aspects of SMN. If you desire a gear set change to strengthen an ability 
 	from your subjob that is not supported by this program, you probably will have to make a custom gear set 
 	and use the /gearset command to use it.
+	
+	Gear Sets last updated: June 21, 2024
 --]]
 
 local sets = {
@@ -79,7 +81,7 @@ local sets = {
 		Neck  = 'Peacock Amulet',
 		Body  = 'Austere Robe',			-- Needed to offset the "possible" Vermillion Cloak		
 		Hands = { 'Carbuncle Mitts//CARBY', 'Smn. Bracers +1//SMNPET', 'Battle Gloves' },
-		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
+		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring' },
 		Waist = { 'Life Belt', 'Tilt Belt' },
 		Legs  = { 'Shep. Hose//PETF', 'Evoker\'s Spats' },
     },
@@ -361,7 +363,7 @@ local sets = {
 
 	['INT'] = {
         Hands = { 'Errant Cuffs', 'Seer\'s Mitts' },
-        Rings = { 'Tamas Ring', 'Windurstian Ring' },
+        Rings = 'Tamas Ring',
 		Body  = 'Errant Hpl.',
         Waist = 'Mrc.Cpt. Belt',
         Legs  = 'Seer\'s Slacks',
@@ -372,7 +374,7 @@ local sets = {
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Seer\'s Mitts',
-		Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
+		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
         Back  = 'White Cape',
         Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
         Legs  = { 'Summoner\'s Spats', 'Wonder Braccae' },
@@ -442,7 +444,7 @@ local sets = {
         Neck  = 'Spike Necklace',
         Body  = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-		Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring' },
+		Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs  = 'Wonder Braccae',
         Feet  = { 'Creek F Clomps', 'Wonder Clumps' },
@@ -459,7 +461,7 @@ local sets = {
         Neck  = 'Spike Necklace',
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
-		Rings = { 'Tamas Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring' },
+		Rings = { 'Tamas Ring', 'Sun Ring', 'Courage Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs  = 'Seer\'s Slacks',
         Feet  = { 'Creek F Clomps', 'Wonder Clumps' },
@@ -477,7 +479,7 @@ local sets = {
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
-		Rings = { 'Tamas Ring', 'Sun Ring', 'Courage Ring', 'Tranquility Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
+		Rings = { 'Tamas Ring', 'Sun Ring', 'Kshama Ring No.9', 'Courage Ring', 'Tranquility Ring' },
         Back  = 'White Cape',
         Waist = 'Mrc.Cpt. Belt',
         Legs  = { 'Summoner\'s Spats', 'Wonder Braccae' },
@@ -495,7 +497,7 @@ local sets = {
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
-		Rings = { 'Tamas Ring', 'Sun Ring', 'Courage Ring', 'Tranquility Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
+		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tranquility Ring' },
         Back  = 'White Cape',
         Waist = 'Mrc.Cpt. Belt',
         Legs  = { 'Summoner\'s Spats', 'Wonder Braccae' },
@@ -514,7 +516,7 @@ local sets = {
         Head  = 'Empress Hairpin',
         Neck  = 'Spike Necklace',
         Body  = 'Mrc.Cpt. Doublet',
-        Rings = { 'Balance Ring', 'Bastokan Ring' },
+        Rings = { 'Kshama Ring No.2', 'Balance Ring' },
         Waist = 'Mrc.Cpt. Belt',
     },
 
@@ -531,7 +533,7 @@ local sets = {
         Neck  = 'Spike Necklace',
         Body  = { 'Errant Hpl.', 'Mrc.Cpt. Doublet' },
         Hands = 'Seer\'s Mitts',
-		Rings  = { 'Tamas Ring', 'Balance Ring', 'Bastokan Ring' },
+		Rings  = { 'Tamas Ring', 'Kshama Ring No.2', 'Balance Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs  = 'Seer\'s Slacks',
         Feet  = { 'Rostrum Pumps', 'Mannequin Pumps' },
@@ -545,7 +547,7 @@ local sets = {
 	
 	['WS_INT'] = {
         Hands = 'Seer\'s Mitts',
-        Rings = { 'Tamas Ring', 'Windurstian Ring' },
+        Rings = 'Tamas Ring',
 		Body  = 'Errant Hpl.',
         Waist = 'Mrc.Cpt. Belt',
         Legs  = 'Seer\'s Slacks',
@@ -562,7 +564,7 @@ local sets = {
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Seer\'s Mitts',
-		Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
+		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs  = { 'Summoner\'s Spats', 'Wonder Braccae' },
         Feet  = { 'Rostrum Pumps', 'Mannequin Pumps' },
@@ -595,7 +597,7 @@ local sets = {
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Seer\'s Mitts',
-		Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
+		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
         Back  = 'White Cape',
         Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
         Legs  = { 'Summoner\'s Spats', 'Wonder Braccae' },
@@ -803,12 +805,13 @@ local sets = {
 -- the weapons if you want to conditionally equip an item with a weapon skill
 -- attribute.
 profile.WeaponType = {
-	['STAVE'] = { 'Fire Staff', 'Vulcan\'s Staff', 'Ice Staff', 'Aquilo\'s Staff',
+	['STAVE'] =  { 'Fire Staff', 'Vulcan\'s Staff', 'Ice Staff', 'Aquilo\'s Staff',
 				  'Wind Staff', 'Auster\'s Staff', 'Earth Staff', 'Terra\'s Staff',
 				  'Thunder Staff', 'Jupiter\'s Staff', 'Water Staff', 'Neptune\'s Staff',
 				  'Light Staff', 'Apollo\'s Staff', 'Dark Staff', 'Pluto\'s Staff',
 				  'Kukulcan\'s Staff' },
-	['CLUB'] = { 'Solid Wand', 'Yew Wand', 'Pilgrim\'s Wand' },
+	['CLUB']  =  { 'Warp Cudgel', 'Solid Wand', 'Yew Wand', 'Pilgrim\'s Wand' },
+	['DAGGER'] = { 'Garuda\'s Dagger' },
 };
 
 profile.Sets = sets;

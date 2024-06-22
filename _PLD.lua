@@ -7,6 +7,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 	It is tailored to handle all the aspects of PLD. If you desire a gear set change to strengthen an ability
 	from your subjob that is not supported by this program, you probably will have to make a custom gear set 
 	and use the /gearset command to use it.
+
+	Gear Sets last updated: June 21, 2024
 --]]
 
 local sets = {
@@ -54,14 +56,20 @@ local sets = {
 	
 	['TP'] = {
 		Head  = 'Mandra. Masque',
-		Body  = 'Choc. Jack Coat',
+		Neck  = 'Justice Badge',
+		Body  = 'Ducal Aketon',
 		Hands = 'Fsh. Gloves',
-		Rings = { 'San d\'Orian Ring', 'Bastokan Ring' },
 		Legs  = 'Fisherman\'s Hose',
 		Feet  = 'Waders',
     },
 	
 	['Tank_TP'] = {
+		Head  = 'Mandra. Masque',
+		Neck  = 'Justice Badge',
+		Body  = 'Ducal Aketon',
+		Hands = 'Fsh. Gloves',
+		Legs  = 'Fisherman\'s Hose',
+		Feet  = 'Waders',	
 	},
 	
 --[[
@@ -127,6 +135,8 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
+		Main = 'Bee Spatha',
+		Sub  = 'Fish Scale Shield',
     },
 	
 --[[
@@ -396,6 +406,7 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
+		Neck = 'Justice Badge',
     },
 
 --[[
@@ -459,6 +470,7 @@ local sets = {
 --]]
 	
 	['WS_DEXMND'] = {
+		Neck = 'Justice Badge',
     },
 	
 --[[
@@ -468,6 +480,7 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
+		Neck = 'Justice Badge',
     },
 
 --[[
@@ -684,6 +697,7 @@ local sets = {
 -- the weapons if you want to conditionally equip an item with a weapon skill
 -- attribute.
 profile.WeaponType = {
+	['SWORD'] = 'Bee Spatha',
 };
 
 profile.Sets = sets;
@@ -776,9 +790,6 @@ profile.OnLoad = function()
 	else
 		gcinclude.offhand = sets.CurrentGear['Sub'];
 	end
-	
-	-- Special inits for "checking HP" gear
-	gcinclude.Special['Parade Gorget'][72] = { 0, 0, 10, 10 };		-- HP on invisible gear: TP, Tank_TP, Acc, Tank_TP + Acc
 end		-- OnLoad
 
 --[[

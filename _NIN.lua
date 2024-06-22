@@ -7,6 +7,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 	It is tailored to handle all the aspects of NIN. If you desire a gear set change to strengthen an ability
 	from your subjob that is not supported by this program, you probably will have to make a custom gear set 
 	and use the /gearset command to use it.
+	
+	Gear Sets last updated: June 21, 2024	
 --]]
 
 local sets = {
@@ -52,9 +54,29 @@ local sets = {
 --]]
 	
 	['TP'] = {
+		Head  = 'Empress Hairpin',
+		Neck  = 'Peacock Amulet',
+		Ears  = { 'Pilferer\'s Earring//SJTHF', 'Physical Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
+		Body  = { 'Wonder Kaftan', 'Beetle Harness' },
+		Hands = { 'Wonder Mitts', 'Ryl.Ftm. Gloves' },
+		Rings = { 'Tamas Ring//MSJ', 'Courage Ring', 'Balance Ring' },
+		Back  = 'Ram Mantle',
+		Waist = { 'Warrior\'s Belt', 'Friar\'s Rope//MSJ' },
+		Legs  = { 'Ryl.Sqr. Breeches', 'Wonder Braccae', 'Ryl.Ftm. Trousers', 'Fisherman\'s Hose' },
+		Feet  = { 'Mannequin Pumps//MSJ', 'Bounding Boots' },
     },
 	
 	['Tank_TP'] = {
+		Head  = 'Empress Hairpin',
+		Neck  = 'Peacock Amulet',
+		Ears  = { 'Pilferer\'s Earring//SJTHF', 'Physical Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
+		Body  = { 'Wonder Kaftan', 'Beetle Harness' },
+		Hands = { 'Wonder Mitts', 'Ryl.Ftm. Gloves' },
+		Rings = { 'Tamas Ring//MSJ', 'Courage Ring', 'Balance Ring' },
+		Back  = 'Ram Mantle',
+		Waist = { 'Warrior\'s Belt', 'Friar\'s Rope//MSJ' },
+		Legs  = { 'Ryl.Sqr. Breeches', 'Wonder Braccae', 'Ryl.Ftm. Trousers', 'Fisherman\'s Hose' },
+		Feet  = { 'Mannequin Pumps//MSJ', 'Bounding Boots' },	
 	},
 	
 --[[
@@ -66,9 +88,21 @@ local sets = {
 --]]
 	
 	['Accuracy'] = {
+		Head  = 'Empress Hairpin',
+		Neck  = { 'Peacock Amulet', 'Spike Necklace' },
+		Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring' },
+		Waist = 'Tilt Belt',
+		Legs  = 'Ryl.Sqr. Breeches',
+		Feet  = 'Bounding Boots',
     },
 	
 	['Tank_Accuracy'] = {
+		Head  = 'Empress Hairpin',
+		Neck  = { 'Peacock Amulet', 'Spike Necklace' },
+		Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring' },
+		Waist = 'Tilt Belt',
+		Legs  = 'Ryl.Sqr. Breeches',
+		Feet  = 'Bounding Boots',
 	},
 	
 --[[
@@ -78,9 +112,21 @@ local sets = {
 --]]
 	
 	['Evasion'] = {
+		Head  = 'Empress Hairpin',
+		Neck  = 'Spirit Torque',
+		Ears  = 'Drone Earring',
+		Rings = 'Balance Ring',
+		Legs  = 'San. Trousers',
+		Feet  = 'Bounding Boots',
     },
 
 	['Tank_Evasion'] = {
+		Head  = 'Empress Hairpin',
+		Neck  = 'Spirit Torque',
+		Ears  = 'Drone Earring',
+		Rings = 'Balance Ring',
+		Legs  = 'San. Trousers',
+		Feet  = 'Bounding Boots',	
 	},
 	
 --[[
@@ -120,6 +166,9 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
+		Main = 'Zushio//ACCESSIBLE',
+		Sub  = 'Anju//ACCESSIBLE',
+		Ammo = 'Happy Egg',
     },
 	
 --[[
@@ -164,6 +213,7 @@ local sets = {
 --]]
 
 	['Macc'] = {
+		Ring1 = 'Tamas Ring',
     },
 
 --[[
@@ -187,6 +237,8 @@ local sets = {
 --]]
 
 	['Midshot'] = {
+		Neck = 'Peacock Amulet',
+		Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
     },
 
 --[[
@@ -276,15 +328,25 @@ local sets = {
 --]]
 
 	['INT'] = {
+		Rings = 'Tamas Ring',
     },
 	
 	['Tank_INT'] = {
+		Rings = 'Tamas Ring',	
 	},
 	
 	['MND'] = {
+		Neck  = 'Justice Badge',
+		Rings = { 'Tamas Ring',	'Tranquility Ring' },
+		Waist = 'Friar\'s Rope',
+		Feet  = 'Mannequin Pumps',
     },
 	
 	['Tank_MND'] = {
+		Neck  = 'Justice Badge',
+		Rings = { 'Tamas Ring',	'Tranquility Ring' },
+		Waist = 'Friar\'s Rope',
+		Feet  = 'Mannequin Pumps',	
 	},
 	
 --[[
@@ -347,6 +409,12 @@ local sets = {
 -]]
 	
 	['WS_STR'] = {
+		Neck  = 'Spike Necklace',
+		Body  = 'Wonder Kaftan',
+		Hands = 'Wonder Mitts',
+		Rings = 'Courage Ring',
+		Legs  = 'Wonder Braccae',
+		Feet  = 'Wonder Clomps',
     },
 	
 --[[
@@ -359,6 +427,13 @@ local sets = {
 --]]
 
 	['WS_STRDEX'] = {
+		Head  = 'Empress Hairpin',
+		Neck  = 'Spike Necklace',
+		Body  = 'Wonder Kaftan',
+		Hands = 'Wonder Mitts',
+		Rings = { 'Courage Ring', 'Balance Ring' },
+		Legs  = { 'Ryl.Sqr. Breeches', 'Wonder Braccae' },
+		Feet  = 'Bounding Boots',	
     },
 
 --[[
@@ -369,6 +444,12 @@ local sets = {
 --]]
 	
 	['WS_STRINT'] = {
+		Neck  = 'Spike Necklace',
+		Body  = 'Wonder Kaftan',
+		Hands = 'Wonder Mitts',
+		Rings = { 'Tamas Ring', 'Courage Ring' },
+		Legs  = 'Wonder Braccae',
+		Feet  = 'Wonder Clomps',	
     },
 --[[
 		* Strength and Intelligence based, 30%/20% respectively *
@@ -377,6 +458,12 @@ local sets = {
 --]]
 	
 	['WS_STRINT_30_20'] = {
+		Neck  = 'Spike Necklace',
+		Body  = 'Wonder Kaftan',
+		Hands = 'Wonder Mitts',
+		Rings = { 'Tamas Ring', 'Courage Ring' },
+		Legs  = 'Wonder Braccae',
+		Feet  = 'Wonder Clomps',
     },
 
 --[[
@@ -388,6 +475,11 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
+		Body  = 'Wonder Kaftan',
+		Hands = 'Wonder Mitts',
+		Rings = { 'Tamas Ring', 'Courage Ring', 'Tranquility Ring' },
+		Legs  = 'Wonder Braccae',
+		Feet  = { 'Mannequin Pumps', 'Wonder Clomps' },
     },
 
 --[[
@@ -399,6 +491,10 @@ local sets = {
 --]]
 	
 	['WS_AGI'] = {
+		Head  = 'Empress Hairpin',
+		Ears  = 'Drone Earring',
+		Legs  = 'Ryl.Sqr. Breeches',
+		Feet  = 'Bounding Boots',
     },
 	
 --[[
@@ -408,6 +504,8 @@ local sets = {
 --]]
 	
 	['WS_CHR'] = {
+		Neck  = 'Flower Necklace',
+		Waist = 'Corsette',
     },
 	
 --[[
@@ -418,6 +516,11 @@ local sets = {
 --]]
 	
 	['WS_DEX'] = {
+		Head  = 'Empress Hairpin',
+		Neck  = 'Spike Necklace',
+		Rings = 'Balance Ring',
+		Legs  = 'Ryl.Sqr. Breeches',
+		Feet  = 'Bounding Boots',
     },
 
 --[[
@@ -427,15 +530,26 @@ local sets = {
 --]]
 	
 	['WS_DEXINT'] = {
+		Head  = 'Empress Hairpin',
+		Neck  = 'Spike Necklace',
+		Rings = { 'Tamas Ring', 'Balance Ring' },
+		Legs  = 'Ryl.Sqr. Breeches',
+		Feet  = 'Bounding Boots',	
     },
 	
 --[[
-		* Intelligence and Mind based *
+		* Mind based *
 		
 		Dagger: Energy Steal,Energy Drain,
 --]]
 	
-	['WS_DEXMND'] = {
+	['WS_MND'] = {
+		Neck  = 'Justice Badge',
+		Body  = 'Wonder Kaftan',
+		Rings = { 'Tamas Ring', 'Tranquility Ring' },
+		Waist = 'Friar\'s Rope',
+		Legs  = 'Wonder Braccae',
+		Feet  = 'Mannequin Pumps',
     },
 
 --[[
@@ -445,6 +559,9 @@ local sets = {
 --]]
 
 	['WS_VIT'] = {
+		Body  = 'Wonder Kaftan',
+		Waist = 'Warrior\'s Belt',
+		Legs  = 'Wonder Braccae',
     },
 	
 --[[
@@ -639,6 +756,10 @@ local sets = {
 -- the weapons if you want to conditionally equip an item with a weapon skill
 -- attribute.
 profile.WeaponType = {
+	['KATANA']  = { 'Anju', 'Zushio' },
+	['CLUB']    = { 'Warp Cudgel' },
+	['H2H']     = { 'Avengers' },
+	['ARCHERY'] = { 'Power Bow +1' },
 };
 
 profile.Sets = sets;

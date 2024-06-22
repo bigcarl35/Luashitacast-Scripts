@@ -7,6 +7,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 	It is tailored to handle all the aspects of BRD. If you desire a gear set change to strengthen an ability
 	from your subjob that is not supported by this program, you probably will have to make a custom gear set 
 	and use the /gearset command to use it.
+	
+	Gear Sets last updated: June 21, 2024	
 --]]
 
 local sets = {
@@ -47,10 +49,15 @@ local sets = {
 --]]
 
 	['TP'] = {
+		Head  = 'Horror Head',
+		Neck  = 'Justice Badge',
+		Ears  = {'Physical Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
+		Body  = 'Lgn. Harness',
+		Hands = 'Ryl.Ftm. Gloves',
+		Rings = { 'Astral Ring', 'Astral Ring' },
+		Legs  = 'Field Hose',
+		Feet  = 'Waders',
     },
-	
-	['TP_Tank'] = {
-	},
 	
 --[[
 	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
@@ -117,7 +124,6 @@ local sets = {
 --]]
 	
 	['Town'] = {
-		Head = 'Lilac Corsage',	
 		Body = 'Ducal Aketon//AK:OMNI',
     },
 	
@@ -195,7 +201,7 @@ local sets = {
 
 	['Song_Midcast_Buff'] = {
 --		Rings = 'Minstrel\'s Ring//HPP.LT.76//TPP.LT.100',
-	}
+	},
 --[[
 	Each of the sections below are so you can tailor your midcast gear for the specific type
 	of song. The entries use the standard prioritization sequences and support inline and 
@@ -335,6 +341,7 @@ local sets = {
     },
 	
 	['MND'] = {
+		Neck = 'Justice Badge',
     },
 
 --[[
@@ -381,6 +388,9 @@ local sets = {
 --[[
 	The following are abilities affected by gear
 --]]
+	
+	['Soul Voice'] = {
+	},
 	
 --[[
 	The following weapon skill gearsets are defined by the stat they emphasize. Listed are all of the sets that
@@ -433,6 +443,7 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
+		Neck = 'Justice Badge',
     },
 
 --[[
@@ -478,6 +489,7 @@ local sets = {
 --]]
 	
 	['WS_INTMND'] = {
+		Neck = 'Justice Badge',
     },
 
 --[[
@@ -487,6 +499,7 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
+		Neck = 'Justice Badge',
     },
 
 --[[

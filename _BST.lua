@@ -9,7 +9,7 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 	supported by this program, you probably will have to make a custom gear set and use the /gearset command to
 	use it.
 	
-	Gear Sets last updated: June 11, 2024
+	Gear Sets last updated: June 21, 2024
 --]]
 
 local sets = {
@@ -55,7 +55,7 @@ local sets = {
 		Ears  = { 'Ethereal Earring', 'Beastly Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Bat Earring//MSJ', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ', 'Physical Earring//SJNIN', 'Reraise Earring', 'Physical Earring' },
         Body  = { 'Gaudy Harness//MSJ//MP.LT.50', 'Narasimha\'s Vest', 'Scorpion Harness', 'Gaudy Harness', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
         Hands = { 'Thick Mufflers', 'Beast Gloves//ACCESSIBLE', 'Wonder Mitts', 'Battle Gloves', 'Ryl.Ftm. Gloves' },
-        Rings = { 'Sun Ring', 'Tamas Ring//MSJ', 'Sun Ring', 'Courage Ring', 'Balance Ring', 'San d\'Orian Ring' },
+        Rings = { 'Sun Ring', 'Tamas Ring//MSJ', 'Sun Ring', 'Courage Ring', 'Kshama Ring No.2', 'Balance Ring' },
         Back  = { 'Psilos Mantle', 'Raptor Mantle', 'Ram Mantle' },
         Waist = { 'Swift Belt', 'Tilt Belt', 'Warrior\'s Belt' },
         Legs  = { 'Thick Breeches', 'Monster Trousers//ACCESSIBLE', 'Beast Trousers//ACCESSIBLE', 'Shep. Hose', 'San. Trousers', 'Ryl.Ftm. Trousers' },
@@ -77,7 +77,7 @@ local sets = {
         Body  = { 'Scorpion Harness', 'Narasimha\'s Vest', 'Beast Jackcoat//ACCESSIBLE' },
         Hands = { 'Thick Mufflers', 'Battle Gloves' },
 		Ears  = { 'Beastly Earring//PETF', 'Pilferer\'s Earring//SJTHF' },
-		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring', 'Bastokan Ring' },
+		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },
         Back  = 'Psilos Mantle',		
         Waist = { 'Life Belt', 'Monster Belt//ACCESSIBLE', 'Tilt Belt', 'Swift Belt' },
         Legs  = { 'Thick Breeches', 'Monster Trousers//ACCESSIBLE' },
@@ -298,7 +298,7 @@ local sets = {
 	['INT'] = {
         Head  = 'Beast helm +1//ACCESSIBLE',
 		Body  = 'Monster Jackcoat//ACCESSIBLE',
-        Rings = { 'Tamas Ring', 'Windurstian Ring' },
+        Rings = 'Tamas Ring',
         Feet  = 'Mannequin Pumps',
     },
 	
@@ -306,7 +306,7 @@ local sets = {
         Head  = 'Beast helm +1//ACCESSIBLE',
 		Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = 'Wonder Kaftan',
-        Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
+        Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
         Waist = 'Friar\'s Rope',
         Legs  = 'Wonder Braccae',
         Feet  = 'Mannequin Pumps',
@@ -378,7 +378,7 @@ local sets = {
 		Ears  = 'Beastly Earring',		-- Should be conditional: using an axe
         Body  = 'Narasimha\'s Vest',
         Hands = { 'Ogre Gloves', 'Wonder Mitts' },
-        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring' },						-- +3 STR
+        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Back  = 'Amemet Mantle',
         Legs  = 'Wonder Braccae',
         Feet  = { 'Creek F Clomps', 'Wonder Clomps' },
@@ -395,7 +395,7 @@ local sets = {
         Neck  = 'Spike Necklace',
         Body  = 'Narasimha\'s Vest',
         Hands = 'Wonder Mitts',
-        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring', 'Bastokan Ring' },
+        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Back  = 'Amemet Mantle',
         Legs  = { 'Ryl.Sqr. Breeches', 'Wonder Braccae' },
         Feet  = { 'Creek F Clomps', 'Bounding Boots' },
@@ -413,7 +413,7 @@ local sets = {
 		Neck  = 'Spike necklace',
 		Body  = { 'Monster Jackcoat//ACCESSIBLE', 'Narasimha\'s vest', 'Wonder Kaftan' },
 		Hands = { 'Ogre gloves', 'Wonder Mitts' },
-		Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
+		Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring' },
 		Legs  = 'Wonder braccae',
 		Feet  = 'Wonder Clomps',
 	},
@@ -429,7 +429,7 @@ local sets = {
 		Neck  = 'Spike necklace',
 		Body  = { 'Monster Jackcoat//ACCESSIBLE', 'Narasimha\'s vest', 'Wonder Kaftan' },
 		Hands = { 'Ogre gloves', 'Wonder Mitts' },
-		Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'San d\'Orian Ring', 'Windurstian Ring' },
+		Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring' },
 		Legs  = 'Wonder braccae',
 		Feet  = 'Wonder Clomps',
 	},
@@ -447,7 +447,7 @@ local sets = {
 		Neck  = { 'Promise Badge', 'Justice badge' },
 		Body  = { 'Narasimha\'s vest', 'Wonder Kaftan' },
 		Hands = 'Ogre gloves',
-		Rings = { 'Tamas Ring', 'Sun ring', 'Sun ring', 'Courage Ring', 'San d\'Orian Ring' },
+		Rings = { 'Tamas Ring', 'Sun ring', 'Sun ring', 'Kshama Ring No.9', 'Courage Ring' },
 		Waist = 'Friar\'s Rope',
 		Legs  = 'Wonder braccae',
 		Feet  = { 'Creek F Clomps', 'Wonder Clomps' },
@@ -464,7 +464,7 @@ local sets = {
 		Neck  = 'Spike necklace',
 		Body  = { 'Narasimha\'s vest', 'Beast Jackcoat//ACCESSIBLE', 'Wonder Kaftan' },
 		Hands = 'Ogre gloves',
-		Ring1 = { 'Sun ring', 'Sun ring', 'Courage Ring', 'San d\'Orian Ring' },
+		Ring1 = { 'Sun ring', 'Sun ring', 'Courage Ring' },
 		Waist = 'Warrior\'s belt',
 		Legs  = { 'Wonder braccae', 'Ryl.Ftm. Trousers' },
 		Feet  = { 'Creek F clomps', 'Wonder Clomps' },
@@ -484,7 +484,7 @@ local sets = {
         Neck  = 'Spike Necklace',
         Body  = { 'Brigandine', 'Mrc.Cot. Doublet' },
         Hands = 'Beast Gloves//ACCESSIBLE',
-        Rings = { 'Balance Ring', 'Bastokan Ring' },
+        Rings = { 'Kshama Ring No.2', 'Balance Ring' },
 		Legs  = { 'Monster Trousers//ACCESSIBLE', 'Ryl.Sqr. Breeches' },
         Feet  = 'Bounding Boots',
     },
@@ -502,7 +502,7 @@ local sets = {
         Neck  = 'Spike Necklace',
         Body  = { 'Monster Jackcoat//ACCESSIBLE', 'Brigandine', 'Mrc.Cpt. Doublet' },
         Hands = 'Beast Gloves//ACCESSIBLE',
-        Rings = { 'Tamas Ring', 'Balance Ring', 'Windurstian Ring', 'Bastokan Ring' },
+        Rings = { 'Tamas Ring', 'Kshama Ring No.2', 'Balance Ring' },
 		Legs  = { 'Monster Trousers//ACCESSIBLE', 'Ryl.Sqr. Breeches' },
         Feet  = 'Bounding Boots',
     },
@@ -536,7 +536,7 @@ local sets = {
 		Head  = 'Bst. Helm +1/ACCESSIBLE',
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = 'Wonder Kaftan',
-        Rings = { 'Tamas Ring', 'Tranquility Ring', 'San d\'Orian Ring' },
+        Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
         Waist = 'Friar\'s Rope',
         Legs  = 'Wonder Braccae',
 		Feet  = 'Mannequin Pumps',
@@ -599,7 +599,7 @@ local sets = {
         Neck = { 'Promise Badge', 'Justice Badge' },
         Body = { 'Monster Jackcoat//DB:WSS//ACCESSIBLE', 'Beast Jackcoat//DB:BPP/ACCESSIBLE', 'Monster Jackcoat//ACCESSIBLE','Beast Jackcoat//ACCESSIBLE' },
         Hands = 'Ogre Gloves',
-        Rings = { 'Tamas Ring',	'Tranquility Ring', 'San d\'Orian Ring' },
+        Rings = { 'Tamas Ring',	'Kshama Ring No.9', 'Tranquility Ring' },
         Waist = 'Friar\'s Rope',
         Legs = 'Wonder Braccae',
         Feet = { 'Monster Gaiters//ACCESSIBLE', 'Beast Gaiters//ACCESSIBLE', 'Mannequin Pumps' },
@@ -803,6 +803,12 @@ profile.WeaponType = {
 	['AXE']    = { 'Maneater', 'Tabarzin', 'Barbaroi Axe', 'War Pick' },
 	['SWORD']  = { 'Ifrit\'s Blade' },
 	['DAGGER'] = { 'Garuda\'s Dagger' },
+	['SCYTHE'] = { 'Suzaku\'s Scythe' },
+	['CLUB']   = { 'Warp Cudgel' },
+	['STAVE'] =  { 'Fire Staff', 'Vulcan\'s Staff', 'Ice Staff', 'Aquilo\'s Staff',
+				  'Wind Staff', 'Auster\'s Staff', 'Earth Staff', 'Terra\'s Staff',
+				  'Thunder Staff', 'Jupiter\'s Staff', 'Water Staff', 'Neptune\'s Staff',
+				  'Light Staff', 'Apollo\'s Staff', 'Dark Staff', 'Pluto\'s Staff' },	
 };
 
 profile.Sets = sets;
