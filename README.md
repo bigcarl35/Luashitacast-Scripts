@@ -17,7 +17,8 @@ The following commands are supported by this implementation of luashitacast.
 
 **/dt: [Physical|Magical|Breath]**: Defines type of damage taken gear to equip  
 **/kite**: Turns on/off equipping movement gear.  
-**/acc**: Turns on/off equipping accuracy gear. This includes both physical and magical.  
+**/acc [all|#'s|names|-code]**: Indicates which slots from the accuracy set should be equipped.  
+**/nac [all|#'s|names|-code]**: Turns off the specified accuracy slots.  
 **/equipit** or **/ei "code|name" [1|2]**: Equips specified ring (coded or actual name) in the specified slot.
 Turns off /GSWAP.  
 **/debug**: Turns on/off displaying of all gear being equipped.  
@@ -29,17 +30,18 @@ Turns off /GSWAP.
 **/gswap**: Turns on/off automatic gear swapping. Useful when doing something not supported.  
 **/help [command]**: List description of "command" or lists all commands if no parameter specified.  
 **/idle**: Turns on/off whether travel gear will equip when player idle. Only available 
-to PLD,NIN,DRK,WAR,THF,RUN.  
+to PLD,NIN,DRK,WAR,THF,RUN,RDM.  
 **/kite**: Equips movement and evasion gear for kiting.  
 **/lock: [all|#'s|names]**: Lock equipment slot(s) so luashitacast can't change item.  
+**/unlock [all,#'s|names]**: Unlocks the specified equipment slots so luashitacast can use.  
 **/maxsong "name"**: Determines the highest level song player can perform that has either the
 common root name (see /maxsong) or the common buff name (e.g., paeon when
 performing one of the army paeon songs.)  
 **/maxspell "name"**: Determines the highest level spell player can cast that has the common root
 name (e.g., Cure gets you Cure III if you're 75 and /whm.)  
 **/petfood [name]**: Equips either named petfood or determines best pet food and equips that.  
-**/region**: Swaps between *owned/not* owned indicating if player's nation controls the
-area from the last conquest tally. Used with some conditional gear.  
+**/region**: Determines if the zone you're in is controlled by your nation. If unable to, just
+swaps between *owned/not* owned. Used with some conditional gear.  
 **/slot name|position gear**: Equips the passed piece of gear and locks the equipment slot.  
 **/tank**: Turns on/off equipping TP tank gear. Only available to: PLD,NIN,DRK,WAR,THF,RDM,RUN.  
 **/unlock: [all|#'s|names]**: Unlock equipment slot(s) so luashitacast can change item.  
