@@ -2806,6 +2806,9 @@ function gcinclude.HandleCommands(args)
 		end
 		
 		if args[2] ~= nil then
+			if sTarget == 'nac' and string.sub(args[2],1,1) == '-' then
+				args[2] = WhichAccuracySet(string.sub(args[2],2,-1));
+			end
 			gcinclude.LockUnlock(sTarget,'unlock',args[2]);
 			if string.lower(args[2]) == 'all' then
 				if sTarget == 'locks' then
