@@ -52,7 +52,7 @@ local sets = {
 	['TP'] = {
         Head  = 'Empress Hairpin',
         Neck  = { 'Peacock Amulet', 'Spike Necklace' },
-        Ears  = { 'Physical Earring', 'Reraise Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
+        Ears  = { 'Fang Earring', 'Fang Earring', 'Physical Earring', 'Reraise Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
         Body  = { 'Rapparee Harness', 'Brigandine', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
         Hands = 'Battle Gloves',
         Rings = { 'Kshama Ring No.2', 'Balance Ring', 'Courage Ring' },
@@ -849,6 +849,21 @@ profile.WeaponType = {
 				  'Light Staff', 'Apollo\'s Staff', 'Dark Staff', 'Pluto\'s Staff' },	
 };
 
+-- Accuracy Sets are predefined /acc commands. You identify them by a name and
+-- a comma delimited list of slots. It's just a convenient shortcut mechanism.
+profile.AccuracySet = {
+	['base'] = 'Rings,Body',
+};
+
+-- RegionControlGear identifies a piece of gear that can be used to automatically
+-- determine if the player is currently in a zone controlled by their nation or
+-- not. The definition includes the name of the piece of gear, what slot does it
+-- equip in (do not use RINGS or EARS, use RING1 and EAR1), whether HP or MP 
+-- is affected, and whether the piece requires region ownership or not the region 
+-- ownership.
+profile.RegionControlGear = {
+};
+
 profile.Sets = sets;
 profile.sjb = nil;
 profile.bAmmo = false;
@@ -1046,13 +1061,7 @@ profile.HandleDefault = function()
 					end				
 				end			
 			elseif cKey == 'E' then		-- Accuracy	
-				if gcdisplay.GetToggle('Acc') == true then 
-					if bTank == true then
-						gcinclude.MoveToCurrent(sets.Tank_Accuracy,sets.CurrentGear);
-					else
-						gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
-					end
-				end
+				gcinclude.FractionalAccuracy(sets.Accuracy,sets.Tank_Accuracy);
 			elseif cKey == 'F' then		-- Kiting
 				if (gcdisplay.GetToggle('Kite') == true) then
 					gcinclude.MoveToCurrent(sets.Movement,sets.CurrentGear);

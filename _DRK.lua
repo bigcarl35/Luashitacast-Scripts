@@ -51,14 +51,14 @@ local sets = {
 --]]
 
 	['TP'] = {
-        Head  = { 'Chaos Burgeonet//ACCESSIBLE','Empress Hairpin' },
-        Neck  = { 'Parade Gorget//HP.GE.85PV', 'Peacock Amulet', 'Spike Necklace' },
+        Head  = { 'Abyss Burgeonet//ACCESSIBLE', 'Empress Hairpin' },
+        Neck  = { 'Parade Gorget//SPECIAL', 'Peacock Amulet', 'Spike Necklace' },
         Ears  = { 'Coral Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Pilferer\'s Earring//SJTHF', 'Drone Earring', 'Energy Earring +1', 'Energy Earring +1' },
         Body  = { 'Chaos Cuirass//ACCESSIBLE', 'Scorpion Harness', 'Brigandine', 'Beetle Harness' },        
-		Hands = { 'Abyss Gauntlets//ACCESSIBLE', 'Thick Mufflers', 'Wonder Mitts' },
+		Hands = { 'Abs. Gauntlets +1//ACCESSIBLE', 'Thick Mufflers', 'Wonder Mitts' },
         Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tamas Ring', 'Kshama Ring No.2', 'Balance Ring' },
         Back  = { 'Psilos Mantle', 'Amemet Mantle', 'Raptor Mantle', 'Ram Mantle' },
-        Waist = { 'Swift Belt', 'Axe Belt//SJWAR', 'Powerful Rope', 'Friar\'s Rope' },
+        Waist = { 'Swift Belt', 'Powerful Rope', 'Friar\'s Rope' },
         Legs  = { 'Thick Breeches', 'Chaos Flanchard//ACCESSIBLE', 'Ryl.Sqr. Breeches', 'San. Trousers' },
         Feet  = { 'Thick Sollerets', 'Chaos Sollerets//ACCESSIBLE', 'Bounding Boots' },
     },
@@ -78,7 +78,7 @@ local sets = {
 	['Accuracy'] = {
 		Head  = 'Optical Hat',
 		Neck  = 'Peacock Amulet',
-        Body  = 'Scorpion Harness',
+        Body  = { 'Abyss Cuirass', 'Scorpion Harness' },
 		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },
 		Hands = 'Thick Mufflers',
 		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt' },
@@ -168,7 +168,7 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-        Main = 'Suzaku\'s Scythe',
+        Main = 'Balmung',
         Ammo = { 'Hedgehog Bomb', 'Fortune Egg' },
     },
 	
@@ -268,7 +268,7 @@ local sets = {
 	-- Dark: Dark Magic Skill.	
 	['Dark'] = {
 		Head  = 'Chaos Burgeonet//ACCESSIBLE',
-		Hands = 'Abyss Gauntlets//ACCESSIBLE',
+		Hands = 'Abs. Gauntlets +1//ACCESSIBLE',
 		Legs  = 'Abyss Flanchard//ACCESSIBLE',
     },
 
@@ -309,7 +309,7 @@ local sets = {
 
 	['INT'] = {
         Rings = { 'Tamas Ring', 'Windurstian Ring' },
-		Hands = 'Abyss Gauntlets//ACCESSIBLE',
+		Hands = 'Abs. Gauntlets +1//ACCESSIBLE',
         Waist = 'Mrc.Cpt. Belt',
 		Legs  = 'Chaos Flanchard//ACCESSIBLE',
         Feet = 'Mannequin Pumps',
@@ -381,8 +381,9 @@ local sets = {
 	you will need to use every weapon skill that your job can do. The leading comment defines what weapon/weapon
 	skill combination the set applies to.
 	
-	DRK can use the following weapons: scythe (A+), great sword (A-), axe (B-), great axe (B-), sword (B-), dagger (C), club(C-).
-	Any other weapon will have no weaponskill available. Weapon skill sets are named based on stat(s) used, regardless of weapon
+	DRK can use the following weapons: scythe (A+), great sword (A-), axe (B-), great axe (B-), sword (B-), dagger (C), club(C-),
+	marksmanship (E). Any other weapon will have no weaponskill available. Weapon skill sets are named based on stat(s) used, 
+	regardless of weapon
 --]]
 
 --[[
@@ -522,6 +523,22 @@ local sets = {
         Legs  = { 'Wonder Braccae', 'San. Trousers' },
         Feet  = 'Wonder Clomps',
     },
+
+--[[
+		* Agility based *
+		
+		Marksmanship: Hot Shot^,Split Shot^,Sniper Shot^,Slug Shot^
+		
+		^ RNG must be subjob
+--]]
+
+	['WS_AGI'] = {
+		Head  = 'Empress Hairpin',
+		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },
+		Waist = 'Mrc.Cpt. Belt',
+		Legs  = 'Ryl.Sqr. Breeches',
+		Feet  = 'Bounding Boots',
+	},
 
 --[[
 		* Charisma based *
@@ -816,6 +833,21 @@ profile.WeaponType = {
 				  'Light Staff', 'Apollo\'s Staff', 'Dark Staff', 'Pluto\'s Staff' },	
 };
 
+-- Accuracy Sets are predefined /acc commands. You identify them by a name and
+-- a comma delimited list of slots. It's just a convenient shortcut mechanism.
+profile.AccuracySet = {
+	['base'] = 'Rings,Body',
+};
+
+-- RegionControlGear identifies a piece of gear that can be used to automatically
+-- determine if the player is currently in a zone controlled by their nation or
+-- not. The definition includes the name of the piece of gear, what slot does it
+-- equip in (do not use RINGS or EARS, use RING1 and EAR1), whether HP or MP 
+-- is affected, and whether the piece requires region ownership or not the region 
+-- ownership.
+profile.RegionControlGear = {
+};
+
 profile.Sets = sets;
 profile.sjb = nil;
 profile.bAmmo = false;		-- /BST specific. Is ammo equipped?
@@ -1016,13 +1048,7 @@ profile.HandleDefault = function()
 					end
 				end
 			elseif cKey == 'E' then		-- Accuracy	
-				if gcdisplay.GetToggle('Acc') == true then 		
-					if bTank == true then
-						gcinclude.MoveToCurrent(sets.Tank_Accuracy,sets.CurrentGear);
-					else
-						gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
-					end
-				end	
+				gcinclude.FractionalAccuracy(sets.Accuracy,sets.Tank_Accuracy);
 			elseif cKey == 'F' then		-- Kiting
 				if (gcdisplay.GetToggle('Kite') == true) then
 					gcinclude.MoveToCurrent(sets.Movement,sets.CurrentGear);

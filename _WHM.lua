@@ -111,7 +111,7 @@ local sets = {
 	},
 	
 	['Resting_Refresh'] = {
-		Main  = { 'Dark Staff//WSWAP', 'Blessed Hammer//ACCESSIBLE//WSWAP, 'Pilgrim\'s Wand//WSWAP' },
+		Main  = { 'Dark Staff//WSWAP', 'Blessed Hammer//ACCESSIBLE//WSWAP', 'Pilgrim\'s Wand//WSWAP' },
         Body = 'Seer\'s Tunic',
     },
 
@@ -777,6 +777,21 @@ profile.WeaponType = {
 	['CLUB']   = { 'Blessed Hammer', 'Solid Wand', 'Yew Wand', 'Pilgrim\'s Wand', 'Warp Cudgel' },
 };
 
+-- Accuracy Sets are predefined /acc commands. You identify them by a name and
+-- a comma delimited list of slots. It's just a convenient shortcut mechanism.
+profile.AccuracySet = {
+	['base'] = 'Rings,Body',
+};
+
+-- RegionControlGear identifies a piece of gear that can be used to automatically
+-- determine if the player is currently in a zone controlled by their nation or
+-- not. The definition includes the name of the piece of gear, what slot does it
+-- equip in (do not use RINGS or EARS, use RING1 and EAR1), whether HP or MP 
+-- is affected, and whether the piece requires region ownership or not the region 
+-- ownership.
+profile.RegionControlGear = {
+};
+
 profile.Sets = sets;
 profile.sjb = nil;
 profile.bAmmo = false;
@@ -956,9 +971,7 @@ profile.HandleDefault = function()
 					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 				end			
 			elseif cKey == 'E' then		-- Accuracy	
-				if gcdisplay.GetToggle('Acc') == true then 
-					gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
-				end
+				gcinclude.FractionalAccuracy(sets.Accuracy,nil);
 			elseif cKey == 'F' then		-- Kiting
 				if (gcdisplay.GetToggle('Kite') == true) then
 					gcinclude.MoveToCurrent(sets.Movement,sets.CurrentGear);

@@ -54,7 +54,7 @@ local sets = {
 --]]
 
 	['TP'] = {
-        Head  = { 'Shep. Bonnet//PET', 'Austere Hat', 'Silver Hairpin' },
+        Head  = { 'Shep. Bonnet//PETF', 'Summoner\'s Horn//ACCESSIBLE//SMNPETMW', 'Austere Hat', 'Silver Hairpin' },
 		Neck  = { 'Uggalepih Pendant//NIGHTTIME', 'Fenrir\'s Torque//DAYTIME', 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
 		Ears  = { 'Loquac. Earring', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1', 'Reraise Earring' },
         Body  = { 'Vermillion Cloak//CARBY','Summoner\'s Dblt.//ACCESSIBLE//SMNPETMD', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' }, 
@@ -71,8 +71,6 @@ local sets = {
 	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
 	Remember that DEX converts to accuracy: (horizon) for every 1 point of DEX you get 
 	0.70 points of accuracy if wielding a 2H weapon, 0.65 for a 1H weapon, and 0.60 for H2H. 
-	Tank_Accuracy is a subset of Accuracy. It lets you specify what accuracy gear to equip 
-	that doesn't compromise your tanking set as much as a full-blown accuracy set would.
 --]]
 	
 	['Accuracy'] = {
@@ -155,7 +153,7 @@ local sets = {
 	-- avatar perpetuation cost abilities defined here. The midcast happens when the
 	-- actual blood pact goes off.
 	['BP'] = {
-        Head  = 'Austere Hat',
+        Head  = { 'Summoner\'s Horn//ACCESSIBLE', 'Austere Hat' },
         Neck = 'Smn. Torque',
         Body  = 'Austere Robe',
         Hands = { 'Carbuncle Mitts//CARBY', 'Smn. Bracers +1' },
@@ -362,6 +360,7 @@ local sets = {
 --]]
 
 	['INT'] = {
+		Head  = 'Summoner\'s Horn//ACCESSIBLE',
         Hands = { 'Errant Cuffs', 'Seer\'s Mitts' },
         Rings = 'Tamas Ring',
 		Body  = 'Errant Hpl.',
@@ -457,7 +456,7 @@ local sets = {
 --]]
 	
 	['WS_STRINT'] = {
-        Head  = 'Mrc.Cpt. Headgear',
+        Head  = { 'Summoner\'s Horn//ACCESSIBLE', 'Mrc.Cpt. Headgear' },
         Neck  = 'Spike Necklace',
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
@@ -546,6 +545,7 @@ local sets = {
 --]]
 	
 	['WS_INT'] = {
+		Head  = 'Summoner\'s Horn//ACCESSIBLE',
         Hands = 'Seer\'s Mitts',
         Rings = 'Tamas Ring',
 		Body  = 'Errant Hpl.',
@@ -561,6 +561,7 @@ local sets = {
 --]]
 	
 	['WS_INTMND'] = {
+		Head  = 'Summoner\'s Horn//ACCESSIBLE',
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Seer\'s Mitts',
@@ -814,6 +815,20 @@ profile.WeaponType = {
 	['DAGGER'] = { 'Garuda\'s Dagger' },
 };
 
+-- Accuracy Sets are predefined /acc commands. You identify them by a name and
+-- a comma delimited list of slots. It's just a convenient shortcut mechanism.
+profile.AccuracySet = {
+	['base'] = 'Rings,Body',
+};
+
+-- RegionControlGear identifies a piece of gear that can be used to automatically
+-- determine if the player is currently in a zone controlled by their nation or
+-- not. The definition includes the name of the piece of gear, what slot does it
+-- equip in (do not use RINGS or EARS, use RING1 and EAR1), whether HP or MP 
+-- is affected, and whether the piece requires region ownership or not the region 
+-- ownership.
+profile.RegionControlGear = { 'Republican Gold Medal','Neck','MP',false };
+
 profile.Sets = sets;
 profile.sjb = nil;			-- Tracks subjob name
 profile.sPetAction = nil;	-- what was the last action by your avatar
@@ -1061,9 +1076,7 @@ profile.HandleDefault = function()
 					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 				end
 			elseif cKey == 'E' then		-- Accuracy
-				if gcdisplay.GetToggle('Acc') == true then 
-					gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
-				end
+				gcinclude.FractionalAccuracy(sets.Accuracy,nil);
 			elseif cKey == 'F' then		-- Kiting
 				if (gcdisplay.GetToggle('Kite') == true) then
 					gcinclude.MoveToCurrent(sets.Movement,sets.CurrentGear);
