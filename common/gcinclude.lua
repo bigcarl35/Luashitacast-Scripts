@@ -125,7 +125,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'gswap','gcmessages','wsdistance','dt','kite','acc','eva','gearset','gs','th','help','wswap','petfood','maxspell','maxsong','region','ajug','db','sbp','showit','equipit','ei','tank','idle','lock','unlock','slot','horn','string','t1'};
+gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','maxsong','maxspell','nac','petfood','region','sbp','showit','slot','string','tank','th','unlock','wsdistance','wswap','t1'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T{'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T{'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -235,13 +235,18 @@ gcinclude.OBI = 'obi';
 gcinclude.sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,SCH,GEO,RUN';
 gcinclude.sVisibleGear = 'Main,Sub,Head,Body,Hands,Legs,Feet';
 
-gcinclude.Locks = { [1] = {'main', false}, [2] = {'sub',false}, [3] = {'range',false}, 
-					[4] = {'ammo',false}, [5] = {'head',false}, [6] = {'neck',false},
-					[7] = {'ear1',false}, [8] = {'ear2',false}, [9] = {'body',false},
-					[10] = {'hands',false}, [11] = {'ring1',false}, [12] = {'ring2',false},
-					[13] = {'back',false}, [14] = {'waist', false}, [15] = {'legs',false}, 
-					[16] = {'feet',false}};
+-- The following structure is used for locks and accuracy
+gcinclude.Locks = { [1] =  {'main', false,false}, [2] =  {'sub',false,false}, 
+					[3] =  {'range',false,false}, [4] =  {'ammo',false,false}, 
+					[5] =  {'head',false,false},  [6] =  {'neck',false,false},
+					[7] =  {'ear1',false,false},  [8] =  {'ear2',false,false}, 
+					[9] =  {'body',false,false},  [10] = {'hands',false,false}, 
+					[11] = {'ring1',false,false}, [12] = {'ring2',false,false},
+					[13] = {'back',false,false},  [14] = {'waist',false,false},
+					[15] = {'legs',false,false},  [16] = {'feet',false,false}};
+					
 gcinclude.LocksNumeric = 'None';
+gcinclude.AccNumeric = 'None';
 
 -- Structure for tracking elemental gear. The "Job" entry is used to make sure the current Job matches
 -- the job where the status was recorded.
@@ -612,27 +617,28 @@ gcinclude.STORAGES = {
 
 -- List of items that are commonly equipped for teleporting, exp boosts, reraise, etc
 gcinclude.equipIt = {
-	['emp'] = {'Empress Band','Ring'},
-	['cha'] = {'Chariot Band','Ring'},
-	['empo'] = {'Emperor Band','Ring'},
-	['ann'] = {'Anniversary Ring','Ring'},
-	['dem'] = {'Dem Ring','Ring'},
-	['mea'] = {'Mea Ring','Ring'},
-	['holla'] = {'Holla Ring','Ring'},
-	['altep'] = {'Altepa Ring','Ring'},
-	['yhoat'] = {'Yhoat Ring','Ring'},
-	['vahzl'] = {'Vahzl Ring','Ring'},
-	['home'] = {'Homing Ring','Ring'},
-	['ret'] = {'Return Ring','Ring'},
-	['warp'] = {'Warp Ring','Ring'},
-	['tav'] = {'Tavnazian Ring','Ring'},
-	['dcl'] = {'Dcl.Grd. Ring','Ring'},
-	['warpc'] = {'Warp Cudgel','Main'},
-	['trick2'] = {'Trick Staff II','Main'},
-	['treat2'] = {'Treat Staff II','Main'},
-	['fork1'] = {'Pitchfork +1','Main'},
-	['purgo'] = {'Wonder Top +1','Body'},
-	['rre'] = {'Reraise Earring','Ear'},
+	['emp'] = {'Empress Band','Ring',nil},
+	['cha'] = {'Chariot Band','Ring',nil},
+	['empo'] = {'Emperor Band','Ring',nil},
+	['ann'] = {'Anniversary Ring','Ring',nil},
+	['dem'] = {'Dem Ring','Ring',nil},
+	['mea'] = {'Mea Ring','Ring',nil},
+	['holla'] = {'Holla Ring','Ring',nil},
+	['altep'] = {'Altepa Ring','Ring',nil},
+	['yhoat'] = {'Yhoat Ring','Ring',nil},
+	['vahzl'] = {'Vahzl Ring','Ring',nil},
+	['home'] = {'Homing Ring','Ring',nil},
+	['ret'] = {'Return Ring','Ring',nil},
+	['warp'] = {'Warp Ring','Ring',nil},
+	['tav'] = {'Tavnazian Ring','Ring',nil},
+	['dcl'] = {'Dcl.Grd. Ring','Ring',nil},
+	['warpc'] = {'Warp Cudgel','Main',nil},
+	['trick2'] = {'Trick Staff II','Main',nil},
+	['treat2'] = {'Treat Staff II','Main',nil},
+	['fork1'] = {'Pitchfork +1','Main',nil},
+	['purgo'] = {'Wonder Top +1','Body',nil},
+	['rre'] = {'Reraise Earring','Ear',nil},
+	['mandy'] = {'Mandra. Suit','Body','Body,Legs'},
 };
 
 -- This is the list of storage containers that can be equipped from outside of a moghouse
@@ -677,12 +683,6 @@ TallyGear = {
 -- The following is a list of all valid conditional operators used in the following
 -- inline codes: //MP, //MPP, //HP, //HPP, //TP, and //TPP.
 InlineConditionals = { '.EQ.', '.GT.', '.GE.', '.LT.', '.LE.', '.NE.' };
-
-InLineSpecialCodes = { 
-						{'//TP.', nil }, { '//TPP.', nil }, {'//MP.', nil }, 
-						{'//MPP.'}, {'//HP.', nil }, {'//HPP', nil}, 
-						{'PARTY', nil},
-					 };
 
 gcinclude.Sets = gcinclude.sets;
 
@@ -741,47 +741,80 @@ end		-- gcinclude.ClearAlias
 	GetLockedList returns a comma delimited list or nil if all unlocked
 --]]
 
-function gcinclude.GetLockedList()
+function gcinclude.GetLockedList(sTarget)
 	local sList = nil;
+	local iOffset;
+	
+	if sTarget == 'acc' then
+		iOffset = 1;
+	else
+		iOffset = 0;
+	end
 
 	for i,j in ipairs(gcinclude.Locks) do
-		if j[2] == true then
+		if j[2+iOffset] == true then
 			if sList == nil then		
 				sList = gData.Constants.EquipSlotNames[gData.Constants.EquipSlotsLC[j[1]]];
-				gcinclude.LocksNumeric = tostring(i);
+				if sTarget == 'locks' then
+					gcinclude.LocksNumeric = tostring(i);
+				else
+					gcinclude.AccNumeric = tostring(i);
+				end
 			else	
 				sList = sList .. ', ' .. gData.Constants.EquipSlotNames[gData.Constants.EquipSlotsLC[j[1]]];
-				gcinclude.LocksNumeric = gcinclude.LocksNumeric .. ',' .. tostring(i);			
+				if sTarget == 'locks' then
+					gcinclude.LocksNumeric = gcinclude.LocksNumeric .. ',' .. tostring(i);
+				else
+					gcinclude.AccNumeric = gcinclude.AccNumeric .. ',' .. tostring(i);
+				end
 			end
 		end
 	end
+	
 	if sList == nil then
-		gcinclude.LocksNumeric = 'None';
+		if sTarget == 'locks' then
+			gcinclude.LocksNumeric = 'None';
+		else
+			gcinclude.AccNumeric = 'None';
+		end
 	end
 	return sList;
 end		-- gcinclude.GetLockedList
 
 --[[
-	Unlock removes the specified (or all) the locked slots. Supported are either the
-	slot name or the slot number.
+	LockUnlock either locks or unlocks the specified (or all) slots or enables/disables
+	the specified slots for accuracy. Supported are either the slot name or the slot 
+	number.
 --]]
 
-function gcinclude.LockUnlock(sType,sWhich)
-
+function gcinclude.LockUnlock(sTarget,sType,sWhich)
+	local iOffset;
+	
+	if sWhich == nil then
+		return;
+	end 
+	
+	-- Determine field to address
+	if sTarget == 'acc' then
+		iOffset = 1;
+	else
+		iOffset = 0;
+	end
+	
 	sWhich = ',' .. string.lower(sWhich) .. ',';
 	for k,l in ipairs(gcinclude.Locks) do
 		local sk = ',' .. tostring(k) .. ',';
 		if (sWhich == ',all,') or (string.find(sWhich,l[1]) ~= nil) or (string.find(sWhich,sk) ~= nil) then
-			gcinclude.Locks[k][2] = (string.lower(sType) == 'lock');
+			gcinclude.Locks[k][2+iOffset] = (string.lower(sType) == 'lock');
 		end
 	end
 	
 	-- Special case for ears and rings
 	for i=1,16,1 do
 		if string.find(sWhich,'ears') and string.sub(gcinclude.Locks[i][1],1,-2) == 'ear' then
-			gcinclude.Locks[i][2] = (string.lower(sType) == 'lock');
+			gcinclude.Locks[i][2+iOffset] = (string.lower(sType) == 'lock');
 		elseif string.find(sWhich,'rings') and string.sub(gcinclude.Locks[i][1],1,-2) == 'ring' then
-			gcinclude.Locks[i][2] = (string.lower(sType) == 'lock');
+			gcinclude.Locks[i][2+iOffset] = (string.lower(sType) == 'lock');
 		end
 	end
 end		-- gcinclude.LockUnlock
@@ -960,7 +993,6 @@ function gcinclude.SetVariables()
 	-- General toggles
 	gcdisplay.CreateToggle('GSwap', true);
 	gcdisplay.CreateToggle('Kite', false);
-	gcdisplay.CreateToggle('Acc', false);
 	gcdisplay.CreateToggle('Eva', false);
 	
 	gcdisplay.CreateToggle('WSwap',(string.find('WHM,BRD',player.MainJob) ~= nil));
@@ -1555,24 +1587,40 @@ function gcinclude.ValidateSpecial(sGear)
 	-- Now, do specific calculations based on the name of the piece of gear
 	if sGear == 'uggalepih pendant' then
 		-- Condition: MP% < 51. MAB bonus. Only visible gear, ignore all "Convert HP to MP"
-		local iMP = player.MP - TallyGear.VCHPMP;
-		local imMP = player.MaxMP - TallyGear.IMP - TallyGear.ICMPHP- TallyGear.ICHPMP;
-		local iaMP = player.MaxMP * (TallyGear.IMPP * 0.01);
-		bGood = (iMP/(imMP - iaMP) < 51);
+		-- Check outright first	
+		if (player.MPP < 51) then
+			return true;
+		else
+			local iMP = player.MP - TallyGear.VCHPMP;
+			local imMP = player.MaxMP - TallyGear.IMP - TallyGear.ICMPHP- TallyGear.ICHPMP;
+			local iaMP = player.MaxMP * (TallyGear.IMPP * 0.01);
+			bGood = ((iMP/(imMP - iaMP))*100 < 51);
+		end
 	elseif sGear == 'parade gorget' then
 		-- Condition: HP% >= 85. Adds "Refresh". Only visible gear
-		-- Check outright first
-		if player.HP/player.MaxHP >= 85 then
-			return(player.MP/player.MaxMP <= gcinclude.settings.Tolerance);
+		-- Check outright first	
+		if (player.HP/player.MaxHP)*100 >= 85 then
+			return((player.MP/player.MaxMP)*100 <= gcinclude.settings.Tolerance);
+		else
+			-- Let's see if the invisible gear will make a difference
+			local iHP = player.MaxHP - TallyGear.IHP - TallyGear.ICMPHP;
+			local iaHP = math.floor(iHP * (TallyGear.IHPP * 0.01));
+			bGood = ((player.HP/(iHP - iaHP))*100 >= 85 and (player.MP/player.MaxMP)*100 <= gcinclude.settings.Tolerance);
 		end
-		-- Let's see if the invisible gear will make a difference
-		local iHP = player.MaxHP - TallyGear.IHP - TallyGear.ICMPHP;
-		local iaHP = math.floor(iHP * (TallyGear.IHPP * 0.01));
-		bGood = (player.HP/(iHP - iaHP) >= 85 and player.MP/player.MaxMP <= gcinclude.settings.Tolerance);
 	elseif sGear == 'sorcerer\'s ring' then
 		-- Condition: HP% < 76 and TP% < 100. Ignore HP+ (flat and percent) and
 		-- Convert HP to MP gear.
-		print(chat.header('ValidateSpecial'):append(chat.message('Warning: Special check for Sorcerer\'s Ring not implemented yet. Ignoring.')));
+		-- Check outright first	
+		if (player.HP/player.MaxHP)*100 < 76 and player.TP/10 < 100 then
+			return true;
+		else
+			local fHP = TallyGear.VHP + TallyGear.IHP;			
+			local fCHPMP = TallyGear.VCHPMP + TallyGear.ICHPMP;
+			local fHPP = math.floor((TallyGear.VHPP + TallyGear.IHPP) * (fHP + fCHPMP) * 0.01);
+			if (player.HP - fHP - fHPP)/player.MaxHP < 76 and player.TP/10 < 100 then
+				return true;
+			end
+		end
 	else
 		print(chat.header('ValidateSpecial'):append(chat.message('Warning: No special code exists for ' .. gear .. '. Ignoring piece.')));		
 	end
@@ -1581,7 +1629,7 @@ end		-- ValidateSpecial
 
 --[[
 	CheckAccessible is a replacement function for what was found in the "Validate"
-	routines, which have been removed. It determines if the passed gear can be
+	routines, which has been removed. It determines if the passed gear can be
 	found in a storage container that is accessible out of town
 --]]
 
@@ -1605,6 +1653,26 @@ function gcinclude.CheckAccessible(sGear)
 	end
 	return false;
 end		-- CheckAccessible
+
+--[[
+	CheckAccuracySlots determines if the passed slot is one of the designated
+	accuracy slots. Please note if the slot is named "ears" or "rings" both
+	associated slots will be checked.
+--]]
+
+function gcinclude.CheckAccuracySlots(sSlot)
+
+	sSlot = string.lower(sSlot);
+	for i,j in ipairs(gcinclude.Locks) do
+		if j[1] == sSlot or 
+		   (sSlot == 'ears' and string.find('ear1,ear2',j[1]) ~= nil and j[3] == true) or
+		   (sSlot == 'rings' and string.find('ring1,ring2',j[1]) ~= nil and j[3] == true) then
+			return true;
+		end
+	end
+	return false;
+end		-- gcinclude.CheckAccuracySlots
+
 
 --[[
 	CheckInline checks for a simple conditional on the item passed into it.
@@ -1658,7 +1726,7 @@ function gcinclude.CheckInline(gear,sSlot)
 		elseif suCode == 'ACCESSIBLE' then
 			bGood = gcinclude.CheckAccessible(sGear); 
 		elseif suCode == 'ACCURACY' then
-			bGood = (gcdisplay.GetToggle('Acc') == true);			
+			bGood = (gcinclude.CheckAccuracySlots(sSlot) == true);		
 		elseif string.sub(suCode,1,3) == 'AK:' then			-- National Aketon
 			local pNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation();
 			local sWhich = string.sub(suCode,4,-1);
@@ -1681,6 +1749,8 @@ function gcinclude.CheckInline(gear,sSlot)
 			bGood = (gData.GetBuffCount('Blind') >= 1);
 		elseif suCode == 'CARBY' then						-- Pet is carbuncle
 			bGood = (gcinclude.isPetNamed('Carbuncle'));
+		elseif suCode == 'COVER' then						-- Player has cast cover
+			bGood = (gData.GetBuffCount('Cover') >= 1);
 		elseif string.sub(suCode,1,3) == 'CR:' then			-- Crafting
 			bGood = (gcinclude.Craft == string.sub(suCode,4,-1));
 		elseif suCode == 'DAYTIME' then						-- Time is daytime
@@ -1701,6 +1771,10 @@ function gcinclude.CheckInline(gear,sSlot)
 			else
 				bGood = false;
 			end	
+		elseif string.find(suCode,'IF:') then
+			local sCur = gData.GetEquipSlot(sSlot);
+			local sItem = string.sub(suCode,4,-1);
+			bGood = (string.lower(sItem) == string.lower(sCur));
 		elseif suCode == 'MSJ' then							-- Magical subjob
 			bGood = (string.find(gcinclude.sMagicJobs,sj) ~= nil);
 		elseif suCode == 'NEWMOON' then						-- Moon phase: New Moon
@@ -1756,7 +1830,7 @@ function gcinclude.CheckInline(gear,sSlot)
 				bGood = false;
 			end			
 		elseif suCode == 'SPECIAL' then
-			bGood = ValidateSpecial(sGear);
+			bGood = gcinclude.ValidateSpecial(sGear);
 		elseif suCode == 'SPIRIT:ES' then					-- Pet being summoned is a spirit
 			bGood = (string.find(gcinclude.Spirits,string.lower(spell.Name)) ~= nil);
 		elseif suCode == 'SPIRIT:EP' then					-- Current pet is a spirit
@@ -1777,8 +1851,8 @@ function gcinclude.CheckInline(gear,sSlot)
 			else
 				bGood = false;
 			end
-		elseif suCode == 'UTSUSEMI' then
-			bGood = (gData.GetBuffCount('copy image (3)') >= 1);
+--		elseif suCode == 'UTSUSEMI' then
+--			bGood = (gData.GetBuffCount('copy image (3)') >= 1);
 		elseif suCode == 'WSWAP' then						-- Weapon swapping enabledB
 			bGood = (gcinclude.settings.bWSOverride == true or gcdisplay.GetToggle('WSwap') == true);
 		elseif string.sub(suCode,1,4) == 'WTH:' then		-- Does the weather match
@@ -1800,28 +1874,12 @@ function gcinclude.CheckInline(gear,sSlot)
 end		-- gcinclude.CheckInline
 
 function gcinclude.t1()
-	local item;
-	local hp,mp;
+	local player = gData.GetPlayer();
+	local tSet = {['Ring2'] = 'Moon Ring'};
 	
-	ClearTallyGear();
-	TallyFromConvert();
-	TallyMP();
-	TallyHP();
-	
-	print('Visible:');
-	print('   HP from Convert MP to HP = ' .. tostring(TallyGear.VCMPHP));
-	print('   HP = ' .. tostring(TallyGear.VHP));
-	print('   HP% = ' .. tostring(TallyGear.VHPP));
-	print('   MP from Convert HP to MP = ' .. tostring(TallyGear.VCHPMP));
-	print('   MP = ' .. tostring(TallyGear.VMP));
-	print('   MP% = ' .. tostring(TallyGear.VMPP));	
-	print('Invisible:');
-	print('   HP from Convert MP to HP = ' .. tostring(TallyGear.ICMPHP));
-	print('   HP = ' .. tostring(TallyGear.IHP));
-	print('   HP% = ' .. tostring(TallyGear.IHPP));
-	print('   MP from Convert HP to MP = ' .. tostring(TallyGear.ICHPMP));
-	print('   MP = ' .. tostring(TallyGear.IMP));
-	print('   MP% = ' .. tostring(TallyGear.IMPP));	
+	print('Before',player:GetStat(1));
+	gFunc.ForceEquipSet(tSet);
+	print('After',player.Stats);
 end		-- gcinclude.t1
 
 --[[
@@ -2013,6 +2071,106 @@ function gcinclude.EquipTheGear(tSet)
 	
 	gFunc.ForceEquipSet(tSet);
 end			-- gcinclude.EquipTheGear
+
+--[[
+	CheckLockAccCollision checks to see if any of the slots associated with locks
+	clashes with slots associated with the accuracy. An appropriate warning is
+	issued if there's a problem.
+--]]
+
+function gcinclude.CheckLockAccCollision(sFrom)
+	sFrom = string.lower(sFrom);
+	
+	for i,j in ipairs(gcinclude.Locks) do
+		if j[2] == true and j[3] == true then
+			if sFrom == 'locks' then
+				print(chat.message('Warning: one or more locks conflict with accuracy slots.'));
+			else
+				print(chat.message('Warning: one or more accuracy slots conflict with locks.'));			
+			end
+			return;
+		end
+	end
+end		-- gcinclude.CheckLockAccCollision
+
+--[[
+	getPairedAccuracySlotValues returns whether the ear slots or ring slots have been
+	degnated for accuracy gear. This is needed to determine if both associated slots
+	need to be populated or just one of the slots.
+--]]
+
+function getPairedAccuracySlotValues(sSlot)
+	local bS1 = false;
+	local bS2 = false;
+	local root = string.sub(string.lower(sSlot),1,-2);
+	
+	for i,j in ipairs(gcinclude.Locks) do
+		if j[1] == root .. '1' and j[3] == true then
+			bS1 = true;
+		elseif j[1] == root .. '2' and j[3] == true then
+			bS2 = true;
+		end
+	end
+	return bS1,bS2;
+end		-- getPairedAccuracySlotValues
+
+--[[
+	FractionalAccuracy uses the stored accuracy slots and builds a equipment table
+	(from the appropriate accuracy set) and then equips said table. It is a replacement
+	for that On/Off accuracy implementation that was originally developed. This new
+	approach lets the user (through the /acc and /nac commands) specify which slots
+	accuracy gear should be equipped. This "fractional" approach lets the user decide
+	how much accuracy gear should be equipped.
+--]]
+
+function gcinclude.FractionalAccuracy(accTbl,tankAccTbl)
+	local src,s,t,root;
+	local tAcc = {};
+	
+	if gcinclude.AccNumeric == 'None' then
+		return;
+	end
+	
+	if gcdisplay.GetToggle('Tank') ~= nil and 
+	   gcdisplay.GetToggle('Tank') == true and 
+	   tankAccTbl ~= nil then
+		src = tankAccTbl;
+	else
+		src = accTbl;
+	end
+	
+	for i,j in pairs(src) do
+		-- Special case for ears and rings. Deal with then
+		if string.lower(i) == 'ears' then
+			local s1,s2 = getPairedAccuracySlotValues('ears');
+			if s1 == true and s2 == true then
+				tAcc[i] = j;
+			elseif s1 == true then
+				tAcc['Ear1'] = j;
+			else
+				tAcc['Ear2'] = j;
+			end
+		elseif string.lower(i) == 'rings' then
+			local s1,s2 = getPairedAccuracySlotValues('rings');
+			if s1 == true and s2 == true then
+				tAcc[i] = j;
+			elseif s1 == true then
+				tAcc['Ring1'] = j;
+			else
+				tAcc['Ring2'] = j;
+			end		
+		else
+			-- Normal slots. Match it up
+			for ii,jj in pairs(gcinclude.Locks) do			
+				if string.lower(i) == jj[1] and jj[3] == true then
+					tAcc[i] = j;
+				end
+			end
+		end
+	end
+	
+	gcinclude.MoveToCurrent(tAcc,gProfile.Sets.CurrentGear);	
+end		-- gcinclude.FractionalAccuracy
 
 --[[
 	MaxSong determines what is the highest tier song that matches the passed root or buff name
@@ -2239,7 +2397,7 @@ function gcinclude.SwapToStave(sStave,noSave,cs)
 	if (gcdisplay.GetToggle('WSwap') == true or gcinclude.settings.bWSOverride) then	
 		sGear = gcinclude.CheckForEleGear('staff',sStave);		
 		-- See if a current weapon is the one of the targetted staves
-		if not (eWeap == nil or (eWeap ~= nil and string.lower(eWeap) == string.lower(sGear))) then
+		if not (eWeap == nil or sGear == nil or (eWeap ~= nil and string.lower(eWeap) == string.lower(sGear))) then
 			-- save the weapon so it can be equipped again
 			if eWeap ~= gcinclude.weapon and noSave == false and gcinclude.settings.bWSOverride == false then
 				gcinclude.weapon = eWeap;
@@ -2267,6 +2425,7 @@ end		-- gcinclude.SwapToStave
 function gcinclude.EquipItem(args)
 	local iName = nil;
 	local iSlot = nil;
+	local sLocks = nil;
 		
 	if #args > 1 then
 		-- see if the item specified is a code	
@@ -2274,6 +2433,7 @@ function gcinclude.EquipItem(args)
 			if k == args[2] then
 				iName = v[1];
 				iSlot = v[2];
+				sLocks = v[3];
 				break;
 			end
 		end
@@ -2301,9 +2461,13 @@ function gcinclude.EquipItem(args)
 		iSlot = string.upper(string.sub(iSlot,1,1)) .. string.lower(string.sub(iSlot,2));
 		-- Now try and load the item
 		gFunc.ForceEquip(iSlot,iName);
-		gcinclude.LockUnlock('lock',iSlot);
-		local sList = gcinclude.GetLockedList();
-		gcdisplay.SetLocks(gcinclude.LocksNumeric);	
+		if sLocks ~= nil then
+			gcinclude.LockUnlock('locks','lock',sLocks);
+		else
+			gcinclude.LockUnlock('locks','lock',iSlot);
+		end
+		local sList = gcinclude.GetLockedList('locks');
+		gcdisplay.SetSlots('locks',gcinclude.LocksNumeric);	
 	else
 		print(chat.header('EquipIt'):append(chat.message('Error: incomplete /equipit command: /equipit code|name slot|#. Command ignored.')));
 	end
@@ -2371,6 +2535,107 @@ function WhichSlot(sSlot)
 		return nil;
 	end
 end		-- WhichSlot
+--[[
+	WhichAccuracySet searches the player's AccuracySet for the named set and
+	returns the associated slots. If not found, an error message is displayed
+	and nil is returned.
+--]]
+
+function WhichAccuracySet(sId)
+
+	if sId == nil or gProfile.AccuracySet == nil then
+		return nil;
+	end
+	
+	for i,j in pairs(gProfile.AccuracySet) do
+		if string.lower(sId) == string.lower(i) then
+			return j;
+		end
+	end
+	print(chat.header('WhichAccuracySet'):append(chat.message('Accuracy set: ' .. sId .. ' not found. Ignoring.')));
+	return nil;
+end
+
+function CheckRegionControl()
+	local player = gData.GetPlayer();
+	local curHP = gData.HP;
+	local curMP = gData.MP;
+	
+	-- Make sure the test gear is defined
+	if gProfile.RegionControlGear == nil then
+		return false;
+	end
+	
+	local sName = gProfile.RegionControlGear[1];
+	local sSlot = gProfile.RegionControlGear[2];
+	local bMP;
+	local bOwn = (gProfile.RegionControlGear[4] == true);
+	
+	if gProfile.RegionControlGear[3] ~= nil then
+		bMP = (string.lower(gProfile.RegionControlGear[3]) == 'mp');
+	else
+		return false;
+	end
+	
+	-- Make sure test gear is valid
+	local item = AshitaCore:GetResourceManager():GetItemByName(sName,2);
+	if item == nil then
+		print(chat.header('CheckRegionControl'):append(chat.message('Error: ' .. sName .. ' is not a valid piece of gear. Terminating region check.')));
+		return false;
+	end
+	
+	-- Make sure test gear is accessible
+	if CheckAccessible(sName) == false then
+		print(chat.header('CheckRegionControl'):append(chat.message('Error: ' .. sName .. ' is not accessible. Terminating region check.')));
+		return false;
+	end
+	
+	-- Make sure the player's level is high enough to equip the test gear
+	if item.Level > player.MainJobSync then
+		print(chat.header('CheckRegionControl'):append(chat.message('Error: ' .. sName .. '\'s level is to high to equip. Terminating region check.')));
+		return false;
+	end
+
+	-- Make sure the player's job can equip the test gear	
+	if not ((bit.band(item.Jobs,gcinclude.JobMask[player.MainJob]) == gcinclude.JobMask[player.MainJob]) or
+	   (bit.band(item.Jobs,gcinclude.JobMask['Alljobs']) == gcinclude.JobMask['Alljobs'])) then
+		print(chat.header('CheckRegionControl'):append(chat.message('Error: ' .. sName .. 'cannot be equipped by your job. Terminating region check.')));
+		return false;
+	end
+
+	-- At this point, see if we can figure out who controls the zone
+	gFunc.ForceEquip(sSlot,sName);
+	if bMP == true then
+		if player.MP > curMP then
+			if bOwn == true then
+				gcDisplay.SetToggle('Region','Owned');
+			else 
+				gcDisplay.SetToggle('Region','Not Owned');
+			end
+		else
+			if bOwn == true then
+				gcDisplay.SetToggle('Region','Not Owned');
+			else 
+				gcDisplay.SetToggle('Region','Owned');
+			end
+		end
+	else
+		if player.HP > curHP then
+			if bOwn == true then
+				gcDisplay.SetToggle('Region','Owned');
+			else 
+				gcDisplay.SetToggle('Region','Not Owned');
+			end
+		else
+			if bOwn == true then
+				gcDisplay.SetToggle('Region','Not Owned');
+			else 
+				gcDisplay.SetToggle('Region','Owned');
+			end
+		end		
+	end
+	return true;	
+end
 
 --[[
 	HandleCommands processes any commands typed into luashitacast as defined in this file
@@ -2453,10 +2718,6 @@ function gcinclude.HandleCommands(args)
 		else
 			print(chat.header('HandleCommands'):append(chat.message('Error: Your job does not support the tanking option. Ignoring command')))
 		end				
-	elseif (args[1] == 'acc') then			-- Turns on/off whether accuracy gear should be equipped
-		gcdisplay.AdvanceToggle('Acc');
-		toggle = 'Accuracy';
-		status = gcdisplay.GetToggle('Acc');
 	elseif (args[1] == 'eva') then			-- Turns on/off whether evasion gear should be equipped
 		gcdisplay.AdvanceToggle('Eva');
 		toggle = 'Evasion';
@@ -2505,35 +2766,76 @@ function gcinclude.HandleCommands(args)
 		end
 		toggle = 'Debuf';
 		status = gcdisplay.GetCycle('DB');
-	elseif (args[1] == 'lock') then
-		if args[2] ~= nil then
-			gcinclude.LockUnlock('lock',args[2]);
+	elseif (args[1] == 'lock' or args[1] == 'acc') then
+		local sTarget = 'locks';
+		if args[1] == 'acc' then
+			sTarget = 'acc';
 		end
-		sList = gcinclude.GetLockedList();	
-		if sList ~= nil then			
-			print(chat.message('The following slot(s) are locked: ' .. sList));
+
+		if args[2] ~= nil then
+			if sTarget == 'acc' and string.sub(args[2],1,1) == '-' then
+				args[2] = WhichAccuracySet(string.sub(args[2],2,-1));
+			end
+			gcinclude.LockUnlock(sTarget,'lock',args[2]);
+		end
+		sList = gcinclude.GetLockedList(sTarget);		
+		if sList ~= nil then
+			if sTarget == 'locks' then
+				print(chat.message('The following slot(s) are locked: ' .. sList));
+			else
+				print(chat.message('The following slot(s) of accuracy are used: ' .. sList));
+			end
 		else
-			print(chat.message('All slots are unlocked'));
-		end
-	elseif (args[1] == 'unlock') then
-		if args[2] ~= nil then
-			gcinclude.LockUnlock('unlock',args[2]);
-			if string.lower(args[2]) == 'all' then
+			if sTarget == 'locks' then
 				print(chat.message('All slots are unlocked'));
 			else
-				print(chat.message('\'' .. args[2] .. '\' have been unlocked'));
+				print(chat.message('All accuracy slots are reset'));
 			end
 		end
-		sList = gcinclude.GetLockedList();
+		
+		if sTarget == 'locks' then 
+			gcdisplay.SetSlots('locks',gcinclude.LocksNumeric);
+		else
+			gcdisplay.SetSlots('acc',gcinclude.AccNumeric);
+		end
+		gcinclude.CheckLockAccCollision(sTarget);
+	elseif (args[1] == 'unlock' or args[1] == 'nac') then
+		local sTarget = 'locks';
+		if args[1] == 'nac' then
+			sTarget = 'acc';
+		end
+		
+		if args[2] ~= nil then
+			gcinclude.LockUnlock(sTarget,'unlock',args[2]);
+			if string.lower(args[2]) == 'all' then
+				if sTarget == 'locks' then
+					print(chat.message('All slots are unlocked'));
+				else
+					print(chat.message('All accuracy slots are reset'));
+				end
+			else
+				if sTarget == 'locks' then
+					print(chat.message('\'' .. args[2] .. '\' have been unlocked'));
+				else
+					print(chat.message('Accuracy slots: \'' .. args[2] .. '\' have been reset'));
+				end
+			end
+		end
+		sList = gcinclude.GetLockedList(sTarget);
+		if sTarget == 'locks' then 
+			gcdisplay.SetSlots('locks',gcinclude.LocksNumeric);
+		else
+			gcdisplay.SetSlots('acc',gcinclude.AccNumeric);
+		end
 	elseif (args[1] == 'slot') then					-- Locks specified slot and equips piece
 		if #args == 3 then
 			local sSlot = WhichSlot(args[2]);
-
 			if sSlot ~= nil then		
-				gcinclude.LockUnlock('lock',sSlot);
-				local sList = gcinclude.GetLockedList();			
+				gcinclude.LockUnlock('locks','lock',sSlot);
+				local sList = gcinclude.GetLockedList('locks');			
 				gFunc.ForceEquip(sSlot,args[3]);
 				print(chat.message(args[3] .. ' equipped in ' .. sSlot));
+				gcdisplay.SetSlots('locks',gcinclude.LocksNumeric);
 			else
 				print(chat.message('Invalid slot specified in /slot command. Ignoring'));
 			end
@@ -2596,8 +2898,12 @@ function gcinclude.HandleCommands(args)
 	elseif args[1] == 'equipit' or args[1] == 'ei' then			-- Equip specified item
 		gcinclude.EquipItem(args);
 	elseif (args[1] == 'region') then			-- Toggles the region setting
-		gcdisplay.AdvanceCycle('Region');
-		toggle = 'Region';
+		local bDef = CheckRegionControl();
+
+		if bDef == false then
+			gcdisplay.AdvanceCycle('Region');
+			toggle = 'Region';
+		end
 		status = gcdisplay.GetCycle('Region');
 	end
 
@@ -3229,9 +3535,7 @@ function gcinclude.HandleMidcast(bTank)
 				gcinclude.MoveToCurrent(gProfile.Sets.MAB,gProfile.Sets.CurrentGear);
 			end
 		elseif cKey == 'E' then			--Magical accuracy
-			if gcdisplay.GetToggle('acc') == true then
-				gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
-			end
+			gcinclude.FractionalAccuracy(gProfile.Sets.Macc,nil);
 		elseif cKey == 'F' then			-- Spell specific gear
 			if string.match(spell.Name, 'Stoneskin') then
 				-- Mind has a large affect on Stoneskin, so equip it here
@@ -3344,11 +3648,7 @@ function gcinclude.HandleWeaponskill(bTank)
 			end		
 		elseif cKey == 'D' then		-- accuracy	
 			if gcdisplay.GetToggle('acc') == true then
-				if bTank == true then
-					gcinclude.MoveToCurrent(gProfile.Sets.Tank_Accuracy,gProfile.Sets.CurrentGear);
-				else
-					gcinclude.MoveToCurrent(gProfile.Sets.Accuracy,gProfile.Sets.CurrentGear);
-				end	
+				gcinclude.FractionalAccuracy(gProfile.Sets.Accuracy,gProfile.Sets.Tank_Accuracy);
 			end
 		elseif cKey == 'E' then		-- elemental obi
 --[[

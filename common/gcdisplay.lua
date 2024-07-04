@@ -15,10 +15,10 @@ local SubLV = 0;
 local Main = 'FOO';
 local Sub = 'BAR';
 local Locks = 'None';
+local AccTier = 'None';
 local JobBar = T{['GSwap'] = {'ALL','MS'},
 				 ['DT'] = {'ALL','MS'},
 				 ['Kite'] = {'ALL','MS'},
-				 ['Acc'] = {'ALL','MS'},
 				 ['Eva'] = {'ALL','MS'},
 				 ['Tank'] = {'PLD,NIN,RUN,WAR,DRK,THF,RDM','M'},
 				 ['Idle'] = {'PLD,NIN,RUN,WAR,DRK,THF,RDM','M'},
@@ -242,10 +242,13 @@ function gcdisplay.GetCycle(name)
 	end
 end		-- gcdisplay.GetCycle
 
-function gcdisplay.SetLocks(sLList)
-
-	Locks = sLList;
-end
+function gcdisplay.SetSlots(sTarget,sLList)
+	if sTarget == 'locks' then
+		Locks = sLList;
+	else
+		AccTier = sLList;
+	end
+end		-- gcdisplay.SetSlots
 
 --[[
 	Unload removes the objects and commands created by the gcdisplay code
@@ -315,6 +318,13 @@ function gcdisplay.Initialize()
 			if gcdisplay.bDisplayIt(key) == true then
 				display = display .. '  ' .. key .. ': ' .. '|cFF00FF00|' .. value.Array[value.Index] .. '|r';
 			end
+		end
+		
+		-- Accuracy slots
+		if AccTier ~= 'None' then
+			display = display .. ' | Acc: ' .. '|cFF00FF00|' .. AccTier .. '|r';
+		else
+			display = display .. ' | Acc: ' .. '|cFFFF0000|' .. AccTier .. '|r';
 		end
 		
 		-- Locks
