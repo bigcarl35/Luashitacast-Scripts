@@ -43,13 +43,13 @@ want me to add any more.
 //ACCESSIBLE	Equip the item if it is found in an accessible storage area
 //ACCURACY		Equip if 'Acc' enabled
 //AK:"nation"	Equip national aketon if player in their nation's city
-~//ARC_CIRCLE	Equip if player has Arcane Circle buff
+//ARC_CIRCLE	Equip if player has Arcane Circle buff
 //ARCHERY		Equip if Range is a Bow
 //AXE			Equip if Main is an Axe
 //BLIND			Equip if player blinded
 //CARBY			Equip if player has a pet and it is Carbuncle
 //CLUB			Equip if Main is a Club
-~//COVER		Equip if Cover is active
+//COVER			Equip if Cover is active
 //CR:"craft"	Equip if the crafting code passed matches the master crafting setting
 //"day"			Equip if the day's name matches the specified day, eg. //FIRESDAY
 //DAGGER		Equip if Main is a Dagger
@@ -57,7 +57,7 @@ want me to add any more.
 //DB:BPP		Equip if debuff cycle set to BPP (blind,poison,paralyze)
 //DB:WSS		Equip if debuff cycle set to WSS (weight,slow,silence)
 //DUSK2DAWN		Equip if it's between dusk and dawn
-~//EN"spell"	Equip if player has en- spell buff
+//EN"spell"		Equip if player has en- spell buff
 //EVASION		Equip if 'Eva' enabled
 //FULLMOON		Equip if moon phase is full moon
 //GA:"gather"	Equip if the gathering code passed matches the master gathering setting
@@ -65,10 +65,12 @@ want me to add any more.
 //GKATANA		Equip if Main is a Great Katana
 //GSWORD		Equip if Main is a Great Sword
 //H2H			Equip if Main is a Hand-to-Hand
-~//HOLY_CIRCLE	Equip if player has Holy Circle buff
+//HOLY_CIRCLE	Equip if player has Holy Circle buff
 //HORN			Equip if wind setting is true
 //HP"conditional"#	Equip if HP meets condition
 //HPP"conditional"#	Equip if HP% meets condition
+//IF:"gear"		Equip if wearing that gear in the tested slot
+~//IFC:"gear"	Equip if wearing that gear in any slot (currently wearing or building gear)
 //KATANA		Equip if Main is a Katana
 //MARKSMANSHIP	Equip if Range is a Gun/Crossbow
 //MSJ			Equip if player's subjob is magical
@@ -104,7 +106,7 @@ want me to add any more.
 //TP"conditional"#	Equip if TP meets condition
 //TPP"conditional"#	Equip if TP% meets condition
 ~//UTSUSEMI		Equip if player has Utsusemi buff
-~//WARD_CIRCLE	Equip if player has Warding Circle buff
+//WARD_CIRCLE	Equip if player has Warding Circle buff
 //WSWAP			Equip if /WSWAP is on
 //WTH:"weather"	Equip if the specified weather matches the current weather
 //WTH-DAY		Equip if the weather's element matches the day's element
@@ -133,4 +135,6 @@ Days: FIRESDAY,EARTHSDAY,WATERSDAY,WINDSDAY,ICEDAY,LIGHTNINGDAY,LIGHTSDAY,
 				DARKSDAY
 Jobs: WAR,MNK,WHM,BLM,RDM,THF,PLD,DRK,BST,BRD,RNG,SAM,NIN,DRG,SMN,
 	Currently out of era: BLU,COR,PUP,DNC,SCH,GEO,RUN
+Weapon Types: ARCHERY,AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,MARKSMANSHIP,
+	POLEARM,SCYTHE,STAVE,SWORD,THROWING
 

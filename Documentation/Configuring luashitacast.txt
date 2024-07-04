@@ -1,0 +1,365 @@
+Since you decided to use my version of luashitacast scripts instead of the commonly found
+configurations, I thank you. I think you'll find my implementation to be much more flexible
+which (unfortunately) means there's a lot more that you can fiddle with. There's very
+little that you "have to do", but the more thorough you are, the more responsive your
+gear swaps will be to most situations that arise. If you have any questioons, please feel
+free to contact me.			-- Paiine, June 30, 2024
+
+Besides having the luashitacast addon installed, there are only three files that you 
+need to run my version of luashitacast: a job file, gcinclude.lua and gcdisplay.lua.
+That's it. There are other files available, but they're mostly documentation to help
+you take advantage of what this addon can do. It is as thorough/minimal as you want it
+to be.
+
+The file structure is as follows, the job file(s) are placed in the following directory
+structure: ..Game\config\addons\luashitacast and gcinclude and gcdisplay into the common
+subdirectory: ..Game\config\addons\luashitacast\common. There are two ways to name the
+job files: either the job.lua (e.g. BRD.lua) or your character name_job.lua (e.g.,
+Paiine_BRD.lua). The first one is a job file used across all characters that play that
+specific job and the second one limits that job file specifically to that character.
+I prefer the latter style, but use whichever makes sense to you.
+
+The main thing you're going to modify are the gear sets, which exist in both the job
+files and the gcinclude.lua file. (The job file's gear sets are specific to that job
+and the gear sets in gcinclude.lua are ones you can wear regardless of your job.) 
+
+Gear sets consist of a name and then "potentially" a line for each of the valid 
+gear slots: Main, Sub, Range, Ammo, Head, Neck, Ear1, Ear2 (or Ears, which represents 
+both ear slots), Body, Hands, Ring1, Ring2 (or Rings, which represents both ring 
+slots), Back, Waist, Legs, and Feet. You only need to include the slot definition if
+you have a piece of gear that's appropriate for that slot in that set. If not, don't
+include it. The piece of gear is identified by what the item is called when viewed
+in game. (Square Enix likes abbreviations.) Each slot can have a priority list, so
+if you have multiple pieces of gear that can be equipped, you can specify a list.
+Remember that the priority list is based on the item's equip level, so the left most
+item should be the highest level and any gear beyond that should be lower levels.
+Now, this implementation of luashitacast also supports inline conditionals, simple
+checks beyond just the level to indicate something else must be true before that
+item will be equipped. These are denoted by a '//' after the item and a code word.
+Multiple inline conditionals can be applied to one item which means all the conditionals
+and the level requirements must be met. (See "Conditional gear master list.txt" in the
+Documentation subdirectory for a list of all inline conditional codes supported and
+their meaning.) If only one item is specified, you only need to put single quotes
+around it. If multiple items are specified, you must enclose the list in parentheses
+({}). Make sure to append a comma at the end of the slot definition before the next
+slot is specified.
+
+Example, this is from my SMN job file:
+
+	['Accuracy'] = {
+        Head  = { 'Shep. Bonnet//PETF', 'Optical Hat' },
+		Ears  = 'Beastly Earring//PETF',
+		Neck  = 'Peacock Amulet',
+		Hands = { 'Carbuncle Mitts//CARBY', 'Smn. Bracers +1//SMNPET', 'Battle Gloves' },
+		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring' },
+		Waist = { 'Life Belt', 'Tilt Belt' },
+		Legs  = { 'Shep. Hose//PETF', 'Evoker\'s Spats' },
+    },
+	
+As you can see, some of the slot definitions have multiple items and some do not. There's
+nothing wrong with enclosing single item definitions in parentheses, they're just not
+needed. Let's look at this gear set definition. It's called "Accuracy". As it's name
+implies, it is used when the player wants to add gear to increase their accuracy. 
+
+	Head  = { 'Shep. Bonnet//PETF', 'Optical Hat' },
+	
+The "Head" line favors the Shepherd's Bonnet over the Optical Hat. Even though an Optical
+Hat is a higher level item than a Shepherd's Bonnet, by being placed before the Optical
+Hat, it will be considered first. There's an inline conditional, //PETF, that has to be 
+true to before it will be selected though. //PETF checks to see that the player has a
+pet and is it fighting. The Shepherd Bonnet increases pet accuracy and for a summoner
+that's more important than the player having accuracy. Let's look at another line:
+
+	Hands = { 'Carbuncle Mitts//CARBY', 'Smn. Bracers +1//SMNPET', 'Battle Gloves' },
+	
+This definition emphasizes gear to be equipped if your summoner has a pet. Specifically,
+the first is equipped if Carbuncle is your current avatar. If not, then the Summoner
+Bracers +1 will be equipped if you have any other summoner pet (any avatar except
+Carbuncle) including elemental spirits. If you have no pet the Battle Gloves will
+be equipped. And, from a different set, here's an example of multiple inline conditionals:
+
+	Head  = { 'Shep. Bonnet//PETF', 'Summoner\'s Horn//ACCESSIBLE//SMNPETMW', 'Austere Hat' },
+
+Got a pet fighting? Equip the Shepherd's Bonnet. Now the weird one, is the Summoner's Horn
+equipable (not in storage or on the porter moogle) AND does the current summoner's avatar's
+element match the weather's element of the zone your in? If neither of the previous two
+pieces' conditions are true, then equip the Austere Hat.
+
+You'll want to fill in all of the sets defined in the Job files and gcinclude.lua that
+you have gear that makes sense to equip. Certain sets are common across all jobs while
+others are specific to a job. (You can even create your own sets, which will be discussed
+later.)
+
+Sets you will find across all jobs in the job files: ['TP'], ['Accuracy'], ['Evasion'],
+['Travel'], ['Idle_Regen'], ['Idle_Refresh'], ['Resting_Regen'], ['Resting_Refresh'],
+['SIR'], ['Start_Weapons'], ['Town'], ['DT_Physical'], ['DT_Magical'], ['DT_Breath'],
+['Macc'], ['MAB'], ['Preshot'], ['Midshot'], ['Precast'], ['Midcast'], ['Healing'],
+['Dark'], ['Divine'], ['Enfeebling'], ['Elemental'], ['Ninjutsu'], ['Summoning'], ['INT'],
+['MND'], ['Stoneskin'], ['Drain'], ['Aspir'], ['Sneak'], ['Invisible'], ['Movement'],
+['Charm'], ['Reward'], ['Tame'], (next three are BST for bst pets.) ['Pet_Attack'], 
+['Pet_Macc'], ['Pet_Matt'], ['Provoke'], ['Berserk'], ['Defender'], ['Warcry'], ['Boost'],
+['Focus'], ['Dodge'], ['Chakra'], ['Steal'], ['SneakAttack'], ['Flee'], ['TrickAttack'],
+['Mug'], ['DivineSeal'], ['ElementalSeal'], ['ArcaneCircle'], ['LastResort'], 
+['WeaponBash'], ['Souleater'], ['HolyCircle'], ['ShieldBash'], 'Sentinel'], ['Cover'],
+['Sharpshot'], ['Scavenge'], ['Camouflage'], ['Barrage'], ['WardingCircle'], ['ThirdEye'],
+['Hasso'], ['Meditate'], ['Seigan'], ['AncientCircle'], ['Jump'], and ['HighJump'].
+
+Note that the sets named after job abilities that are not associated with your main job
+are included to support abilities associated with the subjob. Other sets that are
+found in common across job files, but are restricted by a condition are weapon sets
+(I have defined all the weaponskills that each job can use where the job has a 
+proficiency with said weapon.) and tanking sets. The master list of recognized weapon
+sets are: ['WS_AGI'], ['WS_CHR'], ['WS_DEX'], ['WS_DEXAGI'], ['WS_DEXCHR'], ['WS_DEXINT'],
+['WS_INT'], ['WS_INTMND'], ['WS_MND'], ['WS_STR'], ['WS_STRAGI'], '['WS_STRDEX'],
+['WS_STRMND'], ['WS_STRMND_30_50'], ['WS_STRINT'], ['WS_STRINT_30_20'], ['WS_STRVIT'],
+['WS_VIT'], ['WS_Skill'], and ['WS_HP']. Jobs that can tank (PLD,NIN,RUN,DRK,WAR,BLU)
+have the following sets defined too: ['Tank_TP'], ['Tank_Accuracy'], ['Tank_Evasion'],
+['Tank_INT'], and ['Tank_MND']. The intent of the tank sets is the player can control
+what slots should be left alone to preserve defense. All other gear sets defined in a
+job file are specific to that job.
+
+As to the player defined sets, you need to come up with a unique name and the definitions
+will be placed below the "CurrentGear" set (you do not modify that one, it's 
+programatically populated) after the following comment:
+
+	--[[
+							*** Custom Sets Go below this comment ***
+	--]]
+
+You can either type this gearset in manually or, when in game and luashitacast loaded,
+equip the gear you want for this new set and type '/lac addset "name"' where "name" is
+the unique gear set name. The set will be automatically added at the end of the current
+job's file. 
+
+The gear sets in the gcinclude.lua file mostly cover status effects, crafting, gathering,
+and a couple of general usage sets. The gathering and crafting sets include all gear
+across types, so it's real important to add inline conditionals so that the correct
+subset of gear will be loaded. Example:
+
+	['Gathering'] = {
+		Range = 'Lu Shang\'s F. Rod//GA:FISH',
+		Ammo  = 'Fly Lure//GA:FISH',
+		Body  = { 'Field Tunica//GA:HELM', 'Choc. Jack Coat//GA:DIG', 'Tarutaru Top +1//GA:CLAM', 'Angler\'s Tunica//GA:FISH' },
+		Hands = { 'Field Gloves//GA:HELM', 'Fsh. Gloves//GA:FISH' },
+		Legs  = { 'Field Hose//GA:HELM', 'Taru. Shorts +1//GA:CLAM', 'Fisherman\'s Hose//GA:FISH' },
+		Feet  = { 'Field Boots//GA:HELM', 'Waders//GA:FISH' },
+	},
+	
+The //GA: inline requires you to designate the type of gathering you want to do: digging
+(DIG), clamming (CLAM), fishing (FISH), or harvesting/excavation/logging/mining (HELM).
+So, 'Field Tunica//GA:HELM' means that this body piece should equipped if the gathering
+type specified is HELM and 'Angler\'s Tunica//GA:FISH' should be equipped if the type is
+fishing, etc. It looks a bit confusing, but it's really fairly straightforward.
+
+Gather Types: HELM,DIG,CLAM,FISH, Crafting Types: ALC,BONE,CLOTH,COOK,GSM,LTH,BSM,WW
+
+Beyond the gear sets, there's a few more settings you'll wish to modify. In the OnLoad
+function, you'll find a line that looks like:
+
+	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 13');
+	
+This is where you designate which macro book should be loaded that contains you macros.
+For summoner, mine is 13. Change that number to whatever is appropriate to the job you're
+configuring. Next, in the SetSubjobSet function, you need to tell luashitacast which
+macro bar from the loaded macro book should be active. You do this by modifying the
+subs array:
+
+	local subs = {['WAR'] = 0, ['MNK'] = 0, ['WHM'] = 1, ['BLM'] = 3, ['RDM'] = 2, ['THF'] = 0,
+				 ['PLD'] = 0, ['DRK'] = 0, ['BST'] = 0, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = nil,
+				 ['SAM'] = 0, ['NIN'] = 0, ['DRG'] = 0, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
+				 ['DNC'] = 0, ['SCH'] = 0, ['GEO'] = 0, ['RUN'] = 0};
+
+Every job in the game (including those from expansions not yet implemented on HorizonXI)
+have been included. Whatever your main job is, you should set that to nil. (In the above
+example, since this is from my summoner job file, the following is set: ['SMN'] = nil.
+After that, the rest of the jobs will have their bar set to the appropriate macro bar
+number or 0 indicating no default macro bar. So, looking above, /WHM is on bar 1, /RDM
+is on bar 2, and /BLM is on bar 3. The rest of the subjobs do not have a default setting.
+You can assign multiple jobs to the same macro bar, so it's completely valid to say:
+
+	['WHM'] = 1, ['RDM'] = 1,
+	
+It just means that the number 1 macro bar supports both of those jobs. The rest of the
+settings in the job files and gcinclude.lua are optional. If you don't change them, then
+the default behavior will be used. Some are fairly straightforward while others are a bit
+complicated. I will go into detail what they are here. You're under no obligation to
+change them, but I will describe what they are and occasionally why you might want to
+change them.
+
+Let's start with the job files. Below the gear set definitions there are some variables
+which help you tailor the behavior of luashitacast. Let's start with profile.WeaponType.
+This array lets you define the type of weapon for the weapons you use. There are 15
+supported types: ARCHERY, AXE, CLUB, DAGGER, GAXE, GKATANA, GSWORD, H2H, KATANA, 
+MARKSMANSHIP, POLEARM, SCYTHE, STAVE, SWORD, and THROWING. These definitions are used
+if you use a weaponskill that's based on your skill with the weapon. They're also
+used as an inline conditional to equip gear if the weapon you're using is of the type
+specified. Example:
+
+	profile.WeaponType = {
+		['STAVE'] =  { 'Fire Staff', 'Vulcan\'s Staff', 'Ice Staff', 'Aquilo\'s Staff',
+				  'Wind Staff', 'Auster\'s Staff', 'Earth Staff', 'Terra\'s Staff',
+				  'Thunder Staff', 'Jupiter\'s Staff', 'Water Staff', 'Neptune\'s Staff',
+				  'Light Staff', 'Apollo\'s Staff', 'Dark Staff', 'Pluto\'s Staff',
+				  'Kukulcan\'s Staff' },
+		['CLUB']  =  { 'Warp Cudgel', 'Solid Wand', 'Yew Wand', 'Pilgrim\'s Wand' },
+		['DAGGER'] = { 'Garuda\'s Dagger' },
+	};
+
+Say you wanted to use a club skill, you might have a definition that looks like:
+
+	Neck = 'Prudence Torque//DAGGER',
+	
+With the dagger definition in the profile.WeaponType, if your main hand is holding a
+'Solid Wand', that Prudence Torque would be equipped, but if your main hand has a Fire
+Staff, the torque would not equip. It's perfectly valid to not definite profile.WeaponType,
+but understand that if you do that, any use of the //"weapon type" conditionals will
+always be false and any weapon skill based skill (['WS_Skill']) will not equip any
+skill based gear set.
+
+The next variable is profile.AccuracySet. The way accuracy works on this implementation
+is that the Accuracy/Tank_Accuracy set is mined for specific slots. Through the /acc
+command, you designate which slots should be loaded or all. (Ex: /acc rings,feet) Because
+it's likely that a player will want some predefined sets, profile.AccuracySet was created.
+
+	profile.AccuracySet = {
+		['base'] = 'Rings,Body',
+	};
+
+The above is the default definition. If you type /acc -base, then the Rings and Body
+pieces will be equipped from the accuracy/tank_accuracy gear set. You can keep the 
+"base" definition or replace it or get rid of it and add your own set definitions.
+The format is: ['name'] = 'Slot,...', So:
+
+	['1'] = 'Hands,Feet',
+	['2'] = 'Hands,Rings,Feet',
+	
+are completely valid. When it comes to the slot, you can either use the slot's name or
+the slots positional number. So, ['1'] = '10,16', would be another way of sayings hands
+and feet. Please note though that you cannot use the accuracy set's name as a slot name,
+that's not  recognized.
+
+The next variable is profile.RegionControlGear. Some gear has qualifiers like "in areas
+under own nation". I have yet to be able to figure out programatically who controls a
+zone, so instead there's a toggle to indicate if the zone is owned by your nation or
+not. If you define profile.RegionControlGear, you're indicating a piece of gear that
+can be equipped that will either change a player's HP or MP under what conditions.
+
+	profile.RegionControlGear = { 'Republican Gold Medal','Neck','MP',false };
+	
+In the above case, a Republican Gold Medal will add 50 MP if in a zone not controlled
+by the player's nation. The definition includes the name, slot name, that MP is affected,
+and that it should be true in zones not owned by the player's nation. You only can specify
+one piece of gear per job file. When you type /region, if you've specified a piece of
+gear that luashitacast can equip and check, it does so and sets the region toggle accordingly.
+if no gear is specified or any other condition where the check fails, the region setting
+will toggle to the opposite of whatever it is set to now.
+
+In the HandlePetAction function, if you're modifying a summoner's job file, the default
+behavior of a blood pact is as follows: there's a toggle called "sBP" which stands for
+"Show Blood Pact". By default, if sBP is on, all aggressive blood pacts will display a
+party message indicating what your pet's doing or echo to your window all non-aggressive
+blood pacts. So, for example:
+
+	/p [Ifrit] [Blood Pact: Flaming Crush] >> Goblin Shaman
+	
+would be printed in party chat if your Ifrit avatar did a Flaming Crush on a Goblin Shaman.
+You can change that message if you want. Just change:
+
+	sMsg = '/p  [<pet>] [Blood Pact: ' .. PetAction.Name .. '] >> <t>.';
+	
+to how you want the message displayed. Just remember it has to be a valid print statement
+and valid lua.
+
+In the OnLoad funtion, there are three variables that define the order of gearing that
+occurs in specific functions:
+
+	-- Coded order of operation override
+	gcinclude.settings.priorityEngaged = 'CEFGH';
+	gcinclude.settings.priorityMidCast = 'ABCDEFGH';
+	gcinclude.settings.priorityWeaponSkill = 'ABDE';
+	
+
+priorityEngaged affects the engaged/fighting sequence in the HandleDefault function,
+priorityMidCast affects the spell gcinclude.HandleMidcast function, and priorityWeaponSkill
+affects the gcinclude.HandleWeaponskill function. The way these routines work is that
+multiple conditions are checked and gear equipped accordingly. Each letter represents a
+condition. As successive conditions are met, a gearset overrides the previous gear set
+till you end up with a composite gear set which is then equipped. You can change the
+order of operations if you want by changing the order of the associated letters. (There's
+a further complication with midcast if you're on a job that can tank. The priority 
+settings are then found in profile.HandleMidcast. Another way to tell is that the
+gcinclude.settings.priorityMidCast line in the OnLoad function is commented out. So,
+make sure you modify the order in the correct function.)
+
+For example, the default order for gcinclude.settings.priorityEngaged is CEFGH. That
+means:
+
+	C. Load the evasion set?
+	E. Load the indicated accuracy slots?
+	F. Load the kiting set?
+	G. Load gear associated with debuffs?
+	H. Load the appropriate damage taken gear?
+	
+If you want accuracy to have the highest priority you might consider changing the order
+to CFGHE. The first letter has the lowest priority, the last the highest. Change the order
+if you want.
+
+In the OnLoad function, you can designate the cut-off values for refresh/regen idle
+gear. You do that by changing:
+
+	gcinclude.settings.RegenGearHPP = 50;
+    gcinclude.settings.RefreshGearMPP = 60;
+	
+The numbers are percentages, so while idling, regen gear will be equipped till your 
+HP% > 50% and your refresh gear will be equipped till your MP% > 60%. If you're a 
+beastmaster, there's an array list called profile.JugPets that defines all jug pets.
+Identified by the name of the broth, there are six settings associated with each
+jug pet. Don't change the first 5, but the last one you can change. It expects either
+true or false and it indicates that that particular jug pet is favored by you. By
+default, Singing Herbal Broth is favor. This list is used to automatically equip
+a Jug Pet when "Call Beast" ability is used and no jug pet is currently equipped.
+
+For the jobs where tanking is recognized, some having tanking enabled by default
+(PLD,NIN,RUN) and some are disabled by default (DRK,WAR,THF,RDM,BLU). You can change
+this behavior by changing the tank toggle command in the OnLoad function:
+
+	gcdisplay.SetToggle('Tank',true);
+	
+That's all the optional configurations that can occur in the job files. Now for the
+gcinclude.lua file. There's a block of variables found under gcinclude.settings that
+define default behaviors. Most of these you should leave alone, but the following
+can be changed if you want:
+
+	Messages = false;
+	WScheck = true;
+	WSdistance = 4.7;
+	Tolerance = 97;
+	
+Messages indicates if feedback should be given from luashitacast whenever any gear
+swaps occur. By default this is false and you can toggle this on/off using the
+/gcmessages command, but if you always want this kind of feedback, set this variable
+to true. WScheck indicates that luashitacast should make sure you're not too far away
+from your enemy before performing a weaponskill. (This ensures you don't throw your
+TP away if you happen to be too far away.) WSdistance indicates the range from an
+enemy you can be and still hit said enemy. 4.7 is the maximum that a Tarutaru can
+reach, but if you're playing a taller race, you might increase this number to reflect
+your longer reach. Tolerance is a percentage and it's used when equipping gear based
+on total HP or MP. So gear comparisons when using an absolute like 100% will start
+flipping back and forth between two pieces of gear because one piece adds to the
+total. (An example is between a peacock amulet and a parade gorget.) Using a tolerance
+instead avoids this flickering.
+
+gcinclude.equipIt is a table of codes and what piece of gear should be equipped. It
+is used in the /equipit (or /ei) command. If you want to add codes to the list, after
+the last entry, add your definitions. Each entry is formatted as follows:
+
+	['code'] = {'gear name','slot','list of slots to lock that are not just the slot'},
+	
+so, ['mandy'] = {'Mandra. Suit','Body','Body,Legs'}, means, the code is "mandy", it
+will equip the Mandragoa Suit in the Body slot and since I need to lock out both the
+body and the legs, I've indicated that with the last entry. If it was only the body,
+the last entry would be set to nil.
+
+That pretty much covers everything. The code is pretty well documented, so it should
+give you a hint about what's expected. If you have any questions, feel free to contact
+me.  - Paiine

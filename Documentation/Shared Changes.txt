@@ -1,0 +1,3 @@
+- Added TallyGear structure in definition area of gcinclude.lua
+- Added function ClearTallyGear in gcinclude.lua
+- Added function WhichAccuracySet in gcinclude.lua

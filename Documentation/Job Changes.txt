@@ -1,152 +1,52 @@
-- in "HandlePrecast"
+- Add profile.WeaponType structure
+	Note: Only have to add entries for the weapon type you're using as a skill qualifier.
 
-  -Change:
+- Added support for weapon skill types
 
-		if gcinclude.settings.bEleObis == false then
-			gcinclude.CheckForObisGorgets();
-		end	
-		if gcinclude.settings.bEleObis == true then
-			obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
-			if obi ~= nil then
-				sets.CurrentGear['Waist'] = obi;
-			end
-		end	
-			
-  -To:
+- Change all references of SummonStaves:
+	gcinclude.SummonStaves[pet.Name]
+  To:
+    gcinclude.SummonStaves[string.lower(pet.Name)]
+
+- Exchange //ELEAVA for //SPIRIT:ES	-- duplicate inline conditional, removed //ELEAVA
+
+- Remove from HandleDefault:
+	gcdisplay.SetLocksAction(gcinclude.LocksNumeric,player.Status);
+
+- In Bard job file, add ['Song_Midcast_Buff'] set below 'Song_Midcast' set.
+  In HandleMidcast function, add the following after:
+
+	profile.HandleSongMidcast();
+
+	gcinclude.MoveToCurrent(sets.Song_Midcast_Buff,sets.CurrentGear);
+- In PLD/DRK job file, in OnLoad function, remove:
+  	-- Special inits for "checking HP" gear
+	gcinclude.Special['Parade Gorget'][72] = { 0, 0, 10, 10 };		-- HP on invisible gear: TP, Tank_TP, Acc, Tank_TP + Acc
   
-		obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
-		if obi ~= nil then
-			sets.CurrentGear['Waist'] = obi;
-		end	
-		
-- In "HandleDefault"
-  -Change:
-		local cKey;
-		
-   - To:
-		local cKey,sGear;
-		
-  -Remove:
-	
-	local myLevel = AshitaCore:GetMemoryManager():GetPlayer():GetMainJobLevel();
-		
-	-- Note the player's current level
-	if (myLevel ~= gcinclude.settings.iCurrentLevel) then
-        gcinclude.settings.iCurrentLevel = myLevel;
-    end
-	
-  -Remove:
-   
-		-- Make sure that the global magic settings for the player are known. The secoond clause in
-		-- the if statement takes care of a bizarre case. Turns out if you change the player.MainJob
-		-- from a job where there is not a luashitacast script, it initially remembers the old main
-		-- job. by including the second call, a subsequent invocation occurs getting it right.
-		if gcinclude.settings.bMagicCheck == false or gcinclude.settings.sMJ ~= player.MainJob then
-			gcinclude.CheckMagic50(player);
-		end  
+- In  HandleDefault, Change:
+			elseif cKey == 'E' then		-- Accuracy		
+				if gcdisplay.GetToggle('Acc') == true then 
+					if bTank == true then
+						gcinclude.MoveToCurrent(sets.Tank_Accuracy,sets.CurrentGear);
+					else
+						gcinclude.MoveToCurrent(sets.Accuracy,sets.CurrentGear);
+					end
+				end
+	To:
+		elseif cKey == 'E' then		-- Accuracy	
+			gcinclude.FractionalAccuracy(sets.Accuracy,sets.Tank_Accuracy);
 
-  -Change:
-
-		if gcinclude.settings.bMagic == true and player.MP < player.MaxMP then	
-		
-  -To:
+- Add:
+	-- Accuracy Sets are predefined /acc commands. You identify them by a name and
+	-- a comma delimited list of slots. It's just a convenient shortcut mechanism.
+	profile.AccuracySet = {
+		['base'] = 'Rings,Body',		-- This is an example
+	};
 	
-		if gcinclude.MagicalJob('S') == true and player.MP < player.MaxMP then	
-	
-  -And:
-		if gcinclude.settings.bSJ == true and player.MPP < gcinclude.settings.RefreshGearMPP then
-
-  -To:
-		if gcinclude.MagicalJob('S') == true and player.MPP < gcinclude.settings.RefreshGearMPP then
-		
-  -Change:
-		if string.find(gcinclude.sMagicJobs,player.SubJob) then
-			gcinclude.SwapToStave('dark',false,sets.CurrentGear);
-		end
-		
-  -To:
-		gcinclude.SwapToStave('dark',false,sets.CurrentGear);
-		
-- Only in the SMN job file
-  -Change:
- 		if string.find(gcinclude.SummonSkill,pet.Name) ~= nil then
-			if eWeap ~= nil and (eWeap ~= gcinclude.elemental_staves[pEle][1] or eWeap ~= gcinclude.elemental_staves[pEle][3]) then
-				gcinclude.SwapToStave(pEle,true,sets.CurrentGear);
-			end
-		end
-  -To:
-   		if string.find(gcinclude.SummonSkill,pet.Name) ~= nil then
-			sGear = gcinclude.CheckForEleGear('staff',pEle);
-			if eWeap ~= nil and eWeap ~= sGear then
-				gcinclude.SwapToStave(pEle,true,sets.CurrentGear);
-			end
-		end
-
-- In all job files except SMN, in HandleAbility function
-  -Change:
-  
-  		if gcdisplay.GetToggle('WSwap') == true then
-			if gcinclude.settings.bStave == false then
-				gcinclude.CheckForStaves();
-			end	
-			if gcinclude.settings.bStave == true then
-				gcinclude.SwapToStave('light',false,sets.CurrentGear);
-			end
-		end
-   -To:
-		gcinclude.SwapToStave('light',false,sets.CurrentGear);
-  
-- In "profile.OnLoad", 
-  -Remove:
-
-	-- Determine if subjob uses magic and if the maximum MP is > 50.
-	gcinclude.CheckMagic50(player);		
-
-- In all job files,
-  -Add
---[[
-	The "Standard" gear set is what is worn when you're not fighting (either
-	you or your pet), you're not resting, and is the base set that your town
-	gear is loaded over. It's a good place to put gear that increased your
-		movement (not to be confused with the ['Movement'] gear set which is used
-		when you're kiting.)
---]]
-		
-	['Standard'] = {
-	},
-		
---[[
-		Include gear here that is advantageous when a pet is present but you want
-		the standard set. (An example would be gear that lowers perpetuation cost
-		if you have a summoned avatar pet out.)
---]]
-		
-	['Standard_With_Pet'] = {
-	},
-	
-- In HandleDefault,
-  -Change:
-  
-	-- The default set is the TP gear set. Load it up
-	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
-	
-	if pet == nil then
-		gcinclude.MoveToCurrent(sets.TP_No_Pet,sets.CurrentGear);
-	end
-
-  -To:
-
-	-- The default set is the Standard gear set. Load it up
-	gcinclude.MoveToCurrent(sets.Standard,sets.CurrentGear);
-	
-	if pet ~= nil then
-		gcinclude.MoveToCurrent(sets.Standard_With_Pet,sets.CurrentGear);
-	end
-	
-  -Below: if (pet ~= nil and pet.Status == 'Engaged') or (player ~= nil and player.Status == 'Engaged') then
-   Add:
-   
-		gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
-		if pet == nil then
-			gcinclude.MoveToCurrent(sets.TP_No_Pet,sets.CurrentGear);
-		end		
+- Add:
+	-- RegionControlGear identifies a piece of gear that can be used to automatically
+	-- determine if the player is currently in a zone controlled by their nation or
+	-- not. The definition includes the name of the piece of gear, whether HP or MP 
+	-- is affected, and whether the piece requires region ownership or not the region 
+	-- ownership.
+	profile.RegionControlGear = { 'Republican Gold Medal','MP',false };

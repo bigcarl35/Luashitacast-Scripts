@@ -1,20 +1,8 @@
 To do list:
 ----------
-- /validate [set] - checks all (or specified) set(s) to see if player owns gear and
-	is accessible, whether codes are known, whether slot names correct
-	(Support ALL)
-- Change ring swap in equipgear to if one found, remove from new set and move position
-  for other ring/earring if needed.
-- Implement tiered accuracy system. Separate sets for earch tier. Display on job bar
-  what (if any tier currently equipped.) Add accuracy tier display in bar
-- Need to be able to search storage slips in validate
-- Need special routine for Sorcerer's Ring. Part of MAB, active if HPP < 76% and TP < 100%.
-- Propogate weapon skill solution in BST job file to other files
- 
-On Going
---------
-- Finish job files for the jobs not coded yet: BLM,RDM
-
+- Consider adding inline conditional to check for a piece of gear equipped anywhere.
+  Consider searching not only the ccurrent equipment but also the pending equipment.
+  
 Ongoing questions
 -----------------
 - How does the client know that it should display "Downloading Data"?
@@ -82,6 +70,16 @@ Done
   .GT.,.GE.,.LT.,.LE.
 - Need special routine for Minstrel's Ring. Has to equipped before song started. HPP < 76%
   and TP < 100%. No special omissions.
+- Removed Validate. If wanted should be separate lua program.
+ - Propogate weapon skill solution in BST job file to other files
+- Implement tiered accuracy system. Separate sets for earch tier. Display on job bar
+  what (if any tier currently equipped.) Add accuracy tier display in bar
+- Locks not displayed when set in a MH
+- Need special routine for Sorcerer's Ring. Part of MAB, active if HPP < 76% and TP < 100%.
+- Add accuracy sets. Identify by number, it represents specific elements is the
+  Accuracy set.
+- Determine how to retrieve a player's stat so that the /region can be adapted to test
+  if in own territory or not.
   
 Not Doing
 ---------
@@ -91,3 +89,10 @@ Not Doing
 	No way to tell. Instead there's a switch in the gcdisplay that shows what type of
 	"Reward" shall be use (equips appropriate chest piece). (Just upgrade either the AF
 	or Relic chestpiece to the +1 version and this complication can go away.)
+- /validate [set] - checks all (or specified) set(s) to see if player owns gear and
+	is accessible, whether codes are known, whether slot names correct
+	(Support ALL). [Validate has been removed from luashitacast. At some point I'll
+	probably make it into a stand-alone addon.]
+- Need to be able to search storage slips in validate. (Look to the Find addon code.)
+- Change ring swap in equipgear to if one found, remove from new set and move position
+  for other ring/earring if needed. (This shouldn't be necessary.)	
