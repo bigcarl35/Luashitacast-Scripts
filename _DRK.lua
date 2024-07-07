@@ -59,8 +59,8 @@ local sets = {
         Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tamas Ring', 'Kshama Ring No.2', 'Balance Ring' },
         Back  = { 'Psilos Mantle', 'Amemet Mantle', 'Raptor Mantle', 'Ram Mantle' },
         Waist = { 'Swift Belt', 'Powerful Rope', 'Friar\'s Rope' },
-        Legs  = { 'Thick Breeches', 'Chaos Flanchard//ACCESSIBLE', 'Ryl.Sqr. Breeches', 'San. Trousers' },
-        Feet  = { 'Thick Sollerets', 'Chaos Sollerets//ACCESSIBLE', 'Bounding Boots' },
+        Legs  = { 'Thick Breeches', 'Ryl.Sqr. Breeches', 'San. Trousers' },
+        Feet  = { 'Thick Sollerets', 'Bounding Boots' },
     },
 
 	['Tank_TP'] = {
@@ -78,7 +78,7 @@ local sets = {
 	['Accuracy'] = {
 		Head  = 'Optical Hat',
 		Neck  = 'Peacock Amulet',
-        Body  = { 'Abyss Cuirass', 'Scorpion Harness' },
+        Body  = { 'Abyss Cuirass//ACCESSIBLE', 'Scorpion Harness' },
 		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },
 		Hands = 'Thick Mufflers',
 		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt' },
@@ -565,7 +565,7 @@ local sets = {
         Head  = 'Empress Hairpin',
         Neck  = 'Spike Necklace',
 		Body  = 'Brigandine',
-		Hands = { 'Chaos Gauntlets//ACCESSIBLE', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+		Hands = { 'Abs. Gauntlets +1//ACCESSIBLE', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
         Rings = { 'Kshama Ring No.2', 'Balance Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
         Feet  = 'Bounding Boots',
@@ -581,7 +581,7 @@ local sets = {
         Head  = 'Empress Hairpin',
         Neck  = 'Spike Necklace',
 		Body  = 'Brigandine',
-		Hands = { 'Chaos Gauntlets//ACCESSIBLE', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+		Hands = { 'Abs. Gauntlets +1//ACCESSIBLE', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
         Rings = { 'Kshama Ring No.2', 'Balance Ring' },
 		Legs  = 'Chaos Flanchard//ACCESSIBLE',
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
@@ -845,8 +845,8 @@ profile.AccuracySet = {
 -- equip in (do not use RINGS or EARS, use RING1 and EAR1), whether HP or MP 
 -- is affected, and whether the piece requires region ownership or not the region 
 -- ownership.
-profile.RegionControlGear = {
-};
+profile.RegionControlGear = { 'Republican Gold Medal','Neck','MP',false };
+profile.NeutralControlGear = 'Smn. Torque';	-- has to match RegionControlGear slot
 
 profile.Sets = sets;
 profile.sjb = nil;

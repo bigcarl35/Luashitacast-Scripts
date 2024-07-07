@@ -774,8 +774,8 @@ profile.AccuracySet = {
 -- equip in (do not use RINGS or EARS, use RING1 and EAR1), whether HP or MP 
 -- is affected, and whether the piece requires region ownership or not the region 
 -- ownership.
-profile.RegionControlGear = {
-};
+profile.RegionControlGear = { 'Republican Gold Medal','Neck','MP',false };
+profile.NeutralControlGear = 'Smn. Torque';	-- has to match RegionControlGear slot
 
 profile.Sets = sets;
 profile.sjb = nil;
