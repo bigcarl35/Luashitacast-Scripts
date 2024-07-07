@@ -2576,6 +2576,20 @@ function CheckRegionControl()
 	else
 		return false;
 	end
+
+	-- First check to see if the player might actually be wearing the test gear.
+	-- If so, we'll want to use "neutral" gear instead. This means we'll be
+	-- checking the removal of the test gear instead of the addition.
+	
+	local curSlot = gData.GetEquipSlot(sSlot);
+	if curSlot ~= nil and string.lower(curSlot) == string.lower(sName) then
+		if profile.NeutralControlGear == nil then
+			print(chat.header('CheckRegionControl'):append(chat.message('Error: You\'re wearing the test gear and have not defined the NeutralControlGear.')));
+			return false;
+		else
+			sName = gProfile.NeutralControlGear;
+		end
+	end		
 	
 	-- Make sure test gear is valid
 	local item = AshitaCore:GetResourceManager():GetItemByName(sName,2);
