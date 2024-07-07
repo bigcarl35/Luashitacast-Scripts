@@ -828,6 +828,7 @@ profile.AccuracySet = {
 -- is affected, and whether the piece requires region ownership or not the region 
 -- ownership.
 profile.RegionControlGear = { 'Republican Gold Medal','Neck','MP',false };
+profile.NeutralControlGear = 'Smn. Torque';	-- has to match RegionControlGear slot
 
 profile.Sets = sets;
 profile.sjb = nil;			-- Tracks subjob name
