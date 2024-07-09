@@ -40,8 +40,6 @@ performing one of the army paeon songs.)
 **/maxspell "name"**: Determines the highest level spell player can cast that has the common root
 name (e.g., Cure gets you Cure III if you're 75 and /whm.)  
 **/petfood [name]**: Equips either named petfood or determines best pet food and equips that.  
-**/region**: Determines if the zone you're in is controlled by your nation. If unable to, just
-swaps between *owned/not* owned. Used with some conditional gear.  
 **/slot name|position gear**: Equips the passed piece of gear and locks the equipment slot.  
 **/tank**: Turns on/off equipping TP tank gear. Only available to: PLD,NIN,DRK,WAR,THF,RDM,RUN.  
 **/unlock: [all|#'s|names]**: Unlock equipment slot(s) so luashitacast can change item.  
