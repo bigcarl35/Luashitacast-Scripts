@@ -61,7 +61,6 @@ function gcdisplay.ShowHelp()
 	print(chat.header('Help'):append(chat.message('          [HELM|DIG|CLAM|FISH] -- Equips the specified gathering gear.')));
 	print(chat.header('Help'):append(chat.message('/lock [all|#\'s|names] -- Locks specified equipment slots disabling luashitacast from changing gear in those slots')));
 	print(chat.header('Help'):append(chat.message('/unlock [all|#\'s|names] -- Unlocks specified equipment slots enabling luashitacast on those slots')));
-	print(chat.header('Help'):append(chat.message('/region -- Toggles whether the area you\'re adventuring in is controlled by your nation or not.')));
 	print(chat.header('Help'):append(chat.message('/maxspell name -- Determines the highest level spell your current jobs can cast that has the passed name')));
 	print(chat.header('Help'):append(chat.message('/maxsong name [back] -- Determines the highest level song your current jobs can cast that has the passed name or next to highest')));
 	print(chat.header('Help'):append(chat.message('/equipit code|name [slot] [1|2] --Equips specified item in the specified slot and turns off /gswap.')));
