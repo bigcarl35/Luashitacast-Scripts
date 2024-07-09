@@ -12,6 +12,7 @@ require 'common'
 -]]
 gcinclude.sets = {
 	['Blind'] = {			-- Equip set if you're blind. Note: BLIND is a conditional too
+		Ears = 'Bat Earring',
 	},
 
 	['Bound'] = {			-- Equip set if you are bound
@@ -125,7 +126,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','maxsong','maxspell','nac','petfood','region','sbp','showit','slot','string','tank','th','unlock','wsdistance','wswap','t1'};
+gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','maxsong','maxspell','nac','petfood','sbp','showit','slot','string','tank','th','unlock','wsdistance','wswap','t1'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T{'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T{'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -684,7 +685,99 @@ TallyGear = {
 -- inline codes: //MP, //MPP, //HP, //HPP, //TP, and //TPP.
 InlineConditionals = { '.EQ.', '.GT.', '.GE.', '.LT.', '.LE.', '.NE.' };
 
+-- The following is used to track regional control. Listed is a region, who has
+-- conquest control, and what zone id's are associated with the region. This
+-- structure is populated programmatically. 1 - San d'Orian, 2 - Bastokian, 3 -
+-- Windurstian, 0 - not applicable, -1 unassigned.
+gcinclude.RegionControl = {
+	['Argoneau'] 		  = {-1, {152,7,8,151,200,119,120}},
+	['Bastok'] 			  = { 2, {234,235,236,237}},
+	['Derfland']		  = {-1, {147,197,109,148,110}},
+	['ElshimoLowlands']	  = {-1, {250,252,176,123}},
+	['ElshimoUplands']	  = {-1, {207,211,160,205,163,159,124}},
+	['Fauregandi']		  = {-1, {111,203,204,9,206,166,10}},
+	['Gustaberg']		  = {-1, {191,173,106,143,107,144,172}},
+	['Jeuno']			  = { 0, {243,244,245,246}},
+	['Kolshushu']		  = {-1, {4,118,213,3,198,249,117}},	-- Purgonorgo Isle doesn't have a separate ID
+	['Kuzotz']			  = {-1, {209,114,168,208,247,125}},
+	['LiTelor']			  = {-1, {153,202,154,251,122,121}},
+	['Movapolos']		  = {-1, {13,12,11}},
+	['Norvallen']		  = {-1, {105,104,2,150,149,1,195}},
+	['QuifimIsland']	  = {-1, {127,184,157,126,179,158}},
+	['Ronfaure']		  = {-1, {167,101,141,140,139,190,100,142}},
+	['Sandoria']		  = { 1, {230,231,232,233}},
+	['Sarutabaruta']	  = {-1, {146,116,170,145,192,194,169,115}},
+	['Tavnazia']		  = {-1, {24,25,31,27,30,29,28,32,26}},
+	['Tulia']			  = {-1, {181,180,130,178,177}},
+	['Valdeaunia']		  = {-1, {6,161,162,165,5,112}},
+	['Vollbow']			  = {-1, {113,201,212,174,128}},
+	['Windurst']		  = { 3, {238,239,240,241,242}},
+	['Zulkheim']		  = {-1, {196,108,102,193,248,103}},
+	['Dynamis']			  = { 0, {39,40,41,42,134,135,185,186,187,188}},
+	['Lumoria']			  = { 0, {33,34,35,36,37,38}}
+};
+
+gcinclude.OwnNation = -1; 
+
 gcinclude.Sets = gcinclude.sets;
+
+--[[
+	The following event is used to capture the ownership of the regions.
+	Conquest updates are sent whenever the player zones and periodiaclly.
+	The display bar's region is updated accordingly
+--]]
+
+ashita.events.register('packet_in', 'packet_in_cb', function (e)
+
+	if (e.id == 0x05E) then
+		gcinclude.RegionControl['Ronfaure'][1] = struct.unpack('B', e.data, 0X1E)
+		gcinclude.RegionControl['Zulkheim'][1] = struct.unpack('B', e.data, 0x22)
+		gcinclude.RegionControl['Norvallen'][1] = struct.unpack('B', e.data, 0x26)
+		gcinclude.RegionControl['Gustaberg'][1] = struct.unpack('B', e.data, 0x2A)
+		gcinclude.RegionControl['Derfland'][1] = struct.unpack('B', e.data, 0x2E)
+		gcinclude.RegionControl['Sarutabaruta'][1] = struct.unpack('B', e.data, 0x32)
+		gcinclude.RegionControl['Kolshushu'][1] = struct.unpack('B', e.data, 0x36)
+		gcinclude.RegionControl['Argoneau'][1] = struct.unpack('B', e.data, 0x3A)
+		gcinclude.RegionControl['Fauregandi'][1] = struct.unpack('B', e.data, 0x3E)
+		gcinclude.RegionControl['Valdeaunia'][1] = struct.unpack('B', e.data, 0x42)
+		gcinclude.RegionControl['QuifimIsland'][1] = struct.unpack('B', e.data, 0x46)
+		gcinclude.RegionControl['LiTelor'][1] = struct.unpack('B', e.data, 0x4A)
+		gcinclude.RegionControl['Kuzotz'][1] = struct.unpack('B', e.data, 0x4E)
+		gcinclude.RegionControl['Vollbow'][1] = struct.unpack('B', e.data, 0x52)
+		gcinclude.RegionControl['ElshimoLowlands'][1] = struct.unpack('B', e.data, 0x56)
+		gcinclude.RegionControl['ElshimoUplands'][1] = struct.unpack('B', e.data, 0x5A)
+		gcinclude.RegionControl['Tulia'][1] = struct.unpack('B', e.data, 0x5E)
+		gcinclude.RegionControl['Movapolos'][1] = struct.unpack('B', e.data, 0x62)
+		gcinclude.RegionControl['Tavnazia'][1] = struct.unpack('B', e.data, 0x66)
+		gcinclude.RegionDisplay();
+	end
+	return false;
+end);
+
+--[[
+	RegionDisplay determines if the player's nation owns the area the character is in
+	or not and updates the display bar accordingly.
+--]]
+function gcinclude.RegionDisplay()
+	local zoneId = AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0);
+	
+	-- Make sure the player's nation is known
+	if gcinclude.OwnNation == -1 then
+		gcinclude.OwnNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation() + 1;
+	end
+
+	-- Determine if current zone in region controlled by player's nation
+	for i,j in pairs(gcinclude.RegionControl) do
+		if table.find(j[2],zoneId) ~= nil then
+			if j[1] == gcinclude.OwnNation then
+				gcdisplay.SetCycle('Region','Owned');
+			else
+				gcdisplay.SetCycle('Region','Not Owned');
+			end
+			break;
+		end
+	end
+end
 
 --[[
 	DB_ShowIt will display debug details
@@ -1874,12 +1967,11 @@ function gcinclude.CheckInline(gear,sSlot)
 end		-- gcinclude.CheckInline
 
 function gcinclude.t1()
-	local player = gData.GetPlayer();
-	local tSet = {['Ring2'] = 'Moon Ring'};
-	
-	print('Before',player:GetStat(1));
-	gFunc.ForceEquipSet(tSet);
-	print('After',player.Stats);
+	print(chat.message('Player\'s nation = ' .. tostring(gcinclude.OwnNation)));
+	print(' ');
+	for i,j in pairs(gcinclude.RegionControl) do
+		print(chat.message(i ..' = ' .. tostring(j[1])));
+	end
 end		-- gcinclude.t1
 
 --[[
@@ -2556,101 +2648,6 @@ function WhichAccuracySet(sId)
 	return nil;
 end
 
-function CheckRegionControl()
-	local player = gData.GetPlayer();
-	local curHP = gData.HP;
-	local curMP = gData.MP;
-	
-	-- Make sure the test gear is defined
-	if gProfile.RegionControlGear == nil then
-		return false;
-	end
-	
-	local sName = gProfile.RegionControlGear[1];
-	local sSlot = gProfile.RegionControlGear[2];
-	local bMP;
-	local bOwn = (gProfile.RegionControlGear[4] == true);
-	
-	if gProfile.RegionControlGear[3] ~= nil then
-		bMP = (string.lower(gProfile.RegionControlGear[3]) == 'mp');
-	else
-		return false;
-	end
-
-	-- First check to see if the player might actually be wearing the test gear.
-	-- If so, we'll want to use "neutral" gear instead. This means we'll be
-	-- checking the removal of the test gear instead of the addition.
-	
-	local curSlot = gData.GetEquipSlot(sSlot);
-	if curSlot ~= nil and string.lower(curSlot) == string.lower(sName) then
-		if profile.NeutralControlGear == nil then
-			print(chat.header('CheckRegionControl'):append(chat.message('Error: You\'re wearing the test gear and have not defined the NeutralControlGear.')));
-			return false;
-		else
-			sName = gProfile.NeutralControlGear;
-		end
-	end		
-	
-	-- Make sure test gear is valid
-	local item = AshitaCore:GetResourceManager():GetItemByName(sName,2);
-	if item == nil then
-		print(chat.header('CheckRegionControl'):append(chat.message('Error: ' .. sName .. ' is not a valid piece of gear. Terminating region check.')));
-		return false;
-	end
-	
-	-- Make sure test gear is accessible
-	if CheckAccessible(sName) == false then
-		print(chat.header('CheckRegionControl'):append(chat.message('Error: ' .. sName .. ' is not accessible. Terminating region check.')));
-		return false;
-	end
-	
-	-- Make sure the player's level is high enough to equip the test gear
-	if item.Level > player.MainJobSync then
-		print(chat.header('CheckRegionControl'):append(chat.message('Error: ' .. sName .. '\'s level is to high to equip. Terminating region check.')));
-		return false;
-	end
-
-	-- Make sure the player's job can equip the test gear	
-	if not ((bit.band(item.Jobs,gcinclude.JobMask[player.MainJob]) == gcinclude.JobMask[player.MainJob]) or
-	   (bit.band(item.Jobs,gcinclude.JobMask['Alljobs']) == gcinclude.JobMask['Alljobs'])) then
-		print(chat.header('CheckRegionControl'):append(chat.message('Error: ' .. sName .. 'cannot be equipped by your job. Terminating region check.')));
-		return false;
-	end
-
-	-- At this point, see if we can figure out who controls the zone
-	gFunc.ForceEquip(sSlot,sName);
-	if bMP == true then
-		if player.MP > curMP then
-			if bOwn == true then
-				gcDisplay.SetToggle('Region','Owned');
-			else 
-				gcDisplay.SetToggle('Region','Not Owned');
-			end
-		else
-			if bOwn == true then
-				gcDisplay.SetToggle('Region','Not Owned');
-			else 
-				gcDisplay.SetToggle('Region','Owned');
-			end
-		end
-	else
-		if player.HP > curHP then
-			if bOwn == true then
-				gcDisplay.SetToggle('Region','Owned');
-			else 
-				gcDisplay.SetToggle('Region','Not Owned');
-			end
-		else
-			if bOwn == true then
-				gcDisplay.SetToggle('Region','Not Owned');
-			else 
-				gcDisplay.SetToggle('Region','Owned');
-			end
-		end		
-	end
-	return true;	
-end
-
 --[[
 	HandleCommands processes any commands typed into luashitacast as defined in this file
 --]]
@@ -2914,14 +2911,6 @@ function gcinclude.HandleCommands(args)
 		toggle = 'MaxSong';
 	elseif args[1] == 'equipit' or args[1] == 'ei' then			-- Equip specified item
 		gcinclude.EquipItem(args);
-	elseif (args[1] == 'region') then			-- Toggles the region setting
-		local bDef = CheckRegionControl();
-
-		if bDef == false then
-			gcdisplay.AdvanceCycle('Region');
-			toggle = 'Region';
-		end
-		status = gcdisplay.GetCycle('Region');
 	end
 
 	if gcinclude.settings.Messages then
