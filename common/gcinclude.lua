@@ -126,7 +126,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','maxsong','maxspell','nac','petfood','sbp','showit','slot','string','tank','th','unlock','wsdistance','wswap','t1'};
+gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','maxsong','maxspell','nac','petfood','rc','sbp','showit','slot','string','tank','th','unlock','wsdistance','wswap','t1'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T{'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T{'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -1811,7 +1811,7 @@ function gcinclude.CheckInline(gear,sSlot)
 			bGood = (suCode == string.upper(environ.Day));					-- Is it the specified day
 		elseif string.find('NOT_FIRESDAY,NOT_EARTHSDAY,NOT_WATERSDAY,NOT_WINDSDAY,NOT_ICEDAY,NOT_LIGHTNINGDAY,NOT_LIGHTSDAY,NOT_DARKSDAY',suCode) ~= nil then
 			bGood = (string.sub(suCode,5,-1) ~= string.upper(environ.Day));	-- Is it not the specified day
-		elseif table.find(gcinclude.ExactBuff,string.lower(suCode)) ~= nil then
+		elseif table.find(gcinclude.ExactBuff,string.lower(suCode)) ~= nil then		-- en spells
 			bGood = (gData.GetBuffCount(suCode) >= 1);
 		elseif string.find(wTypesM,suCode) ~= nil then						-- Is main weapon specified type
 			bGood = (gSet['Main'] ~= nil and table.find(gProfile.WeaponType[suCode],gSet['Main']) ~= nil);
@@ -1877,7 +1877,7 @@ function gcinclude.CheckInline(gear,sSlot)
 			bGood = gcinclude.CheckTime(timestamp.hour,'Nighttime',false);
 		elseif suCode == 'NOT_OWN' then						-- Player in area not controlled by their nation
 			bGood = (gcdisplay.GetCycle('Region') ~= 'Owned');
-		elseif string.sub(suCode,1,4) == 'NOT_WTH:' then	-- Does the weather not match
+		elseif string.sub(suCode,1,8) == 'NOT_WTH:' then	-- Does the weather not match
 			bGood = (string.find(string.upper(environ.Weather),string.sub(suCode,9,-1)) == nil);
 		elseif suCode == 'NOT_WTH-DAY' then					-- Weather does not match day's element
 			local sEle = string.upper(environ.DayElement) .. ',NONE';
@@ -1902,10 +1902,10 @@ function gcinclude.CheckInline(gear,sSlot)
 		elseif suCode == 'PETFNPF' then						-- Is player's pet fighting, but not the player
 			bGood = (pet ~= nil and pet.Status == 'Engaged' and player.Status ~= 'Engaged');
 		elseif string.sub(suCode,1,3) == 'PJP' and string.len(suCode) == 6 then	
-			local s = string.sub(suCode,3,-1);
+			local s = string.sub(suCode,4,-1);
 			bGood=(gcinclude.CheckPartyJob(s));				-- party has job: //PJP"job"
 		elseif string.sub(suCode,1,2) == 'SJ' and string.len(suCode) == 5 then	
-			bGood = (string.sub(suCode,4,-1) == sj);		-- subjob is: //SJ"job"
+			bGood = (string.sub(suCode,3,-1) == sj);		-- subjob is: //SJ"job"
 		elseif string.sub(suCode,1,4) == 'SMN:' then
 			bGood = (string.lower(spell.Name) == string.lower(string.sub(suCode,5,-1)));
 		elseif suCode == 'SMNPET' then						-- Is player's pet a summoned avatar
@@ -1966,6 +1966,36 @@ function gcinclude.CheckInline(gear,sSlot)
 	
 	return true,sGear;
 end		-- gcinclude.CheckInline
+
+function gcinclude.RegionControlDisplay()
+	local sAreas = { 
+		[-1] = 'Unassigned',
+		[0]  = 'N/A',
+		[1]  = 'San d\'Orian',
+		[2]  = 'Bastokian',
+		[3]  = 'Windurstian',
+		[4]  = 'Beastmen',
+	};
+	
+	if gcinclude.OwnNation == -1 then
+		gcinclude.OwnNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation() + 1;
+	end
+	
+	if gcinclude.OwnNation < -1 or gcinclude.OwnNation > 4 then
+		print(chat.message('Unknown player\'s nation = ' .. tostring(gcinclude.OwnNation)));
+	else
+		print(chat.message('Player\'s nation = ' .. sAreas[gcinclude.OwnNation]));
+	end
+	
+	print(' ');
+	for i,j in pairs(gcinclude.RegionControl) do
+		if j[1] < 0 or j[1] > 4 Then
+			print(chat.message('Huh? ' .. i ..' = ' .. tostring(j[1])));
+		else
+			print(chat.message(i ..' = ' .. sArea(j[1])));
+		end
+	end
+end		-- RegionControlDisplay
 
 function gcinclude.t1()
 	print(chat.message('Player\'s nation = ' .. tostring(gcinclude.OwnNation)));
@@ -2842,6 +2872,8 @@ function gcinclude.HandleCommands(args)
 		else
 			gcdisplay.SetSlots('acc',gcinclude.AccNumeric);
 		end
+	elseif (args[1] == 'rc' then					-- Display region controls
+		gcinclude.RegionControlDisplay();
 	elseif (args[1] == 'slot') then					-- Locks specified slot and equips piece
 		if #args == 3 then
 			local sSlot = WhichSlot(args[2]);

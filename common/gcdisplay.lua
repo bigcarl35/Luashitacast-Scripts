@@ -64,6 +64,7 @@ function gcdisplay.ShowHelp()
 	print(chat.header('Help'):append(chat.message('/maxspell name -- Determines the highest level spell your current jobs can cast that has the passed name')));
 	print(chat.header('Help'):append(chat.message('/maxsong name [back] -- Determines the highest level song your current jobs can cast that has the passed name or next to highest')));
 	print(chat.header('Help'):append(chat.message('/equipit code|name [slot] [1|2] --Equips specified item in the specified slot and turns off /gswap.')));
+	print(chat.header('Help'):append(chat.message('/rc -- Displays who controls what region')));
 	print(chat.header('Help'):append(chat.message('/petfood [name|ALL|MAX|MIN] --Equips the specified pet food or determines best food and equips it.')));
 	print(chat.header('Help'):append(chat.message('/slot name|pos gear --Locks the specified gear slot and loads the passed gear into said slot')));
 
