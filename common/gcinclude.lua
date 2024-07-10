@@ -727,7 +727,7 @@ gcinclude.Sets = gcinclude.sets;
 	The display bar's region is updated accordingly
 --]]
 
-ashita.events.register('packet_in', 'packet_in_cb', function (e)
+ashita.events.register('packet_in', 'packet_in_callback1', function (e)
 
 	if (e.id == 0x05E) then
 		gcinclude.RegionControl['Ronfaure'][1] = struct.unpack('B', e.data, 0X1E)
@@ -750,9 +750,10 @@ ashita.events.register('packet_in', 'packet_in_cb', function (e)
 		gcinclude.RegionControl['Movapolos'][1] = struct.unpack('B', e.data, 0x62)
 		gcinclude.RegionControl['Tavnazia'][1] = struct.unpack('B', e.data, 0x66)
 		gcinclude.RegionDisplay();
+		e.blocked = false;
 	end
-	return false;
 end);
+
 
 --[[
 	RegionDisplay determines if the player's nation owns the area the character is in
