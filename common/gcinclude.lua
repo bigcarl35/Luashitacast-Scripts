@@ -749,7 +749,9 @@ ashita.events.register('packet_in', 'packet_in_callback1', function (e)
 		gcinclude.RegionControl['Tulia'][1] = struct.unpack('B', e.data, 0x5E)
 		gcinclude.RegionControl['Movapolos'][1] = struct.unpack('B', e.data, 0x62)
 		gcinclude.RegionControl['Tavnazia'][1] = struct.unpack('B', e.data, 0x66)
-		gcinclude.RegionDisplay();
+		if gcdisplay ~= nil then
+			gcinclude.RegionDisplay();
+		end
 		e.blocked = false;
 	end
 end);
@@ -1989,10 +1991,15 @@ function gcinclude.RegionControlDisplay()
 	
 	print(' ');
 	for i,j in pairs(gcinclude.RegionControl) do
-		if j[1] < 0 or j[1] > 4 Then
+		if j[1] < 0 or j[1] > 4 then
 			print(chat.message('Huh? ' .. i ..' = ' .. tostring(j[1])));
 		else
-			print(chat.message(i ..' = ' .. sArea(j[1])));
+			for ii,jj in pairs(sAreas) do
+				if ii == j[1] then
+					print(chat.message(i ..' = ' .. jj));
+					break;
+				end
+			end
 		end
 	end
 end		-- RegionControlDisplay
@@ -2872,7 +2879,7 @@ function gcinclude.HandleCommands(args)
 		else
 			gcdisplay.SetSlots('acc',gcinclude.AccNumeric);
 		end
-	elseif (args[1] == 'rc' then					-- Display region controls
+	elseif (args[1] == 'rc') then					-- Display region controls
 		gcinclude.RegionControlDisplay();
 	elseif (args[1] == 'slot') then					-- Locks specified slot and equips piece
 		if #args == 3 then
