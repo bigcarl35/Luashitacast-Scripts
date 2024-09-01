@@ -119,7 +119,7 @@ gcinclude.settings = {
 	--
 	priorityEngaged = 'BCEFGH'; 	-- indicates order of steps for engagement
 	priorityMidCast = 'ABCDEFGH';	-- indicates order of steps for spell midcast
-	priorityWeaponSkill = 'ABDE';	-- indicates order of steps for a weapon skill
+	priorityWeaponSkill = 'ADBE';	-- indicates order of steps for a weapon skill
 };
 
 -- The following arrays are used by the functions contained in this file. Probably best to leave them alone
@@ -262,6 +262,8 @@ gcinclude.Locks = { [1] =  {'main', false,false}, [2] =  {'sub',false,false},
 gcinclude.LocksNumeric = 'None';
 gcinclude.AccNumeric = 'None';
 
+gcinclude._AllElements = 'fire,ice,wind,earth,thunder,water,light,dark';
+
 -- Structure for tracking elemental gear. The "Job" entry is used to make sure the current Job matches
 -- the job where the status was recorded.
 gcinclude.tElemental_gear = T{	['job'] = 'NON',
@@ -315,8 +317,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Weak'] = 'dark',
 										['NQ'] = { ['Name'] = 'Light staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil },
 										['HQ'] = { ['Name'] = 'Apollo\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil },
-										['Affinity'] = { 'banish','banishga','barblind','barblindra','barsleep','barsleepra','barvira','cursna','dia','diaga','flash','holy','phalanx' },
-										['Potency'] = { 'curaga','cure' },
+										['Affinity'] = { 'banish','banishga','barblind','barblindra','barsleep','barsleepra','barvira','curaga','cure','cursna','dia','diaga','flash','holy','phalanx' },
 										['Summons'] = {'carbuncle','light spirit','lightspirit','cait sith','caitsith','alexander'},
 										},
 									['dark'] = {
@@ -339,7 +340,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Where'] = nil, 
 										['MEacc'] = { 'burn','firaga','fire','flare','blaze' },
 										['eleWS'] = { 'burning blade','red lotus blade','tachi: Kagero','flaming arrow','hot shot','wildfire' },
-										},
+									},
 									['ice'] = {
 										['Weak'] = 'fire',										
 										['Name'] = 'Hyorin obi', 
@@ -348,6 +349,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Where'] = nil, 
 										['MEacc'] = { 'frost','blizzaga','blizzard','freeze','paralyze','bind','distract','ice' },
 										['eleWS'] = { 'frostbite','freezebite','herculean slash','blade: to' },
+										['Other'] = 'elemental magic',
 										},												 
 									['wind'] = {
 										['Weak'] = 'ice',
@@ -384,6 +386,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Where'] = nil, 
 										['MEacc'] = { 'drown','flood','water','waterga','poison' },
 										['eleWS'] = { 'blade: teki','blade: yu' },
+										['Other'] = 'divine magic',
 										},
 									['light'] = {
 										['Weak'] = 'dark',
@@ -393,6 +396,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Where'] = nil, 
 										['MEacc'] = { 'banish','banishga','dia','diaga','flash','repose','holy','auspice','esuna','sacrifice','reprisal','cure','curaga' },
 										['eleWS'] = { 'shining blade','seraph blade','primal rend','tachi: koki','shining strike','seraph strike','starburst','sunburst','garland of bliss','trueflight' },
+										['Other'] = 'cure potency',
 										},
 									['dark'] = {
 										['Weak'] = 'light',
@@ -1104,10 +1108,10 @@ function gcinclude.LockUnlock(sTarget,sType,sWhich)
 end		-- gcinclude.LockUnlock
 
 --[[
-	InitializeEleStructure initializes the elemental gear structure
+	fInitElementalGearStructure initializes the elemental gear structure
 --]]
 
-function InitializeEleStructure()
+function fInitElementalGearStructure()
 	local player = gData.GetPlayer();
 	
 	-- Job
@@ -1229,16 +1233,16 @@ function InitializeEleStructure()
 	gcinclude.tElemental_gear['gorget']['dark']['Where'] = nil;
 	
 	gcinclude.tElemental_gear['gorget']['searched'] = false;	
-end			-- InitializeEleStructure
+end			-- fInitElementalGearStructure
 
 --[[
-	fSearchForEleGear determines which elemental gear the player has accessible
-	for the specified type of gear. sType indicates which type of gear will be
-	searched and bOverride will force a search to occur even if the specified 
-	type has already been searched.
+	fSearchForElementalGear determines which elemental gear the player has 
+	accessible for the specified type of gear. sType indicates which type of 
+	gear will be searched and bOverride will force a search to occur even if 
+	the specified type has already been searched.
 --]]
 
-function fSearchForEleGear(sType,bOverride)
+function fSearchForElementalGear(sType,bOverride)
 	local inventory = AshitaCore:GetMemoryManager():GetInventory();
 	local resources = AshitaCore:GetResourceManager();
 	local player = gData.GetPlayer();
@@ -1260,22 +1264,27 @@ function fSearchForEleGear(sType,bOverride)
 					local item = resources:GetItemById(itemEntry.Id);
 					local sIN = string.lower(item.Name[1]);	
 
-					-- Now, depending on type, determine if the current item is elemental
-					if sType == 'staff' then
-						if sIN == string.lower(gcinclude.tElemental_gear['staff'][sElement]['HQ']['Name']) then
-							gcinclude.tElemental_gear['staff'][sElement]['HQ']['Have'] = true;
-							gcinclude.tElemental_gear['staff'][sElement]['HQ']['Accessible'] = true;
-							gcinclude.tElemental_gear['staff'][sElement]['HQ']['Where'] = tStorage[i][2];
-						elseif sIN == string.lower(gcinclude.tElemental_gear['staff'][sElement]['NQ']['Name']) then
-							gcinclude.tElemental_gear['staff'][sElement]['NQ']['Have'] = true;
-							gcinclude.tElemental_gear['staff'][sElement]['NQ']['Accessible'] = true;
-							gcinclude.tElemental_gear['staff'][sElement]['NQ']['Where'] = tStorage[i][2];
-						end	
-					else	-- 'obi' and 'gorget' have same structure, so...
-						if sIN == string.lower(gcinclude.tElemental_gear[sType][sElement]['Name']) then
-							gcinclude.tElemental_gear[sType][sElement]['Have'] = true;
-							gcinclude.tElemental_gear[sType][sElement]['Accessible'] = true;
-							gcinclude.tElemental_gear[sType][sElement]['Where'] = tStorage[i][2];
+					for ii,jj in pairs(gcinclude.tElemental_gear[sType]) do
+						-- Then loop through the elements (ignore other entries)
+						if string.find(gcinclude._AllElements,ii) ~= nil then
+							-- Now, depending on type, determine if the current item is elemental
+							if sType == 'staff' then
+								if sIN == string.lower(gcinclude.tElemental_gear['staff'][ii]['HQ']['Name']) then
+									gcinclude.tElemental_gear['staff'][ii]['HQ']['Have'] = true;
+									gcinclude.tElemental_gear['staff'][ii]['HQ']['Accessible'] = true;
+									gcinclude.tElemental_gear['staff'][ii]['HQ']['Where'] = tStorage[i][2];
+								elseif sIN == string.lower(gcinclude.tElemental_gear['staff'][ii]['NQ']['Name']) then
+									gcinclude.tElemental_gear['staff'][ii]['NQ']['Have'] = true;
+									gcinclude.tElemental_gear['staff'][ii]['NQ']['Accessible'] = true;
+									gcinclude.tElemental_gear['staff'][ii]['NQ']['Where'] = tStorage[i][2];
+								end	
+							else	-- 'obi' and 'gorget' have same structure, so...
+								if sIN == string.lower(gcinclude.tElemental_gear[sType][ii]['Name']) then
+									gcinclude.tElemental_gear[sType][ii]['Have'] = true;
+									gcinclude.tElemental_gear[sType][ii]['Accessible'] = true;
+									gcinclude.tElemental_gear[sType][ii]['Where'] = tStorage[i][2];
+								end
+							end
 						end				
 					end
 				end
@@ -1283,7 +1292,7 @@ function fSearchForEleGear(sType,bOverride)
 		end
 		gcinclude.tElemental_gear[sType]['searched'] = true;				
 	end
-end		-- fSearchForEleGear
+end		-- fSearchForElementalGear
 
 --[[
 	CheckForEleGear determines if the player has the piece of gear indicated by type and if accessible
@@ -1299,12 +1308,12 @@ function gcinclude.CheckForEleGear(sType,sElement)
 	
 	-- Then make sure elemental gear structure initialized for the right job
 	if player.MainJob ~= gcinclude.tElemental_gear['job'] then
-		InitializeEleStructure();
+		fInitElementalGearStructure();
 	end
 	
 	-- Check to see if that Type/Element needs to be searched
 	if gcinclude.tElemental_gear[sType]['searched'] == false then
-		fSearchForEleGear(sType,true);
+		fSearchForElementalGear(sType,true);
 	end
 	
 	-- if for some reason the search failed, no need to process
@@ -2053,7 +2062,7 @@ function CheckForGear(sGear,sSlot)
 end		-- CheckForGear
 
 --[[
-	CheckItemOwned determines if the specified piece of gear is owned by the
+	fCheckItemOwned determines if the specified piece of gear is owned by the
 	player. bAccessible further restricts the search to containers that are
 	accessible when outside of your mog house. bOnce indicates if the item
 	only has to be found once before returning a result.
@@ -2061,7 +2070,7 @@ end		-- CheckForGear
 	Please note: currently searching storage slips are not supported
 --]]
 
-function gcinclude.CheckItemOwned(sGear,bAccessible,bOnce)
+function fCheckItemOwned(sGear,bAccessible,bOnce)
 	local inventory = AshitaCore:GetMemoryManager():GetInventory();
 	local resources = AshitaCore:GetResourceManager();
 	local containerID,itemEntry,item;
@@ -2070,7 +2079,7 @@ function gcinclude.CheckItemOwned(sGear,bAccessible,bOnce)
 	
 	-- Make sure a piece of gear specified
 	if sGear == nil then
-		return nil;
+		return false,nil;
 	end
 	
 	-- If bOnce not specified, then assume true, only one item found is good enough
@@ -2107,7 +2116,7 @@ function gcinclude.CheckItemOwned(sGear,bAccessible,bOnce)
 	end
 	
 	return (sWhere ~= nil),sWhere;
-end		-- CheckItemOwned
+end		-- fCheckItemOwned
 
 --[[
 	CheckAccuracySlots determines if the passed slot is one of the designated
@@ -2179,7 +2188,7 @@ function gcinclude.CheckInline(gear,sSlot)
 		elseif string.find(wTypesR,suCode) ~= nil then						-- Is ranged weapon specified type
 			bGood = (gSet['Range'] ~= nil and table.find(gProfile.WeaponType[suCode],gSet['Range']) ~= nil);
 		elseif suCode == 'ACCESSIBLE' then
-			bGood = gcinclude.CheckItemOwned(sGear,true,true); 
+			bGood = fCheckItemOwned(sGear,true,true); 
 		elseif suCode == 'ACCURACY' then
 			bGood = (gcinclude.CheckAccuracySlots(sSlot) == true);		
 		elseif string.sub(suCode,1,3) == 'AK:' then			-- National Aketon
@@ -2239,6 +2248,8 @@ function gcinclude.CheckInline(gear,sSlot)
 			bGood = (environ.MoonPhase == 'New Moon');
 		elseif suCode == 'NIGHTTIME' then					-- Time is nighttime
 			bGood = gcinclude.CheckTime(timestamp.hour,'Nighttime',false);
+		elseif suCode == 'NO_PET' then						-- Player has no avatar out
+			bGood = (pet == nil);
 		elseif suCode == 'NOT_OWN' then						-- Player in area not controlled by their nation
 			bGood = (gcdisplay.GetCycle('Region') ~= 'Owned');
 		elseif string.sub(suCode,1,8) == 'NOT_WTH:' then	-- Does the weather not match
@@ -2373,11 +2384,18 @@ end		-- RegionControlDisplay
 
 function gcinclude.t1()
 	print(chat.message('Test - looking for: Staff,Summons,Ramuh. Should return Thunder Staff'));
-	local sWhat = fCheckForElementalGear('staff','Summons','ramuh');
+	local sWhat = fCheckForElementalGearByValue('staff','Summons','ramuh');
 	if sWhat ~= nil then
 		print(chat.message('Answer: ' .. sWhat));
 	else
-		print(chat.message('Something went wrong...'));
+		print(chat.message('Something went wrong or not found...'));
+	end
+	sWhat = fCheckForElementalGearByValue('obi','MEacc','freeze');
+	print(chat.message('Test - looking for: Obi,MEacc,freeze. Should return nil'));
+	if sWhat ~= nil then
+		print(chat.message('Answer: ' .. sWhat));
+	else
+		print(chat.message('Something went wrong or not found...'));
 	end
 end		-- gcinclude.t1
 
@@ -2864,30 +2882,30 @@ function gcinclude.MaxSpell(root,bCast)
 end		-- gcinclude.MaxSpell
 
 --[[
-	fCheckForElementalGear is a generalized routine that searches to see if the targetted
-	elemental gear should be equipped (assuming you have the piece accessible.)
+	fCheckForElementalGearByValue is a generalized routine that searches to see 
+	if the targetted elemental gear should be equipped (assuming you have the piece 
+	accessible.)
 	
 	sWhat		type of elemental gear to check: staff,obi,gorget
-	sWhich		which associated list to check: Affinity,Summons,Potency,MEacc,eleWS
+	sWhich		which associated list to check: Affinity,Summons,MEacc,eleWS
 	sElement	the key to match in the appropriate list
 --]]
 
-function fCheckForElementalGear(sWhat,sWhich,sElement)
+function fCheckForElementalGearByValue(sWhat,sWhich,sElement)
 	local player = gData.GetPlayer();
 	local sRoot;
-	local _AllElements = 'fire,ice,wind,earth,thunder,water,light,dark';
 	
 	-- Make sure the appropriate gear is searched for in the
 	-- elemental gear structure	
 	if gcinclude.tElemental_gear[sWhat]['searched'] == false then
-		fSearchForEleGear(sType,true);
+		fSearchForElementalGear(sWhat,true);
 	end
-	
+
 	-- If it's still false, there was a problem
 	if gcinclude.tElemental_gear[sWhat]['searched'] == true then
 		-- Make sure player is high enough level to equip the item
-		if player.MainJobSync >= gcinclude.tElemental_gear[sWhat][level] then
-			return nil;
+		if player.MainJobSync < gcinclude.tElemental_gear[sWhat]['level'] then
+			return nil;			
 		end
 
 		-- And that locks won't block equipping the item
@@ -2903,17 +2921,17 @@ function fCheckForElementalGear(sWhat,sWhich,sElement)
 		elseif string.find('Summons,eleWS',sWhich) ~= nil then
 			sRoot = string.lower(sElement);
 		else
-			print(chat.header('fCheckForElementalGear'):append(chat.message('Unknown field to search: ' ..sWhich)));
+			print(chat.header('fCheckForElementalGearByValue'):append(chat.message('Unknown field to search: ' ..sWhich)));
 			return nil;
 		end
 
 		-- Now loop through the elements looking for a match
 		for i,j in pairs(gcinclude.tElemental_gear[sWhat]) do
 			-- Looking for elemental entries. Ignore the rest
-			if string.find(_AllElements,i) ~= nil then
+			if string.find(gcinclude._AllElements,i) ~= nil then
 				-- Look for a match in the associated field
-				if table.find(gcinclude.tElemental_gear[sWhat][i][sWhich],sRoot) ~= nil then
-					if sWhich == 'staff' then
+				if table.find(gcinclude.tElemental_gear[sWhat][i][sWhich],sRoot) ~= nil then			
+					if sWhat == 'staff' then
 						if gcinclude.tElemental_gear[sWhat][i]['HQ']['Accessible'] == true then
 							return gcinclude.tElemental_gear[sWhat][i]['HQ']['Name'];
 						elseif gcinclude.tElemental_gear[sWhat][i]['NQ']['Accessible'] == true then
@@ -2931,7 +2949,7 @@ function fCheckForElementalGear(sWhat,sWhich,sElement)
 	-- Since we got here, either the search string wasn't found in the appropriate
 	-- area or it was found, but the player doesn't have the item or it's inaccessible.
 	return nil;
-end		-- fCheckForElementalGear
+end		-- fCheckForElementalGearByValue
 
 --[[
 	SwapToStave determines if swapping your weapon out for one of the elemental staves makes
@@ -2957,11 +2975,10 @@ function gcinclude.SwapToStave(sStave,noSave,cs)
 	if sStave == nil then
 		return;
 	end
-	
+
 	if (gcdisplay.GetToggle('WSwap') == true or gcinclude.settings.bWSOverride == true) then	
-		sGear = gcinclude.CheckForEleGear('staff',sStave);		
 		-- See if a current weapon is the one of the targetted staves
-		if not (eWeap == nil or sGear == nil or (eWeap ~= nil and string.lower(eWeap) == string.lower(sGear))) then
+		if not (eWeap == nil or (eWeap ~= nil and string.lower(eWeap) == string.lower(sStave))) then
 			-- save the weapon so it can be equipped again
 			if eWeap ~= gcinclude.weapon and noSave == false and gcinclude.settings.bWSOverride == false then
 				gcinclude.weapon = eWeap;
@@ -2969,13 +2986,13 @@ function gcinclude.SwapToStave(sStave,noSave,cs)
 			end
 		end
 		
-		if sGear ~= nil then
-			-- All elemental staves are level 51. Check versus level of player and that the
-			-- position (Main and Sub) isn't locked.
+		if sStave ~= nil then
+			-- Check versus level of player and that the slot (Main and Sub) isn't 
+			-- locked.
 			if player.MainJobSync >= gcinclude.tElemental_gear['staff']['level'] then
 				if gcinclude.Locks[gcinclude.tElemental_gear['staff']['slots'][1]][2] == false and 
 				   gcinclude.Locks[gcinclude.tElemental_gear['staff']['slots'][2]][2] == false then
-					cs['Main'] = sGear;
+					cs['Main'] = sStave;
 				else
 					print(chat.message('Warning: Unable to swap to a ' .. sGear .. ' due to locks!'));
 				end
@@ -3962,7 +3979,7 @@ function gcinclude.HandleMidcast(bTank)
 	local player = gData.GetPlayer();
 	local spell = gData.GetAction();
 	local obi;
-	local sSet;
+	local sSet,sGear;
 	local cKey;
 
 	if bTank == nil then		-- Need to check because of transition state of change
@@ -4029,7 +4046,17 @@ function gcinclude.HandleMidcast(bTank)
 			gcinclude.FractionalAccuracy(gProfile.Sets.Macc,nil);
 		elseif cKey == 'F' then			-- Spell specific gear
 			if string.match(spell.Name, 'Stoneskin') then
-				-- Mind has a large affect on Stoneskin, so equip it here
+				-- Stoneskin heavily depends on MND and to a lesser degree, the player's
+				-- Enhancing Magic skill level. The effect is calculated as follows:
+				--   BASE = Enhancing Magic Skill/3 + MND. If the BASE is < 80, then
+				--   the amount of protection is the BASE. If between 80 and 130, the
+				--   amount is (2 * BASE) - 60. If greater than 130, it's (3 * BASE) - 190.
+				--   Cap is 350 although wearing gear that "enhances" stoneskin can raise
+				--   the cap to 380.
+				--
+				-- Note: Titan's Earthen Ward does not use the summoner's stats. The amount
+				-- of the stoneskin is (avatar's level * 2) + 50 HP. Thus, earthen ward is
+				-- treated as a normal blood pact ward and not as part of stoneskin
 				if bTank == true then
 					gcinclude.MoveToCurrent(gProfile.Sets.TANK_MND,gProfile.Sets.CurrentGear);
 				else				
@@ -4055,15 +4082,15 @@ function gcinclude.HandleMidcast(bTank)
 			end
 		elseif cKey == 'H' then				-- Elemental Stave
 			if spell.Skill == 'Summoning' then
-				stat = gcinclude.CheckSummons(spell.Name);
+				sGear = fCheckForElementalGearByValue('staff','Summons',spell.Name);
 			else
-				stat = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleDmg,gcinclude.ELEMENT);
+				sGear = fCheckForElementalGearByValue('staff','Affinity',spell.Name);
 			end
 		
-			if stat ~= nil then
-				gcinclude.SwapToStave(stat,false,gProfile.Sets.CurrentGear);
+			if sGear ~= nil then
+				gcinclude.SwapToStave(sGear,false,gProfile.Sets.CurrentGear);
 			end
-			stat = nil;
+			sGear = nil;
 		end
 	end
 end		-- gcinclude.HandleMidcast
@@ -4126,6 +4153,10 @@ function gcinclude.HandleWeaponskill(bTank)
 			elseif sWS == 'WS_Skill' then
 				gcinclude.MoveToCurrent(gProfile.Sets.WS_Skill,gProfile.Sets.CurrentGear);	
 			end
+		-- An elemental gorget will add the fTP (at least 10% more damage) to the first hit 
+		-- of an elemental weapon skill (and many multi-hit weapon skills replicate the fTP
+		-- for all the hits.) Also, they give +10 Accuracy to all of the weapon skill's hits
+		-- and a 1% chance of not depleting the player's TP after the weapon skill.
 		elseif cKey == 'B' then		-- elemental gorget	
 			local bFound = false;
 			for ii,jj in pairs(gcinclude.eleWS) do
