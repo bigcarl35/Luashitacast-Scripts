@@ -1177,7 +1177,7 @@ function gcinclude.fIsLocked(val)
 			return true;	-- This error should never occur. Assume it's locked.
 		else
 			for j,k in ipairs(gcinclude.Locks) do
-				if k[1] == val then
+				if k[1] == string.lower(val) then
 					index = j;
 					break;
 				end
@@ -2995,7 +2995,7 @@ function gcinclude.fMoveToCurrent(tSet,tMaster,bOverride)
 	local item = {};
 	local ts = {};
 	local ts1 = {};
-	local root,sK,vRoot,sK,sRoot;
+	local root,sK,vRoot,stK,sRoot;
 	local bContinue,iNum,bGood,bSkip;
 
 	if tSet == nil or tMaster == nil then
@@ -3023,7 +3023,7 @@ function gcinclude.fMoveToCurrent(tSet,tMaster,bOverride)
 	for k,v in pairs(ts1) do
 		sK = string.lower(k);
 		
-		if vRoot == 'subset' then
+		if sK == 'subset' then		
 			if type(v) == 'table' then
 				ts = v;
 			else
@@ -3031,8 +3031,8 @@ function gcinclude.fMoveToCurrent(tSet,tMaster,bOverride)
 			end
 			
 			-- Then determine the appropriate set to load
-			for kk,vv in pairs(ts) do
-				bGood,vRoot = fCheckInline(vv,'subset');
+			for kk,vv in pairs(ts) do		
+				bGood,vRoot = fCheckInline(vv,'subset');			
 				if bGood == true then
 					gcinclude.fMoveToCurrent(vRoot,tMaster,bOverride);
 					break;
@@ -3050,7 +3050,7 @@ function gcinclude.fMoveToCurrent(tSet,tMaster,bOverride)
 		if sK ~= 'subset' then	
 			-- Check for special case, Ears or Rings
 			if string.find('ears,rings',sK) ~= nil then	
-				root = string.sub(sK,1,-2);
+				root = string.sub(k,1,-2);
 				iNum = 1;
 				bContinue = true;
 			end
@@ -3058,7 +3058,7 @@ function gcinclude.fMoveToCurrent(tSet,tMaster,bOverride)
 			-- if the slot to be populated is one that will reset the player's TP,
 			-- make sure that /WSWAP is true or that gcinclude.settings.bWSOverride 
 			-- is true.	
-			if string.find('Main,Sub,Range',k) ~= nil then
+			if string.find('main,sub,range',sK) ~= nil then
 				bSkip = not (gcdisplay.GetToggle('WSwap') == true 
 						or gcinclude.settings.bWSOverride == true
 						or bOverride == true);
@@ -3070,9 +3070,9 @@ function gcinclude.fMoveToCurrent(tSet,tMaster,bOverride)
 				ts = {};
 				-- Make sure the piece to be processed is a table
 				if type(v) == 'table' then
-					ts = v;
+					ts = v;			
 				else
-					ts[sK] = v;
+					ts[k] = v;				
 				end
 		
 				iNum = 1;
@@ -3080,38 +3080,39 @@ function gcinclude.fMoveToCurrent(tSet,tMaster,bOverride)
 				-- Walk list of items
 				for kk,vv in pairs(ts) do
 					-- Make sure the item is noted in gcinclude.GearDetails
-					-- and that the level, job, and accessibility is good
+					-- and that the level, job, and accessibility is good					
 					if fGearCheckItem(sK,vv,false) == true then
 						-- See if there's an inline conditional to be checked.
 						-- Note the need to distinguish which "ear" or "ring"
 						if bContinue then
-							sK = root .. tostring(iNum);
-							bGood,vRoot = fCheckInline(vv,sK);
+							stK = root .. tostring(iNum);
 						else
-							bGood,vRoot = fCheckInline(vv,sRoot);
+							stK = k;
 						end
-				
+
+						bGood,vRoot = fCheckInline(vv,stK);
+
 						-- If the inline check returns true, process the gear piece
 						if bGood == true then
 							if bContinue == true then
-								sK = root .. tostring(iNum);
+								stK = root .. tostring(iNum);
 								-- Make sure not locked
-								if gcinclude.fIsLocked(string.lower(sK)) == false then
-									tMaster[sK] = vRoot;
+								if gcinclude.fIsLocked(string.lower(stK)) == false then
+									tMaster[stK] = vRoot;
 									iNum = iNum + 1;
 								else
 									if iNum == 1 then
-										sK = root .. tostring(iNum+1);
-										if gcinclude.fIsLocked(string.lower(sK)) == false then
-											tMaster[sK] = vRoot;
+										stK = root .. tostring(iNum+1);								
+										if gcinclude.fIsLocked(string.lower(stK)) == false then
+											tMaster[stK] = vRoot;
 										end
 									end
 									iNum = 3;	-- This forces the pairing to kick out								
 								end						
-							else
-								-- Normal single slot
-								if gcinclude.fIsLocked(string.lower(k)) == false then
-									tMaster[k] = vRoot;
+							else							
+								-- Normal single slot							
+								if gcinclude.fIsLocked(string.lower(stK)) == false then
+									tMaster[stK] = vRoot;									
 								end
 								break;
 							end
