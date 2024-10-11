@@ -5,10 +5,6 @@ require 'common'
 --[[
 	This file contains routines that are used with Luashitacast across any supported job.
 	Job specific routines are found in the "Username"_job file (ex: Paiine_BST.lua)
-
-	These sets are universal for things like debuff conditions (doomed, asleep, etc); avoid 
-	main/sub/range/ammo slot gear here unless it makes sense and you (potentially) don't mind
-	losing your tp.
 -]]
 gcinclude.sets = {
 
@@ -36,7 +32,7 @@ gcinclude.sets = {
 	},
 
 --[[
-	The Sneaky set is equipped and /gswap is turned off. It's a set intended to equip gear
+	The Sneaky set is equipped and the slots are locked. It's a set intended to equip gear
 	to help the player sneak around.
 --]]	
 	['Sneaky'] = {
@@ -46,8 +42,7 @@ gcinclude.sets = {
 
 --[[
 	The dispense set is used to equip items that have an ability to daily dispense items.
-	They're grouped here as a convenience. Like Sneaky, once this set is loaded /gswap
-	will be turned off.
+	They're grouped here as a convenience.
 --]]
 	['Dispense'] = {
 		Head = 'Dream Hat +1',
@@ -66,16 +61,16 @@ gcinclude.sets = {
 gcinclude.settings = {
 --[[
 	You can also set any of these on a per job basis in the job file in the OnLoad function. See my BST job file 
-	to see how this is done but as an example you can just put 'gcinclude.settings.RefreshGearMPP = 50;' in your 
-	job files OnLoad function to modify for that job only
+	to see how this is done.
 --]]
-	Messages = false; 	 -- set to true if you want chat log messages to appear on any /gc command used such as DT, or KITE gear toggles, certain messages will always appear
-	WScheck = true; 	 -- set to false if you dont want to use the WSdistance safety check
+	Messages = false; 	 -- set to true if you want chat log messages to appear on any /gs command used such as DT, or KITE gear toggles, certain messages will always appear
+	WScheck = true; 	 -- set to false if you don't want to use the WSdistance safety check
 	WSdistance = 4.7; 	 -- default max distance (yalms) to allow non-ranged WS to go off at if the above WScheck is true
 	bWSOverride = false; -- is the player playing a job where weapon swapping always happens, it is not optional?
 	Tolerance = 97;		 -- Comparison value %, cut-off for certain comparisons
+	DefaultTarget = 't'; -- What to use in fMaxSpell and fMaxSong if no target specified
 	--
-	priorityEngaged = 'BCEFGH'; 	-- indicates order of steps for engagement
+	priorityEngaged = 'CEF'; 		-- indicates order of steps for engagement
 	priorityMidCast = 'ABCDEFGH';	-- indicates order of steps for spell midcast
 	priorityWeaponSkill = 'ADBE';	-- indicates order of steps for a weapon skill
 };
@@ -84,7 +79,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','maxsong','maxspell','nac','petfood','rc','rv','sbp','showit','slot','string','tank','th','unlock','wsdistance','wswap','t1'};
+gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','maxsong','maxspell','nac','petfood','rc','rv','sbp','showit','string','tank','th','unlock','wsdistance','wswap','t1'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T{'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T{'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -95,9 +90,9 @@ gcinclude.BstPetAttack = T{'Foot Kick','Whirl Claws','Big Scissors','Tail Blow',
 gcinclude.BstPetMagicAttack = T{'Gloom Spray','Fireball','Acid Spray','Molting Plumage','Cursed Sphere','Nectarous Deluge','Charged Whisker','Nepenthic Plunge'};
 gcinclude.BstPetMagicAccuracy = T{'Toxic Spit','Acid Spray','Leaf Dagger','Venom Spray','Venom','Dark Spore','Sandblast','Dust Cloud','Stink Bomb','Slug Family','Intimidate','Gloeosuccus','Spider Web','Filamented Hold','Choke Breath','Blaster','Snow Cloud','Roar','Palsy Pollen','Spore','Brain Crush','Choke Breath','Silence Gas','Chaotic Eye','Sheep Song','Soporific','Predatory Glare','Sudden Lunge','Numbing Noise','Jettatura','Bubble Shower','Spoil','Scream','Noisome Powder','Acid Mist','Rhinowrecker','Swooping Frenzy','Venom Shower','Corrosive Ooze','Spiral Spin','Infrasonics','Hi-Freq Field','Purulent Ooze','Foul Waters','Sandpit','Infected Leech','Pestilent Plume'};
 gcinclude.SmnSkill = T{'Shining Ruby','Glittering Ruby','Crimson Howl','Inferno Howl','Frost Armor','Crystal Blessing','Aerial Armor','Hastega II','Fleet Wind','Hastega','Earthen Ward','Earthen Armor','Rolling Thunder','Lightning Armor','Soothing Current','Ecliptic Growl','Heavenward Howl','Ecliptic Howl','Noctoshield','Dream Shroud','Altana\'s Favor','Reraise','Reraise II','Reraise III','Raise','Raise II','Raise III','Wind\'s Blessing'};
-gcinclude.SmnMagical = T{'Searing Light','Meteorite','Holy Mist','Inferno','Fire II','Fire IV','Meteor Strike','Conflag Strike','Diamond Dust','Blizzard II','Blizzard IV','Heavenly Strike','Aerial Blast','Aero II','Aero IV','Wind Blade','Earthen Fury','Stone II','Stone IV','Geocrush','Judgement Bolt','Thunder II','Thunder IV','Thunderstorm','Thunderspark','Tidal Wave','Water II','Water IV','Grand Fall','Howling Moon','Lunar Bay','Ruinous Omen','Somnolence','Nether Blast','Night Terror','Level ? Holy'};
+gcinclude.SmnMagical = T{'Searing Light','Meteorite','Holy Mist','Inferno','Fire II','Fire IV','Meteor Strike','Conflag Strike','Diamond Dust','Blizzard II','Blizzard IV','Heavenly Strike','Aerial Blast','Aero II','Aero IV','Wind Blade','Earthen Fury','Stone II','Stone IV','Geocrush','Judgement Bolt','Thunder II','Thunder IV','Thunderstorm','Thunderspark','Tidal Wave','Water II','Water IV','Grand Fall','Howling Moon','Lunar Bay','Ruinous Omen','Somnolence','Nether Blast','Night Terror','Level ? Holy','Burning Strike'};
 gcinclude.SmnAccuracy = T{'Healing Ruby','Healing Ruby II','Whispering Wind','Spring Water','Diamond Storm','Sleepga','Shock Squall','Slowga','Tidal Roar','Pavor Nocturnus','Ultimate Terror','Nightmare','Mewing Lullaby','Eerie Eye'};
-gcinclude.SmnHybrid = T{'Flaming Crush','Burning Strike'};
+gcinclude.SmnHybrid = T{'Flaming Crush'};
 gcinclude.SmnBPRageList = 'Searing Light,Howling Moon,Inferno,Earthen Fury,Tidal Wave,Aerial Blast,Diamond Dust,Judgment Bolt,Ruinous Omen,Punch,Rock Throw,Barracuda Dive,Claw,Axe Kick,Shock Strike,Camisado,Poison Nails,Moonlit Charge,Crescent Fang,Fire II,Stone II,Water II,Blizzard II,Thunder II,Aero II,Thunderspark,Rock Buster,Burning Strike,Tail Whip,Double Punch,Megalith Throw,Double Slap,Meteorite,Fire IV,Stone IV,Water IV,Aero IV,Blizzard IV,Thunder IV,Eclipse Bite,Nether Blast,Flaming Crush,Mountain Buster,Spinning Dive,Predator Claws,Rush,Chaotic Strike';
 gcinclude.BluMagPhys = T{'Foot Kick','Sprout Smack','Wild Oats','Power Attack','Queasyshroom','Battle Dance','Feather Storm','Helldive','Bludgeon','Claw Cyclone','Screwdriver','Grand Slam','Smite of Rage','Pinecone Bomb','Jet Stream','Uppercut','Terror Touch','Mandibular Bite','Sickle Slash','Dimensional Death','Spiral Spin','Death Scissors','Seedspray','Body Slam','Hydro Shot','Frenetic Rip','Spinal Cleave','Hysteric Barrage','Asuran Claws','Cannonball','Disseverment','Ram Charge','Vertical Cleave','Final Sting','Goblin Rush','Vanity Dive','Whirl of Rage','Benthic Typhoon','Quad. Continuum','Empty Thrash','Delta Thrust','Heavy Strike','Quadrastrike','Tourbillion','Amorphic Spikes','Barbed Crescent','Bilgestorm','Bloodrake','Glutinous Dart','Paralyzing Triad','Thrashing Assault','Sinker Drill','Sweeping Gouge','Saurian Slide'};
 gcinclude.BluMagDebuff = T{'Filamented Hold','Cimicine Discharge','Demoralizing Roar','Venom Shell','Light of Penance','Sandspray','Auroral Drape','Frightful Roar','Enervation','Infrasonics','Lowing','CMain Wave','Awful Eye','Voracious Trunk','Sheep Song','Soporific','Yawn','Dream Flower','Chaotic Eye','Sound Blast','Blank Gaze','Stinking Gas','Geist Wall','Feather Tickle','Reaving Wind','Mortal Ray','Absolute Terror','Blistering Roar','Cruel Joke'};
@@ -118,6 +113,7 @@ gcinclude.Rolls = T{{'Fighter\'s Roll',5,9}, {'Monk\'s Roll',3,7}, {'Healer\'s R
 gcinclude.ExactBuff = T{'enthunder','enstone','enaero','enblizzard','enwater','enlight','endark','arcane circle','holy circle','ward circle'};
 gcinclude.Crafting_Types = 'ALC,BONE,CLOTH,COOK,GSM,LTH,BSM,WW';
 gcinclude.Gathering_Types = 'HELM,DIG,CLAM,FISH';
+gcinclude.BarSpells = T{'baraero','baraera','barblizzard','barblizzara','barfire','barfira','barstone','barstonera','barthunder','barthundra','barwater','barwatera','barblind','barblindra','barparalyze','barparalyzra','barpetrify','barpetra','barpoison','barpoisonra','barsilence','barsilencera','barsleep','barsleepra','barvirus','barvira'};
 
 --[[
 	The following two variables are used to store the invoked type of craft/gather type
@@ -228,62 +224,62 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 								['staff'] = {
 									['level'] = 51,
 									['slots'] = {1,2},	-- Main, Sub
-									['relic'] = { ['Name'] = 'Claustrum', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil },  -- Not implemented yet
+									['relic'] = { ['Name'] = 'Claustrum', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },  -- Not implemented yet
 									['fire'] = { 
 										['Weak'] = 'water',
-										['NQ'] = { ['Name'] = 'Fire staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil },
-										['HQ'] = { ['Name'] = 'Vulcan\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil }, 
-										['Affinity'] = { 'barblizzard','barblizzara','barparalyze','barparalyzra','blaze','burn','enfire','firaga','fire','flare' },
-										['Summons'] = { 'ifrit','fire spirit','firespirit' }
+										['NQ'] = { ['Name'] = 'Fire staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['HQ'] = { ['Name'] = 'Vulcan\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} }, 
+										['Affinity'] = { 'blaze','burn','firaga','fire','flare' },
+										['Summons'] = { 'ifrit','fire spirit','firespirit','fire' }
 										},
 									['ice'] = {
 										['Weak'] = 'fire',
-										['NQ'] = { ['Name'] = 'Ice staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil },
-										['HQ'] = {['Name'] = 'Aquilo\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil },
-										['Affinity'] = { 'baraera','baraero','barsilence','barsilencera','bind','blizzaga','blizzard','enblizzard','freeze','frost','ice','paralyze' },
-										['Summons'] = { 'shiva','ice spirit','icespirit' },
+										['NQ'] = { ['Name'] = 'Ice staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['HQ'] = {['Name'] = 'Aquilo\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['Affinity'] = { 'bind','blizzaga','blizzard','freeze','frost','ice','paralyze' },
+										['Summons'] = { 'shiva','ice spirit','icespirit','ice' },
 										},
 									['wind'] = {
 										['Weak'] = 'ice',
-										['NQ'] = { ['Name'] = 'Wind staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil },
-										['HQ'] = { ['Name'] = 'Auster\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil},
-										['Affinity'] = { 'aero','aeroga','barpetrify','barpetra','barstone','barstonra','choke','enaero','gravity','silence','tornado' },
-										['Summons'] = { 'garuda','air spirit','airspirit','siren' },
+										['NQ'] = { ['Name'] = 'Wind staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['HQ'] = { ['Name'] = 'Auster\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['Affinity'] = { 'aero','aeroga','choke','gravity','silence','tornado' },
+										['Summons'] = { 'garuda','air spirit','airspirit','air','siren' },
 										},
 									['earth'] = { 
 										['Weak'] = 'wind',
-										['NQ'] = { ['Name'] = 'Earth staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil },
-										['HQ'] = { ['Name'] = 'Terra\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil },
-										['Affinity'] = { 'barthundra','barthunder','enstone','quake','rasp','slow','stone','stonega','stoneskin' },
-										['Summons'] = {'titan','earth spirit','earthspirit'},
+										['NQ'] = { ['Name'] = 'Earth staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['HQ'] = { ['Name'] = 'Terra\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['Affinity'] = { 'quake','rasp','slow','stone','stonega','stoneskin' },
+										['Summons'] = {'titan','earth spirit','earthspirit','earth' },
 										},
 									['thunder'] = {
 										['Weak'] = 'earth',
-										['NQ'] = { ['Name'] = 'Thunder staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil },
-										['HQ'] = { ['Name'] = 'Jupiter\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil },
-										['Affinity'] = { 'barwater','barwatera','barpoison','barpoisonra','burst','enthunder','shock','thundaga','thunder' },
-										['Summons'] = { 'ramuh','thunder spirit','thunderspirit' },
+										['NQ'] = { ['Name'] = 'Thunder staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['HQ'] = { ['Name'] = 'Jupiter\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['Affinity'] = { 'burst','shock','thundaga','thunder' },
+										['Summons'] = { 'ramuh','thunder spirit','thunderspirit','thunder' },
 										},
 									['water'] = {
 										['Weak'] = 'thunder',
-										['NQ'] = { ['Name'] = 'Water staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil },
-										['HQ'] = { ['Name'] = 'Neptune\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil },
-										['Affinity'] = { 'barfira','barfire','barvira','barvirus','drown','enwater','flood','poison','water','waterga' },
-										['Summons'] = { 'leviathan','water spirit','waterspirit' },
+										['NQ'] = { ['Name'] = 'Water staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['HQ'] = { ['Name'] = 'Neptune\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['Affinity'] = { 'drown','flood','poison','water','waterga' },
+										['Summons'] = { 'leviathan','water spirit','waterspirit','water' },
 										},
 									['light'] = { 
 										['Weak'] = 'dark',
-										['NQ'] = { ['Name'] = 'Light staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil },
-										['HQ'] = { ['Name'] = 'Apollo\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil },
-										['Affinity'] = { 'banish','banishga','barblind','barblindra','barsleep','barsleepra','barvira','curaga','cure','cursna','dia','diaga','flash','holy','phalanx' },
-										['Summons'] = {'carbuncle','light spirit','lightspirit','cait sith','caitsith','alexander'},
+										['NQ'] = { ['Name'] = 'Light staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['HQ'] = { ['Name'] = 'Apollo\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['Affinity'] = { 'banish','banishga','curaga','cure','cursna','dia','diaga','flash','holy','phalanx' },
+										['Summons'] = {'carbuncle','light spirit','lightspirit','light','cait sith','caitsith','alexander'},
 										},
 									['dark'] = {
 										['Weak'] = 'light',
-										['NQ'] = { ['Name'] = 'Dark staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil },
-										['HQ'] = { ['Name'] = 'Pluto\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil },
+										['NQ'] = { ['Name'] = 'Dark staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['HQ'] = { ['Name'] = 'Pluto\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
 										['Affinity'] = { 'absorb-acc','absorb-agi','abs-chr','abs-dex','abs-int','abs-mnd','abs-str','abs-vit','aspir','blind','bio','drain','sleep','sleepga' },
-										['Summons'] = { 'fenrir','diabolos','dark spirit','darkspirit','atomos','odin' },
+										['Summons'] = { 'fenrir','diabolos','dark spirit','darkspirit','dark','atomos','odin' },
 										},
 									['searched'] = false,
 									},
@@ -296,6 +292,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Have'] = false, 
 										['Accessible'] = false,
 										['Where'] = nil, 
+										['Ref'] = {},
 										['MEacc'] = { 'burn','firaga','fire','flare','blaze' },
 										['eleWS'] = { 'burning blade','red lotus blade','tachi: Kagero','flaming arrow','hot shot','wildfire' },
 									},
@@ -304,7 +301,8 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Name'] = 'Hyorin obi', 
 										['Have'] = false, 
 										['Accessible'] = false,
-										['Where'] = nil, 
+										['Where'] = nil,
+										['Ref'] = {},
 										['MEacc'] = { 'frost','blizzaga','blizzard','freeze','paralyze','bind','distract','ice' },
 										['eleWS'] = { 'frostbite','freezebite','herculean slash','blade: to' },
 										['Other'] = 'elemental magic',
@@ -314,7 +312,8 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Name'] = 'Furin obi', 
 										['Have'] = false, 
 										['Accessible'] = false,
-										['Where'] = nil, 
+										['Where'] = nil,
+										['Ref'] = {},
 										['MEacc'] = { 'choke','aero','aeroga','tornado','silence','gravity','flurry' },
 										['eleWS'] = { 'gust slash','cyclone','aeolian edge','tachi: jinpu' },
 										},												 
@@ -323,7 +322,8 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Name'] = 'Dorin obi', 
 										['Have'] = false, 
 										['Accessible'] = false,
-										['Where'] = nil, 
+										['Where'] = nil,
+										['Ref'] = {},
 										['MEacc'] = { 'rasp','quake','stone','stonega','slow' },
 										['eleWS'] = { 'blade: chi','rock crusher','earth crusher' },
 										},
@@ -333,6 +333,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Have'] = false, 
 										['Accessible'] = false,										
 										['Where'] = nil, 
+										['Ref'] = {},
 										['MEacc'] = { 'shock','burst','thundaga','thunder','stun' },
 										['eleWS'] = { 'cloudsplitter','thunder thrust','raiden thrust','tachi: goten' },
 										},
@@ -342,6 +343,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Have'] = false, 
 										['Accessible'] = false,										
 										['Where'] = nil, 
+										['Ref'] = {},
 										['MEacc'] = { 'drown','flood','water','waterga','poison' },
 										['eleWS'] = { 'blade: teki','blade: yu' },
 										['Other'] = 'divine magic',
@@ -352,6 +354,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Have'] = false, 
 										['Accessible'] = false,										
 										['Where'] = nil, 
+										['Ref'] = {},
 										['MEacc'] = { 'banish','banishga','dia','diaga','flash','repose','holy','auspice','esuna','sacrifice','reprisal','cure','curaga' },
 										['eleWS'] = { 'shining blade','seraph blade','primal rend','tachi: koki','shining strike','seraph strike','starburst','sunburst','garland of bliss','trueflight' },
 										['Other'] = 'cure potency',
@@ -362,6 +365,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Have'] = false, 
 										['Accessible'] = false,										
 										['Where'] = nil, 
+										['Ref'] = {},
 										['MEacc'] = { 'blind','bio','sleep','dispel','frazzle','drain','warp','tractor','aspir','escape','sleep','sleepga','retrace','absorb-mnd','absorb-chr','absorb-vit','absorb-agi','absorb-int','absorb-dex','absorb-str' },
 										['eleWS'] = { 'energy steal','energy drain','sanguine blade','dark harvest','shadow of death','infernal scythe','blade: ei','starburst','sunburst','cataclysm','vidohunir','omniscience','leaden suite' },
 										},
@@ -376,6 +380,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Have'] = false, 
 										['Accessible'] = false,										
 										['Where'] = nil, 
+										['Ref'] = {},
 										['skillProp'] = { 'liquefaction','fusion' },
 										['eleWS'] = { 'arching arrow','ascetic\'s fury','asuran fists','atonement','blade: shun','decimation','detonator','drakesbane','dulling arrow','empyreal arrow','final heaven','flaming arrow','full swing','garland of bliss','heavy shot','hexa strike','hot shot','insurgency','knights of round','last stand','mandalic stab','mistral axe','metatron torment','realmrazer','red lotus blade','scourge','shijin spiral','sniper shot','spinning attack','spinning axe','stringing pummel','tachi: kagero','tachi: kasha','upheaval','wheeling thrust' },
 										},
@@ -385,6 +390,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Have'] = false, 
 										['Accessible'] = false,										
 										['Where'] = nil, 
+										['Ref'] = {},
 										['skillProp'] = { 'induration','distortion' },
 										['eleWS'] = { 'blade: to','blast arrow','cross reaper','death blossom','expiacion','freezebite','frostbite','full break','gate of tartarus','geirskogul','ground strike','guillotine','quietus','impulse drive','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','ruinator','raging rush','shadow of death','shattersoul','skullbreaker','smash axe','spiral hell','steel cyclone','tachi: gekko','tachi: hobaku','tachi: rana','tachi: yukikaze','tornado kick','vidohunir' },
 										},
@@ -394,6 +400,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Have'] = false, 
 										['Accessible'] = false,										
 										['Where'] = nil, 
+										['Ref'] = {},
 										['skillProp'] = { 'detonation','fragmentation' },
 										['eleWS'] = { 'aeolian edge','backhand blow','black halo','blade: jin','blade: kamu','blade: to','camlann\'s torment','coronach','cyclone','dancing edge','death blossom','dragon kick','earth crusher','exenterator','freezebite','gale axe','ground strike','gust slash','king\'s justice','mordant rime','raging axe','randgrith','red lotus blade','resolution','ruinator','savage blade','shark bite','shell crusher','sidewinder','slug shot','spinning slash','steel cyclone','tachi: jinpu','tachi: kaiten','taichi: shoha','taichi: yukikaze','tornado kick','trueflight','true strike','victory smite','vidohunir' },
 										},
@@ -403,6 +410,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Have'] = false, 
 										['Accessible'] = false,										
 										['Where'] = nil, 
+										['Ref'] = {},
 										['skillProp'] = { 'scission','gravitation' },
 										['eleWS'] = { 'aeolian edge','asuran fists','avalanche axe','blade: ei','blade: ku','blade: ten','calamity','catastrophe','crescent moon','dancing edge','entropy','eviseration','exenterator','expiacion','fast blade','hard slash','impulse drive','iron tempest','king\'s justice','leaden salute','mercy stroke','nightmare scythe','omniscience','primal rend','pyrrhic kleos','rampage','requiscat','resolution','retibution','savage blade','seraph blade','shattersoul','shining blade','sickle moon','slice','spinning axe','spinning scythe','spiral hell','stardiver','stringing pummel','sturmwind','swift blade','tachi: enpi','tachi: jinpu','tachi: rana','trueflight','viper bite','vorpal blade','wasp sting' },
 										},
@@ -412,6 +420,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Have'] = false, 
 										['Accessible'] = false,										
 										['Where'] = nil, 
+										['Ref'] = {},
 										['skillProp'] = { 'impaction','fragmentation' },
 										['eleWS'] = { 'aeolian edge','apex arrow','armor break','avalanche axe','black halo','blade: chi','blade: jin','blade: kamu','blade: shun','calamity','camlann\'s torment','circle blade','combo','cyclone','death blossom','dragon kick','earth crusher','exenterator','flat blade','full swing','ground strike','heavy swing','howling fist','judgement','king\'s justice','leg sweep','mordant rime','raging axe','raging fist','raiden thrust','realmrazer','resolution','rock crusher','savage blade','seraph strike','shark bite','shield break','shining strike','shoulder tackle','sickle moon','skewer','spinning attack','spinning axe','tachi: goten','tachi: koki','tachi: shoha','thunder thrust','true strike','victory smite','vidohunir','vorpal blade','weapon break' },
 										},
@@ -421,6 +430,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Have'] = false, 
 										['Accessible'] = false,										
 										['Where'] = nil, 
+										['Ref'] = {},
 										['skillProp'] = { 'reverberation','distortion' },
 										['eleWS'] = { 'atonement','blade: teki','brainshaker','circle blade','cross reaper','dark harvest','entropy','quietus','death blossom','decimation','expiacion','full break','garland of bliss','gate of tartarus','geirskogul','ground strike','last stand','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','primal rend','raging rush','retribution','ruinator','shadow of death','shockwave','shoulder tackle','sidewinder','skullbreaker','slug shot','smash axe','spinning scythe','spiral hell','split shot','steel cyclone','sturmwind','sunburst','tachi: gekko','tachi: koki','vidohunir','vorpal thrust' },
 										},
@@ -430,6 +440,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Have'] = false, 
 										['Accessible'] = false,										
 										['Where'] = nil, 
+										['Ref'] = {},
 										['skillProp'] = { 'transfixion','fusion','light' },
 										['eleWS'] = { 'apex arrow','arching arrow','ascetic\'s fury','atonement','blade: chi','blade: ku','blade: rin','blade: shun','blast arrow','blast shot','camlann\'s torment','decimation','detonator','double thrust','drakesbane','dulling arrow','empyreal arrow','eviseration','final heaven','flaming arrow','garland of bliss','heavy shot','hexa strike','hot shot','howling fist','insurgency','knight\'s of round','leaden salute','last stand','mandalic stab','metatron torment','mistral axe','omniscience','piercing arrow','power slash','realmrazer','raiden thrust','scourge','shijin spiral','sidewinder','skewer','slug shot','sniper shot','split shot','stardiver','tachi: enpi','tachi: goten','tachi: kasha','thunder thrust','torcleaver','victory smite','upheaval','vorpal scythe','vorpal thrust','wheeling thrust' },
 										},
@@ -439,6 +450,7 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 										['Have'] = false, 
 										['Accessible'] = false,										
 										['Where'] = nil, 
+										['Ref'] = {},
 										['skillProp'] = { 'compression','gravitation','darkness' },
 										['eleWS'] = { 'asuran fists','black halo','blade: ei','blade: hi','blade: kamu','blade: ku','blade: ten','catastrophe','quietus','entropy','eviseration','impulse drive','insurgency','keen edge','leaden salute','mandalic stab','mercy stroke','requiscat','rundra\'s storm','nightmare scythe','omniscience','one inch punch','penta thrust','primal rend','retribution','shattersoul','starburst','stardiver','stringing pummel','sunburst','swift blade','tachi: kasha','tachi: rana','tachi: shoha','upheaval' },
 										},
@@ -530,360 +542,333 @@ gcinclude.SummonStaves = T{
 --[[
 	This table contains a list of all of the spells that have multiple versions where
 	the intensity is the only change. Included is what job can cast the spell and at 
-	what level.
+	what level, MP cost, and Spell ID.
 	
-	Columns: Spell name, spell id, root, tier, MP cost, WHM, RDM, PLD, SCH, BLM, DRK, BRD, GEO, RUN, NIN
-	
+	Please note that entries that will be included when Treasures of Aht Urgan is released
+	are currently commented out.
 --]]
 
-gcinclude.TieredIndices = T {['SN'] = 1, ['ID'] = 2, ['RT'] = 3, ['TI'] = 4, ['MP'] = 5, ['WHM'] = 6, ['RDM'] = 7, 
-							 ['PLD'] = 8, ['SCH'] = 9, ['BLM'] = 10, ['DRK'] = 11, ['BRD'] = 12, ['GEO'] = 13, 
-							 ['RUN'] = 14 , ['NIN'] = 15};
-gcinclude.TieredSongIndices = T {['SN'] = 1, ['ID'] = 2, ['RT'] = 3, ['TI'] = 4, ['BUF'] = 5};						 
 gcinclude.TieredMagicJobs = 'WHM,RDM,PLD,SCH,BLM,DRK,BRD,GEO,RUN,NIN';
 gcinclude.GearWarnings = '';
 gcinclude.TMtest = {
 	['aero'] = {
-		{ ['Name'] = 'Aero', ['SID'] = 154, ['MP'] = 6, ['RDM'] = 14, ['DRK'] = 12, ['BLM'] = 9, ['SCH'] = 12, ['GEO'] = 14 },
-		{ ['Name'] = 'Aero II', ['SID'] = 155, ['MP'] = 22, ['RDM'] = 45, ['DRK'] = 54, ['BLM'] = 34, ['SCH'] = 38, ['GEO'] = 42 },
-		{ ['Name'] = 'Aero III', ['SID'] = 156, ['MP'] = 54, ['RDM'] = 69, ['BLM'] = 59, ['SCH'] = 60, ['GEO'] = 64 },
-		{ ['Name'] = 'Aero IV', ['SID'] = 157, ['MP'] = 115, ['BLM'] = 72, ['SCH'] = 72 }
+		{ ['Name'] = 'Aero', ['Tier'] = 1, ['SID'] = 154, ['MP'] = 6, ['RDM'] = 14, ['DRK'] = 17, ['BLM'] = 9, ['SCH'] = 12, ['GEO'] = 14 },
+		{ ['Name'] = 'Aero II', ['Tier'] = 2, ['SID'] = 155, ['MP'] = 22, ['RDM'] = 45, ['DRK'] = 54, ['BLM'] = 34, ['SCH'] = 38, ['GEO'] = 42 },
+		{ ['Name'] = 'Aero III', ['Tier'] = 3, ['SID'] = 156, ['MP'] = 54, ['RDM'] = 69, ['BLM'] = 59, ['SCH'] = 60, ['GEO'] = 64 },
+		{ ['Name'] = 'Aero IV', ['Tier'] = 4, ['SID'] = 157, ['MP'] = 115, ['BLM'] = 72, ['SCH'] = 72 }
 		},
 	['aeroga'] = {
-		{ ['Name'] = 'Aeroga', ['SID'] = 184, ['MP'] = 45, ['BLM'] = 23 },
-		{ ['Name'] = 'Aeroga II', ['SID'] = 185, ['MP'] = 131, ['BLM'] = 48 },
-		{ ['Name'] = 'Aeroga III', ['SID'] = 186, ['MP'] = 232, ['BLM'] = 67 }
+		{ ['Name'] = 'Aeroga', ['Tier'] = 1, ['SID'] = 184, ['MP'] = 45, ['BLM'] = 23 },
+		{ ['Name'] = 'Aeroga II', ['Tier'] = 2, ['SID'] = 185, ['MP'] = 131, ['BLM'] = 48 },
+		{ ['Name'] = 'Aeroga III', ['Tier'] = 3, ['SID'] = 186, ['MP'] = 232, ['BLM'] = 67 }
 		},		
 	['banish'] = {
-		{ ['Name'] = 'Banish', ['SID'] = 28, ['MP'] = 15, ['WHM'] = 5, ['PLD'] = 7 },
-		{ ['Name'] = 'Banish II', ['SID'] = 29, ['MP'] = 57, ['WHM'] = 30, ['PLD'] = 34 },
-		{ ['Name'] = 'Banish III', ['SID'] = 30, ['MP'] = 96, ['WHM'] = 65 }
+		{ ['Name'] = 'Banish', ['Tier'] = 1, ['SID'] = 28, ['MP'] = 15, ['WHM'] = 5, ['PLD'] = 7 },
+		{ ['Name'] = 'Banish II', ['Tier'] = 2, ['SID'] = 29, ['MP'] = 57, ['WHM'] = 30, ['PLD'] = 34 },
+		{ ['Name'] = 'Banish III', ['Tier'] = 3, ['SID'] = 30, ['MP'] = 96, ['WHM'] = 65 }
 		},
 	['banishga'] = {
-		{ ['Name'] = 'Banishga', ['SID'] = 38, ['MP'] = 41, ['WHM'] = 15, ['PLD'] = 30 },
-		{ ['Name'] = 'Banishga II', ['SID'] = 39, ['MP'] = 120, ['WHM'] = 40 }
+		{ ['Name'] = 'Banishga', ['Tier'] = 1, ['SID'] = 38, ['MP'] = 41, ['WHM'] = 15, ['PLD'] = 30 },
+		{ ['Name'] = 'Banishga II', ['Tier'] = 2, ['SID'] = 39, ['MP'] = 120, ['WHM'] = 40 }
 		},		
 	['blizzaga'] = {
-		{ ['Name'] = 'Blizzaga', ['SID'] = 179, ['MP'] = 80, ['BLM'] = 32 },
-		{ ['Name'] = 'Blizzaga II', ['SID'] = 180, ['MP'] = 175, ['BLM'] = 57 },
-		{ ['Name'] = 'Blizzaga III', ['SID'] = 181, ['MP'] = 297, ['BLM'] = 71 }
+		{ ['Name'] = 'Blizzaga', ['Tier'] = 1, ['SID'] = 179, ['MP'] = 80, ['BLM'] = 32 },
+		{ ['Name'] = 'Blizzaga II', ['Tier'] = 2, ['SID'] = 180, ['MP'] = 175, ['BLM'] = 57 },
+		{ ['Name'] = 'Blizzaga III', ['Tier'] = 3, ['SID'] = 181, ['MP'] = 297, ['BLM'] = 71 }
 		},	
 	['blizzard'] = {
-		{ ['Name'] = 'Blizzard', ['SID'] = 149, ['MP'] = 8, ['RDM'] = 24, ['DRK'] = 29, ['BLM'] = 17, ['SCH'] = 20, ['GEO'] = 24 },
-		{ ['Name'] = 'Blizzard II', ['SID'] = 150, ['MP'] = 31, ['RDM'] = 55, ['DRK'] = 66, ['BLM'] = 42, ['SCH'] = 46, ['GEO'] = 50 },
-		{ ['Name'] = 'Blizzard III', ['SID'] = 151, ['MP'] = 75, ['RDM'] = 73, ['BLM'] = 64, ['SCH'] = 66, ['GEO'] = 70 },
-		{ ['Name'] = 'Blizzard IV', ['SID'] = 152, ['MP'] = 162, ['BLM'] = 74, ['SCH'] = 74 }
+		{ ['Name'] = 'Blizzard', ['Tier'] = 1, ['SID'] = 149, ['MP'] = 8, ['RDM'] = 24, ['DRK'] = 29, ['BLM'] = 17, ['SCH'] = 20, ['GEO'] = 24 },
+		{ ['Name'] = 'Blizzard II', ['Tier'] = 2, ['SID'] = 150, ['MP'] = 31, ['RDM'] = 55, ['DRK'] = 66, ['BLM'] = 42, ['SCH'] = 46, ['GEO'] = 50 },
+		{ ['Name'] = 'Blizzard III', ['Tier'] = 3, ['SID'] = 151, ['MP'] = 75, ['RDM'] = 73, ['BLM'] = 64, ['SCH'] = 66, ['GEO'] = 70 },
+		{ ['Name'] = 'Blizzard IV', ['Tier'] = 4, ['SID'] = 152, ['MP'] = 162, ['BLM'] = 74, ['SCH'] = 74 }
 		},	
 	['cure'] = {
-		{ ['Name'] = 'Cure', ['ID'] = 1, ['MP'] = 8, ['WHM'] = 1, ['RDM'] = 3, ['PLD'] = 5, ['SCH'] = 5 },
-		{ ['Name'] = 'Cure II', ['SID'] = 2, ['MP'] = 24, ['WHM'] = 11, ['RDM'] = 14, ['PLD'] = 17, ['SCH'] = 17 },
-		{ ['Name'] = 'Cure III', ['SID'] = 3, ['MP'] = 46, ['WHM'] = 21, ['RDM'] = 26, ['PLD'] = 30, ['SCH'] = 30 },
-		{ ['Name'] = 'Cure IV', ['SID'] = 4, ['MP'] = 88, ['WHM'] = 41, ['RDM'] = 48, ['PLD'] = 55, ['SCH'] = 55 },
-		{ ['Name'] = 'Cure V', ['SID'] = 5, ['MP'] = 135, ['WHM'] = 61 }
+		{ ['Name'] = 'Cure', ['Tier'] = 1, ['SID'] = 1, ['MP'] = 8, ['WHM'] = 1, ['RDM'] = 3, ['PLD'] = 5, ['SCH'] = 5 },
+		{ ['Name'] = 'Cure II', ['Tier'] = 2, ['SID'] = 2, ['MP'] = 24, ['WHM'] = 11, ['RDM'] = 14, ['PLD'] = 17, ['SCH'] = 17 },
+		{ ['Name'] = 'Cure III', ['Tier'] = 3, ['SID'] = 3, ['MP'] = 46, ['WHM'] = 21, ['RDM'] = 26, ['PLD'] = 30, ['SCH'] = 30 },
+		{ ['Name'] = 'Cure IV', ['Tier'] = 4, ['SID'] = 4, ['MP'] = 88, ['WHM'] = 41, ['RDM'] = 48, ['PLD'] = 55, ['SCH'] = 55 },
+		{ ['Name'] = 'Cure V', ['Tier'] = 5, ['SID'] = 5, ['MP'] = 135, ['WHM'] = 61 }
 		},
 	['curaga'] = {
-		{ ['Name'] = 'Curaga', ['SID'] = 7, ['MP'] = 60, ['WHM'] = 16 },
-		{ ['Name'] = 'Curaga II', ['SID'] = 8, ['MP'] = 120, ['WHM'] = 31 },
-		{ ['Name'] = 'Curaga III', ['SID'] = 9, ['MP'] = 180, ['WHM'] = 51 },
-		{ ['Name'] = 'Curaga IV', ['SID'] = 10, ['MP'] = 260, ['WHM'] = 71 }
+		{ ['Name'] = 'Curaga', ['Tier'] = 1, ['SID'] = 7, ['MP'] = 60, ['WHM'] = 16 },
+		{ ['Name'] = 'Curaga II', ['Tier'] = 2, ['SID'] = 8, ['MP'] = 120, ['WHM'] = 31 },
+		{ ['Name'] = 'Curaga III', ['Tier'] = 3, ['SID'] = 9, ['MP'] = 180, ['WHM'] = 51 },
+		{ ['Name'] = 'Curaga IV', ['Tier'] = 4, ['SID'] = 10, ['MP'] = 260, ['WHM'] = 71 }
 		},
 	['dia'] = {
-		{ ['Name'] = 'Dia', ['SID'] = 23, ['MP'] = 7, ['WHM'] = 3, ['RDM'] = 1 },
-		{ ['Name'] = 'Dia II', ['SID'] = 24, ['MP'] = 30, ['WHM'] = 36, ['RDM'] = 31 },
-		{ ['Name'] = 'Dia III', ['SID'] = 25, ['MP'] = 45, ['RDM'] = 75 }
+		{ ['Name'] = 'Dia', ['Tier'] = 1, ['SID'] = 23, ['MP'] = 7, ['WHM'] = 3, ['RDM'] = 1 },
+		{ ['Name'] = 'Dia II', ['Tier'] = 2, ['SID'] = 24, ['MP'] = 30, ['WHM'] = 36, ['RDM'] = 31 },
+		{ ['Name'] = 'Dia III', ['Tier'] = 3, ['SID'] = 25, ['MP'] = 45, ['RDM'] = 75 }
 		},
 	['fire'] = {
-		{ ['Name'] = 'Fire', ['SID'] = 144, ['MP'] = 7, ['RDM'] = 19, ['DRK'] = 23, ['BLM'] = 13, ['SCH'] = 42, ['GEO'] = 19 },
-		{ ['Name'] = 'Fire II', ['SID'] = 145, ['MP'] = 26, ['RDM'] = 50, ['DRK'] = 50, ['BLM'] = 38, ['SCH'] = 42, ['GEO'] = 46 },
-		{ ['Name'] = 'Fire III', ['SID'] = 146, ['MP'] = 63, ['RDM'] = 71, ['BLM'] = 62, ['SCH'] = 63, ['GEO'] = 67 },
-		{ ['Name'] = 'Fire IV', ['SID'] = 147, ['MP'] = 135, ['BLM'] = 73, ['SCH'] = 73 }
+		{ ['Name'] = 'Fire', ['Tier'] = 1, ['SID'] = 144, ['MP'] = 7, ['RDM'] = 19, ['DRK'] = 23, ['BLM'] = 13, ['SCH'] = 42, ['GEO'] = 19 },
+		{ ['Name'] = 'Fire II', ['Tier'] = 2, ['SID'] = 145, ['MP'] = 26, ['RDM'] = 50, ['DRK'] = 50, ['BLM'] = 38, ['SCH'] = 42, ['GEO'] = 46 },
+		{ ['Name'] = 'Fire III', ['Tier'] = 3, ['SID'] = 146, ['MP'] = 63, ['RDM'] = 71, ['BLM'] = 62, ['SCH'] = 63, ['GEO'] = 67 },
+		{ ['Name'] = 'Fire IV', ['Tier'] = 4, ['SID'] = 147, ['MP'] = 135, ['BLM'] = 73, ['SCH'] = 73 }
 		},		
 	['firaga'] = {
-		{ ['Name'] = 'Firaga', ['SID'] = 174, ['MP'] = 57, ['BLM'] = 28 },
-		{ ['Name'] = 'Firaga II', ['SID'] = 175, ['MP'] = 153, ['BLM'] = 53 },
-		{ ['Name'] = 'Firaga III', ['SID'] = 176, ['MP'] = 263, ['BLM'] = 69 }
+		{ ['Name'] = 'Firaga', ['Tier'] = 1, ['SID'] = 174, ['MP'] = 57, ['BLM'] = 28 },
+		{ ['Name'] = 'Firaga II', ['Tier'] = 2, ['SID'] = 175, ['MP'] = 153, ['BLM'] = 53 },
+		{ ['Name'] = 'Firaga III', ['Tier'] = 3, ['SID'] = 176, ['MP'] = 263, ['BLM'] = 69 }
 		},
 	['paralyze'] = {
-		{ ['Name'] = 'Paralyze', ['SID'] = 58, ['MP'] = 6, ['WHM'] = 4, ['RDM'] = 6 },
-		{ ['Name'] = 'Paralyze II', ['SID'] = 80, ['MP'] = 36, ['RDM'] = 75 }
+		{ ['Name'] = 'Paralyze', ['Tier'] = 1, ['SID'] = 58, ['MP'] = 6, ['WHM'] = 4, ['RDM'] = 6 },
+		{ ['Name'] = 'Paralyze II', ['Tier'] = 2, ['SID'] = 80, ['MP'] = 36, ['RDM'] = 75 }
 		},
 	['phalanx'] = {
-		{ ['Name'] = 'Phalanx', ['SID'] = 106, ['MP'] = 21, ['RDM'] = 33, ['RUN'] = 68 },
-		{ ['Name'] = 'Phalanx II', ['SID'] = 107, ['MP'] = 42, ['RDM'] = 75 }
+		{ ['Name'] = 'Phalanx', ['Tier'] = 1, ['SID'] = 106, ['MP'] = 21, ['RDM'] = 33, ['RUN'] = 68 },
+--		{ ['Name'] = 'Phalanx II', ['Tier'] = 2, ['SID'] = 107, ['MP'] = 42, ['RDM'] = 75 }
 		},		
 	['protect'] = {
-		{ ['Name'] = 'Protect', ['SID'] = 43, ['MP'] = 9, ['WHM'] = 7, ['RDM'] = 7, ['PLD'] = 10, ['SCH'] = 10, ['RUN'] = 20 },
-		{ ['Name'] = 'Protect II', ['SID'] = 44, ['MP'] = 28, ['WHM'] = 27, ['RDM'] = 27, ['PLD'] = 30, ['SCH'] = 30, ['RUN'] = 40 },
-		{ ['Name'] = 'Protect III', ['SID'] = 45, ['MP'] = 46, ['WHM'] = 47, ['RDM'] = 47, ['PLD'] = 50, ['SCH'] = 50, ['RUN'] = 60 },
-		{ ['Name'] = 'Protect IV', ['SID'] = 46, ['MP'] = 65, ['WHM'] = 63, ['RDM'] = 63, ['PLD'] = 70, ['SCH'] = 66 }
+		{ ['Name'] = 'Protect', ['Tier'] = 1, ['SID'] = 43, ['MP'] = 9, ['WHM'] = 7, ['RDM'] = 7, ['PLD'] = 10, ['SCH'] = 10, ['RUN'] = 20 },
+		{ ['Name'] = 'Protect II', ['Tier'] = 2, ['SID'] = 44, ['MP'] = 28, ['WHM'] = 27, ['RDM'] = 27, ['PLD'] = 30, ['SCH'] = 30, ['RUN'] = 40 },
+		{ ['Name'] = 'Protect III', ['Tier'] = 3, ['SID'] = 45, ['MP'] = 46, ['WHM'] = 47, ['RDM'] = 47, ['PLD'] = 50, ['SCH'] = 50, ['RUN'] = 60 },
+		{ ['Name'] = 'Protect IV', ['Tier'] = 4, ['SID'] = 46, ['MP'] = 65, ['WHM'] = 63, ['RDM'] = 63, ['PLD'] = 70, ['SCH'] = 66 }
 		},	
 	['protectra'] = {
-		{ ['Name'] = 'Protectra', ['SID'] = 125, ['MP'] = 9, ['WHM'] = 7 },
-		{ ['Name'] = 'Protectra II', ['SID'] = 126, ['MP'] = 28, ['WHM'] = 27 },
-		{ ['Name'] = 'Protectra III', ['SID'] = 127, ['MP'] = 46, ['WHM'] = 47 },
-		{ ['Name'] = 'Protectra IV', ['SID'] = 128, ['MP'] = 65, ['WHM'] = 63 },
-		{ ['Name'] = 'Protectra V', ['SID'] = 129, ['MP'] = 84, ['WHM'] = 75 }
+		{ ['Name'] = 'Protectra', ['Tier'] = 1, ['SID'] = 125, ['MP'] = 9, ['WHM'] = 7 },
+		{ ['Name'] = 'Protectra II', ['Tier'] = 2, ['SID'] = 126, ['MP'] = 28, ['WHM'] = 27 },
+		{ ['Name'] = 'Protectra III', ['Tier'] = 3, ['SID'] = 127, ['MP'] = 46, ['WHM'] = 47 },
+		{ ['Name'] = 'Protectra IV', ['Tier'] = 4, ['SID'] = 128, ['MP'] = 65, ['WHM'] = 63 },
+		{ ['Name'] = 'Protectra V', ['Tier'] = 5, ['SID'] = 129, ['MP'] = 84, ['WHM'] = 75 }
 		},
 	['raise'] = {
-		{ ['Name'] = 'Raise', ['SID'] = 12, ['MP'] = 150, ['WHM'] = 25, ['RDM'] = 35, ['PLD'] = 50, ['SCH'] = 35 },
-		{ ['Name'] = 'Raise II', ['SID'] = 13, ['MP'] = 150, ['WHM'] = 56, ['SCH'] = 70 },
-		{ ['Name'] = 'Raise III', ['SID'] = 140, ['MP'] = 150, ['WHM'] = 70 }
+		{ ['Name'] = 'Raise', ['Tier'] = 1, ['SID'] = 12, ['MP'] = 150, ['WHM'] = 25, ['RDM'] = 35, ['PLD'] = 50, ['SCH'] = 35 },
+		{ ['Name'] = 'Raise II', ['Tier'] = 2, ['SID'] = 13, ['MP'] = 150, ['WHM'] = 56, ['SCH'] = 70 },
+		{ ['Name'] = 'Raise III', ['Tier'] = 3, ['SID'] = 140, ['MP'] = 150, ['WHM'] = 70 }
 		},
 	['regen'] = {
-		{ ['Name'] = 'Regen', ['SID'] = 108, ['MP'] = 15, ['WHM'] = 21, ['RDM'] = 21, ['SCH'] = 18, ['RUN'] = 23 },
-		{ ['Name'] = 'Regen II', ['SID'] = 110, ['MP'] = 36, ['WHM'] = 44, ['SCH'] = 37, ['RUN'] = 48 },
-		{ ['Name'] = 'Regen III', ['SID'] = 111, ['MP'] = 64, ['WHM'] = 66, ['SCH'] = 59, ['RUN'] = 70 }
+		{ ['Name'] = 'Regen', ['Tier'] = 1, ['SID'] = 108, ['MP'] = 15, ['WHM'] = 21, ['RDM'] = 21, ['SCH'] = 18, ['RUN'] = 23 },
+		{ ['Name'] = 'Regen II', ['Tier'] = 2, ['SID'] = 110, ['MP'] = 36, ['WHM'] = 44, ['SCH'] = 37, ['RUN'] = 48 },
+		{ ['Name'] = 'Regen III', ['Tier'] = 3, ['SID'] = 111, ['MP'] = 64, ['WHM'] = 66, ['SCH'] = 59, ['RUN'] = 70 }
 		},
 	['reraise'] = {
-		{ ['Name'] = 'Reraise', ['SID'] = 135, ['MP'] = 150, ['WHM'] = 25, ['PLD'] = 35 },
-		{ ['Name'] = 'Reraise II', ['SID'] = 141, ['MP'] = 150, ['WHM'] = 56, ['SCH'] = 70 },
-		{ ['Name'] = 'Reraise III', ['SID'] = 142, ['MP'] = 150, ['WHM'] = 70 }
+		{ ['Name'] = 'Reraise', ['Tier'] = 1, ['SID'] = 135, ['MP'] = 150, ['WHM'] = 25, ['PLD'] = 35 },
+		{ ['Name'] = 'Reraise II', ['Tier'] = 2, ['SID'] = 141, ['MP'] = 150, ['WHM'] = 56, ['SCH'] = 70 },
+		{ ['Name'] = 'Reraise III', ['Tier'] = 3, ['SID'] = 142, ['MP'] = 150, ['WHM'] = 70 }
 		},
 	['shell'] = {
-		{ ['Name'] = 'Shell', ['SID'] = 48, ['MP'] = 18, ['WHM'] = 17, ['RDM'] = 17, ['PLD'] = 20, ['SCH'] = 20, ['RUN'] = 10 },
-		{ ['Name'] = 'Shell II', ['SID'] = 49, ['MP'] = 37, ['WHM'] = 37, ['RDM'] = 37, ['PLD'] = 40, ['SCH'] = 40, ['RUN'] = 30 },
-		{ ['Name'] = 'Shell III', ['SID'] = 50, ['MP'] = 56, ['WHM'] = 57, ['RDM'] = 57, ['PLD'] = 60, ['SCH'] = 60, ['RUN'] = 50 },
-		{ ['Name'] = 'Shell IV', ['SID'] = 51, ['MP'] = 75, ['WHM'] = 68, ['RDM'] = 68, ['SCH'] = 71, ['RUN'] = 70 }
+		{ ['Name'] = 'Shell', ['Tier'] = 1, ['SID'] = 48, ['MP'] = 18, ['WHM'] = 17, ['RDM'] = 17, ['PLD'] = 20, ['SCH'] = 20, ['RUN'] = 10 },
+		{ ['Name'] = 'Shell II', ['Tier'] = 2, ['SID'] = 49, ['MP'] = 37, ['WHM'] = 37, ['RDM'] = 37, ['PLD'] = 40, ['SCH'] = 40, ['RUN'] = 30 },
+		{ ['Name'] = 'Shell III', ['Tier'] = 3, ['SID'] = 50, ['MP'] = 56, ['WHM'] = 57, ['RDM'] = 57, ['PLD'] = 60, ['SCH'] = 60, ['RUN'] = 50 },
+		{ ['Name'] = 'Shell IV', ['Tier'] = 4, ['SID'] = 51, ['MP'] = 75, ['WHM'] = 68, ['RDM'] = 68, ['SCH'] = 71, ['RUN'] = 70 }
 		},
 	['shellra'] = {
-		{ ['Name'] = 'Shellra', ['SID'] = 130, ['MP'] = 18, ['WHM'] = 17 },
-		{ ['Name'] = 'Shellra II', ['SID'] = 131, ['MP'] = 37, ['WHM'] = 37 },
-		{ ['Name'] = 'Shellra III', ['SID'] = 132, ['MP'] = 56, ['WHM'] = 57 },
-		{ ['Name'] = 'Shellra IV', ['SID'] = 133, ['MP'] = 75, ['WHM'] = 68 },
-		{ ['Name'] = 'Shellra V', ['SID'] = 134, ['MP'] = 93, ['WHM'] = 75 }
+		{ ['Name'] = 'Shellra', ['Tier'] = 1, ['SID'] = 130, ['MP'] = 18, ['WHM'] = 17 },
+		{ ['Name'] = 'Shellra II', ['Tier'] = 2, ['SID'] = 131, ['MP'] = 37, ['WHM'] = 37 },
+		{ ['Name'] = 'Shellra III', ['Tier'] = 3, ['SID'] = 132, ['MP'] = 56, ['WHM'] = 57 },
+		{ ['Name'] = 'Shellra IV', ['Tier'] = 4, ['SID'] = 133, ['MP'] = 75, ['WHM'] = 68 },
+		{ ['Name'] = 'Shellra V', ['Tier'] = 5, ['SID'] = 134, ['MP'] = 93, ['WHM'] = 75 }
 		},
 	['slow'] = {
-		{ ['Name'] = 'Slow', ['SID'] = 59, ['MP'] = 12, ['WHM'] = 13, ['RDM'] = 13 },
-		{ ['Name'] = 'Slow II', ['SID'] = 79, ['MP'] = 45, ['RDM'] = 75 }
+		{ ['Name'] = 'Slow', ['Tier'] = 1, ['SID'] = 59, ['MP'] = 12, ['WHM'] = 13, ['RDM'] = 13 },
+		{ ['Name'] = 'Slow II', ['Tier'] = 2, ['SID'] = 79, ['MP'] = 45, ['RDM'] = 75 }
 		},
 	['stonega'] = {
-		{ ['Name'] = 'Stonega', ['SID'] = 189, ['MP'] = 24, ['BLM'] = 15 },
-		{ ['Name'] = 'Stonega II', ['SID'] = 190, ['MP'] = 93, ['BLM'] = 40 },
-		{ ['Name'] = 'Stonega III', ['SID'] = 191, ['MP'] = 175, ['BLM'] = 63 }
+		{ ['Name'] = 'Stonega', ['Tier'] = 1, ['SID'] = 189, ['MP'] = 24, ['BLM'] = 15 },
+		{ ['Name'] = 'Stonega II', ['Tier'] = 2, ['SID'] = 190, ['MP'] = 93, ['BLM'] = 40 },
+		{ ['Name'] = 'Stonega III', ['Tier'] = 3, ['SID'] = 191, ['MP'] = 175, ['BLM'] = 63 }
 		},		
 	['stone'] = {
-		{ ['Name'] = 'Stone', ['SID'] = 159, ['MP'] = 4, ['RDM'] = 4, ['DRK'] = 5, ['BLM'] = 1, ['SCH'] = 4, ['GEO'] = 4 },
-		{ ['Name'] = 'Stone II', ['SID'] = 160, ['MP'] = 16, ['RDM'] = 35, ['DRK'] = 42, ['BLM'] = 26, ['SCH'] = 30, ['GEO'] = 34 },
-		{ ['Name'] = 'Stone III', ['SID'] = 161, ['MP'] = 40, ['RDM'] = 65, ['BLM'] = 51, ['SCH'] = 54, ['GEO'] = 58 },
-		{ ['Name'] = 'Stone IV', ['SID'] = 162, ['MP'] = 88, ['BLM'] = 68, ['SCH'] = 70 }
+		{ ['Name'] = 'Stone', ['Tier'] = 1, ['SID'] = 159, ['MP'] = 4, ['RDM'] = 4, ['DRK'] = 5, ['BLM'] = 1, ['SCH'] = 4, ['GEO'] = 4 },
+		{ ['Name'] = 'Stone II', ['Tier'] = 2, ['SID'] = 160, ['MP'] = 16, ['RDM'] = 35, ['DRK'] = 42, ['BLM'] = 26, ['SCH'] = 30, ['GEO'] = 34 },
+		{ ['Name'] = 'Stone III', ['Tier'] = 3, ['SID'] = 161, ['MP'] = 40, ['RDM'] = 65, ['BLM'] = 51, ['SCH'] = 54, ['GEO'] = 58 },
+		{ ['Name'] = 'Stone IV', ['Tier'] = 4, ['SID'] = 162, ['MP'] = 88, ['BLM'] = 68, ['SCH'] = 70 }
 		},	
 	['thundaga'] = {
-		{ ['Name'] = 'Thundaga', ['SID'] = 194, ['MP'] = 105, ['BLM'] = 36 },
-		{ ['Name'] = 'Thundaga II', ['SID'] = 195, ['MP'] = 200, ['BLM'] = 61 },
-		{ ['Name'] = 'Thundaga III', ['SID'] = 196, ['MP'] = 332, ['BLM'] = 73 }
+		{ ['Name'] = 'Thundaga', ['Tier'] = 1, ['SID'] = 194, ['MP'] = 105, ['BLM'] = 36 },
+		{ ['Name'] = 'Thundaga II', ['Tier'] = 2, ['SID'] = 195, ['MP'] = 200, ['BLM'] = 61 },
+		{ ['Name'] = 'Thundaga III', ['Tier'] = 3, ['SID'] = 196, ['MP'] = 332, ['BLM'] = 73 }
 		},
 	['thunder'] = {
-		{ ['Name'] = 'Thunder', ['SID'] = 164, ['MP'] = 9, ['RDM'] = 29, ['DRK'] = 35, ['BLM'] = 21, ['SCH'] = 24, ['GEO'] = 23 },
-		{ ['Name'] = 'Thunder II', ['SID'] = 165, ['MP'] = 37, ['RDM'] = 60, ['DRK'] = 72, ['BLM'] = 46, ['SCH'] = 51, ['GEO'] = 54 },
-		{ ['Name'] = 'Thunder III', ['SID'] = 166, ['MP'] = 91, ['RDM'] = 75, ['BLM'] = 66, ['SCH'] = 69, ['GEO'] = 73 },
-		{ ['Name'] = 'Thunder IV', ['SID'] = 167, ['MP'] = 194, ['BLM'] = 75, ['SCH'] = 75 }
+		{ ['Name'] = 'Thunder', ['Tier'] = 1, ['SID'] = 164, ['MP'] = 9, ['RDM'] = 29, ['DRK'] = 35, ['BLM'] = 21, ['SCH'] = 24, ['GEO'] = 23 },
+		{ ['Name'] = 'Thunder II', ['Tier'] = 2, ['SID'] = 165, ['MP'] = 37, ['RDM'] = 60, ['DRK'] = 72, ['BLM'] = 46, ['SCH'] = 51, ['GEO'] = 54 },
+		{ ['Name'] = 'Thunder III', ['Tier'] = 3, ['SID'] = 166, ['MP'] = 91, ['RDM'] = 75, ['BLM'] = 66, ['SCH'] = 69, ['GEO'] = 73 },
+		{ ['Name'] = 'Thunder IV', ['Tier'] = 4, ['SID'] = 167, ['MP'] = 194, ['BLM'] = 75, ['SCH'] = 75 }
 		},
 	['water'] = {
-		{ ['Name'] = 'Water', ['SID'] = 169, ['MP'] = 5, ['RDM'] = 9, ['DRK'] = 11, ['BLM'] = 5, ['SCH'] = 8, ['GEO'] = 9 },
-		{ ['Name'] = 'Water II', ['SID'] = 170, ['MP'] = 19, ['RDM'] = 40, ['DRK'] = 48, ['BLM'] = 30, ['SCH'] = 34, ['GEO'] = 38 },
-		{ ['Name'] = 'Water III', ['SID'] = 171, ['MP'] = 46, ['RDM'] = 67, ['BLM'] = 55, ['SCH'] = 57, ['GEO'] = 61 },
-		{ ['Name'] = 'Water IV', ['SID'] = 172, ['MP'] = 99, ['BLM'] = 70, ['SCH'] = 71 }
+		{ ['Name'] = 'Water', ['Tier'] = 1, ['SID'] = 169, ['MP'] = 5, ['RDM'] = 9, ['DRK'] = 11, ['BLM'] = 5, ['SCH'] = 8, ['GEO'] = 9 },
+		{ ['Name'] = 'Water II', ['Tier'] = 2, ['SID'] = 170, ['MP'] = 19, ['RDM'] = 40, ['DRK'] = 48, ['BLM'] = 30, ['SCH'] = 34, ['GEO'] = 38 },
+		{ ['Name'] = 'Water III', ['Tier'] = 3, ['SID'] = 171, ['MP'] = 46, ['RDM'] = 67, ['BLM'] = 55, ['SCH'] = 57, ['GEO'] = 61 },
+		{ ['Name'] = 'Water IV', ['Tier'] = 4, ['SID'] = 172, ['MP'] = 99, ['BLM'] = 70, ['SCH'] = 71 }
 		},
 	['watera'] = {
-		{ ['Name'] = 'Watera', ['SID'] = 199, ['MP'] = 34, ['BLM'] = 19 },
-		{ ['Name'] = 'Watera II', ['SID'] = 200, ['MP'] = 112, ['BLM'] = 44 },
-		{ ['Name'] = 'Watera III', ['SID'] = 201, ['MP'] = 202, ['BLM'] = 65 }
-		},		
+		{ ['Name'] = 'Watera', ['Tier'] = 1, ['SID'] = 199, ['MP'] = 34, ['BLM'] = 19 },
+		{ ['Name'] = 'Watera II', ['Tier'] = 2, ['SID'] = 200, ['MP'] = 112, ['BLM'] = 44 },
+		{ ['Name'] = 'Watera III', ['Tier'] = 3, ['SID'] = 201, ['MP'] = 202, ['BLM'] = 65 }
+		},
+	['flare'] = {
+		{ ['Name'] = 'Flare', ['Tier'] = 1, ['SID'] = 204, ['MP'] = 315, ['BLM'] = 60 },
+--		{ ['Name'] = 'Flare II', ['Tier'] = 2, ['SID'] = 205, ['MP'] = 280, ['BLM'] = 75 }
+		},
+	['freeze'] = {
+		{ ['Name'] = 'Freeze', ['Tier'] = 1, ['SID'] = 206, ['MP'] = 315, ['BLM'] = 50 },
+--		{ ['Name'] = 'Freeze II', ['Tier'] = 2, ['SID'] = 207, ['MP'] = 280, ['BLM'] = 75 }
+		},
+	['tornado'] = {
+		{ ['Name'] = 'Tornado', ['Tier'] = 1, ['SID'] = 208, ['MP'] = 315, ['BLM'] = 52 },
+--		{ ['Name'] = 'Tornado II', ['Tier'] = 2, ['SID'] = 209, ['MP'] = 280, ['BLM'] = 75 }
+		},
+	['quake'] = {
+		{ ['Name'] = 'Quake', ['Tier'] = 1, ['SID'] = 210, ['MP'] = 315, ['BLM'] = 54 },
+--		{ ['Name'] = 'Quake II', ['Tier'] = 2, ['SID'] = 211, ['MP'] = 280, ['BLM'] = 75 }
+		},
+	['burst'] = {
+		{ ['Name'] = 'Burst', ['Tier'] = 1, ['SID'] = 212, ['MP'] = 315, ['BLM'] = 56 },
+--		{ ['Name'] = 'Burst II', ['Tier'] = 2, ['SID'] = 213, ['MP'] = 280, ['BLM'] = 75 }
+		},
+	['flood'] = {
+		{ ['Name'] = 'Flood', ['Tier'] = 1, ['SID'] = 214, ['MP'] = 315, ['BLM'] = 58 },
+--		{ ['Name'] = 'Flood II', ['Tier'] = 2, ['SID'] = 215, ['MP'] = 280, ['BLM'] = 75 }
+		},
+	['poison'] = {
+		{ ['Name'] = 'Poison', ['Tier'] = 1, ['SID'] = 220, ['MP'] = 5, ['RDM'] = 5, ['BLM'] = 3, ['DRK'] = 6 },
+		{ ['Name'] = 'Poison II', ['Tier'] = 2, ['SID'] = 221, ['MP'] = 38, ['RDM'] = 46, ['BLM'] = 43, ['DRK'] = 46 }
+		},
+	['poisonga'] = {
+		{ ['Name'] = 'Poisonga', ['Tier'] = 1, ['SID'] = 225, ['MP'] = 5, ['BLM'] = 24, ['DRK'] = 26 },
+		{ ['Name'] = 'Poison II', ['Tier'] = 2, ['SID'] = 226, ['MP'] = 112, ['BLM'] = 64, ['DRK'] = 66 }
+		},
+	['bio'] = {
+		{ ['Name'] = 'Bio', ['Tier'] = 1, ['SID'] = 230, ['MP'] = 15, ['RDM'] = 10, ['BLM'] = 10, ['DRK'] = 15 },
+		{ ['Name'] = 'Bio II', ['Tier'] = 2, ['SID'] = 231, ['MP'] = 36, ['RDM'] = 36, ['BLM'] = 35, ['DRK'] = 40 },
+--		{ ['Name'] = 'Bio III', ['Tier'] = 3, ['SID'] = 232, ['MP'] = 36, ['RDM'] = 75 }
+		},
+	['drain'] = {
+		{ ['Name'] = 'Drain', ['Tier'] = 1, ['SID'] = 245, ['MP'] = 21, ['SCH'] = 21, ['BLM'] = 12, ['DRK'] = 10 },
+--		{ ['Name'] = 'Drain II', ['Tier'] = 2, ['SID'] = 246, ['MP'] = 37, ['DRK'] = 62 }
+		},
+	['sleep'] = {
+		{ ['Name'] = 'Sleep', ['Tier'] = 1, ['SID'] = 253, ['MP'] = 19, ['RDM'] = 25, ['SCH'] = 30, ['BLM'] = 20, ['DRK'] = 30, ['GEO'] = 35 },
+		{ ['Name'] = 'Sleep II', ['Tier'] = 2, ['SID'] = 259, ['MP'] = 29, ['RDM'] = 46, ['SCH'] = 65, ['BLM'] = 41, ['DRK'] = 56, ['GEO'] = 70 }
+		},
+	['sleepga'] = {
+		{ ['Name'] = 'Sleepga', ['Tier'] = 1, ['SID'] = 273, ['MP'] = 38, ['BLM'] = 31 },
+		{ ['Name'] = 'Sleepga II', ['Tier'] = 2, ['SID'] = 274, ['MP'] = 58, ['BLM'] = 56 }
+		},
+	['blind'] = {
+		{ ['Name'] = 'Blind', ['Tier'] = 1, ['SID'] = 254, ['MP'] = 5, ['RDM'] = 8, ['BLM'] = 4 },
+--		{ ['Name'] = 'Blind II', ['Tier'] = 2, ['SID'] = 276, ['MP'] = 31, ['BLM'] = 75 }
+		},
+	['enfire'] = {
+		{ ['Name'] = 'Enfire', ['Tier'] = 1, ['SID'] = 100, ['MP'] = 12, ['RDM'] = 24 },
+--		{ ['Name'] = 'Enfire II', ['Tier'] = 2, ['SID'] = 312, ['MP'] = 24, ['RDM'] = 58 }
+		},
+	['enblizzard'] = {
+		{ ['Name'] = 'Enblizzard', ['Tier'] = 1, ['SID'] = 101, ['MP'] = 12, ['RDM'] = 22 },
+--		{ ['Name'] = 'Enblizzard II', ['Tier'] = 2, ['SID'] = 313, ['MP'] = 24, ['RDM'] = 56 }
+		},
+	['enaero'] = {
+		{ ['Name'] = 'Enaero', ['Tier'] = 1, ['SID'] = 102, ['MP'] = 12, ['RDM'] = 20 },
+--		{ ['Name'] = 'Enaero II', ['Tier'] = 2, ['SID'] = 314, ['MP'] = 24, ['RDM'] = 52 }
+		},
+	['enstone'] = {
+		{ ['Name'] = 'Enstone', ['Tier'] = 1, ['SID'] = 103, ['MP'] = 12, ['RDM'] = 18 },
+--		{ ['Name'] = 'Enstone II', ['Tier'] = 2, ['SID'] = 315, ['MP'] = 24, ['RDM'] = 52 }
+		},
+	['enthunder'] = {
+		{ ['Name'] = 'Enthunder', ['Tier'] = 1, ['SID'] = 104, ['MP'] = 12, ['RDM'] = 16 },
+--		{ ['Name'] = 'Enthunder II', ['Tier'] = 2, ['SID'] = 316, ['MP'] = 24, ['RDM'] = 50 }
+		},
+	['enwater'] = {
+		{ ['Name'] = 'Enwater', ['Tier'] = 1, ['SID'] = 105, ['MP'] = 12, ['RDM'] = 27 },
+--		{ ['Name'] = 'Enwater II', ['Tier'] = 2, ['SID'] = 317, ['MP'] = 24, ['RDM'] = 60 }
+		},
+	['katon'] = {
+		{ ['Name'] = 'Katon: Ichi', ['Tier'] = 1, ['SID'] = 320, ['MP'] = 0, ['NIN'] = 15 },
+		{ ['Name'] = 'Katon: Ni', ['Tier'] = 2, ['SID'] = 321, ['MP'] = 0, ['NIN'] = 40 }
+		},
+	['hyoton'] = {
+		{ ['Name'] = 'Hyoton: Ichi', ['Tier'] = 1, ['SID'] = 323, ['MP'] = 0, ['NIN'] = 15 },
+		{ ['Name'] = 'Hyoton: Ni', ['Tier'] = 2, ['SID'] = 324, ['MP'] = 0, ['NIN'] = 40 }
+		},
+	['huton'] = {
+		{ ['Name'] = 'Huton: Ichi', ['Tier'] = 1, ['SID'] = 326, ['MP'] = 0, ['NIN'] = 15 },
+		{ ['Name'] = 'Huton: Ni', ['Tier'] = 2, ['SID'] = 327, ['MP'] = 0, ['NIN'] = 40 }
+		},
+	['doton'] = {
+		{ ['Name'] = 'Doton: Ichi', ['Tier'] = 1, ['SID'] = 329, ['MP'] = 0, ['NIN'] = 15 },
+		{ ['Name'] = 'Doton: Ni', ['Tier'] = 2, ['SID'] = 330, ['MP'] = 0, ['NIN'] = 40 }
+		},
+	['raiton'] = {
+		{ ['Name'] = 'Raiton: Ichi', ['Tier'] = 1, ['SID'] = 332, ['MP'] = 0, ['NIN'] = 15 },
+		{ ['Name'] = 'Raiton: Ni', ['Tier'] = 2, ['SID'] = 333, ['MP'] = 0, ['NIN'] = 40 }
+		},
+	['suiton'] = {
+		{ ['Name'] = 'Suiton: Ichi', ['Tier'] = 1, ['SID'] = 335, ['MP'] = 0, ['NIN'] = 15 },
+		{ ['Name'] = 'Suiton: Ni', ['Tier'] = 2, ['SID'] = 336, ['MP'] = 0, ['NIN'] = 40 }
+		},
+	['utsusemi'] = {
+		{ ['Name'] = 'Utsusemi: Ichi', ['Tier'] = 1, ['SID'] = 338, ['MP'] = 0, ['NIN'] = 12 },
+		{ ['Name'] = 'Utsusemi: Ni', ['Tier'] = 2, ['SID'] = 339, ['MP'] = 0, ['NIN'] = 37 }
+		},
+	['hojo'] = {
+		{ ['Name'] = 'Hojo: Ichi', ['Tier'] = 1, ['SID'] = 344, ['MP'] = 0, ['NIN'] = 23 },
+		{ ['Name'] = 'Hojo: Ni', ['Tier'] = 2, ['SID'] = 345, ['MP'] = 0, ['NIN'] = 48 }
+		},
+	['tonko'] = {
+		{ ['Name'] = 'Tonko: Ichi', ['Tier'] = 1, ['SID'] = 344, ['MP'] = 0, ['NIN'] = 9 },
+		{ ['Name'] = 'Tonko: Ni', ['Tier'] = 2, ['SID'] = 345, ['MP'] = 0, ['NIN'] = 34 }
+		},
 	};
-	
-gcinclude.TieredMagic = T {
-	{'Cure',1,'cure',1,8,1,3,5,5,nil,nil,nil,nil,nil,nil},
-	{'Cure II',2,'cure',2,24,11,14,17,17,nil,nil,nil,nil,nil,nil},
-	{'Cure III',3,'cure',3,46,21,26,30,30,nil,nil,nil,nil,nil,nil},
-	{'Cure IV',4,'cure',4,88,41,48,55,55,nil,nil,nil,nil,nil,nil},
-	{'Cure V',5,'cure',5,135,61,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Curaga',7,'curaga',1,60,16,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Curaga II',8,'curaga',2,120,31,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Curaga III',9,'curaga',3,180,51,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Curaga IV',10,'curaga',4,260,71,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Raise',12,'raise',1,150,25,35,50,35,nil,nil,nil,nil,nil,nil},
-	{'Raise II',13,'raise',2,150,56,nil,nil,70,nil,nil,nil,nil,nil,nil},
-	{'Raise III',140,'raise',3,150,70,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Dia',23,'dia',1,7,3,1,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Dia II',24,'dia',2,30,36,31,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Dia III',25,'dia',3,45,nil,75,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Banish',28,'banish',1,15,5,nil,7,nil,nil,nil,nil,nil,nil,nil},
-	{'Banish II',29,'banish',2,57,30,nil,34,nil,nil,nil,nil,nil,nil,nil},
-	{'Banish III',30,'banish',3,96,65,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Banishga',38,'banishga',1,41,15,nil,30,nil,nil,nil,nil,nil,nil,nil},
-	{'Banishga II',39,'banishga',2,120,40,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Protect',43,'protect',1,9, 7,7,10,10,nil,nil,nil,nil,20,nil},
-	{'Protect II',44,'protect',2,28,27,27,30,30,nil,nil,nil,nil,40,nil},
-	{'Protect III',45,'protect',3,46,47,47,50,50,nil,nil,nil,nil,60,nil},
-	{'Protect IV',46,'protect',4,65,63,63,70,66,nil,nil,nil,nil,nil,nil},
-	{'Shell',48,'shell',1,18,17,17,20,20,nil,nil,nil,nil,10,nil},
-	{'Shell II',49,'shell',2,37,37,37,40,40,nil,nil,nil,nil,30,nil},
-	{'Shell III',50,'shell',3,56,57,57,60,60,nil,nil,nil,nil,50,nil},
-	{'Shell IV',51,'shell',4,75,68,68,nil,71,nil,nil,nil,nil,70,nil},
-	{'Slow',56,'slow',1,12,13,13,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Slow II',79,'slow',2,45,nil,75,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Paralyze',58,'paralyze',1,6,4,6,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Paralyze II',80,'paralyze',2,36,nil,75,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Phalanx',106,'phalanx',1,21,nil,33,nil,nil,nil,nil,nil,nil,68,nil},
-	{'Phalanx II',107,'phalanx',2,42,nil,75,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Regen',108,'regen',1,15,21,21,nil,18,nil,nil,nil,nil,23,nil},
-	{'Regen II',110,'regen',2,36,44,nil,nil,37,nil,nil,nil,nil,48,nil},
-	{'Regen III',111,'regen',3,64,66,nil,nil,59,nil,nil,nil,nil,70,nil},
-	{'Protectra',125,'protectra',1,9,7,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Protectra II',126,'protectra',2,28,27,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Protectra III',127,'protectra',3,46,47,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Protectra IV',128,'protectra',4,65,63,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Protectra V',129,'protectra',5,84,75,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Shellra',130,'shellra',1,18,17,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Shellra II',131,'shellra',2,37,37,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Shellra III',132,'shellra',3,56,57,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Shellra IV',133,'shellra',4,75,68,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Shellra V',134,'shellra',5,93,75,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Reraise',135,'reraise',1,150,25,nil,35,nil,nil,nil,nil,nil,nil,nil},
-	{'Reraise II',141,'reraise',2,150,56,nil,70,nil,nil,nil,nil,nil,nil,nil},
-	{'Reraise III',142,'reraise',3,150,70,nil,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Fire',144,'fire',1,7,nil,19,nil,16,13,23,nil,19,nil,nil},
-	{'Fire II',145,'fire',2,26,nil,50,nil,42,38,60,nil,46,nil,nil},
-	{'Fire III',146,'fire',3,63,nil,71,nil,64,62,nil,nil,67,nil,nil},
-	{'Fire IV',147,'fire',4,135,nil,nil,nil,73,73,nil,nil,nil,nil,nil},
-	{'Blizzard',149,'blizzard',1,8,nil,24,nil,20,17,29,nil,24,nil,nil},
-	{'Blizzard II',150,'blizzard',2,31,nil,55,nil,46,42,66,nil,50,nil,nil},
-	{'Blizzard III',151,'blizzard',3,75,nil,73,nil,66,64,nil,nil,70,nil,nil},
-	{'Blizzard IV',152,'blizzard',4,162,nil,nil,nil,74,74,nil,nil,nil,nil,nil},
-	{'Aero',154,'aero',1,6,nil,14,nil,12,9,17,nil,14,nil,nil},
-	{'Aero II',155,'aero',2,22,nil,45,nil,38,34,54,nil,42,nil,nil},
-	{'Aero III',156,'aero',3,54,nil,69,nil,60,59,nil,nil,64,nil,nil},
-	{'Aero IV',157,'aero',4,115,nil,nil,nil,72,72,nil,nil,nil,nil,nil},
-	{'Stone',159,'stone',1,4,nil,4,nil,4,1,5,nil,4,nil,nil},
-	{'Stone II',160,'stone',2,16,nil,35,nil,30,26,42,nil,34,nil,nil},
-	{'Stone III',161,'stone',3,40,nil,65,nil,54,51,nil,nil,58,nil,nil},
-	{'Stone IV',162,'stone',4,88,nil,nil,nil,70,68,nil,nil,nil,nil,nil},
-	{'Thunder',164,'thunder',1,9,nil,29,nil,24,21,35,nil,29,nil,nil},
-	{'Thunder II',165,'thunder',2,37,nil,60,nil,51,46,72,nil,54,nil,nil},
-	{'Thunder III',166,'thunder',3,91,nil,75,nil,69,66,nil,nil,73,nil,nil},
-	{'Thunder IV',167,'thunder',4,194,nil,nil,nil,69,66,nil,nil,nil,nil,nil},
-	{'Water',169,'water',1,5,nil,9,nil,8,5,11,nil,8,nil,nil},
-	{'Water II',170,'water',2,19,nil,40,nil,34,30,48,nil,38,nil,nil},
-	{'Water III',171,'water',3,46,nil,67,nil,57,55,nil,nil,61,nil,nil},
-	{'Water IV',172,'water',4,99,nil,nil,nil,71,70,nil,nil,nil,nil,nil},
-	{'Firaga',174,'firaga',1,57,nil,nil,nil,nil,28,nil,nil,nil,nil,nil},
-	{'Firaga II',175,'firaga',2,153,nil,nil,nil,nil,53,nil,nil,nil,nil,nil},
-	{'Firaga III',176,'firaga',3,263,nil,nil,nil,nil,69,nil,nil,nil,nil,nil},
-	{'Blizzaga',179,'blizzaga',1,80,nil,nil,nil,nil,32,nil,nil,nil,nil,nil},
-	{'Blizzaga II',180,'blizzaga',2,175,nil,nil,nil,nil,57,nil,nil,nil,nil,nil},
-	{'Blizzaga III',181,'blizzaga',3,297,nil,nil,nil,nil,71,nil,nil,nil,nil,nil},
-	{'Aeroga',184,'aeroga',1,45,nil,nil,nil,nil,23,nil,nil,nil,nil,nil},
-	{'Aeroga II',185,'aeroga',2,131,nil,nil,nil,nil,48,nil,nil,nil,nil,nil},
-	{'Aeroga III',186,'aeroga',3,232,nil,nil,nil,nil,67,nil,nil,nil,nil,nil},
-	{'Stonega',189,'stonega',1,24,nil,nil,nil,nil,15,nil,nil,nil,nil,nil},
-	{'Stonega II',190,'stonega',2,93,nil,nil,nil,nil,40,nil,nil,nil,nil,nil},
-	{'Stonega III',191,'stonega',3,175,nil,nil,nil,nil,63,nil,nil,nil,nil,nil},
-	{'Thundaga',194,'thundaga',1,105,nil,nil,nil,nil,36,nil,nil,nil,nil,nil},
-	{'Thundaga II',195,'thundaga',2,200,nil,nil,nil,nil,61,nil,nil,nil,nil,nil},
-	{'Thundaga III',196,'thundaga',3,332,nil,nil,nil,nil,73,nil,nil,nil,nil,nil},
-	{'Watera',199,'watera',1,34,nil,nil,nil,nil,19,nil,nil,nil,nil,nil},
-	{'Watera II',200,'thundaga',2,112,nil,nil,nil,nil,44,nil,nil,nil,nil,nil},
-	{'Watera III',201,'watera',3,202,nil,nil,nil,nil,65,nil,nil,nil,nil,nil},
-	{'Flare',204,'flare',1,315,nil,nil,nil,nil,60,nil,nil,nil,nil,nil},
-	{'Flare II',205,'flare',2,280,nil,nil,nil,nil,75,nil,nil,nil,nil,nil},
-	{'Freeze',206,'freeze',1,315,nil,nil,nil,nil,50,nil,nil,nil,nil,nil},
-	{'Freeze II',207,'freeze',2,280,nil,nil,nil,nil,75,nil,nil,nil,nil,nil},
-	{'Tornado',208,'tornado',1,315,nil,nil,nil,nil,52,nil,nil,nil,nil,nil},
-	{'Tornado II',209,'tornado',2,280,nil,nil,nil,nil,75,nil,nil,nil,nil,nil},
-	{'Quake',210,'quake',1,315,nil,nil,nil,nil,54,nil,nil,nil,nil,nil},
-	{'Quake II',211,'quake',2,280,nil,nil,nil,nil,75,nil,nil,nil,nil,nil},
-	{'Burst',212,'burst',1,315,nil,nil,nil,nil,56,nil,nil,nil,nil,nil},
-	{'Burst II',213,'burst',2,280,nil,nil,nil,nil,75,nil,nil,nil,nil,nil},
-	{'Flood',214,'flood',1,315,nil,nil,nil,nil,58,nil,nil,nil,nil,nil},
-	{'Flood II',215,'flood',2,280,nil,nil,nil,nil,75,nil,nil,nil,nil,nil},
-	{'Poison',220,'poison',1,5,nil,5,nil,nil,3,6,nil,nil,nil,nil},
-	{'Poison II',221,'poison',2,38,nil,46,nil,nil,43,46,nil,nil,nil,nil},
-	{'Poisonga',225,'poisonga',1,44,nil,nil,nil,nil,24,26,nil,nil,nil,nil},
-	{'Poisonga II',226,'poisonga',2,112,nil,nil,nil,nil,64,66,nil,nil,nil,nil},
-	{'Bio',230,'bio',1,15,nil,10,nil,nil,10,15,nil,nil,nil,nil},
-	{'Bio II',231,'bio',2,36,nil,36,nil,nil,35,40,nil,nil,nil,nil},
-	{'Bio III',232,'bio',3,54,nil,nil,nil,nil,75,nil,nil,nil,nil,nil},
-	{'Drain',245,'drain',1,21,nil,nil,nil,21,12,10,nil,nil,nil,nil},
-	{'Drain II',246,'drain',2,37,nil,nil,nil,nil,nil,62,nil,nil,nil,nil},
-	{'Sleep',253,'sleep',1,19,nil,25,nil,30,20,30,nil,35,nil,nil},
-	{'Sleep II',259,'sleep',2,29,nil,46,nil,65,41,56,nil,70,nil,nil},
-	{'Sleepga',273,'sleepga',1,38,nil,nil,nil,nil,31,nil,nil,nil,nil,nil},
-	{'Sleepga II',274,'sleepga',2,58,nil,nil,nil,nil,56,nil,nil,nil,nil,nil},
-	{'Blind',254,'blind',1,5,nil,8,nil,nil,4,nil,nil,nil,nil,nil},
-	{'Blind II',276,'blind',2,31,nil,nil,nil,nil,75,nil,nil,nil,nil,nil},
-	{'Enfire',100,'enfire',1,12,nil,24,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Enfire II',312,'enfire',2,24,nil,58,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Enblizzard',101,'enblizzard',1,12,nil,22,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Enblizzard II',313,'enblizzard',2,24,nil,56,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Enaero',102,'enaero',1,12,nil,20,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Enaero II',314,'enaero',2,24,nil,52,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Enstone',103,'enstone',1,12,nil,18,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Enstone II',315,'enstone',2,24,nil,52,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Enthunder',104,'enthunder',1,12,nil,16,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Enthunder II',316,'enthunder',2,24,nil,50,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Enwater',105,'enwater',1,12,nil,12,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Enwater II',317,'enwater',2,24,nil,60,nil,nil,nil,nil,nil,nil,nil,nil},
-	{'Katon: Ichi',320,'katon',1,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,15},
-	{'Katon: Ni',321,'katon',2,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,40},
-	{'Hyoton: Ichi',323,'hyoton',1,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,15},
-	{'Hyoton: Ni',324,'hyoton',2,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,40},
-	{'Huton: Ichi',326,'huton',1,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,15},
-	{'Huton: Ni',327,'huton',2,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,40},
-	{'Doton: Ichi',329,'doton',1,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,15},
-	{'Doton: Ni',330,'doton',2,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,40},
-	{'Raiton: Ichi',332,'raiton',1,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,15},
-	{'Raiton: Ni',333,'raiton',2,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,40},
-	{'Suiton: Ichi',335,'suiton',1,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,15},
-	{'Suiton: Ni',336,'suiton',2,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,40},
-	{'Utsusemi: Ichi',338,'utsusemi',1,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,12},
-	{'Utsusemi: Ni',339,'utsusemi',2,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,37},
-	{'Hojo: Ichi',344,'hojo',1,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,23},
-	{'Hojo: Ni',345,'hojo',2,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,48},
-	{'Tonko: Ichi',353,'tonko',1,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,9},
-	{'Tonko: Ni',354,'tonko',2,0,nil,nil,nil,nil,nil,nil,nil,nil,nil,34},
-};
 
 --[[
-
-	Like TieredMagic TieredSongs lists all of the songs that a bard can cast that 
-	has multiple tiers. It's split out to handle different parameters.
-	
+	Like TMtest, TStest lists all of the songs that a bard can cast that have
+	multiple tiers. The differences between spells and songs though necessitate
+	splitting it out on it's own.
 --]]
 
-gcinclude.TieredSongIndices = T {['SN'] = 1, ['ID'] = 2, ['RT'] = 3, ['TI'] = 4, ['LVL'] = 5, ['BUF'] = 6};	
-gcinclude.TieredSongs = T{
-	{'Foe Requiem',368,'foe',1,1,'requiem'},
-	{'Foe Requiem II',369,'foe',2,17,'requiem'},
-	{'Foe Requiem III',370,'foe',3,37,'requiem'},
-	{'Foe Requiem IV',371,'foe',4,47,'requiem'},
-	{'Foe Requiem V',372,'foe',5,57,'requiem'},
-	{'Foe Requiem VI',373,'foe',6,67,'requiem'},
-	{'Army\'s Paeon',378,'armys',1,5,'paeon'},
-	{'Army\'s Paeon II',379,'armys',2,15,'paeon'},
-	{'Army\'s Paeon III',380,'armys',3,35,'paeon'},
-	{'Army\'s Paeon IV',381,'armys',4,45,'paeon'},
-	{'Army\'s Paeon V',382,'armys',5,65,'paeon'},
-	{'Mage\'s Ballad',386,'mages',1,25,'ballad'},
-	{'Mage\'s Ballad II',387,'mages',2,55,'ballad'},
-	{'Knight\'s Minne',389,'knights',1,1,'minne'},
-	{'Knight\'s Minne II',390,'knights',2,21,'minne'},
-	{'Knight\'s Minne III',391,'knights',3,41,'minne'},
-	{'Knight\'s Minne IV',392,'knights',4,61,'minne'},
-	{'Valor Minuet',394,'valor',1,3,'minuet'},
-	{'Valor Minuet II',395,'valor',2,23,'minuet'},
-	{'Valor Minuet III',396,'valor',3,43,'minuet'},
-	{'Valor Minuet IV',397,'valor',4,63,'minuet'},
-	{'Sword Madrigal',399,'sword',1,11,'madrigal'},
-	{'Blade Madrigal',400,'blade',2,51,'madrigal'},
-	{'Sheepfoe Mambo',403,'sheepfoe',1,13,'mambo'},
-	{'Dragonfoe Mambo',404,'dragonfoe',2,53,'mambo'},
-	{'Battlefield Elegy',421,'battlefield',1,39,'elegy'},
-	{'Carnage Elegy',422,'carnage',2,59,'elegy'},
-	{'Advancing March',419,'advancing',1,29,'march'},
-	{'Victory March',420,'victory',2,60,'march'}
-};
+gcinclude.TStest = {
+	['requiem'] = {
+		{ ['Name'] = 'Foe Requiem', ['Tier'] = 1, ['SID'] = 368, ['Lvl'] = 7 },
+		{ ['Name'] = 'Foe Requiem II', ['Tier'] = 2, ['SID'] = 369, ['Lvl'] = 17 },
+		{ ['Name'] = 'Foe Requiem III', ['Tier'] = 3, ['SID'] = 370, ['Lvl'] = 37 },
+		{ ['Name'] = 'Foe Requiem IV', ['Tier'] = 4, ['SID'] = 371, ['Lvl'] = 47 },
+		{ ['Name'] = 'Foe Requiem V', ['Tier'] = 5, ['SID'] = 372, ['Lvl'] = 57 },
+		{ ['Name'] = 'Foe Requiem VI', ['Tier'] = 6, ['SID'] = 373, ['Lvl'] = 67 }
+		},
+	['paeon'] = {
+		{ ['Name'] = 'Army\'s Paeon', ['Tier'] = 1, ['SID'] = 378, ['Lvl'] = 5 },
+		{ ['Name'] = 'Army\'s Paeon II', ['Tier'] = 2, ['SID'] = 379, ['Lvl'] = 15 },
+		{ ['Name'] = 'Army\'s Paeon III', ['Tier'] = 3, ['SID'] = 380, ['Lvl'] = 35 },
+		{ ['Name'] = 'Army\'s Paeon IV', ['Tier'] = 4, ['SID'] = 381, ['Lvl'] = 45 },
+		{ ['Name'] = 'Army\'s Paeon V', ['Tier'] = 5, ['SID'] = 382, ['Lvl'] = 65 }
+		},
+	['ballad'] = {
+		{ ['Name'] = 'Mage\'s Ballad', ['Tier'] = 1, ['SID'] = 386, ['Lvl'] = 25 },
+		{ ['Name'] = 'Mage\'s Ballad II', ['Tier'] = 2, ['SID'] = 387, ['Lvl'] = 55 }
+		},
+	['minne'] = {
+		{ ['Name'] = 'Knight\'s Minne', ['Tier'] = 1, ['SID'] = 389, ['Lvl'] = 1 },
+		{ ['Name'] = 'Knight\'s Minne II', ['Tier'] = 2, ['SID'] = 390, ['Lvl'] = 21 },
+		{ ['Name'] = 'Knight\'s Minne III', ['Tier'] = 3, ['SID'] = 391, ['Lvl'] = 41 },
+		{ ['Name'] = 'Knight\'s Minne IV', ['Tier'] = 4, ['SID'] = 392, ['Lvl'] = 61 }
+		},		
+	['minuet'] = {
+		{ ['Name'] = 'Valor Minuet', ['Tier'] = 1, ['SID'] = 394, ['Lvl'] = 3 },
+		{ ['Name'] = 'Valor Minuet II', ['Tier'] = 2, ['SID'] = 395, ['Lvl'] = 23 },
+		{ ['Name'] = 'Valor Minuet III', ['Tier'] = 3, ['SID'] = 396, ['Lvl'] = 43 },
+		{ ['Name'] = 'Valor Minuet IV', ['Tier'] = 4, ['SID'] = 397, ['Lvl'] = 63 }
+		},
+	['madrigal'] = {
+		{ ['Name'] = 'Sword Madrigal', ['Tier'] = 1, ['SID'] = 399, ['Lvl'] = 1 },
+		{ ['Name'] = 'Blade Madrigal', ['Tier'] = 2, ['SID'] = 400, ['Lvl'] = 51 }
+		},
+	['mambo'] = {
+		{ ['Name'] = 'Sheepfoe Mambo', ['Tier'] = 1, ['SID'] = 403, ['Lvl'] = 13 },
+		{ ['Name'] = 'Dragonfoe Mambo', ['Tier'] = 2, ['SID'] = 404, ['Lvl'] = 53 }
+		},
+	['elegy'] = {
+		{ ['Name'] = 'Battlefield Elegy', ['Tier'] = 1, ['SID'] = 421, ['Lvl'] = 39 },
+		{ ['Name'] = 'Carnage Elegy', ['Tier'] = 2, ['SID'] = 422, ['Lvl'] = 59 }
+		},
+	['march'] = {
+		{ ['Name'] = 'Advancing March', ['Tier'] = 1, ['SID'] = 419, ['Lvl'] = 29 },
+		{ ['Name'] = 'Victory March', ['Tier'] = 2, ['SID'] = 420, ['Lvl'] = 60 }
+		},
+	};
 
--- Temporary holding variables for the MH and OH weapons
+-- Temporary holding variables for the main hand and off hand weapons
 gcinclude.weapon = nil;
 gcinclude.offhand = nil;
 
@@ -1082,6 +1067,18 @@ ashita.events.register('packet_in', 'packet_in_callback1', function (e)
 		e.blocked = false;
 	end
 end);
+
+--[[
+	fSummonerPet determines if the player has a SMN summoned pet. Returned is true
+	or false
+--]]
+
+function gcinclude.fSummonerPet()
+	local pet = gData.GetPet();
+	
+	return(pet ~= nil and 
+		table.find(gcinclude.tSummonSkill,string.lower(pet.Name)) ~= nil);
+end
 
 --[[
 	RegionDisplay determines if the player's nation owns the area the character is in
@@ -1641,23 +1638,23 @@ function fGearCheckItem(sSlot,sName,bAccess,bForce)
 	
 	-- Subsets are skipped
 	if string.lower(sSlot) == 'subset' then
-		return false;
+		return false,nil;
 	end
 	
 	if player.MainJob == nil or player.MainJob == 'NON' then
-		return false;
+		return false,nil;
 	end
 	
 	if sSlot == nil or sName == nil then
-		return false;
+		return false,nil;
 	end
 	
 	if bAccess == nil then
-		bAccess = false;
+		bAccess = false,nil;
 	end
 
 	if bForce == nil then
-		bForce = false;
+		bForce = false,nil;
 	end
 	
 	sSlot = string.lower(sSlot);
@@ -1704,14 +1701,14 @@ function fGearCheckItem(sSlot,sName,bAccess,bForce)
 		end
 	end
 	if gcinclude.GearDetails[sSlot][sName] == nil then
-		return false;
+		return false,nil;
 	else
 		if bAccess == true then
-			return (gcinclude.GearDetails[sSlot][sName]['accessible'] == true);
+			return (gcinclude.GearDetails[sSlot][sName]['accessible'] == true),gcinclude.GearDetails[sSlot][sName];
 		else
 			return (gcinclude.GearDetails[sSlot][sName]['job'] == true and 
 				gcinclude.GearDetails[sSlot][sName]['accessible'] == true and 
-				gcinclude.GearDetails[sSlot][sName]['level'] <= player.MainJobSync);
+				gcinclude.GearDetails[sSlot][sName]['level'] <= player.MainJobSync),gcinclude.GearDetails[sSlot][sName];
 		end
 	end
 end	-- fGearCheckItem
@@ -1728,6 +1725,7 @@ end	-- fGearCheckItem
 function fGearCheck(sList,bForce)
 	local tTarget = { gProfile.Sets, gcinclude.Sets };
 	local ts = {};
+	local ref = {};
 	local iCnt = 0;
 	local bGood;
 
@@ -1761,7 +1759,7 @@ function fGearCheck(sList,bForce)
 						for ss,tt in pairs(ts) do						
 							-- Save the details if appropriate. Returned results are
 							-- ignored, but captured in case I change my mind.
-							bGood = fGearCheckItem(jj,tt,false,bForce);
+							bGood,ref = fGearCheckItem(jj,tt,false,bForce);
 							iCnt = iCnt +1;
 							if math.floor(iCnt/50) == iCnt/50 then
 								print(chat.message(tostring(iCnt) .. ' sets processed...'));
@@ -1777,12 +1775,12 @@ function fGearCheck(sList,bForce)
 			if i == 'staff' then
 				for ii,jj in pairs(j) do
 					if ii == 'relic' then
-						bGood = fGearCheckItem('main',jj['Name']);
+						bGood,jj['Ref'] = fGearCheckItem('main',jj['Name']);
 						iCnt = iCnt + 1;
 					elseif table.find({ 'fire','ice','wind','earth','thunder','water',
 										'light','dark' },ii) ~= nil then
-						bGood = fGearCheckItem('main',jj['NQ']['Name']);
-						bGood = fGearCheckItem('main',jj['HQ']['Name']);
+						bGood,jj['NQ']['Ref'] = fGearCheckItem('main',jj['NQ']['Name']);
+						bGood,jj['HQ']['Ref'] = fGearCheckItem('main',jj['HQ']['Name']);
 						iCnt = iCnt + 2;
 					end
 					if math.floor(iCnt/50) == iCnt/50 then
@@ -1794,14 +1792,14 @@ function fGearCheck(sList,bForce)
 					if table.find({ 'fire','ice','wind','earth','thunder','water',
 									'light','dark' },ii) ~= nil then
 						if i == 'obi' then
-							bGood = fGearCheckItem('waist',jj['Name']);
+							bGood,jj['Ref'] = fGearCheckItem('waist',jj['Name']);
 						else
-							bGood = fGearCheckItem('neck',jj['Name']);
+							bGood,jj['Ref'] = fGearCheckItem('neck',jj['Name']);
 						end
 						iCnt = iCnt + 1;
-					if math.floor(iCnt/50) == iCnt/50 then
-						print(chat.message(tostring(iCnt) .. ' sets processed...'));
-					end
+						if math.floor(iCnt/50) == iCnt/50 then
+							print(chat.message(tostring(iCnt) .. ' sets processed...'));
+						end
 					end
 				end
 			end
@@ -1955,7 +1953,7 @@ function gcinclude.MagicalJob(sWhich)
 	local sj = player.SubJob;
 	local sList = gcinclude.sMagicJobs;
 	
-	if string.lower(sWhich) == 'T' then
+	if string.lower(sWhich) == 't' then
 		sList = gcinclude.TieredMagicJobs;
 	end
 	
@@ -1990,8 +1988,9 @@ end
 
 function fTallyGear(sGear,sSlot)
 	local cur = gData.GetEquipment();
-	local sPiece,lcii,sVis;
-	local item = { };
+	local sPiece,lcii,sVis,bGood;
+	local item = {};
+	local ref = {};
 	local rec = { 		-- define tracking structure
 		['visible'] = { 
 			['MP'] = 0, ['MPP'] = 0, ['HP'] = 0, ['HPP'] = 0, 
@@ -2013,8 +2012,8 @@ function fTallyGear(sGear,sSlot)
 	-- The passed item might not be in the dynamic table yet. Make
 	-- sure it is. Also, if it fails the equippable check, then 
 	-- there's no reason to go on
-
-	if fGearCheckItem(sSlot,sGear,false) == false then
+	bGood,ref = fGearCheckItem(sSlot,sGear,false);
+	if bGood == false then
 		return false;
 	end
 	
@@ -2039,7 +2038,8 @@ function fTallyGear(sGear,sSlot)
 			sPiece = string.lower(jj.Name);
 		end
 		-- Make sure that the item is in the dynamic table
-		if fGearCheckItem(lcii,sPiece,false) == false then
+		bGood,ref = fGearCheckItem(lcii,sPiece,false);
+		if bGood == false then
 			return false;
 		end
 		item = fParseDescription(sPiece,gcinclude.GearDetails[lcii][sPiece]['desc']);
@@ -2556,26 +2556,7 @@ function CheckForGear(sGear,sSlot)
 		return false;
 	end
 
-	--	Needs more work
-
-
-	-- Use locks since it is a master list of gear slots
---	for i,j in ipairs(gcinclude.Locks) do
-
-		-- Skip over the slot that matches what was passed in
---		if j[1] ~= sSlot then
---			local sName = string.upper(string.sub(j[1],1,1)) .. string.sub(j[1],2,-1);
-
---			if (gProfile.Sets.CurrentGear[sName] ~= nil) and 
---			   (string.lower(gProfile.Sets.CurrentGear[j[1]]) == string.lower(sGear)) then
---				return true;
---			elseif curGear[sName] ~= nil and 
---			   (string.lower(curGear[j[1]]) == string.lower(sGear)) then
---				return true;
---			end
---		end
---	end
-
+	--	Needs fleshing out
 	return false;
 end		-- CheckForGear
 
@@ -2724,6 +2705,8 @@ function fCheckInline(gear,sSlot)
 			else
 				bGood = false;
 			end
+		elseif suCode == 'BARSPELL' then					-- Spell is a Bar- type
+			bGood = (table.find(gcinclude.BarSpells,string.lower(spell.Name)));
 		elseif suCode == 'BIND' then						-- Player is bound
 			bGood = fBuffed('Bind');
 		elseif suCode == 'BLIND' then						-- Player is blind
@@ -2799,7 +2782,7 @@ function fCheckInline(gear,sSlot)
 		elseif suCode == 'NO_PET' then						-- Player has no avatar out
 			bGood = (pet == nil);
 		elseif suCode == 'NO_SMNPET' then					-- Player has no or non-smn pet
-			bgood = (pet == nil or table.find(gcinclude.tSummonSkill,string.lower(pet.Name)) == nil);
+			bgood = not gcinclude.fSummonerPet();
 		elseif suCode == 'NOT_OWN' then						-- Player in area not controlled by their nation
 			bGood = (gcdisplay.GetCycle('Region') ~= 'Owned');
 		elseif string.sub(suCode,1,8) == 'NOT_WTH:' then	-- Does the weather not match
@@ -2849,9 +2832,9 @@ function fCheckInline(gear,sSlot)
 		elseif string.sub(suCode,1,4) == 'SMN:' then
 			bGood = (string.lower(spell.Name) == string.lower(string.sub(suCode,5,-1)));
 		elseif suCode == 'SMNPET' then						-- Is player's pet a summoned avatar
-			bGood = (pet ~= nil and table.find(gcinclude.tSummonSkill,string.lower(pet.Name)));
+			bGood = gcinclude.fSummonerPet();
 		elseif suCode == 'SMNPETMD' then					-- Does the summoner pet's element match the day?
-			if pet ~= nil and table.find(gcinclude.tSummonSkill,string.lower(pet.Name)) then
+			if gcinclude.fSummonerPet() == true then
 				bGood = (gcinclude.SummonStaves[string.lower(pet.Name)] == string.lower(environ.DayElement));
 			else
 				bGood = false;
@@ -2978,7 +2961,15 @@ function gcinclude.RegionControlDisplay()
 end		-- RegionControlDisplay
 
 function gcinclude.t1()
+
 	fGearCheckList();
+	print(' ');
+	print('Staves');
+	for i,j in pairs(gcinclude.tElemental_gear['staff']) do
+		if table.find({'level','slots','relic','searched'},i) == nil then
+			print(i ..'  NQ: ' .. tostring(j['NQ']['Ref']['accessible']) .. '  HQ: ' .. tostring(j['HQ']['Ref']['accessible']));
+		end
+	end
 end		-- gcinclude.t1
 
 --[[
@@ -2993,10 +2984,11 @@ end		-- gcinclude.t1
 function gcinclude.fMoveToCurrent(tSet,tMaster,bOverride)
 	local player = gData.GetPlayer();
 	local item = {};
+	local ref = {};
 	local ts = {};
 	local ts1 = {};
 	local root,sK,vRoot,stK,sRoot;
-	local bContinue,iNum,bGood,bSkip;
+	local bContinue,iNum,bGood,bSkip,bG;
 
 	if tSet == nil or tMaster == nil then
 		return;
@@ -3080,8 +3072,9 @@ function gcinclude.fMoveToCurrent(tSet,tMaster,bOverride)
 				-- Walk list of items
 				for kk,vv in pairs(ts) do
 					-- Make sure the item is noted in gcinclude.GearDetails
-					-- and that the level, job, and accessibility is good					
-					if fGearCheckItem(sK,vv,false) == true then
+					-- and that the level, job, and accessibility is good
+					bG,ref = fGearCheckItem(sK,vv,false);
+					if bG == true then
 						-- See if there's an inline conditional to be checked.
 						-- Note the need to distinguish which "ear" or "ring"
 						if bContinue then
@@ -3425,197 +3418,201 @@ function gcinclude.fFractionalAccuracy(accTbl,tankAccTbl)
 end		-- gcinclude.fFractionalAccuracy
 
 --[[
-	MaxSong determines what is the highest tier song that matches the passed root or buff name
-	for a bard song that can be cast by the player and if indicated, it will cast it. Further,
-	the invocation can indicate that one less tier should be cast. Only songs current in era are
-	included. Songs not found in the associated lookup table do not have multiple tiers or are
-	out of era. An appropriate message is displayed.	
+	fMaxSpell determines if the passed in spell is in the tiered list and then which
+	tier would be the highest that could be cast by the player. The routine checks to
+	make sure you're high enough level to cast the spell, have enough MP, do you
+	know the spell and whether that spell is off cool down. If indicated, the found
+	spell can be cast
 --]]
 
-function gcinclude.MaxSong(root,bBack,bCast)
+function fMaxSpell(sSpell,sTarget,bCast)
 	local player = gData.GetPlayer();
 	local sMain = player.MainJob;
 	local sSub = player.SubJob;
 	local MainLvl = player.MainJobSync;
 	local SubLvl = player.SubJobSync;
-	local mp = player.MP;
-	local iLvl;
+	local root,sCmd,iMax,bmCast;
+	local tSpell = {};
 
-	if bCast == nil then
-		bCast = false;
-	end
-
-	if bBack == nil then
-		bBack = false;
-	end
-
-	-- Make sure either the main job or sub job is a bard
-	if not (sMain == 'BRD' or sSub == 'BRD') then
-		print(chat.header('MaxSong'):append(chat.message('Current job is not a bard.')));
+	if sSpell == nil then 
+		print(chat.header('MaxSpell'):append(chat.message('No spell specified. Aborting...')));
 		return;
-	else
-		if sMain == 'BRD' then
-			iLvl = MainLvl;
-		else
-			iLvl = SubLvl;
-		end
-	end
-	
-	bFound = false;
-	iTier = T{0,0};		-- Tier of the found matching song and the previous
-	sName = T{0,0};		-- Song name of the matching entry
-	iSID = T{0,0};		-- Song ID
-	
-	root = fGetRoot(root);
-
-	--[[
-		Cycle through the table and find any matches. Then determine if castable and if it is a higher level
-		than the one already found (if any). Save the previous and the current.
-	--]]
-
-	for i,v in pairs(gcinclude.TieredSongs) do
-		if root == v[gcinclude.TieredIndices['RT']] or root == v[gcinclude.TieredIndices['BUF']] then
-			bFound = true;
-			-- See if matched entry is a higher level tier than what was found
-			if v[gcinclude.TieredIndices['TI']] > iTier[1] then
-				-- Make sure the spell isn't too high a level
-				if v[gcinclude.TieredSongIndices['LVL']] <= iLvl  then
-					if AshitaCore:GetMemoryManager():GetPlayer():HasSpell(v[gcinclude.TieredIndices['ID']]) then
-						if iTier[1] > 0 then
-							iTier[2] = iTier[1];
-							sName[2] = sName[1];
-							iSID[2] = iSID[1];
-						end
-						iTier[1] = v[gcinclude.TieredIndices['TI']];
-						sName[1] = v[gcinclude.TieredIndices['SN']];
-						iSID[1] = v[gcinclude.TieredIndices['ID']];
-					end
-				end
-			end
-		end
 	end
 
-	if not bFound then
-		print(chat.header('MaxSong'):append(chat.message('Song root not found - ' .. root)));
+	-- Make sure all parameters passed make sense	
+	if bCast == nil then
+		-- indicate that the found spell shouldn't be cast
+		bCast = false;	
+	end
+	
+	if sTarget == nil then
+		-- indicates the target of the spell if cast. Note: if bCast is false,
+		-- target has no meaning
+		sTarget = '<' .. gcinclude.settings.DefaultTarget .. '>';
+	elseif string.find(sTarget,'<') == nil then
+		sTarget = '<' .. sTarget .. '>';
+	end
+	
+	root = fGetRoot(sSpell);
+	
+	-- See if in tiered magic structure.
+	if gcinclude.TMtest[root] == nil then
+		print(chat.header('MaxSpell'):append(chat.message('FYI: '..sSpell..' not found, probably not a tiered spell.')));
+		if bCast == true then
+			-- Let's try to cast it even so. Assuming everything, just try
+			print(chat.header('MaxSpell'):append(chat.message('FYI: Trying to cast '.. sSpell.. ' as is')));
+			sCmd = '/ma "' .. sSpell .. '" ' .. sTarget;
+			AshitaCore:GetChatManager():QueueCommand(1, sCmd);
+		end
 	else
-		if bBack then
-			if iTier[2] > 0 then
-				if bCast then
-					print(chat.header('MaxSong'):append(chat.message('Casting ' .. sName[2] .. ' (max-1)')));
-					sCmd = 'ma "' .. sName[2] .. '" <t>';
-					AshitaCore:GetChatManager():QueueCommand(1, sCmd);
-					return;
+		iMax = 0;
+		for i,j in pairs(gcinclude.TMtest[root]) do	
+			-- Test for level. Level checks both main and sub jobs
+			if (j[sMain] ~= nil and j[sMain] <= MainLvl) or 
+			   (j[sSub] ~= nil and j[sSub] <= SubLvl) then
+				-- Make sure the player knows the spell
+				if AshitaCore:GetMemoryManager():GetPlayer():HasSpell(j['SID']) then
+					-- Now save it. Processing happens after all level reqs are checked
+					tSpell[j['Tier']] = { ['Name'] = j['Name'], ['SID'] = j['SID'], ['MP'] = j['MP'] };						
+					iMax = iMax +  1;
 				else
-					print(chat.header('MaxSong'):append(chat.message('Highest song of '.. root ..' that you can cast is ' .. sName[2] .. ' (max-1)')));
+					print(chat.header('MaxSpell'):append(chat.message('FYI: You should be able to cast'.. j['Name'] .. ', but don\'t know it. Skipping')));
 				end
-			else
-				print(chat.header('MaxSong'):append(chat.message('Only one song matched')));
-			end
-		else
-			if bCast then
-				print(chat.header('MaxSong'):append(chat.message('Casting ' .. sName[1])));
-				sCmd = '/ma "' .. sName[1] .. '" <t>';
-				AshitaCore:GetChatManager():QueueCommand(1, sCmd);
-			else
-				print(chat.header('MaxSong'):append(chat.message('Highest song of '.. root ..' that you can cast is ' .. sName[2])));
 			end
 		end
-	end	
-end		-- gcinclude.MaxSong
-	
+		
+		-- Figure out which one to call now
+		bmCast = false;
+		if iMax > 0 then
+			for i = iMax, 1, -1 do
+				if player.MP >= tSpell[i]['MP'] then
+					if AshitaCore:GetMemoryManager():GetRecast():GetSpellTimer(tSpell[i]['SID']) == 0 then
+						if bCast then
+							print(chat.header('MaxSpell'):append(chat.message('Casting ' .. tSpell[i]['Name'])));
+							sCmd = '/ma "' .. tSpell[i]['Name'] .. '" ' .. sTarget;
+							AshitaCore:GetChatManager():QueueCommand(1, sCmd);
+							bmCast = true;
+							break;
+						else
+							print(chat.header('MaxSpell'):append(chat.message(tSpell[i]['Name'] .. ' is the maximum version you can cast now.')));
+							break;
+						end
+					else
+						print(chat.header('MaxSpell'):append(chat.message('FYI: ' .. tSpell[i]['Name'] .. ' is on cool down')));
+					end
+				else
+					print(chat.header('MaxSpell'):append(chat.message('FYI: Insufficeint MP to cast ' .. tSpell[i]['Name'])));
+				end
+			end
+		else
+			print(chat.header('MaxSpell'):append(chat.message('FYI: unable to cast any ' .. root .. ' spells (at this time)')));
+			bmCast = true; -- set to skip next warning message
+		end
+		if bmCast == false then
+			print(chat.header('MaxSpell'):append(chat.message('FYI: No spell cast')));
+		end
+	end
+end		-- fMaxSpell
+
 --[[
-	MaxSpell determines what is the highest tier spell that matches the passed root that can
-	be cast by the player and if indicated, will cast it. Please note that only spells that are
-	currently in era and have multiple tiers will be checked. Spells not found in the lookup
-	table or spells found but unable to be cast at the player's current level will not be cast 
-	and an appropriate message will be displayed.
+	fMaxSong determines if the passed in song is in the tiered list and then which
+	tier would be the highest that could be cast by the player. The routine checks to
+	make sure you're high enough level to cast the song, do you know the song and 
+	whether that song is off cool down. If indicated, the found	song can be cast
 --]]
 
-function gcinclude.MaxSpell(root,bCast)
+function fMaxSong(sSong,sTarget,bCast)
 	local player = gData.GetPlayer();
 	local sMain = player.MainJob;
 	local sSub = player.SubJob;
 	local MainLvl = player.MainJobSync;
 	local SubLvl = player.SubJobSync;
-	local mp = player.MP;
-
+	local lSong,root,iMax,bmCast;
+	local tSong = {};
+	
+	if sSong == nil then
+		return;
+	end
+	lSong = string.lower(sSong);
+	
 	if bCast == nil then
 		bCast = false;
 	end
 	
-	-- Make sure either the main job or sub job can cast magic
-	if gcinclude.MagicalJob('T') == false then
-		print(chat.header('MaxSpell'):append(chat.message('Current job does not support magic.')));
-		return;
+	if sTarget == nil then
+		sTarget = '<' .. gcinclude.settings.DefaultTarget .. '>';
+	elseif string.find(sTarget,'<') == nil then
+		sTarget = '<' .. sTarget .. '>';
 	end
-		
-	bFound = false;
-	bJob = false;
-	bCanCast = false;
-	iTier = 0;			-- Tier of the found matching spell
-	sName = nil;		-- Spell name of the matching entry
-	iSID = 0;			-- Spell ID
 	
-	root = fGetRoot(root);
-
-	--[[
-		Cycle through the table and find any matches. Then determine if castable and if it is a higher level
-		than the one already found (if any).
-	--]]
-
-	for i,v in pairs(gcinclude.TieredMagic) do
-		if root == v[gcinclude.TieredIndices['RT']] then
-			bFound = true;
-			-- See if matched entry is a higher level tier than what was found
-			if v[gcinclude.TieredIndices['TI']] > iTier then
-				-- Make sure the spell isn't too high a level
-				if (v[gcinclude.TieredIndices[sMain]] ~= nil and v[gcinclude.TieredIndices[sMain]] <= MainLvl) or
-					(v[gcinclude.TieredIndices[sSub]] ~= nil and v[gcinclude.TieredIndices[sSub]] <= SubLvl) then
-					bCanCast = false;
-					bJob = true;
-					if v[gcinclude.TieredIndices[sMain]] ~= nil then
-						if v[gcinclude.TieredIndices['MP']] <= mp then
-							bCanCast = true;
-						end
-					end
-					if not bCanCast and v[gcinclude.TieredIndices[sSub]] ~= nil then
-						if v[gcinclude.TieredIndices['MP']] <= mp then
-							bCanCast = true;
-						end					
-					end
-
-					-- if it can be cast, save the particulars
-					if bCanCast then
-						if AshitaCore:GetMemoryManager():GetPlayer():HasSpell(v[gcinclude.TieredIndices['ID']]) then
-							iTier = v[gcinclude.TieredIndices['TI']];
-							sName = v[gcinclude.TieredIndices['SN']];
-							iSID = v[gcinclude.TieredIndices['ID']];
-						end
-					end
+	-- Now, determine the type based on the passed in spell
+	root = nil;
+	for i,j in pairs(gcinclude.TStest) do
+		for ii,jj in pairs(j) do
+			if string.find(i .. ',' ..string.lower(jj['Name']),lSong) ~= nil then
+				root = i;				
+				break;
+			end
+		end
+		if root ~= nil then
+			break;
+		end
+	end
+	
+	if root ~= nil then
+		iMax = 0;
+		for i,j in pairs(gcinclude.TStest[root]) do	
+			-- Test for level. Level checks both main and sub jobs
+			if (sMain == 'BRD' and j['Lvl'] <= MainLvl) or 
+			   (sSub == 'BRD' and j['Lvl'] <= SubLvl) then
+				-- Make sure the player knows the spell
+				if AshitaCore:GetMemoryManager():GetPlayer():HasSpell(j['SID']) then
+					-- Now save it. Processing happens after all level reqs are checked
+					tSong[j['Tier']] = { ['Name'] = j['Name'], ['SID'] = j['SID'] };						
+					iMax = iMax +  1;
+				else
+					print(chat.header('MaxSong'):append(chat.message('FYI: You should be able to cast'.. j['Name'] .. ', but don\'t know it. Skipping')));
 				end
 			end
 		end
-	end
-
-	if not bFound then
-		print(chat.header('MaxSpell'):append(chat.message('Spell root not found - ' .. root)));
-	else
-		if not bJob then
-			print(chat.header('MaxSpell'):append(chat.message('You cannot cast that spell.')));
-		elseif iTier == 0 then
-			print(chat.header('MaxSpell'):append(chat.message('You have insufficient MP to cast that spell.')));
-		else
-			if bCast then
-				print(chat.header('MaxSpell'):append(chat.message('Casting ' .. sName)));
-				sCmd = '/ma "' .. sName .. '" <t>';
-				AshitaCore:GetChatManager():QueueCommand(1, sCmd);
-			else
-				print(chat.header('MaxSpell'):append(chat.message('Highest tier of ' .. root .. ' is ' .. sName)));
+		
+		-- Figure out which one to call now
+		bmCast = false;
+		if iMax > 0 then
+			for i = iMax, 1, -1 do
+				if AshitaCore:GetMemoryManager():GetRecast():GetSpellTimer(tSong[i]['SID']) == 0 then
+					if bCast then
+						print(chat.header('MaxSong'):append(chat.message('Casting ' .. tSong[i]['Name'])));
+						sCmd = '/ma "' .. tSong[i]['Name'] .. '" ' .. sTarget;
+						AshitaCore:GetChatManager():QueueCommand(1, sCmd);
+						bmCast = true;
+						break;
+					else
+						print(chat.header('MaxSong'):append(chat.message(tSong[i]['Name'] .. ' is the maximum version you can cast now.')));
+						break;
+					end
+				else
+					print(chat.header('MaxSong'):append(chat.message('FYI: ' .. tSong[i]['Name'] .. ' is on cool down')));
+				end
 			end
+		else
+			print(chat.header('MaxSong'):append(chat.message('FYI: unable to cast any ' .. root .. ' songs (at this time)')));
+			bmCast = true; -- set to skip next warning message
 		end
-	end	
-end		-- gcinclude.MaxSpell
-
+		if bmCast == false then
+			print(chat.header('MaxSong'):append(chat.message('FYI: No song cast')));
+		end
+	else
+		print(chat.header('MaxSong'):append(chat.message('FYI: '..sSong..' not found, probably not a tiered song.')));
+		if bCast == true then
+			-- Let's try to cast it even so. Assuming everything, just try
+			print(chat.header('MaxSong'):append(chat.message('FYI: Trying to cast '.. sSong.. ' as is')));
+			sCmd = '/ma "' .. sSong .. '" ' .. sTarget;
+			AshitaCore:GetChatManager():QueueCommand(1, sCmd);
+		end		
+	end
+end		-- fMaxSong
+	
 --[[
 	fCheckForElementalGearByValue is a generalized routine that searches to see 
 	if the targetted elemental gear should be equipped (assuming you have the piece 
@@ -3698,7 +3695,12 @@ function gcinclude.fSwapToStave(sStave,noSave,cs)
 	local eWeap = nil;
 	local eOff = nil;
 
-	-- First, make sure that locks will not prevent equipping a staff
+	-- This is needed for a timing issue
+	if sStave == nil then
+		return;
+	end
+	
+	-- Now, make sure that locks will not prevent equipping a staff
 	if gcinclude.fIsLocked('main') == true or gcinclude.fIsLocked('sub') == true then
 		return;
 	end
@@ -3711,11 +3713,6 @@ function gcinclude.fSwapToStave(sStave,noSave,cs)
 	if ew['Sub'] ~= nil then
 		eOff = ew['Sub'].Name;
 	end;
-
-	-- This is needed for a timing issue
-	if sStave == nil then
-		return;
-	end
 
 	if (gcdisplay.GetToggle('WSwap') == true or gcinclude.settings.bWSOverride == true) then	
 		-- See if a current weapon is the one of the targetted staves
@@ -4095,19 +4092,6 @@ function gcinclude.HandleCommands(args)
 		gcinclude.RegionControlDisplay();
 	elseif (args[1] == 'rv') then
 		fRefreshVariables();
-	elseif (args[1] == 'slot') then					-- Locks specified slot and equips piece
-		if #args == 3 then
-			local sSlot = WhichSlot(args[2]);
-			if sSlot ~= nil then		
-				gcinclude.LockUnlock('locks','lock',sSlot);
-				local sList = gcinclude.GetLockedList('locks');			
-				gFunc.ForceEquip(sSlot,args[3]);
-				print(chat.message(args[3] .. ' equipped in ' .. sSlot));
-				gcdisplay.SetSlots('locks',gcinclude.LocksNumeric);
-			else
-				print(chat.message('Invalid slot specified in /slot command. Ignoring'));
-			end
-		end
 	elseif (args[1] == 'showit') then						-- Shows debug info for specified type
 		gcinclude.DB_ShowIt();
 	elseif (args[1] == 'gearset' or args[1] == 'gs') then	-- Forces a gear set to be loaded and turns GSWAP off
@@ -4157,12 +4141,10 @@ function gcinclude.HandleCommands(args)
 			print(chat.header('HandleCommands'):append(chat.message('Your job does not support that command. Ignoring.')));
 		end
 	elseif (args[1] == 'maxspell') then			-- Determines highest level spell to cast
-		if #args >= 2 then
-			gcinclude.MaxSpell(args[2],true);
-		end
+		fMaxSpell(args[2],args[3],true);
 		toggle = 'MaxSpell';
 	elseif (args[1] == 'maxsong') then			-- Determines highest level song to cast
-		gcinclude.MaxSong(args[2],(#args > 2),true);
+		fMaxSong(args[2],args[3],true);
 		toggle = 'MaxSong';
 	elseif args[1] == 'equipit' or args[1] == 'ei' then			-- Equip specified item
 		gcinclude.EquipItem(args);
