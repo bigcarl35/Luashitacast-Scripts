@@ -116,7 +116,10 @@ local sets = {
 	['Default'] = {
 		Subset = 'TP',
 		Head   = { 'Lilac Corsage//TOWN', 'Summoner\'s Horn//SMNPETMW', 'Shep. Bonnet//PETF', 'Austere Hat', 'Silver Hairpin' },
-		Body   = { 'Ducal Aketon//TOWN-AK', 'Vermillion Cloak//MPP.LT.90', 'Vermillion Cloak//CARBY','Summoner\'s Dblt.//SMNPETMD', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
+		Body   = { 'Ducal Aketon//TOWN-AK', 'Vermillion Cloak//MPP.LT.90', 'Vermillion Cloak//CARBY','Summoner\'s Dblt.', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
+	},
+
+	['Default_WPet'] = {
 	},
 	
 --[[
@@ -143,9 +146,8 @@ local sets = {
 	
 	-- Blood pacts go through a simulated process that mimics spell casting. The precast
 	-- happens when the blood pact is invoked (either rage or ward), loading the 'BP'
-	-- gear set. You want gear that has Blood Pact Ability Delay, Blood Pact Recast, or
-	-- avatar perpetuation cost abilities defined here. The midcast happens when the
-	-- actual blood pact goes off.
+	-- gear set. You want gear that has Blood Pact Ability Delay or Blood Pact Recast
+	-- abilities defined here. The midcast happens when the actual blood pact goes off.
 	['BP'] = {
         Head  = { 'Summoner\'s Horn +1', 'Austere Hat' },
         Neck = 'Smn. Torque',
@@ -890,7 +892,7 @@ local function HandlePetAction(Pet,PetAction)
 	
 	-- Determine name of pet
 	Pet.Name = string.lower(Pet.Name);
-	if table.find(gcinclude.tSummonSkill,Pet.Name) ~= nil then
+	if gcinclude.fSummonerPet() == true then
 		-- Since the pet is a smn avatar, give feedback on the blood pact
 		bSmn = true;
 		-- if the action is a BP: rage, print out what happened in party chat
@@ -1058,7 +1060,7 @@ profile.HandleDefault = function()
 	-- A pet action takes priority over a player's action. Only SMN avatar actions supported
 	if pet ~= nil then
 		local sLName = string.lower(pet.Name);
-		if petAction ~= nil and (table.find(gcinclude.tSummonSkill,sLName) ~= nil) then
+		if petAction ~= nil and gcinclude.fSummonerPet() == true then
 			HandlePetAction(pet,petAction);
 			return;
 		end
@@ -1142,15 +1144,19 @@ profile.HandleDefault = function()
 		if player.MP < player.MaxMP then
 			gcinclude.fMoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
 		end
+
+	elseif gcinclude.fSummonerPet() then
+		-- Player idling with pet
+		gcinclude.fMoveToCurrent(sets.Default_WPet,sets.CurrentGear);
 	else
-		-- Assume idling. While there's no idle set, just use the 
-		-- "Default" set
+		-- Assume player idling without pet or /subjob's pet
 		gcinclude.fMoveToCurrent(sets.Default,sets.CurrentGear);
 	end
 		
 	-- Make sure to equip the appropriate elemental staff (if appropriate)
 	-- for the current pet
-	if (pet ~= nil) then
+
+	if (pet ~= nil and table.find(gcinclude.tSummonSkill,pet.Name) ~= nil) then
 		local sStave = gcinclude.fCheckForElementalGearByValue('staff','Summons',pet.Name);
 		if sStave ~= nil then
 			gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);
@@ -1215,7 +1221,7 @@ profile.HandleAbility = function()
 			gcinclude.fMoveToCurrent(sets.Reward,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Charm') then
 			gcinclude.fMoveToCurrent(sets.Charm,sets.CurrentGear);
-			local sStave = gcinclude.CheckForEleGear('staff','light');
+			local sStave = gcinclude.fCheckForEleGear('staff','light');
 			if sStave ~= nil then
 				gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);
 			end

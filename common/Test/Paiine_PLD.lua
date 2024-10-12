@@ -965,7 +965,7 @@ profile.HandleDefault = function()
 		if player.MP < player.MaxMP then
 			gcinclude.fMoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
 			if gcdisplay.GetToggle('WSwap') == true then
-				local sStave = gcinclude.CheckForEleGear('staff','dark');
+				local sStave = gcinclude.fCheckForEleGear('staff','dark');
 				if sStave ~= nil then
 					gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);
 				end
@@ -978,7 +978,7 @@ profile.HandleDefault = function()
 	end
 		
 	-- In case the pet is a summoned pet...
-	if pet ~= nil and gcdisplay.GetToggle('WSwap') == true then
+	if pet ~= nil and table.find(gcinclude.tSummonSkill,pet.Name) ~= nil and gcdisplay.GetToggle('WSwap') == true then
 		local sStave = gcinclude.fCheckForElementalGearByValue('staff','Summons',pet.Name);
 		if sStave ~= nil then
 			gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);
@@ -1043,7 +1043,7 @@ profile.HandleAbility = function()
 	-- /BST
 	elseif string.match(ability.Name, 'Charm') then
 		gcinclude.fMoveToCurrent(sets.Charm,sets.CurrentGear);
-		local sStave = gcinclude.CheckForEleGear('staff','light');
+		local sStave = gcinclude.fCheckForEleGear('staff','light');
 		if sStave ~= nil then
 			gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);
 		end

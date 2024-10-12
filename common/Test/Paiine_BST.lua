@@ -1171,7 +1171,7 @@ profile.HandleDefault = function()
 		if gcinclude.MagicalJob('S') == true and player.MP < player.MaxMP then
 			gcinclude.fMoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
 			if gcdisplay.GetToggle('WSwap') == true then
-				local sStave = gcinclude.CheckForEleGear('staff','dark');
+				local sStave = gcinclude.fCheckForEleGear('staff','dark');
 				if sStave ~= nil then
 					gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);
 				end
