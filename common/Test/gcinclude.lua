@@ -218,80 +218,79 @@ gcinclude.AccNumeric = 'None';
 
 gcinclude._AllElements = 'fire,ice,wind,earth,thunder,water,light,dark';
 
--- Structure for tracking elemental gear. The "Job" entry is used to make sure the current Job matches
--- the job where the status was recorded.
-gcinclude.tElemental_gear = T{	['job'] = 'NON',
-								['staff'] = {
+-- Structure for tracking elemental gear. The details that use to be in this table
+-- are now found in gcinclude.GearDetails with a reference to the appropriate record
+-- stored in REF
+gcinclude.tElemental_gear = T{	
+						['relic'] = {
+										['level'] = 75,
+										['type'] = 'STAVE',
+											{ ['Name'] = 'Claustrum', ['Ref'] = {} }
+									},
+						['staff'] = {
 									['level'] = 51,
-									['slots'] = {1,2},	-- Main, Sub
-									['relic'] = { ['Name'] = 'Claustrum', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },  -- Not implemented yet
 									['fire'] = { 
 										['Weak'] = 'water',
-										['NQ'] = { ['Name'] = 'Fire staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
-										['HQ'] = { ['Name'] = 'Vulcan\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} }, 
+										['NQ'] = { ['Name'] = 'Fire staff', ['Ref'] = {} },
+										['HQ'] = { ['Name'] = 'Vulcan\'s staff', ['Ref'] = {} }, 
 										['Affinity'] = { 'blaze','burn','firaga','fire','flare' },
 										['Summons'] = { 'ifrit','fire spirit','firespirit','fire' }
 										},
 									['ice'] = {
 										['Weak'] = 'fire',
-										['NQ'] = { ['Name'] = 'Ice staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
-										['HQ'] = {['Name'] = 'Aquilo\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['NQ'] = { ['Name'] = 'Ice staff', ['Ref'] = {} },
+										['HQ'] = {['Name'] = 'Aquilo\'s staff', ['Ref'] = {} },
 										['Affinity'] = { 'bind','blizzaga','blizzard','freeze','frost','ice','paralyze' },
 										['Summons'] = { 'shiva','ice spirit','icespirit','ice' },
 										},
 									['wind'] = {
 										['Weak'] = 'ice',
-										['NQ'] = { ['Name'] = 'Wind staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
-										['HQ'] = { ['Name'] = 'Auster\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['NQ'] = { ['Name'] = 'Wind staff', ['Ref'] = {} },
+										['HQ'] = { ['Name'] = 'Auster\'s staff', ['Ref'] = {} },
 										['Affinity'] = { 'aero','aeroga','choke','gravity','silence','tornado' },
 										['Summons'] = { 'garuda','air spirit','airspirit','air','siren' },
 										},
 									['earth'] = { 
 										['Weak'] = 'wind',
-										['NQ'] = { ['Name'] = 'Earth staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
-										['HQ'] = { ['Name'] = 'Terra\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['NQ'] = { ['Name'] = 'Earth staff', ['Ref'] = {} },
+										['HQ'] = { ['Name'] = 'Terra\'s staff', ['Ref'] = {} },
 										['Affinity'] = { 'quake','rasp','slow','stone','stonega','stoneskin' },
 										['Summons'] = {'titan','earth spirit','earthspirit','earth' },
 										},
 									['thunder'] = {
 										['Weak'] = 'earth',
-										['NQ'] = { ['Name'] = 'Thunder staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
-										['HQ'] = { ['Name'] = 'Jupiter\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['NQ'] = { ['Name'] = 'Thunder staff', ['Ref'] = {} },
+										['HQ'] = { ['Name'] = 'Jupiter\'s staff', ['Ref'] = {} },
 										['Affinity'] = { 'burst','shock','thundaga','thunder' },
 										['Summons'] = { 'ramuh','thunder spirit','thunderspirit','thunder' },
 										},
 									['water'] = {
 										['Weak'] = 'thunder',
-										['NQ'] = { ['Name'] = 'Water staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
-										['HQ'] = { ['Name'] = 'Neptune\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['NQ'] = { ['Name'] = 'Water staff', ['Ref'] = {} },
+										['HQ'] = { ['Name'] = 'Neptune\'s staff', ['Ref'] = {} },
 										['Affinity'] = { 'drown','flood','poison','water','waterga' },
 										['Summons'] = { 'leviathan','water spirit','waterspirit','water' },
 										},
 									['light'] = { 
 										['Weak'] = 'dark',
-										['NQ'] = { ['Name'] = 'Light staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
-										['HQ'] = { ['Name'] = 'Apollo\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['NQ'] = { ['Name'] = 'Light staff', ['Ref'] = {} },
+										['HQ'] = { ['Name'] = 'Apollo\'s staff', ['Ref'] = {} },
 										['Affinity'] = { 'banish','banishga','curaga','cure','cursna','dia','diaga','flash','holy','phalanx' },
 										['Summons'] = {'carbuncle','light spirit','lightspirit','light','cait sith','caitsith','alexander'},
 										},
 									['dark'] = {
 										['Weak'] = 'light',
-										['NQ'] = { ['Name'] = 'Dark staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
-										['HQ'] = { ['Name'] = 'Pluto\'s staff', ['Have'] = false, ['Accessible'] = false, ['Where'] = nil, ['Ref'] = {} },
+										['NQ'] = { ['Name'] = 'Dark staff', ['Ref'] = {} },
+										['HQ'] = { ['Name'] = 'Pluto\'s staff', ['Ref'] = {} },
 										['Affinity'] = { 'absorb-acc','absorb-agi','abs-chr','abs-dex','abs-int','abs-mnd','abs-str','abs-vit','aspir','blind','bio','drain','sleep','sleepga' },
 										['Summons'] = { 'fenrir','diabolos','dark spirit','darkspirit','dark','atomos','odin' },
 										},
-									['searched'] = false,
 									},
-								['obi'] = {
+						['obi'] = {
 									['level'] = 71,
-									['slots'] = {14},	-- Waist
 									['fire'] = {
 										['Weak'] = 'water',
 										['Name'] = 'Karin obi', 
-										['Have'] = false, 
-										['Accessible'] = false,
-										['Where'] = nil, 
 										['Ref'] = {},
 										['MEacc'] = { 'burn','firaga','fire','flare','blaze' },
 										['eleWS'] = { 'burning blade','red lotus blade','tachi: Kagero','flaming arrow','hot shot','wildfire' },
@@ -299,9 +298,6 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 									['ice'] = {
 										['Weak'] = 'fire',										
 										['Name'] = 'Hyorin obi', 
-										['Have'] = false, 
-										['Accessible'] = false,
-										['Where'] = nil,
 										['Ref'] = {},
 										['MEacc'] = { 'frost','blizzaga','blizzard','freeze','paralyze','bind','distract','ice' },
 										['eleWS'] = { 'frostbite','freezebite','herculean slash','blade: to' },
@@ -310,9 +306,6 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 									['wind'] = {
 										['Weak'] = 'ice',
 										['Name'] = 'Furin obi', 
-										['Have'] = false, 
-										['Accessible'] = false,
-										['Where'] = nil,
 										['Ref'] = {},
 										['MEacc'] = { 'choke','aero','aeroga','tornado','silence','gravity','flurry' },
 										['eleWS'] = { 'gust slash','cyclone','aeolian edge','tachi: jinpu' },
@@ -320,9 +313,6 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 									['earth'] = { 
 										['Weak'] = 'wind',
 										['Name'] = 'Dorin obi', 
-										['Have'] = false, 
-										['Accessible'] = false,
-										['Where'] = nil,
 										['Ref'] = {},
 										['MEacc'] = { 'rasp','quake','stone','stonega','slow' },
 										['eleWS'] = { 'blade: chi','rock crusher','earth crusher' },
@@ -330,9 +320,6 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 									['thunder'] = { 
 										['Weak'] = 'earth',
 										['Name'] = 'Rairin obi', 
-										['Have'] = false, 
-										['Accessible'] = false,										
-										['Where'] = nil, 
 										['Ref'] = {},
 										['MEacc'] = { 'shock','burst','thundaga','thunder','stun' },
 										['eleWS'] = { 'cloudsplitter','thunder thrust','raiden thrust','tachi: goten' },
@@ -340,9 +327,6 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 									['water'] = { 
 										['Weak'] = 'thunder',
 										['Name'] = 'Suirin obi', 
-										['Have'] = false, 
-										['Accessible'] = false,										
-										['Where'] = nil, 
 										['Ref'] = {},
 										['MEacc'] = { 'drown','flood','water','waterga','poison' },
 										['eleWS'] = { 'blade: teki','blade: yu' },
@@ -351,9 +335,6 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 									['light'] = {
 										['Weak'] = 'dark',
 										['Name'] = 'Korin obi', 
-										['Have'] = false, 
-										['Accessible'] = false,										
-										['Where'] = nil, 
 										['Ref'] = {},
 										['MEacc'] = { 'banish','banishga','dia','diaga','flash','repose','holy','auspice','esuna','sacrifice','reprisal','cure','curaga' },
 										['eleWS'] = { 'shining blade','seraph blade','primal rend','tachi: koki','shining strike','seraph strike','starburst','sunburst','garland of bliss','trueflight' },
@@ -362,24 +343,16 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 									['dark'] = {
 										['Weak'] = 'light',
 										['Name'] = 'Anrin obi', 
-										['Have'] = false, 
-										['Accessible'] = false,										
-										['Where'] = nil, 
 										['Ref'] = {},
 										['MEacc'] = { 'blind','bio','sleep','dispel','frazzle','drain','warp','tractor','aspir','escape','sleep','sleepga','retrace','absorb-mnd','absorb-chr','absorb-vit','absorb-agi','absorb-int','absorb-dex','absorb-str' },
 										['eleWS'] = { 'energy steal','energy drain','sanguine blade','dark harvest','shadow of death','infernal scythe','blade: ei','starburst','sunburst','cataclysm','vidohunir','omniscience','leaden suite' },
 										},
-									['searched'] = false,
 									},
-								['gorget'] = {
+						['gorget'] = {
 									['level'] = 72,
-									['slots'] = {6},	-- Neck
 									['fire'] = { 
 										['Weak'] = 'water',
 										['Name'] = 'Flame gorget', 
-										['Have'] = false, 
-										['Accessible'] = false,										
-										['Where'] = nil, 
 										['Ref'] = {},
 										['skillProp'] = { 'liquefaction','fusion' },
 										['eleWS'] = { 'arching arrow','ascetic\'s fury','asuran fists','atonement','blade: shun','decimation','detonator','drakesbane','dulling arrow','empyreal arrow','final heaven','flaming arrow','full swing','garland of bliss','heavy shot','hexa strike','hot shot','insurgency','knights of round','last stand','mandalic stab','mistral axe','metatron torment','realmrazer','red lotus blade','scourge','shijin spiral','sniper shot','spinning attack','spinning axe','stringing pummel','tachi: kagero','tachi: kasha','upheaval','wheeling thrust' },
@@ -387,9 +360,6 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 									['ice'] = {
 										['Weak'] = 'fire',
 										['Name'] = 'Snow gorget', 
-										['Have'] = false, 
-										['Accessible'] = false,										
-										['Where'] = nil, 
 										['Ref'] = {},
 										['skillProp'] = { 'induration','distortion' },
 										['eleWS'] = { 'blade: to','blast arrow','cross reaper','death blossom','expiacion','freezebite','frostbite','full break','gate of tartarus','geirskogul','ground strike','guillotine','quietus','impulse drive','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','ruinator','raging rush','shadow of death','shattersoul','skullbreaker','smash axe','spiral hell','steel cyclone','tachi: gekko','tachi: hobaku','tachi: rana','tachi: yukikaze','tornado kick','vidohunir' },
@@ -397,9 +367,6 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 									['wind'] = {
 										['Weak'] = 'ice',
 										['Name'] = 'Breeze gorget', 
-										['Have'] = false, 
-										['Accessible'] = false,										
-										['Where'] = nil, 
 										['Ref'] = {},
 										['skillProp'] = { 'detonation','fragmentation' },
 										['eleWS'] = { 'aeolian edge','backhand blow','black halo','blade: jin','blade: kamu','blade: to','camlann\'s torment','coronach','cyclone','dancing edge','death blossom','dragon kick','earth crusher','exenterator','freezebite','gale axe','ground strike','gust slash','king\'s justice','mordant rime','raging axe','randgrith','red lotus blade','resolution','ruinator','savage blade','shark bite','shell crusher','sidewinder','slug shot','spinning slash','steel cyclone','tachi: jinpu','tachi: kaiten','taichi: shoha','taichi: yukikaze','tornado kick','trueflight','true strike','victory smite','vidohunir' },
@@ -407,9 +374,6 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 									['earth'] = {
 										['Weak'] = 'wind',
 										['Name'] = 'Soil gorget', 
-										['Have'] = false, 
-										['Accessible'] = false,										
-										['Where'] = nil, 
 										['Ref'] = {},
 										['skillProp'] = { 'scission','gravitation' },
 										['eleWS'] = { 'aeolian edge','asuran fists','avalanche axe','blade: ei','blade: ku','blade: ten','calamity','catastrophe','crescent moon','dancing edge','entropy','eviseration','exenterator','expiacion','fast blade','hard slash','impulse drive','iron tempest','king\'s justice','leaden salute','mercy stroke','nightmare scythe','omniscience','primal rend','pyrrhic kleos','rampage','requiscat','resolution','retibution','savage blade','seraph blade','shattersoul','shining blade','sickle moon','slice','spinning axe','spinning scythe','spiral hell','stardiver','stringing pummel','sturmwind','swift blade','tachi: enpi','tachi: jinpu','tachi: rana','trueflight','viper bite','vorpal blade','wasp sting' },
@@ -417,9 +381,6 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 									['thunder'] = {
 										['Weak'] = 'earth',
 										['Name'] = 'Thunder gorget', 
-										['Have'] = false, 
-										['Accessible'] = false,										
-										['Where'] = nil, 
 										['Ref'] = {},
 										['skillProp'] = { 'impaction','fragmentation' },
 										['eleWS'] = { 'aeolian edge','apex arrow','armor break','avalanche axe','black halo','blade: chi','blade: jin','blade: kamu','blade: shun','calamity','camlann\'s torment','circle blade','combo','cyclone','death blossom','dragon kick','earth crusher','exenterator','flat blade','full swing','ground strike','heavy swing','howling fist','judgement','king\'s justice','leg sweep','mordant rime','raging axe','raging fist','raiden thrust','realmrazer','resolution','rock crusher','savage blade','seraph strike','shark bite','shield break','shining strike','shoulder tackle','sickle moon','skewer','spinning attack','spinning axe','tachi: goten','tachi: koki','tachi: shoha','thunder thrust','true strike','victory smite','vidohunir','vorpal blade','weapon break' },
@@ -427,9 +388,6 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 									['water'] = {
 										['Weak'] = 'thunder',
 										['Name'] = 'Aqua gorget', 
-										['Have'] = false, 
-										['Accessible'] = false,										
-										['Where'] = nil, 
 										['Ref'] = {},
 										['skillProp'] = { 'reverberation','distortion' },
 										['eleWS'] = { 'atonement','blade: teki','brainshaker','circle blade','cross reaper','dark harvest','entropy','quietus','death blossom','decimation','expiacion','full break','garland of bliss','gate of tartarus','geirskogul','ground strike','last stand','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','primal rend','raging rush','retribution','ruinator','shadow of death','shockwave','shoulder tackle','sidewinder','skullbreaker','slug shot','smash axe','spinning scythe','spiral hell','split shot','steel cyclone','sturmwind','sunburst','tachi: gekko','tachi: koki','vidohunir','vorpal thrust' },
@@ -437,9 +395,6 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 									['light'] = {
 										['Weak'] = 'dark',
 										['Name'] = 'Light gorget', 
-										['Have'] = false, 
-										['Accessible'] = false,										
-										['Where'] = nil, 
 										['Ref'] = {},
 										['skillProp'] = { 'transfixion','fusion','light' },
 										['eleWS'] = { 'apex arrow','arching arrow','ascetic\'s fury','atonement','blade: chi','blade: ku','blade: rin','blade: shun','blast arrow','blast shot','camlann\'s torment','decimation','detonator','double thrust','drakesbane','dulling arrow','empyreal arrow','eviseration','final heaven','flaming arrow','garland of bliss','heavy shot','hexa strike','hot shot','howling fist','insurgency','knight\'s of round','leaden salute','last stand','mandalic stab','metatron torment','mistral axe','omniscience','piercing arrow','power slash','realmrazer','raiden thrust','scourge','shijin spiral','sidewinder','skewer','slug shot','sniper shot','split shot','stardiver','tachi: enpi','tachi: goten','tachi: kasha','thunder thrust','torcleaver','victory smite','upheaval','vorpal scythe','vorpal thrust','wheeling thrust' },
@@ -447,9 +402,6 @@ gcinclude.tElemental_gear = T{	['job'] = 'NON',
 									['dark'] = {
 										['Weak'] = 'light',
 										['Name'] = 'Shadow gorget', 
-										['Have'] = false, 
-										['Accessible'] = false,										
-										['Where'] = nil, 
 										['Ref'] = {},
 										['skillProp'] = { 'compression','gravitation','darkness' },
 										['eleWS'] = { 'asuran fists','black halo','blade: ei','blade: hi','blade: kamu','blade: ku','blade: ten','catastrophe','quietus','entropy','eviseration','impulse drive','insurgency','keen edge','leaden salute','mandalic stab','mercy stroke','requiscat','rundra\'s storm','nightmare scythe','omniscience','one inch punch','penta thrust','primal rend','retribution','shattersoul','starburst','stardiver','stringing pummel','sunburst','swift blade','tachi: kasha','tachi: rana','tachi: shoha','upheaval' },
@@ -1294,237 +1246,56 @@ function gcinclude.LockUnlock(sTarget,sType,sWhich)
 end		-- gcinclude.LockUnlock
 
 --[[
-	fInitElementalGearStructure initializes the elemental gear structure
+	fCheckForEleGear determines if the player has the piece of elemental gear 
+	indicated by type and if it is accessible
 --]]
 
-function fInitElementalGearStructure()
+function gcinclude.fCheckForEleGear(sType,sElement)
 	local player = gData.GetPlayer();
-	
-	-- Job
-	gcinclude.tElemental_gear['Job'] = player.MainJob;
-
-	-- Staves
-	gcinclude.tElemental_gear['staff']['relic']['Have'] = false;
-	gcinclude.tElemental_gear['staff']['fire']['NQ']['Have'] = false;
-	gcinclude.tElemental_gear['staff']['fire']['HQ']['Have'] = false;	
-	gcinclude.tElemental_gear['staff']['ice']['NQ']['Have'] = false;
-	gcinclude.tElemental_gear['staff']['ice']['HQ']['Have'] = false;	
-	gcinclude.tElemental_gear['staff']['wind']['NQ']['Have'] = false;
-	gcinclude.tElemental_gear['staff']['wind']['HQ']['Have'] = false;	
-	gcinclude.tElemental_gear['staff']['earth']['NQ']['Have'] = false;
-	gcinclude.tElemental_gear['staff']['earth']['HQ']['Have'] = false;	
-	gcinclude.tElemental_gear['staff']['thunder']['NQ']['Have'] = false;
-	gcinclude.tElemental_gear['staff']['thunder']['HQ']['Have'] = false;	
-	gcinclude.tElemental_gear['staff']['water']['NQ']['Have'] = false;
-	gcinclude.tElemental_gear['staff']['water']['HQ']['Have'] = false;
-	gcinclude.tElemental_gear['staff']['light']['NQ']['Have'] = false;
-	gcinclude.tElemental_gear['staff']['light']['HQ']['Have'] = false;	
-	gcinclude.tElemental_gear['staff']['dark']['NQ']['Have'] = false;	
-	gcinclude.tElemental_gear['staff']['dark']['HQ']['Have'] = false;
-	
-	gcinclude.tElemental_gear['staff']['relic']['Accessible'] = false;
-	gcinclude.tElemental_gear['staff']['fire']['NQ']['Accessible'] = false;
-	gcinclude.tElemental_gear['staff']['fire']['HQ']['Accessible'] = false;
-	gcinclude.tElemental_gear['staff']['ice']['NQ']['Accessible'] = false;
-	gcinclude.tElemental_gear['staff']['ice']['HQ']['Accessible'] = false;
-	gcinclude.tElemental_gear['staff']['wind']['NQ']['Accessible'] = false;
-	gcinclude.tElemental_gear['staff']['wind']['HQ']['Accessible'] = false;
-	gcinclude.tElemental_gear['staff']['earth']['NQ']['Accessible'] = false;
-	gcinclude.tElemental_gear['staff']['earth']['HQ']['Accessible'] = false;
-	gcinclude.tElemental_gear['staff']['thunder']['NQ']['Accessible'] = false;
-	gcinclude.tElemental_gear['staff']['thunder']['HQ']['Accessible'] = false;
-	gcinclude.tElemental_gear['staff']['water']['NQ']['Accessible'] = false;
-	gcinclude.tElemental_gear['staff']['water']['HQ']['Accessible'] = false;
-	gcinclude.tElemental_gear['staff']['light']['NQ']['Accessible'] = false;
-	gcinclude.tElemental_gear['staff']['light']['HQ']['Accessible'] = false;
-	gcinclude.tElemental_gear['staff']['dark']['NQ']['Accessible'] = false;	
-	gcinclude.tElemental_gear['staff']['dark']['HQ']['Accessible'] = false;	
-	
-	gcinclude.tElemental_gear['staff']['relic']['Where'] = nil;
-	gcinclude.tElemental_gear['staff']['fire']['NQ']['Where'] = nil;
-	gcinclude.tElemental_gear['staff']['fire']['HQ']['Where'] = nil;
-	gcinclude.tElemental_gear['staff']['ice']['NQ']['Where'] = nil;
-	gcinclude.tElemental_gear['staff']['ice']['HQ']['Where'] = nil;	
-	gcinclude.tElemental_gear['staff']['wind']['NQ']['Where'] = nil;
-	gcinclude.tElemental_gear['staff']['wind']['HQ']['Where'] = nil;
-	gcinclude.tElemental_gear['staff']['earth']['NQ']['Where'] = nil;
-	gcinclude.tElemental_gear['staff']['earth']['HQ']['Where'] = nil;
-	gcinclude.tElemental_gear['staff']['thunder']['NQ']['Where'] = nil;
-	gcinclude.tElemental_gear['staff']['thunder']['HQ']['Where'] = nil;	
-	gcinclude.tElemental_gear['staff']['water']['NQ']['Where'] = nil;
-	gcinclude.tElemental_gear['staff']['water']['HQ']['Where'] = nil;
-	gcinclude.tElemental_gear['staff']['light']['NQ']['Where'] = nil;
-	gcinclude.tElemental_gear['staff']['light']['HQ']['Where'] = nil;
-	gcinclude.tElemental_gear['staff']['dark']['NQ']['Where'] = nil;
-	gcinclude.tElemental_gear['staff']['dark']['HQ']['Where'] = nil;
-	
-	gcinclude.tElemental_gear['staff']['searched'] = false;
-
-	-- Obis
-	gcinclude.tElemental_gear['obi']['fire']['Have'] = nil;
-	gcinclude.tElemental_gear['obi']['ice']['Have'] = nil;
-	gcinclude.tElemental_gear['obi']['wind']['Have'] = nil;
-	gcinclude.tElemental_gear['obi']['earth']['Have'] = nil;
-	gcinclude.tElemental_gear['obi']['thunder']['Have'] = nil;
-	gcinclude.tElemental_gear['obi']['water']['Have'] = nil;
-	gcinclude.tElemental_gear['obi']['light']['Have'] = nil;
-	gcinclude.tElemental_gear['obi']['dark']['Have'] = nil;
-
-	gcinclude.tElemental_gear['obi']['fire']['Accessible'] = nil;
-	gcinclude.tElemental_gear['obi']['ice']['Accessible'] = nil;
-	gcinclude.tElemental_gear['obi']['wind']['Accessible'] = nil;
-	gcinclude.tElemental_gear['obi']['earth']['Accessible'] = nil;
-	gcinclude.tElemental_gear['obi']['thunder']['Accessible'] = nil;
-	gcinclude.tElemental_gear['obi']['water']['Accessible'] = nil;
-	gcinclude.tElemental_gear['obi']['light']['Accessible'] = nil;
-	gcinclude.tElemental_gear['obi']['dark']['Accessible'] = nil;
-	
-	gcinclude.tElemental_gear['obi']['fire']['Where'] = nil;
-	gcinclude.tElemental_gear['obi']['ice']['Where'] = nil;
-	gcinclude.tElemental_gear['obi']['wind']['Where'] = nil;
-	gcinclude.tElemental_gear['obi']['earth']['Where'] = nil;
-	gcinclude.tElemental_gear['obi']['thunder']['Where'] = nil;
-	gcinclude.tElemental_gear['obi']['water']['Where'] = nil;
-	gcinclude.tElemental_gear['obi']['light']['Where'] = nil;
-	gcinclude.tElemental_gear['obi']['dark']['Where'] = nil;
-
-	gcinclude.tElemental_gear['obi']['searched'] = false;
-	
-	-- Gorgets
-	gcinclude.tElemental_gear['gorget']['fire']['Have'] = false;
-	gcinclude.tElemental_gear['gorget']['ice']['Have'] = false;
-	gcinclude.tElemental_gear['gorget']['wind']['Have'] = false;
-	gcinclude.tElemental_gear['gorget']['earth']['Have'] = false;
-	gcinclude.tElemental_gear['gorget']['thunder']['Have'] = false;
-	gcinclude.tElemental_gear['gorget']['water']['Have'] = false;
-	gcinclude.tElemental_gear['gorget']['light']['Have'] = false;
-	gcinclude.tElemental_gear['gorget']['dark']['Have'] = false;
-
-	gcinclude.tElemental_gear['gorget']['fire']['Accessible'] = false;
-	gcinclude.tElemental_gear['gorget']['ice']['Accessible'] = false;
-	gcinclude.tElemental_gear['gorget']['wind']['Accessible'] = false;
-	gcinclude.tElemental_gear['gorget']['earth']['Accessible'] = false;
-	gcinclude.tElemental_gear['gorget']['thunder']['Accessible'] = false;
-	gcinclude.tElemental_gear['gorget']['water']['Accessible'] = false;
-	gcinclude.tElemental_gear['gorget']['light']['Accessible'] = false;
-	gcinclude.tElemental_gear['gorget']['dark']['Accessible'] = false;
-	
-	gcinclude.tElemental_gear['gorget']['fire']['Where'] = nil;
-	gcinclude.tElemental_gear['gorget']['ice']['Where'] = nil;
-	gcinclude.tElemental_gear['gorget']['wind']['Where'] = nil;
-	gcinclude.tElemental_gear['gorget']['earth']['Where'] = nil;
-	gcinclude.tElemental_gear['gorget']['thunder']['Where'] = nil;
-	gcinclude.tElemental_gear['gorget']['water']['Where'] = nil;
-	gcinclude.tElemental_gear['gorget']['light']['Where'] = nil;
-	gcinclude.tElemental_gear['gorget']['dark']['Where'] = nil;
-	
-	gcinclude.tElemental_gear['gorget']['searched'] = false;	
-end			-- fInitElementalGearStructure
-
---[[
-	fSearchForElementalGear determines which elemental gear the player has 
-	accessible for the specified type of gear. sType indicates which type of 
-	gear will be searched and bOverride will force a search to occur even if 
-	the specified type has already been searched.
---]]
-
-function fSearchForElementalGear(sType,bOverride)
-	local inventory = AshitaCore:GetMemoryManager():GetInventory();
-	local resources = AshitaCore:GetResourceManager();
-	local player = gData.GetPlayer();
-	local tStorage = gcinclude.EQUIPABLE;
-	
-	-- Only need to do the search if the type of elemental gear has not been
-	-- searched already or bOverride is indicated
-	if bOverride == true or gcinclude.tElemental_gear[sType]['searched'] == false then
-		gcinclude.tElemental_gear['job'] = player.MainJob;	-- Make sure right job
-
-		-- Loop through the accessible storages
-		for i = 1,#tStorage,1 do
-			local containerID = tStorage[i][1];
+	local bGood,slot;
 		
-			-- Then loop through the container
-			for j = 1,inventory:GetContainerCountMax(containerID),1 do
-				local itemEntry = inventory:GetContainerItem(containerID, j);
-				if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
-					local item = resources:GetItemById(itemEntry.Id);
-					local sIN = string.lower(item.Name[1]);	
-
-					for ii,jj in pairs(gcinclude.tElemental_gear[sType]) do
-						-- Then loop through the elements (ignore other entries)
-						if string.find(gcinclude._AllElements,ii) ~= nil then
-							-- Now, depending on type, determine if the current item is elemental
-							if sType == 'staff' then
-								if sIN == string.lower(gcinclude.tElemental_gear['staff'][ii]['HQ']['Name']) then
-									gcinclude.tElemental_gear['staff'][ii]['HQ']['Have'] = true;
-									gcinclude.tElemental_gear['staff'][ii]['HQ']['Accessible'] = true;
-									gcinclude.tElemental_gear['staff'][ii]['HQ']['Where'] = tStorage[i][2];
-								elseif sIN == string.lower(gcinclude.tElemental_gear['staff'][ii]['NQ']['Name']) then
-									gcinclude.tElemental_gear['staff'][ii]['NQ']['Have'] = true;
-									gcinclude.tElemental_gear['staff'][ii]['NQ']['Accessible'] = true;
-									gcinclude.tElemental_gear['staff'][ii]['NQ']['Where'] = tStorage[i][2];
-								end	
-							else	-- 'obi' and 'gorget' have same structure, so...
-								if sIN == string.lower(gcinclude.tElemental_gear[sType][ii]['Name']) then
-									gcinclude.tElemental_gear[sType][ii]['Have'] = true;
-									gcinclude.tElemental_gear[sType][ii]['Accessible'] = true;
-									gcinclude.tElemental_gear[sType][ii]['Where'] = tStorage[i][2];
-								end
-							end
-						end				
-					end
-				end
-			end	
-		end
-		gcinclude.tElemental_gear[sType]['searched'] = true;				
-	end
-end		-- fSearchForElementalGear
-
---[[
-	CheckForEleGear determines if the player has the piece of gear indicated by type and if accessible
---]]
-
-function gcinclude.CheckForEleGear(sType,sElement)
-	local player = gData.GetPlayer();
-	
 	-- Make sure player job defined and download not transitioning
 	if player.MainJob == 'NON' then
 		return nil;
 	end
-	
-	-- Then make sure elemental gear structure initialized for the right job
-	if player.MainJob ~= gcinclude.tElemental_gear['job'] then
-		fInitElementalGearStructure();
+
+	-- Then check the level of the player vs the elemental piece of gear
+	if player.MainJobSync < gcinclude.tElemental_gear[sType]['level'] then
+		return nil;
 	end
 	
-	-- Check to see if that Type/Element needs to be searched
-	if gcinclude.tElemental_gear[sType]['searched'] == false then
-		fSearchForElementalGear(sType,true);
+	-- Now make sure the reference to the dynamic gear table is set
+	-- Remember, staves have two references and obi/gorget have one
+	if sType == 'staff' then
+		bGood,gcinclude.tElemental_gear[sType][sElement]['HQ']['Ref'] = 
+			fGearCheckItem('main',gcinclude.tElemental_gear[sType][sElement]['HQ']['Name'],false,false);
+		bGood,gcinclude.tElemental_gear[sType][sElement]['NQ']['Ref'] = 
+			fGearCheckItem('main',gcinclude.tElemental_gear[sType][sElement]['NQ']['Name'],false,false);
+	else	-- obis and gorgets have the same structure, so are combined here
+		bGood,gcinclude.tElemental_gear[sType][sElement]['Ref'] = 
+			fGearCheckItem('main',gcinclude.tElemental_gear[sType][sElement]['Name'],false,false);
 	end
-	
-	-- if for some reason the search failed, no need to process
-	if gcinclude.tElemental_gear[sType]['searched'] == true then	
-		-- For staff, check for HQ before looking at NQ
-		if sType == 'staff' then
-			if gcinclude.tElemental_gear[sType][sElement]['HQ']['Accessible'] == true then
-				return gcinclude.tElemental_gear[sType][sElement]['HQ']['Name'];
-			elseif gcinclude.tElemental_gear[sType][sElement]['NQ']['Accessible'] == true then
-				return gcinclude.tElemental_gear[sType][sElement]['NQ']['Name'];
-			else
-				return nil;
-			end
-		
-		-- Obi and Gorget have the same structure, so handle the same way
+
+	-- Since we now know that the links to the dynamic table are there, process
+	-- the reference accordingly. For staff, check for HQ before looking at NQ
+	if sType == 'staff' then
+		if gcinclude.tElemental_gear[sType][sElement]['HQ']['Ref']['accessible'] == true then
+			return gcinclude.tElemental_gear[sType][sElement]['HQ']['Name'];
+		elseif gcinclude.tElemental_gear[sType][sElement]['NQ']['Ref']['accessible'] == true then
+			return gcinclude.tElemental_gear[sType][sElement]['NQ']['Name'];
 		else
-			if gcinclude.tElemental_gear[sType][sElement]['Accessible'] == true	then
-				return gcinclude.tElemental_gear[sType][sElement]['Name'];
-			else
-				return nil;
-			end
+			return nil;
+		end
+	else
+		-- Obi and Gorget have the same structure, so handle the same way
+		if gcinclude.tElemental_gear[sType][sElement]['Ref']['accessible'] == true	then
+			return gcinclude.tElemental_gear[sType][sElement]['Name'];
+		else
+			return nil;
 		end
 	end
 	return nil;
-end		-- gcinclude.CheckForEleGear
+end		-- gcinclude.fCheckForEleGear
 
 --[[
 	fRefreshVariables is a routine that let's the player manually make sure
@@ -1774,11 +1545,8 @@ function fGearCheck(sList,bForce)
 		for i,j in pairs(gcinclude.tElemental_gear) do
 			if i == 'staff' then
 				for ii,jj in pairs(j) do
-					if ii == 'relic' then
-						bGood,jj['Ref'] = fGearCheckItem('main',jj['Name']);
-						iCnt = iCnt + 1;
-					elseif table.find({ 'fire','ice','wind','earth','thunder','water',
-										'light','dark' },ii) ~= nil then
+					if table.find({ 'fire','ice','wind','earth','thunder','water',
+									'light','dark' },ii) ~= nil then
 						bGood,jj['NQ']['Ref'] = fGearCheckItem('main',jj['NQ']['Name']);
 						bGood,jj['HQ']['Ref'] = fGearCheckItem('main',jj['HQ']['Name']);
 						iCnt = iCnt + 2;
@@ -2961,7 +2729,20 @@ function gcinclude.RegionControlDisplay()
 end		-- RegionControlDisplay
 
 function gcinclude.t1()
-
+	local name;
+	name = gcinclude.fCheckForEleGear('staff','fire');
+	if name ~= nil then
+		print('Fire staff: ' .. name);
+	else
+		print('No fire staff found');
+	end
+	name = gcinclude.fCheckForEleGear('staff','light');
+	if name ~= nil then
+		print('Light staff: ' .. name);
+	else
+		print('No light staff found');
+	end	
+--[[
 	fGearCheckList();
 	print(' ');
 	print('Staves');
@@ -2970,6 +2751,7 @@ function gcinclude.t1()
 			print(i ..'  NQ: ' .. tostring(j['NQ']['Ref']['accessible']) .. '  HQ: ' .. tostring(j['HQ']['Ref']['accessible']));
 		end
 	end
+--]]
 end		-- gcinclude.t1
 
 --[[
@@ -3625,55 +3407,63 @@ end		-- fMaxSong
 
 function gcinclude.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
 	local player = gData.GetPlayer();
-	local sRoot;
-	
-	-- Make sure the appropriate gear is searched for in the
-	-- elemental gear structure	
-	if gcinclude.tElemental_gear[sWhat]['searched'] == false then
-		fSearchForElementalGear(sWhat,true);
+	local sRoot,bGood;
+
+	-- Make sure locks won't block equipping the item
+	if sWhat == 'staff' and (gcinclude.fIsLocked('main') == true or gcinclude.fIsLocked('sub') == true) then
+		return nil;
+	elseif sWhat == 'obi' and gcinclude.fIsLocked('waist') == true then
+		return nil;
+	elseif gcinclude.fIsLocked('neck') == true then -- gorget
+		return nil;
+	end
+		
+	-- What's searched for is sometimes a "root" and other times an "as-is"
+	if string.find('Affinity,MEacc',sWhich) ~= nil then
+		sRoot = fGetRoot(sElement);	
+	elseif string.find('Summons,eleWS',sWhich) ~= nil then
+		sRoot = string.lower(sElement);
+	else
+		print(chat.header('fCheckForElementalGearByValue'):append(chat.message('Unknown field to search: ' ..sWhich)));
+		return nil;
 	end
 
-	-- If it's still false, there was a problem
-	if gcinclude.tElemental_gear[sWhat]['searched'] == true then
-		-- Make sure player is high enough level to equip the item
-		if player.MainJobSync < gcinclude.tElemental_gear[sWhat]['level'] then
-			return nil;			
-		end
+	-- Then determine which gear is the appropriate one
+	for i,j in pairs(gcinclude.tElemental_gear[sWhat]) do
+		-- Looking for elemental entries. Ignore the rest
 
-		-- And that locks won't block equipping the item
-		for i,j in pairs(gcinclude.tElemental_gear[sWhat]['slots']) do
-			if gcinclude.Locks[j][2] == true then
-				return nil;
-			end
-		end
-		
-		-- What's searched for is sometimes a "root" and other times an "as-is"
-		if string.find('Affinity,MEacc',sWhich) ~= nil then
-			sRoot = fGetRoot(sElement);	
-		elseif string.find('Summons,eleWS',sWhich) ~= nil then
-			sRoot = string.lower(sElement);
-		else
-			print(chat.header('fCheckForElementalGearByValue'):append(chat.message('Unknown field to search: ' ..sWhich)));
-			return nil;
-		end
-
-		-- Now loop through the elements looking for a match
-		for i,j in pairs(gcinclude.tElemental_gear[sWhat]) do
-			-- Looking for elemental entries. Ignore the rest
-			if string.find(gcinclude._AllElements,i) ~= nil then
-				-- Look for a match in the associated field
+		if string.find(gcinclude._AllElements,i) ~= nil then
+			-- Look for a match in the associated field			
+			if sWhat == 'staff' then
 				if table.find(gcinclude.tElemental_gear[sWhat][i][sWhich],sRoot) ~= nil then			
-					if sWhat == 'staff' then
-						if gcinclude.tElemental_gear[sWhat][i]['HQ']['Accessible'] == true then
-							return gcinclude.tElemental_gear[sWhat][i]['HQ']['Name'];
-						elseif gcinclude.tElemental_gear[sWhat][i]['NQ']['Accessible'] == true then
-							return gcinclude.tElemental_gear[sWhat][i]['NQ']['Name'];
-						end
-					else	-- True for both 'obi' and 'gorget'
-						if gcinclude.tElemental_gear[sWhat][i]['Accessible'] == true then
-							return gcinclude.tElemental_gear[sWhat][i]['Name'];
-						end
+					-- Make sure the link to the dynamic table is in place
+					bGood,gcinclude.tElemental_gear[sWhat][i]['HQ']['Ref'] = 
+						fGearCheckItem('main',gcinclude.tElemental_gear[sWhat][i]['HQ']['Name'],false,false);
+					bGood,gcinclude.tElemental_gear[sWhat][i]['NQ']['Ref'] = 
+						fGearCheckItem('main',gcinclude.tElemental_gear[sWhat][i]['NQ']['Name'],false,false);
+					-- Then determine if there's a staff that matches
+					if gcinclude.tElemental_gear[sWhat][i]['HQ']['Ref']['accessible'] == true then
+						return gcinclude.tElemental_gear[sWhat][i]['HQ']['Name'];
+					elseif gcinclude.tElemental_gear[sWhat][i]['NQ']['Ref']['accessible'] == true then
+						return gcinclude.tElemental_gear[sWhat][i]['NQ']['Name'];
+					else
+						return nil;
 					end
+				end
+			elseif sWhat == 'obi' or sWhat == 'gorget' then
+				if table.find(gcinclude.tElemental_gear[sWhat][i][sWhich],sRoot) ~= nil then
+					if sWhat == 'obi' then
+						bGood,gcinclude.tElemental_gear[sWhat][i]['Ref'] = 
+							fGearCheckItem('waist',gcinclude.tElemental_gear[sWhat][i]['Name'],false,false);
+					else
+						bGood,gcinclude.tElemental_gear[sWhat][i]['Ref'] = 
+							fGearCheckItem('neck',gcinclude.tElemental_gear[sWhat][i]['Name'],false,false);				
+					end
+				end
+				
+				-- Then determine if there's an obi or gorget that matches
+				if gcinclude.tElemental_gear[sWhat][i]['Ref']['accessible'] == true then
+					return gcinclude.tElemental_gear[sWhat][i]['Name'];
 				end
 			end
 		end
@@ -3725,15 +3515,11 @@ function gcinclude.fSwapToStave(sStave,noSave,cs)
 		end
 		
 		if sStave ~= nil then
-			-- Check versus level of player and that the slot (Main and Sub) isn't 
-			-- locked.
+			-- Check versus level of player.
 			if player.MainJobSync >= gcinclude.tElemental_gear['staff']['level'] then
-				if gcinclude.Locks[gcinclude.tElemental_gear['staff']['slots'][1]][2] == false and 
-				   gcinclude.Locks[gcinclude.tElemental_gear['staff']['slots'][2]][2] == false then
-					cs['Main'] = sStave;
-				else
-					print(chat.message('Warning: Unable to swap to a ' .. sGear .. ' due to locks!'));
-				end
+				cs['Main'] = sStave;
+			else
+				print(chat.message('Warning: Unable to swap to a ' .. sGear .. ' due to locks!'));
 			end
 		end
 	end
@@ -4342,7 +4128,7 @@ function gcinclude.CheckEleSpells(spellName,listName,sWhat)
 	for k, str in pairs(listName) do								-- search the list
 		if string.find(str,root) ~= nil then						-- if not nil then the "root" was found
 			if sWhat == gcinclude.OBI then		
-				local sGear = gcinclude.CheckForEleGear('obi',k);
+				local sGear = gcinclude.fCheckForEleGear('obi',k);
 				if sGear ~= nil then
 					pctDay,pctWeather = gcinclude.CheckObiDW(k);	-- determine if the day/weather is advantageous
 					if (pctDay + pctWeather) > 0 then
@@ -4816,7 +4602,7 @@ function gcinclude.HandleWeaponskill(bTank)
 			local bFound = false;
 			for ii,jj in pairs(gcinclude.eleWS) do
 				if string.find(jj,ws.Name) ~= nil then
-					local sGorget = gcinclude.CheckForEleGear('gorget',ii);
+					local sGorget = gcinclude.fCheckForEleGear('gorget',ii);
 					if sGorget ~= nil and bFound == false then
 						gProfile.Sets.CurrentGear['Neck'] = sGorget;
 						bFound = true;
