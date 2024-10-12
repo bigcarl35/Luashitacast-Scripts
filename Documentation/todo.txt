@@ -1,12 +1,99 @@
 To do list:
-----------
-- Consider adding inline conditional to check for a piece of gear equipped anywhere.
-  Consider searching not only the ccurrent equipment but also the pending equipment.
+----------   
+- Support explicit pre/mid sets that can be specified instead of the current iterative
+  method.
+    
+- Determine how far a pet is away from a target
+  
+Look into item.RecastDelay (is this the item's cooldown?)
+
+- Add day, time, moon phase, weather, zone (location) to display bar
+
+Change Midcast section. Instead of what we're currently doing, have it broken out by
+the type of spell (i.e., a section for each type: [Healing], ['elemental'], etc.)
+Each section has it's own set and you use inline codes for the variations:
+
+['Enhancing'] = {
+	Body = 'Blessed Bliaut//BARSPELL',
+	},
+
+So, Magic Attack Bonus would be applied with all magic attack spells including hybrid
+weapon skills. I.e., apply MAB to elemental offence spells, dots like dia and bio
+that have an initial attack damage, etc.
+
+Individual spells of the "type" would be included in each section
+Common routines included with each type: obi and elemental stave
+
+- Need list of hybrid weapon skills
+
+- Add //PETNF
+
+- recheck smn roles in gcinclude
+
+- modify equipit to check to see if the item is on cool down and to keep searching
+  for another one to equip
+
+- Problem on DRK, reference to "invisible" not defined. Think some special circumstances
+  arose with the Uggy Pendant //SPECIAL check. Try to keep an eye open for that happening
+  again. Unable to repeat.
   
 Ongoing questions
 -----------------
 - How does the client know that it should display "Downloading Data"?
-- How can I determine who controls the zone the player is in?
+- Timing issues are the bane of my existence...
+
+New since last release
+----------------------
+- Complete rebase of code. Better consistency, more efficient, more encompassing
+- Dynamic equipment table implemented and integrated. Cuts down on calls to the
+  server, helping reduce lag and stuttering especially in level capped areas.
+  - Added automatic support for the elemental staves, obis, and gorgets via the
+    /gc command.
+- Travel gear set has become the default set except when tanking is indicated,
+  TP_Tank is then the default.
+- Display bar is updated even if /GSWAP is off
+- Numerous inline conditionals added. //accessible has become obsolete, all gear's
+  accessibility is automatically checked now
+- Elemental gear swapping now based on magical affinity, summons, magical elemental
+  accuracy, and elemental weapon skill, where appropriate instead of the matching the
+  element of the spell/weaponskill. Weather and day are still considered, where 
+  appropriate.
+- Table added and integrated to handle multi-slot gear
+- Reordered midcast so that specific spell's gear are equipped last
+- Fractional sets now supported, although only used internally
+- INT set equipped when using ninjutsu
+- /gearset or /gs no longer disables /GSWAP. Instead, the set is equipped and the
+  associated slots are locked. (Note: if weapons included in gearset, regardless
+  of the /WSWAP setting, they will be equipped. This exception is true for both
+  /gearset and /equipit.)
+- Inline conditional //ACCESSIBLE is no longer needed as now all gear's accessibility
+  is checked automatically.
+- Double checked all of the weapon skills to make sure the correct stats were being
+  emphasized. (Horizon has changed more than I thought.)
+- Renamed "Travel" gear set to "Default" gear set. Got rid of "Town", "Idle_Regen",
+  "Idle_Refresh" and "Damage Taken". Gear from the first three can be added to 
+  "Default" with the appropriate inlines and the last one should be added to "TP". 
+  Got rid of gcinclude.settings.RegenGearHPP and gcinclude.settings.RefreshGearHPP. 
+  now handled with conditionals. I've removed the common debuffs above the ordered
+  priorityEngaged list. (Where it was before it had too high a priority for such
+  and incidental action.)
+- There's a timing issue that can pop up when you login or change jobs. It causes
+  all gear except what you were wearing last time you were that job to be considered
+  inaccessible. By typing /gc after the client download has completed, you force the
+  program to try again. This pretty much addresses the problem.
+- There's another timing issue. Sometimes the display bar will be missing some options
+  that are job specific. Has to do with the client communication not being complete
+  when the variables for the display bar were created. If you type /rv, the program
+  will "refresh" the "variables" and the toolbar should be the way you expect it.
+- Town set has been merged default set with conditionals added for "town" recognition.
+- Subset is now supported including the fractional aspects for accuracy and gear sets
+  in general.
+- Added BARSPELL support
+- Added Default_WPet to Summoner's job. (It's a variation on the default set when the
+  player has a summoned pet out.)
+- Linked dynamic gear structure to elemental gear structure
+- New versions of MaxSpell and MaxSong. Checks for conditions and easier to extend.
+- Switched to new version of elemental magic table. Got the code changed accordingly.
 
 Done
 ----
@@ -80,19 +167,133 @@ Done
   Accuracy set.
 - Determine how to retrieve a player's stat so that the /region can be adapted to test
   if in own territory or not.
+- Adjust /HP and /MP to consider if the increase/decrease is true under region 
+  control conditions. (No SPECIAL gear has regional conditions.)
+- Consider adding inline conditional to check for a piece of gear equipped anywhere.
+  Consider searching not only the ccurrent equipment but also the pending equipment.
+- Added unregister for packet interception event.
+- Midcast, do F after H
+- Add INT gear when damage dealing ninjutsu is performed. 
+ - Add fractionating a set. This way, instead of using a defaultWeapon, you could say
+  you just want the weapons from the ['Start_Weapons']. Look into fractionatedAccuracy
+- Add table to check for multi-slot items. If lock one, lock both
+- Issue with rings. If /acc rings then nac rings, only ring2 is released. Fixed logic
+  error in FractionalAccuracy. Only arose if you had /acc slots enabled and /nac rings
+  or ears.
+- Pre-check through command (/gearcheck) whether all gear mentioned in job/gcinclude
+  is accessible. look-up table for quick checks. Populate as it processes. Try out
+  initially on a specific gear set.
+- Need to add spell "root" list based on magical affinity. Add the manipulation
+  code to gcinclude.lua in the gcinclude.HandleMidcast function, under "H".
+- Add inline codes for: Bind, Curse, Doom (includes Bane), Paralysis, Petrify,
+  Poison, Silence, Sleep, Weakness, and Shining Ruby.
+- The default gear set is the Travel set, no longer the TP set. The exception is
+  when the job is tanking. In that case it's the TP_Tank set.
+- GSWAP being off should not inhibit the displaybar being updated 
+- Lock checking has been removed from fEquipTheGear. Lock checking was added to
+  fMoveToCurrent.
+- When using /gearswap, change from toggling GSwap to using locks. Only lock the slots 
+  loaded by the /gearswap
+- Which toolbar is displayed resets to a the default for the job/sj combo when you
+  zone. Why?
+- Subsets now are supported
+- Removed "slot" command. Kind of an unknown command and not that useful
+- Rewrote MaxSpell and MaxSong. It now checks not only levels and spell whether the
+  player knows the spell, but also does the player have enough MP and is the spell/
+  song on cool down.
+- For /maxspell or /maxsong, check to see if there's a target specified and use that.
+  If none specified, then use <t>. Check spell cd? Might have to back up one
+- Need to create a [bar] set for bar- spells. -- Maybe //BARSPELL instead, where that
+  recognizes a list of bar-ga spells. --
+  //SPELL='list' or variable for spells affected -- use subset
+- Can I determine if a spell is on cd? or item on cd? (RecastDelay * 15(?)) If so, use
+  in Maxspell.
+- Maxspell - possible, indicate two spells (max, -1)
   
-Not Doing
+ Possibly in the future
+ ---------------------- 
+- Add Event to display bar. Values: none, assault, besieged, campaign, garrison, salvage,
+  Fellow
+  
+- Add slot for equipit (explicit slot?), would be nice to detect cooldown  
+
+- Need to be able to search storage slips
+
+- Add an inline conditional to a slot name. It implies that all gear in that slot's
+  definition has that conditional applied to it. Example:
+  
+	Main//WSWAP = { list of weapons }
+	
+	or
+	
+	Neck//NIGHTTIME = { ...}
+	Neck//DAYTIME = { ... }
+	
+	or
+	
+	Head = { ... }
+	Head//TANK = { ... }
+	
+  The second example introduces the idea off having multiple lines addressing the
+  same slot. Which is process depends on the inline conditional. The third example
+  might be a way to combine TP and TP_Tank. Still not convinced implementing this
+  feature would be worth the effort.
+  
+	I think this one is doable!
+
+- Make it so you can pull a line from another set. 
+		Ex: head = { 'Lilac Corsage//TOWN','TP:head' },
+  for load the corsage if in town, else process TP's head line
+  
+  Not Doing
 ---------
 - /equipit needs //inline support. 
 	Very unlikely to be wanted since usually part of a multi-definition line. Skipping
+	
 - See if I can tell what debuff is on a bst pet. (If so, code checkinline to use info)
 	No way to tell. Instead there's a switch in the gcdisplay that shows what type of
 	"Reward" shall be use (equips appropriate chest piece). (Just upgrade either the AF
 	or Relic chestpiece to the +1 version and this complication can go away.)
+	
 - /validate [set] - checks all (or specified) set(s) to see if player owns gear and
 	is accessible, whether codes are known, whether slot names correct
 	(Support ALL). [Validate has been removed from luashitacast. At some point I'll
 	probably make it into a stand-alone addon.]
+	
 - Need to be able to search storage slips in validate. (Look to the Find addon code.)
+	Not doing since I only look in areas where accessible outside of moghouse and the
+	porter slips are not accessible unless talking to a porter moogle with your slip.
+	
 - Change ring swap in equipgear to if one found, remove from new set and move position
-  for other ring/earring if needed. (This shouldn't be necessary.)	
+  for other ring/earring if needed. (This shouldn't be necessary.)
+  
+- Add way to check that multiple of same ring or earring is valid
+	There's no way to determine if repeated items are because of a couple of inline
+	conditionals vs two of the same item. Example:
+		rings = { x//POISONED,x//PETRIFIED }
+	Does that mean you have two of ring "x" that are qualified or only one where you
+	want to match one of the two conditionals?
+	
+- Need to support a gear type: *OBI, *STAFF, *GORGET. In each case, what piece
+  of gear will be equipped is dynamically determined.
+  
+		Waist = '*OBI',
+
+	The elemental aspects will be dealt with in context. While the idea of processing
+	in situ is appealing, it gets really hard to figure out "why" the player wants
+	an elemental piece of gear. The why tends to be the driving factor. So instead of
+	listing a generic elemental reference, the code will call to equip an elemental
+	piece of gear by the context of the calling routine.
+	
+- Look for "Enchantment:" qualifier on HP/MP boosts... no, look for conditional qualifiers.
+  You might find a day (ex. Darksday: MP-15%) or some other qualifier. The table will not
+  support the qualifier, that has to be done w/an inline conditional. Maybe just carry
+  the "values" as qualified?
+  
+  First pass: assume that if the item has been equipped, the "conditional" whatever it is
+  has been met. I'm not sure I'll go beyond this first pass, although maybe I'll support
+  conditionals that currently are supported in the second pass. We'll see.
+  
+  Gear that has hidden effects will not be supported since the details are not in the
+  description.	(I'm just assuming that the conditions for the enchantment/activity
+  were met.)
