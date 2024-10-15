@@ -1,3 +1,8 @@
+This branch is a work in progress. I am rebasing my code while adding new features. Refer to the Main branch for a
+stable version or try this Karma branch if you like. The configuration script has not been updated yet. Once this
+version is complete and tested throughly, it will be merged into the main branch.
+									October 15, 2024
+	 
 # Luashitacast-Scripts
 This repository contains my Luashitacast scripts that I have tailored to work on the FFXI private server HorizonXI
 
