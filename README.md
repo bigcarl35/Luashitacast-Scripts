@@ -29,6 +29,8 @@ Turns off /GSWAP.
 **/debug**: Turns on/off displaying of all gear being equipped.  
 **/dt [P|M|B]**: Indicates type of damage to mitigate: P-Physical, M-Magical, or B-Breath.  
 **/eva**: Turns on/off equipping evasion gear.  
+**/gc**: Runs the gear check script so the server need only be queried once for all gear. You should
+do this once the "downloading data" has disappeared on the client screen.  
 **/gearset** or **/gs: name [on]** Equips specified gear set and turns off /gswap unless on specified 
     HELM|DIG|CLAM|FISH for appropriate gather set.  
     AL|BN|CL|CO|GS|LT|SM|WW for appropriate crafting set.  
@@ -37,15 +39,14 @@ Turns off /GSWAP.
 **/idle**: Turns on/off whether travel gear will equip when player idle. Only available 
 to PLD,NIN,DRK,WAR,THF,RUN,RDM.  
 **/kite**: Equips movement and evasion gear for kiting.  
-**/lock: [all|#'s|names]**: Lock equipment slot(s) so luashitacast can't change item.  
-**/unlock [all,#'s|names]**: Unlocks the specified equipment slots so luashitacast can use.  
-**/maxsong "name"**: Determines the highest level song player can perform that has either the
+**/lock: [all|#'s|names]**: Lock equipment slot(s) so luashitacast can't change item.   
+**/maxsong "name" [target]**: Determines the highest level song player can perform that has either the
 common root name (see /maxsong) or the common buff name (e.g., paeon when
 performing one of the army paeon songs.)  
-**/maxspell "name"**: Determines the highest level spell player can cast that has the common root
+**/maxspell "name" [target]**: Determines the highest level spell player can cast that has the common root
 name (e.g., Cure gets you Cure III if you're 75 and /whm.)  
 **/petfood [name]**: Equips either named petfood or determines best pet food and equips that.  
-**/slot name|position gear**: Equips the passed piece of gear and locks the equipment slot.  
+**/rv**: Refreshes the display bar variables. If you notice items missing from the display bar, do this.  
 **/tank**: Turns on/off equipping TP tank gear. Only available to: PLD,NIN,DRK,WAR,THF,RDM,RUN.  
 **/unlock: [all|#'s|names]**: Unlock equipment slot(s) so luashitacast can change item.  
 **/wsdistance [#]**: Turns on/off distance check on melee weapon skill. Also supports changing the
