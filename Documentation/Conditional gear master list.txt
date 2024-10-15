@@ -99,7 +99,7 @@ want me to add any more.
 //PET			Equip if player has a pet
 //PETF			Equip if player has pet and it is fighting
 //PETFNPF		Equip if player has pet and it is fighting but the player is not fighting
-~//PETNF		Equip if player has a pet and it is not fighting
+//PETNF		Equip if player has a pet and it is not fighting
 //PETRIFIED		Equip if player is petrified
 //PJP"job"		Equip if a player in the party is "job" (ex., BRD)
 //PJPNM"job"	Equip if a player in the party is "job" (ex., BRD), exclude current player
