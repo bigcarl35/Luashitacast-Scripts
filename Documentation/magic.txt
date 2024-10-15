@@ -1,0 +1,395 @@
+Healing Magic
+	- The higher the Healing Magic skill, the less likely that a healing magic spell
+      will be interrupted.
+	- All healing magic are light-based spells
+	- Healing spell: cures, curagas, raises, reraises, blindna, cursna, paralyna,
+	  poisona, silena, stona, and viruna.
+	  
+	Curing Magic (Cure and Curaga)
+		- All curing magic on Horizon have potency caps based on the form of the spell
+		  and the "power" calculation which is defined as follows:
+		  
+		  power = (MND*3) + VIT + (Healing Magic Skill*0.6)
+		  
+		  Spell			  low cap	low effect	  high effect
+		  -----------------------------------------------------
+		  Cure		  		100			20				 30   
+		  Cure II	  		170			75				 90
+		  Cure III    		300		   160			    190
+		  Cure IV     		460		   330			    390
+		  Cure V      		560		   570			    690
+		  Curaga	  		170			75			  	 90
+		  Curaga II	  		300		   160			    190
+		  Curaga III  		460		   330			    390
+		  Curaga IV   		560		   570			    690
+		  
+		  Pollen	  		100			24				 34
+		  Healing Breeze	460		   120				180
+		  Magic Fruit		300		   370				490
+		  Exuviation		100		 	70		 		 80
+		  
+		  - Numbers taken from the AirSkyBoat code
+		  
+		  What that means is that if the player's power is below the low cap,
+		  the cure's base heal will be the low effect. As soon as the power is 
+		  >= the low cap, cure's base heal will be the high effect. Any bonuses
+		  from day, weather, staff, and potency are then tacked on.
+		  
+		  That means that boosting your power rating by upping your MND, VIT or
+		  Healing Magic Skill only has so much effect, depending on the spell level
+		  and power caps.
+		  
+		  Light's day (matches healing magic element) and Light's weather (or 
+		  double weather) have a chance to add 10% and 10%/25% respectively. 
+		  There's approximately a 33% chance for these bonuses to proc. (Please 
+		  note that the Dark's day/weather will penalize following the same 
+		  ratios and dark weather values.) If using a Korin obi, the day/weather
+		  bonuses are guaranteed to happen.
+		  
+		  Cure potency ignores the power cap making it a very attractive trait 
+		  to boost up, but it is capped at 50%. Please note that cure potency
+		  does not affect the damage on undead, it is ignored.
+		  
+		  As to Light/Apollo staff, you get a 10% bonus cure potency. The magic
+		  affinity from the staff only applies to damaging spells, so in this
+		  case, when you're casting a cure on an undead target.
+	- Bottom line, on Horizon, healing magic is only gear dependent on cures
+	
+Enhancing Magic
+	- Enhancing Magic skill determines the potency and spell interruption rate of
+	  enhancing magic spells, although for some of the spells, potency has no effect.
+	- Barspells: 
+		- Only one elemental bar spell and one status bar spell can be applied at
+		  the same time.
+		- Single target bar spells are stronger than AoE bar spells. The single
+		  target bars spell will overwrite the AoE spell regardless of the level.
+		- Resistence gained from barspells = (Enhancing Magic Skill/5) + 40,
+		  rounded down. 
+		- Duration starts at 2 minutes 30 seconds and increases by .8 seconds per 
+		  enhancing magic skill point over 180, until a maximum of 4 minutes is 
+		  attained.
+	- Stoneskin:
+		- Prevents a certain amount of damage
+		- The amount of damage absorbed by stoneskin is calculated as follows:
+			Base = (Enhancing Magic Skill/3) + MND
+			if Base <= 80, then damage absorbed is the base value.
+			if 80 <= Base < 130, then damage absorbed is (2*Base) - 60.
+			if 130 <= Base, then damage absorved is (3 * Base) - 190.
+			Stoneskin caps at 350.
+			Gear that "enhances" stoneskin adds a 30 bonus (sub 75 gear).
+	- Phalanx:
+		- Gives the player a certain amount of damage resistance
+		- The amount of damage resistance of phalanx is calculated as follows:
+			if enhancing magic skill <= 300, (Enhancing Magic Skill/10) - 2
+			if enhancing magic skill > 300, (Enhancing Magic Skill - 300.5)/28.5 + 28
+			Damage reduction caps at 35 (500 Enhancing Magic Skill)
+	- Sneak and Invisible:
+		- Only adjustment available is gear that lengthens the duration.
+		- Duration minimum is random, but duration is capped at 5 mins. (Not sure the
+		  cap is true, I think I've seen 6 mins when wearing dream +1 gear.)
+	- Magic affinity does not affect Enhancing Magic
+	- Enhancing spells: bar/ra elemental spells, bar/ra status spells, aquaveil, 
+	  blink, stoneskin, phalanx, protect/ra spells, shell/ra spells, erase, regen, 
+	  refresh, deoderize, invisible, sneak, haste, spike spells (not dread),
+	  escape, teleport spells, warp spells, en- spells (except enlight, that's
+	  Divine Magic)
+	- Bottom line, enhancing magic has some exceeptions. Need special handling for
+	  barspells, and then break outs for certain spells.
+	  
+Elemental Magic
+	- Elemental Magic encompasses spells that fall into several subcategories:
+		- Elemental Nukes - spells that cause elemental damage to one or more targets
+		- Ancient Magic - Long cast time spells with a resistance dampening effect of
+		  the element it is weak to. (For example, Freeze lowers resistance to Fire
+		  spells.)
+		- Cumulative Magic - (out of era) - hits of the same element after application
+		  increase the damage output. Tend to have a -ja suffix
+		- Helix - (out of era) - spells that cause initial damage as well as high DoT
+		- Meteor - (out of era) - spell not associated with the eight elements, but
+		  is considered elemental. This is does not include Carbuncle's Meteor.
+		- Elemental Debuffs - Spells which reduce a single enemy attribute and 
+		  cause a minimal DoT
+	- Elemental Magic Skill determines the accuracy and spell interruption rate of all
+	  elemental magic spells. It does not affect the damage of elemental magic spells
+	  except for "meteor".
+	- Magic Damage is calculated from the following formula:
+		Damage = D x MTDR x Staff x Affinity x Resist x Resistance Rank Reduction x
+			MB x MBB x Day & Weather x MAB/MDB x TMDA x Potency Multipliers
+		- D: INT-adjusted base spell damage
+		- MTDR: Multiple Target Damage Reduction (for AoE's)
+		- Staff: Elemental Staff hidden damage bonus multiplier
+		- Affinity: Elemental affinity bonus multiplier (from staves and Magic Atk. Bonus)
+		- Resist: Reduction of spell damage due to resist states
+		- Resistance Rank Reduction: Reduction of spell damage due to resistance rank
+		- MB: Magic Burst
+		- MBB: Magic Burst Bonus
+		- Day & Weather: Day and weather multipliers including iridescence and preismatic
+		- MAB/MDB: Caster Magic Attack Bonus divided by target's Magic Defense Bonus
+		- TMDA: Target Magic Damage Adjustment (Magic Damage Taken reduction)
+		- Potency Multipliers: (possibly all out of era), e.g. Ebullience, Klimaform
+		  bonus, Goetia +2 set bonus, etc
+		- When calculating magic damage, the product is floored to the next lowest integer
+		  before going on to the next multiplier. Each term after "D" starts with a base
+		  of 1.0 and increases or decreases by caster and target's stats and attributes
+		  as well as other affects
+		D = mDMG + V + (dINT x M)
+		- V: every damage dealing spell has a base damage value, denoted by V
+		- dINT: represents the difference between the caster's INT and the target's INT
+		- M: every damage dealing spell has several INT multiplier values denoted as M
+		  for different dINT ranges. (For offensive white magic, substitute dMND.)
+		- The calculation of D is a piecewise function with the multiplier M changing
+		  at the following INT levels:
+				dINT = 0 ~ 49, dINT = 50 ~ 99, dINT = 100 ~ 199, dINT = 200 ~ 299,
+				dINT = 300 ~ 399, dINT = 400 ~ 499, dINT = 500 ~ 599, dINT > 600
+		- When determining D, the appropriate V and M values must be applied depending
+		  on the INT difference. Example: dINT = 134, V100 should be chosen for the base
+		  damage, and the M which corresponds to dINT = 100 - 199 should be chosen as
+		  the multiplier. When choosing the  V value, reduce the dINT by the amount
+		  factored into the V value to come up with the correct result (eg, 134 INT
+		  when using V100 calculation, use dINT = 134-100 = 34
+		- There's charts on: https://www.bg-wiki.com/ffxi/Magic_Damage that show the
+		  appropriate values for M and Vxx with Vcaps.
+		- With dINT < 0, damage will be reduced and potentially zero
+		- On tier 1 single target nukes, the damage increase from INT caps at dINT = 100,
+		  so more INT on gear will be wasted. Tier 2 caps and 200, 3 at 300, etc.
+		MTDR: Multi-Target Damage Reduction
+		- For single target spells, MTDR = 1.0
+		- For AoE spells with one target, MTDR = 1.0
+		- For AoE spells with T targets, 2 <= T <= 10, MTDR = 0.9 - 0.05T
+		- For AoE spells with 10 or more targets, MTDR = 0.4
+		Staff:
+		- For HQ staff with a matching element, staff = 1.15
+		- For NQ staff with a matching element, staff = 1.1
+		- For NQ staff of opposed element, staff = 0.9
+		- For HQ staff of opposed element, staff = 0.85
+		- For all other weapons, staff - 1.0
+		Affinity, also referred as "Elemental Magic Attack Bonus":
+		- (out of era)
+		- This is not the affinity you find on elemental staves
+		Resist:
+		- There are four states of resistance associated with all magical damaging spells:
+			- Unresisted: Resist = 1.0
+			- 1/2 resisted: Resist = 0.5
+			- 3/4 resisted: Resist = 0.25
+			- 7/8 resisted: Resist = 0.125
+		- Spells with multiple targets, the resist value is calculated for each target
+		  independently
+		Resistance Rank Reduction:
+		- When a monster's resistance rank to an element is 50% or lower, an additional
+		  forced resist of 50% is added onto the previous resist, calculated multiplicably.
+		Consecutive Elemental Damage Penalty:
+		- There's a penalty applied to any elemental magic spell cast on a monster within
+		  5 seconds of the same spell being cast on that monster. This is known as a
+		  "nuke wall". This causes a -20% spell damage reduction. Casting the same spell
+		  again will only do 40~50% damage. This penalty only applies on NMs and excludes
+		  elemental damage from skillchains.
+		Day & Weather:
+		- This starts with a base of 1.0 and additional values add or subtract depending
+		  on the day of the week's element, weather, and certain gear (elemental obis.)
+		- There's ~33% chance to proc the bonus/penalty due to day or weather.
+		- Day:
+			Matching day with spell proc: +0.1, opposing day: -0.1, Sorcerer's Tonbon/+1
+			and spell proc: +0.05
+		- Weather:
+			Matching weather and spell proc: +0.1, double weather: +0.25, double weather
+			and day: +0.35
+			Opposing weather and spell proc: -0.1, opposing double weather: -0.25,
+			opposing double weather and day: -0.35. 
+			Note that elemental obi of the correct element forces the effect to proc
+		Magic Burst:
+		- The magic burst multiplier is dependent on the number of weapon skills which
+		  resulted in the skill chain formation. This starts at 1.25 for a two stage chain
+		  and goes up by 0.1 for each additional stage.
+				- No Magic Burst. MB = 1.0
+				- 2-stage skillchain. MB = 1.35
+				- 3-stage skillchain.  MB = 1.45
+				- X-stage skillchain. MB = 1.25 + (0.1 x X)
+		Magic Burst Bonus:
+			MBB = 1.0 + Gear + [Atma/Atmacite] + [AMII Merits] + Traits
+			
+			- Gear: any gear with magic burst bonus
+			- Atma/Atmacite - (out of era)
+			- AMII Merits - (out of era, added ToAU), AMII merits for a specific spell
+			  beyond the first one. Level 2 AMII, 0.03. Level 3 AMII, 0.06, Level 4 AMII,
+			  0.09, Level 5 AMII, 0.12
+			- Trait: See Magic Burst Bonus for trait levels. Varies from 0.05 to 0.13
+			  depending on the trait level
+		MAB/MDB, Magic Attack Bonus/Magic Defense Bonus:
+		- Combines the effects of the caster's MAD with the target's MDB.
+			cMAB = 1 + (caster's Magic Attack Bonus / 100)
+			tMDB = 1 + (target's Magic Defence Bonus / 100)
+			
+			MAB/MDB = cMAB/tMDB
+		TDMA, Target Magic Damage Adjustment:
+		- Certain specific enemies or families of monsters have traits that cause them
+		  to take more or less magical damage on a percentage basis. Values are determined
+		  as a fraction of 256.
+		- The base value for TDMA is 1.0 and is adjusted according to the fractional
+		  values for the specific monster type or families and other buffs the target
+		  might have. The effects of Shell are included by the Magic Damage Taken term.
+		Potency Multipliers: (all out of era)	
+	- Elemental bonuses: elemental magic bonuses on equipment fall into three categories:
+		- Elemental magic skill bonus: directly adds to player's skill level
+		- Elemental casting time reduction: reduces how long it takes to cast a spell, by
+			percentage. (Gear out of era)
+		- Elemental magic recast time reduction: reduces recast time of elemental spell by
+			percentage. (Gear out of era)		
+	- Elemental spells: aeros, aerogas, blizzagas, blizzards, burn, burst, drown, firagas,
+		fires, flare, flood, quake, rasp, shock, stones, stonegas, thundagas, thunders,
+		tornado, waters, and watergas.
+	- Bottom line, on Horizon, elemental magic either is a nuke or a status damage DoT
+		
+Enfeebling Magic
+	- Enfeebling magic is a general category of spells which apply a negative status
+	  effect (debuff) to one or more targets.
+	- Enfeebling Magic Skill determines the accuracy of said spells and the spell
+	  interruption rate when cast said spells.
+	- All enfeebling spells either completely resist or stick to a target, there's no
+	  partials. The duration of a "stuck" spell is highly dependent on the accuracy of
+	  the spell relative to the target's resistance (and/or magic evasion).
+	- For enfeebling spells with variable potency, the potency is calculated from a
+	  formula that varies by spell (blind, slow, paralyze, poison).
+	  - Potency = floor(floor(base potency + dStat Modifier) x 
+					   (Enfeebling Magic Effect + Gear))
+		Duration = (base duration + (6s x RDM group 2 merit level) + RDM Enfeebling Job
+			Points) x duration on gear
+		Dia duration = (base duration + RDM enfeebling job points + (6s x RDM group 2
+			Merit Point level)) x duration listed on gear + duration listed on gear
+	- Immunobreak: (out of era)
+	- Enfeebling spells: bind, blinds, dias, diaga, dispel, gravity, paralyzes, poisons,
+	  poisonga, sleeps, sleepgas, silence, and slows.
+	  
+Divine Magic
+	- Divine magic focuses on damaging or debilitating enemies with light elemental
+	  white magic spells. Because of this, divine magic is particularly effective
+	  against monsters in the undead family. Banish spells in particular have enhanced
+	  properties when used against undead monsters.
+	  - Divine "nukes": Spells that cause immediate light elemental damage to one or
+	    more targets - banish spells, holy spells
+	  - Divine Enfeebling: Spells that are light based variants on black magic enfeebles,
+		flash (a high enmity variant of bind) and repose (a variant of sleep, out of era.)
+	  - Divine Enhancement: Currently only enlight
+	  - Divine Magic Skill determines accuracy and the spell interruption rate on divine
+	    magic. It does not affect damage at all.
+	  - The damage for "nukes" ic calculated from the magic damage formula (see elemental
+	    magic's formula.) The main caster stats that affect damage potential are MND,
+		Magic Attack Bonus, and elemental damage affinity and potency bonuses.
+	  - Divine spells: banishes, banishgas, enlight, flash, and holy.
+	  
+Dark Magic
+	- Dark magic is a category of darkness elemental black magic which focuses on
+	  absorbing from an enemy enhance the caster, including Absorb spells, drain and
+	  aspir.
+	- Dark magic skill determines accuracy, potency of some spells, and the spell
+	  interruption rate of dark magic spells. Dark magic skill does nothing for the
+	  potency of absorb spells, but does effect the accuracy and duration.
+	- Dark magic bonuses on equipment fall into one of three categories:
+		- Dark magic skill bonus: Directly adds to the player's dark magic skill
+		- Dark magic casting time reduction: reduces the cast time of dark magic
+			by a percentage
+		- Spell-specific bonuses: gear that "enhances" a particular dark magic spell
+	- Drain: steals enemy HP and absorbs into the caster's HP pool
+		- More HP than the caster has can be absorbed, but HPP only goes to 100%
+		- Potency is directly associated with the dark magic skill
+			At < 300 dark magic skill, the maximum potential potency is:
+				Dark Magic Skill +20
+			At 300 >= dark magic skill, the maximum potential potency is:
+				Dark Magic Skill x 5/8 + 132.5
+		- The minimum potency is 50% of the maximum potency, and the actual potency
+		  of the spell (when unresisted) will randomly fall anywhere between the
+		  minimum and maximum potencial potency.
+	- Aspir: steals enemy MP and absorbs into the caster's MP pool
+		- More MP than the caster has can be absorbed, but MPP only goies to 100%
+		- The potency is directly associated with the dark magic skill
+			The maximum potency < 300 is:
+				(Dark Magic Skill/3 +20) x (1 + Potency)
+			The maximum potency >= 300 is:
+				(Dark Magic Skill x 0.4) x (1 + Potency)
+		- The minimum potency is 50% of the maximum potency and the actual potency
+		  of the spell (when unresisted) will randomly fall anywhere between the
+		  minimum and maximum potency.
+	- Dark spells: absorb accuracy, absorb AGI, absorb CHR, absorb DEX, absorb INT,
+	  absorb MND, absorb STR, absorb TP, absorb VIT, aspir, bios, drain, stun and
+	  tractor
+
+Summoning Magic
+	- Summoning magic calls for an avatar to fight for the summoner, enfeeble enemies,
+	  and buff the party.
+	- Summoning Magic Skill reduces the chance of spell interruption and influences
+	  a summoner's elemental spirits.
+	- Summoning Magic Skill does many things:
+		- Decreases the wait time between when an elemental spirit is summoned and
+		  uses a spell and the time before casting another.
+		- Increases the intelligence of the AI of an Elemental Spirit. The spirit
+		  will generally cast more powerful and relevant spells more often. When the
+		  AI is good, the Light Spirit sometimes defies the spell recast timer when
+		  your HP is low.
+		- If you're over skill cap, it affect Blood Pact: Rage and Blood Pact: Ward
+			- Blood Pact: Ward - increases duration
+			- Blood Pact: Rage - Accurracy bonus and Magic Accuracy bonus based on
+			  how far over cap your summoning skill is.
+		- Summoning skill also affects certain Blood Pact skills:
+			shining ruby, glittering ruby, crimson howl, inferno howl, frost armor,
+			crystal blessing, aerial armor, hastega ii, fleet wind, hastega, earthen
+			ward, earthen armor, rolling thunder, lightening armor, soothing current,
+			ecliptic howl, noctoshield, and dream shroud.
+	- An inital MP cost is required to summon an avatar/elemental spirit into our
+	  plane of existence, as well as a perpetuation cost to sustain it. The base
+	  MP cost is based on the summoner's level.
+	- Summoning spells: carbuncle, fenrir, ifrit, titan, leviathan, garuda, shiva,
+	  ramuh, diabolos, fire spirit, ice spirit, air spirit, earth spirit, thunder
+	  spirit, water spirit, light spirit, and dark spirit.
+
+Blue Magic
+	Out of era
+
+Songs
+	- Songs are a general category available only to BRD. Unlike other types of magic,
+	  there are two components that together determine the skill value for the song's
+	  effectiveness - singing skill and instrument skill.
+	- There are two different instruments: wind and string and the type used in the
+	  calculation is whichever is currentlt equipped.
+	- While Magic Accuracy with songs is not clearly known, it depends on CHR and 
+	  the combined skill level (sing and instrument) multiplied by a scaling factor.
+	- Songs cannot be interrupted by being struck so spell interruption is not
+	  necessary when playing a song.
+	- There are two types of songs: party buffing and target debuffing songs.
+	- With an instrument, a bard can place two active buffing songs on party members.
+	- Without an instrument, a bard can only place one active buffing song on party
+	  members.
+	- Bard Song bonuses on equipment fall into several categories:
+		- Skill bonus: directly adds to player's singing, wind, or string skill
+		- Song Spellcasting Time Reduction: reduces casting time by a percentage
+		- Song Recast Delay Reduction: reduces recasting cool down by a number of
+		  seconds
+		- Song Duration Increase: increases the duration of all songs by a percentage
+		- Song-Specific bonuses: increase the potency and/or duration of a specific
+		  song
+	- Song duration equipment does affect offensive debuff durations
+	- Base duration of a party song is 120 seconds
+	- Song+ potency gear increases duration by 10% per 1 Song+
+	- All gear song effect duration bonuses are additive with the duration increase
+	  from song+ potency effects
+	- Song types: Carols, Enfeebling, Threnodies, Recovery/Misc, Status Enhancing,
+	  Status Resistence
+	
+Ninjutsu
+	- Ninjutsu is a means of casting magic that uses ninja tools instead of MP.
+	- Ninjutsu skill affects spell interruption rate, potency, and magic accuracy
+	  of ninjutsu spells.
+	- There are three types of ninjutsu spells: buffs, debuffs, and elemental-based
+	  damage.
+	- Elemental-based damage spells also lowers the resistence to the opposing
+	  element.
+	- Ninjutsu equipment bonuses falls into four categories:
+		- Ninjutsu Magic Skill Bonus - directly adds to the player's ninjutsu skill
+		- Ninjutsu Damage Enhancement - increases damage dealt by elemental ninjusu
+		  spells similar to magic attack bonus.
+		- Ninjutsu Recast Delay Reduction - reduces how long you have to wait before
+		  recasting. Similar to haste and fast cast.
+		- Ninjutsu Tool Expertise - occasionally allows the casting of a ninjutsu
+		  spell without expending the associated ninja tool
+	- Ninjutsu: Dotons, Dokumoris, Hojos, Hutons, Hyotons, Jubakus, Katons, Kurayamis,
+	  Raitons, Suitons, Tonkos, Utsusemis
+
+

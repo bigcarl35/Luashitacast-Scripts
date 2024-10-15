@@ -1,3 +1,24 @@
-- Added TallyGear structure in definition area of gcinclude.lua
-- Added function ClearTallyGear in gcinclude.lua
-- Added function WhichAccuracySet in gcinclude.lua
+10/13/14
+
+- Added *:San ninjutsu to gcinclude.TMtest, currently commented out since it's from
+  merits category 2
+
+- Renamed DefaultTarget to DefaultSpellTarget and named default target for song to 
+  DefaultSongTarget
+  
+- Changed HandleMidcast to check for bard song affinities; ninjutsu does not use
+  elemental affinities, so using elemental staves makes no difference. Magical
+  Affinity affects the magic accuracy on some bard spells, it does not affect
+  duration nor potency. This means you don't need to worry about the day's element
+  nor the weather. (Just turn WSWAP off if you don't want the staff equipped.)
+  
+- Changed HandleMidcast so that it does not equip an elemental staff when summoning
+  an avatar/spirit. HandleDefault in the job file still equips the appropriate elemental
+  staff when you have an avatar/spirit pet out.
+  
+- Fixed a bug in gcinclude.fCheckForElementalGearByValue, re: obi/gorget slot
+  association.
+
+- Switched over to using gcinclude.fCheckForElementalGearByValue to determine if the
+  weaponskill is elemental in nature and whether the player has the appropriate
+  gorget in HandleWeaponskill.

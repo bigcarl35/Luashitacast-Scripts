@@ -5,8 +5,6 @@ To do list:
     
 - Determine how far a pet is away from a target
   
-Look into item.RecastDelay (is this the item's cooldown?)
-
 - Add day, time, moon phase, weather, zone (location) to display bar
 
 Change Midcast section. Instead of what we're currently doing, have it broken out by
@@ -26,16 +24,17 @@ Common routines included with each type: obi and elemental stave
 
 - Need list of hybrid weapon skills
 
-- Add //PETNF
-
 - recheck smn roles in gcinclude
-
-- modify equipit to check to see if the item is on cool down and to keep searching
-  for another one to equip
 
 - Problem on DRK, reference to "invisible" not defined. Think some special circumstances
   arose with the Uggy Pendant //SPECIAL check. Try to keep an eye open for that happening
   again. Unable to repeat.
+  
+  Update: have repeated. Think it's an issue of the item not being correctly instantiated.
+  Reloading Luashitacast fixed the problem. I'm guessing that /GC would also resolve the
+  issue. (Oh, in this case, it was me equipping a Balmung that caused the problem.)
+
+- Y's scythe +1 dark affinity
   
 Ongoing questions
 -----------------
@@ -47,8 +46,8 @@ New since last release
 - Complete rebase of code. Better consistency, more efficient, more encompassing
 - Dynamic equipment table implemented and integrated. Cuts down on calls to the
   server, helping reduce lag and stuttering especially in level capped areas.
-  - Added automatic support for the elemental staves, obis, and gorgets via the
-    /gc command.
+- Added automatic support for the elemental staves, obis, and gorgets via the
+  /gc command.
 - Travel gear set has become the default set except when tanking is indicated,
   TP_Tank is then the default.
 - Display bar is updated even if /GSWAP is off
@@ -76,7 +75,7 @@ New since last release
   Got rid of gcinclude.settings.RegenGearHPP and gcinclude.settings.RefreshGearHPP. 
   now handled with conditionals. I've removed the common debuffs above the ordered
   priorityEngaged list. (Where it was before it had too high a priority for such
-  and incidental action.)
+  an incidental action.)
 - There's a timing issue that can pop up when you login or change jobs. It causes
   all gear except what you were wearing last time you were that job to be considered
   inaccessible. By typing /gc after the client download has completed, you force the
@@ -85,7 +84,8 @@ New since last release
   that are job specific. Has to do with the client communication not being complete
   when the variables for the display bar were created. If you type /rv, the program
   will "refresh" the "variables" and the toolbar should be the way you expect it.
-- Town set has been merged default set with conditionals added for "town" recognition.
+- Town set has been merged into default set with conditionals added for "town" 
+  recognition.
 - Subset is now supported including the fractional aspects for accuracy and gear sets
   in general.
 - Added BARSPELL support
@@ -94,6 +94,14 @@ New since last release
 - Linked dynamic gear structure to elemental gear structure
 - New versions of MaxSpell and MaxSong. Checks for conditions and easier to extend.
 - Switched to new version of elemental magic table. Got the code changed accordingly.
+
+10/13/24
+- Add "San" ninjutsu to tiered spell list, offensive spells only
+- DefaultTarget changed to DefaultSpellTarget and new  default target for songs 
+  named DefaultSongTarget
+- Added bard song affinities 
+- Removed elemental staff support when summoning an avatar/spirit. Elemental staff
+  support still exists when you have a summoned avatar/spirit pet out.
 
 Done
 ----
@@ -209,6 +217,17 @@ Done
 - Can I determine if a spell is on cd? or item on cd? (RecastDelay * 15(?)) If so, use
   in Maxspell.
 - Maxspell - possible, indicate two spells (max, -1)
+- Need conditional when player fighting but not pet
+- Add "San" ninjutsu to tiered spell list, offensive spells only
+- Renamed DefaultTarget to DefaultSpellTarget and named default target for song to 
+  DefaultSongTarget
+- Added bard song affinities 
+- Change to not use elemental staff when summoning an avatar, but rather swap
+  weapons once the pet is out.
+- Add //PETNF
+- Modified ShowIt to remove variables that were dropped and added display of the dynamic
+  gear list
+- Add /gc reminder to SetVariables function
   
  Possibly in the future
  ---------------------- 
@@ -244,6 +263,12 @@ Done
 - Make it so you can pull a line from another set. 
 		Ex: head = { 'Lilac Corsage//TOWN','TP:head' },
   for load the corsage if in town, else process TP's head line
+
+- modify equipit to check to see if the item is on cool down and to keep searching
+  for another one to equip. I know how to get the general information about an item 
+  (name, description, etc), but not how many charges are left or what is the cool 
+  down on the item. I'm guessing this is sent in a packet, maybe upon zoning. A 
+  comparison to a master clock? More investigation is needed.
   
   Not Doing
 ---------
@@ -297,3 +322,6 @@ Done
   Gear that has hidden effects will not be supported since the details are not in the
   description.	(I'm just assuming that the conditions for the enchantment/activity
   were met.)
+  
+- Need to add ninjutsu affinities. Ninjutsu does not use elemental affinity, so
+  equipping and elemental staff will have no effect

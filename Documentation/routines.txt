@@ -1,0 +1,145 @@
+Functions in gcinclude.lua:
+
+fBuffed(test) returns T/F
+	This function determines if the player has the specified buff/debuff.
+
+fCheckInline(gear,sSlot) returns T/F and gear name
+	This function processed the passed gear piece looking for inline conditionals.
+	If found it evaluates the conditional and returns trur or false depending on
+	if the conditions are found to be true. Also, the piece of gear minus the
+	conditionals are returned.
+	
+fCheckForElementalGearByValue(sWhat,sWhich,sElement) returns item name/nil
+	Search the elemental gear structure for the targetted elemental gear. The type
+	of gear is specified along with which list to search and the value to match in
+	that list.
+	
+	sWhat - staff, obi, or gorget, sWhich - field to search (Affinity,Summons on
+	staves and MEacc,eleWS on obis and gorgets), sElement - value to search for.
+	
+fCheckItemOwned(sGear,bAccessible,bOnce) returns true/false,where found
+	Determines if indicated item is owned by player. Can be further restricted to 
+	require the item to be accessible outside of the player's mog house. You can 
+	also indicate that one match is enough.
+	
+	sGear - name of item to check, bAccessible - whether item has to be accessible
+	outside of the player's mog house, bOnce - whether the search looks for all
+	matches or is the first one found sufficient.
+
+fEquipTheGear(tSet,bOverride)
+	This function determines if any slots in the passed temporary set need to be
+	cleared due to locks, multislot items, or weapon swapping not permitted (this
+	last aspect can be overriden with the bOverride). Then it equips the gear.
+
+fEquipItem(args)
+	This routine equips the "passed in item/item associated with the passed in code"
+	and locks the slot(s) where the gear was placed.
+	
+fFractionalSet(hs,sSlots)
+	This function will transfer the slots from the passed gear set into the current 
+	job temporary set that match the slots specified.
+
+fGearCheck()
+	This function walks through all the gear sets in the job file/gcinclude (excluding
+	CurrentGear) and processes the gear into a global structure. It is intended to cut
+	down on server calls when it comes to checking if a gear piece should be equipped
+	or not, hopefully relieving some of the lag.
+
+fGearCheckItem(slot,item) returns T/F, matching record
+	This function processes the specified piece of gear noting: name, level, can equip?,
+	accessibility, and description. The results are stored in gcinclude.GearDetails. 
+	Returned is whether the player can equip the piece or not.
+	
+fGetRoot(sSpellName,bVersion) returns root of spell name
+	This function takes the passed spell name and determines what the root is,
+	basically the first word in the spell name. 
+
+fGetTableByName(sName) returns gearset table
+	This function returns a table containing the named gearset, regardless if it is
+	found in the job file or the gcinclude file.
+	
+fInitElementalGearStructure()
+	Routine to reset the elemental gear structure back to unknown.
+
+fIsLocked(val) returns T/F
+	Simple check to see if the passed slot is locked
+
+fLockSlotsBySet(gs)
+	This function locks all the slots that have values in the passed set.
+
+fMaxSong(sSong,sTarget,bCast)
+	This function determines what forms of the passed in song the player can
+	cast and optionally casts the highest form of said song. It checks levels,
+	whether the player knows the song, and whether the song is on cool down.
+	
+fMaxSpell(sSpell,sTarget,bCast)
+	This function determines what forms of the passed in spell the player can 
+	cast and optionally casts to highest form of said spell. It checks for levels,
+	whether the player has enough MP, knows the spell, and whether the spell is on
+	cool down.
+
+fMoveToCurrent(tSet,tMaster,[bOverride],[bKeep]) 
+	Processes the passed gear set and populates the master gear set accordingly.
+
+fParseDescription(sName,sDesc]) returns { }
+	This function parses the passed description for the passed item name looking
+	for all HP/HPP/MP/MPP/CHPMP/CMPHP values and, if appropriate, nation control
+	setting.
+		
+fSummonerPet()
+	Determines if the player has a summoner's avatar/spirit summoned.
+	
+fSwapToStave(sStave,noSave,cs)
+	Determines if the passed stave can be equipped and if so does so.
+	
+	sStave - name of stave. noSave - indicates if old weapon should be saved,
+	cs - identifies the set the stave is added to.
+
+fWhichStat(sSpellName) returns MND/INT/nil
+	This function determines if the "root" of the passed spell has a stat
+	associated with it. Currently only INT and MND stats are supported.
+
+gcinclude.Initialize 
+	Initializes display bar, variables, and aliases
+	
+gcinclude.Unload
+	Clears aliases, unloads the packet sniffer, and unloads the
+	display bar.
+	
+Functions in gcdisplay:
+		
+Functions in job files:
+
+All
+	HandleCommand
+		processes commands local to the job before invoking the	gcinclude.HandleCommand 
+		function
+		
+	HandleDefault
+		Main controlling function that processes pet/player actions
+	
+	HandlePetAction(PetAction)
+		Handles BST pet actions
+	
+	OnLoad
+		Initializes settings, prioritization, which macro book is displayed,
+		and loads the ['Start_weapons'] gear set
+		
+	OnUnload
+		Invokes gcinclude.Unload
+	
+	SetSubjobSet
+		Sets the appropriate toolbar for the current macro book based on subjob
+		
+SMN	
+	HandlePetAction(Pet,PetAction) - handles both SMN pet actions and /BST pet 
+		actions
+	
+BST
+	profile.EquipMaxEquipableJugPet(sets.CurrentGear) returns T/F - determines
+		which jugpet to equip in the ammo slot and does so
+		
+	profile.FindJugPets() returns T/F - processes accessible inventory looking 
+		for jugs that whose min to max range contains the player's level/level 
+		sync and are equipable
+	
