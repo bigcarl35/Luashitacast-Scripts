@@ -114,7 +114,7 @@ gcinclude.Rolls = T{{'Fighter\'s Roll',5,9}, {'Monk\'s Roll',3,7}, {'Healer\'s R
 gcinclude.ExactBuff = T{'enthunder','enstone','enaero','enblizzard','enwater','enlight','endark','arcane circle','holy circle','ward circle'};
 gcinclude.Crafting_Types = 'ALC,BONE,CLOTH,COOK,GSM,LTH,BSM,WW';
 gcinclude.Gathering_Types = 'HELM,DIG,CLAM,FISH';
-gcinclude.BarSpells = T{'baraero','baraera','barblizzard','barblizzara','barfire','barfira','barstone','barstonera','barthunder','barthundra','barwater','barwatera','barblind','barblindra','barparalyze','barparalyzra','barpetrify','barpetra','barpoison','barpoisonra','barsilence','barsilencera','barsleep','barsleepra','barvirus','barvira'};
+gcinclude.BarElementSpells = T{ 'baraero','baraera','barblizzard','barblizzara','barfire','barfira','barstone','barstonera','barthunder','barthundra','barwater','barwatera' };
 
 --[[
 	The following two variables are used to store the invoked type of craft/gather type
@@ -2472,7 +2472,7 @@ function fCheckInline(gear,sSlot)
 				bGood = false;
 			end
 		elseif suCode == 'BARSPELL' then					-- Spell is a Bar- type
-			bGood = (table.find(gcinclude.BarSpells,string.lower(spell.Name)));
+			bGood = (table.find(gcinclude.BarElementSpells,string.lower(spell.Name)));
 		elseif suCode == 'BIND' then						-- Player is bound
 			bGood = fBuffed('Bind');
 		elseif suCode == 'BLIND' then						-- Player is blind
