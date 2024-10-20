@@ -1,0 +1,166 @@
+I think it's important to understand conditionals in regards to this implementation of
+Luashitacast before getting to the "nit-gritty" details. Conditionals started out as a
+way to support gear that had a conditional aspect to them like "... if your nation controls
+the area your in". Initially I created a master list for all gear that has that type of
+wording, but soon I discovered that there were conditionals that were Player defined. Things
+like "if it's nighttime" even though that phrase was not to be found on the item's description.
+Basically the player was coming up with circumstances that they wanted an item equipped that
+had nothing to do with gear descriptions. Shortly thereafter came the concept of inline
+conditionals and I had to rethink the concept all together.
+
+For awhile there were two types of conditions supported: "Block" and "Inline", but block
+has since been removed. Only "Inline" conditionals are now supported. An "Inline"
+conditional asks a question that can be answered with Yes or No. Is it night time? Is your
+subjob a ninja? Is anyone in your party a bard? etc. There's a master list of conditional
+types found below. You designate an "Inline" conditional by appending a "//" and the code
+to the piece of gear in your gear set.
+
+How about an example? This is from a BST job file:
+
+['Start_Weapons'] = {
+	Main = { 'Maneater', 'Barbaroi Axe', 'Ryl.Arc. Sword' },	-- Sword added for low level option
+    Sub  = { 'Tabarzin//SJNIN', 'War Pick//SJNIN', 'Tatami Shield' },
+    Ammo = 'S. Herbal Broth',
+},
+
+In this case the Tabarzin would be loaded in your sub gear slot if your main job is high 
+enough level and your subjob is Ninja. If the Tabarzin is too high a level, the War Pick's
+level will be checked.
+
+The other thing to note is that you can have multiple inline conditionals on one piece of
+gear (eg. Feet = 'Monsoon Kyahan//EVASION//WTH:EARTH'. Item would be quipped if the evasion
+flag is true and there's earth weather (i.e., sandstorm.) If you want to "or" the multiple
+inline conditions, enter it multiple times on separate gear (eg. 
+
+	Feet = {'Monsoon Kyahan//EVASION', 'Monsoon Kyahan//WTH:EARTH'}
+
+Of course, the above example isn't the correct check for the piece of gear, you want
+the double conditional shown above it.
+
+Here's a list of all the "Inline" conditionals currently supported. Let me know if you 
+want me to add any more.
+
+//ABSORB		Equip if an absorb spell cast
+//ACCURACY		Equip if 'Acc' enabled
+//AK:"nation"	Equip national aketon if player in their nation's city
+//ARC_CIRCLE	Equip if player has Arcane Circle buff
+//ARCHERY		Equip if Range is a Bow
+//AXE			Equip if Main is an Axe
+//BARSPELL		Equip if the spell being cast is a "bar" type spell
+//BOUND			Equip if player is bound
+//BLINDED		Equip if player blinded
+//CARBY			Equip if player has a pet and it is Carbuncle
+//CLUB			Equip if Main is a Club
+//COVER			Equip if Cover is active
+//CR:"craft"	Equip if the crafting code passed matches the master crafting setting
+//CURE			Equip if spell being cast is a cure/curaga spell
+//"day"			Equip if the day's name matches the specified day, eg. //FIRESDAY
+//CURSED			Equip if player is cursed
+//DAGGER		Equip if Main is a Dagger
+//DAYTIME		Equip if it's daytime
+//DB:BPP		Equip if debuff cycle set to BPP (blind,poison,paralyze)
+//DB:WSS		Equip if debuff cycle set to WSS (weight,slow,silence)
+//DOOMED		Equip if player is doomed or baned
+//DT_BREATH		Equip item if damage taken is set to breath
+//DT_MAGICAL	Equip item if damage taken is set to magical
+//DT_PHYSICAL	Equip item if damage taken is set to physical
+//DUSK2DAWN		Equip if it's between dusk and dawn
+//EN"spell"		Equip if player has en- spell buff
+//EVASION		Equip if 'Eva' enabled
+//FULLMOON		Equip if moon phase is full moon
+//GA:"gather"	Equip if the gathering code passed matches the master gathering setting
+//GAXE			Equip if Main is a Great Axe
+//GKATANA		Equip if Main is a Great Katana
+//GSWORD		Equip if Main is a Great Sword
+//H2H			Equip if Main is a Hand-to-Hand
+//HOLY_CIRCLE	Equip if player has Holy Circle buff
+//HORN			Equip if wind setting is true
+//HP"conditional"#	Equip if HP meets condition
+//HPP"conditional"#	Equip if HP% meets condition
+//IDLE			Equip if Idle is true (part of tanking configuration)
+~//IF:"gear"		Equip if wearing that gear in the tested slot
+~//IFC:"gear"	Equip if wearing that gear in any slot (currently wearing or building gear)
+//KATANA		Equip if Main is a Katana
+~//LVL"conditional"# Equip if player's level meets the conditional setting
+//LVLDIV#		Equip if player's level is evenly divisible by #
+//MARKSMANSHIP	Equip if Range is a Gun/Crossbow
+//MSJ			Equip if player's subjob is magical
+//MP"conditional"#	Equip if MP meets condition
+//MPP"conditional"#	Equip if MP% meets condition
+//NEWMOON		Equip if moon phase is new moon
+//NIGHTTIME		Equip if it's nighttime
+//NO_PET		Equip if the player has no pet
+//NO_SMNPET		Equip if player has no pet or pet is not a smn avatar
+//NOT_"day"		Equip if the day's name does not match the specified day, eg. //NOT_FIRESDAY
+//NOT_OWN		Equip if region not controlled by player's nation
+//NOT_WTH:"weather" Equip if theweather does not match the specified weather
+//NOT_WTH-DAY	Equip if the weather does not match the day's element
+//NOT_WSWAP	Equip if WSWAP is turned off
+//OWN			Equip if region controlled by player's nation. (Does not include cities)
+//PARALYZED		Equip if player is paralyzed
+//PARTY#		Equip based on how large party is. # is number in party
+//PET			Equip if player has a pet
+//PETF			Equip if player has pet and it is fighting
+//PETFNPF		Equip if player has pet and it is fighting but the player is not fighting
+//PETNF			Equip if player has a pet and it is not fighting
+//PETRIFIED		Equip if player is petrified
+//PJP"job"		Equip if a player in the party is "job" (ex., BRD)
+//PJPNM"job"	Equip if a player in the party is "job" (ex., BRD), exclude current player
+//POISONED 		Equip if player is poisoned
+//POLEARM		Equip if Main is a Polearm
+//SCYTHE		Equip if Main is a Scythe
+//SHINING_RUBY	Equip if player has the Shining Ruby buff
+//SILENCED		Equip if player is silenced
+//SJ"job"		Equip if player's subjob is "job" (i.e., THF, NIN, etc)
+//SLEPT			Equip if player is slept
+//SMN:"name"	Equip if the named avatar is being summoned
+//SMNPET		Equip if player has a summoner's avatar out
+//SMNPETMD		Equip if pet's element matches the day's element
+//SMNPETMW		Equip if player's pet's element matches current weather
+//SPECIAL		Equip if the special comparisons match
+//SPIRIT:ES		Equip if avatar being summoned is an elemental spirit
+//SPIRIT:EP		Equip if current pet is an elemental spirit
+//STAVE			Equip if Main is a Staff
+//STRING		Equip if wind setting is false
+//SWORD			Equip if Main is a Sword
+//TANK			Equip if Tank is toggled on
+//THROWING		Equip if Ammo is thrown
+//TOWN			Equip if in town
+//TOWN-NA		Equip national/Dukal aketon if player in their nation's city (or any capital and Jeuno)
+//TP"conditional"#	Equip if TP meets condition
+//TPP"conditional"#	Equip if TP% meets condition
+~//UNDERLVL##	Equip if player's level is under ##
+//UTSUSEMI		Equip if player has Utsusemi buff
+//WARD_CIRCLE	Equip if player has Warding Circle buff
+//WEAKENED		Equip if player is weakened
+//WSWAP			Equip if /WSWAP is on
+//WTH:"weather"	Equip if the specified weather matches the current weather
+//WTH-DAY		Equip if the weather's element matches the day's element
+~//XYZ_CHECK		Weird conditional. Equip if a party member has X's Knife equipped
+				and another has Y's Scythe equipped and Z's polearm
+
+~ not implemented yet
+
+Out of era:				
+//AUTOMATON		Equip if player's automaton is active
+//SAMBA			Equip if player has Samba buff they applied
+
+
+Examples:
+//HPP.GE.85		Equip if Total HP% >= 85%
+//MP.LT.50//MSJ	Equip if current MP < 50 and max MP > 50 and SJ is magical
+//TPP.LT.100	Equip if current TP < 100%
+//SPECIAL		Equip if the special conditions met
+
+Crafting Types: ALC,BONE,CLOTH,COOK,GSM,LTH,BSM,WW
+Conditionals: .EQ.,.GT.,.GE.,.LT.,.LE.,.NE.
+Gathering Types: HELM,DIG,CLAM,FISH
+Weather Types: CLEAR,SUNSHINE,CLOUDS,FOG,FIRE,WATER,EARTH,WIND,ICE,THUNDER,
+				LIGHT,DARK,NONE
+Days: FIRESDAY,EARTHSDAY,WATERSDAY,WINDSDAY,ICEDAY,LIGHTNINGDAY,LIGHTSDAY,
+				DARKSDAY
+Jobs: WAR,MNK,WHM,BLM,RDM,THF,PLD,DRK,BST,BRD,RNG,SAM,NIN,DRG,SMN,
+	Currently out of era: BLU,COR,PUP,DNC,SCH,GEO,RUN
+Weapon Types: ARCHERY,AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,MARKSMANSHIP,
+	POLEARM,SCYTHE,STAVE,SWORD,THROWING
+
