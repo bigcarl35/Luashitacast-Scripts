@@ -885,9 +885,8 @@ profile.sAmmo = nil;		-- BST specific. Name of ammo equipped
 local function HandlePetAction(PetAction)
 	local pet = gData.GetPet();
 	
-	-- Only gear swap if this flag is true and the pet is a summoned pet
-	if gcdisplay.GetToggle('GSwap') == false or 
-	   table.find(gcinclude.tSummonSkill,pet.Name) ~= nil then
+	-- Only gear swap if this flag is true or the pet is a summoned pet
+	if gcdisplay.GetToggle('GSwap') == false or gcinclude.fSummonerPet() == true then
 		return;
 	end
 
@@ -1096,7 +1095,7 @@ profile.HandleDefault = function()
 	-- /SMN pet's actions are not supported.
 	if pet ~= nil then
 		local sLName = string.lower(pet.Name);
-		if petAction ~= nil and (table.find(gcinclude.tSummonSkill,sLName) == nil) then
+		if petAction ~= nil and gcinclude.fSummonerPet() == false then
 			HandlePetAction(petAction);
 			return;
 		end
@@ -1174,11 +1173,9 @@ profile.HandleDefault = function()
 
 		if gcinclude.fMagicalSubJob() == true and player.MP < player.MaxMP then
 			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
-			if gcdisplay.GetToggle('WSwap') == true then
-				local sStave = gcinclude.fCheckForEleGear('staff','dark');
-				if sStave ~= nil then
-					gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);
-				end
+			local sStave = gcinclude.fCheckForEleGear('staff','dark');
+			if sStave ~= nil then
+				gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);
 			end
 		end
 	else
@@ -1188,7 +1185,7 @@ profile.HandleDefault = function()
 	end
 			
 	-- In case the pet is a summoned pet...
-	if pet ~= nil and gcdisplay.GetToggle('WSwap') == true then
+	if pet ~= nil and gcinclude.fSummonerPet() == true then
 		local sStave = gcinclude.fCheckForElementalGearByValue('staff','Summons',pet.Name);
 		if sStave ~= nil then
 			gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);

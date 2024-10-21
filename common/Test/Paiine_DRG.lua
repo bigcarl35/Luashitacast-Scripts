@@ -767,7 +767,7 @@ local function HandlePetAction(PetAction)
 	local pet = gData.GetPet();
 	
 	-- Only gear swap if this flag is true and the pet is a BST pet
-	if gcdisplay.GetToggle('GSwap') == false or table.find(gcinclude.tSummonSkill,pet.Name) ~= nil then
+	if gcdisplay.GetToggle('GSwap') == false or gcinclude.fSummonerPet() == true then
 		return;
 	end
 
@@ -973,7 +973,7 @@ profile.HandleDefault = function()
 	end
 		
 	-- In case the pet is a summoned pet...
-	if pet ~= nil and table.find(gcinclude.tSummonSkill,pet.Name) ~= nil and gcdisplay.GetToggle('WSwap') == true then
+	if gcinclude.fSummonerPet() == true then
 		local sStave = gcinclude.fCheckForElementalGearByValue('staff','Summons',pet.Name);
 		if sStave ~= nil then
 			gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);

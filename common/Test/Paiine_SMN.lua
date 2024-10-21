@@ -1165,7 +1165,7 @@ profile.HandleDefault = function()
 	-- Make sure to equip the appropriate elemental staff (if appropriate)
 	-- for the current pet
 
-	if (pet ~= nil and table.find(gcinclude.tSummonSkill,pet.Name) ~= nil) then
+	if (gcinclude.fSummonerPet() == true) then
 		local sStave = gcinclude.fCheckForElementalGearByValue('staff','Summons',pet.Name);
 		if sStave ~= nil then
 			gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);
