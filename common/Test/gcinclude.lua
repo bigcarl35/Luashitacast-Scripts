@@ -115,7 +115,7 @@ gcinclude.ExactBuff = T{'enthunder','enstone','enaero','enblizzard','enwater','e
 gcinclude.Crafting_Types = 'ALC,BONE,CLOTH,COOK,GSM,LTH,BSM,WW';
 gcinclude.Gathering_Types = 'HELM,DIG,CLAM,FISH';
 
-gcinclude.BarElementSpells = T{ 'baraero','baraera','barblizzard','barblizzara','barfire','barfira','barstone','barstonera','barthunder','barthundra','barwater','barwatera' };
+gcinclude.BarElementSpells = T{ 'baraero', 'baraera', 'barblizzard', 'barblizzara', 'barfire', 'barfira', 'barstone', 'barstonera', 'barthunder', 'barthundra', 'barwater', 'barwatera' };
 gcinclude.AbsorbDarkSpells = T{ 'absorb-agi', 'absorb-chr', 'absorb-dex', 'absorb-int', 'absorb-mnd', 'absorb-str', 'absorb-vit', 'absorb-acc', 'absorb-tp' };
 --[[
 	The following two variables are used to store the invoked type of craft/gather type
@@ -181,6 +181,22 @@ gcinclude.tWeekDayElement = T{
 	['Darksday'] =     { ['strong'] = 'dark',    ['weak'] = 'light' }
 };
 
+-- define coded lists
+gcinclude.DaysOfTheWeek = { 
+	'FIRESDAY', 'EARTHSDAY', 'WATERSDAY', 'WINDSDAY', 'ICEDAY', 'LIGHTNINGDAY', 
+	'LIGHTSDAY', 'DARKSDAY' 
+};
+gcinclude.NotDaysOfTheWeek = { 
+	'NOT_FIRESDAY', 'NOT_EARTHSDAY', 'NOT_WATERSDAY', 'NOT_WINDSDAY', 'NOT_ICEDAY', 
+	'NORT_LIGHTNINGDAY', 'NOT_LIGHTSDAY', 'NOT_DARKSDAY' 
+};
+							   
+-- define valid codes for weapon types
+gcinclude.tWeapontypeMelee = { 
+	'AXE', 'GAXE', 'SWORD', 'GSWORD', 'SCYTHE', 'STAVE', 'CLUB', 'H2H', 'DAGGER', 
+	'KATANA', 'GKATANA', 'POLEARM' 
+};
+gcinclude.tWeapontypeRange = { 'ARCHERY', 'MARKSMANSHIP', 'THROWING' };
 -- define constants for DT so typos aren't made
 gcinclude.OFF = 'Off';
 gcinclude.PHY = 'Physical';
@@ -192,7 +208,7 @@ gcinclude.HORN = 'Horn';
 gcinclude.STRING = 'String';
 
 -- Define job list that can tank
-gcinclude._TankJobList = 'PLD,NIN,RUN,DRK,WAR,BLU';
+gcinclude._TankJobList = 'PLD,NIN,RUN,DRK,WAR,THF,RDM,BLU';
 
 -- Define constants dealing with magic gear and jobs
 gcinclude.ELEMENT = 'ele';
@@ -427,18 +443,8 @@ gcinclude.tElemental_gear = T{
 -- Listed below are all the spells that are affected by INT or MND
 gcinclude.tStatMagic = T{
 	['int'] = {'INT','aero,aeroga,bind,blaze,blind,blizzaga,blizzard,burst,dread,firaga,fire,flare,flood,freeze,ice,quake,shock,stone,stonega,thundaga,thunder,tornado,water,waterga,katon,hyoton,huton,doton,raiton,suiton'},
-	['mnd'] = {'MND','banish,distract,frazzle,paralyze,slow,cure,curaga,cura'},
+	['mnd'] = {'MND','banish,distract,frazzle,silence,paralyze,slow,cure,curaga,cura'},
 };
-
--- List of summons
-gcinclude.tSummonSkill = { 
-	'carbuncle','fenrir','ifrit','titan','leviathan','garuda','shiva','ramuh',
-	'diabolos','fire','firespirit','fire spirit','ice','icespirit','ice spirit',
-	'air','airspirit','air spirit','earth','earthspirit','earth spirit','thunder',
-	'thunderspirit','thunder spirit','water','waterspirit','water spirit','light',
-	'lightspirit','light spirit','dark','darkspirit','dark spirit','cait','caitsith',
-	'cait sith','siren','atomos','alexander','odin'
-	};
 
 -- The following lists all "base" songs that are elemental in nature and can affect Elemental Damage 
 -- by the day/weather
@@ -997,8 +1003,7 @@ end);
 function gcinclude.fSummonerPet()
 	local pet = gData.GetPet();
 	
-	return(pet ~= nil and 
-		table.find(gcinclude.tSummonSkill,string.lower(pet.Name)) ~= nil);
+	return (pet ~= nil and fElementByPetName(pet.Name) ~= nil);
 end
 
 --[[
@@ -1044,7 +1049,7 @@ function DB_ShowIt()
 	print(chat.message('WSdistance: ' .. tostring(gcinclude.settings.WSdistance)));
 	print(chat.message('bWSOverride: ' .. tostring(gcinclude.settings.bWSOverride)));
 	print(chat.message(' '));
-	fGearCheckList();
+	GearCheckList();
 end		-- DB_ShowIt
 	
 --[[
@@ -1578,11 +1583,12 @@ function GearCheck(sList,bForce)
 end		-- GearCheck
 
 --[[
-	fGearCheckList will list out the details of the dynamic table.
+	GearCheckList will list out the details of the dynamic table.
 --]]
 
-function fGearCheckList()
-
+function GearCheckList()
+	local sMsg;
+	
 	for i,j in pairs(gcinclude.GearDetails) do
 		print(chat.message('Slot: ' .. i));
 		for ii,jj in pairs(j) do
@@ -1591,18 +1597,25 @@ function fGearCheckList()
 					print(chat.message('   ' .. ii));
 				end
 			end
+			sMsg = nil;
 			if type(jj) == 'table' then 
 				for iii,jjj in pairs(jj) do
 					if iii ~= 'desc' then
-						print(chat.message('      ' .. iii .. ': '.. tostring(jjj)));
+						if sMsg == nil then
+							sMsg = iii .. ': '.. tostring(jjj);
+						else
+							sMsg = sMsg .. ', ' .. iii .. ': '.. tostring(jjj);
+						end
 					end
+				end
+				if sMsg ~= nil then
+					print(chat.message('   ' .. sMsg));
 				end
 				print(chat.message(' '));
 			end
 		end
-	end
-	
-end
+	end	
+end		-- GearCheckList
 
 --[[
 	fIsPetNamed determines if that passed pet has the passed name
@@ -2076,11 +2089,11 @@ function fMakeCodeTable(sList)
 end		-- fMakeCodeTable
 
 --[[
-	ValidInlineCode checks that the formatting of the dynamic code is correct.
+	fValidInlineDynamicCode checks that the formatting of the dynamic code is correct.
 	Returned is True or False and the individual pieces
 --]]
 
-function ValidInlineDynamicCode(suCode)
+function fValidInlineDynamicCode(suCode)
 	local bPct = false;
 	local iOff = 0;	
 	local sOperator,sRoot,ival;
@@ -2108,14 +2121,14 @@ function ValidInlineDynamicCode(suCode)
 	else
 		return false;
 	end
-end		-- ValidInlineCode
+end		-- fValidInlineCode
 
 --[[
-	EvalCodedComparison parses the passed conditional is true or not. Result is
-	passed back
+	fEvalCodedComparison parses the passed conditional and determines if it is 
+	true or not. Result is passed back
 --]]
 
-function EvalCodedComparison(sRoot,sOperator,ival,sGear)
+function fEvalCodedComparison(sRoot,sOperator,ival,sGear)
 	local player = gData.GetPlayer();
 	local bGood = false;
 	
@@ -2187,19 +2200,23 @@ function EvalCodedComparison(sRoot,sOperator,ival,sGear)
 		end
 	end
 	return bGood;
-end		-- EvalCodedComparison
+end		-- fEvalCodedComparison
 
 --[[
-	ValidSpecial sees if the passed gear's settings are valid. Returned is True
+	fValidSpecial sees if the passed gear's settings are valid. Returned is True
 	or False.
 --]]
 
-function gcinclude.ValidateSpecial(sSlot,sGear)
+function fValidateSpecial(sSlot,sGear)
 	local player = gData.GetPlayer();
 	local rec = {};
 	local gear;
 	local bGood = false;
 	
+	if sSlot == nil then
+		return false;
+	end
+
 	if sGear == nil then
 		return false;
 	end
@@ -2215,8 +2232,8 @@ function gcinclude.ValidateSpecial(sSlot,sGear)
 
 	-- Do specific calculations based on the name of the piece of gear
 	if sGear == 'uggalepih pendant' then
-		-- Condition: MP% < 51. MAB bonus. Only visible gear, ignore all "Convert HP to MP"
-		-- Check outright first	
+		-- Condition: MP% < 51. MAB bonus. Only visible gear, ignore all 
+		-- "Convert HP to MP" check outright first	
 		if (player.MPP < 51) then
 			return true;
 		else
@@ -2253,10 +2270,10 @@ function gcinclude.ValidateSpecial(sSlot,sGear)
 			end
 		end
 	else
-		print(chat.header('ValidateSpecial'):append(chat.message('Warning: No special code exists for ' .. gear .. '. Ignoring piece.')));		
+		print(chat.header('fValidateSpecial'):append(chat.message('Warning: No special code exists for ' .. gear .. '. Ignoring piece.')));		
 	end
 	return bGood;
-end		-- ValidateSpecial
+end		-- fValidateSpecial
 
 --[[
 	fBuffed determines if the player has the buff/debuff or not. Returned is True/False.
@@ -2280,26 +2297,10 @@ function fBuffed(test)
 end
 
 --[[
-	CheckForGear determines if the passed gear is already equipped/will be
-	equipped from the temporary set.
---]]
-
-function CheckForGear(sGear,sSlot)
-	local curGear = gData.GetEquipment();
-	
-	if sGear == nil or sSlot == nil then
-		return false;
-	end
-
-	--	Needs fleshing out
-	return false;
-end		-- CheckForGear
-
---[[
-	fCheckItemOwned determines if the specified piece of gear is owned by the
-	player. bAccessible further restricts the search to containers that are
-	accessible when outside of your mog house. bOnce indicates if the item
-	only has to be found once before returning a result.
+	fCheckItemOwned determines if the specified piece of gear is owned by 
+	the player. bAccessible further restricts the search to containers 
+	that are accessible when outside of your mog house. bOnce indicates 
+	if the item only has to be found once before returning a result.
 	
 	Please note: currently searching storage slips are not supported
 --]]
@@ -2385,8 +2386,6 @@ function fCheckInline(gear,sSlot)
 	local environ = gData.GetEnvironment();
 	local timestamp = gData.GetTimestamp();
 	local gSet = gData.GetCurrentSet();
-	local wTypesM = 'AXE,GAXE,SWORD,GSWORD,SCYTHE,STAVE,CLUB,H2H,DAGGER,KATANA,GKATANA,POLEARM';
-	local wTypesR = 'ARCHERY,MARKSMANSHIP,THROWING';
 	local iPos,ii,suCode;
 	local sj = player.SubJob;
 	local suCodeTbl = { };
@@ -2406,15 +2405,15 @@ function fCheckInline(gear,sSlot)
 	suCodeTbl = fMakeCodeTable(string.upper(string.sub(gear,iPos,-1)));
 
 	for ii,suCode in pairs(suCodeTbl) do
-		if string.find('FIRESDAY,EARTHSDAY,WATERSDAY,WINDSDAY,ICEDAY,LIGHTNINGDAY,LIGHTSDAY,DARKSDAY',suCode) ~= nil then
+		if table.find(gcinclude.DaysOfTheWeek,suCode) ~= nil then
 			bGood = (suCode == string.upper(environ.Day));					-- Is it the specified day
-		elseif string.find('NOT_FIRESDAY,NOT_EARTHSDAY,NOT_WATERSDAY,NOT_WINDSDAY,NOT_ICEDAY,NOT_LIGHTNINGDAY,NOT_LIGHTSDAY,NOT_DARKSDAY',suCode) ~= nil then
+		elseif table.find(gcinclude.NotDaysOfTheWeek,suCode) ~= nil then
 			bGood = (string.sub(suCode,5,-1) ~= string.upper(environ.Day));	-- Is it not the specified day
 		elseif table.find(gcinclude.ExactBuff,string.lower(suCode)) ~= nil then		-- en spells
 			bGood = (gData.GetBuffCount(suCode) >= 1);
-		elseif string.find(wTypesM,suCode) ~= nil then						-- Is main weapon specified type
+		elseif table.find(gcinclude.tWeapontypeMelee,suCode) ~= nil then						-- Is main weapon specified type
 			bGood = (gSet['Main'] ~= nil and table.find(gProfile.WeaponType[suCode],gSet['Main']) ~= nil);
-		elseif string.find(wTypesR,suCode) ~= nil then						-- Is ranged weapon specified type
+		elseif table.find(gcinclude.tWeapontypeRange,suCode) ~= nil then						-- Is ranged weapon specified type
 			bGood = (gSet['Range'] ~= nil and table.find(gProfile.WeaponType[suCode],gSet['Range']) ~= nil);
 		elseif suCode == 'ABSORB' then										-- Spell is an Absorb- type
 			bGood = (table.find(gcinclude.AbsorbDarkSpells,string.lower(spell.Name)));
@@ -2424,26 +2423,8 @@ function fCheckInline(gear,sSlot)
 			else	-- Invalid inline for a subset
 				bGood = false;
 			end
-		elseif string.sub(suCode,1,3) == 'AK:' then			-- National Aketon
-			local pNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation();
-			local sWhich = string.sub(suCode,4,-1);
-			if sWhich == 'WINDY' then
-				bGood = (environ.Area ~= nil and gcinclude.Windy:contains(environ.Area) and pNation == 2);
-			elseif sWhich == 'SANDY' then
-				bGood = (environ.Area ~= nil and gcinclude.Sandy:contains(environ.Area) and pNation == 0);
-			elseif sWhich == 'BASTOK' then
-				bGood = (environ.Area ~= nil and gcinclude.Bastok:contains(environ.Area) and pNation == 1);
-			elseif sWhich == 'OMNI' then
-				bGood = (environ.Area ~= nil and 
-						(gcinclude.Windy:contains(environ.Area) or
-						 gcinclude.Sandy:contains(environ.Area) or 
-						 gcinclude.Bastok:contains(environ.Area) or 
-						 gcinclude.Jeuno:contains(environ.Area)));
-			else
-				bGood = false;
-			end
 		elseif suCode == 'BARSPELL' then					-- Spell is a Bar- type
-			bGood = (table.find(gcinclude.BarElementSpells,string.lower(spell.Name)));
+			bGood = (table.find(gcinclude.BarElementSpells,string.lower(spell.Name)) ~= nil);
 		elseif suCode == 'BOUND' then						-- Player is bound
 			bGood = fBuffed('Bind');
 		elseif suCode == 'BLINDED' then						-- Player is blind
@@ -2485,12 +2466,14 @@ function fCheckInline(gear,sSlot)
 				bGood = false;
 			end	
 		elseif suCode == 'IDLE' then
-			if string.find('PLD,NIN,RUN,DRK,WAR,THF,RDM,BLU',player.MainJob) ~= nil then
+			if string.find(gcinclude._TankJobList,player.MainJob) ~= nil then
 				bGood = gcdisplay.GetToggle('Idle');
 			else
 				bGood = false;
 			end
 		elseif string.find(suCode,'IF:') then
+			-- Currently only tests the piece currently equipped. I probably
+			-- should check the temporary set too at some point.
 			if sSlot ~= 'subset' then
 				local sCur = gData.GetEquipSlot(sSlot);
 				local sItem = string.sub(suCode,4,-1);
@@ -2498,13 +2481,8 @@ function fCheckInline(gear,sSlot)
 			else	-- Invalid inline for a subset
 				bGood = false;
 			end		
-		elseif string.find(suCode,'IFC:') then
-			if sSlot ~= 'subset' then
-				local sOtherGear = string.sub(suCode,5,-1);
-				bGood = (CheckForGear(sOtherGear,sSlot));
-			else	-- Invalid inline for a subset
-				bGood = false;
-			end			
+--		elseif string.find(suCode,'IFC:') then
+--			Needs to be implemented			
 		elseif string.find(suCode,'LVLDIV') then			-- Player's level divisable by #
 			local iDiv = tonumber(string.sub(suCode,7,-1));
 			if iDiv > 0 then
@@ -2512,6 +2490,8 @@ function fCheckInline(gear,sSlot)
 			else
 				bGood = false;
 			end
+--		elseif string.find(suCode,'LVL') then
+--			Needs to be implemented		
 		elseif suCode == 'MSJ' then							-- Magical subjob
 			bGood = (string.find(gcinclude._sMagicJobs,sj) ~= nil);
 		elseif suCode == 'NEWMOON' then						-- Moon phase: New Moon
@@ -2535,7 +2515,7 @@ function fCheckInline(gear,sSlot)
 			bGood = (gcdisplay.GetCycle('Region') == 'Owned');
 		elseif suCode == 'PARALYZED' then					-- Player is paralyzed
 			bGood = fBuffed('Paralysis');
-		elseif string.sub(suCode,1,5) == 'PARTY' then	-- is player in a party/alliance
+		elseif string.sub(suCode,1,5) == 'PARTY' then		-- is player in a party/alliance
 			if suCode == 'PARTY' then
 				bGood = (party.InParty == true);
 			else
@@ -2591,7 +2571,7 @@ function fCheckInline(gear,sSlot)
 			end			
 		elseif suCode == 'SPECIAL' then
 			if sSlot ~= 'subset' then
-				bGood = gcinclude.ValidateSpecial(sSlot,sGear);
+				bGood = fValidateSpecial(sSlot,sGear);
 			else	-- Invalid inline for a subset
 				bGood = false;
 			end		
@@ -2606,9 +2586,17 @@ function fCheckInline(gear,sSlot)
 				bGood = false;
 			end
 		elseif suCode == 'TANK' then
-			bGood = (gcdisplay.GetToggle('Tank') == true);
+			if string.find(gcinclude._TankJobList,player.MainJob) ~= nil then
+				bGood = (gcdisplay.GetToggle('Tank') == true);
+			else
+				bGood = false;
+			end
 		elseif suCode == 'TH' then
-			bGood = (gcdisplay.GetToggle('TH') == true);
+			if player.MainJob == 'THF' then
+				bGood = (gcdisplay.GetToggle('TH') == true);
+			else
+				bGood = false;
+			end
 		elseif suCode == 'TOWN' then
 			-- Equip if in town	
 			bGood = (environ.Area ~= nil and table.find(gcinclude.Towns,environ.Area) ~= nil);
@@ -2633,9 +2621,9 @@ function fCheckInline(gear,sSlot)
 			end						 
 		elseif string.find('TP.,TPP,MP.,MPP,HP.,HPP',string.sub(suCode,1,3)) ~= nil then
 			local sRoot,sOperator,ival;
-			bGood,sRoot,sOperator,ival = ValidInlineDynamicCode(suCode);		
+			bGood,sRoot,sOperator,ival = fValidInlineDynamicCode(suCode);		
 			if bGood == true then
-				bGood = EvalCodedComparison(sRoot,sOperator,ival,sGear);
+				bGood = fEvalCodedComparison(sRoot,sOperator,ival,sGear);
 			else
 				bGood = false;
 			end
@@ -2650,6 +2638,8 @@ function fCheckInline(gear,sSlot)
 		elseif suCode == 'WTH-DAY' then						-- Weather matches day's element
 			local sEle = string.upper(environ.DayElement) .. ',NONE';
 			bGood = (string.find(sEle,string.upper(environ.WeatherElement)) ~= nil);
+--		elseif string.find(suCode,'XYZ_CHECK') then
+--			Needs to be implemented		
 		else
 			print(chat.header('fCheckInline'):append(chat.message('Warning: Unknown code = ' .. suCode .. '. Ignoring piece of gear.')));
 			bGood = false;
@@ -3710,12 +3700,12 @@ function gcinclude.HandleCommands(args)
 		toggle = 'Evasion';
 		status = gcdisplay.GetToggle('Eva');
 	elseif (args[1] == 'wswap') then		-- Turns on/off whether weapon swapping is permitted
-		if player.MainJob ~= 'SMN' then
+		if gcinclude.settings.bWSOverride == false then
 			gcdisplay.AdvanceToggle('WSwap');
 			toggle = 'Weapon Swap';
 			status = gcdisplay.GetToggle('WSwap');
 		else
-			print(chat.header('HandleCommands'):append(chat.message('Error: Weapon swapping always enabled on summoners. Ignoring command')))
+			print(chat.header('HandleCommands'):append(chat.message('Error: Weapon swapping always enabled on ' .. player.MainJob .. '. Ignoring command')))
 		end		
 	elseif (args[1] == 'sbp') then			-- Turns on/off whether the blood pact message is shown
 		if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
@@ -3821,7 +3811,7 @@ function gcinclude.HandleCommands(args)
 		else
 			gcdisplay.SetSlots('acc',gcinclude.AccNumeric);
 		end
-	elseif (args[1] == 'rc') then					-- Display region controls
+	elseif (args[1] == 'rc') then							-- Display region controls
 		RegionControlDisplay();
 	elseif (args[1] == 'rv') then
 		RefreshVariables();
@@ -4261,13 +4251,13 @@ function fMidcastSinging()
 end
 
 --[[
-	fMidcastHealingMagic handles all of the equipment management when a healing spell
+	MidcastHealingMagic handles all of the equipment management when a healing spell
 	is cast. There are three types of spells handled in 'healing magic': cures to
 	heal players hit points, debuffs to remove status effects on players, and offensive
 	cures to do damage to undead monsters. Each type is handled here.
 --]]
 
-function fMidcastHealingMagic()
+function MidcastHealingMagic()
 	local ti = gData.GetTargetIndex();
 	local target = gData.GetEntity(ti);
 	local spell = gData.GetAction();
@@ -4325,10 +4315,10 @@ function fMidcastHealingMagic()
 			gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
 		end
 	end
-end
+end		-- MidcastHealingMagic
 
 --[[
-	fMidcastDarkMagic handles all of the equipment management when a dark spell
+	MidcastDarkMagic handles all of the equipment management when a dark spell
 	is cast. Dark spells are dependent on the level of the dark spell magic. Most 
 	dark spells extract a "strength" from the target and gives it to the player.
 	The exception is bio/ii (which is a dot and lowers the target's attack), 
@@ -4338,7 +4328,7 @@ end
 	Dark=Macc=2xINT
 --]]
 
-function fMidcastDarkMagic()
+function MidcastDarkMagic()
 	local spell = gData.GetAction();
 	local root,pDay,pWeather,sGear;
 	local bTank;
@@ -4388,15 +4378,16 @@ function fMidcastDarkMagic()
 			gcinclude.MoveToCurrent(gProfile.Sets.DarkMagic,gProfile.Sets.CurrentGear);
 		end
 	end
-end
+end		-- MidcastDarkMagic
 
 --[[
-	fMidcastDivineMagic handles all of the equipment management when a divine spell
+	MidcastDivineMagic handles all of the equipment management when a divine spell
 	is cast. Divine Magic is highly dependent on the level of the divine magic skill
-	and MND.
+	and MND. This routine handles three types of divine magic: offensive "nukes",
+	Enfeebling, and Enhancing.
 --]]
 
-function fMidcastDivineMagic()
+function MidcastDivineMagic()
 	local spell = gData.GetAction();
 	local root,pDay,pWeather,sGear;
 	local bTank;
@@ -4406,35 +4397,54 @@ function fMidcastDivineMagic()
 		bTank = false;
 	end
 	
-	if bTank == true then
-		gcinclude.MoveToCurrent(gProfile.Sets.Tank_DivineMagic,gProfile.Sets.CurrentGear);
-	else
-		gcinclude.MoveToCurrent(gProfile.Sets.DivineMagic,gProfile.Sets.CurrentGear);
-	end
-
-	-- Check for an elemental obi. First determine if a bonus is possible 
-	-- based on day's element and/or weather
-	pDay,pWeather = fCheckObiDW('light');
-	if pDay + pWeather > 0 then
-		sGear = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
-		if sGear ~= nil then
-			gProfile.Sets.CurrentGear['Waist'] = sGear;
-		end
-	end	
+	root = fGetRoot(spell.Name);
 	
-	-- And an elemental staff, for the affinity
+	if table.find({'banish','banishga','holy'},root) ~= nil then
+		-- Offensive Divine
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_OffensiveDivine,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.OffensiveDivine,gProfile.Sets.CurrentGear);
+		end
+		
+		-- Check for an elemental obi. First determine if a bonus is possible 
+		-- based on day's element and/or weather
+		pDay,pWeather = fCheckObiDW('light');
+		if pDay + pWeather > 0 then
+			sGear = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+			if sGear ~= nil then
+				gProfile.Sets.CurrentGear['Waist'] = sGear;
+			end
+		end	
+	elseif table.find({'flash','repose'},root) ~= nil then
+		-- Enfeebling Divine
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnfeebleDivine,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.EnfeebleDivine,gProfile.Sets.CurrentGear);
+		end
+	else
+		-- Enhancing Divine
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnhanceDivine,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.EnhanceDivine,gProfile.Sets.CurrentGear);
+		end
+	end
+	
+	-- And see if an elemental staff would be useful, for the affinity
 	sGear = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
 	if sGear ~= nil then
 		gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
 	end			
-end
+end		-- MidcastDivineMagic
 
 --[[
-	fMidcastEnfeeblingMagic handles all of the equipment management when a enfeeble
+	MidcastEnfeeblingMagic handles all of the equipment management when a enfeeble
 	spell is cast.
 --]]
 
-function fMidcastEnfeeblingMagic()
+function MidcastEnfeeblingMagic()
 end
 
 --[[

@@ -42,7 +42,6 @@ want me to add any more.
 
 //ABSORB		Equip if an absorb spell cast
 //ACCURACY		Equip if 'Acc' enabled
-//AK:"nation"	Equip national aketon if player in their nation's city
 //ARC_CIRCLE	Equip if player has Arcane Circle buff
 //ARCHERY		Equip if Range is a Bow
 //AXE			Equip if Main is an Axe
@@ -78,7 +77,7 @@ want me to add any more.
 //HP"conditional"#	Equip if HP meets condition
 //HPP"conditional"#	Equip if HP% meets condition
 //IDLE			Equip if Idle is true (part of tanking configuration)
-~//IF:"gear"		Equip if wearing that gear in the tested slot
+//IF:"gear"		Equip if wearing that gear in the tested slot
 ~//IFC:"gear"	Equip if wearing that gear in any slot (currently wearing or building gear)
 //KATANA		Equip if Main is a Katana
 ~//LVL"conditional"# Equip if player's level meets the conditional setting
@@ -126,10 +125,9 @@ want me to add any more.
 //TANK			Equip if Tank is toggled on
 //THROWING		Equip if Ammo is thrown
 //TOWN			Equip if in town
-//TOWN-NA		Equip national/Dukal aketon if player in their nation's city (or any capital and Jeuno)
+//TOWN-AK		Equip ducal aketon or national aketon if in the appropriate town
 //TP"conditional"#	Equip if TP meets condition
 //TPP"conditional"#	Equip if TP% meets condition
-~//UNDERLVL##	Equip if player's level is under ##
 //UTSUSEMI		Equip if player has Utsusemi buff
 //WARD_CIRCLE	Equip if player has Warding Circle buff
 //WEAKENED		Equip if player is weakened
