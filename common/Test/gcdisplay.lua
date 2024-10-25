@@ -35,7 +35,7 @@ local fontSettings = T{
 	font_family = 'Arial',
 	font_height = 14,
 	color = 0xFFFFFFFF,
-	position_x = 300,
+	position_x = 250, --300,
 	position_y = 0,
 	background = T{
 		visible = true,
@@ -332,6 +332,10 @@ function gcdisplay.Initialize()
 		else
 			display = display .. ' | Locks: ' .. '|cFFFF0000|' .. Locks .. '|r';
 		end
+
+		local env = gData.GetEnvironment();
+		display = display .. string.format(' | %s | %.2f | %d%% %s | %s ',
+			env.Day,env.Time,env.MoonPercent,env.MoonPhase,env.RawWeather);
 		
 		gcdisplay.FontObject.text = display;
 	end);

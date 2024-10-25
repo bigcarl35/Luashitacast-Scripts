@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the DRK job.
 
-	Gear Sets last updated: September 15, 2024	
-	Code update: September 28, 2024	
+	Gear Sets last updated: October 21, 2024	
+	Code update: October 21, 2024	
 --]]
 
 local sets = {
@@ -53,7 +53,20 @@ local sets = {
 		- Souleater Recast merits now decrease it's recast by 10 seconds per merit instead of 12
 		- "Last Resort"'s duration has been doubled from 30 to 60 seconds
 --]]
+	
+--[[
+	The "default" gear set is what is worn when you're not fighting (either you or your pet)
+	and you're not resting. It covers everything else: idling, traveling, in town, etc. This 
+	set displays what your character looks like most of the	time. This set does not 
+	distinguish the type of activities you're doing by default, so use inlines accordingly.
+--]]
 
+	['Default'] = {
+		Subset = {'TP_Tank//TANK', 'TP' },
+		Head   = { 'Lilac Corsage//TOWN', 'Abs. Burgeonet +1', 'Empress Hairpin' },
+		Body   = { 'Ducal Aketon//TOWN-AK', 'Plastron', 'Chaos Cuirass', 'Scorpion Harness', 'Brigandine', 'Beetle Harness' },
+	},
+	
 --[[
 	The TP sets are used when you are fighting.	The accuracy set will be applied in a fractional
 	manner and the evasion set if /eva is specified. When tanking, Tank_TP will be equipped 
@@ -64,7 +77,7 @@ local sets = {
 	['TP'] = {
         Head  = { 'Abs. Burgeonet +1', 'Empress Hairpin' },
         Neck  = { 'Parade Gorget//SPECIAL', 'Opo-opo necklace//SLEPT', 'Peacock Amulet', 'Spike Necklace' },
-        Ears  = { 'Bat Earring//BLIND', 'Coral Earring//DT_MAGICAL', 'Brutal Earring', 'Coral Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Pilferer\'s Earring//SJTHF', 'Drone Earring', 'Energy Earring +1', 'Energy Earring +1' },
+        Ears  = { 'Bat Earring//BLINDED', 'Coral Earring//DT_MAGICAL', 'Brutal Earring', 'Coral Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Pilferer\'s Earring//SJTHF', 'Drone Earring', 'Energy Earring +1', 'Energy Earring +1' },
         Body  = { 'Plastron', 'Chaos Cuirass', 'Scorpion Harness', 'Brigandine', 'Beetle Harness' },        
 		Hands = { 'Abs. Gauntlets +1', 'Thick Mufflers', 'Wonder Mitts' },
         Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tamas Ring', 'Kshama Ring No.2', 'Balance Ring' },
@@ -75,7 +88,8 @@ local sets = {
     },
 
 	['Tank_TP'] = {
-		Legs = 'Chaos Flanchard',
+		Subset = 'TP',
+		Legs  = 'Chaos Flanchard',
 	},
 	
 --[[
@@ -98,7 +112,7 @@ local sets = {
 		Hands = { 'Abs. Gauntlets +1', 'Thick Mufflers' }, -- DEX from +1 gauntlets > 3 acc
 		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt' },
 		Legs  = 'Thick Breeches',
-		Feet  = { 'Chaos Sollerets +1', 'Bounding Boots' }, -- Needed to override the default Thick Sollerets
+		Feet  = { 'Chs. Sollerets +1', 'Bounding Boots' }, -- Needed to override the default Thick Sollerets
     },
 
 	['Tank_Accuracy'] = {
@@ -109,7 +123,7 @@ local sets = {
 		Hands = 'Thick Mufflers',
 		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt' },
 		Legs  = 'Thick Breeches',
-		Feet  = { 'Chaos Sollerets +1', 'Bounding Boots' }, -- Needed to override the default Thick Sollerets	
+		Feet  = { 'Chs. Sollerets +1', 'Bounding Boots' }, -- Needed to override the default Thick Sollerets	
 	},
 	
 --[[
@@ -130,22 +144,6 @@ local sets = {
 		Body = 'Scorpion Harness',
 		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring', 'Windurstian Earring' },		
         Legs = { 'Chaos Flanchard', 'San. Trousers' },	
-	},
-	
---[[
-	The "default" gear set is what is worn when you're not fighting (either you or your pet)
-	and you're not resting. It covers everything else: idling, traveling, in town, etc. The
-	"default" set replaces the "travel" set which replaced the "idle" set. I just think the
-	new name makes more sense. This set displays what your character looks like most of the
-	time. It also includes the new //town gear (there use to be a separate town set. That
-	has been removed.) This set does not distinguish the type of activities you're doing by
-	default, so use inlines accordingly.
---]]
-
-	['Default'] = {
-		Subset = {'TP_Tank//TANK', 'TP' },
-		Head   = { 'Lilac Corsage//TOWN', 'Abs. Burgeonet +1', 'Empress Hairpin' },
-		Body   = { 'Ducal Aketon//TOWN-AK', 'Plastron', 'Chaos Cuirass', 'Scorpion Harness', 'Brigandine', 'Beetle Harness' },
 	},
 
 --[[
@@ -328,7 +326,7 @@ local sets = {
 	-- success of THF's lock picking skill, reducing the chance of spawning a mimic
 	-- or the chance of failure. INT is associated with the element ice
 	['INT'] = {
-        Rings = { 'Tamas Ring', 'Windurstian Ring' },
+        Rings = 'Tamas Ring',
 		Hands = 'Abs. Gauntlets +1',
         Waist = 'Mrc.Cpt. Belt',
 		Legs  = 'Chaos Flanchard',
@@ -352,7 +350,7 @@ local sets = {
         Rings = { 'Tamas Ring', 'Tranquility Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = { 'Abyss Flanchard', 'Wonder Braccae' },
-        Feet = { 'Chaos Sollerets +1', 'Mannequin Pumps' },
+        Feet = { 'Chs. Sollerets +1', 'Mannequin Pumps' },
     },
 
 	-- Tank_MND is a special version of the MND set that composits MND gear with
@@ -437,7 +435,7 @@ local sets = {
 		Axe: Raging Axe,Smash Axe,Gale Axe,Avalanche Axe,Spinning Axe,Rampage,Decimation
 		Great Axe: Iron Tempest,Sturmwind,Keen Edge,Raging Rush
 		Sword: Flat Blade,Circle Blade,Spirits Within,Vorpal Blade
-		Club: Starlight,Brainshaker,Moonlight,Skullbreaker,True Strike		
+		Club: Brainshaker,Skullbreaker,True Strike		
 -]]
 	
 	['WS_STR'] = {
@@ -445,12 +443,12 @@ local sets = {
         Neck  = 'Spike Necklace',
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
 		Body  = { 'Plastron', 'Chaos Cuirass', 'Wonder Kaftan' },
-        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+        Hands = { 'Wonder Mitts', 'Ryl.Ftm. Gloves' },
         Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
         Legs  = { 'Thick Breeches' ,'Wonder Braccae' },
-        Feet  = { 'Chaos Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
+        Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
     },
 
 --[[
@@ -464,12 +462,12 @@ local sets = {
         Neck  = 'Spike Necklace',
         Ears  = { 'Genin Earring//SJNIN', 'Drone Earring', 'Beastly Earring//AXE' },
         Body  = { 'Plastron','Chaos Cuirass', 'Wonder Kaftan' },
-        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+        Hands = { 'Wonder Mitts', 'Ryl.Ftm. Gloves' },
         Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
         Legs  = { 'Thick Breeches', 'Ryl.Sqr. Breeches', 'Wonder Braccae' },
-        Feet  = { 'Chaos Sollerets +1', 'Creek F Clomps', 'Wonder Clomps', 'Bounding Boots' },
+        Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps', 'Bounding Boots' },
     },
 	
 --[[
@@ -483,12 +481,12 @@ local sets = {
         Neck  = 'Spike Necklace',
         Ears  = { 'Genin Earring//SJNIN', 'Drone Earring', 'Beastly Earring//AXE' },
         Body  = { 'Plastron', 'Chaos Cuirass', 'Brigandine', 'Wonder Kaftan' },
-        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+        Hands = { 'Wonder Mitts', 'Ryl.Ftm. Gloves' },
         Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Kshama Ring No.2', 'Balance Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
         Legs  = { 'Thick Breeches', 'Ryl.Sqr. Breeches', 'Wonder Braccae' },
-        Feet  = { 'Chaos Sollerets +1', 'Creek F Clomps', 'Wonder Clomps', 'Bounding Boots' },
+        Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps', 'Bounding Boots' },
     },
 
 --[[
@@ -504,12 +502,12 @@ local sets = {
         Neck  = 'Spike Necklace',
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
         Body  = { 'Plastron', 'Chaos Cuirass', 'Wonder Kaftan' },
-        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+        Hands = { 'Wonder Mitts', 'Ryl.Ftm. Gloves' },
         Rings = { 'Flame Ring', 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
         Legs  = { 'Thick Breeches', 'Wonder Braccae' },
-        Feet  = { 'Chaos Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
+        Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
     },
 
 --[[
@@ -523,12 +521,12 @@ local sets = {
         Neck  = 'Spike Necklace',
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
         Body  = { 'Plastron', 'Chaos Cuirass', 'Wonder Kaftan' },
-        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+        Hands = { 'Wonder Mitts', 'Ryl.Ftm. Gloves' },
         Rings = { 'Flame Ring', 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
         Legs  = { 'Thick Breeches', 'Wonder Braccae' },
-        Feet  = { 'Chaos Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
+        Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
     },
 
 --[[
@@ -541,16 +539,16 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
-		Head  = 'Chaos Sollerets',
+		Head  = 'Chaos Burgeonet',
         Neck  = { 'Promise Badge','Justice Badge' },
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
 		Body  = { 'Plastron', 'Abyss Cuirass', 'Wonder Kaftan' },
-        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY' },
+        Hands = 'Wonder Mitts',
         Rings = { 'Flame Ring', 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tranquility Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
         Legs  = 'Wonder Braccae',
-        Feet  = { 'Chaos Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
+        Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
     },
 
 --[[
@@ -562,16 +560,16 @@ local sets = {
 --]]
 	
 	['WS_STRVIT'] = {
-		Head  = 'Chaos Sollerets',
+		Head  = 'Chaos Burgeonet',
         Neck  = 'Spike Necklace',
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
 		Body  = { 'Plastron', 'Wonder Kaftan' },
-        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY' },
+        Hands = 'Wonder Mitts',
         Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
         Legs  = { 'Wonder Braccae', 'San. Trousers' },
-        Feet  = { 'Chaos Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
+        Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
     },
 
 --[[
@@ -617,7 +615,7 @@ local sets = {
         Neck  = 'Spike Necklace',
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
 		Body  = 'Brigandine',
-		Hands = { 'Abs. Gauntlets +1', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+		Hands = { 'Abs. Gauntlets +1', 'Ryl.Ftm. Gloves' },
         Rings = { 'Kshama Ring No.2', 'Balance Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
         Feet  = 'Bounding Boots',
@@ -634,7 +632,7 @@ local sets = {
         Neck  = 'Spike Necklace',
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
 		Body  = 'Brigandine',
-		Hands = { 'Abs. Gauntlets +1', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+		Hands = { 'Abs. Gauntlets +1', 'Ryl.Ftm. Gloves' },
         Rings = { 'Kshama Ring No.2', 'Balance Ring' },
 		Legs  = 'Chaos Flanchard',
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
@@ -654,7 +652,7 @@ local sets = {
         Rings = { 'Tamas Ring', 'Tranquility Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
-		Feet = { 'Chaos Sollerets +1', 'Mannequin Pumps' },
+		Feet = { 'Chs. Sollerets +1', 'Mannequin Pumps' },
     },
 
 --[[
@@ -681,15 +679,16 @@ local sets = {
         Rings = 'Toreador\'s Ring',
         Waist = 'Powerful Rope',
         Legs  = 'Wonder Braccae',
-        Feet  = { 'Creek F Clomps', 'Chaos Sollerets' },
+        Feet  = { 'Creek F Clomps', 'Chs. Sollerets +1' },
     },
 	
 --[[
-	Movement tends to be used for kiting. Emphasis should be placed on gear that increases movement speed, but you 
-	might also want gear that has evasion. The choice is yours.
+	Kite is used for kiting. Emphasis should be placed on gear that increases 
+	movement speed, but you might also want gear that has evasion. The choice
+	is yours.
 --]]
 
-	['Movement'] = { 
+	['Kite'] = { 
 	},
 	
 --[[
@@ -910,18 +909,18 @@ local function HandlePetAction(PetAction)
 	local pet = gData.GetPet();
 	
 	-- Only gear swap if this flag is true and the pet is a BST pet
-	if gcdisplay.GetToggle('GSwap') == false or table.find(gcinclude.tSummonSkill,pet.Name) ~= nil then
+	if gcdisplay.GetToggle('GSwap') == false or gcinclude.fSummonerPet() == true then
 		return;
 	end
 
 	if (gcinclude.BstPetAttack:contains(PetAction.Name)) then				-- Pet Attack
-		gcinclude.fMoveToCurrent(sets.Pet_Attack,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Pet_Attack,sets.CurrentGear);
 	elseif (gcinclude.BstPetMagicAttack:contains(PetAction.Name)) then		-- Pet Magical Attack
-		gcinclude.fMoveToCurrent(sets.Pet_Matt,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Pet_Matt,sets.CurrentGear);
 	elseif (gcinclude.BstPetMagicAccuracy:contains(PetAction.Name)) then	-- Pet Magical Accuracy Attack
-		gcinclude.fMoveToCurrent(sets.Pet_Macc,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Pet_Macc,sets.CurrentGear);
     end
-	gcinclude.fEquipTheGear(sets.CurrentGear);
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandlePetAction
 
 --[[
@@ -978,8 +977,8 @@ profile.OnLoad = function()
 	SetSubjobSet(player.SubJob);
 	
 	-- Load up the weapons bar. (This need only be done once.)
-	gcinclude.fMoveToCurrent(sets.Start_Weapons,sets.CurrentGear);	
-	gcinclude.fEquipTheGear(sets.CurrentGear);
+	gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear);	
+	gcinclude.EquipTheGear(sets.CurrentGear);
 	
 	-- Make sure the saved weapons are the starting weapons
 	gcinclude.weapon = sets.CurrentGear['Main'];
@@ -1068,46 +1067,51 @@ profile.HandleDefault = function()
 			gcinclude.weapon ~= nil and
 			gcdisplay.GetToggle('WSwap') == true and 
 			eWeap ~= gcinclude.weapon then
-		if gcinclude.Locks[1][2] == false then
+		if gcinclude.fIsLocked('main') == false then
 			sets.CurrentGear['Main'] = gcinclude.weapon;
 		end
-		if gcinclude.Locks[2][2] == false then
+		if gcinclude.fIsLocked('sub') == false then
 			sets.CurrentGear['Sub'] = gcinclude.weapon;
 		end
 	end
 		
 	-- Start with the default set
-	gcinclude.fMoveToCurrent(sets.Default,sets.CurrentGear);
+	gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 		
 	-- Now process the player status accordingly		
 	if player ~= nil and player.Status == 'Engaged' then
+		if bTank == true then
+			gcinclude.MoveToCurrent(sets.Tank_TP,sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
+		end
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
 			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
 			if cKey == 'C' then		-- Evasion			
 				if gcdisplay.GetToggle('Eva') == true then	
 					if bTank == true then
-						gcinclude.fMoveToCurrent(sets.Tank_Evasion,sets.CurrentGear);
+						gcinclude.MoveToCurrent(sets.Tank_Evasion,sets.CurrentGear);
 					else			
-						gcinclude.fMoveToCurrent(sets.Evasion,sets.CurrentGear);
+						gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 					end
 				end
 			elseif cKey == 'E' then		-- Accuracy	
-				gcinclude.fFractionalAccuracy(sets.Accuracy,sets.Tank_Accuracy);
+				gcinclude.FractionalAccuracy(sets.Accuracy,sets.Tank_Accuracy);
 			elseif cKey == 'F' then		-- Kiting
 				if (gcdisplay.GetToggle('Kite') == true) then
-					gcinclude.fMoveToCurrent(sets.Movement,sets.CurrentGear);
+					gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
 				end
 			end				
 		end
 	elseif player.Status == 'Resting' then
 		-- Player kneeling. Priority (low to high): regen,refresh
 		if player.HP < player.MaxHP then		
-			gcinclude.fMoveToCurrent(sets.Resting_Regen,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Resting_Regen,sets.CurrentGear);
 		end
 		
 		if player.MP < player.MaxMP then
-			gcinclude.fMoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
 			if gcdisplay.GetToggle('WSwap') == true then
 				local sStave = gcinclude.fCheckForEleGear('staff','dark');
 				if sStave ~= nil then
@@ -1118,11 +1122,11 @@ profile.HandleDefault = function()
 	else
 		-- Assume idling. While there's no idle set, just use the 
 		-- "Default" set
-		gcinclude.fMoveToCurrent(sets.Default,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 	end
 				
 	-- In case the pet is a summoned pet...
-	if pet ~= nil and table.find(gcinclude.tSummonSkill,pet.Name) ~= nil and gcdisplay.GetToggle('WSwap') == true then
+	if pet ~= nil and gcinclude.fSummonerPet() == true then
 		local sStave = gcinclude.fCheckForElementalGearByValue('staff','Summons',pet.Name);
 		if sStave ~= nil then
 			gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);
@@ -1132,10 +1136,10 @@ profile.HandleDefault = function()
 	-- And make sure a weapon equipped. (Going into a capped area can cause no weapon to be equipped.)
 	local gear = gData.GetEquipment();
 	if gear.Main == nil then
-		gcinclude.fMoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
+		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
 	end
 	
-	gcinclude.fEquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set
+	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set
 	
 	-- Lastly, update the display, just in case
 	gcdisplay.Update();
@@ -1158,20 +1162,20 @@ profile.HandleAbility = function()
 	
 	-- Now process the appropriate job ability. Start with abilities associated with DRK
 	if string.match(ability.Name, 'Blood Weapon') then
-		gcinclude.fMoveToCurrent(sets.BloodWeapon,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.BloodWeapon,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Arcane Circle') then
-		gcinclude.fMoveToCurrent(sets.ArcaneCircle,sets.CurrentGear);	
+		gcinclude.MoveToCurrent(sets.ArcaneCircle,sets.CurrentGear);	
 	elseif string.match(ability.Name, 'Last Resort') then
-		gcinclude.fMoveToCurrent(sets.LastResort,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.LastResort,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Souleater') then
-		gcinclude.fMoveToCurrent(sets.Souleater,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Souleater,sets.CurrentGear);
 	elseif string.match(ability.Name, 'WeaponBash') then
-		gcinclude.fMoveToCurrent(sets.WeaponBash,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.WeaponBash,sets.CurrentGear);
 	
 	-- And now the subjob abilities	
 	-- /BST
 	elseif string.match(ability.Name, 'Charm') then	
-		gcinclude.fMoveToCurrent(sets.Charm,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Charm,sets.CurrentGear);
 		local sStave = gcinclude.fCheckForEleGear('staff','light');
 		if sStave ~= nil then
 			gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);
@@ -1181,82 +1185,82 @@ profile.HandleAbility = function()
 		if profile.sAmmo == nil or string.find(string.lower(profile.sAmmo),'pet f') == nil then		-- something else equipped
 			profile.bAmmo = gcinclude.doPetFood('max',nil);
 		end	
-		gcinclude.fMoveToCurrent(sets.Reward,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Reward,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Tame') then
-		gcinclude.fMoveToCurrent(sets.Tame,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Tame,sets.CurrentGear);
 	-- /WAR
 	elseif string.match(ability.Name, 'Provoke') then
-		gcinclude.fMoveToCurrent(sets.Provoke,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Provoke,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Berserk') then
-		gcinclude.fMoveToCurrent(sets.Berserk,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Berserk,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Defender') then
-		gcinclude.fMoveToCurrent(sets.Defender,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Defender,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Warcry') then
-		gcinclude.fMoveToCurrent(sets.Warcry,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Warcry,sets.CurrentGear);
 	-- /MNK
 	elseif string.match(ability.Name, 'Boost') then
-		gcinclude.fMoveToCurrent(sets.Boost,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Boost,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Focus') then
-		gcinclude.fMoveToCurrent(sets.Focus,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Focus,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Dodge') then
-		gcinclude.fMoveToCurrent(sets.Dodge,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Dodge,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Chakra') then
-		gcinclude.fMoveToCurrent(sets.Chakra,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Chakra,sets.CurrentGear);
 	-- /THF
 	elseif string.match(ability.Name, 'Steal') then
-		gcinclude.fMoveToCurrent(sets.Steal,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Steal,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Sneak Attack') then
-		gcinclude.fMoveToCurrent(sets.SneakAttack,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.SneakAttack,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Flee') then
-		gcinclude.fMoveToCurrent(sets.Flee,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Flee,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Trick Attack') then
-		gcinclude.fMoveToCurrent(sets.TrickAttack,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.TrickAttack,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Mug') then
-		gcinclude.fMoveToCurrent(sets.Mug,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Mug,sets.CurrentGear);
 	-- /WHM
 	elseif string.match(ability.Name, 'Divine Seal') then
-		gcinclude.fMoveToCurrent(sets.DivineSeal,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.DivineSeal,sets.CurrentGear);
 	-- /BLM
 	elseif string.match(ability.Name, 'Elemental Seal') then
-		gcinclude.fMoveToCurrent(sets.ElementalSeal,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.ElementalSeal,sets.CurrentGear);
 	-- /RNG
 	elseif string.match(ability.Name, 'Sharpshot') then
-		gcinclude.fMoveToCurrent(sets.Sharpshot,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Sharpshot,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Scavenge') then
-		gcinclude.fMoveToCurrent(sets.Scavenge,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Scavenge,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Camouflage') then
-		gcinclude.fMoveToCurrent(sets.Camouflage,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Camouflage,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Barrage') then
-		gcinclude.fMoveToCurrent(sets.Barrage,sets.CurrentGear);	
+		gcinclude.MoveToCurrent(sets.Barrage,sets.CurrentGear);	
 	-- /SAM
 	elseif string.match(ability.Name, 'Warding Circle') then
-		gcinclude.fMoveToCurrent(sets.WardingCircle,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.WardingCircle,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Third Eye') then
-		gcinclude.fMoveToCurrent(sets.ThirdEye,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.ThirdEye,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Hasso') then
-		gcinclude.fMoveToCurrent(sets.Hasso,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Hasso,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Meditate') then
-		gcinclude.fMoveToCurrent(sets.Meditate,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Meditate,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Seigan') then
-		gcinclude.fMoveToCurrent(sets.Seigan,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Seigan,sets.CurrentGear);
 	-- /PLD
 	elseif string.match(ability.Name, 'Holy Circle') then
-		gcinclude.fMoveToCurrent(sets.HolyCircle,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.HolyCircle,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Shield Bash') then
-		gcinclude.fMoveToCurrent(sets.ShieldBash,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.ShieldBash,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Sentinel') then
-		gcinclude.fMoveToCurrent(sets.Sentinel,sets.CurrentGear);	
+		gcinclude.MoveToCurrent(sets.Sentinel,sets.CurrentGear);	
 	elseif string.match(ability.Name, 'Cover') then
-		gcinclude.fMoveToCurrent(sets.Cover,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Cover,sets.CurrentGear);
 	-- /DRG
 	elseif string.match(ability.Name, 'Ancient Circle') then
-		gcinclude.fMoveToCurrent(sets.AncientCircle,sets.CurrentGear);	
+		gcinclude.MoveToCurrent(sets.AncientCircle,sets.CurrentGear);	
 	elseif string.match(ability.Name, 'Jump') then
-		gcinclude.fMoveToCurrent(sets.Jump,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Jump,sets.CurrentGear);
 	elseif string.match(ability.Name, 'High Jump') then
-		gcinclude.fMoveToCurrent(sets.HighJump,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.HighJump,sets.CurrentGear);
 	end
-	gcinclude.fEquipTheGear(sets.CurrentGear);		-- Equip the composited HandleAbility set
+	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleAbility set
 end		-- HandleAbility
 	
 --[[
@@ -1276,18 +1280,18 @@ profile.HandleItem = function()
 	end
 	
 	if string.match(item.Name, 'Holy Water') then 
-		gcinclude.fMoveToCurrent(gcinclude.sets.Holy_Water,sets.CurrentGear);
+		gcinclude.MoveToCurrent(gcinclude.sets.Holy_Water,sets.CurrentGear);
 		bShow = true;
 	elseif string.match(item.Name, 'Silent Oil') then
-		gcinclude.fMoveToCurrent(sets.Sneak,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Sneak,sets.CurrentGear);
 		bShow = true;
 	elseif string.match(item.Name, 'Prism Powder') then
-		gcinclude.fMoveToCurrent(sets.Invisible,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Invisible,sets.CurrentGear);
 		bShow = true;
 	end
 		
 	if bShow == true then
-		gcinclude.fEquipTheGear(sets.CurrentGear);
+		gcinclude.EquipTheGear(sets.CurrentGear);
 	end
 end		-- HandleItem
 
@@ -1310,14 +1314,8 @@ profile.HandlePrecast = function()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Equip the precast gear set
-	gcinclude.fMoveToCurrent(sets.Precast,sets.CurrentGear);
-		
-	-- See if an elemental obi should be equipped
-	obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
-	if obi ~= nil then
-		sets.CurrentGear['Waist'] = obi;
-	end
-	gcinclude.fEquipTheGear(sets.CurrentGear);
+	gcinclude.MoveToCurrent(sets.Precast,sets.CurrentGear);
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandlePrecast
 
 --[[
@@ -1345,7 +1343,7 @@ profile.HandleMidcast = function()
 	-- Call the common HandleMidcast now
 	gcinclude.HandleMidcast(bTank);
 	
-	gcinclude.fEquipTheGear(sets.CurrentGear);		-- Equip the composited midcast set
+	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited midcast set
 end		-- HandleMidcast
 
 --[[
@@ -1361,8 +1359,8 @@ profile.HandlePreshot = function()
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 		
-	gcinclude.fMoveToCurrent(sets.Preshot,sets.CurrentGear);
-	gcinclude.fEquipTheGear(sets.CurrentGear);
+	gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandlePreshot
 
 --[[
@@ -1378,10 +1376,10 @@ profile.HandleMidshot = function()
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 	
-	gcinclude.fMoveToCurrent(sets.Midshot,sets.CurrentGear);
+	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
 	
 	-- Equip the composited Midshot set	
-	gcinclude.fEquipTheGear(sets.CurrentGear);
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandleMidshot
 
 --[[
@@ -1392,7 +1390,6 @@ profile.HandleWeaponskill = function()
 	local ws = gData.GetAction();
 	local canWS = gcinclude.CheckWsBailout();
 	local cKey;
-	local bTank = gcdisplay.GetToggle('Tank');
 	
 	-- If conditions would cause the weaponskill to fail, the action will be
 	-- cancelled so you do not lose your tp.
@@ -1410,10 +1407,10 @@ profile.HandleWeaponskill = function()
 	gcinclude.ClearSet(sets.CurrentGear);
 
 	-- Call the common weaponskill handler
-	gcinclude.HandleWeaponskill(bTank);
+	gcinclude.fHandleWeaponskill();
 	
 	-- Equip the composited weaponskill set		
-	gcinclude.fEquipTheGear(sets.CurrentGear);
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandleWeaponskill
 
 return profile;

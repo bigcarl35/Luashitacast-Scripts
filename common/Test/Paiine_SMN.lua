@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the SMN job.
 	
-	Gear Sets last updated: July 78, 2024
-	Code update: September 28, 2024
+	Gear Sets last updated: October 21, 2024
+	Code update: October 21, 2024
 --]]
 
 local sets = {
@@ -45,26 +45,54 @@ local sets = {
 		
 		- Not noted, but top level elemental blood pact rage skills no longer can skillchain
 --]]
+
+--[[
+	The "default" gear set is what is worn when you're not fighting (either you or your pet)
+	and you're not resting. It covers everything else: idling, traveling, in town, etc. This 
+	set displays what your character looks like most of the	time. This set does not 
+	distinguish the type of activities you're doing by default, so use inlines accordingly.
+--]]
+	
+	['Default'] = {
+		Main  = 'Earth Staff//NO_PET',
+		Head  = { 'Lilac Corsage//TOWN', 'Austere Hat', 'Silver Hairpin +1' },
+		Neck  = { 'Rep.Gold Medal//NOT_OWN','Uggalepih Pendant//NIGHTTIME', 'Fenrir\'s Torque//DAYTIME', 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
+		Ears  = { 'Bat Earring//BLINDED', 'Loquac. Earring', 'Coral Earring//DT_MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
+		Body  = { 'Ducal Aketon//TOWN-AK', 'Vermillion Cloak//MPP.LT.94', 'Summoner\'s Dblt.', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
+		Hands = { 'Smn. Bracers +1', 'Errant Cuffs', 'Carbuncle Mitts' },
+		Rings = { 'Evoker\'s Ring', 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
+		Back  = { 'Blue Cape', 'White Cape' },
+        Waist = { 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
+        Legs  = { 'Summoner\'s Spats', 'Evoker\'s Spats', 'Fisherman\'s Hose' }, 
+        Feet  = { 'Summoner\'s Pgch.', 'Mannequin Pumps', 'Seer\'s Pumps', 'Waders'},
+		Ammo  = { 'Hedgehog Bomb', 'Fortune Egg' },
+	},
+
+	['Default_WPet'] = {
+		Subset = 'Default',
+		Head   = 'Smn. Horn +1//SMNPETMW',
+		Hands  = { 'Carbuncle Mitts//CARBY', 'Smn. Bracers +1' },
+	},
 	
 --[[
 	Unlike most jobs, summoner's emphasis is fighting with your avatar. The ['TP'] set is combined
-	for both you and your pet fighting. Make sure to use appropriate inline conditionals to 
+	for either you or your pet is fighting. Make sure to use appropriate inline conditionals to 
 	emphasize gear accordingly. ['Accuracy'] and ['Evasion'] also represent both pets and players.
 	['Macc'] is for the player since pet Macc is applied during a blood pact and ['TP'] is still 
 	combined though and emphasizes the pet since summoner's are bad fighters.
 --]]
 
 	['TP'] = {
-        Head  = { 'Summoner\'s Horn//SMNPETMW', 'Shep. Bonnet//PETF', 'Austere Hat', 'Silver Hairpin' },
+        Head  = { 'Smn. Horn +1//SMNPETMW', 'Shep. Bonnet//PETF', 'Austere Hat', 'Silver Hairpin +1' },
 		Neck  = { 'Rep.Gold Medal//NOT_OWN','Uggalepih Pendant//NIGHTTIME', 'Fenrir\'s Torque//DAYTIME', 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
-		Ears  = { 'Bat Earring//BLIND', 'Loquac. Earring', 'Coral Earring//DT_MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1', 'Reraise Earring' },
+		Ears  = { 'Bat Earring//BLINDED//PETNF', 'Loquac. Earring', 'Beastly Earring//PETF', 'Coral Earring//DT_MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1', 'Reraise Earring' },
         Body  = { 'Vermillion Cloak//CARBY','Summoner\'s Dblt.//SMNPETMD', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' }, 
         Hands = { 'Carbuncle Mitts//CARBY', 'Smn. Bracers +1', 'Errant Cuffs', 'Carbuncle Mitts' },
 		Rings = { 'Evoker\'s Ring', 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
         Back  = { 'Blue Cape', 'White Cape' },
         Waist = { 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
         Legs  = { 'Evoker\'s Spats//PETF', 'Summoner\'s Spats', 'Evoker\'s Spats', 'Shep. Hose', 'Fisherman\'s Hose' }, 
-        Feet  = { 'Rostrum Pumps//NO_SMNPET', 'Summoner\'s Pgch.', 'Mannequin Pumps', 'Seer\'s Pumps', 'Waders'},
+        Feet  = { 'Summoner\'s Pgch.', 'Mannequin Pumps', 'Seer\'s Pumps', 'Waders'},
 		Ammo  = { 'Hedgehog Bomb', 'Fortune Egg' },
 	},
 
@@ -77,7 +105,7 @@ local sets = {
 	for every 1 point of DEX you get 0.70 points of accuracy if wielding a 2H weapon, 0.65 for 
 	a 1H weapon, and 0.60 for H2H. 
 --]]
-	
+		
 	['Accuracy'] = {
         Head  = { 'Shep. Bonnet//PETF', 'Optical Hat' },
 		Ears  = 'Beastly Earring//PETF',
@@ -96,32 +124,13 @@ local sets = {
 	
 	['Evasion'] = {
 		Head  = { 'Optical Hat', 'Empress Hairpin' },
-		Ears  = { 'Bat Earring//BLIND', 'Ethereal Earring', 'Genin Earring//SJNIN', 'Drone Earring' },
+		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Genin Earring//SJNIN', 'Drone Earring' },
 		Neck  = 'Spirit Torque',
 		Body  = 'Austere Robe',			-- Needed to offset the "possible" Vermillion Cloak	
 		Hands = 'Battle Gloves',
 		Legs  = { 'Evoker\'s Spats', 'Shep. Hose//PETF'},
     },
 
---[[
-	The "default" gear set is what is worn when you're not fighting (either you or your pet)
-	and you're not resting. It covers everything else: idling, traveling, in town, etc. The
-	"default" set replaces the "travel" set which replaced the "idle" set. I just think the
-	new name makes more sense. This set displays what your character looks like most of the
-	time. It also includes the new //town gear (there use to be a separate town set. That
-	has been removed.) This set does not distinguish the type of activities you're doing by
-	default, so use inlines accordingly. 
---]]
-	
-	['Default'] = {
-		Subset = 'TP',
-		Head   = { 'Lilac Corsage//TOWN', 'Summoner\'s Horn//SMNPETMW', 'Shep. Bonnet//PETF', 'Austere Hat', 'Silver Hairpin' },
-		Body   = { 'Ducal Aketon//TOWN-AK', 'Vermillion Cloak//MPP.LT.90', 'Vermillion Cloak//CARBY','Summoner\'s Dblt.', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
-	},
-
-	['Default_WPet'] = {
-	},
-	
 --[[
 	When you are resting (kneeling down), if your HP is not full, your HP 'Resting' 
 	set will be equipped. If your MP is below maximum value, your MP 'Resting_Refresh' 
@@ -380,11 +389,11 @@ local sets = {
 	-- or the chance of failure. INT is associated with the element ice
 	['INT'] = {
 		Head  = 'Summoner\'s Horn +1',
-        Hands = { 'Errant Cuffs', 'Seer\'s Mitts' },
+        Hands = 'Errant Cuffs',
         Rings = 'Tamas Ring',
 		Body  = 'Errant Hpl.',
         Waist = 'Mrc.Cpt. Belt',
-        Legs  = { 'Errant Slops', 'Seer\'s Slacks' },
+        Legs  = 'Errant Slops', 
         Feet  = { 'Rostrum Pumps', 'Mannequin Pumps' },
     },
 
@@ -396,7 +405,6 @@ local sets = {
 	['MND'] = {
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
-        Hands = 'Seer\'s Mitts',
 		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
         Back  = 'White Cape',
         Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
@@ -509,7 +517,7 @@ local sets = {
         Hands = 'Wonder Mitts',
 		Rings = { 'Tamas Ring', 'Flame Ring', 'Sun Ring', 'Courage Ring' },
         Waist = 'Mrc.Cpt. Belt',
-        Legs  = { 'Errant Slops', 'Seer\'s Slacks' },
+        Legs  = 'Errant Slops',
         Feet  = { 'Creek F Clomps', 'Wonder Clumps' },
     },
 
@@ -578,10 +586,9 @@ local sets = {
         Head  = 'Empress Hairpin',
         Neck  = 'Spike Necklace',
         Body  = { 'Errant Hpl.', 'Mrc.Cpt. Doublet' },
-        Hands = 'Seer\'s Mitts',
 		Rings  = { 'Tamas Ring', 'Kshama Ring No.2', 'Balance Ring' },
         Waist = 'Mrc.Cpt. Belt',
-        Legs  = { 'Errant Slops', 'Seer\'s Slacks' },
+        Legs  = 'Errant Slops',
         Feet  = { 'Rostrum Pumps', 'Mannequin Pumps' },
     },
 
@@ -593,11 +600,10 @@ local sets = {
 	
 	['WS_INT'] = {
 		Head  = 'Summoner\'s Horn +1',
-        Hands = 'Seer\'s Mitts',
         Rings = 'Tamas Ring',
 		Body  = 'Errant Hpl.',
         Waist = 'Mrc.Cpt. Belt',
-        Legs  = { 'Errant Slops', 'Seer\'s Slacks' },
+        Legs  = 'Errant Slops',
         Feet  = { 'Rostrum Pumps', 'Mannequin Pumps' },
     },
 	
@@ -611,7 +617,6 @@ local sets = {
 		Head  = 'Summoner\'s Horn +1',
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
-        Hands = 'Seer\'s Mitts',
 		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs  = { 'Errant Slops', 'Summoner\'s Spats', 'Wonder Braccae' },
@@ -645,7 +650,6 @@ local sets = {
 	['WS_MND'] = {
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
-        Hands = 'Seer\'s Mitts',
 		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
         Back  = 'White Cape',
         Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
@@ -663,12 +667,12 @@ local sets = {
     },
 	
 --[[
-	Movement tends to be used for kiting. Emphasis should be placed on gear 
-	that increases movement speed, but you might also want gear that has evasion. 
-	The choice is yours.
+	Kite is used for kiting. Emphasis should be placed on gear that increases 
+	movement speed, but you might also want gear that has evasion. The choice
+	is yours.
 --]]
 
-	['Movement'] = { 
+	['Kite'] = { 
 	},
 
 --[[
@@ -917,24 +921,24 @@ local function HandlePetAction(Pet,PetAction)
 	if bSmn == true then
 		-- All SMN pet actions are blood pacts. Address accordingly
 		if (gcinclude.SmnSkill:contains(PetAction.Name)) then			-- summoning skill based blood pact?
-			gcinclude.fMoveToCurrent(sets.SmnSkill,sets.CurrentGear);		
+			gcinclude.MoveToCurrent(sets.SmnSkill,sets.CurrentGear);		
 		elseif (gcinclude.SmnMagical:contains(PetAction.Name)) then		-- magical based blood pact?
-			gcinclude.fMoveToCurrent(sets.SmnMagical,sets.CurrentGear);	
+			gcinclude.MoveToCurrent(sets.SmnMagical,sets.CurrentGear);	
 			-- If /acc flagged, load accuracy set (for magical accuracy)
 			if gcdisplay.GetToggle('Acc') == true then
-				gcinclude.fMoveToCurrent(sets.SmnAccuracy,sets.CurrentGear);			
+				gcinclude.MoveToCurrent(sets.SmnAccuracy,sets.CurrentGear);			
 			end
 		elseif (gcinclude.SmnHybrid:contains(PetAction.Name)) then		-- hybrid blood pact (2x physical, 1x magical)?
-			gcinclude.fMoveToCurrent(sets.SmnHybrid,sets.CurrentGear);		
+			gcinclude.MoveToCurrent(sets.SmnHybrid,sets.CurrentGear);		
 			-- If /acc flagged, load accuracy set (for both physical and magical accuracy)
 			if gcdisplay.GetToggle('Acc') == true then
-				gcinclude.fMoveToCurrent(sets.SmnAccuracy,sets.CurrentGear);
+				gcinclude.MoveToCurrent(sets.SmnAccuracy,sets.CurrentGear);
 			end				
 		else																-- physical	blood pact
-			gcinclude.fMoveToCurrent(sets.SmnPhysical,sets.CurrentGear);			
+			gcinclude.MoveToCurrent(sets.SmnPhysical,sets.CurrentGear);			
 			-- if /acc flagged, load accuracy set (for physical accuracy)
 			if gcdisplay.GetToggle('Acc') == true then
-				gcinclude.fMoveToCurrent(sets.SmnAccuracy,sets.CurrentGear);
+				gcinclude.MoveToCurrent(sets.SmnAccuracy,sets.CurrentGear);
 			end
 		end
 	else
@@ -942,14 +946,14 @@ local function HandlePetAction(Pet,PetAction)
 		-- a SMN's avatar, if you want accuracy gear here, you must use the
 		-- //ACCURACY inline in the specified Pet_xxx sets, accordingly.
 		if (gcinclude.BstPetAttack:contains(PetAction.Name)) then				-- Pet Attack
-			gcinclude.fMoveToCurrent(sets.Pet_Attack,sets.CurrentGear);		
+			gcinclude.MoveToCurrent(sets.Pet_Attack,sets.CurrentGear);		
 		elseif (gcinclude.BstPetMagicAttack:contains(PetAction.Name)) then		-- Pet Magical Attack
-			gcinclude.fMoveToCurrent(sets.Pet_Matt,sets.CurrentGear);		
+			gcinclude.MoveToCurrent(sets.Pet_Matt,sets.CurrentGear);		
 		elseif (gcinclude.BstPetMagicAccuracy:contains(PetAction.Name)) then	-- Pet Magical Accuracy Attack
-			gcinclude.fMoveToCurrent(sets.Pet_Macc,sets.CurrentGear);		
+			gcinclude.MoveToCurrent(sets.Pet_Macc,sets.CurrentGear);		
 		end
 	end
-	gcinclude.fEquipTheGear(sets.CurrentGear);
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandlePetAction
 
 --[[
@@ -1008,8 +1012,8 @@ profile.OnLoad = function()
 	SetSubjobSet(player.SubJob);
 	
 	-- Load up the weapons bar.
-	gcinclude.fMoveToCurrent(sets.Start_Weapons,sets.CurrentGear);
-	gcinclude.fEquipTheGear(sets.CurrentGear);
+	gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear);
+	gcinclude.EquipTheGear(sets.CurrentGear);
 	
 	-- Make sure the saved weapons are the starting weapons
 	gcinclude.weapon = sets.CurrentGear['Main'];
@@ -1109,28 +1113,29 @@ profile.HandleDefault = function()
 		else
 			-- Since no pet, assuming slot not locked, equip the default weapon
 			if gcinclude.fIsLocked('main') == false then
-				gcinclude.fFractionalSet(sets.Start_Weapons,'Main');
+				gcinclude.FractionalSet(sets.Start_Weapons,'Main');
 			end
 		end
 	end
 
 	-- Start with the default set
-	gcinclude.fMoveToCurrent(sets.Default,sets.CurrentGear);
+	gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 	
 	-- Now process the pet/player statuses accordingly.
 	if (pet ~= nil and pet.Status == 'Engaged') or (player ~= nil and player.Status == 'Engaged') then
+		gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
 			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
 			if cKey == 'C' then		-- Evasion
 				if gcdisplay.GetToggle('Eva') == true then
-					gcinclude.fMoveToCurrent(sets.Evasion,sets.CurrentGear);
+					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 				end
 			elseif cKey == 'E' then		-- Accuracy
-				gcinclude.fFractionalAccuracy(sets.Accuracy,nil);
+				gcinclude.FractionalAccuracy(sets.Accuracy,nil);
 			elseif cKey == 'F' then		-- Kiting
 				if (gcdisplay.GetToggle('Kite') == true) then
-					gcinclude.fMoveToCurrent(sets.Movement,sets.CurrentGear);
+					gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
 				end
 			end
 		end
@@ -1138,25 +1143,25 @@ profile.HandleDefault = function()
 		-- Player kneeling. Priority (low to high): regen, refresh
 		
 		if player.HP < player.MaxHP then		
-			gcinclude.fMoveToCurrent(sets.Resting_Regen,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Resting_Regen,sets.CurrentGear);
 		end
 
 		if player.MP < player.MaxMP then
-			gcinclude.fMoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
 		end
 
 	elseif gcinclude.fSummonerPet() then
 		-- Player idling with pet
-		gcinclude.fMoveToCurrent(sets.Default_WPet,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Default_WPet,sets.CurrentGear);
 	else
 		-- Assume player idling without pet or /subjob's pet
-		gcinclude.fMoveToCurrent(sets.Default,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 	end
 		
 	-- Make sure to equip the appropriate elemental staff (if appropriate)
 	-- for the current pet
 
-	if (pet ~= nil and table.find(gcinclude.tSummonSkill,pet.Name) ~= nil) then
+	if (gcinclude.fSummonerPet() == true) then
 		local sStave = gcinclude.fCheckForElementalGearByValue('staff','Summons',pet.Name);
 		if sStave ~= nil then
 			gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);
@@ -1166,11 +1171,11 @@ profile.HandleDefault = function()
 	-- And make sure a weapon equipped. (Going into a capped area can cause no weapon to be equipped.)
 	local gear = gData.GetEquipment();
 	if gear.Main == nil then
-		gcinclude.fMoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
+		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
 	end
 	
 	-- Equip the composited HandleDefault set
-	gcinclude.fEquipTheGear(sets.CurrentGear);
+	gcinclude.EquipTheGear(sets.CurrentGear);
 	
 	-- Lastly, update the display, just in case
 	gcdisplay.Update();
@@ -1218,129 +1223,129 @@ profile.HandleAbility = function()
 			if profile.sAmmo == nil or string.find(string.lower(profile.sAmmo),'pet f') == nil then		-- something else equipped
 				profile.bAmmo = gcinclude.doPetFood('max',nil);
 			end
-			gcinclude.fMoveToCurrent(sets.Reward,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Reward,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Charm') then
-			gcinclude.fMoveToCurrent(sets.Charm,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Charm,sets.CurrentGear);
 			local sStave = gcinclude.fCheckForEleGear('staff','light');
 			if sStave ~= nil then
 				gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);
 			end
 		elseif string.match(ability.Name, 'Tame') then
-			gcinclude.fMoveToCurrent(sets.Tame,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Tame,sets.CurrentGear);
 		end
 	-- /WAR
 	elseif sj == 'WAR' then
 		if string.match(ability.Name, 'Provoke') then
-			gcinclude.fMoveToCurrent(sets.Provoke,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Provoke,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Berserk') then
-			gcinclude.fMoveToCurrent(sets.Berserk,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Berserk,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Defender') then
-			gcinclude.fMoveToCurrent(sets.Defender,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Defender,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Warcry') then
-			gcinclude.fMoveToCurrent(sets.Warcry,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Warcry,sets.CurrentGear);
 		end
 	--* /MNK *--
 	elseif sj == 'MNK' then
 		if string.match(ability.Name, 'Boost') then
-			gcinclude.fMoveToCurrent(sets.Boost,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Boost,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Focus') then
-			gcinclude.fMoveToCurrent(sets.Focus,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Focus,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Dodge') then
-			gcinclude.fMoveToCurrent(sets.Dodge,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Dodge,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Chakra') then
-			gcinclude.fMoveToCurrent(sets.Chakra,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Chakra,sets.CurrentGear);
 		end
 	-- /THF
 	elseif sj == 'THF' then
 		if string.match(ability.Name, 'Steal') then
-			gcinclude.fMoveToCurrent(sets.Steal,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Steal,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Sneak Attack') then
-			gcinclude.fMoveToCurrent(sets.SneakAttack,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.SneakAttack,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Flee') then
-			gcinclude.fMoveToCurrent(sets.Flee,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Flee,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Trick Attack') then
-			gcinclude.fMoveToCurrent(sets.TrickAttack,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.TrickAttack,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Mug') then
-			gcinclude.fMoveToCurrent(sets.Mug,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Mug,sets.CurrentGear);
 		end
 	-- /WHM
 	elseif sj == 'WHM' then
 		if string.match(ability.Name, 'Divine Seal') then
-			gcinclude.fMoveToCurrent(sets.DivineSeal,sets.CurrentGear);	
+			gcinclude.MoveToCurrent(sets.DivineSeal,sets.CurrentGear);	
 		end
 	-- /BLM
 	elseif sj == 'BLM' then
 		if string.match(ability.Name, 'Elemental Seal') then
-			gcinclude.fMoveToCurrent(sets.ElementalSeal,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.ElementalSeal,sets.CurrentGear);
 		end
 	-- /DRK
 	elseif sj == 'DRK' then
 		if string.match(ability.Name, 'Arcane Circle') then
-			gcinclude.fMoveToCurrent(sets.ArcaneCircle,sets.CurrentGear);	
+			gcinclude.MoveToCurrent(sets.ArcaneCircle,sets.CurrentGear);	
 		elseif string.match(ability.Name, 'Last Resort') then
-			gcinclude.fMoveToCurrent(sets.LastResort,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.LastResort,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Weapon Bash') then
-			gcinclude.fMoveToCurrent(sets.WeaponBash,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.WeaponBash,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Souleater') then
-			gcinclude.fMoveToCurrent(sets.Souleater,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Souleater,sets.CurrentGear);
 		end
 	-- /RNG
 	elseif sj == 'RNG' then
 		if string.match(ability.Name, 'Sharpshot') then
-			gcinclude.fMoveToCurrent(sets.Sharpshot,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Sharpshot,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Scavenge') then
-			gcinclude.fMoveToCurrent(sets.Scavenge,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Scavenge,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Camouflage') then
-			gcinclude.fMoveToCurrent(sets.Camouflage,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Camouflage,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Barrage') then
-			gcinclude.fMoveToCurrent(sets.Barrage,sets.CurrentGear);	
+			gcinclude.MoveToCurrent(sets.Barrage,sets.CurrentGear);	
 		end
 	-- /SAM
 	elseif sj == 'SAM' then
 		if string.match(ability.Name, 'Warding Circle') then
-			gcinclude.fMoveToCurrent(sets.WardingCircle,sets.CurrentGear);			
+			gcinclude.MoveToCurrent(sets.WardingCircle,sets.CurrentGear);			
 		elseif string.match(ability.Name, 'Third Eye') then
-			gcinclude.fMoveToCurrent(sets.ThirdEye,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.ThirdEye,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Hasso') then
-			gcinclude.fMoveToCurrent(sets.Hasso,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Hasso,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Meditate') then
-			gcinclude.fMoveToCurrent(sets.Meditate,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Meditate,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Seigan') then
-			gcinclude.fMoveToCurrent(sets.Seigan,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Seigan,sets.CurrentGear);
 		end
 	-- /DRG
 	elseif sj == 'DRG' then
 		if string.match(ability.Name, 'Ancient Circle') then
-			gcinclude.fMoveToCurrent(sets.AncientCircle,sets.CurrentGear);			
+			gcinclude.MoveToCurrent(sets.AncientCircle,sets.CurrentGear);			
 		elseif string.match(ability.Name, 'Jump') then
-			gcinclude.fMoveToCurrent(sets.Jump,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.Jump,sets.CurrentGear);
 		elseif string.match(ability.Name, 'High Jump') then
-			gcinclude.fMoveToCurrent(sets.HighJump,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.HighJump,sets.CurrentGear);
 		end
 	-- /PLD
 	elseif sj == 'PLD' then
 		if string.match(ability.Name, 'Holy Circle') then
-			gcinclude.fMoveToCurrent(sets.HolyCircle,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.HolyCircle,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Shield Bash') then
-			gcinclude.fMoveToCurrent(sets.ShieldBash,sets.CurrentGear);
+			gcinclude.MoveToCurrent(sets.ShieldBash,sets.CurrentGear);
 		elseif string.match(ability.Name, 'Sentinel') then
-			gcinclude.fMoveToCurrent(sets.Sentinel,sets.CurrentGear);	
+			gcinclude.MoveToCurrent(sets.Sentinel,sets.CurrentGear);	
 		elseif string.match(ability.Name, 'Cover') then
-			gcinclude.fMoveToCurrent(sets.Cover,sets.CurrentGear);	
+			gcinclude.MoveToCurrent(sets.Cover,sets.CurrentGear);	
 		end
 	end
 	
 	-- SMN abilities
 	if string.find(ability.Name, 'Astral Flow') then
-		gcinclude.fMoveToCurrent(sets.AstralFlow,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.AstralFlow,sets.CurrentGear);
 	elseif table.find(gcinclude.SmnSkill,ability.Name) ~= nil or
 		   table.find(gcinclude.SmnMagical,ability.Name) ~= nil or
 		   table.find(gcinclude.SmnAccuracy,ability.Name) ~= nil or
 		   table.find(gcinclude.SmnHybrid,ability.Name) ~= nil or
 		   string.find(gcinclude.SmnBPRageList,ability.Name) ~= nil then
-		gcinclude.fMoveToCurrent(sets.BP,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.BP,sets.CurrentGear);
 	end
-	gcinclude.fEquipTheGear(sets.CurrentGear);		-- Equip the composited HandleAbility set
+	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleAbility set
 end		-- HandleAbility
 
 --[[
@@ -1360,18 +1365,18 @@ profile.HandleItem = function()
 	end
 		
 	if string.match(item.Name, 'Holy Water') then 
-		gcinclude.fMoveToCurrent(gcinclude.sets.Holy_Water,sets.CurrentGear);
+		gcinclude.MoveToCurrent(gcinclude.sets.Holy_Water,sets.CurrentGear);
 		bShow = true;
 	elseif string.match(item.Name, 'Silent Oil') then
-		gcinclude.fMoveToCurrent(sets.Sneak,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Sneak,sets.CurrentGear);
 		bShow = true;
 	elseif string.match(item.Name, 'Prism Powder') then
-		gcinclude.fMoveToCurrent(sets.Invisible,sets.CurrentGear);
+		gcinclude.MoveToCurrent(sets.Invisible,sets.CurrentGear);
 		bShow = true;
 	end
 		
 	if bShow == true then
-		gcinclude.fEquipTheGear(sets.CurrentGear);
+		gcinclude.EquipTheGear(sets.CurrentGear);
 	end
 end		-- HandleItem
 
@@ -1394,14 +1399,8 @@ profile.HandlePrecast = function()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Equip the precast gear set
-	gcinclude.fMoveToCurrent(sets.Precast,sets.CurrentGear);	
-		
-	-- See if an elemental obi should be equipped
-	obi = gcinclude.fCheckForElementalGearByValue('obi','MEacc',spell.Name);
-	if obi ~= nil then
-		sets.CurrentGear['Waist'] = obi;
-	end	
-	gcinclude.fEquipTheGear(sets.CurrentGear);
+	gcinclude.MoveToCurrent(sets.Precast,sets.CurrentGear);	
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandlePrecast
 
 --[[
@@ -1422,7 +1421,7 @@ profile.HandleMidcast = function()
 	-- Call the common HandleMidcast now
 	gcinclude.HandleMidcast();
 	
-	gcinclude.fEquipTheGear(sets.CurrentGear);		-- Equip the composited midcast set
+	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited midcast set
 end		-- gcinclude.HandleMidcast
 
 --[[
@@ -1437,8 +1436,8 @@ profile.HandlePreshot = function()
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 		
-	gcinclude.fMoveToCurrent(sets.Preshot,sets.CurrentGear);
-	gcinclude.fEquipTheGear(sets.CurrentGear);
+	gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandlePreshot
 
 --[[
@@ -1455,10 +1454,10 @@ profile.HandleMidshot = function()
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 	
-	gcinclude.fMoveToCurrent(sets.Midshot,sets.CurrentGear);
+	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
 	
 	-- Equip the composited Midshot set
-	gcinclude.fEquipTheGear(sets.CurrentGear);
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandleMidshot
 
 --[[
@@ -1485,10 +1484,10 @@ profile.HandleWeaponskill = function()
 	gcinclude.ClearSet(sets.CurrentGear);
 
 	-- Call the common weaponskill handler
-	gcinclude.HandleWeaponskill(false);
+	gcinclude.fHandleWeaponskill();
 	
 	-- Equip the composited weaponskill set
-	gcinclude.fEquipTheGear(sets.CurrentGear);
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandleWeaponskill
 
 return profile;
