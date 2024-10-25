@@ -39,7 +39,7 @@ common root name (see /maxsong) or the common buff name (e.g., paeon when
 performing one of the army paeon songs.)  
 **/maxspell "name"**: Determines the highest level spell player can cast that has the common root
 name (e.g., Cure gets you Cure III if you're 75 and /whm.)  
-**/petfood [name]**: Equips either named petfood or determines best pet food and equips that.  
+**/petfood [name]**: Equips the named pet food.  
 **/slot name|position gear**: Equips the passed piece of gear and locks the equipment slot.  
 **/tank**: Turns on/off equipping TP tank gear. Only available to: PLD,NIN,DRK,WAR,THF,RDM,RUN.  
 **/unlock: [all|#'s|names]**: Unlock equipment slot(s) so luashitacast can change item.  
