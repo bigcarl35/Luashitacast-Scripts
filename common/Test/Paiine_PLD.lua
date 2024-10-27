@@ -4,26 +4,34 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the PLD job.
 
-	Gear Sets last updated: June 21, 2024
-	Code update: September 28, 2024
+	Gear Sets last updated: October 21, 2024
+	Code update: October 21, 2024
 --]]
 
 local sets = {
 --[[
-	The gear sets are self contained, a mixture of direct gear assignments and conditional
-	assignments. Each set contains entries identified by the gear slot. If it's a single
-	value, it's a direct assignment like: Body = 'Austere Robe', but there can be multiple
-	items identified, usually ordered by level: Body = { 'Vermillion Cloak//CARBY','Austere Robe' },
-	Any item that has a // appended to it contains an inline conditional. The // code is a test
-	to see if the item should be equipped. The level is still checked, but if the inline coded
-	test is successful, that piece of gear will be loaded. Currently nothing checks to see
-	if that item can be equipped by the job it's associated with let alone whether the player
-	even has it accessible. Those are all planned for the future. In the mean time the onus is
-	on the player to create the correct definitions.
+	The gear sets are self contained, a mixture of direct gear assignments and 
+	conditional assignments. Each set contains entries identified by the gear 
+	slot. If it's a single value, it's a direct assignment like: Body = 'Austere 
+	Robe', but there can be multiple items identified, usually ordered by level: 
+	Body = { 'Vermillion Cloak//CARBY','Austere Robe' }, Any item that has a // 
+	appended to it contains an inline conditional. The // code is a test to see 
+	if the item should be equipped. The level is still checked, but if the inline 
+	coded test is successful, that piece of gear will be loaded. If you've done 
+	a /gc command, the item's suitability for the job and accessibility will 
+	also be checked.
 		
-	Not all sets need to be defined. There is nothing wrong with leaving a set "empty", but don't
-	delete any of the sets. All the ones listed here (except for any custom sets) are expected to 
-	exist by Luashitacast.
+	Not all sets need to be defined. There is nothing wrong with leaving a set 
+	"empty", but don't delete any of the sets. All the ones listed here (except 
+	for any custom sets) are expected to exist by Luashitacast. PLD supports 
+	"tanking", so you'll find some sets with an associated "Tank_" set (ex. 
+	TP and Tank_TP). Minally include a subset entry in the Tank_ set so that 
+	some gear is definied until you create a tanking set.
+	Example:
+	
+	['Tank_TP'] = {
+		Subset = 'TP',
+	}
 		
 	*** Note ***
 	/SMN has a problem in that their pet is the level of the subjob, which is not very useful. 
@@ -761,7 +769,7 @@ profile.sAmmo = nil;
 	not SMN avatars.
 --]]
 
-local function HandlePetAction(PetAction)
+function HandlePetAction(PetAction)
 	local pet = gData.GetPet();
 	
 	-- Only gear swap if this flag is true and the pet is a BST pet
@@ -784,7 +792,7 @@ end		-- HandlePetAction
 	which subjob is current. 
 --]]
 
-local function SetSubjobSet(chkSJ)
+function SetSubjobSet(chkSJ)
 	-- "chkSJ" is the key for what toolbar is shown. All jobs are defined in the subs table.
 	-- A value of 0 means that job is not configured. All values > 0 indicate which toolbar
 	-- is to be displayed. The player must change the entries in this table to match their
@@ -816,7 +824,7 @@ end		-- SetSubjobSet
 	OnLoad is run whenever you log into your PLD or change your job to PLD
 --]]
 
-profile.OnLoad = function()
+function profile.OnLoad()
 	local player = gData.GetPlayer();
 
 	gSettings.AllowAddSet = true;
@@ -848,7 +856,7 @@ end		-- OnLoad
 	OnUnload is run when you change to another job
 --]]
 
-profile.OnUnload = function()
+function profile.OnUnload()
 	gcinclude.Unload();
 end		-- OnUnload
 
@@ -857,7 +865,7 @@ end		-- OnUnload
 	of in gcinclude.HandleCommands are specific to PLD or the help system.
 --]]
 
-profile.HandleCommand = function(args)
+function profile.HandleCommand(args)
 	if args[1] == 'help' then
 		gcdisplay.ShowHelp();
 	elseif args[1] == 'petfood' then			-- Supported since pet food is not job specific, but very niche
@@ -872,7 +880,7 @@ end		-- HandleCommand
 	their pet.
 --]]
 	
-profile.HandleDefault = function()
+function profile.HandleDefault()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();
 	local player = gData.GetPlayer();
@@ -881,6 +889,8 @@ profile.HandleDefault = function()
 	local eWeap = nil;
 	local cKey;
 	local bTank = gcdisplay.GetToggle('Tank');
+
+	gcinclude.StartReminder();		-- See if reminder should be printed
 	
 	-- Only pet actions from BST are supported.
 	if (petAction ~= nil and player.SubJob == 'BST') then
@@ -935,6 +945,11 @@ profile.HandleDefault = function()
 			
 	-- Now process the player status accordingly
 	if player ~= nil and player.Status == 'Engaged' then
+		if bTank == true then
+			gcinclude.MoveToCurrent(sets.Tank_TP,sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
+		end
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
 			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
@@ -999,7 +1014,7 @@ end		-- HandleDefault
 	HandleAbility is used to change the player's gear appropriately.
 --]]
 
-profile.HandleAbility = function()
+function profile.HandleAbility()
 	local ability = gData.GetAction();
 	local eq = gData.GetEquipment();
 	
@@ -1133,7 +1148,7 @@ end		-- HandleAbility
 	is supported
 --]]
 
-profile.HandleItem = function()
+function profile.HandleItem()
 	local item = gData.GetAction();
 	local bShow = false;
 	
@@ -1165,7 +1180,7 @@ end		-- HandleItem
 	Fast Cast, cast time reduction, and quick cast gear in anticipation of a spell
 --]]
 
-profile.HandlePrecast = function()
+function profile.HandlePrecast()
     local spell = gData.GetAction();
 	local obi;
 	local mSet;
@@ -1189,7 +1204,7 @@ end		-- HandlePrecast
 	are loaded: INT/MND, spell specific, macc, magic skill, obi, ele swap	
 --]]
 
-profile.HandleMidcast = function()
+function profile.HandleMidcast()
 	local bTank = gcdisplay.GetToggle('Tank');
 	
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
@@ -1216,7 +1231,7 @@ end		-- HandleMidcast
 	and Ranged Shot Speed Gear for a ranged attack
 --]]
 
-profile.HandlePreshot = function()
+function profile.HandlePreshot()
 	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
 		-- Clear out the CurrentGear in case of leftovers
 		gcinclude.ClearSet(sets.CurrentGear);	
@@ -1231,7 +1246,7 @@ end		-- HandlePreshot
 	and Damage gear for a ranged attack
 --]]
 
-profile.HandleMidshot = function()
+function profile.HandleMidshot()
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
@@ -1250,7 +1265,7 @@ end		-- HandleMidshot
 	HandleWeaponskill loads the gear appropriately for the weapon skill you're doing
 --]]
 
-profile.HandleWeaponskill = function()
+function profile.HandleWeaponskill()
 	local ws = gData.GetAction();
 	local canWS = gcinclude.CheckWsBailout();
 	local cKey;

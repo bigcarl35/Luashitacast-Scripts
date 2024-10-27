@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the BLM job.
 	
-	Gear Sets last updated: June 21, 2024
-	Code update: September 1, 2024
+	Gear Sets last updated: October 21, 2024
+	Code update: October 1, 2024
 --]]
 
 local sets = {
@@ -16,10 +16,8 @@ local sets = {
 	items identified, usually ordered by level: Body = { 'Vermillion Cloak//CARBY','Austere Robe' },
 	Any item that has a // appended to it contains an inline conditional. The // code is a test
 	to see if the item should be equipped. The level is still checked, but if the inline coded
-	test is successful, that piece of gear will be loaded. Currently nothing checks to see
-	if that item can be equipped by the job it's associated with let alone whether the player
-	even has it accessible. Those are all planned for the future. In the mean time the onus is
-	on the player to create the correct definitions.
+	test is successful, that piece of gear will be loaded. If you've done a /gc command,
+	the item's suitability for the job and accessibility will also be checked.
 	
 	Not all sets need to be defined. There is nothing wrong with leaving a set "empty", but don't
 	delete any of the sets. All the ones listed here (except for any custom sets) are expected to 
@@ -55,15 +53,13 @@ local sets = {
 --]]
 
 	['TP'] = {
-        Head  = 'Silver Hairpin',
+        Head  = 'Silver Hairpin +1',
         Neck  = 'Justice Badge',
         Ears  = { 'Energy Earring +1', 'Energy Earring +1' },
         Body  = { 'Seer\'s Tunic', 'Angler\'s Tunica' },
-        Hands = { 'Seer\'s Mitts', 'Baron\'s Cuffs' },
+        Hands = 'Baron\'s Cuffs',
         Rings = { 'Tamas Ring', 'Astral Ring', 'Astral Ring' },
         Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
-        Legs  = 'Ryl.Ftm. Trousers',
-        Feet  = 'Bounding Boots',
     },
 		
 --[[
@@ -103,7 +99,7 @@ local sets = {
 		
 	['Default'] = {
 		Subset = 'TP',
-        Head   = { 'Lilac Corsage//TOWN', 'Silver Hairpin' },
+        Head   = { 'Lilac Corsage//TOWN', 'Silver Hairpin +1' },
         Body   = { 'Ducal Aketon//TOWN-AK', 'Seer\'s Tunic', 'Angler\'s Tunica' },		
 	},
 		
@@ -138,7 +134,6 @@ local sets = {
 
 	['Start_Weapons'] = {
 		Main = 'Solid Wand',
-		Sub = 'Fish Scale Shield',
 		Ammo = 'Fortune Egg',
     },
 	
@@ -282,10 +277,8 @@ local sets = {
 	-- success of THF's lock picking skill, reducing the chance of spawning a mimic
 	-- or the chance of failure. INT is associated with the element ice
 	['INT'] = {
-        Hands = 'Seer\'s Mitts',
         Rings = 'Tamas Ring',
         Waist = 'Mrc.Cpt. Belt',
-        Legs  = 'Seer\'s Slacks',
         Feet  = 'Mannequin Pumps',
     },
 
@@ -297,7 +290,6 @@ local sets = {
 	['MND'] = {
         Neck  = 'Justice Badge',
         Body  = 'Wonder Kaftan',
-        Hands = 'Seer\'s Mitts',
         Rings = { 'Tamas Ring', 'Tranquility Ring' },
 		Back  = 'White Cape',
         Waist = 'Friar\'s Rope',
@@ -469,10 +461,8 @@ local sets = {
 	['WS_DEXINT'] = {
 		Head  = 'Empress Hairpin',
 		Neck  = 'Spike Necklace',
-		Hands = 'Seer\'s Mitts',
 		Rings = { 'Tamas Ring', 'Balance Ring' },
 		Waist = 'Mrc.Cpt. Belt',
-		Legs  = 'Seer\'s Slacks',
 		Feet  = 'Mannequin Pumps',
     },
 
@@ -483,10 +473,8 @@ local sets = {
 --]]
 
 	['WS_INT'] = {
-		Hands = 'Seer\'s Mitts',
 		Rings = 'Tamas Ring',
 		Waist = 'Mrc.Cpt. Belt',
-		Legs  = 'Seer\'s Slacks',
 		Feet  = 'Mannequin Pumps',
 	},
 
@@ -498,7 +486,6 @@ local sets = {
 
 	['WS_MND'] = {
 		Neck  = 'Justice Badge',
-		Hands = 'Seer\'s Mitts',
 		Rings = { 'Tamas Ring', 'Tranquility Ring' },
 		Back  = 'White Cape',
 		Waist = 'Friar\'s Rope',
@@ -541,7 +528,6 @@ local sets = {
 	--* BST *--
 	-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration)
 	['Charm'] = {
-	    Head = 'Entrancing Ribbon',
         Neck = 'Flower Necklace',
         Waist = 'Corsette',
     },
@@ -731,7 +717,7 @@ profile.sAmmo = nil;
 	not SMN avatars.
 --]]
 
-local function HandlePetAction(PetAction)
+function HandlePetAction(PetAction)
 	local pet = gData.GetPet();
 	
 	-- Only gear swap if this flag is true and the pet is a BST pet
@@ -754,7 +740,7 @@ end		-- HandlePetAction
 	which subjob is current. 
 --]]
 
-local function SetSubjobSet(chkSJ)
+function SetSubjobSet(chkSJ)
 	-- "chkSJ" is the key for what toolbar is shown. All jobs are defined in the subs table.
 	-- A value of 0 means that job is not configured. All values > 0 indicate which toolbar
 	-- is to be displayed. The player must change the entries in this table to match their
@@ -786,7 +772,7 @@ end		-- SetSubjobSet
 	OnLoad is run whenever you log into your BST or change your job to BST
 --]]
 
-profile.OnLoad = function()
+function profile.OnLoad()
 	local player = gData.GetPlayer();
 
 	gSettings.AllowAddSet = true;
@@ -819,7 +805,7 @@ end		-- OnLoad
 	OnUnload is run when you change to another job
 --]]
 
-profile.OnUnload = function()
+function profile.OnUnload()
 	gcinclude.Unload();
 end		-- OnUnload
 
@@ -828,7 +814,7 @@ end		-- OnUnload
 	of in gcinclude.HandleCommands are specific to BST or the help system, which has been tailored to BST.
 --]]
 
-profile.HandleCommand = function(args)
+function profile.HandleCommand(args)
 	if args[1] == 'help' then
 		gcdisplay.ShowHelp();
 	elseif args[1] == 'petfood' then			-- Supported since pet food is not job specific, but very niche
@@ -843,7 +829,7 @@ end		-- HandleCommand
 	their pet.
 --]]
 	
-profile.HandleDefault = function()
+function profile.HandleDefault()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();
 	local player = gData.GetPlayer();	
@@ -852,6 +838,8 @@ profile.HandleDefault = function()
 	local eWeap = nil;
 	local cKey;
 
+	gcinclude.StartReminder();		-- See if reminder should be printed
+	
 	-- Only pet actions from BST are supported.
 	if (petAction ~= nil and player.SubJob == 'BST') then
 		HandlePetAction(petAction);
@@ -911,6 +899,7 @@ profile.HandleDefault = function()
 		
 	-- Now process the player status accordingly
 	if player.Status == 'Engaged' then
+		gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
 			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
@@ -965,7 +954,7 @@ end		-- HandleDefault
 	HandleAbility is used to change the player's gear appropriately.
 --]]
 
-profile.HandleAbility = function()
+function profile.HandleAbility()
 	local ability = gData.GetAction();
 			
 	if gcdisplay.GetToggle('GSwap') == false then
@@ -1069,7 +1058,7 @@ end		-- HandleAbility
 	is supported
 --]]
 
-profile.HandleItem = function()
+function profile.HandleItem()
 	local item = gData.GetAction();
 	local bShow = false;
 	
@@ -1100,7 +1089,7 @@ end		-- HandleItem
 	HandlePrecast loads Fast Cast, cast time reduction, and quick cast gear in anticipation of a spell
 --]]
 
-profile.HandlePrecast = function()
+function profile.HandlePrecast()
     local spell = gData.GetAction();
 	local obi;
 	local mSet;
@@ -1124,7 +1113,7 @@ end		-- HandlePrecast
 	are loaded: INT/MND, spell specific, macc, magic skill, obi, ele swap	
 --]]
 
-profile.HandleMidcast = function()
+function profile.HandleMidcast()
 
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
 		return;
@@ -1144,7 +1133,7 @@ end		-- HandleMidcast
 	and Ranged Shot Speed Gear for a ranged attack
 --]]
 
-profile.HandlePreshot = function()
+function profile.HandlePreshot()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
@@ -1161,7 +1150,7 @@ end		-- HandlePreshot
 	and Damage gear for a ranged attack
 --]]
 
-profile.HandleMidshot = function()
+function profile.HandleMidshot()
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
@@ -1180,7 +1169,7 @@ end		-- HandleMidshot
 	HandleWeaponskill loads the gear appropriately for the weapon skill you're doing
 --]]
 
-profile.HandleWeaponskill = function()
+function profile.HandleWeaponskill()
 	local ws = gData.GetAction();
 	local canWS = gcinclude.CheckWsBailout();
 	local cKey;

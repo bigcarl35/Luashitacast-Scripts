@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the DRK job.
 
-	Gear Sets last updated: September 15, 2024	
-	Code update: September 28, 2024	
+	Gear Sets last updated: October 21, 2024	
+	Code update: October 21, 2024	
 --]]
 
 local sets = {
@@ -16,14 +16,20 @@ local sets = {
 	items identified, usually ordered by level: Body = { 'Vermillion Cloak//CARBY','Austere Robe' },
 	Any item that has a // appended to it contains an inline conditional. The // code is a test
 	to see if the item should be equipped. The level is still checked, but if the inline coded
-	test is successful, that piece of gear will be loaded. Currently nothing checks to see
-	if that item can be equipped by the job it's associated with let alone whether the player
-	even has it accessible. Those are all planned for the future. In the mean time the onus is
-	on the player to create the correct definitions.
+	test is successful, that piece of gear will be loaded. If you've done a /gc command,
+	the item's suitability for the job and accessibility will also be checked.
 	
 	Not all sets need to be defined. There is nothing wrong with leaving a set "empty", but don't
 	delete any of the sets. All the ones listed here (except for any custom sets) are expected to 
-	exist by Luashitacast.
+	exist by Luashitacast. DRK supports "tanking", so you'll find some sets with an associated 
+	"Tank_" set (ex. TP and Tank_TP). Minally include a subset entry in the Tank_ set so that 
+	some gear is definied until you create a tanking set.
+	
+	Example:
+	
+	['Tank_TP'] = {
+		Subset = 'TP',
+	}
 		
 	*** Note ***
 	/SMN has a problem in that their pet is the level of the subjob, which is not very useful. 
@@ -112,7 +118,7 @@ local sets = {
 		Hands = { 'Abs. Gauntlets +1', 'Thick Mufflers' }, -- DEX from +1 gauntlets > 3 acc
 		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt' },
 		Legs  = 'Thick Breeches',
-		Feet  = { 'Chaos Sollerets +1', 'Bounding Boots' }, -- Needed to override the default Thick Sollerets
+		Feet  = { 'Chs. Sollerets +1', 'Bounding Boots' }, -- Needed to override the default Thick Sollerets
     },
 
 	['Tank_Accuracy'] = {
@@ -123,7 +129,7 @@ local sets = {
 		Hands = 'Thick Mufflers',
 		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt' },
 		Legs  = 'Thick Breeches',
-		Feet  = { 'Chaos Sollerets +1', 'Bounding Boots' }, -- Needed to override the default Thick Sollerets	
+		Feet  = { 'Chs. Sollerets +1', 'Bounding Boots' }, -- Needed to override the default Thick Sollerets	
 	},
 	
 --[[
@@ -326,7 +332,7 @@ local sets = {
 	-- success of THF's lock picking skill, reducing the chance of spawning a mimic
 	-- or the chance of failure. INT is associated with the element ice
 	['INT'] = {
-        Rings = { 'Tamas Ring', 'Windurstian Ring' },
+        Rings = 'Tamas Ring',
 		Hands = 'Abs. Gauntlets +1',
         Waist = 'Mrc.Cpt. Belt',
 		Legs  = 'Chaos Flanchard',
@@ -350,7 +356,7 @@ local sets = {
         Rings = { 'Tamas Ring', 'Tranquility Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = { 'Abyss Flanchard', 'Wonder Braccae' },
-        Feet = { 'Chaos Sollerets +1', 'Mannequin Pumps' },
+        Feet = { 'Chs. Sollerets +1', 'Mannequin Pumps' },
     },
 
 	-- Tank_MND is a special version of the MND set that composits MND gear with
@@ -435,7 +441,7 @@ local sets = {
 		Axe: Raging Axe,Smash Axe,Gale Axe,Avalanche Axe,Spinning Axe,Rampage,Decimation
 		Great Axe: Iron Tempest,Sturmwind,Keen Edge,Raging Rush
 		Sword: Flat Blade,Circle Blade,Spirits Within,Vorpal Blade
-		Club: Starlight,Brainshaker,Moonlight,Skullbreaker,True Strike		
+		Club: Brainshaker,Skullbreaker,True Strike		
 -]]
 	
 	['WS_STR'] = {
@@ -443,12 +449,12 @@ local sets = {
         Neck  = 'Spike Necklace',
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
 		Body  = { 'Plastron', 'Chaos Cuirass', 'Wonder Kaftan' },
-        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+        Hands = { 'Wonder Mitts', 'Ryl.Ftm. Gloves' },
         Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
         Legs  = { 'Thick Breeches' ,'Wonder Braccae' },
-        Feet  = { 'Chaos Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
+        Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
     },
 
 --[[
@@ -462,12 +468,12 @@ local sets = {
         Neck  = 'Spike Necklace',
         Ears  = { 'Genin Earring//SJNIN', 'Drone Earring', 'Beastly Earring//AXE' },
         Body  = { 'Plastron','Chaos Cuirass', 'Wonder Kaftan' },
-        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+        Hands = { 'Wonder Mitts', 'Ryl.Ftm. Gloves' },
         Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
         Legs  = { 'Thick Breeches', 'Ryl.Sqr. Breeches', 'Wonder Braccae' },
-        Feet  = { 'Chaos Sollerets +1', 'Creek F Clomps', 'Wonder Clomps', 'Bounding Boots' },
+        Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps', 'Bounding Boots' },
     },
 	
 --[[
@@ -481,12 +487,12 @@ local sets = {
         Neck  = 'Spike Necklace',
         Ears  = { 'Genin Earring//SJNIN', 'Drone Earring', 'Beastly Earring//AXE' },
         Body  = { 'Plastron', 'Chaos Cuirass', 'Brigandine', 'Wonder Kaftan' },
-        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+        Hands = { 'Wonder Mitts', 'Ryl.Ftm. Gloves' },
         Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Kshama Ring No.2', 'Balance Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
         Legs  = { 'Thick Breeches', 'Ryl.Sqr. Breeches', 'Wonder Braccae' },
-        Feet  = { 'Chaos Sollerets +1', 'Creek F Clomps', 'Wonder Clomps', 'Bounding Boots' },
+        Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps', 'Bounding Boots' },
     },
 
 --[[
@@ -502,12 +508,12 @@ local sets = {
         Neck  = 'Spike Necklace',
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
         Body  = { 'Plastron', 'Chaos Cuirass', 'Wonder Kaftan' },
-        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+        Hands = { 'Wonder Mitts', 'Ryl.Ftm. Gloves' },
         Rings = { 'Flame Ring', 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
         Legs  = { 'Thick Breeches', 'Wonder Braccae' },
-        Feet  = { 'Chaos Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
+        Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
     },
 
 --[[
@@ -521,12 +527,12 @@ local sets = {
         Neck  = 'Spike Necklace',
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
         Body  = { 'Plastron', 'Chaos Cuirass', 'Wonder Kaftan' },
-        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+        Hands = { 'Wonder Mitts', 'Ryl.Ftm. Gloves' },
         Rings = { 'Flame Ring', 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
         Legs  = { 'Thick Breeches', 'Wonder Braccae' },
-        Feet  = { 'Chaos Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
+        Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
     },
 
 --[[
@@ -539,16 +545,16 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
-		Head  = 'Chaos Sollerets',
+		Head  = 'Chaos Burgeonet',
         Neck  = { 'Promise Badge','Justice Badge' },
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
 		Body  = { 'Plastron', 'Abyss Cuirass', 'Wonder Kaftan' },
-        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY' },
+        Hands = 'Wonder Mitts',
         Rings = { 'Flame Ring', 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tranquility Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
         Legs  = 'Wonder Braccae',
-        Feet  = { 'Chaos Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
+        Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
     },
 
 --[[
@@ -560,16 +566,16 @@ local sets = {
 --]]
 	
 	['WS_STRVIT'] = {
-		Head  = 'Chaos Sollerets',
+		Head  = 'Chaos Burgeonet',
         Neck  = 'Spike Necklace',
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
 		Body  = { 'Plastron', 'Wonder Kaftan' },
-        Hands = { 'Wonder Mitts', 'Battle Gloves//ACCURACY' },
+        Hands = 'Wonder Mitts',
         Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
         Legs  = { 'Wonder Braccae', 'San. Trousers' },
-        Feet  = { 'Chaos Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
+        Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
     },
 
 --[[
@@ -615,7 +621,7 @@ local sets = {
         Neck  = 'Spike Necklace',
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
 		Body  = 'Brigandine',
-		Hands = { 'Abs. Gauntlets +1', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+		Hands = { 'Abs. Gauntlets +1', 'Ryl.Ftm. Gloves' },
         Rings = { 'Kshama Ring No.2', 'Balance Ring' },
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
         Feet  = 'Bounding Boots',
@@ -632,7 +638,7 @@ local sets = {
         Neck  = 'Spike Necklace',
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
 		Body  = 'Brigandine',
-		Hands = { 'Abs. Gauntlets +1', 'Battle Gloves//ACCURACY', 'Ryl.Ftm. Gloves' },
+		Hands = { 'Abs. Gauntlets +1', 'Ryl.Ftm. Gloves' },
         Rings = { 'Kshama Ring No.2', 'Balance Ring' },
 		Legs  = 'Chaos Flanchard',
         Waist = { 'Life Belt//ACCURACY', 'Mrc.Cpt. Belt' },
@@ -652,7 +658,7 @@ local sets = {
         Rings = { 'Tamas Ring', 'Tranquility Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
-		Feet = { 'Chaos Sollerets +1', 'Mannequin Pumps' },
+		Feet = { 'Chs. Sollerets +1', 'Mannequin Pumps' },
     },
 
 --[[
@@ -679,7 +685,7 @@ local sets = {
         Rings = 'Toreador\'s Ring',
         Waist = 'Powerful Rope',
         Legs  = 'Wonder Braccae',
-        Feet  = { 'Creek F Clomps', 'Chaos Sollerets' },
+        Feet  = { 'Creek F Clomps', 'Chs. Sollerets +1' },
     },
 	
 --[[
@@ -905,7 +911,7 @@ profile.sAmmo = nil;		-- /BST specific. Name of ammo equipped
 	not SMN avatars.
 --]]
 
-local function HandlePetAction(PetAction)
+function HandlePetAction(PetAction)
 	local pet = gData.GetPet();
 	
 	-- Only gear swap if this flag is true and the pet is a BST pet
@@ -928,7 +934,7 @@ end		-- HandlePetAction
 	which subjob is current. 
 --]]
 
-local function SetSubjobSet(chkSJ)
+function SetSubjobSet(chkSJ)
 	-- "chkSJ" is the key for what toolbar is shown. All jobs are defined in the subs table.
 	-- A value of 0 means that job is not configured. All values > 0 indicate which toolbar
 	-- is to be displayed. The player must change the entries in this table to match their
@@ -960,7 +966,7 @@ end		-- SetSubjobSet
 	OnLoad is run whenever you log into your BST or change your job to BST
 --]]
 
-profile.OnLoad = function()
+function profile.OnLoad()
 	local player = gData.GetPlayer();
 
 	gSettings.AllowAddSet = true;
@@ -993,7 +999,7 @@ end		-- OnLoad
 	OnUnload is run when you change to another job
 --]]
 
-profile.OnUnload = function()
+function profile.OnUnload()
 	gcinclude.Unload();
 end		-- OnUnload
 
@@ -1002,7 +1008,7 @@ end		-- OnUnload
 	of in gcinclude.HandleCommands are specific to BST or the help system, which has been tailored to BST.
 --]]
 
-profile.HandleCommand = function(args)
+function profile.HandleCommand(args)
 	if args[1] == 'help' then
 		gcdisplay.ShowHelp();
 	elseif args[1] == 'petfood' then			-- Supported since pet food is not job specific, but very niche
@@ -1017,7 +1023,7 @@ end		-- HandleCommand
 	their pet (if they have one).
 --]]
 
-profile.HandleDefault = function()
+function profile.HandleDefault()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();		
 	local player = gData.GetPlayer();
@@ -1027,6 +1033,8 @@ profile.HandleDefault = function()
 	local eWeap = nil;
 	local cKey;
 
+	gcinclude.StartReminder();		-- See if reminder should be printed
+	
 	-- A /bst charmed pet action takes priority over a player's action.
 	if petAction ~= nil and player.SubJob == 'BST' then
 		HandlePetAction(petAction);
@@ -1080,6 +1088,11 @@ profile.HandleDefault = function()
 		
 	-- Now process the player status accordingly		
 	if player ~= nil and player.Status == 'Engaged' then
+		if bTank == true then
+			gcinclude.MoveToCurrent(sets.Tank_TP,sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
+		end
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
 			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
@@ -1144,7 +1157,7 @@ end		-- HandleDefault
 	HandleAbility is used to change the player's gear appropriately.
 --]]
 
-profile.HandleAbility = function()
+function profile.HandleAbility()
 	local ability = gData.GetAction();
 			
 	-- Only gear swap if this flag is true
@@ -1263,7 +1276,7 @@ end		-- HandleAbility
 	is supported
 --]]
 
-profile.HandleItem = function()
+function profile.HandleItem()
 	local item = gData.GetAction();
 	local bShow = false;
 
@@ -1295,7 +1308,7 @@ end		-- HandleItem
 	Fast Cast, cast time reduction, and quick cast gear in anticipation of a spell
 --]]
 
-profile.HandlePrecast = function()
+function profile.HandlePrecast()
     local spell = gData.GetAction();
 	local obi;
 	local mSet;
@@ -1319,7 +1332,7 @@ end		-- HandlePrecast
 	are loaded: INT/MND, spell specific, macc, magic skill, obi, ele swap	
 --]]
 
-profile.HandleMidcast = function()
+function profile.HandleMidcast()
 	local bTank = gcdisplay.GetToggle('Tank');
 	
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
@@ -1346,7 +1359,7 @@ end		-- HandleMidcast
 	and Ranged Shot Speed Gear for a ranged attack
 --]]
 
-profile.HandlePreshot = function()
+function profile.HandlePreshot()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
@@ -1362,7 +1375,7 @@ end		-- HandlePreshot
 	HandleMidshot loads Ranged Attack and Damage gear for a ranged attack
 --]]
 
-profile.HandleMidshot = function()
+function profile.HandleMidshot()
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
@@ -1381,7 +1394,7 @@ end		-- HandleMidshot
 	HandleWeaponskill loads the gear appropriately for the weapon skill you're doing
 --]]
 
-profile.HandleWeaponskill = function()
+function profile.HandleWeaponskill()
 	local ws = gData.GetAction();
 	local canWS = gcinclude.CheckWsBailout();
 	local cKey;

@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the RDM job.
 	
-	Gear Sets last updated: June 21, 2024
-	Code update: September 28, 2024
+	Gear Sets last updated: October 21, 2024
+	Code update: October 21, 2024
 --]]
 
 local sets = {
@@ -16,14 +16,20 @@ local sets = {
 	items identified, usually ordered by level: Body = { 'Vermillion Cloak//CARBY','Austere Robe' },
 	Any item that has a // appended to it contains an inline conditional. The // code is a test
 	to see if the item should be equipped. The level is still checked, but if the inline coded
-	test is successful, that piece of gear will be loaded. Currently nothing checks to see
-	if that item can be equipped by the job it's associated with let alone whether the player
-	even has it accessible. Those are all planned for the future. In the mean time the onus is
-	on the player to create the correct definitions.
-	
+	test is successful, that piece of gear will be loaded. If you've done a /gc command,
+	the item's suitability for the job and accessibility will also be checked.
+
 	Not all sets need to be defined. There is nothing wrong with leaving a set "empty", but don't
 	delete any of the sets. All the ones listed here (except for any custom sets) are expected to 
-	exist by Luashitacast.
+	exist by Luashitacast. RDM supports "tanking", so you'll find some sets with an associated 
+	"Tank_" set (ex. TP and Tank_TP). Minally include a subset entry in the Tank_ set so that 
+	some gear is definied until you create a tanking set.
+	
+	Example:
+	
+	['Tank_TP'] = {
+		Subset = 'TP',
+	}
 		
 	*** Note ***
 	/SMN has a problem in that their pet is the level of the subjob, which is not very useful. 
@@ -63,19 +69,20 @@ local sets = {
 --]]
 
 	['TP'] = {
-        Head  =  'Silver Hairpin',
+        Head  =  'Silver Hairpin +1',
         Neck  = { 'Spirit Torque', 'Justice Badge' },
         Ears  = { 'Geist Earring', 'Energy Earring +1', 'Energy Earring +1' },
-        Body  = { 'Ctr. Scale Mail', 'Baron\'s Saio', 'Beetle harness', 'Angler\'s Tunica' },
+        Body  = { 'Brigandine', 'Ctr. Scale Mail', 'Baron\'s Saio', 'Beetle harness', 'Angler\'s Tunica' },
 		Back  = 'White Cape',
         Hands = { 'Baron\'s Cuffs', 'Battle gloves' },
         Rings = { 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
-        Waist = { 'Friar\'s Rope', 'Mrc.Cpt. Belt' },
+        Waist = { 'Powerful Rope', 'Friar\'s Rope', 'Mrc.Cpt. Belt' },
         Legs  = { 'Ctr. Cuisses', 'San. Trousers', 'Ryl.Ftm. trousers', 'Fisherman\'s Hose' },
         Feet  = { 'Mannequin Pumps','Bounding boots', 'Waders' },
     },
 
 	['Tank_TP'] = {
+		Subset = 'TP',
 	},
 	
 --[[
@@ -89,11 +96,14 @@ local sets = {
 --]]
 	
 	['Accuracy'] = {
+		Neck  = 'Peacock Amulet',
         Hands = 'Battle Gloves',
 		Rings = 'Balance Ring',
+		Waist = { 'Life Belt', 'Tilt Belt' },
     },
 
 	['Tank_Accuracy'] = {
+		Subset = 'Accuracy',
 	},
 	
 --[[
@@ -104,10 +114,12 @@ local sets = {
 	
 	['Evasion'] = {
         Head = 'Empress Hairpin',
+		Neck = 'Spirit Torque',
         Hands = 'Battle Gloves',
     },
 
 	['Tank_Evasion'] = {
+		Subset = 'Evasion',
 	},
 
 --[[
@@ -122,9 +134,9 @@ local sets = {
 
 	['Default'] = {
 		Subset = {'TP_Tank//TANK', 'TP' },
-		Main  =  { 'Solid Wand//WSWAP', 'Yew Wand//WSWAP' },
-		Head   = { 'Lilac Corsage//TOWN', 'Silver Hairpin' },
-		Body   = { 'Ducal Aketon//TOWN-AK', 'Ctr. Scale Mail', 'Baron\'s Saio', 'Beetle harness', 'Angler\'s Tunica' },
+		Main  =  { 'Fencing Degen//WSWAP', 'Rose Wand +1//WSWAP', 'Solid Wand//WSWAP', 'Yew Wand//WSWAP' },
+		Head   = { 'Lilac Corsage//TOWN', 'Silver Hairpin +1' },
+		Body   = { 'Ducal Aketon//TOWN-AK', 'Brigandine', 'Ctr. Scale Mail', 'Baron\'s Saio', 'Beetle harness', 'Angler\'s Tunica' },
 	},
 		
 --[[
@@ -299,7 +311,7 @@ local sets = {
 	-- success of THF's lock picking skill, reducing the chance of spawning a mimic
 	-- or the chance of failure. INT is associated with the element ice
 	['INT'] = {
-		Main = 'Yew Wand//WSWAP',
+		Main = { 'Rose Wand +1//WSWAP', 'Solid Wand//WSWAP', 'Yew Wand//WSWAP' },
 		Body = 'Baron\'s Saio',
     },
 
@@ -307,6 +319,7 @@ local sets = {
 	-- tanking gear. If /tank enabled, this set will be equipped instead of the
 	-- INT set
 	['Tank_INT'] = {
+		Subset = 'INT',
 	},
 
 	-- MND is used to determine the effectiveness of healing magic spells, 
@@ -315,7 +328,8 @@ local sets = {
 	-- magic spells as well as reducing the base damage taken from them. MND 
 	-- is associated with the element water
 	['MND'] = {
-        Neck  = 'Justice Badge',
+		Main  = { 'Rose Wand +1//WSWAP', 'Solid Wand//WSWAP', 'Yew Wand//WSWAP' },
+        Neck  = { 'Promise Badge', 'Justice Badge' },
         Rings = 'Tranquility Ring',
         Waist = 'Friar\'s Rope',
     },
@@ -324,6 +338,7 @@ local sets = {
 	-- tanking gear. If /tank enabled, this set will be equipped instead of the
 	-- MND set
 	['Tank_MND'] = {
+		Subset = 'MND',
 	},
 	
 --[[
@@ -719,6 +734,12 @@ local sets = {
 -- the weapons if you want to conditionally equip an item with a weapon skill
 -- attribute.
 profile.WeaponType = {
+	['SWORD'] =  { 'Fencing Degen' },
+	['STAVE'] =  { 'Fire Staff', 'Vulcan\'s Staff', 'Ice Staff', 'Aquilo\'s Staff',
+				  'Wind Staff', 'Auster\'s Staff', 'Earth Staff', 'Terra\'s Staff',
+				  'Thunder Staff', 'Jupiter\'s Staff', 'Water Staff', 'Neptune\'s Staff',
+				  'Light Staff', 'Apollo\'s Staff', 'Dark Staff', 'Pluto\'s Staff' },
+	['CLUB']  =  { 'Warp Cudgel', 'Solid Wand', 'Yew Wand', 'Pilgrim\'s Wand' },
 };
 
 -- Accuracy Sets are predefined /acc commands. You identify them by a name and
@@ -738,11 +759,11 @@ profile.sAmmo = nil;
 	not SMN avatars.
 --]]
 
-local function HandlePetAction(PetAction)
+function HandlePetAction(PetAction)
 	local pet = gData.GetPet();
 	
 	-- Only gear swap if this flag is true and the pet is a BST pet
-	if gcdisplay.GetToggle('GSwap') == false gcinclude.fSummonerPet() == true then
+	if gcdisplay.GetToggle('GSwap') == false or gcinclude.fSummonerPet() == true then
 		return;
 	end
 
@@ -761,7 +782,7 @@ end		-- HandlePetAction
 	which subjob is current. 
 --]]
 
-local function SetSubjobSet(chkSJ)
+function SetSubjobSet(chkSJ)
 	-- "chkSJ" is the key for what toolbar is shown. All jobs are defined in the subs table.
 	-- A value of 0 means that job is not configured. All values > 0 indicate which toolbar
 	-- is to be displayed. The player must change the entries in this table to match their
@@ -793,7 +814,7 @@ end		-- SetSubjobSet
 	OnLoad is run whenever you log into your BST or change your job to BST
 --]]
 
-profile.OnLoad = function()
+function profile.OnLoad()
 	local player = gData.GetPlayer();
 
 	gSettings.AllowAddSet = true;
@@ -824,7 +845,7 @@ end		-- OnLoad
 	OnUnload is run when you change to another job
 --]]
 
-profile.OnUnload = function()
+function profile.OnUnload()
 	gcinclude.Unload();
 end		-- OnUnload
 
@@ -833,7 +854,7 @@ end		-- OnUnload
 	of in gcinclude.HandleCommands are specific to BST or the help system, which has been tailored to BST.
 --]]
 
-profile.HandleCommand = function(args)
+function profile.HandleCommand(args)
 	if args[1] == 'help' then
 		gcdisplay.ShowHelp();
 	elseif args[1] == 'petfood' then			-- Supported since pet food is not job specific, but very niche
@@ -848,7 +869,7 @@ end		-- HandleCommand
 	their pet.
 --]]
 	
-profile.HandleDefault = function()
+function profile.HandleDefault()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();
 	local player = gData.GetPlayer();	
@@ -858,6 +879,8 @@ profile.HandleDefault = function()
 	local eWeap = nil;
 	local cKey;
 
+	gcinclude.StartReminder();		-- See if reminder should be printed
+	
 	-- Only pet actions from BST are supported.
 	if (petAction ~= nil and player.SubJob == 'BST') then
 		HandlePetAction(petAction);
@@ -911,6 +934,11 @@ profile.HandleDefault = function()
 	
 	-- Now process the player status accordingly
 	if player.Status == 'Engaged' then
+		if bTank == true then
+			gcinclude.MoveToCurrent(sets.Tank_TP,sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
+		end	
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
 			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
@@ -975,7 +1003,7 @@ end		-- HandleDefault
 	HandleAbility is used to change the player's gear appropriately.
 --]]
 
-profile.HandleAbility = function()
+function profile.HandleAbility()
 	local ability = gData.GetAction();
 			
 	if gcdisplay.GetToggle('GSwap') == false then
@@ -1082,7 +1110,7 @@ end		-- HandleAbility
 	is supported
 --]]
 
-profile.HandleItem = function()
+function profile.HandleItem()
 	local item = gData.GetAction();
 	local bShow = false;
 	
@@ -1113,7 +1141,7 @@ end		-- HandleItem
 	HandlePrecast loads Fast Cast, cast time reduction, and quick cast gear in anticipation of a spell
 --]]
 
-profile.HandlePrecast = function()
+function profile.HandlePrecast()
     local spell = gData.GetAction();
 	local obi;
 	local mSet;
@@ -1137,7 +1165,7 @@ end		-- HandlePrecast
 	are loaded: INT/MND, spell specific, macc, magic skill, obi, ele swap	
 --]]
 
-profile.HandleMidcast = function()
+function profile.HandleMidcast()
 	local bTank = gcdisplay.GetToggle('Tank');
 
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
@@ -1164,7 +1192,7 @@ end		-- HandleMidcast
 	and Ranged Shot Speed Gear for a ranged attack
 --]]
 
-profile.HandlePreshot = function()
+function profile.HandlePreshot()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
@@ -1181,7 +1209,7 @@ end		-- HandlePreshot
 	and Damage gear for a ranged attack
 --]]
 
-profile.HandleMidshot = function()
+function profile.HandleMidshot()
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
@@ -1200,7 +1228,7 @@ end		-- HandleMidshot
 	HandleWeaponskill loads the gear appropriately for the weapon skill you're doing
 --]]
 
-profile.HandleWeaponskill = function()
+function profile.HandleWeaponskill()
 	local ws = gData.GetAction();
 	local canWS = gcinclude.CheckWsBailout();
 	local cKey;

@@ -445,20 +445,6 @@ gcinclude.tStatMagic = T{
 	['int'] = {'INT','aero,aeroga,bind,blaze,blind,blizzaga,blizzard,burst,dread,firaga,fire,flare,flood,freeze,ice,quake,shock,stone,stonega,thundaga,thunder,tornado,water,waterga,katon,hyoton,huton,doton,raiton,suiton'},
 	['mnd'] = {'MND','banish,distract,frazzle,silence,paralyze,slow,cure,curaga,cura'},
 };
-
--- The following lists all "base" songs that are elemental in nature and can affect Elemental Damage 
--- by the day/weather
-
-gcinclude.SongEleDmg = T{
-	['fire']    = 'valor minuet,ice threnody,sinewy etude,ice carol,herculean etude',
-	['water']   = 'fire threnody,spirited etude,fire carol,logical etude',
-	['wind']    = 'sheepfoe mambo,earth threnody,quick etude,raptor mazurka,earth carol,dragonfoe mambo,gold capricco,swift etude,chocobo mazurka',
-	['thunder'] = 'herb pastoral,sword madrigal,water threnody,advancing march,hunter\'s prelude,dextrous etude,water carol,blade madrigal,victory march.archer\'s prelude,uncanny etude',
-	['earth']   = 'knight\'s minne,lightning threnody,vivacious etude,Battlefield elegy,carrnage elegy,vital etude',
-	['ice']     = 'wind threnody,scop\'s operetta,learned etude,wind carol,sage etude,puppet\'s operetta',
-	['light']   = 'army\'s paeon,foe lullaby,dark threnody,foe lullaby,enchanting etude,mage\'s ballad,horde lullaby,fowl aubade,magic finale,lightning carol,dark carol,shining fantasia,bewitching etude,goddess hymnus,warding round,maiden\'s virelai',
-	['dark']    = 'light threnody,light carol,goblin gavotte',
-};
 	
 -- List of elemental spirit avatars
 gcinclude.Spirits = 'fire,firespirit,ice,icespirit,air,airspirit,earth,earthspirit,thunder,thunderspirit,water,waterspirit,light,lightspirit,dark,darkspirit';
@@ -801,38 +787,38 @@ gcinclude.TStest = {
 gcinclude.weapon = nil;
 gcinclude.offhand = nil;
 
--- Table of all BST pet food including the minimum level needed to equip. 
--- The last column is programmatically populated, so don't change it.
-gcinclude.petfood = {
-	['alpha'] = {'Alpha','Pet Food Alpha',12,false,nil},
-	['beta'] = {'Beta','Pet Food Beta',24,false,nil},
-	['gamma'] = {'Gamma','Pet Fd. Gamma',36,false,nil},
-	['delta'] = {'Delta','Pet Food Delta',48,false,nil},
-	['epsilon'] = {'Epsilon','Pet Fd. Epsilon',60,false,nil},
-	['zeta'] = {'Zeta','Pet Food Zeta',72,false,nil}
+-- Table of all BST pet food
+gcinclude.tPetFood = {
+	[1] = { ['name'] = 'pet food alpha',  ['lvl'] = 12, ['have'] = false },
+	[2] = { ['name'] = 'pet food beta',   ['lvl'] = 24, ['have'] = false },
+	[3] = { ['name'] = 'pet fd. gamma',   ['lvl'] = 36, ['have'] = false },
+	[4] = { ['name'] = 'pet food delta',  ['lvl'] = 48, ['have'] = false },
+	[5] = { ['name'] = 'pet fd. epsilon', ['lvl'] = 60, ['have'] = false },
+	[6] = { ['name'] = 'pet food zeta',   ['lvl'] = 72, ['have'] = false }
 };
+gcinclude._PetFoodCount = 6;
 
 -- This is a list of all player storage containers available in FFXI.
 -- Quite a number of them are not valid on HorizonXI yet.
 
 gcinclude.STORAGES = {
-    [1] = {0, 'Inventory' },
-    [2] = {1, 'Safe' },
-    [3] = {2, 'Storage' },
-    [4] = {3, 'Temporary' },
-    [5] = {4, 'Locker' },
-    [6] = {5, 'Satchel' },
-    [7] = {6, 'Sack' },
-    [8] = {7, 'Case' },
-    [9] = {8, 'Wardrobe' },
-    [10]= {9, 'Safe 2' },
-    [11]= {10, 'Wardrobe 2' },
-    [12]= {11, 'Wardrobe 3' },
-    [13]= {12, 'Wardrobe 4' },
-    [14]= {13, 'Wardrobe 5' },
-    [15]= {14, 'Wardrobe 6' },
-    [16]= {15, 'Wardrobe 7' },
-    [17]= {16, 'Wardrobe 8' }
+    [1] = { ['id'] = 0,  ['name'] = 'Inventory' },
+    [2] = { ['id'] = 1,  ['name'] = 'Safe' },
+    [3] = { ['id'] = 2,  ['name'] = 'Storage' },
+    [4] = { ['id'] = 3,  ['name'] = 'Temporary' },
+    [5] = { ['id'] = 4,  ['name'] = 'Locker' },
+    [6] = { ['id'] = 5,  ['name'] = 'Satchel' },
+    [7] = { ['id'] = 6,  ['name'] = 'Sack' },
+    [8] = { ['id'] = 7,  ['name'] = 'Case' },
+    [9] = { ['id'] = 8,  ['name'] = 'Wardrobe' },
+    [10]= { ['id'] = 9,  ['name'] = 'Safe 2' },
+    [11]= { ['id'] = 10, ['name'] = 'Wardrobe 2' },
+    [12]= { ['id'] = 11, ['name'] = 'Wardrobe 3' },
+    [13]= { ['id'] = 12, ['name'] = 'Wardrobe 4' },
+    [14]= { ['id'] = 13, ['name'] = 'Wardrobe 5' },
+    [15]= { ['id'] = 14, ['name'] = 'Wardrobe 6' },
+    [16]= { ['id'] = 15, ['name'] = 'Wardrobe 7' },
+    [17]= { ['id'] = 16, ['name'] = 'Wardrobe 8' }
 };
 
 -- List of items that are commonly equipped for teleporting, exp boosts, reraise, etc
@@ -874,10 +860,18 @@ gcinclude.multiSlot = {
 };
 
 -- This is the list of storage containers that can be equipped from outside of a moghouse
-gcinclude.EQUIPABLE = {gcinclude.STORAGES[1],		-- Inventory
-					   gcinclude.STORAGES[9],		-- Wardrobe
-					   gcinclude.STORAGES[11],		-- Wardrobe 2
-					   gcinclude.STORAGES[17]};		-- Wardrobe 8
+gcinclude.EQUIPABLE = { 
+			gcinclude.STORAGES[1],		-- Inventory
+			gcinclude.STORAGES[9],		-- Wardrobe
+			gcinclude.STORAGES[11],		-- Wardrobe 2
+			gcinclude.STORAGES[17]		-- Wardrobe 8
+};
+
+gcinclude.EQUIPABLE_NONHOLIDAY = {
+			gcinclude.STORAGES[1],		-- Inventory
+			gcinclude.STORAGES[9],		-- Wardrobe
+			gcinclude.STORAGES[11]		-- Wardrobe 2
+};
 
 -- This is the job masks for gear that can be equipped. I have included all jobs
 -- including those not yet in the game on Horizon XI and the place holder jobs
@@ -892,10 +886,6 @@ gcinclude.JobMask = { ['None'] = 0x0,
 		['JOB24'] = 0x1000000, ['JOB25'] = 0x2000000, ['JOB26'] = 0x4000000,
 		['JOB27'] = 0x8000000, ['JOB28'] = 0x10000000, ['JOB29'] = 0x20000000,
 		['JOB30'] = 0x30000000, ['JOB31'] = 0x80000000, ['Alljobs'] = 0x007FFFFE };
-
--- The following is a list of all valid conditional operators used in the following
--- inline codes: //MP, //MPP, //HP, //HPP, //TP, and //TPP.
-InlineConditionals = { '.EQ.', '.GT.', '.GE.', '.LT.', '.LE.', '.NE.' };
 
 -- The following is used to track regional control. Listed is a region, who has
 -- conquest control, and what zone id's are associated with the region. This
@@ -957,6 +947,7 @@ gcinclude.GearDetails = {
 	
 gcinclude.OwnNation = -1; 
 gcinclude.fb = false;
+gcinclude.basetime = os.time();
 
 gcinclude.Sets = gcinclude.sets;
 
@@ -994,6 +985,24 @@ ashita.events.register('packet_in', 'packet_in_callback1', function (e)
 		e.blocked = false;
 	end
 end);
+
+--[[
+	StartReminder is a simple routine used to delay the printing of a reminder from
+	the start of running this code. It compares a base time (is seconds) with "now"
+	and after 15 secs prints the reminder, then disables itself.
+--]]
+
+function gcinclude.StartReminder()
+
+	if gcinclude.basetime == 0 then
+		return;
+	end
+
+	if os.difftime(os.time(),gcinclude.basetime) >= 15 then
+		print(chat.message('FYI: Remember to do a /gc when \'data download\' finishes'));
+		gcinclude.basetime = 0;		
+	end
+end
 
 --[[
 	fSummonerPet determines if the player has a SMN summoned pet. Returned is true
@@ -1387,8 +1396,6 @@ function SetVariables()
 	-- General cycles
 	gcdisplay.CreateCycle('DT', {[1] = gcinclude.OFF, [2] = gcinclude.PHY, [3] = gcinclude.MAG, [4] = gcinclude.BRE});
 	gcdisplay.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned'});
-	
-	print(chat.message('FYI: Remember to do a /gc when \'data download\' finishes'));
 end		-- SetVariables
 
 --[[
@@ -1459,7 +1466,7 @@ function fGearCheckItem(sSlot,sName,bAccess,bForce)
 			
 			-- Save item w/details
 			gcinclude.GearDetails[sSlot][sName] = { 
-				['level'] = item.Level, 
+				['level'] = item.Level,
 				['job'] = bJob, 
 				['accessible'] = bAccessible, 
 				['desc'] = item.Description[1]
@@ -1588,30 +1595,42 @@ end		-- GearCheck
 
 function GearCheckList()
 	local sMsg;
+	local bOnce;
 	
 	for i,j in pairs(gcinclude.GearDetails) do
+		print(chat.message(' '));
 		print(chat.message('Slot: ' .. i));
 		for ii,jj in pairs(j) do
+			bOnce = true;
+			sMsg = nil;
 			if type(ii) ~= 'number' then
 				if string.find('desc,num,vis',ii) == nil then
-					print(chat.message('   ' .. ii));
+					sMsg = '   ' .. ii .. ' - ';
 				end
 			end
-			sMsg = nil;
 			if type(jj) == 'table' then 
 				for iii,jjj in pairs(jj) do
 					if iii ~= 'desc' then
-						if sMsg == nil then
-							sMsg = iii .. ': '.. tostring(jjj);
+						if bOnce == true then
+							sMsg = sMsg .. iii .. ': '.. tostring(jjj);
+							bOnce = not bOnce;
 						else
-							sMsg = sMsg .. ', ' .. iii .. ': '.. tostring(jjj);
+							if type(jjj) == 'boolean' then
+								sMsg = sMsg .. ', ' .. iii .. ': '
+								if jjj == false then
+									sMsg = sMsg .. chat.color1(8,tostring(jjj));
+								else
+									sMsg = sMsg .. chat.color1(2,tostring(jjj));
+								end
+							else
+								sMsg = sMsg .. iii .. ': '.. tostring(jjj);
+							end
 						end
 					end
 				end
 				if sMsg ~= nil then
-					print(chat.message('   ' .. sMsg));
+					print('   ' .. sMsg);
 				end
-				print(chat.message(' '));
 			end
 		end
 	end	
@@ -2330,7 +2349,7 @@ function fCheckItemOwned(sGear,bAccessible,bOnce)
 	end
 	
 	for i,desc in pairs(tStorage) do
-		containerID = desc[1];
+		containerID = desc['id'];
 		-- then loop through the container
 		for j = 1,inventory:GetContainerCountMax(containerID),1 do
 			itemEntry = inventory:GetContainerItem(containerID, j);
@@ -2694,9 +2713,13 @@ function RegionControlDisplay()
 end		-- RegionControlDisplay
 
 function gcinclude.t1()
-	local t = gData.GetTargetIndex();
-	local target = gData.GetEntity(t);
-	print(target.Name,target.Type,target.Status);
+	if gcinclude.fPetReward(nil,true) == true then
+		print('something happens');
+	end
+	
+	for i,j in ipairs(gcinclude.tPetFood) do
+		print(j['name'] .. ': ' .. tostring(j['have']));
+	end
 end		-- gcinclude.t1
 
 --[[
@@ -3637,6 +3660,7 @@ function gcinclude.HandleCommands(args)
 			bForce = false;
 		end
 		GearCheck(sList,bForce);
+		gcinclude.basetime = 0;		-- Kill reminder
     elseif args[1] == 'gcmessages' then		-- turns feedback on/off for all commands
 		gcinclude.settings.Messages = not gcinclude.settings.Messages;
 		if gcinclude.settings.Messages then
@@ -4040,187 +4064,89 @@ function gcinclude.CheckWsBailout()
 		
 	return true;
 end		-- gcinclude.CheckWsBailout
-
 --[[
-	findString is multi-functional, searching the passed storage containers (whether accessible or not) for any or
-	all of the passed string. Depending on the passed arguments, either the found items will be listed or the accessible
-	storage table will be updated.
-	
-	findString(tStorage,sString,bUpdate,sName)
-		where	tStorage is a list of the storage containers to search
-				bUpdate indicates if the accessible storage table should be updated (inhibits displaying what is found)
-				sName indicates which pet food is being looked for. In most cases this is nil
-				
-	Please note that this code was originally findPetFood and has been generalized
+	PetReward scans all equipable storage containers for all of the pet foods and
+	tallies which ones the player has. Then, it picks the one likely to have the
+	most benefit for the "reward" based on the level and what was passed in.
 --]]
 
-function gcinclude.findString(tStorage,sString,bUpdate,sName)
+function gcinclude.fPetReward(sFood,bMax)
 	local inventory = AshitaCore:GetMemoryManager():GetInventory();
 	local resources = AshitaCore:GetResourceManager();
-	local iCount = 0;
+	local player = gData.GetPlayer();
+	local tStorage = gcinclude.EQUIPABLE_NONHOLIDAY;
+	local containerID;
+	local i1,i2,step;
+	local _ammo = 4;	-- Lock # for ammo slot
 	
-	-- process passed parameters
-	if tStorage == nil or tStorage == {} then
-		print(chat.header('findString'):append(chat.message('No storage containers specified')));
+	if bMax == nil then
+		bMax = true;
+	end
+
+	-- Make sure ammo slot isn't locked
+	if gcinclude.tLocks[_ammo]['lock'] == true then
+		print(chat.header('PetReward'):append(chat.message('Ammo slot locked. Unable to equip any pet food')));
 		return false;
 	end
-	
-	if sString == nil then
-		print(chat.header('findString'):append(chat.message('No search string specified')));
+		
+	-- Reset the pet food indicators
+	for i,j in ipairs(gcinclude.tPetFood) do
+		j['have'] = false;;
 	end
 	
-	if bUpdate == nil then
-		bUpdate = false;		-- Assume this is just a listing
-	end
-	
-	if sName ~= nil then
-		sName = string.lower(sName);
-	end
-
-	for k,_ in pairs(gcinclude.petfood) do
-		gcinclude.petfood[k][4] = false;
-		gcinclude.petfood[k][5] = nil;
-	end
-
-	iCnt = 0;
-	for _ in pairs(tStorage) do iCnt = iCnt + 1 end
-	
-	-- now, loop through the passed storage containers
-	for i = 1,iCnt,1 do
-		bFound = false;
-		containerID = gcinclude.STORAGES[i][1];
+	-- Now, note which pet foods the player has
+	for i,j in ipairs(tStorage) do
+		containerID = j['id'];
 		-- then loop through the container
-		for j = 1,inventory:GetContainerCountMax(containerID),1 do
-			local itemEntry = inventory:GetContainerItem(containerID, j);
+		for k = 1, inventory:GetContainerCountMax(containerID), 1 do
+			local itemEntry = inventory:GetContainerItem(containerID, k);
 			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
-                local item = resources:GetItemById(itemEntry.Id);
-				b,c = string.find(string.lower(item.Name[1]),sString);	
-				if b ~= nil then
-					if bUpdate then
-						for k,tpf in pairs(gcinclude.petfood) do
-							if string.lower(tpf[2]) == string.lower(item.Name[1]) then
-								if gcinclude.petfood[k][4] == false then
-									gcinclude.petfood[k][4] = true;
-									gcinclude.petfood[k][5] = gcinclude.STORAGES[i][2];							
-								end
-							end
-						end
-						iCount = iCount + 1;
-					else
-						iCt = itemEntry.Count
-						if iCt ~= nil and iCt > 0 then
-							iCount = iCount + 1;
-							if not bFound then
-								for l,sl in pairs(gcinclude.STORAGES) do
-									if containerID == sl[1] then
-										print(chat.header('findString'):append(chat.message(sl[2])));
-										bFound = true;
-										break;
-									end
-								end
-							end
-							print(chat.header('findString'):append(chat.message('   ' .. item.Name[1] .. ' ('..tostring(iCt) .. ')')));
+				local item = resources:GetItemById(itemEntry.Id);
+				if item ~= nil then
+					local sName = string.lower(item.Name[1]);
+					for ii,jj in ipairs(gcinclude.tPetFood) do
+						if sName == jj['name'] then
+							jj['have'] = true;
 						end
 					end
 				end
 			end
 		end
 	end
-
-	return (iCount > 0);	
-end		-- gcinclude.findString
-
---[[
-	findMaxEquipablePetFood searches all accessible player storage containers (regardless of location)
-	and equips the highest level pet food that can be equipped that's found.
---]]
-
-function gcinclude.findMaxEquipablePetFood()
 	
-	-- see if any pet food is accessible (inventory, wardrobe, wardrobe 2)
-	return gcinclude.findString(gcinclude.EQUIPABLE,'pet f',true,nil);		
-end		-- gcinclude.findMaxEquipablePetFood
-
---[[
-	doPetFood does one of two things. It either equips the indicated food or it
-	shows where the food can be found. What is equipped will either be indicated or
-	the max level pet food that can be equipped.
-	
-	/petfood [all|max] [name]
---]]
-
-function gcinclude.doPetFood(action, sType)
-	local player = gData.GetPlayer();
-	local ilvl;
-	local sName = nil;
-		
-	if action == nil then
-		sAction = 'max';
+	-- Determine order to process
+	if bMax == true then
+		i1 = 1; i2 = gcinclude._PetFoodCount; step = 1;
 	else
-		sAction = string.lower(action);
-		if not (sAction == 'all' or sAction == 'max' or sAction == 'min') then
-			if sType ~= nil then
-				print(chat.header('doPetFood'):append(chat.message('Invalid action specified : ' .. action .. '. Ignoring command')));
-				return false;
-			end
-		else
-			sType = nil;
+		i1 = gcinclude._PetFoodCount; i2 = 1; step = -1;
+	end
+
+	-- Then process what was found
+	local iFound = -1;
+	for i = i1,i2,step do
+		if sFood ~= nil and string.lower(sFood) == gcinclude.tPetFood[i]['name'] and 
+			gcinclude.tPetFood[i]['have'] == true and 
+			gcinclude.tPetFood[i]['lvl'] <= player.MainJobSync then
+			iFound = i;
+		elseif gcinclude.tPetFood[i]['have'] == true and 
+			gcinclude.tPetFood[i]['lvl'] <= player.MainJobSync then
+			iFound = i;
 		end
 	end
 	
-	if sAction == 'all' then
-		-- Currently only 1=Inventory,2=Safe,3=storage,6=satchel,9=wardrobe,11=wardrobe 2 are used, but 
-		-- have included all for future expansion. (Note that 17=Wardrobe 8 holds event gear and is accessible,
-		-- but you can't store petfood in there.)
-		if not gcinclude.findString({1,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17},'pet f',false,sType) then
-			print(chat.header('doPetFood'):append(chat.message('No pet food found')));
-		end
+	if iFound > 0 then
+		local sName = gcinclude.tPetFood[iFound]['name'];
+		gFunc.ForceEquip('Ammo', sName);
+		print(chat.header('PetReward'):append(chat.message('Equipping: ' .. sName)));
+		return true;
+	elseif sName ~= nil then
+		print(chat.header('PetReward'):append(chat.message('Error: ' .. sFood .. ' not found or you cannot equip it.')));
+		return false;
 	else
-		if (sAction == 'max' or sAction == 'min') then
-			if not gcinclude.findMaxEquipablePetFood() then
-				print(chat.header('doPetFood'):append(chat.message('No equipable pet food found or found pet food is too high level')));
-				return false;
-			end
-		else
-			if not gcinclude.findString(gcinclude.EQUIPABLE,sAction,true,nil) then 
-				print(chat.header('doPetFood'):append(chat.message(action .. ' not found in accessible storage')));
-			end
-			return false;
-		end
-		
-		-- Now to process what was found
-		if sAction == 'max' then
-			ilvl = 0;
-		else
-			ilvl = player.MainJobSync;
-		end
-		
-		for k,tpf in pairs(gcinclude.petfood) do
-			if sAction == 'max' then
-				if tpf[4] and (tpf[3] > ilvl) and (tpf[3] <= player.MainJobSync) then
-					ilvl = tpf[3];
-					sName = tpf[2];
-				end
-			elseif sAction == 'min' then
-				if tpf[4] and tpf[3] <= ilvl then
-					ilvl = tpf[3];
-					sName = tpf[2];
-				end
-			end
-		end
+		print(chat.header('PetReward'):append(chat.message('Error: No equipable pet food found.')));
+		return false;
 	end
-
-	if sName ~= nil then
-		if gcinclude.fLocks[4]['lock'] == false then
-			gFunc.ForceEquip('Ammo', sName);
-			print(chat.header('doPetFood'):append(chat.message('Equipping: ' .. sName)));
-			return true;
-		else
-			print(chat.header('doPetFood'):append(chat.message('Ammo slot locked. Unable to equip: ' .. sName)));
-			return false;
-		end
-	end				
-end		-- gcinclude.doPetFood
+end		-- PetReward
 
 --[[
 	Unload ensures that the aliases are removed and the display objects are removed
@@ -4279,31 +4205,33 @@ function MidcastHealingMagic()
 			gcinclude.MoveToCurrent(gProfile.Sets.HealingMagic,gProfile.Sets.CurrentGear);
 		end
 	else
-		-- Some type of cure
-		if target.Type == 'Monster' then
-			-- Until I figure out how to determine that a monster is undead, just assume
-			-- that if targetting a monster, it is undead.
-			if bTank == true then
-				gcinclude.MoveToCurrent(gProfile.Sets.Tank_OffensiveCuring,gProfile.Sets.CurrentGear);
-			else
-				gcinclude.MoveToCurrent(gProfile.Sets.OffensiveCuring,gProfile.Sets.CurrentGear);
-			end
-			
-			-- Check for an elemental obi since this is an offensive spell. First
-			-- determine if a bonus is possible based on day's element and/or weather
-			pDay,pWeather = fCheckObiDW('light');
-			if pDay + pWeather > 0 then
-				sGear = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
-				if sGear ~= nil then
-					gProfile.Sets.CurrentGear['Waist'] = sGear;
+		if target ~= nil then
+			-- Some type of cure
+			if target.Type == 'Monster' then
+				-- Until I figure out how to determine that a monster is undead, just assume
+				-- that if targetting a monster, it is undead.
+				if bTank == true then
+					gcinclude.MoveToCurrent(gProfile.Sets.Tank_OffensiveCuring,gProfile.Sets.CurrentGear);
+				else
+					gcinclude.MoveToCurrent(gProfile.Sets.OffensiveCuring,gProfile.Sets.CurrentGear);
 				end
-			end			
-		else
-			-- This is the the type of curing magic most folks assume happens
-			if bTank == true then
-				gcinclude.MoveToCurrent(gProfile.Sets.Tank_Curing,gProfile.Sets.CurrentGear);
+			
+				-- Check for an elemental obi since this is an offensive spell. First
+				-- determine if a bonus is possible based on day's element and/or weather
+				pDay,pWeather = fCheckObiDW('light');
+				if pDay + pWeather > 0 then
+					sGear = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+					if sGear ~= nil then
+						gProfile.Sets.CurrentGear['Waist'] = sGear;
+					end
+				end			
 			else
-				gcinclude.MoveToCurrent(gProfile.Sets.Curing,gProfile.Sets.CurrentGear);
+				-- This is the the type of curing magic most folks assume happens
+				if bTank == true then
+					gcinclude.MoveToCurrent(gProfile.Sets.Tank_Curing,gProfile.Sets.CurrentGear);
+				else
+					gcinclude.MoveToCurrent(gProfile.Sets.Curing,gProfile.Sets.CurrentGear);
+				end
 			end
 		end
 		

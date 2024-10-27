@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the BST job.
 	
-	Gear Sets last updated: September 15, 2024
-	Code update: September , 2024
+	Gear Sets last updated: October 25, 2024
+	Code update: October 25, 2024
 --]]
 
 local sets = {
@@ -15,11 +15,9 @@ local sets = {
 	value, it's a direct assignment like: Body = 'Austere Robe', but there can be multiple
 	items identified, usually ordered by level: Body = { 'Vermillion Cloak//CARBY','Austere Robe' },
 	Any item that has a // appended to it contains an inline conditional. The // code is a test
-	to see if the item should be equipped. The level is still checked, but if the inline coded
-	test is successful, that piece of gear will be loaded. Currently nothing checks to see
-	if that item can be equipped by the job it's associated with let alone whether the player
-	even has it accessible. Those are all planned for the future. In the mean time the onus is
-	on the player to create the correct definitions.
+	to see if the item should be equipped. The level is still checked, but if the inline code
+	test is successful, that piece of gear will be loaded. If you've done a /gc command,
+	the item's suitability for the job and accessibility will also be checked.
 		
 	Not all sets need to be defined. There is nothing wrong with leaving a set "empty", but don't
 	delete any of the sets. All the ones listed here (except for any custom sets) are expected to 
@@ -56,14 +54,19 @@ local sets = {
 --]]
 
 	['Default'] = {
-		Head   = { 'Lilac Corsage//TOWN', 'Shep. Bonnet//PET', 'Panther Mask', 'Monster Helm', 'Beast Helm +1', 'Shep. Bonnet', 'Empress Hairpin', 'Silver Hairpin//MSJ' },
-		Body   = { 'Ducal Aketon//TOWN-AK', 'Gaudy Harness//MSJ//MP.LT.50', 'Narasimha\'s Vest', 'Scorpion Harness', 'Gaudy Harness', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
+		Head   = { 'Lilac Corsage//TOWN', 'Panther Mask', 'Empress Hairpin' },
+		Neck   = { 'Opo-opo necklace//SLEPT', 'Peacock Amulet', 'Spike Necklace' },
+		Body   = { 'Ducal Aketon//TOWN-AK', 'Gaudy Harness//MSJ//MP.LT.50', 'Narasimha\'s Vest', 'Ducal Aketon' },
+		Hands  = { 'Thick Mufflers', 'Battle Gloves' },
+        Rings  = { 'Flame Ring', 'Tamas Ring//MSJ', 'Sun Ring' },
+        Back   = { 'Forager\'s Mantle', 'Ram Mantle' },
+        Waist  = { 'Swift Belt', 'Warrior\'s Belt' },
+        Legs   = { 'Thick Breeches', 'Ryl.Ftm. Trousers' },
+        Feet   = { 'Thick Sollerets', 'Bounding Boots' },
 	},
 
 	['Default_WPet'] = {
 		Subset = 'Default',
-		Head   = 'Smn. Horn +1//SMNPETMW',
-		Hands  = { 'Carbuncle Mitts//CARBY', 'Smn. Bracers +1' },
 	},
 	
 --[[
@@ -72,14 +75,13 @@ local sets = {
 --]]
 
 	['TP'] = {
-		Subset = 'Default',
-        Head   = { 'Shep. Bonnet//PET', 'Panther Mask', 'Monster Helm', 'Beast Helm +1', 'Shep. Bonnet', 'Empress Hairpin', 'Silver Hairpin//MSJ' },
+        Head   = { 'Shep. Bonnet//PET', 'Panther Mask', 'Monster Helm', 'Beast Helm +1', 'Shep. Bonnet', 'Empress Hairpin', 'Silver Hairpin +1//MSJ' },
         Neck   = { 'Opo-opo necklace//SLEPT', 'Peacock Amulet', 'Spike Necklace' },
 		Ears   = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Coral Earring//DT_MAGICAL', 'Beastly Earring', 'Brutal Earring', 'Genin Earring//SJNIN', 'Bat Earring//MSJ', 'Fang Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ', 'Reraise Earring' },
         Body   = { 'Gaudy Harness//MSJ//MP.LT.50', 'Narasimha\'s Vest', 'Scorpion Harness', 'Gaudy Harness', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
         Hands  = { 'Thick Mufflers', 'Beast Gloves', 'Wonder Mitts', 'Battle Gloves', 'Ryl.Ftm. Gloves' },
-        Rings  = { 'Forager\'s Mantle', 'Flame Ring', 'Tamas Ring//MSJ', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Kshama Ring No.2', 'Balance Ring' },
-        Back   = { 'Psilos Mantle', 'Raptor Mantle', 'Ram Mantle' },
+        Rings  = { 'Flame Ring', 'Tamas Ring//MSJ', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Kshama Ring No.2', 'Balance Ring' },
+        Back   = { 'Forager\'s Mantle', 'Psilos Mantle', 'Raptor Mantle', 'Ram Mantle' },
         Waist  = { 'Swift Belt', 'Tilt Belt', 'Warrior\'s Belt' },
         Legs   = { 'Thick Breeches', 'Monster Trousers', 'Beast Trousers', 'Shep. Hose', 'San. Trousers', 'Ryl.Ftm. Trousers' },
         Feet   = { 'Thick Sollerets', 'Monster Gaiters', 'Beast Gaiters', 'Wonder Clomps', 'Bounding Boots' },
@@ -194,7 +196,7 @@ local sets = {
 	['Midshot'] = {
 		Head  = 'Optical Hat',
 		Neck  = 'Peacock Amulet',
-		Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	
+		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	
         Back = 'Psilos Mantle',
     },
 
@@ -813,38 +815,117 @@ local sets = {
 --]]
 	
 };
+
 -- list of all jug pets available on HorizonXI.
--- what,name,min level,max level,duration,have,favored
-profile.JPI = T {['JUG'] = 1, ['MIN'] = 2, ['MAX'] = 3, ['DUR'] = 4, 
-				 ['HAVE'] = 5, ['FAVE'] = 6};
 profile.JugPets = T {
-	['carrot broth'] = {'Hare Familiar',23,35,90,false,false},
-	['herbal broth'] = {'Sheep Familiar',23,35,60,false,false},
-	['humus'] = {'Flowerpot Bill',28,40,60,false,false},
-	['meat broth'] = {'Tiger Familiar',28,40,60,false,false},
-	['grasshopper broth'] = {'Flytrap Familiar',28,40,60,false,false},
-	['carrion broth'] = {'Lizard Familiar',33,45,60,false,false},
-	['bug broth'] = {'Mayfly Familiar',33,45,60,false,false},
-	['mole broth'] = {'Eft Familiar',33,45,60,false,false},
-	['tree sap'] = {'Beetle Familiar',38,45,60,false,false},
-	['antica broth'] = {'Antlion Familiar',38,50,60,false,false},
-	['fish broth'] = {'Crab Familiar',23,55,30,false,false},
-	['blood bath'] = {'Mite Familiar',43,55,60,false,false},
-	['f. carrot broth'] = {'Keeneared Steffi',43,75,90,false,false},
-	['s. herbal broth'] = {'Lullaby Melodia',43,75,60,false,true},
-	['rich humus'] = {'Flowerpot Ben',51,75,60,false,false},
-	['w. meat broth'] = {'Saber Siravarde',51,75,60,false,false},
-	['seedbed soil'] = {'Funguar Familiar',33,65,60,false,false},
-	['qdv. bug broth'] = {'Shellbuster Orob',53,75,60,false,false},
-	['c. carrion broth'] = {'Coldblood Como',53,75,60,false,false},
-	['fish oil broth'] = {'Courier Carrie',23,75,30,false,false},
-	['alchemist water'] = {'Homunculus',23,75,60,false,false},
-	['n. grasshopper broth'] = {'Voracious Audrey',53,75,60,false,false},
-	['l. mole broth'] = {'Ambusher Allie',58,75,60,false,false},
-	['scarlet sap'] = {'Panzer Galahad',63,75,60,false,false},
-	['c. blood broth'] = {'Lifedrinker Lars',63,75,60,false,false},
-	['f. antica broth'] = {'Chopsuey Chucky',63,75,60,false,false},
-	['sun water'] = {'Amigo Sabotender',75,75,30,false,false},
+	['carrot broth'] = { 
+		['name'] = 'Hare Familiar', ['min'] = 23, ['max'] = 35, 
+		['have'] = false, ['fav'] = false
+	},
+	['herbal broth'] = { 
+		['name'] = 'Sheep Familiar', ['min'] = 23, ['max'] = 35,
+		['have'] = false, ['fav'] = false
+	},
+	['humus'] = { 
+		['name'] = 'Flowerpot Bill', ['min'] = 28, ['max'] = 40,
+		['have'] = false, ['fav'] = false
+	},
+	['meat broth'] = { 
+		['name'] = 'Tiger Familiar', ['min'] = 28, ['max'] = 40,
+		['have'] = false, ['fav'] = false
+	},
+	['grasshopper broth'] = { 
+		['name'] = 'Flytrap Familiar', ['min'] = 28, ['max'] = 40,
+		['have'] = false, ['fav'] = false
+	},
+	['carrion broth'] = { 
+		['name'] = 'Lizard Familiar', ['min'] = 33, ['max'] = 45,
+		['have'] = false, ['fav'] = false
+	},
+	['bug broth'] = { 
+		['name'] = 'Mayfly Familiar', ['min'] = 33, ['max'] = 45,
+		['have'] = false, ['fav'] = false
+	},
+	['mole broth'] = { 
+		['name'] = 'Eft Familiar', ['min'] = 33, ['max'] = 45,
+		['have'] = false, ['fav'] = false
+	},
+	['tree sap'] = { 
+		['name'] = 'Beetle Familiar', ['min'] = 38, ['max'] = 45,
+		['have'] = false, ['fav'] = false
+	},
+	['antica broth'] = { 
+		['name'] = 'Antlion Familiar', ['min'] = 38, ['max'] = 50,
+		['have'] = false, ['fav'] = false
+	},
+	['fish broth'] = { 
+		['name'] = 'Crab Familiar', ['min'] = 23, ['max'] = 55,
+		['have'] = false, ['fav'] = false
+	},
+	['blood bath'] = { 
+		['name'] = 'Mite Familiar', ['min'] = 43, ['max'] = 55,
+		['have'] = false, ['fav'] = false
+	},
+	['f. carrot broth'] = { 
+		['name'] = 'Keeneared Steffi', ['min'] = 43, ['max'] = 75,
+		['have'] = false, ['fav'] = false
+	},
+	['s. herbal broth'] = { 
+		['name'] = 'Lullaby Melodia', ['min'] = 43, ['max'] = 75,
+		['have'] = false, ['fav'] = true
+	},
+	['rich humus'] = { 
+		['name'] = 'Flowerpot Ben', ['min'] = 51, ['max'] = 75,
+		['have'] = false, ['fav'] = false
+	},
+	['w. meat broth'] = { 
+		['name'] = 'Saber Siravarde', ['min'] = 51, ['max'] = 75,
+		['have'] = false, ['fav'] = false
+	},
+	['seedbed soil'] = { 
+		['name'] = 'Funguar Familiar', ['min'] = 33, ['max'] = 65,
+		['have'] = false, ['fav'] = false
+	},
+	['qdv. bug broth'] = { 
+		['name'] = 'Shellbuster Orob', ['min'] = 53, ['max'] = 75,
+		['have'] = false, ['fav'] = false
+	},
+	['c. carrion broth'] = { 
+		['name'] = 'Coldblood Como', ['min'] = 53, ['max'] = 75,
+		['have'] = false, ['fav'] = false
+	},
+	['fish oil broth'] = { 
+		['name'] = 'Courier Carrie', ['min'] = 23, ['max'] = 75,
+		['have'] = false, ['fav'] = false
+	},
+	['alchemist water'] = { 
+		['name'] = 'Homunculus', ['min'] = 23, ['max'] = 75,
+		['have'] = false, ['fav'] = false
+	},
+	['n. grasshopper broth'] = { 
+		['name'] = 'Voracious Audrey', ['min'] = 53, ['max'] = 75,
+		['have'] = false, ['fav'] = false
+	},
+	['l. mole broth'] = { 
+		['name'] = 'Ambusher Allie', ['min'] = 58, ['max'] = 75,
+		['have'] = false, ['fav'] = false
+	},
+	['scarlet sap'] = { 
+		['name'] = 'Panzer Galahad', ['min'] = 63, ['max'] = 75,
+		['have'] = false, ['fav'] = false
+	},
+	['c. blood broth'] = { 
+		['name'] = 'Lifedrinker Lars', ['min'] = 63, ['max'] = 75,
+		['have'] = false, ['fav'] = false
+	},
+	['f. antica broth'] = { 
+		['name'] = 'Chopsuey Chucky', ['min'] = 63, ['max'] = 75,
+		['have'] = false, ['fav'] = false
+	},
+	['sun water'] = { 
+		['name'] = 'Amigo Sabotender', ['min'] = 75, ['max'] = 75,
+		['have'] = false, ['fav'] = false
+	}
 };
 
 -- There's no way to consistently identify the type of weapon you're currently
@@ -882,7 +963,7 @@ profile.sAmmo = nil;		-- BST specific. Name of ammo equipped
 	not SMN avatars.
 --]]
 
-local function HandlePetAction(PetAction)
+function HandlePetAction(PetAction)
 	local pet = gData.GetPet();
 	
 	-- Only gear swap if this flag is true or the pet is a summoned pet
@@ -907,7 +988,7 @@ end		-- HandlePetAction
 	which subjob is current. 
 --]]
 
-local function SetSubjobSet(chkSJ)
+function SetSubjobSet(chkSJ)
 	-- "chkSJ" is the key for what toolbar is shown. All jobs are defined in the subs table.
 	-- A value of 0 means that job is not configured. All values > 0 indicate which toolbar
 	-- is to be displayed. The player must change the entries in this table to match their
@@ -939,7 +1020,7 @@ end		-- SetSubjobSet
 	OnLoad is run whenever you log into your BST or change your job to BST
 --]]
 
-profile.OnLoad = function()
+function profile.OnLoad()
 	local player = gData.GetPlayer();
 
 	gSettings.AllowAddSet = true;
@@ -972,45 +1053,47 @@ end		-- OnLoad
 	OnUnload is run when you change to another job
 --]]
 
-profile.OnUnload = function()
+function profile.OnUnload()
 	gcinclude.Unload();
 end		-- OnUnload
 
 --[[
-	FindJugPets traverses the master list of jugs and determines if any of the accessible jugs
+	fFindJugPets traverses the master list of jugs and determines if any of the accessible jugs
 	make sense to equip based on the level range of the pet and the player's level. All that
 	meet that criteria will have their appropriate indicators turned on. Returned is whether 
 	any jug pets that match that criteria were found.
 --]]
 
-profile.FindJugPets = function()
+function fFindJugPets()
 	local inventory = AshitaCore:GetMemoryManager():GetInventory();
 	local resources = AshitaCore:GetResourceManager();
 	local player = gData.GetPlayer();
+	local tStorage = EQUIPABLE_NONHOLIDAY;
 	local iCount = 0;
 	
 	-- Clear the table ownership settings
 	for k,v in pairs(profile.JugPets) do
-		v[profile.JPI['HAVE']] = false;
+		v['have'] = false;
 	end
 	
 	-- Now walk the equipable (in the field) storage areas
-	for k,v in pairs(gcinclude.EQUIPABLE) do
-		containerID = v[1];
-
+	for k,v in ipairs(tStorage) do
+		containerID = v['id'];
 		-- then loop through the selected container looking for a jug pet's broth
 		for j = 1,inventory:GetContainerCountMax(containerID),1 do
 			local itemEntry = inventory:GetContainerItem(containerID, j);
 			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
                 local item = resources:GetItemById(itemEntry.Id);
-				-- then check the master list of jug pets
-				for kk,tpf in pairs(profile.JugPets) do
-					if kk == string.lower(item.Name[1]) then
-						if (tpf[profile.JPI['MIN']] <= player.MainJobSync) and 
-							(tpf[profile.JPI['MAX']] >= player.MainJobSync) then
-							-- finally, this one is possible to be selected
-							profile.JugPets[kk][profile.JPI['HAVE']] = true;
-							iCount = iCount + 1;
+				if item ~= nil then
+					-- then check the master list of jug pets
+					for kk,tpf in pairs(profile.JugPets) do
+						if kk == string.lower(item.Name[1]) then
+							if (tpf['min'] <= player.MainJobSync) and 
+								(tpf['max'] >= player.MainJobSync) then
+								-- finally, this one is possible to be selected
+								profile.JugPets[kk]['have'] = true;
+								iCount = iCount + 1;
+							end
 						end
 					end
 				end
@@ -1020,15 +1103,15 @@ profile.FindJugPets = function()
 	
 	-- assuming any were found, return true or false
 	return (iCount > 0);
-end		-- FindJugPets
+end		-- fFindJugPets
 
 --[[
-	EquipMaxEquipableJugPet determines what is the best jug pet to load and equips it. The success is returned.
+	fEquipMaxEquipableJugPet determines what is the best jug pet to load and equips it. The success is returned.
 	The way this function works is by searching for available jug pets and determining which are level
 	appropriate. Of those check if any are favored. If so, equip that one, else equip first one on list.
 --]]
 
-profile.EquipMaxEquipableJugPet = function(cs)
+function fEquipMaxEquipableJugPet(cs)
 	local sBroth = nil;
 	
 	if cs == nil then
@@ -1036,12 +1119,12 @@ profile.EquipMaxEquipableJugPet = function(cs)
 	end
 
 	-- find any equipable jug pets
-	if profile.FindJugPets() == true then
+	if fFindJugPets() == true then
 		-- then cycle through the list and find the favored one. If none favored, the first jug found will be used.
 		for k,v in pairs(profile.JugPets) do
-			if v[profile.JPI['HAVE']] == true then		-- One of the found pets
+			if v['have'] == true then		-- One of the found pets
 				sBroth = k;
-				if v[profile.JPI['FAVE']] == true then	-- Favored
+				if v['fave'] == true then	-- Favored
 					break;
 				end
 			end
@@ -1050,14 +1133,14 @@ profile.EquipMaxEquipableJugPet = function(cs)
 			cs['Ammo'] = sBroth;
 			return true;
 		else
-			print(chat.header('EquipMaxEquipableJugPet'):append(chat.message('Error: Found jug, but none equipped!')));
+			print(chat.header('fEquipMaxEquipableJugPet'):append(chat.message('Error: Found jug, but none equipped!')));
 			return false;
 		end
 	else
-		print(chat.header('EquipMaxEquipableJugPet'):append(chat.message('Error: No jug pets found to equip')));
+		print(chat.header('fEquipMaxEquipableJugPet'):append(chat.message('Error: No jug pets found to equip')));
 		return false;
 	end
-end		-- EquipMaxEquipableJugPet
+end		-- fEquipMaxEquipableJugPet
 
 --[[
 	HandleCommand is run when you type in a command defined in LUASHITACAST. The commands 
@@ -1065,13 +1148,13 @@ end		-- EquipMaxEquipableJugPet
 	system.
 --]]
 
-profile.HandleCommand = function(args)
+function profile.HandleCommand(args)
 	if args[1] == 'help' then
 		gcdisplay.ShowHelp();
 	elseif (args[1] == 'ajug') then			-- Turns on/off whether Automated Jug Pets supported
 		gcdisplay.AdvanceToggle('AJug');
 	elseif args[1] == 'petfood' then
-		gcinclude.doPetFood(args[2],args[3]);
+		gcinclude.fPetReward(args[2],true);
 	else
 		gcinclude.HandleCommands(args);
 	end
@@ -1082,7 +1165,7 @@ end		-- HandleCommand
 	their pet.
 --]]
 	
-profile.HandleDefault = function()
+function profile.HandleDefault()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();
 	local player = gData.GetPlayer();
@@ -1090,6 +1173,8 @@ profile.HandleDefault = function()
 	local ew = gData.GetEquipment();
 	local eWeap = nil;
 	local cKey;
+
+	gcinclude.StartReminder();		-- See if reminder should be printed
 	
 	-- A pet action takes priority over a player's action as long as it is a BST pet action.
 	-- /SMN pet's actions are not supported.
@@ -1150,6 +1235,7 @@ profile.HandleDefault = function()
 				
 	-- Now process the player status accordingly
 	if (player ~= nil and player.Status == 'Engaged') or (pet ~= nil and pet.Status == 'Engaged') then
+		gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
 			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
@@ -1178,6 +1264,9 @@ profile.HandleDefault = function()
 				gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);
 			end
 		end
+	elseif pet ~= nil then
+		-- Player idling with pet
+		gcinclude.MoveToCurrent(sets.Default_WPet,sets.CurrentGear);
 	else
 		-- Assume idling. While there's no idle set, just use the 
 		-- "Default" set
@@ -1206,10 +1295,10 @@ profile.HandleDefault = function()
 end		-- HandleDefault
 
 --[[
-	bAmmoIsJug determines if the item in the Ammo slot is a jug pet or not.
+	fAmmoIsJug determines if the item in the Ammo slot is a jug pet or not.
 --]]
 
-profile.bAmmoIsJug = function(sAmmo)
+function fAmmoIsJug(sAmmo)
 	local bFound = false;
 	
 	if sAmmo == nil then
@@ -1224,13 +1313,13 @@ profile.bAmmoIsJug = function(sAmmo)
 		end		
 	end
 	return bFound;
-end		-- bAmmoIsJug
+end		-- fAmmoIsJug
 
 --[[
 	HandleAbility is used to change the player's gear appropriately for the specified pet ability.
 --]]
 
-profile.HandleAbility = function()
+function profile.HandleAbility()
 	local ability = gData.GetAction();
 	local eq = gData.GetEquipment();
 	
@@ -1258,9 +1347,9 @@ profile.HandleAbility = function()
 		-- First make sure player wants the automated jug pet funtionality
 		if gcdisplay.GetToggle('AJug') == true then
 			-- Ok, now see if a jug pet already equipped
-			local bJugFound = profile.bAmmoIsJug(profile.sAmmo);
+			local bJugFound = fAmmoIsJug(profile.sAmmo);
 			if bJugFound == nil or (bJugFound ~= nil and bJugFound == false) then
-				profile.bAmmo = profile.EquipMaxEquipableJugPet(sets.CurrentGear);
+				profile.bAmmo = fEquipMaxEquipableJugPet(sets.CurrentGear);
 			end
 		end
 		gcinclude.MoveToCurrent(sets.CallBeast,sets.CurrentGear);
@@ -1269,11 +1358,15 @@ profile.HandleAbility = function()
 	elseif string.match(ability.Name, 'Gauge') then
 		gcinclude.MoveToCurrent(sets.Gauge,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Reward') then
+		gcinclude.MoveToCurrent(sets.Reward,sets.CurrentGear);
 		-- Pet reward. Make sure that pet food already equipped
 		if profile.sAmmo == nil or string.find(string.lower(profile.sAmmo),'pet f') == nil then		-- something else equipped
-			profile.bAmmo = gcinclude.doPetFood('max',nil);
+			if gcdisplay.GetCycle('DB') == 'Norm' then
+				profile.bAmmo = gcinclude.fPetReward(nil,true);
+			else
+				profile.bAmmo = gcinclude.fPetReward(nil,false);
+			end
 		end
-		gcinclude.MoveToCurrent(sets.Reward,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Tame') then
 		-- Trying to tame a beast. (Someone's charm failed.)
 		gcinclude.MoveToCurrent(sets.Tame,sets.CurrentGear);		
@@ -1374,7 +1467,7 @@ end		-- HandleAbility
 	is supported
 --]]
 
-profile.HandleItem = function()
+function profile.HandleItem()
 	local item = gData.GetAction();
 	local bShow = false;
 	
@@ -1406,7 +1499,7 @@ end		-- HandleItem
 	Fast Cast, cast time reduction, and quick cast gear in anticipation of a spell
 --]]
 
-profile.HandlePrecast = function()
+function profile.HandlePrecast()
     local spell = gData.GetAction();
 	local obi;
 	local mSet;
@@ -1430,7 +1523,7 @@ end		-- HandlePrecast
 	are loaded: INT/MND, spell specific, macc, magic skill, obi, ele swap	
 --]]
 
-profile.HandleMidcast = function()
+function profile.HandleMidcast()
 
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
 		return;
@@ -1450,7 +1543,7 @@ end		-- gcinclude.HandleMidcast
 	and Ranged Shot Speed Gear for a ranged attack
 --]]
 
-profile.HandlePreshot = function()
+function profile.HandlePreshot()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
@@ -1467,7 +1560,7 @@ end		-- HandlePreshot
 	and Damage gear for a ranged attack
 --]]
 
-profile.HandleMidshot = function()
+function profile.HandleMidshot()
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
@@ -1486,7 +1579,7 @@ end		-- HandleMidshot
 	HandleWeaponskill loads the gear appropriately for the weapon skill you're doing
 --]]
 
-profile.HandleWeaponskill = function()
+function profile.HandleWeaponskill()
 	local ws = gData.GetAction();
 	local canWS = gcinclude.CheckWsBailout();
 	local cKey;

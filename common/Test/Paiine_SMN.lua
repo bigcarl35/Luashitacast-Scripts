@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the SMN job.
 	
-	Gear Sets last updated: October 13, 2024
-	Code update: October 13, 2024
+	Gear Sets last updated: October 21, 2024
+	Code update: October 21, 2024
 --]]
 
 local sets = {
@@ -16,14 +16,12 @@ local sets = {
 	items identified, usually ordered by level: Body = { 'Vermillion Cloak//CARBY','Austere Robe' },
 	Any item that has a // appended to it contains an inline conditional. The // code is a test
 	to see if the item should be equipped. The level is still checked, but if the inline coded
-	test is successful, that piece of gear will be equipped. Currently nothing checks to see
-	if that item can be equipped by the job it's associated with let alone whether the player
-	even has it accessible. Those are all planned for the future. In the mean time the onus is
-	on the player to create the correct definitions.
+	test is successful, that piece of gear will be equipped. If you've done a /gc command,
+	the item's suitability for the job and accessibility will also be checked.
 
-	Not all sets need to be defined. There is nothing wrong with leaving a set "empty", but don't
-	delete any of the sets. All the ones listed here (except for any custom sets) are expected to 
-	exist by Luashitacast.
+	Not all sets need to be defined. There is nothing wrong with leaving a set "empty", but 
+	don't delete any of the sets. All the ones listed here (except for any custom sets) are 
+	expected to exist by Luashitacast. 
 	
 	*** Note ***
 	Unlike when summoner is used as a subjob, /bst's pets are charmed at the max level of your
@@ -55,7 +53,7 @@ local sets = {
 	
 	['Default'] = {
 		Main  = 'Earth Staff//NO_PET',
-		Head  = { 'Lilac Corsage//TOWN', 'Austere Hat', 'Silver Hairpin' },
+		Head  = { 'Lilac Corsage//TOWN', 'Austere Hat', 'Silver Hairpin +1' },
 		Neck  = { 'Rep.Gold Medal//NOT_OWN','Uggalepih Pendant//NIGHTTIME', 'Fenrir\'s Torque//DAYTIME', 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
 		Ears  = { 'Bat Earring//BLINDED', 'Loquac. Earring', 'Coral Earring//DT_MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
 		Body  = { 'Ducal Aketon//TOWN-AK', 'Vermillion Cloak//MPP.LT.94', 'Summoner\'s Dblt.', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
@@ -83,7 +81,7 @@ local sets = {
 --]]
 
 	['TP'] = {
-        Head  = { 'Smn. Horn +1//SMNPETMW', 'Shep. Bonnet//PETF', 'Austere Hat', 'Silver Hairpin' },
+        Head  = { 'Smn. Horn +1//SMNPETMW', 'Shep. Bonnet//PETF', 'Austere Hat', 'Silver Hairpin +1' },
 		Neck  = { 'Rep.Gold Medal//NOT_OWN','Uggalepih Pendant//NIGHTTIME', 'Fenrir\'s Torque//DAYTIME', 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
 		Ears  = { 'Bat Earring//BLINDED//PETNF', 'Loquac. Earring', 'Beastly Earring//PETF', 'Coral Earring//DT_MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1', 'Reraise Earring' },
         Body  = { 'Vermillion Cloak//CARBY','Summoner\'s Dblt.//SMNPETMD', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' }, 
@@ -389,11 +387,11 @@ local sets = {
 	-- or the chance of failure. INT is associated with the element ice
 	['INT'] = {
 		Head  = 'Summoner\'s Horn +1',
-        Hands = { 'Errant Cuffs', 'Seer\'s Mitts' },
+        Hands = 'Errant Cuffs',
         Rings = 'Tamas Ring',
 		Body  = 'Errant Hpl.',
         Waist = 'Mrc.Cpt. Belt',
-        Legs  = { 'Errant Slops', 'Seer\'s Slacks' },
+        Legs  = 'Errant Slops', 
         Feet  = { 'Rostrum Pumps', 'Mannequin Pumps' },
     },
 
@@ -405,7 +403,6 @@ local sets = {
 	['MND'] = {
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
-        Hands = 'Seer\'s Mitts',
 		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
         Back  = 'White Cape',
         Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
@@ -518,7 +515,7 @@ local sets = {
         Hands = 'Wonder Mitts',
 		Rings = { 'Tamas Ring', 'Flame Ring', 'Sun Ring', 'Courage Ring' },
         Waist = 'Mrc.Cpt. Belt',
-        Legs  = { 'Errant Slops', 'Seer\'s Slacks' },
+        Legs  = 'Errant Slops',
         Feet  = { 'Creek F Clomps', 'Wonder Clumps' },
     },
 
@@ -587,10 +584,9 @@ local sets = {
         Head  = 'Empress Hairpin',
         Neck  = 'Spike Necklace',
         Body  = { 'Errant Hpl.', 'Mrc.Cpt. Doublet' },
-        Hands = 'Seer\'s Mitts',
 		Rings  = { 'Tamas Ring', 'Kshama Ring No.2', 'Balance Ring' },
         Waist = 'Mrc.Cpt. Belt',
-        Legs  = { 'Errant Slops', 'Seer\'s Slacks' },
+        Legs  = 'Errant Slops',
         Feet  = { 'Rostrum Pumps', 'Mannequin Pumps' },
     },
 
@@ -602,11 +598,10 @@ local sets = {
 	
 	['WS_INT'] = {
 		Head  = 'Summoner\'s Horn +1',
-        Hands = 'Seer\'s Mitts',
         Rings = 'Tamas Ring',
 		Body  = 'Errant Hpl.',
         Waist = 'Mrc.Cpt. Belt',
-        Legs  = { 'Errant Slops', 'Seer\'s Slacks' },
+        Legs  = 'Errant Slops',
         Feet  = { 'Rostrum Pumps', 'Mannequin Pumps' },
     },
 	
@@ -620,7 +615,6 @@ local sets = {
 		Head  = 'Summoner\'s Horn +1',
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
-        Hands = 'Seer\'s Mitts',
 		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs  = { 'Errant Slops', 'Summoner\'s Spats', 'Wonder Braccae' },
@@ -654,7 +648,6 @@ local sets = {
 	['WS_MND'] = {
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
-        Hands = 'Seer\'s Mitts',
 		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
         Back  = 'White Cape',
         Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
@@ -896,7 +889,7 @@ profile.sAmmo = nil;		-- /BST specific. Name of ammo equipped
 	the pet is trying to perform. (This is specifically rage blood pacts.)
 --]]
 
-local function HandlePetAction(Pet,PetAction)
+function HandlePetAction(Pet,PetAction)
 	local bSmn = false;
 	
 	-- Determine name of pet
@@ -966,7 +959,7 @@ end		-- HandlePetAction
 	which subjob is current. 
 --]]
 
-local function SetSubjobSet(chkSJ)
+function SetSubjobSet(chkSJ)
 	-- "chkSJ" is the key for what toolbar is shown. All jobs are defined in the subs table.
 	-- A value of 0 means that job is not configured. All values > 0 indicate which toolbar
 	-- is to be displayed. The player must change the entries in this table to match their
@@ -998,7 +991,7 @@ end		-- SetSubjobSet
 	OnLoad is run whenever you log into your SMN or change your job to SMN
 --]]
 
-profile.OnLoad = function()
+function profile.OnLoad()
 	local player = gData.GetPlayer();
 
 	-- Initialize settings
@@ -1033,7 +1026,7 @@ end		-- OnLoad
 	OnUnload is run when you change to another job
 --]]
 
-profile.OnUnload = function()
+function profile.OnUnload()
 	gcinclude.Unload();
 end		-- OnUnload
 
@@ -1042,7 +1035,7 @@ end		-- OnUnload
 	of in gcinclude.HandleCommands are specific to SMN or the help system.
 --]]
 
-profile.HandleCommand = function(args)
+function profile.HandleCommand(args)
 	if args[1] == 'help' then
 		gcdisplay.ShowHelp(args);
 	elseif args[1] == 'petfood' then
@@ -1056,7 +1049,7 @@ end		-- HandleCommand
 	HandleDefault is run when some action happens. This emphasizes pet actions
 --]]
 	
-profile.HandleDefault = function()
+function profile.HandleDefault()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();
 	local player = gData.GetPlayer();
@@ -1065,6 +1058,7 @@ profile.HandleDefault = function()
 	local eWeap = nil;
 	local cKey,sGear;
 
+	gcinclude.StartReminder();		-- See if reminder should be printed
 	
 	-- A pet action takes priority over a player's action. Only SMN avatar actions supported
 	if pet ~= nil then
@@ -1128,6 +1122,7 @@ profile.HandleDefault = function()
 	
 	-- Now process the pet/player statuses accordingly.
 	if (pet ~= nil and pet.Status == 'Engaged') or (player ~= nil and player.Status == 'Engaged') then
+		gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
 		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
 		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
 			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
@@ -1189,7 +1184,7 @@ end		-- HandleDefault
 	HandleAbility is used to change the player's gear appropriately for the specified avatar ability.
 --]]
 
-profile.HandleAbility = function()
+function profile.HandleAbility()
 	local player = gData.GetPlayer();
 	local ability = gData.GetAction();
 	local eq = gData.GetEquipment();
@@ -1357,7 +1352,7 @@ end		-- HandleAbility
 	is supported
 --]]
 
-profile.HandleItem = function()
+function profile.HandleItem()
 	local item = gData.GetAction();
 	local bShow = false;
 
@@ -1389,7 +1384,7 @@ end		-- HandleItem
 	Fast Cast, cast time reduction, and quick cast gear in anticipation of a spell
 --]]
 
-profile.HandlePrecast = function()
+function profile.HandlePrecast()
     local spell = gData.GetAction();
 	local obi;
 	local mSet;
@@ -1413,7 +1408,7 @@ end		-- HandlePrecast
 	are loaded: INT/MND, spell specific, macc, magic skill, obi, ele swap	
 --]]
 
-profile.HandleMidcast = function()
+function profile.HandleMidcast()
 
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
 		return;
@@ -1433,7 +1428,7 @@ end		-- gcinclude.HandleMidcast
 	and Ranged Shot Speed Gear for a ranged attack
 --]]
 
-profile.HandlePreshot = function()
+function profile.HandlePreshot()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
@@ -1449,7 +1444,7 @@ end		-- HandlePreshot
 	and Damage gear for a ranged attack
 --]]
 
-profile.HandleMidshot = function()
+function profile.HandleMidshot()
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
@@ -1468,7 +1463,7 @@ end		-- HandleMidshot
 	HandleWeaponskill loads the gear appropriately for the weapon skill you're doing
 --]]
 
-profile.HandleWeaponskill = function()
+function profile.HandleWeaponskill()
 	local ws = gData.GetAction();
 	local canWS = gcinclude.CheckWsBailout();
 	local cKey;
