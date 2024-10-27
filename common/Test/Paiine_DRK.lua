@@ -68,7 +68,7 @@ local sets = {
 --]]
 
 	['Default'] = {
-		Subset = {'TP_Tank//TANK', 'TP' },
+		Subset = {'Tank_TP//TANK', 'TP' },
 		Head   = { 'Lilac Corsage//TOWN', 'Abs. Burgeonet +1', 'Empress Hairpin' },
 		Body   = { 'Ducal Aketon//TOWN-AK', 'Plastron', 'Chaos Cuirass', 'Scorpion Harness', 'Brigandine', 'Beetle Harness' },
 	},
@@ -130,6 +130,16 @@ local sets = {
 		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt' },
 		Legs  = 'Thick Breeches',
 		Feet  = { 'Chs. Sollerets +1', 'Bounding Boots' }, -- Needed to override the default Thick Sollerets	
+	},
+
+--[[
+	Similar to accuracy except will be used on ranged attacks
+--]]
+
+	['Ranged_Accuracy'] = {
+	},
+
+	['Tank_Ranged_Accuracy'] = {
 	},
 	
 --[[
@@ -212,8 +222,8 @@ local sets = {
     },
 	
 --[[
-	Midshot is the second stage of a ranged shot. This is where you place Ranged 
-	Accuracy, Ranged Attack, Ranged Damage, recycle, etc.
+	Midshot is the second stage of a ranged shot. This is where you place
+	Ranged Attack, Ranged Damage, recycle, etc.
 --]]
 
 	['Midshot'] = {
@@ -579,14 +589,14 @@ local sets = {
     },
 
 --[[
-		* Agility based *
+		* Agility based, ranged *
 		
 		Marksmanship: Hot Shot^,Split Shot^,Sniper Shot^,Slug Shot^
 		
 		^ RNG must be subjob
 --]]
 
-	['WS_AGI'] = {
+	['WS_RANGED_AGI'] = {
 		Head  = 'Empress Hairpin',
 		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },
 		Waist = 'Mrc.Cpt. Belt',
@@ -1105,7 +1115,11 @@ function profile.HandleDefault()
 					end
 				end
 			elseif cKey == 'E' then		-- Accuracy	
-				gcinclude.FractionalAccuracy(sets.Accuracy,sets.Tank_Accuracy);
+				if bTank == true then
+					gcinclude.FractionalAccuracy(sets.Tank_Accuracy);
+				else
+					gcinclude.FractionalAccuracy(sets.Accuracy);
+				end
 			elseif cKey == 'F' then		-- Kiting
 				if (gcdisplay.GetToggle('Kite') == true) then
 					gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
@@ -1376,6 +1390,8 @@ end		-- HandlePreshot
 --]]
 
 function profile.HandleMidshot()
+	local b = gcdisplay.GetToggle('Tank');
+	
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
@@ -1386,6 +1402,12 @@ function profile.HandleMidshot()
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
 	
+	if b ~= nil and b == true then
+		gcinclude.FractionalAccuracy(gProfile.Sets.Tank_Ranged_Accuracy);
+	else
+		gcinclude.FractionalAccuracy(gProfile.Sets.Ranged_Accuracy);
+	end
+				
 	-- Equip the composited Midshot set	
 	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandleMidshot

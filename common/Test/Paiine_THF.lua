@@ -141,6 +141,16 @@ local sets = {
         Waist = { 'Life Belt', 'Tilt Belt', 'Mrc.Cpt. Belt' },
         Feet  = 'Bounding Boots',	
 	},
+
+--[[
+	Similar to accuracy except will be used on ranged attacks
+--]]
+
+	['Ranged_Accuracy'] = {
+	},
+
+	['Tank_Ranged_Accuracy'] = {
+	},
 	
 --[[
 	If evasion wanted, equip evasion gear. Remember that AGI converts to evasion: for every
@@ -226,8 +236,8 @@ local sets = {
     },
 	
 --[[
-	Midshot is the second stage of a ranged shot. This is where you place Ranged 
-	Accuracy, Ranged Attack, Ranged Damage, recycle, etc.
+	Midshot is the second stage of a ranged shot. This is where you place
+	Ranged Attack, Ranged Damage, recycle, etc.
 --]]
 
 	['Midshot'] = {
@@ -469,14 +479,14 @@ local sets = {
     },
 
 --[[
-		* Strength and Agility based *
+		* Strength and Agility based, ranged *
 		
 		Archery: Flaming Arrow^,Piercing Arrow^,Dulling Arrow^,Sidewinder^
 		
 		^ Subjob must be RNG
 --]]
 
-	['WS_STRAGI'] = {
+	['WS_RANGED_STRAGI'] = {
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
         Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },
@@ -549,14 +559,14 @@ local sets = {
     },
 
 --[[
-		* Agility based *
+		* Agility based, ranged *
 		
 		Marksmanship: Hot Shot^,Split Shot^,Sniper Shot^,Slug Shot^
 		
 		^ Subjob must be RNG
 --]]
 
-	['WS_AGI'] = {
+	['WS_RANGED_AGI'] = {
         Head  = 'Empress Hairpin',
         Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },
         Body  = { 'Assassin\'s Vest', 'Mrc.Cpt. Doublet' },
@@ -1161,8 +1171,12 @@ function profile.HandleDefault()
 						gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 					end				
 				end			
-			elseif cKey == 'E' then		-- Accuracy	
-				gcinclude.FractionalAccuracy(sets.Accuracy,sets.Tank_Accuracy);
+			elseif cKey == 'E' then		-- Accuracy
+				if bTank == true then
+					gcinclude.FractionalAccuracy(sets.Tank_Accuracy);
+				else
+					gcinclude.FractionalAccuracy(sets.Accuracy);
+				end
 			elseif cKey == 'F' then		-- Kiting
 				if (gcdisplay.GetToggle('Kite') == true) then
 					gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
@@ -1444,6 +1458,8 @@ end		-- HandlePreshot
 --]]
 
 function profile.HandleMidshot()
+	local b = gcdisplay.GetToggle('Tank');
+	
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
@@ -1454,6 +1470,12 @@ function profile.HandleMidshot()
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
 
+	if b ~= nil and b == true then
+		gcinclude.FractionalAccuracy(gProfile.Sets.Tank_Ranged_Accuracy);
+	else
+		gcinclude.FractionalAccuracy(gProfile.Sets.Ranged_Accuracy);
+	end
+				
 	if gcdisplay.GetToggle('TH') == true then
 		gcinclude.MoveToCurrent(sets.TH,sets.CurrentGear);
 	end	

@@ -96,6 +96,13 @@ local sets = {
 		Neck = 'Spike Necklace',
 		Rings = 'Balance Ring',
     },
+
+--[[
+	Similar to accuracy except will be used on ranged attacks
+--]]
+
+	['Ranged_Accuracy'] = {
+	},
 	
 --[[
 	If evasion wanted, equip evasion gear. Remember that AGI converts to evasion: for every
@@ -161,9 +168,8 @@ local sets = {
     },
 	
 --[[
-	The second stage is Midcast. This is where you'll want to equip magic attack, or magic
-	enhancing gear. (Magic Attack Bonus also happens here, but is broken out into it's own 
-	gear set. See MAB.)
+	Midshot is the second stage of a ranged shot. This is where you place
+	Ranged Attack, Ranged Damage, recycle, etc.
 --]]
 
 	['Midshot'] = {
@@ -835,7 +841,7 @@ function profile.HandleDefault()
 					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 				end			
 			elseif cKey == 'E' then		-- Accuracy	
-				gcinclude.FractionalAccuracy(sets.Accuracy,nil);
+				gcinclude.FractionalAccuracy(sets.Accuracy);
 			elseif cKey == 'F' then		-- Kiting
 				if (gcdisplay.GetToggle('Kite') == true) then
 					gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
@@ -1113,6 +1119,7 @@ function profile.HandleMidshot()
 	gcinclude.ClearSet(gProfile.Sets.CurrentGear);
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
+	gcinclude.FractionalAccuracy(gProfile.Sets.Ranged_Accuracy);
 
 	-- Equip the composited Midshot set
 	gcinclude.EquipTheGear(sets.CurrentGear);	

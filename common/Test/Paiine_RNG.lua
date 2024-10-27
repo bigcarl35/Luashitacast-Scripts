@@ -91,6 +91,13 @@ The "default" gear set is what is worn when you're not fighting (either you or y
 		Rings = 'Balance Ring',
 		Feet  = 'Bounding Boots',
 	},
+
+--[[
+	Similar to accuracy except will be used on ranged attacks
+--]]
+
+	['Ranged_Accuracy'] = {
+	},
 	
 --[[
 	If evasion wanted, equip evasion gear. Remember that AGI converts to evasion: for every
@@ -157,8 +164,8 @@ The "default" gear set is what is worn when you're not fighting (either you or y
     },
 	
 --[[
-	Midshot is the second stage of a ranged shot. This is where you place Ranged 
-	Accuracy, Ranged Attack, Ranged Damage, recycle, etc.
+	Midshot is the second stage of a ranged shot. This is where you place
+	Ranged Attack, Ranged Damage, recycle, etc.
 --]]
 
 	['Midshot'] = {
@@ -362,13 +369,24 @@ The "default" gear set is what is worn when you're not fighting (either you or y
     },
 
 --[[
-		* Strength and Agility based *
+		* Agility based, ranged *
+		
+		Marksmanship: Hot Shot,Split Shot,Sniper Shot,Slug Shot,Blast Shot,Heavy Shot,
+					  Detonator
+--]]
+	
+	['WS_RANGED_AGI'] = {
+		Feet  = 'Bounding Boots',
+    },
+	
+--[[
+		* Strength and Agility based, ranged *
 
 		Archery: Flaming Arrow,Piercing Arrow,Dulling Arrow,Sidewinder,
 				 Blast Arrow,Arching Arrow,Empyreal Arrow,Namas Arrow
 --]]
 
-	['WS_STRAGI'] = {
+	['WS_RANGED_STRAGI'] = {
 		Rings = 'Courage Ring',
 		Feet  = 'Bounding Boots',
     },
@@ -414,17 +432,6 @@ The "default" gear set is what is worn when you're not fighting (either you or y
 
 	['WS_STRMND'] = {
 		Rings = 'Courage Ring',	
-    },
-
---[[
-		* Agility based *
-		
-		Marksmanship: Hot Shot,Split Shot,Sniper Shot,Slug Shot,Blast Shot,Heavy Shot,
-					  Detonator
---]]
-	
-	['WS_AGI'] = {
-		Feet  = 'Bounding Boots',
     },
 	
 --[[
@@ -893,7 +900,7 @@ function profile.HandleDefault()
 					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 				end			
 			elseif cKey == 'E' then		-- Accuracy	
-				gcinclude.FractionalAccuracy(sets.Accuracy,nil);
+				gcinclude.FractionalAccuracy(sets.Accuracy);
 			elseif cKey == 'F' then		-- Kiting
 				if (gcdisplay.GetToggle('Kite') == true) then
 					gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
@@ -1170,7 +1177,8 @@ function profile.HandleMidshot()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
-
+	gcinclude.FractionalAccuracy(gProfile.Sets.Ranged_Accuracy);
+	
 	-- Equip the composited Midshot set
 	gcinclude.EquipTheGear(sets.CurrentGear);	
 end		-- HandleMidshot

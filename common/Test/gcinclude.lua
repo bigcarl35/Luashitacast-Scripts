@@ -127,8 +127,6 @@ gcinclude.Gather=nil;
 --]]
 
 gcinclude.tWeaponSkills = {
-	['AGI']    = { 'hot shot', 'split shot', 'sniper shot', 'slugshot', 'blast shot', 
-				   'heavy shot', 'detonator' },
 	['CHR']    = { 'shadowstitch' },
 	['DEX']    = { 'wasp sting', 'viper bite', 'blade: metsu', 'dancing edge' },
 	['DEXAGI'] = { 'shark bite', 'coronach' },
@@ -137,6 +135,14 @@ gcinclude.tWeaponSkills = {
 	['INT']    = { 'gate of tartarus' },
 	['INTMND'] = { 'spirit taker' },
 	['MND']    = { 'energy steal', 'energy drain' },
+	['RANGED_AGI']  = {		-- marksmanship
+				   'hot shot', 'split shot', 'sniper shot', 'slugshot', 'blast shot', 
+				   'heavy shot', 'detonator' 
+				   },
+	['RANGED_STRAGI'] = { -- archery
+				   'flaming arrow', 'piercing arrow', 'dulling arrow', 'sidewinder', 
+				   'blast arrow', 'arching arrow', 'empyreal arrow', 'namas arrow'
+				   },
 	['STR']    = { 'raging axe', 'smash axe', 'gale axe', 'avalanche axe', 'spinning axe',
 				   'rampage', 'mistral axe', 'decimation', 'spinning attack', 'flat blade',
 				   'circle blade', 'vorpal blade', 'hard slash', 'crescent moon', 
@@ -147,9 +153,7 @@ gcinclude.tWeaponSkills = {
 				   'tachi: kasha', 'tachi: kaiten', 'brainshaker', 'skullbreaker',
 				   'true strike', 'heavy swing', 'shell crusher', 'full swing', 'onslaught',
 				   'double thrust', 'spinning scythe', 'Vorpal Scythe' },
-	['STRAGI'] = { 'sickle moon', 'vorpal thrust', 'flaming arrow', 'piercing arrow',
-				   'dulling arrow', 'sidewinder', 'blast arrow', 'arching arrow',
-				   'empyreal arrow', 'namas arrow' },
+	['STRAGI'] = { 'sickle moon', 'vorpal thrust' },
 	['STRDEX'] = { 'combo', 'backhand blow', 'raging fists', 'fast blade', 'penta thrust',
 				   'blade: rin', 'blade: retsu', 'blade: jin', 'blade: ten', 'blade: ku',
 				   'Geirskogul' },
@@ -3064,8 +3068,8 @@ end	-- gcinclude.FractionalSet
 	how much accuracy gear should be equipped.
 --]]
 
-function gcinclude.FractionalAccuracy(accTbl,tankAccTbl)
-	local src,t,vRoot,bGood;
+function gcinclude.FractionalAccuracy(accTbl)
+	local t,vRoot,bGood;
 	local s1,s2;
 	local tAcc = {};
 	local ts = {};
@@ -3076,24 +3080,7 @@ function gcinclude.FractionalAccuracy(accTbl,tankAccTbl)
 		return;
 	end
 	
-	-- Now determine which table to use
-	if gcdisplay.GetToggle('Tank') ~= nil and 
-	   gcdisplay.GetToggle('Tank') == true and 
-	   tankAccTbl ~= nil then
-		if type(tankAccTbl) == 'string' then
-			src = fGetTableByName(tankAccTbl);
-		else
-			src = tankAccTbl;
-		end
-	else
-		if type(tankAccTbl) == 'string' then
-			src = fGetTableByName(accTbl);
-		else
-			src = accTbl;
-		end
-	end
-	
-	for i,j in pairs(src) do
+	for i,j in pairs(accTbl) do
 		t = string.lower(i);
 		if t == 'subset' then
 			bSubset = true;
@@ -3139,7 +3126,7 @@ function gcinclude.FractionalAccuracy(accTbl,tankAccTbl)
 		gcinclude.MoveToCurrent(tAcc,gProfile.Sets.CurrentGear);
 	else
 		if bSubset == true then
-			for i,j in pairs(src) do
+			for i,j in pairs(accTbl) do
 			t = string.lower(i);
 			if t == 'subset' then
 				if type(j) == 'table' then
@@ -3152,12 +3139,7 @@ function gcinclude.FractionalAccuracy(accTbl,tankAccTbl)
 					for kk,vv in pairs(ts) do
 						bGood,vRoot = fCheckInline(vv,'subset');
 						if bGood == true then
-							if gcdisplay.GetToggle('Tank') ~= nil and 
-							   gcdisplay.GetToggle('Tank') == true then
-								gcinclude.FractionalAccuracy(accTbl,vRoot);
-							else
-								gcinclude.FractionalAccuracy(vRoot,tankAccTbl);
-							end
+							gcinclude.FractionalAccuracy(vRoot);
 							break;
 						end
 					end
@@ -4539,7 +4521,7 @@ function gcinclude.HandleMidcast(bTank)
 				gcinclude.MoveToCurrent(gProfile.Sets.MAB,gProfile.Sets.CurrentGear);
 			end
 		elseif cKey == 'E' then			--Magical accuracy
-			gcinclude.FractionalAccuracy(gProfile.Sets.Macc,nil);
+			gcinclude.FractionalAccuracy(gProfile.Sets.Macc);
 		elseif cKey == 'F' then			-- Spell specific gear
 			if string.match(spell.Name, 'Stoneskin') then
 				if bTank == true then
@@ -4622,7 +4604,19 @@ function gcinclude.fHandleWeaponskill()
 	
 		elseif cKey == 'D' then		-- accuracy		
 			-- Next check on accuracy. Use Tank_accuracy if /tank = true
-			gcinclude.FractionalAccuracy(gProfile.Sets.Accuracy,gProfile.Sets.Tank_Accuracy);
+			local b = gcdisplay.GetToggle('Tank');
+			if table.find(gcinclude.tWeaponSkills['RANGED_AGI'],lname) ~= nil or
+				table.find(gcinclude.tWeaponSkills['RANGED_STRAGI'],lname) ~= nil then
+				if b ~= nil and b == true then
+					gcinclude.FractionalAccuracy(gProfile.Sets.Tank_Ranged_Accuracy);
+				else
+					gcinclude.FractionalAccuracy(gProfile.Sets.Ranged_Accuracy);
+				end
+			elseif b ~= nil and b == true then
+				gcinclude.FractionalAccuracy(gProfile.Sets.Tank_Accuracy);
+			else
+				gcinclude.FractionalAccuracy(gProfile.Sets.Accuracy);
+			end
 		elseif cKey == 'E' then		-- elemental obi
 --[[
 	If the weaponskill is elemental and is closing a skillchain, then if 
