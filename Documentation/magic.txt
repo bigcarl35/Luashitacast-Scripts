@@ -271,15 +271,15 @@ Divine Magic
 	  - Divine Enhancement: Currently only enlight
 	  - Divine Magic Skill determines accuracy and the spell interruption rate on divine
 	    magic. It does not affect damage at all.
-	  - The damage for "nukes" ic calculated from the magic damage formula (see elemental
+	  - The damage for "nukes" is calculated from the magic damage formula (see elemental
 	    magic's formula.) The main caster stats that affect damage potential are MND,
 		Magic Attack Bonus, and elemental damage affinity and potency bonuses.
 	  - Divine spells: banishes, banishgas, enlight, flash, and holy.
 	  
 Dark Magic
 	- Dark magic is a category of darkness elemental black magic which focuses on
-	  absorbing from an enemy enhance the caster, including Absorb spells, drain and
-	  aspir.
+	  absorbing from an enemy, enhancing the caster, including Absorb spells, drain 
+	  and aspir.
 	- Dark magic skill determines accuracy, potency of some spells, and the spell
 	  interruption rate of dark magic spells. Dark magic skill does nothing for the
 	  potency of absorb spells, but does effect the accuracy and duration.
@@ -292,9 +292,9 @@ Dark Magic
 		- More HP than the caster has can be absorbed, but HPP only goes to 100%
 		- Potency is directly associated with the dark magic skill
 			At < 300 dark magic skill, the maximum potential potency is:
-				Dark Magic Skill +20
+				(Dark Magic Skill/3) + 20
 			At 300 >= dark magic skill, the maximum potential potency is:
-				Dark Magic Skill x 5/8 + 132.5
+				(Dark Magic Skill x 0.9)
 		- The minimum potency is 50% of the maximum potency, and the actual potency
 		  of the spell (when unresisted) will randomly fall anywhere between the
 		  minimum and maximum potencial potency.
@@ -302,9 +302,9 @@ Dark Magic
 		- More MP than the caster has can be absorbed, but MPP only goies to 100%
 		- The potency is directly associated with the dark magic skill
 			The maximum potency < 300 is:
-				(Dark Magic Skill/3 +20) x (1 + Potency)
+				(Dark Magic Skill/3 +20) 
 			The maximum potency >= 300 is:
-				(Dark Magic Skill x 0.4) x (1 + Potency)
+				(Dark Magic Skill x 0.4) 
 		- The minimum potency is 50% of the maximum potency and the actual potency
 		  of the spell (when unresisted) will randomly fall anywhere between the
 		  minimum and maximum potency.
@@ -348,7 +348,7 @@ Songs
 	  there are two components that together determine the skill value for the song's
 	  effectiveness - singing skill and instrument skill.
 	- There are two different instruments: wind and string and the type used in the
-	  calculation is whichever is currentlt equipped.
+	  calculation is whichever is currently equipped.
 	- While Magic Accuracy with songs is not clearly known, it depends on CHR and 
 	  the combined skill level (sing and instrument) multiplied by a scaling factor.
 	- Songs cannot be interrupted by being struck so spell interruption is not
@@ -391,5 +391,27 @@ Ninjutsu
 		  spell without expending the associated ninja tool
 	- Ninjutsu: Dotons, Dokumoris, Hojos, Hutons, Hyotons, Jubakus, Katons, Kurayamis,
 	  Raitons, Suitons, Tonkos, Utsusemis
+	  
+	  
+General:
+	- MND increases resistance to white magic spells, INT increases resistance to black
+	  magic spells, and CHR reduces resistance to Bard songs and Charm.
+	- Elemental day and weather strengthens spells matching the element (or penalizes
+	  if weak to the element).
+	- Players have a base elemental resistance equal to a capped C-skill. So, a level
+	  75 player's elemental resistance's hidden score is around 225. What's displayed
+	  in the equipment page is just the +/- to the element excluding the base score.
+	- Spike spells do damage and possibly a status effect. The damage is calculated
+	  when the player first hit.
+	  
+	  Blaze Spikes covers the player with fire spikes. It is strictly a damage spell.
+	
+		Base Damage = floor(floor(((INT + 2) / 12) + 4) * (1 + MAB/100))
+	
+	  Ice Spikes covers the player with ice spikes. This spell does ice	damage and has 
+	  a chance to paralyze the attacker. Shock Spikes cover the player with lightning 
+	  spikes. This spell does lightning damage and has a chance to stun the attacker.
+	
+		Base Damge = floor(floor(((INT + 10) / 20) + 2) * (1 + MAB/100))
 
 
