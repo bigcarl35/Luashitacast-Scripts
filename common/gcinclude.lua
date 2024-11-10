@@ -68,12 +68,14 @@ gcinclude.settings = {
 	WSdistance = 4.7; 	 -- default max distance (yalms) to allow non-ranged WS to go off at if the above WScheck is true
 	bWSOverride = false; -- is the player playing a job where weapon swapping always happens, it is not optional?
 	Tolerance = 97;		 -- Comparison value %, cut-off for certain comparisons
-	DefaultSpellTarget = 't'; -- What to use in fMaxSpell if no target specified
-	DefaultSongTarget = 't';  -- What to use in fMaxSong if no target specified
+	DefaultSpellTarget = 't'; -- What to use in MaxSpell if no target specified
+	DefaultSongTarget = 't';  -- What to use in MaxSong if no target specified
 	--
 	priorityEngaged = 'CEF'; 		-- indicates order of steps for engagement
 	priorityMidCast = 'ABCDEFGH';	-- indicates order of steps for spell midcast
 	priorityWeaponSkill = 'ADBE';	-- indicates order of steps for a weapon skill
+	--
+	bAutoStaveSwapping = true;		-- indicates if elemental stave swapping should occur automatically
 };
 
 -- The following arrays are used by the functions contained in this file. Probably best to leave them alone
@@ -111,39 +113,65 @@ gcinclude.NinNukes = T{'Katon: Ichi', 'Katon: Ni', 'Katon: San', 'Hyoton: Ichi',
 gcinclude.Rolls = T{{'Fighter\'s Roll',5,9}, {'Monk\'s Roll',3,7}, {'Healer\'s Roll',3,7}, {'Corsair\'s Roll',5,9}, {'Ninja Roll',4,8},{'Hunter\'s Roll',4,8}, {'Chaos Roll',4,8}, {'Magus\'s Roll',2,6}, {'Drachen Roll',4,8}, {'Choral Roll',2,6},{'Beast Roll',4,8}, {'Samurai Roll',2,6}, {'Evoker\'s Roll',5,9}, {'Rogue\'s Roll',5,9}, {'Warlock\'s Roll',4,8},
 	{'Puppet Roll',3,7}, {'Gallant\'s Roll',3,7}, {'Wizard\'s Roll',5,9}, {'Dancer\'s Roll',3,7}, {'Scholar\'s Roll',2,6},{'Naturalist\'s Roll',3,7}, {'Runeist\'s Roll',4,8}, {'Bolter\'s Roll',3,9}, {'Caster\'s Roll',2,7}, {'Courser\'s Roll',3,9},{'Blitzer\'s Roll',4,9}, {'Tactician\'s Roll',5,8}, {'Allies\' Roll',3,10}, {'Miser\'s Roll',5,7},
 	{'Companion\'s Roll',2,10},{'Avenger\'s Roll',4,8},}; -- {name,lucky,unlucky}
-gcinclude.ExactBuff = T{'enthunder','enstone','enaero','enblizzard','enwater','enlight','endark','arcane circle','holy circle','ward circle'};
 gcinclude.Crafting_Types = 'ALC,BONE,CLOTH,COOK,GSM,LTH,BSM,WW';
 gcinclude.Gathering_Types = 'HELM,DIG,CLAM,FISH';
-gcinclude.BarElementSpells = T{ 'baraero','baraera','barblizzard','barblizzara','barfire','barfira','barstone','barstonera','barthunder','barthundra','barwater','barwatera' };
 
 --[[
 	The following two variables are used to store the invoked type of craft/gather type
 --]]
 gcinclude.Craft=nil;
 gcinclude.Gather=nil;
+
 --[[
 	The following define all the weaponskills according to the desired stats
 --]]
-gcinclude.WS_AGI = 'Hot Shot,Split Shot,Sniper Shot,Slugshot,Blast Shot,Heavy Shot,Detonator';
-gcinclude.WS_CHR = 'Shadowstitch';
-gcinclude.WS_DEX = 'Wasp Sting,Viper Bite,Blade: Metsu,Dancing Edge';
-gcinclude.WS_DEXAGI = 'Shark Bite,Coronach';
-gcinclude.WS_DEXCHR = 'Eviseration';
-gcinclude.WS_DEXINT = 'Gust Slash,Cyclone';
-gcinclude.WS_INT = 'Gate of Tartarus';
-gcinclude.WS_INTMND = 'Spirit Taker';
-gcinclude.WS_MND = 'Energy Steal,Energy Drain';
-gcinclude.WS_STR = 'Raging Axe,Smash Axe,Gale Axe,Avalanche Axe,Spinning Axe,Rampage,Mistral Axe,Decimation,Spinning Attack,Flat Blade,Circle Blade,Vorpal Blade,Hard Slash,Crescent Moon,Mercy Stroke,Iron Tempest,Sturmwind,Keen Edge,Raging Rush,Metatron Torment,Leg Sweep,Skewer,Wheeling Thrust,Impulse Drive,Tachi: Enpi,Tachi: Hobaku,Tachi: Goten,Tachi: Kagero,Tachi: Jinpu,Tachi: Yukikaze,Tachi: Gekko,Tachi: Kasha,Tachi:Kaiten,Brainshaker,Skullbreaker,True Strike,Heavy Swing,Shell Crusher,Full Swing,Onslaught,Double Thrust,Spinning Scythe,Vorpal Scythe';
-gcinclude.WS_STRAGI = 'Sickle Moon,Vorpal Thrust,Flaming Arrow,Piercing Arrow,Dulling Arrow,Sidewinder,Blast Arrow,Arching Arrow,Empyreal Arrow,Namas Arrow';
-gcinclude.WS_STRDEX = 'Combo,Backhand Blow,Raging Fists,Fast Blade,Penta Thrust,Blade: Rin,Blade: Retsu,Blade: Jin,Blade: Ten,Blade: Ku,Geirskogul';
-gcinclude.WS_STRINT = 'Dark Harvest,Shadow of Death,Nightmare Scythe,Spiral Hell,Burning Blade,Frostbite,Freezebite,Spinning Slash,Ground Strike,Thunder Thrust,Raiden Thrust,Blade: Teki,Blade: To,Blade: Chi,Blade: Ei,Rock Crusher,Earth Crusher,Catastrophe';
-gcinclude.WS_STRINT_30_20 = 'Red Lotus Blade';
-gcinclude.WS_STRMND = 'Guillotine,Cross Reaper,Shining Blade,Seraph Blade,Swift Blade,Savage Blade,Shockwave,Tachi: Koki,Shining Strike,Seraph Strike,Judgment,Hexa strike,Randgrith,Retribution,Knights of Round';
-gcinclude.WS_STRMND_30_50 = 'Black Halo';
-gcinclude.WS_STRVIT = 'Calamity,Slice,Howling Fist,Dragon Kick,Asuran Fists,Power Slash,Scourge,Shield Break,Armor Break,Weapon Break,Full Break,Steel Cyclone';
-gcinclude.WS_VIT = 'Shoulder Tackle,One Inch Punch,Final Heaven';
-gcinclude.WS_Skill = 'Starlight,Moonlight';
-gcinclude.WS_HP = 'Spirits Within';
+
+gcinclude.tWeaponSkills = {
+	['CHR']    = { 'shadowstitch' },
+	['DEX']    = { 'wasp sting', 'viper bite', 'blade: metsu', 'dancing edge' },
+	['DEXAGI'] = { 'shark bite', 'coronach' },
+	['DEXCHR'] = { 'eviseration' },
+	['DEXINT'] = { 'gust slash', 'cyclone' },
+	['INT']    = { 'gate of tartarus' },
+	['INTMND'] = { 'spirit taker' },
+	['MND']    = { 'energy steal', 'energy drain' },
+	['RANGED_AGI']  = {		-- marksmanship
+				   'hot shot', 'split shot', 'sniper shot', 'slugshot', 'blast shot', 
+				   'heavy shot', 'detonator' 
+				   },
+	['RANGED_STRAGI'] = { -- archery
+				   'flaming arrow', 'piercing arrow', 'dulling arrow', 'sidewinder', 
+				   'blast arrow', 'arching arrow', 'empyreal arrow', 'namas arrow'
+				   },
+	['STR']    = { 'raging axe', 'smash axe', 'gale axe', 'avalanche axe', 'spinning axe',
+				   'rampage', 'mistral axe', 'decimation', 'spinning attack', 'flat blade',
+				   'circle blade', 'vorpal blade', 'hard slash', 'crescent moon', 
+				   'mercy stroke', 'iron tempest', 'sturmwind', 'keen edge', 'raging rush',
+				   'metatron torment', 'leg sweep', 'skewer', 'wheeling thrust',
+				   'impulse drive', 'tachi: enpi', 'tachi: hobaku', 'tachi: goten',
+				   'tachi: kagero', 'tachi: jinpu', 'tachi: yukikaze', 'tachi: gekko',
+				   'tachi: kasha', 'tachi: kaiten', 'brainshaker', 'skullbreaker',
+				   'true strike', 'heavy swing', 'shell crusher', 'full swing', 'onslaught',
+				   'double thrust', 'spinning scythe', 'Vorpal Scythe' },
+	['STRAGI'] = { 'sickle moon', 'vorpal thrust' },
+	['STRDEX'] = { 'combo', 'backhand blow', 'raging fists', 'fast blade', 'penta thrust',
+				   'blade: rin', 'blade: retsu', 'blade: jin', 'blade: ten', 'blade: ku',
+				   'Geirskogul' },
+	['STRINT'] = { 'dark harvest', 'shadow of death', 'nightmare scythe', 'spiral hell',
+				   'burning blade', 'frostbite', 'freezebite', 'spinning slash',
+				   'ground strike', 'thunder thrust', 'raiden thrust', 'blade: teki',
+				   'blade: to', 'blade: chi', 'blade: ei', 'rock crusher', 'earth crusher',
+				   'catastrophe' },
+	['STRINT_30_20'] = { 'red lotus blade' },
+	['STRMND'] = { 'guillotine', 'cross reaper', 'shining blade', 'seraph blade', 
+				   'swift blade', 'savage blade', 'shockwave', 'tachi: koki', 
+				   'shining strike', 'seraph strike', 'judgment', 'hexa strike', 'randgrith',
+				   'retribution', 'knights of round' },
+	['STRMND_30_50'] = { 'black halo' },
+	['STRVIT'] = { 'shoulder tackle', 'one inch punch', 'final heaven' },
+	['Skill']  = { 'starlight', 'moonlight' },
+	['HP']     = { 'spirits within' }
+};
 
 -- Daily element and their Elemental weaknesses
 gcinclude.tWeekDayElement = T{
@@ -157,6 +185,22 @@ gcinclude.tWeekDayElement = T{
 	['Darksday'] =     { ['strong'] = 'dark',    ['weak'] = 'light' }
 };
 
+-- define coded lists
+gcinclude.DaysOfTheWeek = { 
+	'FIRESDAY', 'EARTHSDAY', 'WATERSDAY', 'WINDSDAY', 'ICEDAY', 'LIGHTNINGDAY', 
+	'LIGHTSDAY', 'DARKSDAY' 
+};
+gcinclude.NotDaysOfTheWeek = { 
+	'NOT_FIRESDAY', 'NOT_EARTHSDAY', 'NOT_WATERSDAY', 'NOT_WINDSDAY', 'NOT_ICEDAY', 
+	'NORT_LIGHTNINGDAY', 'NOT_LIGHTSDAY', 'NOT_DARKSDAY' 
+};
+							   
+-- define valid codes for weapon types
+gcinclude.tWeapontypeMelee = { 
+	'AXE', 'GAXE', 'SWORD', 'GSWORD', 'SCYTHE', 'STAVE', 'CLUB', 'H2H', 'DAGGER', 
+	'KATANA', 'GKATANA', 'POLEARM' 
+};
+gcinclude.tWeapontypeRange = { 'ARCHERY', 'MARKSMANSHIP', 'THROWING' };
 -- define constants for DT so typos aren't made
 gcinclude.OFF = 'Off';
 gcinclude.PHY = 'Physical';
@@ -168,13 +212,12 @@ gcinclude.HORN = 'Horn';
 gcinclude.STRING = 'String';
 
 -- Define job list that can tank
-gcinclude._TankJobList = 'PLD,NIN,RUN,DRK,WAR,BLU';
+gcinclude._TankJobList = 'PLD,NIN,RUN,DRK,WAR,THF,RDM,BLU';
 
 -- Define constants dealing with magic gear and jobs
 gcinclude.ELEMENT = 'ele';
 gcinclude.OBI = 'obi';
-gcinclude.sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,SCH,GEO,RUN';
-gcinclude.sVisibleGear = 'Main,Sub,Head,Body,Hands,Legs,Feet';
+gcinclude._sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,SCH,GEO,RUN';
 
 -- The following structure is used for locks and accuracy
 gcinclude.tLocks = { 
@@ -216,7 +259,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'water',
 										['NQ'] = { ['Name'] = 'Fire staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Vulcan\'s staff', ['Ref'] = {} }, 
-										['Affinity'] = { 'blaze','burn','firaga','fire','flare' },
+										['Affinity'] = { 'blaze','burn','firaga','fire','flare','enfire' },
 										['SongAffinity'] = { 'ice threnody' },
 										['Summons'] = { 'ifrit','fire spirit','firespirit','fire' }
 										},
@@ -224,7 +267,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'fire',
 										['NQ'] = { ['Name'] = 'Ice staff', ['Ref'] = {} },
 										['HQ'] = {['Name'] = 'Aquilo\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'bind','blizzaga','blizzard','freeze','frost','ice','paralyze' },
+										['Affinity'] = { 'blizzaga','blizzard','freeze','frost','ice','enblizzard' },
 										['SongAffinity'] = { 'wind threnody' },
 										['Summons'] = { 'shiva','ice spirit','icespirit','ice' },
 										},
@@ -232,7 +275,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'ice',
 										['NQ'] = { ['Name'] = 'Wind staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Auster\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'aero','aeroga','choke','gravity','silence','tornado' },
+										['Affinity'] = { 'aero','aeroga','choke','tornado','enaero' },
 										['SongAffinity'] = { 'earth threnody' },
 										['Summons'] = { 'garuda','air spirit','airspirit','air','siren' },
 										},
@@ -240,7 +283,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'wind',
 										['NQ'] = { ['Name'] = 'Earth staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Terra\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'quake','rasp','slow','stone','stonega','stoneskin' },
+										['Affinity'] = { 'quake','rasp','stone','stonega','enstone' },
 										['SongAffinity'] = { 'lightning threnody', 'battlefield elegy', 'carnage elegy' },
 										['Summons'] = {'titan','earth spirit','earthspirit','earth' },
 										},
@@ -248,7 +291,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'earth',
 										['NQ'] = { ['Name'] = 'Thunder staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Jupiter\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'burst','shock','thundaga','thunder' },
+										['Affinity'] = { 'burst','shock','thundaga','thunder','enthunder' },
 										['SongAffinity'] = { 'water threnody' },
 										['Summons'] = { 'ramuh','thunder spirit','thunderspirit','thunder' },
 										},
@@ -256,7 +299,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'thunder',
 										['NQ'] = { ['Name'] = 'Water staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Neptune\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'drown','flood','poison','water','waterga' },
+										['Affinity'] = { 'drown','flood','poison','water','waterga','enwater' },
 										['SongAffinity'] = { 'fire threnody' },
 										['Summons'] = { 'leviathan','water spirit','waterspirit','water' },
 										},
@@ -264,7 +307,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'dark',
 										['NQ'] = { ['Name'] = 'Light staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Apollo\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'banish','banishga','curaga','cure','cursna','dia','diaga','flash','holy','phalanx' },
+										['Affinity'] = { 'banish','banishga','curaga','cure','dia','diaga','flash','holy','enlight' },
 										['SongAffinity'] = { 'dark threnody', 'foe requiem', 'foe requiem ii', 'foe requiem iii', 'foe requiem iv', 'foe requiem v', 'foe requiem vi', 'foe lullaby', 'horde lullaby', 'magic finale', 'maiden\'s virelai' },
 										['Summons'] = {'carbuncle','light spirit','lightspirit','light','cait sith','caitsith','alexander'},
 										},
@@ -272,7 +315,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'light',
 										['NQ'] = { ['Name'] = 'Dark staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Pluto\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'absorb-acc','absorb-agi','abs-chr','abs-dex','abs-int','abs-mnd','abs-str','abs-vit','aspir','blind','bio','drain','sleep','sleepga' },
+										['Affinity'] = { 'aspir','blind','bio','drain','sleep','sleepga','endark' },
 										['SongAffinity'] = { 'light threnody' },
 										['Summons'] = { 'fenrir','diabolos','dark spirit','darkspirit','dark','atomos','odin' },
 										},
@@ -283,14 +326,14 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'water',
 										['Name'] = 'Karin obi', 
 										['Ref'] = {},
-										['MEacc'] = { 'burn','firaga','fire','flare','blaze' },
+										['MEacc'] = { 'burn','firaga','fire','flare','blaze','enfire','blaze' },
 										['eleWS'] = { 'burning blade','red lotus blade','tachi: Kagero','flaming arrow','hot shot','wildfire' },
 									},
 									['ice'] = {
 										['Weak'] = 'fire',										
 										['Name'] = 'Hyorin obi', 
 										['Ref'] = {},
-										['MEacc'] = { 'frost','blizzaga','blizzard','freeze','paralyze','bind','distract','ice' },
+										['MEacc'] = { 'frost','blizzaga','blizzard','freeze','paralyze','bind','distract','ice','enblizzard' },
 										['eleWS'] = { 'frostbite','freezebite','herculean slash','blade: to' },
 										['Other'] = 'elemental magic',
 										},												 
@@ -298,28 +341,28 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'ice',
 										['Name'] = 'Furin obi', 
 										['Ref'] = {},
-										['MEacc'] = { 'choke','aero','aeroga','tornado','silence','gravity','flurry' },
+										['MEacc'] = { 'choke','aero','aeroga','tornado','silence','gravity','flurry','enaero' },
 										['eleWS'] = { 'gust slash','cyclone','aeolian edge','tachi: jinpu' },
 										},												 
 									['earth'] = { 
 										['Weak'] = 'wind',
 										['Name'] = 'Dorin obi', 
 										['Ref'] = {},
-										['MEacc'] = { 'rasp','quake','stone','stonega','slow' },
+										['MEacc'] = { 'rasp','quake','stone','stonega','slow','enstone' },
 										['eleWS'] = { 'blade: chi','rock crusher','earth crusher' },
 										},
 									['thunder'] = { 
 										['Weak'] = 'earth',
 										['Name'] = 'Rairin obi', 
 										['Ref'] = {},
-										['MEacc'] = { 'shock','burst','thundaga','thunder','stun' },
+										['MEacc'] = { 'shock','burst','thundaga','thunder','stun','enthunder' },
 										['eleWS'] = { 'cloudsplitter','thunder thrust','raiden thrust','tachi: goten' },
 										},
 									['water'] = { 
 										['Weak'] = 'thunder',
 										['Name'] = 'Suirin obi', 
 										['Ref'] = {},
-										['MEacc'] = { 'drown','flood','water','waterga','poison' },
+										['MEacc'] = { 'drown','flood','water','waterga','poison','enwater' },
 										['eleWS'] = { 'blade: teki','blade: yu' },
 										['Other'] = 'divine magic',
 										},
@@ -327,7 +370,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'dark',
 										['Name'] = 'Korin obi', 
 										['Ref'] = {},
-										['MEacc'] = { 'banish','banishga','dia','diaga','flash','repose','holy','auspice','esuna','sacrifice','reprisal','cure','curaga' },
+										['MEacc'] = { 'banish','banishga','dia','diaga','flash','repose','holy','auspice','esuna','sacrifice','reprisal','cure','curaga','enlight' },
 										['eleWS'] = { 'shining blade','seraph blade','primal rend','tachi: koki','shining strike','seraph strike','starburst','sunburst','garland of bliss','trueflight' },
 										['Other'] = 'cure potency',
 										},
@@ -335,7 +378,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'light',
 										['Name'] = 'Anrin obi', 
 										['Ref'] = {},
-										['MEacc'] = { 'blind','bio','sleep','dispel','frazzle','drain','warp','tractor','aspir','escape','sleep','sleepga','retrace','absorb-mnd','absorb-chr','absorb-vit','absorb-agi','absorb-int','absorb-dex','absorb-str' },
+										['MEacc'] = { 'blind','bio','sleep','dispel','frazzle','drain','warp','tractor','aspir','escape','sleep','sleepga','retrace','endark' },
 										['eleWS'] = { 'energy steal','energy drain','sanguine blade','dark harvest','shadow of death','infernal scythe','blade: ei','starburst','sunburst','cataclysm','vidohunir','omniscience','leaden suite' },
 										},
 									},
@@ -401,85 +444,41 @@ gcinclude.tElemental_gear = T{
 									},
 };
 
--- Prismatic is included for completeness, but has not been integrated into the code. If someone
--- looks like they're going to get a Claustrum, I'll adjust the code accordingly.
-gcinclude.prismatic = { ['Name'] = 'Claustrum',
-						['Where'] = nil,
-						['Searched'] = false };
---[[
-	The "root" of spells is the first word in the spell name, all in lower case. 
-	
-	The following lists all "root" spells whose Magical Accuracy can be affected by day/weather
---]]
-
-gcinclude.MagicEleAcc = T{
-	['fire']    = 'burn,firaga,fire,flare,blaze',
-    ['water']   = 'drown,flood,water,waterga,poison',
-    ['wind']    = 'choke,aero,aeroga,tornado,silence,gravity,flurry',
-    ['thunder'] = 'shock,burst,thundaga,thunder,Stun',
-    ['earth']   = 'rasp,quake,stone,stonega,slow',
-    ['ice']     = 'frost,blizzaga,blizzard,freeze,paralyze,bind,distract,ice',
-    ['light']   = 'banish,banishga,dia,diaga,flash,repose,holy,auspice,esuna,sacrifice,reprisal,cure,curaga,cura',
-    ['dark']    = 'blind,bio,sleep,dispel,frazzle,drain,warp,tractor,aspir,escape,sleepga,retrace,absorb-mnd,absorb-chr,absorb-vit,absorb-agi,absorb-int,absorb-dex,absorb-str'
-};
-	
--- The following lists all "root" spells that are elemental in nature and can affect Elemental Damage 
--- by the day/weather
-	
-gcinclude.MagicEleDmg = T{
-	['fire']    = 'firaga,fire,flare',
-	['water']   = 'flood,water,waterga',
-	['wind']    = 'aero,aeroga,tornado',
-	['thunder'] = 'burst,thundaga,thunder',
-	['earth']   = 'quake,stone,stonega',
-	['ice']     = 'blizzaga,blizzard,freeze',
-	['light']   = 'banish,banishga,dia,diaga,holy,auspice,esuna,sacrifice,phalanx,refresh,reprisal,cure,curaga,cura',
-	['dark']    = 'blind,bio,poison,sleep,dispel,frazzle,drain,aspir,escape,sleepga,retrace,absorb-mnd,absorb-chr,absorb-vit,absorb-agi,absorb-int,absorb-dex','absorb-str'
-};
-
--- Listed below are all the spells that are affected by INT or MND
-gcinclude.tStatMagic = T{
-	['int'] = {'INT','aero,aeroga,bind,blaze,blind,blizzaga,blizzard,burst,dread,firaga,fire,flare,flood,freeze,ice,quake,shock,stone,stonega,thundaga,thunder,tornado,water,waterga,katon,hyoton,huton,doton,raiton,suiton'},
-	['mnd'] = {'MND','banish,distract,frazzle,paralyze,slow,cure,curaga,cura'},
-};
-
--- List of summons
-gcinclude.tSummonSkill = { 
-	'carbuncle','fenrir','ifrit','titan','leviathan','garuda','shiva','ramuh',
-	'diabolos','fire','firespirit','fire spirit','ice','icespirit','ice spirit',
-	'air','airspirit','air spirit','earth','earthspirit','earth spirit','thunder',
-	'thunderspirit','thunder spirit','water','waterspirit','water spirit','light',
-	'lightspirit','light spirit','dark','darkspirit','dark spirit','cait','caitsith',
-	'cait sith','siren','atomos','alexander','odin'
-	};
-
--- The following lists all "base" songs that are elemental in nature and can affect Elemental Damage 
--- by the day/weather
-
-gcinclude.SongEleDmg = T{
-	['fire']    = 'valor minuet,ice threnody,sinewy etude,ice carol,herculean etude',
-	['water']   = 'fire threnody,spirited etude,fire carol,logical etude',
-	['wind']    = 'sheepfoe mambo,earth threnody,quick etude,raptor mazurka,earth carol,dragonfoe mambo,gold capricco,swift etude,chocobo mazurka',
-	['thunder'] = 'herb pastoral,sword madrigal,water threnody,advancing march,hunter\'s prelude,dextrous etude,water carol,blade madrigal,victory march.archer\'s prelude,uncanny etude',
-	['earth']   = 'knight\'s minne,lightning threnody,vivacious etude,Battlefield elegy,carrnage elegy,vital etude',
-	['ice']     = 'wind threnody,scop\'s operetta,learned etude,wind carol,sage etude,puppet\'s operetta',
-	['light']   = 'army\'s paeon,foe lullaby,dark threnody,foe lullaby,enchanting etude,mage\'s ballad,horde lullaby,fowl aubade,magic finale,lightning carol,dark carol,shining fantasia,bewitching etude,goddess hymnus,warding round,maiden\'s virelai',
-	['dark']    = 'light threnody,light carol,goblin gavotte',
-};
-	
--- List of elemental spirit avatars
-gcinclude.Spirits = 'fire,firespirit,ice,icespirit,air,airspirit,earth,earthspirit,thunder,thunderspirit,water,waterspirit,light,lightspirit,dark,darkspirit';
-
--- This table associates a summoned avatar with an element so that the appropriate stave can be equipped
-gcinclude.SummonStaves = T{
-	['carbuncle'] = 'light', ['light spirit'] = 'light', ['lightspirit'] = 'light', ['cait sith'] = 'light', ['caitsith'] = 'light', ['alexander'] = 'light',
-	['fenrir']    = 'dark', ['diabolos'] = 'dark', ['dark spirit'] = 'dark', ['darkspirit'] = 'dark', ['atomos'] = 'dark', ['odin'] = 'dark',
-	['ifrit']     = 'fire', ['fire spirit'] = 'fire', ['firespirit'] = 'fire',
-	['titan']     = 'earth', ['earth spirit'] = 'earth', ['earthspirit'] = 'earth',
-	['leviathan'] = 'water', ['water spirit'] = 'water', ['waterspirit'] = 'water',
-	['garuda']    = 'wind', ['air spirit'] = 'wind', ['airspirit'] = 'wind', ['siren'] = 'wind',
-	['shiva']     = 'ice', ['ice spirit'] = 'ice', ['icespirit'] = 'ice',
-	['ramuh']     = 'thunder', ['thunder spirit'] = 'thunder', ['thunderspirit'] = 'thunder'
+-- Listed below are spells grouped by a dependency or a type. These are 
+-- root names
+gcinclude.tSpell = {
+	['int']		 = { 
+					'gravity','blind','sleep','sleepga','poison',
+					'poisonga','bind','dispel','blaze','ice','shock', 
+				   },
+	['mnd']		 = {
+					'paralyze','slow','slowga','frazzle','distract',
+					'dia','diaga','silence'
+				   },
+	['eDebuff']	 = { 'drown','burn','frost','choke','rasp','shock' },
+	['barspell'] = { 
+				['ele'] = {
+						   'baraero','baraera','barblizzard','barblizzara',
+						   'barfire','barfira','barstone','barstonera',
+						   'barthunder','barthundra','barwater','barwatera' 
+						  },
+				['status'] = {}
+					},
+	['enspell']  = {
+					'enthunder','enstone','enaero','enblizzard','enfire',
+					'enwater','enlight','endark'
+				   },
+	['spikes']	 = { 'blaze','ice','shock','dread' },
+	['spirits']  = { 
+					'fire','firespirit','ice','icespirit','air','airspirit',
+					'earth','earthspirit','thunder','thunderspirit','water',
+					'waterspirit','light','lightspirit','dark','darkspirit' 
+				   },
+	['absorb']   = {
+					'absorb-agi','absorb-chr','absorb-dex','absorb-int',
+					'absorb-mnd','absorb-str','absorb-vit','absorb-acc',
+					'absorb-tp'
+				   },
 };
 
 --[[
@@ -491,7 +490,6 @@ gcinclude.SummonStaves = T{
 	are currently commented out.
 --]]
 
-gcinclude.TieredMagicJobs = 'WHM,RDM,PLD,SCH,BLM,DRK,BRD,GEO,RUN,NIN';
 gcinclude.GearWarnings = '';
 gcinclude.TMtest = {
 	['aero'] = {
@@ -821,38 +819,38 @@ gcinclude.TStest = {
 gcinclude.weapon = nil;
 gcinclude.offhand = nil;
 
--- Table of all BST pet food including the minimum level needed to equip. 
--- The last column is programmatically populated, so don't change it.
-gcinclude.petfood = {
-	['alpha'] = {'Alpha','Pet Food Alpha',12,false,nil},
-	['beta'] = {'Beta','Pet Food Beta',24,false,nil},
-	['gamma'] = {'Gamma','Pet Fd. Gamma',36,false,nil},
-	['delta'] = {'Delta','Pet Food Delta',48,false,nil},
-	['epsilon'] = {'Epsilon','Pet Fd. Epsilon',60,false,nil},
-	['zeta'] = {'Zeta','Pet Food Zeta',72,false,nil}
+-- Table of all BST pet food
+gcinclude.tPetFood = {
+	[1] = { ['name'] = 'pet food alpha',  ['lvl'] = 12, ['have'] = false },
+	[2] = { ['name'] = 'pet food beta',   ['lvl'] = 24, ['have'] = false },
+	[3] = { ['name'] = 'pet fd. gamma',   ['lvl'] = 36, ['have'] = false },
+	[4] = { ['name'] = 'pet food delta',  ['lvl'] = 48, ['have'] = false },
+	[5] = { ['name'] = 'pet fd. epsilon', ['lvl'] = 60, ['have'] = false },
+	[6] = { ['name'] = 'pet food zeta',   ['lvl'] = 72, ['have'] = false }
 };
+gcinclude._PetFoodCount = 6;
 
 -- This is a list of all player storage containers available in FFXI.
 -- Quite a number of them are not valid on HorizonXI yet.
 
 gcinclude.STORAGES = {
-    [1] = {0, 'Inventory' },
-    [2] = {1, 'Safe' },
-    [3] = {2, 'Storage' },
-    [4] = {3, 'Temporary' },
-    [5] = {4, 'Locker' },
-    [6] = {5, 'Satchel' },
-    [7] = {6, 'Sack' },
-    [8] = {7, 'Case' },
-    [9] = {8, 'Wardrobe' },
-    [10]= {9, 'Safe 2' },
-    [11]= {10, 'Wardrobe 2' },
-    [12]= {11, 'Wardrobe 3' },
-    [13]= {12, 'Wardrobe 4' },
-    [14]= {13, 'Wardrobe 5' },
-    [15]= {14, 'Wardrobe 6' },
-    [16]= {15, 'Wardrobe 7' },
-    [17]= {16, 'Wardrobe 8' }
+    [1] = { ['id'] = 0,  ['name'] = 'Inventory' },
+    [2] = { ['id'] = 1,  ['name'] = 'Safe' },
+    [3] = { ['id'] = 2,  ['name'] = 'Storage' },
+    [4] = { ['id'] = 3,  ['name'] = 'Temporary' },
+    [5] = { ['id'] = 4,  ['name'] = 'Locker' },
+    [6] = { ['id'] = 5,  ['name'] = 'Satchel' },
+    [7] = { ['id'] = 6,  ['name'] = 'Sack' },
+    [8] = { ['id'] = 7,  ['name'] = 'Case' },
+    [9] = { ['id'] = 8,  ['name'] = 'Wardrobe' },
+    [10]= { ['id'] = 9,  ['name'] = 'Safe 2' },
+    [11]= { ['id'] = 10, ['name'] = 'Wardrobe 2' },
+    [12]= { ['id'] = 11, ['name'] = 'Wardrobe 3' },
+    [13]= { ['id'] = 12, ['name'] = 'Wardrobe 4' },
+    [14]= { ['id'] = 13, ['name'] = 'Wardrobe 5' },
+    [15]= { ['id'] = 14, ['name'] = 'Wardrobe 6' },
+    [16]= { ['id'] = 15, ['name'] = 'Wardrobe 7' },
+    [17]= { ['id'] = 16, ['name'] = 'Wardrobe 8' }
 };
 
 -- List of items that are commonly equipped for teleporting, exp boosts, reraise, etc
@@ -881,24 +879,31 @@ gcinclude.tEquipIt = {
 };
 
 -- List of items that inhibit more than the obvious gear slot. Add entries as you
--- need to, to account for the gear you use. Each entry identifies the piece of
--- gear that takes up more than one slot, the slot name, and the extra slot that
--- has to be empty.
+-- need to, to account for the gear you use.
 gcinclude.multiSlot = {
-	{ 'Vermillion Cloak', 'Body', 'Head' },
-	{ 'Royal Cloak', 'Body', 'Head' },
-	{ 'Mandra. Suit', 'Body', 'Legs' },
-	{ 'Taru. Shorts', 'Legs', 'Feet' },
-	{ 'Taru. Shorts +1', 'Legs', 'Feet' },
-	{ 'Tarutaru Top', 'Body', 'Hands' },
-	{ 'Tarutaru Top +1', 'Body', 'Hands' },
+	{ ['item'] = 'Vermillion Cloak', ['slot'] = 'Body', ['affected'] = 'Head' },
+	{ ['item'] = 'Royal Cloak', 	 ['slot'] = 'Body', ['affected'] = 'Head' },
+	{ ['item'] = 'Mandra. Suit',	 ['slot'] = 'Body', ['affected'] = 'Legs' },
+	{ ['item'] = 'Taru. Shorts',	 ['slot'] = 'Legs', ['affected'] = 'Feet' },
+	{ ['item'] = 'Taru. Shorts +1',  ['slot'] = 'Legs', ['affected'] = 'Feet' },
+	{ ['item'] = 'Tarutaru Top',	 ['slot'] = 'Body', ['affected'] = 'Hands' },
+	{ ['item'] = 'Tarutaru Top +1',  ['slot'] = 'Body', ['affected'] = 'Hands' },
+	{ ['item'] = 'Goblin Suit',      ['slot'] = 'Body', ['affected'] = 'Hands,Feet' },
 };
 
 -- This is the list of storage containers that can be equipped from outside of a moghouse
-gcinclude.EQUIPABLE = {gcinclude.STORAGES[1],		-- Inventory
-					   gcinclude.STORAGES[9],		-- Wardrobe
-					   gcinclude.STORAGES[11],		-- Wardrobe 2
-					   gcinclude.STORAGES[17]};		-- Wardrobe 8
+gcinclude.EQUIPABLE = { 
+			gcinclude.STORAGES[1],		-- Inventory
+			gcinclude.STORAGES[9],		-- Wardrobe
+			gcinclude.STORAGES[11],		-- Wardrobe 2
+			gcinclude.STORAGES[17]		-- Wardrobe 8
+};
+
+gcinclude.EQUIPABLE_NONHOLIDAY = {
+			gcinclude.STORAGES[1],		-- Inventory
+			gcinclude.STORAGES[9],		-- Wardrobe
+			gcinclude.STORAGES[11]		-- Wardrobe 2
+};
 
 -- This is the job masks for gear that can be equipped. I have included all jobs
 -- including those not yet in the game on Horizon XI and the place holder jobs
@@ -914,43 +919,40 @@ gcinclude.JobMask = { ['None'] = 0x0,
 		['JOB27'] = 0x8000000, ['JOB28'] = 0x10000000, ['JOB29'] = 0x20000000,
 		['JOB30'] = 0x30000000, ['JOB31'] = 0x80000000, ['Alljobs'] = 0x007FFFFE };
 
--- The following is a list of all valid conditional operators used in the following
--- inline codes: //MP, //MPP, //HP, //HPP, //TP, and //TPP.
-InlineConditionals = { '.EQ.', '.GT.', '.GE.', '.LT.', '.LE.', '.NE.' };
-
 -- The following is used to track regional control. Listed is a region, who has
 -- conquest control, and what zone id's are associated with the region. This
 -- structure is populated programmatically. 1 - San d'Orian, 2 - Bastokian, 3 -
 -- Windurstian, 0 - not applicable, -1 unassigned.
 gcinclude.RegionControl = {
-	['Argoneau'] 		  = {-1, {152,7,8,151,200,119,120}},
-	['Bastok'] 			  = { 2, {234,235,236,237}},
-	['Derfland']		  = {-1, {147,197,109,148,110}},
-	['ElshimoLowlands']	  = {-1, {250,252,176,123}},
-	['ElshimoUplands']	  = {-1, {207,211,160,205,163,159,124}},
-	['Fauregandi']		  = {-1, {111,203,204,9,206,166,10}},
-	['Gustaberg']		  = {-1, {191,173,106,143,107,144,172}},
-	['Jeuno']			  = { 0, {243,244,245,246}},
-	['Kolshushu']		  = {-1, {4,118,213,3,198,249,117}},	-- Purgonorgo Isle doesn't have a separate ID
-	['Kuzotz']			  = {-1, {209,114,168,208,247,125}},
-	['LiTelor']			  = {-1, {153,202,154,251,122,121}},
-	['Movapolos']		  = {-1, {13,12,11}},
-	['Norvallen']		  = {-1, {105,104,2,150,149,1,195}},
-	['QuifimIsland']	  = {-1, {127,184,157,126,179,158}},
-	['Ronfaure']		  = {-1, {167,101,141,140,139,190,100,142}},
-	['Sandoria']		  = { 1, {230,231,232,233}},
-	['Sarutabaruta']	  = {-1, {146,116,170,145,192,194,169,115}},
-	['Tavnazia']		  = {-1, {24,25,31,27,30,29,28,32,26}},
-	['Tulia']			  = {-1, {181,180,130,178,177}},
-	['Valdeaunia']		  = {-1, {6,161,162,165,5,112}},
-	['Vollbow']			  = {-1, {113,201,212,174,128}},
-	['Windurst']		  = { 3, {238,239,240,241,242}},
-	['Zulkheim']		  = {-1, {196,108,102,193,248,103}},
-	['Dynamis']			  = { 0, {39,40,41,42,134,135,185,186,187,188}},
-	['Lumoria']			  = { 0, {33,34,35,36,37,38}}
+	['Argoneau'] 		= { ['own'] = -1, ['zones'] = {152,7,8,151,200,119,120}},
+	['Bastok'] 			= { ['own'] =  2, ['zones'] = {234,235,236,237}},
+	['Derfland']		= { ['own'] = -1, ['zones'] = {147,197,109,148,110}},
+	['ElshimoLowlands']	= { ['own'] = -1, ['zones'] = {250,252,176,123}},
+	['ElshimoUplands']	= { ['own'] = -1, ['zones'] = {207,211,160,205,163,159,124}},
+	['Fauregandi']		= { ['own'] = -1, ['zones'] = {111,203,204,9,206,166,10}},
+	['Gustaberg']		= { ['own'] = -1, ['zones'] = {191,173,106,143,107,144,172}},
+	['Jeuno']			= { ['own'] =  0, ['zones'] = {243,244,245,246}},
+	['Kolshushu']		= { ['own'] = -1, ['zones'] = {4,118,213,3,198,249,117}},	-- Purgonorgo Isle doesn't have a separate ID
+	['Kuzotz']			= { ['own'] = -1, ['zones'] = {209,114,168,208,247,125}},
+	['LiTelor']			= { ['own'] = -1, ['zones'] = {153,202,154,251,122,121}},
+	['Movapolos']		= { ['own'] = -1, ['zones'] = {13,12,11}},
+	['Norvallen']		= { ['own'] = -1, ['zones'] = {105,104,2,150,149,1,195}},
+	['QuifimIsland']	= { ['own'] = -1, ['zones'] = {127,184,157,126,179,158}},
+	['Ronfaure']		= { ['own'] = -1, ['zones'] = {167,101,141,140,139,190,100,142}},
+	['Sandoria']		= { ['own'] =  1, ['zones'] = {230,231,232,233}},
+	['Sarutabaruta']	= { ['own'] = -1, ['zones'] = {146,116,170,145,192,194,169,115}},
+	['Tavnazia']		= { ['own'] = -1, ['zones'] = {24,25,31,27,30,29,28,32,26}},
+	['Tulia']			= { ['own'] = -1, ['zones'] = {181,180,130,178,177}},
+	['Valdeaunia']		= { ['own'] = -1, ['zones'] = {6,161,162,165,5,112}},
+	['Vollbow']			= { ['own'] = -1, ['zones'] = {113,201,212,174,128}},
+	['Windurst']		= { ['own'] =  3, ['zones'] = {238,239,240,241,242}},
+	['Zulkheim']		= { ['own'] = -1, ['zones'] = {196,108,102,193,248,103}},
+	['Dynamis']			= { ['own'] =  0, ['zones'] = {39,40,41,42,134,135,185,186,187,188}},
+	['Lumoria']			= { ['own'] =  0, ['zones'] = {33,34,35,36,37,38}},
+	['Promyvion']		= { ['own'] =  0, ['zones'] = {16,17,18,19,20,21,22,23,39,40,41,42}}
 };
 
--- This structure will be dynamically populated by the fGearCheck function.
+-- This structure will be dynamically populated by the GearCheck function.
 -- The slots will have a set structure providing details about every gear
 -- piece in the job file/gcinclude so that when checking for the piece of
 -- gear, the details that would require looking up item details will already
@@ -978,6 +980,7 @@ gcinclude.GearDetails = {
 	
 gcinclude.OwnNation = -1; 
 gcinclude.fb = false;
+gcinclude.basetime = os.time();
 
 gcinclude.Sets = gcinclude.sets;
 
@@ -990,31 +993,51 @@ gcinclude.Sets = gcinclude.sets;
 ashita.events.register('packet_in', 'packet_in_callback1', function (e)
 
 	if (e.id == 0x05E) then
-		gcinclude.RegionControl['Ronfaure'][1] = struct.unpack('B', e.data, 0X1E)
-		gcinclude.RegionControl['Zulkheim'][1] = struct.unpack('B', e.data, 0x22)
-		gcinclude.RegionControl['Norvallen'][1] = struct.unpack('B', e.data, 0x26)
-		gcinclude.RegionControl['Gustaberg'][1] = struct.unpack('B', e.data, 0x2A)
-		gcinclude.RegionControl['Derfland'][1] = struct.unpack('B', e.data, 0x2E)
-		gcinclude.RegionControl['Sarutabaruta'][1] = struct.unpack('B', e.data, 0x32)
-		gcinclude.RegionControl['Kolshushu'][1] = struct.unpack('B', e.data, 0x36)
-		gcinclude.RegionControl['Argoneau'][1] = struct.unpack('B', e.data, 0x3A)
-		gcinclude.RegionControl['Fauregandi'][1] = struct.unpack('B', e.data, 0x3E)
-		gcinclude.RegionControl['Valdeaunia'][1] = struct.unpack('B', e.data, 0x42)
-		gcinclude.RegionControl['QuifimIsland'][1] = struct.unpack('B', e.data, 0x46)
-		gcinclude.RegionControl['LiTelor'][1] = struct.unpack('B', e.data, 0x4A)
-		gcinclude.RegionControl['Kuzotz'][1] = struct.unpack('B', e.data, 0x4E)
-		gcinclude.RegionControl['Vollbow'][1] = struct.unpack('B', e.data, 0x52)
-		gcinclude.RegionControl['ElshimoLowlands'][1] = struct.unpack('B', e.data, 0x56)
-		gcinclude.RegionControl['ElshimoUplands'][1] = struct.unpack('B', e.data, 0x5A)
-		gcinclude.RegionControl['Tulia'][1] = struct.unpack('B', e.data, 0x5E)
-		gcinclude.RegionControl['Movapolos'][1] = struct.unpack('B', e.data, 0x62)
-		gcinclude.RegionControl['Tavnazia'][1] = struct.unpack('B', e.data, 0x66)
+		gcinclude.RegionControl['Ronfaure']['own'] = struct.unpack('B', e.data, 0X1E)
+		gcinclude.RegionControl['Zulkheim']['own'] = struct.unpack('B', e.data, 0x22)
+		gcinclude.RegionControl['Norvallen']['own'] = struct.unpack('B', e.data, 0x26)
+		gcinclude.RegionControl['Gustaberg']['own'] = struct.unpack('B', e.data, 0x2A)
+		gcinclude.RegionControl['Derfland']['own'] = struct.unpack('B', e.data, 0x2E)
+		gcinclude.RegionControl['Sarutabaruta']['own'] = struct.unpack('B', e.data, 0x32)
+		gcinclude.RegionControl['Kolshushu']['own'] = struct.unpack('B', e.data, 0x36)
+		gcinclude.RegionControl['Argoneau']['own'] = struct.unpack('B', e.data, 0x3A)
+		gcinclude.RegionControl['Fauregandi']['own'] = struct.unpack('B', e.data, 0x3E)
+		gcinclude.RegionControl['Valdeaunia']['own'] = struct.unpack('B', e.data, 0x42)
+		gcinclude.RegionControl['QuifimIsland']['own'] = struct.unpack('B', e.data, 0x46)
+		gcinclude.RegionControl['LiTelor']['own'] = struct.unpack('B', e.data, 0x4A)
+		gcinclude.RegionControl['Kuzotz']['own'] = struct.unpack('B', e.data, 0x4E)
+		gcinclude.RegionControl['Vollbow']['own'] = struct.unpack('B', e.data, 0x52)
+		gcinclude.RegionControl['ElshimoLowlands']['own'] = struct.unpack('B', e.data, 0x56)
+		gcinclude.RegionControl['ElshimoUplands']['own'] = struct.unpack('B', e.data, 0x5A)
+		gcinclude.RegionControl['Tulia']['own'] = struct.unpack('B', e.data, 0x5E)
+		gcinclude.RegionControl['Movapolos']['own'] = struct.unpack('B', e.data, 0x62)
+		gcinclude.RegionControl['Tavnazia']['own'] = struct.unpack('B', e.data, 0x66)
 		if gcdisplay ~= nil then
-			gcinclude.RegionDisplay();
+			RegionDisplay();
 		end
 		e.blocked = false;
 	end
 end);
+
+--[[
+	StartReminder is a simple routine used to delay the printing of a reminder from
+	the start of running this code. It compares a base time (is seconds) with "now"
+	and after 15 secs prints the reminder, then disables itself.
+--]]
+
+function gcinclude.StartReminder()
+
+	if gcinclude.basetime == 0 then
+		return;
+	end
+
+	if os.difftime(os.time(),gcinclude.basetime) >= 15 then
+		print(chat.message('************'));
+		print(chat.message('FYI: Remember to do a /gc once \'data download\' finishes'));
+		print(chat.message('************'));
+		gcinclude.basetime = 0;		
+	end
+end
 
 --[[
 	fSummonerPet determines if the player has a SMN summoned pet. Returned is true
@@ -1024,8 +1047,7 @@ end);
 function gcinclude.fSummonerPet()
 	local pet = gData.GetPet();
 	
-	return(pet ~= nil and 
-		table.find(gcinclude.tSummonSkill,string.lower(pet.Name)) ~= nil);
+	return (pet ~= nil and fElementByPetName(pet.Name) ~= nil);
 end
 
 --[[
@@ -1033,7 +1055,7 @@ end
 	or not and updates the display bar accordingly.
 --]]
 
-function gcinclude.RegionDisplay()
+function RegionDisplay()
 	local zoneId = AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0);
 	
 	-- Make sure the player's nation is known
@@ -1043,22 +1065,24 @@ function gcinclude.RegionDisplay()
 
 	-- Determine if current zone in region controlled by player's nation
 	for i,j in pairs(gcinclude.RegionControl) do
-		if table.find(j[2],zoneId) ~= nil then
-			if j[1] == gcinclude.OwnNation then
+		if table.find(j['zones'],zoneId) ~= nil then
+			if j['own'] == gcinclude.OwnNation then
 				gcdisplay.SetCycle('Region','Owned');
+			elseif j['own'] == 0 and fBuffed('Signet') == false then
+				gcdisplay.SetCycle('Region','N/A');
 			else
 				gcdisplay.SetCycle('Region','Not Owned');
 			end
 			break;
 		end
 	end
-end
+end		-- RegionDisplay
 
 --[[
 	DB_ShowIt will display debug details
 --]]
 
-function gcinclude.DB_ShowIt()
+function DB_ShowIt()
 	local player = gData.GetPlayer();
 	
 	print(chat.message(' '));
@@ -1069,11 +1093,10 @@ function gcinclude.DB_ShowIt()
 	print(chat.message(' '));
 	print(chat.message('WScheck: ' .. tostring(gcinclude.settings.WScheck)));
 	print(chat.message('WSdistance: ' .. tostring(gcinclude.settings.WSdistance)));
-	print(chat.message('MagicJob: ' .. tostring(gcinclude.MagicalJob('S'))));
 	print(chat.message('bWSOverride: ' .. tostring(gcinclude.settings.bWSOverride)));
 	print(chat.message(' '));
-	fGearCheckList();
-end		-- gcinclude.DB_ShowIt
+	GearCheckList();
+end		-- DB_ShowIt
 	
 --[[
 	Message toggles on/off a feedback mechanism for all luashitacast commands
@@ -1089,21 +1112,21 @@ end		-- gcinclude.Message
 	SetAlias registers all of the luashitacast commands that are defined in this file
 --]]
 
-function gcinclude.SetAlias()
+function SetAlias()
 	for _, v in ipairs(gcinclude.AliasList) do
 		AshitaCore:GetChatManager():QueueCommand(-1, '/alias /' .. v .. ' /lac fwd ' .. v);
 	end
-end		-- gcinclude.SetAlias
+end		-- SetAlias
 
 --[[
 	ClearAlias removes the luashitacast commands that were registered in this file
 --]]
 
-function gcinclude.ClearAlias()
+function ClearAlias()
 	for _, v in ipairs(gcinclude.AliasList) do
 		AshitaCore:GetChatManager():QueueCommand(-1, '/alias del /' .. v);
 	end
-end		-- gcinclude.ClearAlias
+end		-- ClearAlias
 
 --[[
 	fIsLocked determines if the passed slot is locked. Please note that only slot
@@ -1157,7 +1180,7 @@ function fLockSlotsBySet(gs)
 	end
 	local sList = fGetLockedList('locks');
 	gcdisplay.SetSlots('locks',gcinclude.LocksNumeric);	
-end
+end		-- fLockSlotsBySet
 
 --[[
 	fGetLockedList returns a comma delimited list or nil if all unlocked
@@ -1165,12 +1188,10 @@ end
 
 function fGetLockedList(sTarget)
 	local sList = nil;
-	local sWhich;
+	local sWhich = 'lock';
 	
 	if sTarget == 'acc' then
 		sWhich = 'acc';
-	else
-		sWhich = 'lock';
 	end
 
 	for i,j in ipairs(gcinclude.tLocks) do
@@ -1204,13 +1225,13 @@ function fGetLockedList(sTarget)
 end		-- fGetLockedList
 
 --[[
-	fLockUnlock either locks or unlocks the specified (or all) slots or enables/disables
+	LockUnlock either locks or unlocks the specified (or all) slots or enables/disables
 	the specified slots for accuracy. Supported are either the slot name or the slot 
 	number.
 --]]
 
-function fLockUnlock(sTarget,sType,sWhich)
-	local s;
+function LockUnlock(sTarget,sType,sWhich)
+	local s = 'lock';
 	
 	if sWhich == nil then
 		return;
@@ -1219,8 +1240,6 @@ function fLockUnlock(sTarget,sType,sWhich)
 	-- Determine field to address
 	if sTarget == 'acc' then
 		s = 'acc';
-	else
-		s = 'lock';
 	end
 	
 	sWhich = ',' .. string.lower(sWhich) .. ',';
@@ -1240,6 +1259,34 @@ function fLockUnlock(sTarget,sType,sWhich)
 		end
 	end
 end		-- LockUnlock
+
+--[[
+	fElementByPetName determines what element is associated with the currently
+	summoned avatar/spirit and returns it. If the pet is unknown or from another
+	job, nil is returned
+--]]
+
+function fElementByPetName(pName)
+	local lcName;
+	local ele = nil;
+	
+	if pName == nil then
+		return nil;
+	end
+	
+	lcName = string.lower(pName);
+	
+	for i,j in pairs(gcinclude.tElemental_gear['staff']) do
+		if string.find(gcinclude._AllElements,i) ~= nil then
+			if table.find(j['Summons'],lcName) ~= nil then
+				ele = i;
+				break;
+			end
+		end
+	end
+	
+	return ele;
+end		-- fElementByPetName
 
 --[[
 	fCheckForEleGear determines if the player has the piece of elemental gear 
@@ -1294,13 +1341,13 @@ function gcinclude.fCheckForEleGear(sType,sElement)
 end		-- gcinclude.fCheckForEleGear
 
 --[[
-	fRefreshVariables is a routine that let's the player manually make sure
+	RefreshVariables is a routine that let's the player manually make sure
 	the job-dependent variables are set. Sometimes when logging in, the
 	SetVariables routine is run before the client is done downloading. In
 	this case, sometimes some toggels are accidentally omitted.
 --]]
 
-function fRefreshVariables()
+function RefreshVariables()
 	local player = gData.GetPlayer();
 	
 	-- Now, simple toggles, those not dependent on the player's characteristics
@@ -1341,13 +1388,13 @@ function fRefreshVariables()
 	if player.MainJob == 'SMN' then
 		gcdisplay.CreateToggle('sBP',true);
 	end	
-end
+end		-- RefreshVariables
 
 --[[
 	SetVariables defines run settings for luashitacast
 --]]
 
-function gcinclude.SetVariables()
+function SetVariables()
 	local player = gData.GetPlayer();
 
 	-- General toggles
@@ -1355,7 +1402,9 @@ function gcinclude.SetVariables()
 	gcdisplay.CreateToggle('Kite', false);
 	gcdisplay.CreateToggle('Eva', false);
 	
-	gcdisplay.CreateToggle('WSwap',(string.find('WHM,BRD',player.MainJob) ~= nil));
+	if string.find('BLM,SMN',player.MainJob) == nil then
+		gcdisplay.CreateToggle('WSwap',(string.find('WHM,BRD',player.MainJob) ~= nil));
+	end
 
 	-- Job specific toggles	
 	if string.find('PLD,NIN,RUN',player.MainJob) ~= nil then
@@ -1385,10 +1434,8 @@ function gcinclude.SetVariables()
 	
 	-- General cycles
 	gcdisplay.CreateCycle('DT', {[1] = gcinclude.OFF, [2] = gcinclude.PHY, [3] = gcinclude.MAG, [4] = gcinclude.BRE});
-	gcdisplay.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned'});
-	
-	print(chat.message('FYI: Remember to do a /gc when \'data download\' finishes'));
-end		-- gcinclude.SetVariables
+	gcdisplay.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned', [3] = 'N/A'});
+end		-- SetVariables
 
 --[[
 	fGearCheckItem process the specific item sent to it and where appropriate, populates
@@ -1458,7 +1505,7 @@ function fGearCheckItem(sSlot,sName,bAccess,bForce)
 			
 			-- Save item w/details
 			gcinclude.GearDetails[sSlot][sName] = { 
-				['level'] = item.Level, 
+				['level'] = item.Level,
 				['job'] = bJob, 
 				['accessible'] = bAccessible, 
 				['desc'] = item.Description[1]
@@ -1491,7 +1538,7 @@ end	-- fGearCheckItem
 	areas.
 --]]
 
-function fGearCheck(sList,bForce)
+function GearCheck(sList,bForce)
 	local tTarget = { gProfile.Sets, gcinclude.Sets };
 	local ts = {};
 	local ref = {};
@@ -1506,9 +1553,9 @@ function fGearCheck(sList,bForce)
 		-- Loop the two files
 		for s,t in pairs(tTarget) do
 			if t == gProfile.Sets then
-				print(chat.header('fGearCheck'):append(chat.message('Starting to scan the Job file')));
+				print(chat.header('GearCheck'):append(chat.message('Starting to scan the Job file')));
 			else
-				print(chat.header('fGearCheck'):append(chat.message('Starting to scan gcinclude')));
+				print(chat.header('GearCheck'):append(chat.message('Starting to scan gcinclude')));
 			end
 		
 			-- Loop the gear sets
@@ -1539,7 +1586,7 @@ function fGearCheck(sList,bForce)
 			end
 		end
 		
-		print(chat.header('fGearCheck'):append(chat.message('Starting to scan special')));
+		print(chat.header('GearCheck'):append(chat.message('Starting to scan special')));
 		for i,j in pairs(gcinclude.tElemental_gear) do
 			if i == 'staff' then
 				for ii,jj in pairs(j) do
@@ -1571,48 +1618,68 @@ function fGearCheck(sList,bForce)
 			end
 		end
 		
-		print(chat.header('fGearCheck'):append(chat.message('Scan completed')));
-		print(chat.header('fGearCheck'):append(chat.message(' ')));
-		print(chat.header('fGearCheck'):append(chat.message('Resultant gear breakdown:')));
+		print(chat.header('GearCheck'):append(chat.message('Scan completed')));
+		print(chat.header('GearCheck'):append(chat.message(' ')));
+		print(chat.header('GearCheck'):append(chat.message('Resultant gear breakdown:')));
 	end
 	
 	for i,j in pairs(gcinclude.GearDetails) do
 		print(chat.message('   [' .. i .. '] - ' .. tostring(j['num'])));
 	end
-end		-- fGearCheck
+end		-- GearCheck
 
 --[[
-	fGearCheckList will list out the details of the dynamic table.
+	GearCheckList will list out the details of the dynamic table.
 --]]
 
-function fGearCheckList()
-
+function GearCheckList()
+	local sMsg;
+	local bOnce;
+	
 	for i,j in pairs(gcinclude.GearDetails) do
+		print(chat.message(' '));
 		print(chat.message('Slot: ' .. i));
 		for ii,jj in pairs(j) do
+			bOnce = true;
+			sMsg = nil;
 			if type(ii) ~= 'number' then
 				if string.find('desc,num,vis',ii) == nil then
-					print(chat.message('   ' .. ii));
+					sMsg = '   ' .. ii .. ' - ';
 				end
 			end
 			if type(jj) == 'table' then 
 				for iii,jjj in pairs(jj) do
 					if iii ~= 'desc' then
-						print(chat.message('      ' .. iii .. ': '.. tostring(jjj)));
+						if bOnce == true then
+							sMsg = sMsg .. iii .. ': '.. tostring(jjj);
+							bOnce = not bOnce;
+						else
+							if type(jjj) == 'boolean' then
+								sMsg = sMsg .. ', ' .. iii .. ': '
+								if jjj == false then
+									sMsg = sMsg .. chat.color1(8,tostring(jjj));
+								else
+									sMsg = sMsg .. chat.color1(2,tostring(jjj));
+								end
+							else
+								sMsg = sMsg .. iii .. ': '.. tostring(jjj);
+							end
+						end
 					end
 				end
-				print(chat.message(' '));
+				if sMsg ~= nil then
+					print('   ' .. sMsg);
+				end
 			end
 		end
-	end
-	
-end
+	end	
+end		-- GearCheckList
 
 --[[
-	isPetNamed determines if that passed pet has the passed name
+	fIsPetNamed determines if that passed pet has the passed name
 --]]
 
-function gcinclude.isPetNamed(sName)
+function fIsPetNamed(sName)
 	local pet = gData.GetPet();
 
 	if pet == nil then
@@ -1625,18 +1692,18 @@ function gcinclude.isPetNamed(sName)
 		
 		return (string.find(sMatch,sPetName) ~= nil);
 	else
-		print(chat.header('isPetNamed'):append(chat.message('Error: Passed name is nil')));
+		print(chat.header('fIsPetNamed'):append(chat.message('Error: Passed name is nil')));
 		return false;
 	end
-end		-- gcinclude.isPetNamed
+end		-- fIsPetNamed
 
 --[[
-	CheckPartyJob determines if the party has a member of the passed job.
+	fCheckPartyJob determines if the party has a member of the passed job.
 	You can optionally state to not include yourself. By default, you're
 	always listed in the first slot of the party.
 --]]
 
-function gcinclude.CheckPartyJob(jobs,bNotMe)
+function fCheckPartyJob(jobs,bNotMe)
 	local pParty = AshitaCore:GetMemoryManager():GetParty();
 	local bFound = false;
 	local iStart = 1;
@@ -1658,7 +1725,7 @@ function gcinclude.CheckPartyJob(jobs,bNotMe)
 		end
 	end
 	return bFound;
-end		-- gcinclude.CheckPartyJob
+end		-- fCheckPartyJob
 
 --[[
 	CheckTime determines if the current server time is found in the passed name time range.
@@ -1710,41 +1777,16 @@ function gcinclude.ClearSet(gSet)
 end		-- gcinclude.ClearSet
 
 --[[
-	MagicalJob just determines if the main job or the sub job can do magic
+	fMagicSubJob determines if the sub job can do magic
 --]]
 
-function gcinclude.MagicalJob(sWhich)
+function gcinclude.fMagicalSubJob()
 	local player = gData.GetPlayer();
-	local mj = player.MainJob;
 	local sj = player.SubJob;
-	local sList = gcinclude.sMagicJobs;
+	local sList = gcinclude._sMagicJobs;
 	
-	if string.lower(sWhich) == 't' then
-		sList = gcinclude.TieredMagicJobs;
-	end
-	
-	return (string.find(sList,mj) ~= nil or string.find(sList,sj) ~= nil);
-end		-- gcinclude.MagicalJob
-
---[[
-	CheckRegionControl determines if region control is specified on the passed
-	piece of gear and whether the condition is met. True is returned for all
-	results except if region control expected and the test fails.
---]]
-
-function CheckRegionControl(item)
-	
-	if item == nil then
-		return true;
-	end
-	
-	if string.find(item.Resource.Description[1],' outside own ') ~= nil then
-		return(gcdisplay.GetCycle('Region') ~= 'Owned');
-	elseif string.find(item.Resource.Description[1],' own nation') ~= nil then
-		return(	gcdisplay.GetCycle('Region') == 'Owned');
-	end
-	return true;
-end
+	return (string.find(sList,sj) ~= nil);
+end		-- gcinclude.fMagicalSubJob
 
 --[[
 	fTallyGear tallies up all the MP and HP manipulations on the gear
@@ -1890,13 +1932,13 @@ function fParseDescriptionExceptions(rec,sGear,sDesc)
 		-- for the Wyvern.
 	elseif sGear == 'booster earring' then
 		-- another player in the party (besides yourself) must be a BLU	
-		if gcinclude.CheckPartyJob('BLU',true) == true then
+		if fCheckPartyJob('BLU',true) == true then
 			rec['HP'] = 10;
 			rec['MP'] = 10;
 		end
 	elseif sGear == 'ese earring' then
 		-- another player in the party (besides yourself) must be a MNK
-		if gcinclude.CheckPartyJob('MNK',true) == true then
+		if fCheckPartyJob('MNK',true) == true then
 			rec['HP'] = 20;
 		end	
 	elseif sGear == 'multiple ring' then
@@ -2082,11 +2124,11 @@ function fParseDescription(item,sDesc)
 end
 
 --[[
-	MakeCodeTable takes the passed, // delimited list and returns the
+	fMakeCodeTable takes the passed, // delimited list and returns the
 	individual codes in a table
 --]]
 
-function gcinclude.MakeCodeTable(sList)
+function fMakeCodeTable(sList)
 	local sTbl = { };
 	local iPos;
 
@@ -2101,14 +2143,14 @@ function gcinclude.MakeCodeTable(sList)
 		end
 	end
 	return sTbl;
-end		-- gcinclude.MakeCodeTable
+end		-- fMakeCodeTable
 
 --[[
-	ValidInlineCode checks that the formatting of the dynamic code is correct.
+	fValidInlineDynamicCode checks that the formatting of the dynamic code is correct.
 	Returned is True or False and the individual pieces
 --]]
 
-function ValidInlineDynamicCode(suCode)
+function fValidInlineDynamicCode(suCode)
 	local bPct = false;
 	local iOff = 0;	
 	local sOperator,sRoot,ival;
@@ -2136,14 +2178,14 @@ function ValidInlineDynamicCode(suCode)
 	else
 		return false;
 	end
-end		-- ValidInlineCode
+end		-- fValidInlineCode
 
 --[[
-	EvalCodedComparison parses the passed conditional is true or not. Result is
-	passed back
+	fEvalCodedComparison parses the passed conditional and determines if it is 
+	true or not. Result is passed back
 --]]
 
-function EvalCodedComparison(sRoot,sOperator,ival,sGear)
+function fEvalCodedComparison(sRoot,sOperator,ival,sGear)
 	local player = gData.GetPlayer();
 	local bGood = false;
 	
@@ -2215,19 +2257,23 @@ function EvalCodedComparison(sRoot,sOperator,ival,sGear)
 		end
 	end
 	return bGood;
-end		-- EvalCodedComparison
+end		-- fEvalCodedComparison
 
 --[[
-	ValidSpecial sees if the passed gear's settings are valid. Returned is True
+	fValidSpecial sees if the passed gear's settings are valid. Returned is True
 	or False.
 --]]
 
-function gcinclude.ValidateSpecial(sSlot,sGear)
+function fValidateSpecial(sSlot,sGear)
 	local player = gData.GetPlayer();
 	local rec = {};
 	local gear;
 	local bGood = false;
 	
+	if sSlot == nil then
+		return false;
+	end
+
 	if sGear == nil then
 		return false;
 	end
@@ -2243,8 +2289,8 @@ function gcinclude.ValidateSpecial(sSlot,sGear)
 
 	-- Do specific calculations based on the name of the piece of gear
 	if sGear == 'uggalepih pendant' then
-		-- Condition: MP% < 51. MAB bonus. Only visible gear, ignore all "Convert HP to MP"
-		-- Check outright first	
+		-- Condition: MP% < 51. MAB bonus. Only visible gear, ignore all 
+		-- "Convert HP to MP" check outright first	
 		if (player.MPP < 51) then
 			return true;
 		else
@@ -2281,10 +2327,10 @@ function gcinclude.ValidateSpecial(sSlot,sGear)
 			end
 		end
 	else
-		print(chat.header('ValidateSpecial'):append(chat.message('Warning: No special code exists for ' .. gear .. '. Ignoring piece.')));		
+		print(chat.header('fValidateSpecial'):append(chat.message('Warning: No special code exists for ' .. gear .. '. Ignoring piece.')));		
 	end
 	return bGood;
-end		-- ValidateSpecial
+end		-- fValidateSpecial
 
 --[[
 	fBuffed determines if the player has the buff/debuff or not. Returned is True/False.
@@ -2294,16 +2340,13 @@ end		-- ValidateSpecial
 function fBuffed(test)
 	local buffs = AshitaCore:GetMemoryManager():GetPlayer():GetBuffs();
 
-	-- if a string, it's the buff's name
-	if type(test) == 'string' then
-		test = string.lower(test);
-		for _, buff in pairs(buffs) do
-            local buffString = AshitaCore:GetResourceManager():GetString("buffs.names", buff);
+	test = string.lower(test);
+	for _, buff in pairs(buffs) do
+		local buffString = AshitaCore:GetResourceManager():GetString("buffs.names", buff);
 			
-			if (buffString) then
-				if string.find(buffString,test) ~= nil then
-					return true;
-				end
+		if (buffString) then
+			if string.find(string.lower(buffString),test) ~= nil then
+				return true;
 			end
 		end
 	end
@@ -2311,26 +2354,10 @@ function fBuffed(test)
 end
 
 --[[
-	CheckForGear determines if the passed gear is already equipped/will be
-	equipped from the temporary set.
---]]
-
-function CheckForGear(sGear,sSlot)
-	local curGear = gData.GetEquipment();
-	
-	if sGear == nil or sSlot == nil then
-		return false;
-	end
-
-	--	Needs fleshing out
-	return false;
-end		-- CheckForGear
-
---[[
-	fCheckItemOwned determines if the specified piece of gear is owned by the
-	player. bAccessible further restricts the search to containers that are
-	accessible when outside of your mog house. bOnce indicates if the item
-	only has to be found once before returning a result.
+	fCheckItemOwned determines if the specified piece of gear is owned by 
+	the player. bAccessible further restricts the search to containers 
+	that are accessible when outside of your mog house. bOnce indicates 
+	if the item only has to be found once before returning a result.
 	
 	Please note: currently searching storage slips are not supported
 --]]
@@ -2360,7 +2387,7 @@ function fCheckItemOwned(sGear,bAccessible,bOnce)
 	end
 	
 	for i,desc in pairs(tStorage) do
-		containerID = desc[1];
+		containerID = desc['id'];
 		-- then loop through the container
 		for j = 1,inventory:GetContainerCountMax(containerID),1 do
 			itemEntry = inventory:GetContainerItem(containerID, j);
@@ -2380,23 +2407,23 @@ function fCheckItemOwned(sGear,bAccessible,bOnce)
 end		-- fCheckItemOwned
 
 --[[
-	CheckAccuracySlots determines if the passed slot is one of the designated
+	fCheckAccuracySlots determines if the passed slot is one of the designated
 	accuracy slots. Please note if the slot is named "ears" or "rings" both
 	associated slots will be checked.
 --]]
 
-function gcinclude.CheckAccuracySlots(sSlot)
+function fCheckAccuracySlots(sSlot)
 
 	sSlot = string.lower(sSlot);
 	for i,j in ipairs(gcinclude.tLocks) do
-		if j[1] == sSlot or 
-		   (sSlot == 'ears' and string.find('ear1,ear2',j[1]) ~= nil and j[3] == true) or
-		   (sSlot == 'rings' and string.find('ring1,ring2',j[1]) ~= nil and j[3] == true) then
+		if j['slot'] == sSlot or 
+		   (sSlot == 'ears' and string.find('ear1,ear2',j['slot']) ~= nil and j['acc'] == true) or
+		   (sSlot == 'rings' and string.find('ring1,ring2',j['slot']) ~= nil and j['acc'] == true) then
 			return true;
 		end
 	end
 	return false;
-end		-- gcinclude.CheckAccuracySlots
+end		-- fCheckAccuracySlots
 
 
 --[[
@@ -2416,8 +2443,6 @@ function fCheckInline(gear,sSlot)
 	local environ = gData.GetEnvironment();
 	local timestamp = gData.GetTimestamp();
 	local gSet = gData.GetCurrentSet();
-	local wTypesM = 'AXE,GAXE,SWORD,GSWORD,SCYTHE,STAVE,CLUB,H2H,DAGGER,KATANA,GKATANA,POLEARM';
-	local wTypesR = 'ARCHERY,MARKSMANSHIP,THROWING';
 	local iPos,ii,suCode;
 	local sj = player.SubJob;
 	local suCodeTbl = { };
@@ -2434,55 +2459,41 @@ function fCheckInline(gear,sSlot)
 	end
 	
 	sGear = string.sub(gear,1,iPos-1);
-	suCodeTbl = gcinclude.MakeCodeTable(string.upper(string.sub(gear,iPos,-1)));
+	suCodeTbl = fMakeCodeTable(string.upper(string.sub(gear,iPos,-1)));
 
 	for ii,suCode in pairs(suCodeTbl) do
-		if string.find('FIRESDAY,EARTHSDAY,WATERSDAY,WINDSDAY,ICEDAY,LIGHTNINGDAY,LIGHTSDAY,DARKSDAY',suCode) ~= nil then
+		if table.find(gcinclude.DaysOfTheWeek,suCode) ~= nil then
 			bGood = (suCode == string.upper(environ.Day));					-- Is it the specified day
-		elseif string.find('NOT_FIRESDAY,NOT_EARTHSDAY,NOT_WATERSDAY,NOT_WINDSDAY,NOT_ICEDAY,NOT_LIGHTNINGDAY,NOT_LIGHTSDAY,NOT_DARKSDAY',suCode) ~= nil then
+		elseif table.find(gcinclude.NotDaysOfTheWeek,suCode) ~= nil then
 			bGood = (string.sub(suCode,5,-1) ~= string.upper(environ.Day));	-- Is it not the specified day
-		elseif table.find(gcinclude.ExactBuff,string.lower(suCode)) ~= nil then		-- en spells
+		elseif table.find(gcinclude.tSpell['enspell'],string.lower(suCode)) ~= nil then		-- en spells
 			bGood = (gData.GetBuffCount(suCode) >= 1);
-		elseif string.find(wTypesM,suCode) ~= nil then						-- Is main weapon specified type
+		elseif table.find(gcinclude.tWeapontypeMelee,suCode) ~= nil then						-- Is main weapon specified type
 			bGood = (gSet['Main'] ~= nil and table.find(gProfile.WeaponType[suCode],gSet['Main']) ~= nil);
-		elseif string.find(wTypesR,suCode) ~= nil then						-- Is ranged weapon specified type
+		elseif table.find(gcinclude.tWeapontypeRange,suCode) ~= nil then						-- Is ranged weapon specified type
 			bGood = (gSet['Range'] ~= nil and table.find(gProfile.WeaponType[suCode],gSet['Range']) ~= nil);
+		elseif suCode == 'ABSORB' then										-- Spell is an Absorb- type
+			bGood = (table.find(gcinclude.tSpell['absorb'],string.lower(spell.Name)));
 		elseif suCode == 'ACCURACY' then
 			if sSlot ~= 'subset' then
-				bGood = (gcinclude.CheckAccuracySlots(sSlot) == true);
+				bGood = (fCheckAccuracySlots(sSlot) == true);
 			else	-- Invalid inline for a subset
 				bGood = false;
 			end
-		elseif string.sub(suCode,1,3) == 'AK:' then			-- National Aketon
-			local pNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation();
-			local sWhich = string.sub(suCode,4,-1);
-			if sWhich == 'WINDY' then
-				bGood = (environ.Area ~= nil and gcinclude.Windy:contains(environ.Area) and pNation == 2);
-			elseif sWhich == 'SANDY' then
-				bGood = (environ.Area ~= nil and gcinclude.Sandy:contains(environ.Area) and pNation == 0);
-			elseif sWhich == 'BASTOK' then
-				bGood = (environ.Area ~= nil and gcinclude.Bastok:contains(environ.Area) and pNation == 1);
-			elseif sWhich == 'OMNI' then
-				bGood = (environ.Area ~= nil and 
-						(gcinclude.Windy:contains(environ.Area) or
-						 gcinclude.Sandy:contains(environ.Area) or 
-						 gcinclude.Bastok:contains(environ.Area) or 
-						 gcinclude.Jeuno:contains(environ.Area)));
-			else
-				bGood = false;
-			end
-		elseif suCode == 'BARSPELL' then					-- Spell is a Bar- type
-			bGood = (table.find(gcinclude.BarElementSpells,string.lower(spell.Name)));
-		elseif suCode == 'BIND' then						-- Player is bound
+		elseif suCode == 'BARSPELL' then					--  is a Bar- type		
+			bGood = (table.find(gcinclude.tSpell['barspell']['ele'],string.lower(spell.Name)) ~= nil);
+		elseif suCode == 'BOUND' then						-- Player is bound
 			bGood = fBuffed('Bind');
-		elseif suCode == 'BLIND' then						-- Player is blind
+		elseif suCode == 'BLINDED' then						-- Player is blind
 			bGood = fBuffed('Blind');
 		elseif suCode == 'CARBY' then						-- Pet is carbuncle
-			bGood = (gcinclude.isPetNamed('Carbuncle'));
+			bGood = (fIsPetNamed('Carbuncle'));
 		elseif suCode == 'COVER' then						-- Player has cast cover
 			bGood = fBuffed('Cover');
 		elseif string.sub(suCode,1,3) == 'CR:' then			-- Crafting
 			bGood = (gcinclude.Craft == string.sub(suCode,4,-1));
+		elseif suCode == 'CURE' then						-- Cure spell cast
+			bGood = (string.find('cure,curaga',fGetRoot(spell.Name)) ~= nil);
 		elseif suCode == 'CURSED' then						-- Player is cursed
 			bGood = fBuffed('Curse');
 		elseif suCode == 'DAYTIME' then						-- Time is daytime
@@ -2512,12 +2523,14 @@ function fCheckInline(gear,sSlot)
 				bGood = false;
 			end	
 		elseif suCode == 'IDLE' then
-			if string.find('PLD,NIN,RUN,DRK,WAR,THF,RDM,BLU',player.MainJob) ~= nil then
+			if string.find(gcinclude._TankJobList,player.MainJob) ~= nil then
 				bGood = gcdisplay.GetToggle('Idle');
 			else
 				bGood = false;
 			end
 		elseif string.find(suCode,'IF:') then
+			-- Currently only tests the piece currently equipped. I probably
+			-- should check the temporary set too at some point.
 			if sSlot ~= 'subset' then
 				local sCur = gData.GetEquipSlot(sSlot);
 				local sItem = string.sub(suCode,4,-1);
@@ -2525,13 +2538,8 @@ function fCheckInline(gear,sSlot)
 			else	-- Invalid inline for a subset
 				bGood = false;
 			end		
-		elseif string.find(suCode,'IFC:') then
-			if sSlot ~= 'subset' then
-				local sOtherGear = string.sub(suCode,5,-1);
-				bGood = (CheckForGear(sOtherGear,sSlot));
-			else	-- Invalid inline for a subset
-				bGood = false;
-			end			
+--		elseif string.find(suCode,'IFC:') then
+--			Needs to be implemented			
 		elseif string.find(suCode,'LVLDIV') then			-- Player's level divisable by #
 			local iDiv = tonumber(string.sub(suCode,7,-1));
 			if iDiv > 0 then
@@ -2539,8 +2547,10 @@ function fCheckInline(gear,sSlot)
 			else
 				bGood = false;
 			end
+--		elseif string.find(suCode,'LVL') then
+--			Needs to be implemented		
 		elseif suCode == 'MSJ' then							-- Magical subjob
-			bGood = (string.find(gcinclude.sMagicJobs,sj) ~= nil);
+			bGood = (string.find(gcinclude._sMagicJobs,sj) ~= nil);
 		elseif suCode == 'NEWMOON' then						-- Moon phase: New Moon
 			bGood = (environ.MoonPhase == 'New Moon');
 		elseif suCode == 'NIGHTTIME' then					-- Time is nighttime
@@ -2550,7 +2560,9 @@ function fCheckInline(gear,sSlot)
 		elseif suCode == 'NO_SMNPET' then					-- Player has no or non-smn pet
 			bgood = not gcinclude.fSummonerPet();
 		elseif suCode == 'NOT_OWN' then						-- Player in area not controlled by their nation
-			bGood = (gcdisplay.GetCycle('Region') ~= 'Owned');
+			bGood = (gcdisplay.GetCycle('Region') == 'Not Owned');
+		elseif suCode == 'NOT_WSWAP' then					-- WSWAP is disabled
+			bGood = (gcinclude.settings.bWSOverride == false or gcdisplay.GetToggle('WSwap') == false);
 		elseif string.sub(suCode,1,8) == 'NOT_WTH:' then	-- Does the weather not match
 			bGood = (string.find(string.upper(environ.Weather),string.sub(suCode,9,-1)) == nil);
 		elseif suCode == 'NOT_WTH-DAY' then					-- Weather does not match day's element
@@ -2560,7 +2572,7 @@ function fCheckInline(gear,sSlot)
 			bGood = (gcdisplay.GetCycle('Region') == 'Owned');
 		elseif suCode == 'PARALYZED' then					-- Player is paralyzed
 			bGood = fBuffed('Paralysis');
-		elseif string.sub(suCode,1,5) == 'PARTY' then	-- is player in a party/alliance
+		elseif string.sub(suCode,1,5) == 'PARTY' then		-- is player in a party/alliance
 			if suCode == 'PARTY' then
 				bGood = (party.InParty == true);
 			else
@@ -2583,10 +2595,10 @@ function fCheckInline(gear,sSlot)
 			bGood = fBuffed('Petrify');
 		elseif string.sub(suCode,1,3) == 'PJP' and string.len(suCode) == 6 then	
 			local s = string.sub(suCode,4,-1);
-			bGood=(gcinclude.CheckPartyJob(s,false));		-- party has job: //PJP"job"
+			bGood=(fCheckPartyJob(s,false));		-- party has job: //PJP"job"
 		elseif string.sub(suCode,1,3) == 'PJPNM' and string.len(suCode) == 8 then	
 			local s = string.sub(suCode,6,-1);
-			bGood=(gcinclude.CheckPartyJob(s,true));		-- party has job: //PJPNM"job", not including player
+			bGood=(fCheckPartyJob(s,true));		-- party has job: //PJPNM"job", not including player
 		elseif suCode == 'POISONED' then					-- Player is poisoned
 			bGood = fBuffed('Poison');
 		elseif suCode == 'SHINING_RUBY' then				-- Player has shining ruby
@@ -2603,27 +2615,33 @@ function fCheckInline(gear,sSlot)
 			bGood = gcinclude.fSummonerPet();
 		elseif suCode == 'SMNPETMD' then					-- Does the summoner pet's element match the day?
 			if gcinclude.fSummonerPet() == true then
-				bGood = (gcinclude.SummonStaves[string.lower(pet.Name)] == string.lower(environ.DayElement));
+				bGood = (fElementByPetName(pet.Name) == string.lower(environ.DayElement));
 			else
 				bGood = false;
 			end
 		elseif suCode == 'SMNPETMW' then					-- Does the player's pet's element match the weather
 			if pet ~= nil then
-				local sElement = gcinclude.SummonStaves[string.lower(pet.Name)];
+				local sElement = fElementByPetName(pet.Name);
 				bGood = (sElement ~= nil and string.find(string.lower(environ.RawWeather),string.lower(sElement)) ~= nil);
 			else
 				bGood = false;
 			end			
 		elseif suCode == 'SPECIAL' then
 			if sSlot ~= 'subset' then
-				bGood = gcinclude.ValidateSpecial(sSlot,sGear);
+				bGood = fValidateSpecial(sSlot,sGear);
 			else	-- Invalid inline for a subset
 				bGood = false;
-			end		
+			end
+		elseif string.sub(suCode,1,6) == 'SPELL:' then
+			-- Make sure a spell is being cast
+			if spell.Name == nil then
+				return false;
+			end
+			bGood = (string.find(fGetRoot(spell.Name),string.lower(string.sub(suCode,7,-1))) ~= nil);
 		elseif suCode == 'SPIRIT:ES' then					-- Pet being summoned is a spirit
-			bGood = (string.find(gcinclude.Spirits,string.lower(spell.Name)) ~= nil);
+			bGood = (string.find(gcinclude.tSpell['spirits'],string.lower(spell.Name)) ~= nil);
 		elseif suCode == 'SPIRIT:EP' then					-- Current pet is a spirit
-			bGood = (pet ~= nil and string.find(gcinclude.Spirits,string.lower(pet.Name)) ~= nil);
+			bGood = (pet ~= nil and string.find(gcinclude.tSpell['spirits'],string.lower(pet.Name)) ~= nil);
 		elseif suCode == 'STRING' then						-- Is the bard's instrument a string instrument
 			if player.MainJob == 'BRD' then
 				bGood = (gcdisplay.GetCycle('Instrument') == 'String');
@@ -2631,9 +2649,17 @@ function fCheckInline(gear,sSlot)
 				bGood = false;
 			end
 		elseif suCode == 'TANK' then
-			bGood = (gcdisplay.GetToggle('Tank') == true);
+			if string.find(gcinclude._TankJobList,player.MainJob) ~= nil then
+				bGood = (gcdisplay.GetToggle('Tank') == true);
+			else
+				bGood = false;
+			end
 		elseif suCode == 'TH' then
-			bGood = (gcdisplay.GetToggle('TH') == true);
+			if player.MainJob == 'THF' then
+				bGood = (gcdisplay.GetToggle('TH') == true);
+			else
+				bGood = false;
+			end
 		elseif suCode == 'TOWN' then
 			-- Equip if in town	
 			bGood = (environ.Area ~= nil and table.find(gcinclude.Towns,environ.Area) ~= nil);
@@ -2658,9 +2684,9 @@ function fCheckInline(gear,sSlot)
 			end						 
 		elseif string.find('TP.,TPP,MP.,MPP,HP.,HPP',string.sub(suCode,1,3)) ~= nil then
 			local sRoot,sOperator,ival;
-			bGood,sRoot,sOperator,ival = ValidInlineDynamicCode(suCode);		
+			bGood,sRoot,sOperator,ival = fValidInlineDynamicCode(suCode);		
 			if bGood == true then
-				bGood = EvalCodedComparison(sRoot,sOperator,ival,sGear);
+				bGood = fEvalCodedComparison(sRoot,sOperator,ival,sGear);
 			else
 				bGood = false;
 			end
@@ -2675,6 +2701,8 @@ function fCheckInline(gear,sSlot)
 		elseif suCode == 'WTH-DAY' then						-- Weather matches day's element
 			local sEle = string.upper(environ.DayElement) .. ',NONE';
 			bGood = (string.find(sEle,string.upper(environ.WeatherElement)) ~= nil);
+--		elseif string.find(suCode,'XYZ_CHECK') then
+--			Needs to be implemented		
 		else
 			print(chat.header('fCheckInline'):append(chat.message('Warning: Unknown code = ' .. suCode .. '. Ignoring piece of gear.')));
 			bGood = false;
@@ -2693,7 +2721,7 @@ end		-- fCheckInline
 	along with who currently controls them.
 --]]
 
-function gcinclude.RegionControlDisplay()
+function RegionControlDisplay()
 	local sAreas = { 
 		[-1] = 'Unassigned',
 		[0]  = 'N/A',
@@ -2715,12 +2743,16 @@ function gcinclude.RegionControlDisplay()
 	
 	print(' ');
 	for i,j in pairs(gcinclude.RegionControl) do
-		if j[1] < 0 or j[1] > 4 then
-			print(chat.message('Huh? ' .. i ..' = ' .. tostring(j[1])));
+		if j['own'] < 0 or j['own'] > 4 then
+			print(chat.message('Huh? ' .. i ..' = ' .. tostring(j['own'])));
 		else
 			for ii,jj in pairs(sAreas) do
-				if ii == j[1] then
-					print(chat.message(i ..' = ' .. jj));
+				if ii == j['own'] then
+					if j['own'] == 0 and fBuffed('Signet') == true then
+						print(chat.message(i .. ' = ' .. jj .. ', but not owned gear works'));
+					else
+						print(chat.message(i ..' = ' .. jj));
+					end
 					break;
 				end
 			end
@@ -2729,23 +2761,11 @@ function gcinclude.RegionControlDisplay()
 end		-- RegionControlDisplay
 
 function gcinclude.t1()
-	local name;
-	name = gcinclude.fCheckForEleGear('staff','fire');
-	if name ~= nil then
-		print('Fire staff: ' .. name);
-	else
-		print('No fire staff found');
-	end
-	name = gcinclude.fCheckForEleGear('staff','light');
-	if name ~= nil then
-		print('Light staff: ' .. name);
-	else
-		print('No light staff found');
-	end	
+	print('Nothing being tested atm');
 end		-- gcinclude.t1
 
 --[[
-	fMoveToCurrent copies the gear defined in the passed set to current master
+	MoveToCurrent copies the gear defined in the passed set to current master
 	set. Nothing is displayed, this is just a transfer routine.
 	
 	Update: support for subsets have been added. The subsets are processed first
@@ -2753,7 +2773,7 @@ end		-- gcinclude.t1
 	If nesting goes too deep, it will run out of memory.
 --]]
 
-function gcinclude.fMoveToCurrent(tSet,tMaster,bOverride)
+function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 	local player = gData.GetPlayer();
 	local item = {};
 	local ref = {};
@@ -2798,7 +2818,7 @@ function gcinclude.fMoveToCurrent(tSet,tMaster,bOverride)
 			for kk,vv in pairs(ts) do		
 				bGood,vRoot = fCheckInline(vv,'subset');			
 				if bGood == true then
-					gcinclude.fMoveToCurrent(vRoot,tMaster,bOverride);
+					gcinclude.MoveToCurrent(vRoot,tMaster,bOverride);
 					break;
 				end
 			end			
@@ -2892,15 +2912,15 @@ function gcinclude.fMoveToCurrent(tSet,tMaster,bOverride)
 			end						
 		end
 	end	
-end		-- gcinclude.fMoveToCurrent
+end		-- gcinclude.MoveToCurrent
 
 --[[
-	fEquipTheGear makes sure that the passed gear set doesn't have an item in a slot
+	EquipTheGear makes sure that the passed gear set doesn't have an item in a slot
 	that is being blocked by another item (e.g., no head gear if a vermillion cloak
 	is in the body slot.) It the equips the gear set.
 --]]
 
-function gcinclude.fEquipTheGear(tSet,bOverride)
+function gcinclude.EquipTheGear(tSet,bOverride)
 	local sSlot;
 
 	if tSet == nil then
@@ -2913,8 +2933,8 @@ function gcinclude.fEquipTheGear(tSet,bOverride)
 	
 	-- Then deal with the multislot items
 	for j,k in pairs(gcinclude.multiSlot) do
-		if tSet[k[2]] ~= nil and string.lower(tSet[k[2]]) == string.lower(k[1]) then
-			tSet[k[3]] = '';
+		if tSet[k['slot']] ~= nil and string.lower(tSet[k['slot']]) == string.lower(k['item']) then
+			tSet[k['affected']] = '';
 		end
 	end
 	
@@ -2954,7 +2974,7 @@ function gcinclude.fEquipTheGear(tSet,bOverride)
 	end
 	
 	gFunc.ForceEquipSet(tSet);
-end			-- gcinclude.fEquipTheGear
+end			-- gcinclude.EquipTheGear
 
 --[[
 	CheckLockAccCollision checks to see if any of the slots associated with locks
@@ -2999,13 +3019,13 @@ function getPairedAccuracySlotValues(sSlot)
 end		-- getPairedAccuracySlotValues
 
 --[[
-	fFractionalSet is similar to fFractionalAccuracy in that is equips part of a 
+	FractionalSet is similar to FractionalAccuracy in that is equips part of a 
 	predefined set, but it's not based on accuracy. Instead, it's based on a
 	list of slots. (Note that only names are supported and not slot numbers.)
 	It creates a temporary set based on the specified slots and equips it. 
 --]]
 
-function gcinclude.fFractionalSet(hs,sSlots)
+function gcinclude.FractionalSet(hs,sSlots)
 	local i,t;
 	local tAcc = {};
 	local ts = {};
@@ -3051,7 +3071,7 @@ function gcinclude.fFractionalSet(hs,sSlots)
 	end
 
 	if bFound == true then
-		gcinclude.fMoveToCurrent(tAcc,gProfile.Sets.CurrentGear);
+		gcinclude.MoveToCurrent(tAcc,gProfile.Sets.CurrentGear);
 	else
 		if bSubset == true then
 			for j,k in pairs(ts) do
@@ -3067,7 +3087,7 @@ function gcinclude.fFractionalSet(hs,sSlots)
 					for kk,vv in pairs(ts) do
 						bGood,vRoot = fCheckInline(vv,'subset');
 						if bGood == true then
-							gcinclude.fFractionalSet(vRoot,sSlots)
+							gcinclude.FractionalSet(vRoot,sSlots)
 							break;
 						end
 					end
@@ -3075,10 +3095,10 @@ function gcinclude.fFractionalSet(hs,sSlots)
 			end
 		end
 	end
-end	-- gcinclude.fFractionalSet
+end	-- gcinclude.FractionalSet
 
 --[[
-	fFractionalAccuracy uses the stored accuracy slots and builds an equipment table
+	FractionalAccuracy uses the stored accuracy slots and builds an equipment table
 	(from the appropriate accuracy set) and then equips said table. It is a replacement
 	for that On/Off accuracy implementation that was originally developed. This new
 	approach lets the user (through the /acc and /nac commands) specify which slots
@@ -3086,8 +3106,8 @@ end	-- gcinclude.fFractionalSet
 	how much accuracy gear should be equipped.
 --]]
 
-function gcinclude.fFractionalAccuracy(accTbl,tankAccTbl)
-	local src,t,vRoot,bGood;
+function gcinclude.FractionalAccuracy(accTbl)
+	local t,vRoot,bGood;
 	local s1,s2;
 	local tAcc = {};
 	local ts = {};
@@ -3098,24 +3118,7 @@ function gcinclude.fFractionalAccuracy(accTbl,tankAccTbl)
 		return;
 	end
 	
-	-- Now determine which table to use
-	if gcdisplay.GetToggle('Tank') ~= nil and 
-	   gcdisplay.GetToggle('Tank') == true and 
-	   tankAccTbl ~= nil then
-		if type(tankAccTbl) == 'string' then
-			src = fGetTableByName(tankAccTbl);
-		else
-			src = tankAccTbl;
-		end
-	else
-		if type(tankAccTbl) == 'string' then
-			src = fGetTableByName(accTbl);
-		else
-			src = accTbl;
-		end
-	end
-	
-	for i,j in pairs(src) do
+	for i,j in pairs(accTbl) do
 		t = string.lower(i);
 		if t == 'subset' then
 			bSubset = true;
@@ -3148,7 +3151,7 @@ function gcinclude.fFractionalAccuracy(accTbl,tankAccTbl)
 			else
 				-- Normal slots. Match it up
 				for ii,jj in pairs(gcinclude.tLocks) do			
-					if t == jj[1] and jj[3] == true then
+					if t == jj['slot'] and jj['acc'] == true then
 						tAcc[i] = j;
 						bFound = true;
 					end
@@ -3158,10 +3161,10 @@ function gcinclude.fFractionalAccuracy(accTbl,tankAccTbl)
 	end
 	
 	if bFound == true then
-		gcinclude.fMoveToCurrent(tAcc,gProfile.Sets.CurrentGear);
+		gcinclude.MoveToCurrent(tAcc,gProfile.Sets.CurrentGear);
 	else
 		if bSubset == true then
-			for i,j in pairs(src) do
+			for i,j in pairs(accTbl) do
 			t = string.lower(i);
 			if t == 'subset' then
 				if type(j) == 'table' then
@@ -3174,12 +3177,7 @@ function gcinclude.fFractionalAccuracy(accTbl,tankAccTbl)
 					for kk,vv in pairs(ts) do
 						bGood,vRoot = fCheckInline(vv,'subset');
 						if bGood == true then
-							if gcdisplay.GetToggle('Tank') ~= nil and 
-							   gcdisplay.GetToggle('Tank') == true then
-								gcinclude.fFractionalAccuracy(accTbl,vRoot);
-							else
-								gcinclude.fFractionalAccuracy(vRoot,tankAccTbl);
-							end
+							gcinclude.FractionalAccuracy(vRoot);
 							break;
 						end
 					end
@@ -3187,17 +3185,17 @@ function gcinclude.fFractionalAccuracy(accTbl,tankAccTbl)
 			end
 		end
 	end
-end		-- gcinclude.fFractionalAccuracy
+end		-- gcinclude.FractionalAccuracy
 
 --[[
-	fMaxSpell determines if the passed in spell is in the tiered list and then which
+	MaxSpell determines if the passed in spell is in the tiered list and then which
 	tier would be the highest that could be cast by the player. The routine checks to
 	make sure you're high enough level to cast the spell, have enough MP, do you
 	know the spell and whether that spell is off cool down. If indicated, the found
 	spell can be cast
 --]]
 
-function fMaxSpell(sSpell,sTarget,bCast)
+function MaxSpell(sSpell,sTarget,bCast)
 	local player = gData.GetPlayer();
 	local sMain = player.MainJob;
 	local sSub = player.SubJob;
@@ -3284,16 +3282,16 @@ function fMaxSpell(sSpell,sTarget,bCast)
 			print(chat.header('MaxSpell'):append(chat.message('FYI: No spell cast')));
 		end
 	end
-end		-- fMaxSpell
+end		-- MaxSpell
 
 --[[
-	fMaxSong determines if the passed in song is in the tiered list and then which
+	MaxSong determines if the passed in song is in the tiered list and then which
 	tier would be the highest that could be cast by the player. The routine checks to
 	make sure you're high enough level to cast the song, do you know the song and 
 	whether that song is off cool down. If indicated, the found	song can be cast
 --]]
 
-function fMaxSong(sSong,sTarget,bCast)
+function MaxSong(sSong,sTarget,bCast)
 	local player = gData.GetPlayer();
 	local sMain = player.MainJob;
 	local sSub = player.SubJob;
@@ -3383,7 +3381,7 @@ function fMaxSong(sSong,sTarget,bCast)
 			AshitaCore:GetChatManager():QueueCommand(1, sCmd);
 		end		
 	end
-end		-- fMaxSong
+end		-- MaxSong
 	
 --[[
 	fCheckForElementalGearByValue is a generalized routine that searches to see 
@@ -3401,11 +3399,11 @@ function gcinclude.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
 
 	-- Make sure locks won't block equipping the item
 	if sWhat == 'staff' and (gcinclude.fIsLocked('main') == true or gcinclude.fIsLocked('sub') == true) then
-		return nil;
+		return nil,nil;
 	elseif sWhat == 'obi' and gcinclude.fIsLocked('waist') == true then
-		return nil;
+		return nil,nil;
 	elseif gcinclude.fIsLocked('neck') == true then -- gorget
-		return nil;
+		return nil,nil;
 	end
 		
 	-- What's searched for is sometimes a "root" and other times an "as-is"
@@ -3415,7 +3413,7 @@ function gcinclude.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
 		sRoot = string.lower(sElement);
 	else
 		print(chat.header('fCheckForElementalGearByValue'):append(chat.message('Unknown field to search: ' ..sWhich)));
-		return nil;
+		return nil,nil;
 	end
 
 	-- Determine target slot
@@ -3442,9 +3440,9 @@ function gcinclude.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
 						fGearCheckItem(sTarget,gcinclude.tElemental_gear[sWhat][i]['NQ']['Name'],false,false);
 					-- Then determine if there's a staff that matches
 					if gcinclude.tElemental_gear[sWhat][i]['HQ']['Ref']['accessible'] == true then
-						return gcinclude.tElemental_gear[sWhat][i]['HQ']['Name'];
+						return gcinclude.tElemental_gear[sWhat][i]['HQ']['Name'],i;
 					elseif gcinclude.tElemental_gear[sWhat][i]['NQ']['Ref']['accessible'] == true then
-						return gcinclude.tElemental_gear[sWhat][i]['NQ']['Name'];
+						return gcinclude.tElemental_gear[sWhat][i]['NQ']['Name'],i;
 					else
 						return nil;
 					end
@@ -3457,14 +3455,14 @@ function gcinclude.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
 				
 				-- Then determine if there's an obi or gorget that matches
 				if gcinclude.tElemental_gear[sWhat][i]['Ref']['accessible'] == true then
-					return gcinclude.tElemental_gear[sWhat][i]['Name'];
+					return gcinclude.tElemental_gear[sWhat][i]['Name'],i;
 				end
 			end
 		end
 	end
 	-- Since we got here, either the search string wasn't found in the appropriate
 	-- area or it was found, but the player doesn't have the item or it's inaccessible.
-	return nil;
+	return nil,nil;
 end		-- fCheckForElementalGearByValue
 
 --[[
@@ -3484,8 +3482,9 @@ function gcinclude.fSwapToStave(sStave,noSave,cs)
 		return;
 	end
 	
-	-- Now, make sure that locks will not prevent equipping a staff
-	if gcinclude.fIsLocked('main') == true or gcinclude.fIsLocked('sub') == true then
+	-- Make sure that auto staves enabled and that locks will not prevent equipping a staff
+	if gcinclude.settings.bAutoStaveSwapping == false or 
+			gcinclude.fIsLocked('main') == true then
 		return;
 	end
 	
@@ -3529,14 +3528,14 @@ function gcinclude.fSwapToStave(sStave,noSave,cs)
 end		-- gcinclude.fSwapToStave
 
 --[[
-	fEquipItem processes the passed arguments and equips the specified item 
+	EquipItem processes the passed arguments and equips the specified item 
 	(whether by coded entry or name) into the appropriate equipment slot, 
 	then locks the appropriate slot
 	
 		/equipit|ei code|"item name" slot
 --]]
 
-function fEquipItem(args)
+function EquipItem(args)
 	local inventory = AshitaCore:GetMemoryManager():GetInventory();
 	local resources = AshitaCore:GetResourceManager();
 	local iName,iSlot,sLocks;
@@ -3578,16 +3577,20 @@ function fEquipItem(args)
 		-- Now try and load the item
 		gFunc.ForceEquip(iSlot,iName);
 		if sLocks ~= nil then
-			fLockUnlock('locks','lock',sLocks);
+			LockUnlock('locks','lock',sLocks);
 		else
-			fLockUnlock('locks','lock',iSlot);
+			LockUnlock('locks','lock',iSlot);
 		end
 		local sList = fGetLockedList('locks');
 		gcdisplay.SetSlots('locks',gcinclude.LocksNumeric);	
 	else
-		print(chat.header('EquipIt'):append(chat.message('Error: incomplete /equipit command: /equipit code|name slot|#. Command ignored.')));
+		print(chat.message('List of /equipit codes and items:'));
+	
+		for i,j in pairs(gcinclude.tEquipIt) do
+			print(chat.message(string.format('%-s - %s',i,j['Name'])));
+		end
 	end
-end		-- fEquipItem
+end		-- EquipItem
 
 --[[
 	fGetTableByName returns the gear set that is associated with the set name passed to it.
@@ -3624,40 +3627,12 @@ function fGetTableByName(sName)
 end		-- fGetTableByName
 
 --[[
-	WhichSlot takes the passed slot #/name/code and converts it to a correctly
-	formatted equipment slot name. If unable to determine, nil is returned.
---]]
-
-function WhichSlot(sSlot)
-	if sSlot == nil then
-		return nil;
-	end
-	
-	sSlot = string.lower(sSlot);
-	
-	-- First look for special cases, then determine if a slot name or
-	-- number is specified
-	if sSlot == 'rings' then
-		return 'Ring1';
-	elseif sSlot == 'ears' then
-		return 'Ear1';
-	else
-		-- Locks are a convenient list to use to identify the slot name/number
-		for j,k in ipairs(gcinclude.tLocks) do
-			if k['slot'] == sSlot or tostring(j) == sSlot then
-				return string.upper(string.sub(k['slot'],1,1)) .. string.sub(k['slot'],2,-1);
-			end
-		end
-		return nil;
-	end
-end		-- WhichSlot
---[[
-	WhichAccuracySet searches the player's AccuracySet for the named set and
+	fWhichAccuracySet searches the player's AccuracySet for the named set and
 	returns the associated slots. If not found, an error message is displayed
 	and nil is returned.
 --]]
 
-function WhichAccuracySet(sId)
+function fWhichAccuracySet(sId)
 
 	if sId == nil or gProfile.AccuracySet == nil then
 		return nil;
@@ -3668,9 +3643,9 @@ function WhichAccuracySet(sId)
 			return j;
 		end
 	end
-	print(chat.header('WhichAccuracySet'):append(chat.message('Accuracy set: ' .. sId .. ' not found. Ignoring.')));
+	print(chat.header('fWhichAccuracySet'):append(chat.message('Accuracy set: ' .. sId .. ' not found. Ignoring.')));
 	return nil;
-end
+end		-- fWhichAccuracySet
 
 --[[
 	HandleCommands processes any commands typed into luashitacast as defined in this file
@@ -3705,7 +3680,8 @@ function gcinclude.HandleCommands(args)
 			sList = 'list';
 			bForce = false;
 		end
-		fGearCheck(sList,bForce);
+		GearCheck(sList,bForce);
+		gcinclude.basetime = 0;		-- Kill reminder
     elseif args[1] == 'gcmessages' then		-- turns feedback on/off for all commands
 		gcinclude.settings.Messages = not gcinclude.settings.Messages;
 		if gcinclude.settings.Messages then
@@ -3769,12 +3745,12 @@ function gcinclude.HandleCommands(args)
 		toggle = 'Evasion';
 		status = gcdisplay.GetToggle('Eva');
 	elseif (args[1] == 'wswap') then		-- Turns on/off whether weapon swapping is permitted
-		if player.MainJob ~= 'SMN' then
+		if gcinclude.settings.bWSOverride == false then
 			gcdisplay.AdvanceToggle('WSwap');
 			toggle = 'Weapon Swap';
 			status = gcdisplay.GetToggle('WSwap');
 		else
-			print(chat.header('HandleCommands'):append(chat.message('Error: Weapon swapping always enabled on summoners. Ignoring command')))
+			print(chat.header('HandleCommands'):append(chat.message('Error: Weapon swapping always enabled on ' .. player.MainJob .. '. Ignoring command')))
 		end		
 	elseif (args[1] == 'sbp') then			-- Turns on/off whether the blood pact message is shown
 		if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
@@ -3820,9 +3796,9 @@ function gcinclude.HandleCommands(args)
 
 		if args[2] ~= nil then
 			if sTarget == 'acc' and string.sub(args[2],1,1) == '-' then
-				args[2] = WhichAccuracySet(string.sub(args[2],2,-1));
+				args[2] = fWhichAccuracySet(string.sub(args[2],2,-1));
 			end
-			fLockUnlock(sTarget,'lock',args[2]);
+			LockUnlock(sTarget,'lock',args[2]);
 		end
 		sList = fGetLockedList(sTarget);		
 		if sList ~= nil then
@@ -3857,9 +3833,9 @@ function gcinclude.HandleCommands(args)
 		
 		if args[2] ~= nil then
 			if sTarget == 'acc' and string.sub(args[2],1,1) == '-' then
-				args[2] = WhichAccuracySet(string.sub(args[2],2,-1));
+				args[2] = fWhichAccuracySet(string.sub(args[2],2,-1));
 			end
-			fLockUnlock(sTarget,'unlock',args[2]);
+			LockUnlock(sTarget,'unlock',args[2]);
 			if string.lower(args[2]) == 'all' then
 				if sTarget == 'locks' then
 					print(chat.message('All slots are unlocked'));
@@ -3880,12 +3856,12 @@ function gcinclude.HandleCommands(args)
 		else
 			gcdisplay.SetSlots('acc',gcinclude.AccNumeric);
 		end
-	elseif (args[1] == 'rc') then					-- Display region controls
-		gcinclude.RegionControlDisplay();
+	elseif (args[1] == 'rc') then							-- Display region controls
+		RegionControlDisplay();
 	elseif (args[1] == 'rv') then
-		fRefreshVariables();
+		RefreshVariables();
 	elseif (args[1] == 'showit') then						-- Shows debug info for specified type
-		gcinclude.DB_ShowIt();
+		DB_ShowIt();
 	elseif (args[1] == 'gearset' or args[1] == 'gs') then	-- Forces a gear set to be loaded and turns GSWAP off
 		if #args > 1 then
 			--gcinclude.ClearSet(gcinclude.sets.CurrentGear);
@@ -3897,22 +3873,22 @@ function gcinclude.HandleCommands(args)
 				if string.find(sTmp,sArg) then
 					-- Crafting set
 					gcinclude.Craft = sArg;
-					gcinclude.fMoveToCurrent(gcinclude.sets.Crafting,gcinclude.sets.CurrentGear);					
+					gcinclude.MoveToCurrent(gcinclude.sets.Crafting,gcinclude.sets.CurrentGear);					
 				else
 					-- Gather set
 					gcinclude.Gather = sArg;
-					gcinclude.fMoveToCurrent(gcinclude.sets.Gathering,gcinclude.sets.CurrentGear);
+					gcinclude.MoveToCurrent(gcinclude.sets.Gathering,gcinclude.sets.CurrentGear);
 				end
 			else
 				local tTable = fGetTableByName(sArg);	-- Change string to table
 				if tTable ~= nil then
-					gcinclude.fMoveToCurrent(tTable,gcinclude.sets.CurrentGear,true);
+					gcinclude.MoveToCurrent(tTable,gcinclude.sets.CurrentGear,true);
 				else
 					print(chat.header('HandleCommands'):append(chat.message('Gear set not found: ' .. sArg)));
 				end
 			end
 			
-			gcinclude.fEquipTheGear(gcinclude.sets.CurrentGear,true);
+			gcinclude.EquipTheGear(gcinclude.sets.CurrentGear,true);
 			fLockSlotsBySet(gcinclude.sets.CurrentGear);
 
 			toggle = 'Gear Swap';
@@ -3933,13 +3909,13 @@ function gcinclude.HandleCommands(args)
 			print(chat.header('HandleCommands'):append(chat.message('Your job does not support that command. Ignoring.')));
 		end
 	elseif (args[1] == 'maxspell') then			-- Determines highest level spell to cast
-		fMaxSpell(args[2],args[3],true);
+		MaxSpell(args[2],args[3],true);
 		toggle = 'MaxSpell';
 	elseif (args[1] == 'maxsong') then			-- Determines highest level song to cast
-		fMaxSong(args[2],args[3],true);
+		MaxSong(args[2],args[3],true);
 		toggle = 'MaxSong';
 	elseif args[1] == 'equipit' or args[1] == 'ei' then			-- Equip specified item
-		fEquipItem(args);
+		EquipItem(args);
 	end
 
 	if gcinclude.settings.Messages then
@@ -3948,65 +3924,10 @@ function gcinclude.HandleCommands(args)
 end		-- gcinclude.HandleCommands
 
 --[[
-	WsStat determines which stats are emphasized when using the passed weaponskill name and
-	returns an appropriate gear set name. All valid weaponskills are checked against.
+	This function returns the weak element to the passed in element.
 --]]
 
-function gcinclude.WsStat(ws_name,ws_default)
-	local ws_stat;
-	
-	if string.find(ws_name,gcinclude.WS_AGI) ~= nil then
-		ws_stat = 'WS_AGI';
-	elseif string.find(ws_name,gcinclude.WS_CHR) ~= nil then
-		ws_stat = 'WS_CHR';
-	elseif string.find(ws_name,gcinclude.WS_DEX) ~= nil then
-		ws_stat = 'WS_DEX';
-	elseif string.find(ws_name,gcinclude.WS_DEXAGI) ~= nil then
-		ws_stat = 'WS_DEXAGI';
-	elseif string.find(ws_name,gcinclude.WS_DEXCHR) ~= nil then
-		ws_stat = 'WS_DEXCHR';
-	elseif string.find(ws_name,gcinclude.WS_DEXINT) ~= nil then
-		ws_stat = 'WS_DEXINT';
-	elseif string.find(ws_name,gcinclude.WS_INT) ~= nil then
-		ws_stat = 'WS_INT';
-	elseif string.find(ws_name,gcinclude.WS_INTMND) ~= nil then
-		ws_stat = 'WS_INTMND';
-	elseif string.find(ws_name,gcinclude.WS_MND) ~= nil then
-		ws_stat = 'WS_MND';
-	elseif string.find(ws_name,gcinclude.WS_STR) ~= nil then
-		ws_stat = 'WS_STR';
-	elseif string.find(ws_name,gcinclude.WS_STRAGI) ~= nil then
-		ws_stat = 'WS_STRAGI';
-	elseif string.find(ws_name,gcinclude.WS_STRDEX) ~= nil then
-		ws_stat = 'WS_STRDEX';
-	elseif string.find(ws_name,gcinclude.WS_STRMND) ~= nil then
-		ws_stat = 'WS_STRMND';
-	elseif string.find(ws_name,gcinclude.WS_STRMND_30_50) ~= nil then
-		ws_stat = 'WS_STRMND_30_50';		
-	elseif string.find(ws_name,gcinclude.WS_STRINT) ~= nil then
-		ws_stat = 'WS_STRINT';
-	elseif string.find(ws_name,gcinclude.WS_STRINT_30_20) ~= nil then
-		ws_stat = 'WS_STRINT_30_20';		
-	elseif string.find(ws_name,gcinclude.WS_STRVIT) ~= nil then
-		ws_stat = 'WS_STRVIT';
-	elseif string.find(ws_name,gcinclude.WS_VIT) ~= nil then
-		ws_stat = 'WS_VIT';
-	elseif string.find(ws_name,gcinclude.WS_Skill) ~= nil then
-		ws_stat = 'WS_Skill';
-	elseif string.find(ws_name,gcinclude.WS_HP) ~= nil then
-		ws_stat = 'WS_HP';
-	else
-		ws_stat = 'WS_' .. ws_default;
-	end
-	return ws_stat;
-end		-- gcinclude.WsStat
-
---[[
-	These functions determines if the passed element is a good fit/bad fit for an elemental obi 
-	based on the day and the weather
---]]
-
-function gcinclude.EleWeak(ele)
+function fEleWeak(ele)
 	local sWeak = nil;
 	
 	ele = string.lower(ele);
@@ -4017,32 +3938,35 @@ function gcinclude.EleWeak(ele)
 		end
 	end		
 	return sWeak;
-end		-- gcinclude.EleWeak
+end		-- fEleWeak
 
 --[[
-	CheckObiDW determines if the weather/day element makes equiping an elemental obi advantageous.
+	fCheckObiDW determines if the weather/day element makes equiping an elemental 
+	obi advantageous.
 	
-	Please note: Elemental obis can be useful when closing a skillchain with certain weaponskills.
-	This code does NOT track that opportunity, so it is not even considered.
+	Please note: Elemental obis can be useful when closing a skillchain with certain 
+	weaponskills. This code does NOT track that opportunity, so it is not even considered.
 --]]
 
-function gcinclude.CheckObiDW(ele)
+function fCheckObiDW(ele)
+	local sEnvironment = gData.GetEnvironment();
+	local sWeak = fEleWeak(ele);
+	local sDay = sEnvironment.DayElement;
 	local PctDay = 0;
 	local PctWeather = 0;
 	local PctIridesecene = 0;
-	local sEnvironment = gData.GetEnvironment();
-	local sWeak = gcinclude.EleWeak(ele);
-	local sDay = sEnvironment.DayElement;
 
+	ele = string.lower(ele);
+	
 	-- First, the day
-	if string.lower(sDay) == string.lower(ele) then
+	if string.lower(sDay) == ele then
 		PctDay = 10;
-	elseif string.lower(sWeak) == string.lower(ele) then
+	elseif string.lower(sWeak) == ele then
 		PctDay = -10;
 	end
 	
 	-- Next the weather
-	if string.lower(sEnvironment.WeatherElement) == string.lower(ele) then
+	if string.lower(sEnvironment.WeatherElement) == ele then
 		if string.find(sEnvironment.Weather,'x2') ~= nil then 		-- There's a storm of the element
 			PctWeather = 25
 		else 
@@ -4071,7 +3995,7 @@ function gcinclude.CheckObiDW(ele)
 	PctWeather = PctWeather + PctIridesecene;
 	
 	return PctDay,PctWeather;
-end		-- gcinclude.CheckObiDW
+end		-- fCheckObiDW
 
 --[[
 	fGetRoot determines the "base" of a spell name. (The base is the first word in the spell name.)
@@ -4114,63 +4038,6 @@ function fGetRoot(sSpellName,bVersion)
 end		-- fGetRoot
 
 --[[
-	CheckEleSpells determines if the passed in spell name is elemental in nature and returns
-	the elemental type.
---]]
-
-function gcinclude.CheckEleSpells(spellName,listName,sWhat)
-	local root = nil;
-	local k;
-	local str;
-	local pctDay = 0;
-	local pctWeather = 0;
-	
-	if spellName == nil or listName == nil or sWhat == nil then
-		print(chat.header('CheckEleSpells'):append(chat.message('Error: invalid passed parameters')));
-		return;
-	end
-
-	root = fGetRoot(spellName);
-	for k, str in pairs(listName) do								-- search the list
-		if string.find(str,root) ~= nil then						-- if not nil then the "root" was found
-			if sWhat == gcinclude.OBI then		
-				local sGear = gcinclude.fCheckForEleGear('obi',k);
-				if sGear ~= nil then
-					pctDay,pctWeather = gcinclude.CheckObiDW(k);	-- determine if the day/weather is advantageous
-					if (pctDay + pctWeather) > 0 then
-						return sGear;						-- return the obi's name
-					end
-				end
-			elseif sWhat == gcinclude.ELEMENT then
-				return k;
-			end
-			break;
-		end
-	end
-	return
-end		-- gcinclude.CheckEleSpells
-
---[[
-	CheckSummons is a simple routine that determines the element of the summoned avatar
---]]
-
-function gcinclude.CheckSummons(spellName)
-	local sn;
-	
-	if spellName == nil then
-		print(chat.header('CheckSummons'):append(chat.message('Error: invalid passed parameter')));
-		return nil;
-	else
-		sn = string.lower(spellName);
-	end
-	
-	if gcinclude.SummonStaves[sn] ~= nil then
-		return gcinclude.SummonStaves[sn];
-	end
-	return nil;
-end		-- gcinclude.CheckSummons
-
---[[
 	fWhichStat determines if the passed spell has a stat associated with it
 --]]
 
@@ -4184,12 +4051,13 @@ function fWhichStat(sSpellName)
 	end
 	
 	root = fGetRoot(sSpellName);
-	for k, tbl in pairs(gcinclude.tStatMagic) do			-- search the list
-		if string.find(tbl[2],root) ~= nil then				-- if not nil then the "root" was found
-			return tbl[1];
-		end
+	if table.find(gcinclude.tSpell['int'],root) ~= nil then		-- if not nil then the "root" was found
+		return 'INT';
+	elseif table.find(gcinclude.tSpell['mnd'],root) ~= nil then	-- if not nil then the "root" was found
+		return 'MND';	
+	else	
+		return;	
 	end
-	return	
 end		-- fWhichStat
 
 --[[
@@ -4218,194 +4086,96 @@ function gcinclude.CheckWsBailout()
 		
 	return true;
 end		-- gcinclude.CheckWsBailout
-
 --[[
-	findString is multi-functional, searching the passed storage containers (whether accessible or not) for any or
-	all of the passed string. Depending on the passed arguments, either the found items will be listed or the accessible
-	storage table will be updated.
-	
-	findString(tStorage,sString,bUpdate,sName)
-		where	tStorage is a list of the storage containers to search
-				bUpdate indicates if the accessible storage table should be updated (inhibits displaying what is found)
-				sName indicates which pet food is being looked for. In most cases this is nil
-				
-	Please note that this code was originally findPetFood and has been generalized
+	PetReward scans all equipable storage containers for all of the pet foods and
+	tallies which ones the player has. Then, it picks the one likely to have the
+	most benefit for the "reward" based on the level and what was passed in.
 --]]
 
-function gcinclude.findString(tStorage,sString,bUpdate,sName)
+function gcinclude.fPetReward(sFood,bMax)
 	local inventory = AshitaCore:GetMemoryManager():GetInventory();
 	local resources = AshitaCore:GetResourceManager();
-	local iCount = 0;
+	local player = gData.GetPlayer();
+	local tStorage = gcinclude.EQUIPABLE_NONHOLIDAY;
+	local containerID;
+	local i1,i2,step;
+	local _ammo = 4;	-- Lock # for ammo slot
 	
-	-- process passed parameters
-	if tStorage == nil or tStorage == {} then
-		print(chat.header('findString'):append(chat.message('No storage containers specified')));
+	if bMax == nil then
+		bMax = true;
+	end
+
+	-- Make sure ammo slot isn't locked
+	if gcinclude.tLocks[_ammo]['lock'] == true then
+		print(chat.header('PetReward'):append(chat.message('Ammo slot locked. Unable to equip any pet food')));
 		return false;
 	end
-	
-	if sString == nil then
-		print(chat.header('findString'):append(chat.message('No search string specified')));
+		
+	-- Reset the pet food indicators
+	for i,j in ipairs(gcinclude.tPetFood) do
+		j['have'] = false;;
 	end
 	
-	if bUpdate == nil then
-		bUpdate = false;		-- Assume this is just a listing
-	end
-	
-	if sName ~= nil then
-		sName = string.lower(sName);
-	end
-
-	for k,_ in pairs(gcinclude.petfood) do
-		gcinclude.petfood[k][4] = false;
-		gcinclude.petfood[k][5] = nil;
-	end
-
-	iCnt = 0;
-	for _ in pairs(tStorage) do iCnt = iCnt + 1 end
-	
-	-- now, loop through the passed storage containers
-	for i = 1,iCnt,1 do
-		bFound = false;
-		containerID = gcinclude.STORAGES[i][1];
+	-- Now, note which pet foods the player has
+	for i,j in ipairs(tStorage) do
+		containerID = j['id'];
 		-- then loop through the container
-		for j = 1,inventory:GetContainerCountMax(containerID),1 do
-			local itemEntry = inventory:GetContainerItem(containerID, j);
+		for k = 1, inventory:GetContainerCountMax(containerID), 1 do
+			local itemEntry = inventory:GetContainerItem(containerID, k);
 			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
-                local item = resources:GetItemById(itemEntry.Id);
-				b,c = string.find(string.lower(item.Name[1]),sString);	
-				if b ~= nil then
-					if bUpdate then
-						for k,tpf in pairs(gcinclude.petfood) do
-							if string.lower(tpf[2]) == string.lower(item.Name[1]) then
-								if gcinclude.petfood[k][4] == false then
-									gcinclude.petfood[k][4] = true;
-									gcinclude.petfood[k][5] = gcinclude.STORAGES[i][2];							
-								end
-							end
-						end
-						iCount = iCount + 1;
-					else
-						iCt = itemEntry.Count
-						if iCt ~= nil and iCt > 0 then
-							iCount = iCount + 1;
-							if not bFound then
-								for l,sl in pairs(gcinclude.STORAGES) do
-									if containerID == sl[1] then
-										print(chat.header('findString'):append(chat.message(sl[2])));
-										bFound = true;
-										break;
-									end
-								end
-							end
-							print(chat.header('findString'):append(chat.message('   ' .. item.Name[1] .. ' ('..tostring(iCt) .. ')')));
+				local item = resources:GetItemById(itemEntry.Id);
+				if item ~= nil then
+					local sName = string.lower(item.Name[1]);
+					for ii,jj in ipairs(gcinclude.tPetFood) do
+						if sName == jj['name'] then
+							jj['have'] = true;
 						end
 					end
 				end
 			end
 		end
 	end
-
-	return (iCount > 0);	
-end		-- gcinclude.findString
-
---[[
-	findMaxEquipablePetFood searches all accessible player storage containers (regardless of location)
-	and equips the highest level pet food that can be equipped that's found.
---]]
-
-function gcinclude.findMaxEquipablePetFood()
 	
-	-- see if any pet food is accessible (inventory, wardrobe, wardrobe 2)
-	return gcinclude.findString(gcinclude.EQUIPABLE,'pet f',true,nil);		
-end		-- gcinclude.findMaxEquipablePetFood
-
---[[
-	doPetFood does one of two things. It either equips the indicated food or it
-	shows where the food can be found. What is equipped will either be indicated or
-	the max level pet food that can be equipped.
-	
-	/petfood [all|max] [name]
---]]
-
-function gcinclude.doPetFood(action, sType)
-	local player = gData.GetPlayer();
-	local ilvl;
-	local sName = nil;
-		
-	if action == nil then
-		sAction = 'max';
+	-- Determine order to process
+	if bMax == true then
+		i1 = 1; i2 = gcinclude._PetFoodCount; step = 1;
 	else
-		sAction = string.lower(action);
-		if not (sAction == 'all' or sAction == 'max' or sAction == 'min') then
-			if sType ~= nil then
-				print(chat.header('doPetFood'):append(chat.message('Invalid action specified : ' .. action .. '. Ignoring command')));
-				return false;
-			end
-		else
-			sType = nil;
+		i1 = gcinclude._PetFoodCount; i2 = 1; step = -1;
+	end
+
+	-- Then process what was found
+	local iFound = -1;
+	for i = i1,i2,step do
+		if sFood ~= nil and string.lower(sFood) == gcinclude.tPetFood[i]['name'] and 
+			gcinclude.tPetFood[i]['have'] == true and 
+			gcinclude.tPetFood[i]['lvl'] <= player.MainJobSync then
+			iFound = i;
+		elseif gcinclude.tPetFood[i]['have'] == true and 
+			gcinclude.tPetFood[i]['lvl'] <= player.MainJobSync then
+			iFound = i;
 		end
 	end
 	
-	if sAction == 'all' then
-		-- Currently only 1=Inventory,2=Safe,3=storage,6=satchel,9=wardrobe,11=wardrobe 2 are used, but 
-		-- have included all for future expansion. (Note that 17=Wardrobe 8 holds event gear and is accessible,
-		-- but you can't store petfood in there.)
-		if not gcinclude.findString({1,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17},'pet f',false,sType) then
-			print(chat.header('doPetFood'):append(chat.message('No pet food found')));
-		end
+	if iFound > 0 then
+		local sName = gcinclude.tPetFood[iFound]['name'];
+		gFunc.ForceEquip('Ammo', sName);
+		print(chat.header('PetReward'):append(chat.message('Equipping: ' .. sName)));
+		return true;
+	elseif sName ~= nil then
+		print(chat.header('PetReward'):append(chat.message('Error: ' .. sFood .. ' not found or you cannot equip it.')));
+		return false;
 	else
-		if (sAction == 'max' or sAction == 'min') then
-			if not gcinclude.findMaxEquipablePetFood() then
-				print(chat.header('doPetFood'):append(chat.message('No equipable pet food found or found pet food is too high level')));
-				return false;
-			end
-		else
-			if not gcinclude.findString(gcinclude.EQUIPABLE,sAction,true,nil) then 
-				print(chat.header('doPetFood'):append(chat.message(action .. ' not found in accessible storage')));
-			end
-			return false;
-		end
-		
-		-- Now to process what was found
-		if sAction == 'max' then
-			ilvl = 0;
-		else
-			ilvl = player.MainJobSync;
-		end
-		
-		for k,tpf in pairs(gcinclude.petfood) do
-			if sAction == 'max' then
-				if tpf[4] and (tpf[3] > ilvl) and (tpf[3] <= player.MainJobSync) then
-					ilvl = tpf[3];
-					sName = tpf[2];
-				end
-			elseif sAction == 'min' then
-				if tpf[4] and tpf[3] <= ilvl then
-					ilvl = tpf[3];
-					sName = tpf[2];
-				end
-			end
-		end
+		print(chat.header('PetReward'):append(chat.message('Error: No equipable pet food found.')));
+		return false;
 	end
-
-	if sName ~= nil then
-		if gcinclude.fLocks[4]['lock'] == false then
-			gFunc.ForceEquip('Ammo', sName);
-			print(chat.header('doPetFood'):append(chat.message('Equipping: ' .. sName)));
-			return true;
-		else
-			print(chat.header('doPetFood'):append(chat.message('Ammo slot locked. Unable to equip: ' .. sName)));
-			return false;
-		end
-	end				
-end		-- gcinclude.doPetFood
+end		-- PetReward
 
 --[[
 	Unload ensures that the aliases are removed and the display objects are removed
 --]]
 
 function gcinclude.Unload()
-	gcinclude.ClearAlias();
+	ClearAlias();
 	ashita.events.unregister('packet_in', 'packet_in_callback1');
 	
 	gcdisplay.Unload();
@@ -4417,9 +4187,550 @@ end		-- gcinclude.Unload
 
 function gcinclude.Initialize()
 	gcdisplay.Initialize:once(2);
-	gcinclude.SetVariables:once(2);
-	gcinclude.SetAlias:once(2);
+	SetVariables:once(2);
+	SetAlias:once(2);
 end		-- gcinclude.Initialize
+
+--[[
+	fMidcastSinging handles all of the equipment management when a song is cast.
+--]]
+
+function fMidcastSinging()
+end
+
+--[[
+	MidcastHealingMagic handles all of the equipment management when a healing spell
+	is cast. There are three types of spells handled in 'healing magic': cures to
+	heal players hit points, debuffs to remove status effects on players, and offensive
+	cures to do damage to undead monsters. Each type is handled here.
+--]]
+
+function MidcastHealingMagic()
+	local ti = gData.GetTargetIndex();
+	local target = gData.GetEntity(ti);
+	local spell = gData.GetAction();
+	local root,sGear,pDay,pWeather;
+	local bTank,sEle;
+	
+	bTank = gcdisplay.GetToggle('Tank');
+	if bTank == nil then
+		bTank = false;
+	end
+	
+	root = fGetRoot(spell.Name);
+
+	if string.find('curaga,cure',root) == nil then
+		-- Start with the non-cure based spells
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_HealingMagic,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.HealingMagic,gProfile.Sets.CurrentGear);
+		end
+	else
+		if target ~= nil then
+			-- Some type of cure
+			if target.Type == 'Monster' then
+				-- Until I figure out how to determine that a monster is undead, just assume
+				-- that if targetting a monster, it is undead.
+				if bTank == true then
+					gcinclude.MoveToCurrent(gProfile.Sets.Tank_OffensiveCuring,gProfile.Sets.CurrentGear);
+				else
+					gcinclude.MoveToCurrent(gProfile.Sets.OffensiveCuring,gProfile.Sets.CurrentGear);
+				end
+			
+				-- Check for an elemental obi since this is an offensive spell. First
+				-- determine if a bonus is possible based on day's element and/or weather
+				sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+				if sGear ~= nil then
+					pDay,pWeather = fCheckObiDW(sEle);
+					if pDay + pWeather > 0 then
+						gProfile.Sets.CurrentGear['Waist'] = sGear;
+					end
+				end			
+			else
+				-- This is the the type of curing magic most folks assume happens
+				if bTank == true then
+					gcinclude.MoveToCurrent(gProfile.Sets.Tank_CuringMagic,gProfile.Sets.CurrentGear);
+				else
+					gcinclude.MoveToCurrent(gProfile.Sets.CuringMagic,gProfile.Sets.CurrentGear);
+				end
+			end
+		end
+		
+		-- While the reasoning is different, both types of "cures" can use an elemental
+		-- stave. (Offensive cures take advantage of affinity while regular cures 
+		-- appreciate the cure potency on a light-based staff.)
+		sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
+		if sGear ~= nil then
+			gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
+		end
+	end
+end		-- MidcastHealingMagic
+
+--[[
+	MidcastDarkMagic handles all of the equipment management when a dark spell
+	is cast. Dark spells are dependent on the level of the dark spell magic. Most 
+	dark spells extract a "strength" from the target and gives it to the player.
+	The exception is bio/ii (which is a dot and lowers the target's attack), 
+	tractor, and stun. 
+	
+	For drain/Aspir, Dark Magic Skill > all else. For absorb spells, 
+	Dark=Macc=2xINT
+--]]
+
+function MidcastDarkMagic()
+	local spell = gData.GetAction();
+	local ew = gData.GetEquipment();
+	local root,pDay,pWeather,sGear;
+	local bTank,sEle;
+	
+	bTank = gcdisplay.GetToggle('Tank');
+	if bTank == nil then
+		bTank = false;
+	end
+	
+	root = fGetRoot(spell.Name);
+	
+	if table.find(gcinclude.tSpell['absorb'],root) ~= nil then
+		-- Absorb spell
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Absorb,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.Absorb,gProfile.Sets.CurrentGear);
+		end
+	elseif root == 'drain' then
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Drain,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.Drain,gProfile.Sets.CurrentGear);
+		end	
+		
+		-- Check for an elemental obi. First determine if a bonus is possible 
+		-- based on day's element and/or weather
+		sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+		if sGear ~= nil then
+			pDay,pWeather = fCheckObiDW(sEle);
+			if pDay + pWeather > 0 then
+				gProfile.Sets.CurrentGear['Waist'] = sGear;
+			end
+		end	
+		
+		-- And an elemental staff, for the affinity
+		sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
+		if sGear ~= nil then
+			-- There's a wild exception that needs to be checked here. If /WSWAP is
+			-- enabled and the player is wielding Y's Scythe (only equipable by DRK)
+			-- and sGear = 'Dark Staff', then don't equip it. Y's scythe grants +1
+			-- dark magic affinity which is what a dark staff does. There's no
+			-- advantage to equipping the staff.
+			if not (gcdisplay.GetToggle('WSwap') == true and
+					ew['Main'] == 'Y\'s Scythe' and sGear == 'Dark Staff') then
+				gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
+			end
+		end	
+	elseif root == 'aspir' then
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Aspir,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.Aspir,gProfile.Sets.CurrentGear);
+		end	
+		
+		-- Check for an elemental obi. First determine if a bonus is possible 
+		-- based on day's element and/or weather
+		sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+		if sGear ~= nil then
+			pDay,pWeather = fCheckObiDW(sEle);
+			if pDay + pWeather > 0 then
+				gProfile.Sets.CurrentGear['Waist'] = sGear;
+			end
+		end	
+		
+		-- Check for an elemental obi. First determine if a bonus is possible 
+		-- based on day's element and/or weather
+		sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+		if sGear ~= nil then
+			pDay,pWeather = fCheckObiDW(sEle);
+			if pDay + pWeather > 0 then
+				gProfile.Sets.CurrentGear['Waist'] = sGear;
+			end
+		end	
+		
+		-- And an elemental staff, for the affinity
+		sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
+		if sGear ~= nil then
+			-- There's a wild exception that needs to be checked here. If /WSWAP is
+			-- enabled and the player is wielding Y's Scythe (only equipable by DRK)
+			-- and sGear = 'Dark Staff', then don't equip it. Y's scythe grants +1
+			-- dark magic affinity which is what a dark staff does. There's no
+			-- advantage to equipping the staff.
+			if not (gcdisplay.GetToggle('WSwap') == true and
+					ew['Main'] == 'Y\'s Scythe' and sGear == 'Dark Staff') then
+				gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
+			end
+		end		
+	elseif root == 'dread' then
+		-- Dread Spikes, out of era, but coming soonish
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Dreadspikes,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.Dreadspikes,gProfile.Sets.CurrentGear);
+		end			
+	else
+		-- All other dark magic spells 
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_DarkMagic,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.DarkMagic,gProfile.Sets.CurrentGear);
+		end
+	end
+end		-- MidcastDarkMagic
+
+--[[
+	MidcastDivineMagic handles all of the equipment management when a divine spell
+	is cast. Divine Magic is highly dependent on the level of the divine magic skill
+	and MND. This routine handles three types of divine magic: offensive "nukes",
+	Enfeebling, and Enhancing.
+--]]
+
+function MidcastDivineMagic()
+	local spell = gData.GetAction();
+	local root,pDay,pWeather,sGear;
+	local bTank,sEle;
+	
+	bTank = gcdisplay.GetToggle('Tank');
+	if bTank == nil then
+		bTank = false;
+	end
+	
+	root = fGetRoot(spell.Name);
+	
+	if table.find({'banish','banishga','holy','enlight'},root) ~= nil then
+		-- Offensive Divine
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_OffensiveDivine,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.OffensiveDivine,gProfile.Sets.CurrentGear);
+		end
+		
+		-- Check for an elemental obi. First determine if a bonus is possible 
+		-- based on day's element and/or weather
+		sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+		if sGear ~= nil then
+			pDay,pWeather = fCheckObiDW(sEle);
+			if pDay + pWeather > 0 then
+				gProfile.Sets.CurrentGear['Waist'] = sGear;
+			end
+		end	
+	elseif table.find({'flash','repose'},root) ~= nil then
+		-- Enfeebling Divine
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnfeebleDivine,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.EnfeebleDivine,gProfile.Sets.CurrentGear);
+		end
+	else
+		-- Enhancing Divine
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnhanceDivine,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.EnhanceDivine,gProfile.Sets.CurrentGear);
+		end
+	end
+	
+	-- And see if an elemental staff would be useful, for the affinity
+	sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
+	if sGear ~= nil then
+		gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
+	end			
+end		-- MidcastDivineMagic
+
+--[[
+	MidcastEnfeeblingMagic handles all of the equipment management when a enfeeble
+	spell is cast. There are two subdivisions of enfeeble spells, those that depend
+	on INT and those that depend on MND. The rest of the gear details are fairly in
+	common: you want high enfeeble magic skill, magical accuracy, etc.
+--]]
+
+function MidcastEnfeeblingMagic()
+	local spell = gData.GetAction();
+	local root,bTank,sGear,sEle;
+	local pDay,pWeather;
+	
+	bTank = gcdisplay.GetToggle('Tank');
+	if bTank == nil then
+		bTank = false;
+	end
+	
+	root = fGetRoot(spell.Name);
+	
+	if table.find(gcinclude.tSpell['int'],root) ~= nil then
+		-- INT: gravity,bind,blind,dispel,sleep,sleepga,poison,poisonga
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnfeeblingINT,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.EnfeeblingINT,gProfile.Sets.CurrentGear);
+		end		
+	else
+		-- MND: paralyze,silence,slow,slowga,frazzle,distract,dia,diaga
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnfeeblingMND,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.EnfeeblingMND,gProfile.Sets.CurrentGear);
+		end			
+	end
+	
+	-- See if an elemental obi would make sense for the Magical Elemental accuracy
+	sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+	if sGear ~= nil then
+		pDay,pWeather = fCheckObiDW(sEle);
+		if pDay + pWeather > 0 then
+			gProfile.Sets.CurrentGear['Waist'] = sGear;
+		end
+	end
+		
+	-- And then if an elemental staff would be useful, for the affinity
+	sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
+	if sGear ~= nil then
+		gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
+	end
+end		-- MidcastEnfeeblingMagic
+
+--[[
+	MidcastEnhancingMagic handles all of the equipment management when a enhancing
+	spell is cast. Enhancing magic is sort of a catch-all category. It includes bar-
+	spells, en-spells, protect/shell, regen, spikes, teleports, and warps.
+--]]
+
+function MidcastEnhancingMagic()
+	local spell = gData.GetAction();
+	local root,bTank,sGear,sEle;
+	local pDay,pWeather;
+	
+	bTank = gcdisplay.GetToggle('Tank');
+	if bTank == nil then
+		bTank = false;
+	end
+	
+	root = fGetRoot(spell.Name);
+	
+	if table.find(gcinclude.tSpell['barspell']['ele'],root) ~= nil or 
+		table.find(gcinclude.tSpell['barspell']['status'],root) ~= nil then
+		-- A bar spell. Use inline conditional to distinguish type, as needed
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Barspell,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.Barspell,gProfile.Sets.CurrentGear);
+		end	
+	elseif table.find(gcinclude.tSpell['enspell'],root) ~= nil then
+		-- En-spell: en"element". Sword enhancing gear applies to all melee
+		-- weapons and is applied when the spell is cast. Damage is calculated
+		-- after the weapon hits.
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Enspell,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.Enspell,gProfile.Sets.CurrentGear);
+		end
+		-- See if an elemental obi would make sense for the Magical Elemental accuracy
+		sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+		if sGear ~= nil then
+			pDay,pWeather = fCheckObiDW(sEle);
+			if pDay + pWeather > 0 then
+				gProfile.Sets.CurrentGear['Waist'] = sGear;
+			end
+		end 
+	elseif table.find(gcinclude.tSpell['spikes'],root) ~= nil then
+		-- Spike spell: Blaze, Ice, and Shock. Damage based on INT (capped), MAB, 
+		-- day/weather bonuses, Magic Affinity at time of hit. Enhancing spike gear 
+		-- is equipped when cast
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Spike,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.Spike,gProfile.Sets.CurrentGear);
+		end	
+		-- See if an elemental obi would make sense for the Magical Elemental accuracy
+		sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+		if sGear ~= nil then
+			pDay,pWeather = fCheckObiDW(sEle);
+			if pDay + pWeather > 0 then
+				gProfile.Sets.CurrentGear['Waist'] = sGear;
+			end
+		end
+	elseif root == 'stoneskin' then
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Stoneskin,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.Stoneskin,gProfile.Sets.CurrentGear);
+		end	
+	elseif root == 'sneak' then
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Sneak,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.Sneak,gProfile.Sets.CurrentGear);
+		end		
+	elseif root == 'invisible' then
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Invisible,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.Invisible,gProfile.Sets.CurrentGear);
+		end	
+	elseif root == 'phalanx' then
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Phalanx,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.Phalanx,gProfile.Sets.CurrentGear);
+		end			
+	else
+		-- Catch all for the rest of the enhancing spells
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnhancingMagic,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.EnhancingMagic,gProfile.Sets.CurrentGear);
+		end	
+	end
+end		-- MidcastEnhancingMagic
+
+--[[
+	MidcastElementalMagic handles all of the equipment management when a elemental
+	spell is cast. Elemental magic on HorizonXI falls into two categories: nukes and
+	debuffs. (You could argue that ancient magic should be broken out too, but for
+	now it falls under nukes.) All elemental spells are INT based. Nukes are based
+	on the difference in INT between the caster and the target whereas for debuffs,
+	the caster's INT is used to determine the amount of damage each tick the debuff
+	does as well as how much the target stat is lowered. Elemental magic skill is
+	used to determine accuracy and spell interruption rate.
+--]]
+
+function MidcastElementalMagic()
+	local spell = gData.GetAction();
+	local root,bTank,sGear,sEle;
+	local pDay,pWeather;
+	
+	bTank = gcdisplay.GetToggle('Tank');
+	if bTank == nil then
+		bTank = false;
+	end
+	
+	root = fGetRoot(spell.Name);
+	
+	if table.find(gcinclude.tSpell['eDebuff'],root) ~= nil then
+		-- Elemental debuff
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_ElementalDebuff,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.ElementalDebuff,gProfile.Sets.CurrentGear);
+		end			
+	else
+		-- Nuke
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_ElementalNuke,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.ElementalNuke,gProfile.Sets.CurrentGear);
+		end				
+	end
+	
+	-- See if an elemental obi would make sense for the Magical Elemental accuracy
+	sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+	if sGear ~= nil then
+		pDay,pWeather = fCheckObiDW(sEle);
+		if pDay + pWeather > 0 then
+			gProfile.Sets.CurrentGear['Waist'] = sGear;
+		end
+	end
+		
+	-- And then if an elemental staff would be useful, for the affinity
+	sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
+	if sGear ~= nil then
+		gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
+	end	
+end		-- MidcastElementalMagic
+
+--[[
+	MidcastSummoning handles all of the equipment management when a avatar/spirit
+	summoning spell is cast. This routine is straightforward. While some gear is
+	more advantageous than others, that can all be handled with inline conditionals.
+--]]
+
+function MidcastSummoning()
+	local bTank;
+
+	bTank = gcdisplay.GetToggle('Tank');
+	
+	if bTank == nil then
+		bTank = false;
+	end
+	
+	if bTank == true then
+		gcinclude.MoveToCurrent(gProfile.Sets.Tank_Summoning,gProfile.Sets.CurrentGear);
+	else
+		gcinclude.MoveToCurrent(gProfile.Sets.Summoning,gProfile.Sets.CurrentGear);
+	end
+end		-- MidcastSummoning
+
+--[[
+	MidcastBlueMagic handles all of the equipment management when a blue magic
+	spell is cast.
+	
+	WIP: Until more details are released on how HorizonXI are implementing blue
+	magic, this function is nothing but a stub function
+--]]
+
+function MidcastBlueMagic()
+end		-- MidcastBlueMagic
+
+--[[
+	fMidcastGeomancy handles all of the equipment management when a geomancy magic
+	spell is cast.
+	
+	WIP: Until more details are released on how HorizonXI is implementing geomancy
+	magic, this function is nothing but a stub function
+--]]
+
+function MidcastGeomancy()
+end		-- MidcastGeomancy
+
+--[[
+	fMidcastNinjutsu handles all of the equipment management when a ninjutsu spell
+	is cast.
+--]]
+
+function MidcastNinjutsu()
+end		-- MidcastNinjutsu
+
+--[[
+	fHandleMidcast is a coordinating routine that's used to call the independent types
+	of magic routines. Unlike the previous implementation, the multitude of tiers are
+	collapsed to help give the player agency.
+--]]
+
+function gcinclude.fHandleMidcast()
+	local spell = gData.GetAction();
+	
+	if spell.Skill == 'Singing' then
+		gcinclude.HandleMidcast(gcdisplay.GetToggle('Tank') == true);
+		--MidcastSinging();
+	elseif spell.Skill == 'Healing Magic' then
+		MidcastHealingMagic();
+	elseif spell.Skill == 'Dark Magic' then
+		MidcastDarkMagic();
+	elseif spell.Skill == 'Divine Magic' then
+		MidcastDivineMagic();
+	elseif spell.Skill == 'Enfeebling Magic' then
+		MidcastEnfeeblingMagic();
+	elseif spell.Skill == 'Enhancing Magic' then
+		MidcastEnhancingMagic();
+	elseif spell.Skill == 'Elemental Magic' then
+		MidcastElementalMagic();
+	elseif spell.Skill == 'Summoning' then
+		MidcastSummoning();
+	--elseif spell.Skill == 'Blue Magic' then
+	--	MidcastBlueMagic();
+	--elseif spell.Skill == 'Geomancy' then
+	--	MidcastGeomancy();
+	elseif spell.Skill == 'Ninjutsu' then
+		gcinclude.HandleMidcast(gcdisplay.GetToggle('Tank') == true);
+		--MidcastNinjutsu();
+	end
+end		-- fMidcastNinjutsu
 
 --[[
 	HandleMidcast is the second function invoked when a player casts a spell. It equips gear appropriate for 
@@ -4431,7 +4742,7 @@ end		-- gcinclude.Initialize
 function gcinclude.HandleMidcast(bTank)
 	local player = gData.GetPlayer();
 	local spell = gData.GetAction();
-	local obi;
+	local obi,sEle;
 	local sSet,sGear;
 	local cKey;
 
@@ -4442,48 +4753,49 @@ function gcinclude.HandleMidcast(bTank)
 	gcinclude.settings.priorityMidCast = string.upper(gcinclude.settings.priorityMidCast);
 	for i = 1,string.len(gcinclude.settings.priorityMidCast),1 do
 		cKey = string.sub(gcinclude.settings.priorityMidCast,i,i);
-
+		sGear = nil;
+		
 		if cKey == 'A' then				-- midcast gear
-			gcinclude.fMoveToCurrent(gProfile.Sets.Midcast,gProfile.Sets.CurrentGear);
+			gcinclude.MoveToCurrent(gProfile.Sets.Midcast,gProfile.Sets.CurrentGear);
 		elseif cKey == 'B' then			-- Spell Interruption Rate gear
 			if spell.Skill ~= 'Singing' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.SIR,gProfile.Sets.CurrentGear);
+				gcinclude.MoveToCurrent(gProfile.Sets.SIR,gProfile.Sets.CurrentGear);
 			end
 		elseif cKey == 'C' then			-- INT/MND gear?
 			sSet = fWhichStat(spell.Name);
 			if sSet ~= nil then
 				if sSet == 'MND' then
 					if bTank == true then
-						gcinclude.fMoveToCurrent(gProfile.Sets.Tank_MND,gProfile.Sets.CurrentGear);
+						gcinclude.MoveToCurrent(gProfile.Sets.Tank_MND,gProfile.Sets.CurrentGear);
 					else
-						gcinclude.fMoveToCurrent(gProfile.Sets.MND,gProfile.Sets.CurrentGear);
+						gcinclude.MoveToCurrent(gProfile.Sets.MND,gProfile.Sets.CurrentGear);
 					end
 				elseif sSet == 'INT' then
 					if bTank == true then
-						gcinclude.fMoveToCurrent(gProfile.Sets.Tank_INT,gProfile.Sets.CurrentGear);
+						gcinclude.MoveToCurrent(gProfile.Sets.Tank_INT,gProfile.Sets.CurrentGear);
 					else
-						gcinclude.fMoveToCurrent(gProfile.Sets.INT,gProfile.Sets.CurrentGear);
+						gcinclude.MoveToCurrent(gProfile.Sets.INT,gProfile.Sets.CurrentGear);
 					end
 				end
 			end
 		elseif cKey == 'D' then			-- Magic Skill Type		
 			-- Now process for the skill type
 			if spell.Skill == 'Healing Magic' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.Healing,gProfile.Sets.CurrentGear);
+				gcinclude.MoveToCurrent(gProfile.Sets.Healing,gProfile.Sets.CurrentGear);
 			elseif spell.Skill == 'Dark Magic' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.Dark,gProfile.Sets.CurrentGear);
+				gcinclude.MoveToCurrent(gProfile.Sets.Dark,gProfile.Sets.CurrentGear);
 			elseif spell.Skill == 'Divine Magic' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.Divine,gProfile.Sets.CurrentGear);
+				gcinclude.MoveToCurrent(gProfile.Sets.Divine,gProfile.Sets.CurrentGear);
 			elseif spell.Skill == 'Enfeebling Magic' then				
-				gcinclude.fMoveToCurrent(gProfile.Sets.Enfeebling,gProfile.Sets.CurrentGear);
+				gcinclude.MoveToCurrent(gProfile.Sets.Enfeebling,gProfile.Sets.CurrentGear);
 			elseif spell.Skill == 'Enhancing Magic' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.Enhancing,gProfile.Sets.CurrentGear);
+				gcinclude.MoveToCurrent(gProfile.Sets.Enhancing,gProfile.Sets.CurrentGear);
 			elseif spell.Skill == 'Elemental Magic' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.Elemental,gProfile.Sets.CurrentGear);
+				gcinclude.MoveToCurrent(gProfile.Sets.Elemental,gProfile.Sets.CurrentGear);
 			elseif spell.Skill == 'Ninjutsu' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.Ninjutsu,gProfile.Sets.CurrentGear);
+				gcinclude.MoveToCurrent(gProfile.Sets.Ninjutsu,gProfile.Sets.CurrentGear);
 			elseif spell.Skill == 'Summoning' then	
-				gcinclude.fMoveToCurrent(gProfile.Sets.Summoning,gProfile.Sets.CurrentGear);
+				gcinclude.MoveToCurrent(gProfile.Sets.Summoning,gProfile.Sets.CurrentGear);
 			end
 
 			-- See if Magic Attack Bonus useful. It only affects offensive spells. (In the case
@@ -4493,43 +4805,43 @@ function gcinclude.HandleMidcast(bTank)
 			-- affected by MAB.
 			
 			if string.find('Healing Magic,Enfeebling Magic,Enhancing Magic,Ninjutsu,Summoning,Singing',spell.Skill) == nil then
-				gcinclude.fMoveToCurrent(gProfile.Sets.MAB,gProfile.Sets.CurrentGear);
+				gcinclude.MoveToCurrent(gProfile.Sets.MAB,gProfile.Sets.CurrentGear);
 			end
 		elseif cKey == 'E' then			--Magical accuracy
-			gcinclude.fFractionalAccuracy(gProfile.Sets.Macc,nil);
+			gcinclude.FractionalAccuracy(gProfile.Sets.Macc);
 		elseif cKey == 'F' then			-- Spell specific gear
 			if string.match(spell.Name, 'Stoneskin') then
 				if bTank == true then
-					gcinclude.fMoveToCurrent(gProfile.Sets.TANK_MND,gProfile.Sets.CurrentGear);
+					gcinclude.MoveToCurrent(gProfile.Sets.TANK_MND,gProfile.Sets.CurrentGear);
 				else				
-					gcinclude.fMoveToCurrent(gProfile.Sets.MND,gProfile.Sets.CurrentGear);
+					gcinclude.MoveToCurrent(gProfile.Sets.MND,gProfile.Sets.CurrentGear);
 				end
 				-- Now load the specific stoneskin set	
-				gcinclude.fMoveToCurrent(gProfile.Sets.Stoneskin,gProfile.Sets.CurrentGear);
+				gcinclude.MoveToCurrent(gProfile.Sets.Stoneskin,gProfile.Sets.CurrentGear);
 			elseif string.match(spell.Name, 'Drain') then
-				gcinclude.fMoveToCurrent(gProfile.Sets.Drain,gProfile.Sets.CurrentGear);
+				gcinclude.MoveToCurrent(gProfile.Sets.Drain,gProfile.Sets.CurrentGear);
 			elseif string.match(spell.Name, 'Aspir') then
-				gcinclude.fMoveToCurrent(gProfile.Sets.Aspir,gProfile.Sets.CurrentGear);
+				gcinclude.MoveToCurrent(gProfile.Sets.Aspir,gProfile.Sets.CurrentGear);
 			elseif string.match(spell.Name, 'Sneak') then
-				gcinclude.fMoveToCurrent(gProfile.Sets.Sneak,gProfile.Sets.CurrentGear);
+				gcinclude.MoveToCurrent(gProfile.Sets.Sneak,gProfile.Sets.CurrentGear);
 			elseif string.match(spell.Name, 'Invisible') then
-				gcinclude.fMoveToCurrent(gProfile.Sets.Invisible,gProfile.Sets.CurrentGear);
+				gcinclude.MoveToCurrent(gProfile.Sets.Invisible,gProfile.Sets.CurrentGear);
 			elseif string.match(spell.Name, 'Phalanx') then
-				gcinclude.fMoveToCurrent(gProfile.Sets.Phalanx,gProfile.Sets.CurrentGear);
+				gcinclude.MoveToCurrent(gProfile.Sets.Phalanx,gProfile.Sets.CurrentGear);
 			end
 		elseif cKey == 'G' then				-- Elemental Obi
 			if spell.Skill ~= 'Summoning' then
 				local sRoot = fGetRoot(spell.Name);
-				sGear = gcinclude.fCheckForElementalGearByValue('obi','MEacc',sRoot);
+				sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',sRoot);
 				if sGear ~= nil then
-					gProfile.Sets.CurrentGear['Waist'] = obi;
+					gProfile.Sets.CurrentGear['Waist'] = sGear;
 				end
 			end
 		elseif cKey == 'H' then				-- Elemental Stave
 			if spell.Skill == 'Singing' then
-				sGear = gcinclude.fCheckForElementalGearByValue('staff','SongAffinity',spell.Name);
+				sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','SongAffinity',spell.Name);
 			elseif spell.Skill ~= 'Summoning' then
-				sGear = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
+				sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
 			-- The elemental staff has no effect on the summons. It does have an effect if
 			-- you have a pet out. Skip it here, but make sure handles in the job file.
 			end
@@ -4537,99 +4849,81 @@ function gcinclude.HandleMidcast(bTank)
 			if sGear ~= nil then
 				gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
 			end
-			sGear = nil;
 		end
 	end
 end		-- gcinclude.HandleMidcast
-	
+
 --[[
-	HandleWeaponskill loads the gear appropriately for the weapon skill you're doing
+	gcinclude.fHandleWeaponskill loads the appropriate gear for the weapon skill
+	you're doing
 --]]
 
-function gcinclude.HandleWeaponskill(bTank)
+function gcinclude.fHandleWeaponskill()
 	local ws = gData.GetAction();
+	local lName = string.lower(ws.Name);
+	local sName,sEle;
+	local t = {};
 	
-	if bTank == nil then	-- Need to check because of transition state of change
-		bTank = false;
-	end
-		
- 	gcinclude.settings.priorityWeaponSkill = string.upper(gcinclude.settings.priorityWeaponSkill);
+	gcinclude.settings.priorityWeaponSkill = string.upper(gcinclude.settings.priorityWeaponSkill);
 	for i = 1,string.len(gcinclude.settings.priorityWeaponSkill),1 do
 		cKey = string.sub(gcinclude.settings.priorityWeaponSkill,i,i);
 		if cKey == 'A' then			-- weaponskill set
-			local sWS = gcinclude.WsStat(ws.Name,'STR');
-
-			if sWS == 'WS_STR' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_STR,gProfile.Sets.CurrentGear);
-			elseif sWS == 'WS_STRAGI' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_STRAGI,gProfile.Sets.CurrentGear);
-			elseif sWS == 'WS_STRDEX' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_STRDEX,gProfile.Sets.CurrentGear);
-			elseif sWS == 'WS_STRINT' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_STRINT,gProfile.Sets.CurrentGear);
-			elseif sWS == 'WS_STRINT_30_20' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_STRINT_30_20,gProfile.Sets.CurrentGear);
-			elseif sWS == 'WS_STRMND' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_STRMND,gProfile.Sets.CurrentGear);
-			elseif sWS == 'WS_STRMND_30_50' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_STRMND_30_50,gProfile.Sets.CurrentGear);					
-			elseif sWS == 'WS_STRVIT' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_STRVIT,gProfile.Sets.CurrentGear);
-			elseif sWS == 'WS_AGI' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_AGI,gProfile.Sets.CurrentGear);		
-			elseif sWS == 'WS_CHR' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_CHR,gProfile.Sets.CurrentGear);
-			elseif sWS == 'WS_DEX' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_DEX,gProfile.Sets.CurrentGear);
-			elseif sWS == 'WS_DEXAGI' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_DEXAGI,gProfile.Sets.CurrentGear);
-			elseif sWS == 'WS_DEXCHR' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_DEXCHR,gProfile.Sets.CurrentGear);
-			elseif sWS == 'WS_DEXINT' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_DEXINT,gProfile.sets.CurrentGear);
-			elseif sWS == 'WS_INT' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_INT,gProfile.Sets.CurrentGear);
-			elseif sWS == 'WS_INTMND' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_INTMND,gProfile.Sets.CurrentGear);
-			elseif sWS == 'WS_MND' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_MND,gProfile.Sets.CurrentGear);
-			elseif sWS == 'WS_VIT' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_VIT,gProfile.Sets.CurrentGear);			
-			elseif sWS == 'WS_HP' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_HP,gProfile.Sets.CurrentGear);						
-			elseif sWS == 'WS_Skill' then
-				gcinclude.fMoveToCurrent(gProfile.Sets.WS_Skill,gProfile.Sets.CurrentGear);	
+			for i,j in pairs(gcinclude.tWeaponSkills) do
+				if table.find(j,lName) ~= nil then
+					sName = 'WS_' .. i;
+					t = fGetTableByName(sName);
+					if t ~= nil then
+						gcinclude.MoveToCurrent(t,gProfile.Sets.CurrentGear);
+					end
+				break;
+				end
 			end
-		-- An elemental gorget will add the fTP (at least 10% more damage) to the first hit 
-		-- of an elemental weapon skill (and many multi-hit weapon skills replicate the fTP
-		-- for all the hits.) Also, they give +10 Accuracy to all of the weapon skill's hits
-		-- and a 1% chance of not depleting the player's TP after the weapon skill.
-		elseif cKey == 'B' then		-- elemental gorget	
-			local sGorget = gcinclude.fCheckForElementalGearByValue('gorget','eleWS',ws.Name);
+		elseif cKey == 'B' then		-- elemental gorget
+			-- An elemental gorget will add the fTP (at least 10% more damage) to the first hit 
+			-- of an elemental weapon skill (and many multi-hit weapon skills replicate the fTP
+			-- for all the hits.) Also, they give +10 Accuracy to all of the weapon skill's hits
+			-- and a 1% chance of not depleting the player's TP after the weapon skill.
+	
+			local sGorget,sEle = gcinclude.fCheckForElementalGearByValue('gorget','eleWS',ws.Name);
 			if sGorget ~= nil then
 				gProfile.Sets.CurrentGear['Neck'] = sGorget;
-			end		
-		elseif cKey == 'D' then		-- accuracy	
-			gcinclude.fFractionalAccuracy(gProfile.Sets.Accuracy,gProfile.Sets.Tank_Accuracy);
+			end
+	
+		elseif cKey == 'D' then		-- accuracy		
+			-- Next check on accuracy. Use Tank_accuracy if /tank = true
+			local b = gcdisplay.GetToggle('Tank');
+			if table.find(gcinclude.tWeaponSkills['RANGED_AGI'],lname) ~= nil or
+				table.find(gcinclude.tWeaponSkills['RANGED_STRAGI'],lname) ~= nil then
+				if b ~= nil and b == true then
+					gcinclude.FractionalAccuracy(gProfile.Sets.Tank_Ranged_Accuracy);
+				else
+					gcinclude.FractionalAccuracy(gProfile.Sets.Ranged_Accuracy);
+				end
+			elseif b ~= nil and b == true then
+				gcinclude.FractionalAccuracy(gProfile.Sets.Tank_Accuracy);
+			else
+				gcinclude.FractionalAccuracy(gProfile.Sets.Accuracy);
+			end
 		elseif cKey == 'E' then		-- elemental obi
 --[[
-			If the weaponskill is elemental and is closing a skillchain, then if the
-			conditions for equipping an elemental obi are advantageous, it should be
-			equipped now. Unfortunately I have no idea how to detect the closing of
-			a skillchain and the automatic equipment of an elemental obi could 
-			adversely affect the damage, so this section is not implemented. If I can
-			ever figure out how to detect closing a skillchain, I will readdress this.
-															- CCF, 1/12/2024
---]]	
-		end				
+	If the weaponskill is elemental and is closing a skillchain, then if 
+	the conditions for equipping an elemental obi are advantageous, it 
+	should be equipped now. Unfortunately I have no idea how to detect 
+	the closing of a skillchain and the automatic equipping of an elemental 
+	obi could adversely affect the damage, so this section is not 
+	implemented. If I can ever figure out how to detect closing a 
+	skillchain, I will readdress this.
+	
+	- CCF, 1/12/2024
+--]]
+		end
 	end
 	
-	-- Certain weapon skills can take advantage of magic attack bonus. Check here
-	-- and equip gear appropriately
-	ws.Name = string.lower(ws.Name);
-	if string.find('red lotus blade,sanguine blade',ws.Name) ~= nil then
-		gcinclude.fMoveToCurrent(gProfile.Sets.MAB,gProfile.Sets.CurrentGear);	
-	end	
-end		-- gcinclude.HandleWeaponskill
+	-- Certain weapon skills can take advantage of magic attack bonus. 
+	-- Check here and equip gear appropriately
+	if string.find('red lotus blade,sanguine blade',lName) ~= nil then
+		gcinclude.MoveToCurrent(gProfile.Sets.MAB,gProfile.Sets.CurrentGear);	
+	end		
+end		-- gcinclude.fHandleWeaponskill
 
 return gcinclude;

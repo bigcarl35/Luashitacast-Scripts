@@ -23,9 +23,9 @@ local JobBar = T{['GSwap'] = {'ALL','MS'},
 				 ['Tank'] = {'PLD,NIN,RUN,WAR,DRK,THF,RDM','M'},
 				 ['Idle'] = {'PLD,NIN,RUN,WAR,DRK,THF,RDM','M'},
 				 ['WSwap'] = {'-SMN,BLM','M'},		-- Some jobs swap weapons all the time
-				 ['TH'] = {'THF','M'},				-- THF field, only valid if THF is main job
-				 ['AJug'] = {'BST','M'},			-- BST field, only valid if BST is main job
-				 ['DB'] = {'BST','M'},				-- BST field, only valid if BST is main job
+				 ['TH'] = {'THF','M'},
+				 ['AJug'] = {'BST','M'},
+				 ['DB'] = {'BST','M'},
 				 ['Region'] = {'ALL','MS'},
 				 ['Instrument'] = {'BRD','M'},
 				 ['sBP'] = {'SMN','MS'}};
@@ -34,15 +34,15 @@ local fontSettings = T{
 	visible = true,
 	font_family = 'Arial',
 	font_height = 14,
-	color = 0xFFFFFFFF,
-	position_x = 300,
+	color = 0xFFFFFFFF,			-- White
+	position_x = 275, --300,
 	position_y = 0,
 	background = T{
 		visible = true,
-		color = 0xFF000000,
+		color = 0xFF000000,		-- Black
 	}
 };
-
+	
 --[[
 	ShowHelp Displays help for all the commands across jobs
 --]]
@@ -65,7 +65,7 @@ function gcdisplay.ShowHelp()
 	print(chat.header('Help'):append(chat.message('/maxsong name [back] -- Determines the highest level song your current jobs can cast that has the passed name or next to highest')));
 	print(chat.header('Help'):append(chat.message('/equipit code|name [slot] [1|2] --Equips specified item in the specified slot and turns off /gswap.')));
 	print(chat.header('Help'):append(chat.message('/rc -- Displays who controls what region')));
-	print(chat.header('Help'):append(chat.message('/petfood [name|ALL|MAX|MIN] --Equips the specified pet food or determines best food and equips it.')));
+	print(chat.header('Help'):append(chat.message('/petfood name --Equips the specified pet food.')));
 
 	if string.find('SMN,BLM',Main) == nil then
 		print(chat.header('Help'):append(chat.message('/wswap -- Toggles whether automatic weapon swapping is permitted. Default is FALSE.')));
@@ -241,6 +241,10 @@ function gcdisplay.GetCycle(name)
 	end
 end		-- gcdisplay.GetCycle
 
+--[[
+	SetSlots stores the list of locks or accuracy slots, for displaying
+--]]
+
 function gcdisplay.SetSlots(sTarget,sLList)
 	if sTarget == 'locks' then
 		Locks = sLList;
@@ -293,6 +297,76 @@ function gcdisplay.bDisplayIt(s)
 end		-- gcdisplay.bDisplayIt
 
 --[[
+	fColor will return the colorized string according to the keyword's color. All
+	colors are denoted in hex
+--]]
+
+function fColor(skw,sMsg)
+	local tkwEle = {	-- cOORRGGBB where OO is opacity, RR red, GG green, BB blue
+		{ ['kw'] = 'firesday',		 ['color'] = '|cFFFF0000|' }, -- red
+		{ ['kw'] = 'earthsday',		 ['color'] = '|cFFC19A6B|' }, -- camel
+		{ ['kw'] = 'watersday',		 ['color'] = '|cFF1F51FF|' }, -- neon blue
+		{ ['kw'] = 'windsday',		 ['color'] = '|cFF4CBB17|' }, -- kelly green
+		{ ['kw'] = 'iceday',		 ['color'] = '|cFF00FFFF|' }, -- aqua
+		{ ['kw'] = 'lightningday',   ['color'] = '|cE1C16EFF|' }, -- "light purple"
+		{ ['kw'] = 'lightsday', 	 ['color'] = '|cFFFFFFFF|' }, -- white
+		{ ['kw'] = 'darksday', 		 ['color'] = '|cFF71797E|' }, -- steel gray
+		{ ['kw'] = 'clear', 		 ['color'] = '|cFFA7C7E7|' }, -- pastel blue
+		{ ['kw'] = 'sunshine', 		 ['color'] = '|cFFFFEA00|' }, -- bright yellow
+		{ ['kw'] = 'clouds', 		 ['color'] = '|cFFFFFDD0|' }, -- cream
+		{ ['kw'] = 'fog',	 		 ['color'] = '|cFFB2BEB5|' }, -- ash gray
+		{ ['kw'] = 'fire', 			 ['color'] = '|cFFFF0000|' }, -- red
+		{ ['kw'] = 'fire x2', 		 ['color'] = '|cFFFF0000|' }, -- red
+		{ ['kw'] = 'water', 		 ['color'] = '|cFF1F51FF|' }, -- neon blue
+		{ ['kw'] = 'water x2', 		 ['color'] = '|cFF1F51FF|' }, -- neon blue
+		{ ['kw'] = 'earth', 		 ['color'] = '|cFFC19A6B|' }, -- camel
+		{ ['kw'] = 'earth x2', 		 ['color'] = '|cFFC19A6B|' }, -- camel
+		{ ['kw'] = 'wind',	 		 ['color'] = '|cFF4CBB17|' }, -- kelly green
+		{ ['kw'] = 'wind x2', 		 ['color'] = '|cFF4CBB17|' }, -- kelly green
+		{ ['kw'] = 'ice',	 		 ['color'] = '|cFF00FFFF|' }, -- aqua
+		{ ['kw'] = 'ice x2', 		 ['color'] = '|cFF00FFFF|' }, -- aqua
+		{ ['kw'] = 'thunder', 		 ['color'] = '|cE1C16EFF|' }, -- "light purple"
+		{ ['kw'] = 'thunder x2',	 ['color'] = '|cE1C16EFF|' }, -- "light purple"
+		{ ['kw'] = 'light', 		 ['color'] = '|cFFFFFFFF|' }, -- white
+		{ ['kw'] = 'light x2', 		 ['color'] = '|cFFFFFFFF|' }, -- white
+		{ ['kw'] = 'dark',	 		 ['color'] = '|cFF71797E|' }, -- steel gray
+		{ ['kw'] = 'dark x2', 		 ['color'] = '|cFF71797E|' }, -- steel gray
+		{ ['kw'] = 'full moon',		 ['color'] = '|cFFFFFFFF|' }, -- white
+		{ ['kw'] = 'waning gibbous', ['color'] = '|cFFE5E4E2|' }, -- platinum
+		{ ['kw'] = 'last quarter', 	 ['color'] = '|cFFC0C0C0|' }, -- silver
+		{ ['kw'] = 'waning crescent',['color'] = '|cFF848884|' }, -- smoke
+		{ ['kw'] = 'new moon', 		 ['color'] = '|cFF71797E|' }, -- steel gray
+		{ ['kw'] = 'waxing crescent',['color'] = '|cFF848884|' }, -- smoke
+		{ ['kw'] = 'first quarter',  ['color'] = '|cFFC0C0C0|' }, -- silver
+		{ ['kw'] = 'waxing gibbous', ['color'] = '|cFFE5E4E2|' }, -- platinum
+		{ ['kw'] = 'green',			 ['color'] = '|cFF00FF00|' }, -- green
+		{ ['kw'] = 'red',			 ['color'] = '|cFFFF0000|' }, -- red
+	};
+	local sEnd = '|r';
+	local sfColor;
+	local sColor = nil;
+	
+	if skw == nil then
+		return ' ';
+	end
+	
+	skw = string.lower(skw);
+	for i,j in pairs(tkwEle) do
+		if j['kw'] == skw then
+			sColor = j['color'];
+			break;
+		end
+	end
+	
+	if sColor == nil then
+		sfColor = sMsg;
+	else
+		sfColor = sColor .. sMsg .. sEnd;
+	end
+	return sfColor;
+end		-- fColor
+
+--[[
 	Initialize creates the display bar
 --]]
 
@@ -306,33 +380,37 @@ function gcdisplay.Initialize()
 			if gcdisplay.bDisplayIt(k) == true then
 				display = display .. '   ';
 				if (v == true) then
-					display = display .. '|cFF00FF00|' .. k .. '|r';
+					display = display .. fColor('green',k);
 				else
-					display = display .. '|cFFFF0000|' .. k .. '|r';
+					display = display .. fColor('red',k);
 				end
 			end
 		end
 		display = display .. ' |';
 		for key, value in pairs(Cycles) do
 			if gcdisplay.bDisplayIt(key) == true then
-				display = display .. '  ' .. key .. ': ' .. '|cFF00FF00|' .. value.Array[value.Index] .. '|r';
+				display = display .. '  ' .. key .. ': ' .. fColor('green',value.Array[value.Index]);
 			end
 		end
 		
 		-- Accuracy slots
 		if AccTier ~= 'None' then
-			display = display .. ' | Acc: ' .. '|cFF00FF00|' .. AccTier .. '|r';
+			display = display .. ' | Acc: ' .. fColor('green',AccTier);
 		else
-			display = display .. ' | Acc: ' .. '|cFFFF0000|' .. AccTier .. '|r';
+			display = display .. ' | Acc: ' .. fColor('red',AccTier);
 		end
 		
 		-- Locks
 		if Locks ~= 'None' then
-			display = display .. ' | Locks: ' .. '|cFF00FF00|' .. Locks .. '|r';
+			display = display .. ' | Locks: ' .. fColor('green',Locks);
 		else
-			display = display .. ' | Locks: ' .. '|cFFFF0000|' .. Locks .. '|r';
+			display = display .. ' | Locks: ' .. fColor('red',Locks);
 		end
-		
+
+		local env = gData.GetEnvironment();
+		display = display .. string.format(' | %s | %02d:%02d | %d%% %s | %s ',
+			fColor(env.Day,env.Day),env.Timestamp.hour,env.Timestamp.minute,env.MoonPercent,fColor(env.MoonPhase,env.MoonPhase),fColor(env.RawWeather,env.RawWeather));
+		--display = fColor('full moon') ..' | ' .. fColor('waning gibbous') ..' | ' .. fColor('last quarter') ..' | ' .. fColor('waning crescent') .. ' | ' .. fColor('new moon') .. ' | ' .. fColor('waxing crescent') .. ' | ' .. fColor('first quarter') .. ' | ' .. fColor('waxing gibbous') .. ' | ' .. fColor('full moon');
 		gcdisplay.FontObject.text = display;
 	end);
 end		-- gcdisplay.Initialize
