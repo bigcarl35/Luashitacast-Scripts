@@ -236,6 +236,7 @@ local sets = {
 --]]
 
 	['Precast'] = {	
+		Ears = 'Loquac. Earring',
 	},
 
 --[[
@@ -540,6 +541,7 @@ local sets = {
 --]]
 	['ElementalNuke'] = {
 		Rings = 'Tamas Earring',
+		Hands = 'Abs. Gauntlets +1',
 		Feet  = 'Mannequin Pumps',
 	},
 	
@@ -571,6 +573,9 @@ local sets = {
 --]]
 
 	['ElementalDebuff'] = {
+		Rings = 'Tamas Earring',
+		Hands = 'Abs. Gauntlets +1',
+		Feet  = 'Mannequin Pumps',
 	},
 	
 	['Tank_ElementalDebuff'] = {
@@ -606,6 +611,9 @@ local sets = {
 --]]
 	
 	['DarkMagic'] = {
+		Head = 'Chaos Burgeonet',
+		Hands = 'Crimson Fng. Gnt.',
+		Legs = 'Abyss Flanchard',
 	},
 	
 	['Tank_DarkMagic'] = {
@@ -646,6 +654,9 @@ local sets = {
 --]]
 
 	['Drain'] = {
+		Head = 'Chaos Burgeonet',
+		Hands = 'Crimson Fng. Gnt.',
+		Legs = 'Abyss Flanchard',	
 	},
 	
 	['Tank_Drain'] = {
@@ -667,6 +678,9 @@ local sets = {
 --]]
 
 	['Aspir'] = {
+		Head = 'Chaos Burgeonet',
+		Hands = 'Crimson Fng. Gnt.',
+		Legs = 'Abyss Flanchard',	
 	},
 	
 	['Tank_Aspir'] = {
@@ -748,6 +762,11 @@ local sets = {
 --]]
 	
 	['EnfeeblingINT'] = {
+		Body  = 'Chaos Cuirass',
+		Hands = 'Abs. Gauntlets',
+		Rings = 'Tamas Ring',
+		Legs  = 'Chaos Flanchard',
+		Feet  = 'Abyss Sollerets',
 	},
 	
 	['Tank_EnfeeblingINT'] = {
@@ -755,8 +774,11 @@ local sets = {
 	
 	['EnfeeblingMND'] = {
 	    Neck  = { 'Promise Badge', 'Justice Badge' },
-        Rings = { 'Tamas Ring', 'Tranquility Ring' },
+		Body  = 'Abyss Cuirass',
+        Rings = { 'Tamas Ring', 'Kshama Ring No.9' },
         Waist = 'Friar\'s Rope',
+		Legs  = 'Abyss Flanchard',
+		Feet  = 'Chs. Sollerets +1',
 	},
 	
 	['Tank_EnfeeblingMND'] = {
