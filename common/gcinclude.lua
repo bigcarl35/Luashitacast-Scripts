@@ -259,7 +259,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'water',
 										['NQ'] = { ['Name'] = 'Fire staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Vulcan\'s staff', ['Ref'] = {} }, 
-										['Affinity'] = { 'blaze','burn','firaga','fire','flare','enfire' },
+										['Affinity'] = { 'blaze','burn','firaga','fire','flare','enfire','katon' },
 										['SongAffinity'] = { 'ice threnody' },
 										['Summons'] = { 'ifrit','fire spirit','firespirit','fire' }
 										},
@@ -267,7 +267,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'fire',
 										['NQ'] = { ['Name'] = 'Ice staff', ['Ref'] = {} },
 										['HQ'] = {['Name'] = 'Aquilo\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'blizzaga','blizzard','freeze','frost','ice','enblizzard' },
+										['Affinity'] = { 'blizzaga','blizzard','freeze','frost','ice','enblizzard','jubaku','hyoton' },
 										['SongAffinity'] = { 'wind threnody' },
 										['Summons'] = { 'shiva','ice spirit','icespirit','ice' },
 										},
@@ -275,7 +275,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'ice',
 										['NQ'] = { ['Name'] = 'Wind staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Auster\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'aero','aeroga','choke','tornado','enaero' },
+										['Affinity'] = { 'aero','aeroga','choke','tornado','enaero','huton' },
 										['SongAffinity'] = { 'earth threnody' },
 										['Summons'] = { 'garuda','air spirit','airspirit','air','siren' },
 										},
@@ -283,7 +283,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'wind',
 										['NQ'] = { ['Name'] = 'Earth staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Terra\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'quake','rasp','stone','stonega','enstone' },
+										['Affinity'] = { 'quake','rasp','stone','stonega','enstone','hojo','doton' },
 										['SongAffinity'] = { 'lightning threnody', 'battlefield elegy', 'carnage elegy' },
 										['Summons'] = {'titan','earth spirit','earthspirit','earth' },
 										},
@@ -291,7 +291,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'earth',
 										['NQ'] = { ['Name'] = 'Thunder staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Jupiter\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'burst','shock','thundaga','thunder','enthunder' },
+										['Affinity'] = { 'burst','shock','thundaga','thunder','enthunder','raiton' },
 										['SongAffinity'] = { 'water threnody' },
 										['Summons'] = { 'ramuh','thunder spirit','thunderspirit','thunder' },
 										},
@@ -299,7 +299,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'thunder',
 										['NQ'] = { ['Name'] = 'Water staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Neptune\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'drown','flood','poison','water','waterga','enwater' },
+										['Affinity'] = { 'drown','flood','poison','water','waterga','enwater','dokumori','suiton' },
 										['SongAffinity'] = { 'fire threnody' },
 										['Summons'] = { 'leviathan','water spirit','waterspirit','water' },
 										},
@@ -315,7 +315,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'light',
 										['NQ'] = { ['Name'] = 'Dark staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Pluto\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'aspir','blind','bio','drain','sleep','sleepga','endark' },
+										['Affinity'] = { 'aspir','blind','bio','drain','sleep','sleepga','endark','kurayami' },
 										['SongAffinity'] = { 'light threnody' },
 										['Summons'] = { 'fenrir','diabolos','dark spirit','darkspirit','dark','atomos','odin' },
 										},
@@ -326,14 +326,14 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'water',
 										['Name'] = 'Karin obi', 
 										['Ref'] = {},
-										['MEacc'] = { 'burn','firaga','fire','flare','blaze','enfire','blaze' },
+										['MEacc'] = { 'burn','firaga','fire','flare','blaze','enfire','blaze','katon' },
 										['eleWS'] = { 'burning blade','red lotus blade','tachi: Kagero','flaming arrow','hot shot','wildfire' },
 									},
 									['ice'] = {
 										['Weak'] = 'fire',										
 										['Name'] = 'Hyorin obi', 
 										['Ref'] = {},
-										['MEacc'] = { 'frost','blizzaga','blizzard','freeze','paralyze','bind','distract','ice','enblizzard' },
+										['MEacc'] = { 'frost','blizzaga','blizzard','freeze','paralyze','bind','distract','ice','enblizzard','hyoton' },
 										['eleWS'] = { 'frostbite','freezebite','herculean slash','blade: to' },
 										['Other'] = 'elemental magic',
 										},												 
@@ -341,28 +341,28 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'ice',
 										['Name'] = 'Furin obi', 
 										['Ref'] = {},
-										['MEacc'] = { 'choke','aero','aeroga','tornado','silence','gravity','flurry','enaero' },
+										['MEacc'] = { 'choke','aero','aeroga','tornado','silence','gravity','flurry','enaero','huton' },
 										['eleWS'] = { 'gust slash','cyclone','aeolian edge','tachi: jinpu' },
 										},												 
 									['earth'] = { 
 										['Weak'] = 'wind',
 										['Name'] = 'Dorin obi', 
 										['Ref'] = {},
-										['MEacc'] = { 'rasp','quake','stone','stonega','slow','enstone' },
+										['MEacc'] = { 'rasp','quake','stone','stonega','slow','enstone','doton' },
 										['eleWS'] = { 'blade: chi','rock crusher','earth crusher' },
 										},
 									['thunder'] = { 
 										['Weak'] = 'earth',
 										['Name'] = 'Rairin obi', 
 										['Ref'] = {},
-										['MEacc'] = { 'shock','burst','thundaga','thunder','stun','enthunder' },
+										['MEacc'] = { 'shock','burst','thundaga','thunder','stun','enthunder','raiton' },
 										['eleWS'] = { 'cloudsplitter','thunder thrust','raiden thrust','tachi: goten' },
 										},
 									['water'] = { 
 										['Weak'] = 'thunder',
 										['Name'] = 'Suirin obi', 
 										['Ref'] = {},
-										['MEacc'] = { 'drown','flood','water','waterga','poison','enwater' },
+										['MEacc'] = { 'drown','flood','water','waterga','poison','enwater','suiton' },
 										['eleWS'] = { 'blade: teki','blade: yu' },
 										['Other'] = 'divine magic',
 										},
@@ -447,38 +447,45 @@ gcinclude.tElemental_gear = T{
 -- Listed below are spells grouped by a dependency or a type. These are 
 -- root names
 gcinclude.tSpell = {
-	['int']		 = { 
+	['int']		  =  { 
 					'gravity','blind','sleep','sleepga','poison',
 					'poisonga','bind','dispel','blaze','ice','shock', 
-				   },
-	['mnd']		 = {
+				     },
+	['mnd']		   = {
 					'paralyze','slow','slowga','frazzle','distract',
 					'dia','diaga','silence'
-				   },
-	['eDebuff']	 = { 'drown','burn','frost','choke','rasp','shock' },
-	['barspell'] = { 
+				     },
+	['eDebuff']	   = { 'drown','burn','frost','choke','rasp','shock' },
+	['barspell']   = { 
 				['ele'] = {
 						   'baraero','baraera','barblizzard','barblizzara',
 						   'barfire','barfira','barstone','barstonera',
 						   'barthunder','barthundra','barwater','barwatera' 
 						  },
-				['status'] = {}
-					},
-	['enspell']  = {
-					'enthunder','enstone','enaero','enblizzard','enfire',
-					'enwater','enlight','endark'
-				   },
-	['spikes']	 = { 'blaze','ice','shock','dread' },
-	['spirits']  = { 
-					'fire','firespirit','ice','icespirit','air','airspirit',
-					'earth','earthspirit','thunder','thunderspirit','water',
-					'waterspirit','light','lightspirit','dark','darkspirit' 
-				   },
-	['absorb']   = {
-					'absorb-agi','absorb-chr','absorb-dex','absorb-int',
-					'absorb-mnd','absorb-str','absorb-vit','absorb-acc',
-					'absorb-tp'
-				   },
+				['status'] = {
+							'barsleep','barsleepra','barpoison','barpoisonra',
+							'barparalyze','barparalyzra','barblind','barblindra',
+							'barvirus','barvira','barpetrify','barpetra'
+							}
+					 },
+	['enspell']    = {
+					 'enthunder','enstone','enaero','enblizzard','enfire',
+					 'enwater','enlight','endark'
+				     },
+	['spikes']	   = { 'blaze','ice','shock','dread' },
+	['spirits']    = { 
+					 'fire','firespirit','ice','icespirit','air','airspirit',
+					 'earth','earthspirit','thunder','thunderspirit','water',
+					 'waterspirit','light','lightspirit','dark','darkspirit' 
+				     },
+	['absorb']     = {
+					 'absorb-agi','absorb-chr','absorb-dex','absorb-int',
+					 'absorb-mnd','absorb-str','absorb-vit','absorb-acc',
+					 'absorb-tp'
+				     },
+	['nin-buff']   = { 'tonko','utsusemi','monomi' },
+	['nin-debuff'] = { 'kurayami','hojo','dokumori','jubaku' },
+	['nin-ele']    = { 'katon','suiton','raiton','doton','huton','hyoton' },
 };
 
 --[[
@@ -4694,6 +4701,60 @@ end		-- MidcastGeomancy
 --]]
 
 function MidcastNinjutsu()
+	local spell = gData.GetAction();
+	local root,bTank,sGear,sEle;
+	local pDay,pWeather;
+	
+	bTank = gcdisplay.GetToggle('Tank');
+	if bTank == nil then
+		bTank = false;
+	end
+	
+	root = fGetRoot(spell.Name);
+	
+	-- There's three types of ninjutsu: buff, debuff and elemental. Anything
+	-- else is a mystery and will be processed with the current gear.
+	if table.find(gcinclude.tSpell['nin-buff'],root) ~= nil then
+		-- Buff
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_NinjutsuBuff,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.NinjutsuBuff,gProfile.Sets.CurrentGear);
+		end
+	else
+		if table.find(gcinclude.tSpell['nin-debuff'],root) ~= nil then
+			-- Debuff
+			if bTank == true then
+				gcinclude.MoveToCurrent(gProfile.Sets.Tank_NinjutsuDebuff,gProfile.Sets.CurrentGear);
+			else
+				gcinclude.MoveToCurrent(gProfile.Sets.NinjutsuDebuff,gProfile.Sets.CurrentGear);
+			end	
+		elseif table.find(gcinclude.tSpell['nin-ele'],root) ~= nil then
+			-- Elemental
+			if bTank == true then
+				gcinclude.MoveToCurrent(gProfile.Sets.Tank_NinjutsuElemental,gProfile.Sets.CurrentGear);
+			else
+				gcinclude.MoveToCurrent(gProfile.Sets.NinjutsuElemental,gProfile.Sets.CurrentGear);
+			end	
+			
+			-- See if an elemental obi would make sense for the Magical Elemental accuracy
+			sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+			if sGear ~= nil then
+				pDay,pWeather = fCheckObiDW(sEle);
+				if pDay + pWeather > 0 then
+					gProfile.Sets.CurrentGear['Waist'] = sGear;
+				end
+			end			
+		else
+			return;
+		end
+		
+		-- And then if an elemental staff would be useful, for the affinity
+		sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
+		if sGear ~= nil then
+			gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
+		end		
+	end
 end		-- MidcastNinjutsu
 
 --[[
@@ -4727,8 +4788,7 @@ function gcinclude.fHandleMidcast()
 	--elseif spell.Skill == 'Geomancy' then
 	--	MidcastGeomancy();
 	elseif spell.Skill == 'Ninjutsu' then
-		gcinclude.HandleMidcast(gcdisplay.GetToggle('Tank') == true);
-		--MidcastNinjutsu();
+		MidcastNinjutsu();
 	end
 end		-- fMidcastNinjutsu
 
