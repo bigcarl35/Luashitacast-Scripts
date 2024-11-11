@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the DRK job.
 
-	Gear Sets last updated: October 28, 2024	
-	Code update: October 21, 2024	
+	Gear Sets last updated: November 10, 2024	
+	Code update: November 10, 2024	
 --]]
 
 local sets = {
@@ -149,7 +149,7 @@ local sets = {
 	['Evasion'] = {
         Head = 'Empress Hairpin',
 		Body = 'Scorpion Harness',
-		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring', 'Windurstian Earring' },		
+		Ears = { 'Genin Earring//SJNIN', 'Drone Earring', 'Windurstian Earring' },		
         Legs = { 'Chaos Flanchard', 'San. Trousers' },
     },
 
@@ -224,6 +224,9 @@ local sets = {
 --]]
 
 	['Midshot'] = {	
+		Neck  = 'Peacock Amulet',
+		Hands = 'Crimson Fng. Gnt.',
+		Back  = 'Psilos Mantle',
     },
 	
 --[[
@@ -344,6 +347,7 @@ local sets = {
 --]]
 
 	['OffensiveCuring'] = {
+		Subset = 'CuringMagic',
 	},
 	
 	['Tank_OffensiveCuring'] = {
@@ -466,6 +470,7 @@ local sets = {
 --]]
 
 	['Stoneskin'] = {
+		Subset = 'MND',
 	},
 	
 	['Tank_Stoneskin'] = {
@@ -789,8 +794,25 @@ local sets = {
 --]]
 
 --[[
-	Ninjutsu: TBD
+	Ninjutsu:
 --]]
+	['NinjutsuBuff'] = {
+	},
+	
+	['Tank_NinjutsuBuff'] = {
+	},
+	
+	['NinjutsuDebuff'] = {
+	},
+	
+	['Tank_NinjutsuDebuff'] = {
+	},
+	
+	['NinjutsuElemental'] = {
+	},
+	
+	['Tank_NinjutsuElemental'] = {
+	},
 
 --[[
 	Blue Magic: Until the release of Treasures of Aht Urghan is close to a 
@@ -845,7 +867,7 @@ local sets = {
 		Subset = 'INT',
 	},
 
-	['MND'] = {
+	['MND'] = {	
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Abyss Cuirass', 'Wonder Kaftan' },
         Rings = { 'Tamas Ring', 'Tranquility Ring' },
@@ -1218,12 +1240,22 @@ local sets = {
 	},
 	
 	['SneakAttack'] = {
+		Head = 'Empress Hairpin',
+		Neck = 'Spike Necklace',
+		Body = 'Brigandine',
+		Hands = 'Abs. Gauntlets +1',
+		Rings = { 'Kshama Ring No.2', 'Balance Ring' },
+		Waist = 'Warwolf Belt',
+		Feet = 'Bounding Boots',
 	},
 	
 	['Flee'] = {
 	},
 	
 	['TrickAttack'] = {
+		Head = 'Empress Hairpin',
+		Ears = 'Drone Earring', 
+		Feet = 'Bounding Boots',
 	},
 	
 	['Mug'] = {

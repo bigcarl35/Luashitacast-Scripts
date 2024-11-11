@@ -655,8 +655,16 @@ local sets = {
 --]]
 
 --[[
-	Ninjutsu: TBD
+	Ninjutsu:
 --]]
+	['NinjutsuBuff'] = {
+	},
+	
+	['NinjutsuDebuff'] = {
+	},
+	
+	['NinjutsuElemental'] = {
+	},
 
 --[[
 	Blue Magic: Until the release of Treasures of Aht Urghan is close to a 
