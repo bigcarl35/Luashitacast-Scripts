@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the BRD job.
 	
-	Gear Sets last updated: October 21, 2024	
-	Code update: October 21, 2024
+	Gear Sets last updated: November 12, 2024	
+	Code update: November 12, 2024
 --]]
 
 local sets = {
@@ -170,6 +170,15 @@ local sets = {
     },
 
 --[[
+	SingingPrecast is the first stage of when a song is sung. It is where
+	you specify fastcast and song spellcasting reduction gear.
+--]]
+
+	['SingingPrecast'] = {
+	},
+	
+-- **** From here:
+--[[
 	The 'meat and potatos' of being a bard are the songs. The following sets allow 
 	the bard to	individualize songs based on type plus emulate the precast/midcast 
 	of regular spells.
@@ -258,6 +267,7 @@ local sets = {
 	
 	['Virelai'] = {
 	},
+-- **** To here will be removed in the future, once midcast is complete
 	
 --[[
 	Spells are a bit different. Each type of spell can have it's own enhancement gear as well as 
@@ -1566,9 +1576,6 @@ end		-- HandleItem
 --]]
 
 function profile.HandlePrecast()
-    local spell = gData.GetAction();
-	local obi;
-	local mSet;
 		
 	-- Only gear swap if this flag is trues
 	if gcdisplay.GetToggle('GSwap') == false then		
@@ -1579,11 +1586,7 @@ function profile.HandlePrecast()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Equip the precast gear set
-	if spell.Skill == 'Singing' then
-		gcinclude.MoveToCurrent(sets.Song_Precast,sets.CurrentGear);
-	else
-		gcinclude.MoveToCurrent(sets.Precast,sets.CurrentGear);
-	end
+	gcinclude.HandlePrecast();
 	gcinclude.EquipTheGear(sets.CurrentGear);	
 end		-- HandlePrecast
 

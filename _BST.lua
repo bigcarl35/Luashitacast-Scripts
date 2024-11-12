@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the BST job.
 	
-	Gear Sets last updated: October 25, 2024
-	Code update: October 25, 2024
+	Gear Sets last updated: November 12, 2024
+	Code update: November 12, 2024
 --]]
 
 local sets = {
@@ -1863,9 +1863,6 @@ end		-- HandleItem
 --]]
 
 function profile.HandlePrecast()
-    local spell = gData.GetAction();
-	local obi;
-	local mSet;
 	
 	-- Only process if /gswap is turned on
 	if gcdisplay.GetToggle('GSwap') == false then
@@ -1876,7 +1873,7 @@ function profile.HandlePrecast()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Equip the precast gear set
-	gcinclude.MoveToCurrent(sets.Precast,sets.CurrentGear);	
+	gcinclude.HandlePrecast();
 	gcinclude.EquipTheGear(sets.CurrentGear);	
 end		-- HandlePrecast
 

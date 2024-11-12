@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the NIN job.
 	
-	Gear Sets last updated: October 21, 2024
-	Code update: October 21, 2024
+	Gear Sets last updated: November 12, 2024
+	Code update: November 12, 2024
 --]]
 
 local sets = {
@@ -67,9 +67,13 @@ local sets = {
 --]]
 	
 	['Default'] = {
-		Subset = { 'Tank_TP//TANK','TP' },
+		Subset = 'TP',
 		Head   = { 'Lilac Corsage//TOWN', 'Empress Hairpin' },
 		Body   = { 'Ducal Aketon//TOWN-AK', 'Wonder Kaftan', 'Beetle Harness' },
+	},
+
+	['Tank_Default'] = {
+		Subset = 'Default',
 	},
 	
 --[[
@@ -226,6 +230,9 @@ local sets = {
 	['Preshot'] = {
     },
 	
+	['Tank_Preshot'] = {
+	},
+	
 --[[
 	Midshot is the second stage of a ranged shot. This is where you place 
 	Ranged Attack, Ranged Damage, recycle, etc.
@@ -236,6 +243,9 @@ local sets = {
 		Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
     },
 
+	['Tank_Midshot'] = {
+	},
+	
 --[[
 	Spells are a bit different. Each type of spell can have it's own enhancement gear as well as 
 	stat based gear. (In some cases individual spells have special entries.) These sets do not 
@@ -250,6 +260,9 @@ local sets = {
 --]]
 
 	['Precast'] = {							
+	},
+
+	['Tank_Precast'] = {
 	},
 	
 --[[
@@ -889,6 +902,9 @@ local sets = {
 		Feet  = 'Wonder Clomps',
     },
 
+	['Tank_WS_STR'] = {
+	},
+	
 --[[
 		* Strength and Dexterity based, even weighting *
 		
@@ -908,6 +924,9 @@ local sets = {
 		Feet  = 'Bounding Boots',	
     },
 
+	['Tank_WS_STRDEX'] = {
+	},
+	
 --[[
 		* Strength and Intelligence based, even weighting *
 		
@@ -923,6 +942,10 @@ local sets = {
 		Legs  = 'Wonder Braccae',
 		Feet  = 'Wonder Clomps',	
     },
+	
+	['Tank_WS_STRINT'] = {
+	},
+		
 --[[
 		* Strength and Intelligence based, 30%/20% respectively *
 		
@@ -938,6 +961,9 @@ local sets = {
 		Feet  = 'Wonder Clomps',
     },
 
+	['Tank_WS_STRINT_30_20'] = {
+	},
+	
 --[[
 		* Strength and Mind based, even weighting *
 		
@@ -954,6 +980,9 @@ local sets = {
 		Feet  = { 'Mannequin Pumps', 'Wonder Clomps' },
     },
 
+	['Tank_WS_STRMND'] = {
+	},
+	
 --[[
 		* Agility based, ranged *
 		
@@ -968,7 +997,10 @@ local sets = {
 		Legs  = 'Ryl.Sqr. Breeches',
 		Feet  = 'Bounding Boots',
     },
-	
+
+	['Tank_WS_RANGED_AGI'] = {
+	},
+		
 --[[
 		* Charisma based *
 		
@@ -979,7 +1011,10 @@ local sets = {
 		Neck  = 'Flower Necklace',
 		Waist = 'Corsette',
     },
-	
+
+	['Tank_WS_CHR'] = {
+	},
+		
 --[[
 		* Dexterity based *
 		
@@ -995,6 +1030,9 @@ local sets = {
 		Feet  = 'Bounding Boots',
     },
 
+	['Tank_WS_DEX'] = {
+	},
+	
 --[[
 		* Dexterity and Intelligence based *
 		
@@ -1008,7 +1046,10 @@ local sets = {
 		Legs  = 'Ryl.Sqr. Breeches',
 		Feet  = 'Bounding Boots',	
     },
-	
+
+	['Tank_WS_DEXINT'] = {
+	},
+		
 --[[
 		* Mind based *
 		
@@ -1024,6 +1065,9 @@ local sets = {
 		Feet  = 'Mannequin Pumps',
     },
 
+	['Tank_WS_MND'] = {
+	},
+	
 --[[
 		* Vitality based *
 
@@ -1035,7 +1079,10 @@ local sets = {
 		Waist = 'Warrior\'s Belt',
 		Legs  = 'Wonder Braccae',
     },
-	
+
+	['Tank_WS_VIT'] = {
+	},
+		
 --[[
 		* Skill based *
 		
@@ -1044,7 +1091,10 @@ local sets = {
 
 	['WS_Skill'] = {
     },
-	
+
+	['Tank_WS_Skill'] = {
+	},
+		
 --[[
 	Kite is used for kiting. Emphasis should be placed on gear that increases 
 	movement speed, but you might also want gear that has evasion. The choice
@@ -1424,7 +1474,11 @@ function profile.HandleDefault()
 	end
 
 	-- Start with the default set
-	gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+	if bTank == true then
+		gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
+	else
+		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+	end
 		
 	-- Now process the player status accordingly	
 	if player ~= nil and player.Status == 'Engaged' then
@@ -1474,7 +1528,11 @@ function profile.HandleDefault()
 	else
 		-- Assume idling. While there's no idle set, just use the 
 		-- "Default" set
-		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+		if bTank == true then
+			gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+		end
 	end
 		
 	-- In case the pet is a summoned pet...
@@ -1653,9 +1711,6 @@ end		-- HandleItem
 --]]
 
 function profile.HandlePrecast()
-    local spell = gData.GetAction();
-	local obi;
-	local mSet;
 		
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
@@ -1666,7 +1721,7 @@ function profile.HandlePrecast()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Equip the precast gear set
-	gcinclude.MoveToCurrent(sets.Precast,sets.CurrentGear);
+	gcinclude.HandlePrecast();
 	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandlePrecast
 
@@ -1709,13 +1764,26 @@ end		-- HandleMidcast
 --]]
 
 function profile.HandlePreshot()
-	if gcdisplay.GetToggle('GSwap') == true then		-- Only gear swap if this flag is true
-		-- Clear out the CurrentGear in case of leftovers
-		gcinclude.ClearSet(sets.CurrentGear);	
-		
-		gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
-		gcinclude.EquipTheGear(sets.CurrentGear);
+	local bTank = gcdisplay.GetToggle('Tank');
+
+	if bTank == nil then
+		bTank = false;
 	end
+	
+	if gcdisplay.GetToggle('GSwap') == false then
+		return;
+	end
+	
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);	
+		
+	-- Load appropriate set
+	if bTank == true then
+		gcinclude.MoveToCurrent(sets.Tank_Preshot,sets.CurrentGear);
+	else
+		gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
+	end
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandlePreshot
 
 --[[
@@ -1724,7 +1792,11 @@ end		-- HandlePreshot
 --]]
 
 function profile.HandleMidshot()
-	local b = gcdisplay.GetToggle('Tank');
+	local bTank = gcdisplay.GetToggle('Tank');
+
+	if bTank == nil then
+		bTank = false;
+	end
 	
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
@@ -1734,13 +1806,13 @@ function profile.HandleMidshot()
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 	
-	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
-	
-	if b ~= nil and b == true then
+	if bTank == true then
+		gcinclude.MoveToCurrent(sets.Tank_Midshot,sets.CurrentGear);
 		gcinclude.FractionalAccuracy(gProfile.Sets.Tank_Ranged_Accuracy);
 	else
+		gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
 		gcinclude.FractionalAccuracy(gProfile.Sets.Ranged_Accuracy);
-	end	
+	end;
 	
 	-- Equip the composited Midshot set
 	gcinclude.EquipTheGear(sets.CurrentGear);	

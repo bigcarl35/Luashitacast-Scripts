@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the THF job.
 	
-	Gear Sets last updated: October 21, 2024
-	Code update: October 28, 2024
+	Gear Sets last updated: November 12, 2024
+	Code update: November 12, 2024
 --]]
 
 local sets = {
@@ -85,6 +85,10 @@ local sets = {
         Waist = { 'Swift Belt', 'Mrc.Cpt. Belt' },
         Legs  = { 'Bravo\'s Subligar', 'Wonder Braccae', 'San. Trousers', 'Ryl.Ftm. Trousers' },
         Feet  = { 'Assassin\'s Pouln.', 'Creek F Clomps', 'Bounding Boots' },
+	},
+	
+	['Tank_Default'] = {
+		Subset = 'Default',
 	},
 	
 --[[
@@ -237,6 +241,9 @@ local sets = {
 	['Preshot'] = {
     },
 	
+	['Tank_Preshot'] = {
+	},
+	
 --[[
 	Midshot is the second stage of a ranged shot. This is where you place
 	Ranged Attack, Ranged Damage, recycle, etc.
@@ -250,6 +257,9 @@ local sets = {
 		Legs  = 'Bravo\'s Subligar',
     },
 
+	['Tank_Midshot'] = {
+	},
+	
 --[[
 	Spells are a bit different. Each type of spell can have it's own enhancement gear as well as 
 	stat based gear. (In some cases individual spells have special entries.) These sets do not 
@@ -262,6 +272,9 @@ local sets = {
 	['Precast'] = {							
 	},
 
+	['Tank_Precast'] = {
+	},
+	
 --[[
 	The second stage is Midcast. This is where you equip gear that gives 
 	magic attack, enhancing bonuses, potency improvements, duration
@@ -906,6 +919,9 @@ local sets = {
         Feet  = { 'Creek F clomps', 'Wonder Clomps' },
     },
 
+	['Tank_WS_STR'] = {
+	},
+	
 --[[
 		* Strength and Agility based, ranged *
 		
@@ -926,7 +942,10 @@ local sets = {
         Legs = 'Wonder Braccae',
         Feet = { 'Creek F clomps', 'Bounding Boots' },
     },
-	
+
+	['Tank_WS_RANGED_STRAGI'] = {
+	},
+		
 --[[
 		* Strength and Dexterity based, even weighting *
 		
@@ -948,6 +967,9 @@ local sets = {
         Feet  = { 'Creek F clomps', 'Bounding Boots' },
     },
 
+	['Tank_WS_STRDEX'] = {
+	},
+	
 --[[
 		* Strength and Intelligence based, even weighting *
 		
@@ -966,6 +988,9 @@ local sets = {
         Feet  = 'Wonder Clomps',
     },
 
+	['Tank_WS_STRINT'] = {
+	},
+	
 --[[
 		* Strength and Mind based, even weighting *
 		
@@ -986,6 +1011,9 @@ local sets = {
         Feet  = { 'Creek F clomps', 'Wonder Clomps' },
     },
 
+	['Tank_WS_STRMND'] = {
+	},
+	
 --[[
 		* Agility based, ranged *
 		
@@ -1004,6 +1032,9 @@ local sets = {
         Feet  = 'Bounding Boots',
     },
 	
+	['Tank_WS_RANGED_AGI'] = {
+	},
+	
 --[[
 		* Charisma based *
 		
@@ -1018,6 +1049,9 @@ local sets = {
 		Feet  = 'Assassin\'s Poulaines',
     },
 
+	['Tank_WS_CHR'] = {
+	},
+	
 --[[
 		* Dexterity based *
 		
@@ -1035,6 +1069,9 @@ local sets = {
         Feet  = 'Bounding Boots',
     },
 
+	['Tank_WS_DEX'] = {
+	},
+	
 --[[
 		* Dexterity and Agility based *
 		
@@ -1052,6 +1089,9 @@ local sets = {
 		Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },
         Feet  = 'Bounding Boots',
     },
+
+	['Tank_WS_DEXAGI'] = {
+	},
 	
 --[[
 		* Dexterity and Charisma based *
@@ -1072,7 +1112,10 @@ local sets = {
 		Waist = 'Corsette',
         Feet  = 'Bounding Boots',
     },
-	
+
+	['Tank_WS_DEXCHR'] = {
+	},
+		
 --[[
 		* Dexterity and Intelligence based *
 		
@@ -1090,6 +1133,9 @@ local sets = {
         Feet  = 'Bounding Boots',
     },
 
+	['Tank_WS_DEXINT'] = {
+	},
+	
 --[[
 		* Mind based *
 		
@@ -1104,7 +1150,10 @@ local sets = {
         Legs  = 'Wonder Braccae',
         Feet  = 'Mannequin Pumps',
     },
-	
+
+	['Tank_WS_MND'] = {
+	},
+		
 --[[
 		* Vitality based *
 		
@@ -1119,9 +1168,21 @@ local sets = {
         Legs  = { 'Wonder Braccae', 'San. Trousers', 'Ryl.Ftm. Trousers' },
     },
 
+	['Tank_WS_VIT'] = {
+	},
+	
+--[[
+		* Skill based *
+		
+		Club: Starlight,Moonlight
+--]]
+
 	['WS_Skill'] = {
     },
 
+	['Tank_WS_Skill'] = {
+	},
+	
 --[[
 		* HP based *
 		
@@ -1139,7 +1200,10 @@ local sets = {
         Legs  = 'Wonder Braccae',
 		Feet  = { 'Creek F Clomps', 'Wonder Clomps', 'Creek F Clomps' }, 
     },
-	
+
+	['Tank_WS_HP'] = {
+	},
+		
 --[[
 	Kite is used for kiting. Emphasis should be placed on gear that increases 
 	movement speed, but you might also want gear that has evasion. The choice
@@ -1580,7 +1644,11 @@ function profile.HandleDefault()
 	end
 	
 	-- Start with the default set
-	gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+	if bTank == true then
+		gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
+	else
+		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+	end
 	
 	-- Now process the player status accordingly	
 	if player.Status == 'Engaged' then
@@ -1634,7 +1702,11 @@ function profile.HandleDefault()
 	else									
 		-- Assume idling. While there's no idle set, just use the 
 		-- "Default" set
+	if bTank == true then
+		gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
+	else
 		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+	end
 	end
 		
 	-- In case the pet is a summoned pet...
@@ -1819,9 +1891,6 @@ end		-- HandleItem
 --]]
 
 function profile.HandlePrecast()
-    local spell = gData.GetAction();
-	local obi;
-	local mSet;
 	
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
@@ -1832,7 +1901,7 @@ function profile.HandlePrecast()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Equip the precast gear set
-	gcinclude.MoveToCurrent(sets.Precast,sets.CurrentGear);
+	gcinclude.HandlePrecast();
 	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandlePrecast
 
@@ -1875,14 +1944,25 @@ end		-- HandleMidcast
 --]]
 
 function profile.HandlePreshot()
+	local bTank = gcdisplay.GetToggle('Tank');
+
+	if bTank == nil then
+		bTank = false;
+	end
+	
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
 	
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
-		
-	gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
+	
+	-- Load appropriate set
+	if bTank == true then
+		gcinclude.MoveToCurrent(sets.Tank_Preshot,sets.CurrentGear);
+	else
+		gcinclude.MoveToCurrent(sets.Preshot,sets.CurrentGear);
+	end	
 	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandlePreshot
 
@@ -1892,7 +1972,11 @@ end		-- HandlePreshot
 --]]
 
 function profile.HandleMidshot()
-	local b = gcdisplay.GetToggle('Tank');
+	local bTank = gcdisplay.GetToggle('Tank');
+
+	if bTank == nil then
+		bTank = false;
+	end
 	
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
@@ -1902,14 +1986,15 @@ function profile.HandleMidshot()
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
 	
-	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
-
-	if b ~= nil and b == true then
+	-- Load appropriate set
+	if bTank == true then
+		gcinclude.MoveToCurrent(sets.Tank_Midshot,sets.CurrentGear);
 		gcinclude.FractionalAccuracy(gProfile.Sets.Tank_Ranged_Accuracy);
 	else
+		gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
 		gcinclude.FractionalAccuracy(gProfile.Sets.Ranged_Accuracy);
-	end
-				
+	end;
+			
 	if gcdisplay.GetToggle('TH') == true then
 		gcinclude.MoveToCurrent(sets.TH,sets.CurrentGear);
 	end	
