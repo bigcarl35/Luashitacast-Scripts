@@ -76,6 +76,7 @@ gcinclude.settings = {
 	priorityWeaponSkill = 'ADBE';	-- indicates order of steps for a weapon skill
 	--
 	bAutoStaveSwapping = true;		-- indicates if elemental stave swapping should occur automatically
+	bGc = false;			-- indicates if /gc has been run
 };
 
 -- The following arrays are used by the functions contained in this file. Probably best to leave them alone
@@ -2641,10 +2642,15 @@ function fCheckInline(gear,sSlot)
 			local s = string.lower(string.sub(suCode,4,-1));
 			bGood = (string.find(string.lower(spell.Name),s) ~= nil);
 		elseif suCode == 'SPECIAL' then
-			if sSlot ~= 'subset' then
-				bGood = fValidateSpecial(sSlot,sGear);
-			else	-- Invalid inline for a subset
+			-- Skip SPECIAL if /gc not run. (Sometimes errors.)
+			if gcinclude.settings.bGc == false then
 				bGood = false;
+			else
+				if sSlot ~= 'subset' then
+					bGood = fValidateSpecial(sSlot,sGear);
+				else	-- Invalid inline for a subset
+					bGood = false;
+				end
 			end
 		elseif string.sub(suCode,1,6) == 'SPELL:' then
 			-- Make sure a spell is being cast
@@ -3698,7 +3704,8 @@ function gcinclude.HandleCommands(args)
 			bForce = false;
 		end
 		GearCheck(sList,bForce);
-		gcinclude.basetime = 0;		-- Kill reminder
+		gcinclude.basetime = 0;			-- Kill reminder
+		gcinclude.Settings.bGc = true;	-- indicates /gc was run
     elseif args[1] == 'gcmessages' then		-- turns feedback on/off for all commands
 		gcinclude.settings.Messages = not gcinclude.settings.Messages;
 		if gcinclude.settings.Messages then
