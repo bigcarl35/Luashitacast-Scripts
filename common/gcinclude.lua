@@ -2344,16 +2344,24 @@ end		-- fValidateSpecial
 	The passed buff name can be a substring, but that can also lead to miss identifications.
 --]]
 
-function fBuffed(test)
+function fBuffed(test,bStart)
 	local buffs = AshitaCore:GetMemoryManager():GetPlayer():GetBuffs();
+	local pos;
 
+	if bStart == nil then
+		bStart = false;
+	end
+	
 	test = string.lower(test);
 	for _, buff in pairs(buffs) do
 		local buffString = AshitaCore:GetResourceManager():GetString("buffs.names", buff);
 			
 		if (buffString) then
-			if string.find(string.lower(buffString),test) ~= nil then
-				return true;
+			pos = string.find(string.lower(buffString),test);
+			if pos ~= nil then
+				if (bStart == true and pos == 1) or (bStart == false) then
+					return true;
+				end
 			end
 		end
 	end
@@ -2487,8 +2495,8 @@ function fCheckInline(gear,sSlot)
 			else	-- Invalid inline for a subset
 				bGood = false;
 			end
-		elseif suCode == 'BARSPELL' then					--  is a Bar- type		
-			bGood = (table.find(gcinclude.tSpell['barspell']['ele'],string.lower(spell.Name)) ~= nil);
+		elseif suCode == 'BARSPELL' then					--  Player has a "bar" buff
+			bGood = (fBuffed('Bar',true));
 		elseif suCode == 'BOUND' then						-- Player is bound
 			bGood = fBuffed('Bind');
 		elseif suCode == 'BLINDED' then						-- Player is blind
@@ -2524,11 +2532,7 @@ function fCheckInline(gear,sSlot)
 		elseif string.sub(suCode,1,3) == 'GA:' then			-- Gathering
 			bGood = (gcinclude.Gather == string.sub(suCode,4,-1));
 		elseif suCode == 'HORN' then						-- Is the bard's instrument a horn
-			if player.MainJob == 'BRD' then
-				bGood = (gcdisplay.GetCycle('Instrument') == 'Horn');
-			else
-				bGood = false;
-			end	
+			bGood = (gcdisplay.GetCycle('Instrument') == 'Horn');
 		elseif suCode == 'IDLE' then
 			if string.find(gcinclude._TankJobList,player.MainJob) ~= nil then
 				bGood = gcdisplay.GetToggle('Idle');
@@ -2633,6 +2637,9 @@ function fCheckInline(gear,sSlot)
 			else
 				bGood = false;
 			end			
+		elseif string.sub(suCode,1,3) == 'SO:' then			-- Is song being cast of type
+			local s = string.lower(string.sub(suCode,4,-1));
+			bGood = (string.find(string.lower(spell.Name),s) ~= nil);
 		elseif suCode == 'SPECIAL' then
 			if sSlot ~= 'subset' then
 				bGood = fValidateSpecial(sSlot,sGear);
@@ -2645,6 +2652,8 @@ function fCheckInline(gear,sSlot)
 				return false;
 			end
 			bGood = (string.find(fGetRoot(spell.Name),string.lower(string.sub(suCode,7,-1))) ~= nil);
+		elseif suCode == 'SPIKE' then						-- does player have a spike buff
+			bGood = (fBuffed('Spike'));
 		elseif suCode == 'SPIRIT:ES' then					-- Pet being summoned is a spirit
 			bGood = (string.find(gcinclude.tSpell['spirits'],string.lower(spell.Name)) ~= nil);
 		elseif suCode == 'SPIRIT:EP' then					-- Current pet is a spirit
@@ -2768,7 +2777,8 @@ function RegionControlDisplay()
 end		-- RegionControlDisplay
 
 function gcinclude.t1()
-	print('Nothing being tested atm');
+	print('Testing for a Bar- buff');
+	print(fBuffed('Bar',true));
 end		-- gcinclude.t1
 
 --[[
@@ -4199,6 +4209,29 @@ function gcinclude.Initialize()
 end		-- gcinclude.Initialize
 
 --[[
+	HandlePrecast equips the appropriate precast gear
+--]]
+
+function gcinclude.HandlePrecast()
+	local spell = gData.GetAction();
+	local bTank = gcdisplay.GetToggle('Tank');
+	
+	if bTank == nil then
+		bTank = false;
+	end
+	
+	if spell.Skill == 'Singing' then
+		gcinclude.MoveToCurrent(gProfile.Sets.SingingPrecast,gProfile.Sets.CurrentGear);
+	else
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Precast,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.Precast,gProfile.Sets.CurrentGear);
+		end
+	end
+end		-- HandlePrecast
+
+--[[
 	fMidcastSinging handles all of the equipment management when a song is cast.
 --]]
 
@@ -4922,7 +4955,12 @@ function gcinclude.fHandleWeaponskill()
 	local ws = gData.GetAction();
 	local lName = string.lower(ws.Name);
 	local sName,sEle;
+	local bTank = gcdisplay.GetToggle('Tank');
 	local t = {};
+	
+	if bTank == nil then
+		bTank = false;
+	end	
 	
 	gcinclude.settings.priorityWeaponSkill = string.upper(gcinclude.settings.priorityWeaponSkill);
 	for i = 1,string.len(gcinclude.settings.priorityWeaponSkill),1 do
@@ -4930,7 +4968,11 @@ function gcinclude.fHandleWeaponskill()
 		if cKey == 'A' then			-- weaponskill set
 			for i,j in pairs(gcinclude.tWeaponSkills) do
 				if table.find(j,lName) ~= nil then
-					sName = 'WS_' .. i;
+					if bTank == true then
+						sName = 'Tank_WS_' .. i;
+					else
+						sName = 'WS_' .. i;
+					end
 					t = fGetTableByName(sName);
 					if t ~= nil then
 						gcinclude.MoveToCurrent(t,gProfile.Sets.CurrentGear);
