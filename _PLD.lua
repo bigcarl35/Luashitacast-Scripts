@@ -89,7 +89,6 @@ local sets = {
 --]]
 	
 	['TP'] = {
-		Subset = 'Default',	
 		Head   = 'Mandra. Masque',
 		Neck   = 'Justice Badge',
 		Body   = 'Ducal Aketon',
@@ -214,7 +213,8 @@ local sets = {
     },
 	
 	['Tank_Midshot'] = {
-
+	},
+	
 --[[
 	Spells are a bit different. Each type of spell can have it's own enhancement gear as well as 
 	stat based gear. (In some cases individual spells have special entries.) These sets do not 
