@@ -487,6 +487,14 @@ gcinclude.tSpell = {
 	['nin-buff']   = { 'tonko','utsusemi','monomi' },
 	['nin-debuff'] = { 'kurayami','hojo','dokumori','jubaku' },
 	['nin-ele']    = { 'katon','suiton','raiton','doton','huton','hyoton' },
+	['brd-enh']	   = {
+					 'minne','minuet','paeon','pastoral','madrigal','mambo',
+					 'operetta','etude','ballad','march','prelude','aubade',
+					 'carol','mazurka','gavotte','capriccio','fantasia',
+					 'hymnus','round'
+					 },
+	['brd-enf']	   = { 'requiem','threnody','lullaby','finale','elegy','virelai' },
+	
 };
 
 --[[
@@ -2441,6 +2449,37 @@ function fCheckAccuracySlots(sSlot)
 	return false;
 end		-- fCheckAccuracySlots
 
+--[[
+	fBardSongType determines if bard song being cast is of the type being passed.
+	Returned is true or false
+--]]
+
+function fBardSongType(sType)
+	local spell = gData.GetAction();
+	local bGood = false;
+	
+	if sType == nil or spell.Name == nil then
+		return false;
+	end
+	
+	sType = string.lower(sType);
+	
+	if sType == 'enh' then
+		for i,j in pairs(gcinclude.tSpell['brd-enh']) do
+			if string.find(string.lower(spell.Name,j)) ~= nil then
+				bGood = true;
+				break;
+			end			
+		end
+	else
+		for i,j in pairs(gcinclude.tSpell['brd-enf']) do
+			if string.find(string.lower(spell.Name,j)) ~= nil then
+				bGood = true;
+				break;
+			end			
+		end
+	end
+end		-- fBardSongType
 
 --[[
 	fCheckInline checks for a simple conditional on the item passed into it.
@@ -3705,7 +3744,7 @@ function gcinclude.HandleCommands(args)
 		end
 		GearCheck(sList,bForce);
 		gcinclude.basetime = 0;			-- Kill reminder
-		gcinclude.Settings.bGc = true;	-- indicates /gc was run
+		gcinclude.settings.bGc = true;	-- indicates /gc was run
     elseif args[1] == 'gcmessages' then		-- turns feedback on/off for all commands
 		gcinclude.settings.Messages = not gcinclude.settings.Messages;
 		if gcinclude.settings.Messages then
@@ -4239,10 +4278,32 @@ function gcinclude.HandlePrecast()
 end		-- HandlePrecast
 
 --[[
-	fMidcastSinging handles all of the equipment management when a song is cast.
+	MidcastSinging handles all of the equipment management when a song is cast.
 --]]
 
-function fMidcastSinging()
+function MidcastSinging()
+	local spell = gData.GetAction();
+	local bTank = gcdisplay.GetToggle('Tank');
+	
+	if bTank == nil then
+		bTank = false;
+	end
+	
+	if fBardSongType('enh') == true then
+		-- Enhancement song
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnhancementSinging,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.EnhancementSinging,gProfile.Sets.CurrentGear);
+		end
+	elseif fBardSongType('enf') == true then
+		-- Enfeebling song
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnfeeblingSinging,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.EnfeeblingSinging,gProfile.Sets.CurrentGear);
+		end		
+	end
 end
 
 --[[
@@ -4807,8 +4868,7 @@ function gcinclude.fHandleMidcast()
 	local spell = gData.GetAction();
 	
 	if spell.Skill == 'Singing' then
-		gcinclude.HandleMidcast(gcdisplay.GetToggle('Tank') == true);
-		--MidcastSinging();
+		MidcastSinging();
 	elseif spell.Skill == 'Healing Magic' then
 		MidcastHealingMagic();
 	elseif spell.Skill == 'Dark Magic' then
