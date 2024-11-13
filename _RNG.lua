@@ -633,6 +633,18 @@ The "default" gear set is what is worn when you're not fighting (either you or y
 	Singing: TBD
 --]]
 
+	['EnhancementSinging'] = {
+	},
+	
+	['Tank_EnhancementSinging'] = {
+	},
+	
+	['EnfeeblingSinging'] = {
+	},
+	
+	['Tank_EnfeeblingSinging'] = {
+	},
+
 --[[
 	Ninjutsu:
 --]]

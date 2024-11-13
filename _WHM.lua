@@ -654,6 +654,18 @@ local sets = {
 	Singing: TBD
 --]]
 
+	['EnhancementSinging'] = {
+	},
+	
+	['Tank_EnhancementSinging'] = {
+	},
+	
+	['EnfeeblingSinging'] = {
+	},
+	
+	['Tank_EnfeeblingSinging'] = {
+	},
+
 --[[
 	Ninjutsu:
 --]]
