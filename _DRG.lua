@@ -54,7 +54,7 @@ local sets = {
 	},
 	
 --[[
-	The TP sets are used when you are fighting. The accuracy is addressed separately in a fractional 
+	The TP set is used when you are fighting. The accuracy is addressed separately in a fractional 
 	manner. The evasion set if equipped if /eva is specified. Please note that there are no specific
 	gearsets associated with the dragoon's wyvern when it comes to fighting.
 --]]
@@ -94,15 +94,17 @@ local sets = {
     },
 
 --[[
-	Similar to accuracy except will be used on ranged attacks
+	Similar to the accuracy set, the Ranged_Accuracy set will be used on ranged attacks
 --]]
 
 	['Ranged_Accuracy'] = {
 	},
 	
 --[[
-	If evasion wanted, equip evasion gear. Remember that AGI converts to evasion: for every
-	2 points of AGI you get 1 point of evasion
+	If evasion wanted, equip evasion gear. Remember that AGI converts to evasion: for 
+	every 2 points of AGI you get 1 point of evasion. Note that if you leave the body
+	slot empty, but designate a piece of head gear and the previous body slot had a
+	multi-slot body piece (like Vermillion Cloak), then body slot will be left empty.	
 --]]
 	
 	['Evasion'] = {
@@ -114,13 +116,9 @@ local sets = {
     },
 	
 --[[
-	When you are resting (kneeling down), your HP 'Resting' set will be equipped. 
-	If your subjob uses MP and your MP is below the set threshhold (defined by 
-	gcinclude.settings.RefreshGearMP), your MP 'Resting_Refresh' gear set will 
-	be equipped. Regardless of which set is equipped, assuming that your subjob 
-	uses magic, you have a Dark/Pluto staff accessible, weapon swapping is 
-	enabled (/wswap), and your MP is not at maximum, the Dark/Pluto staff will 
-	automatically be equipped.
+	When you are resting (kneeling down), if your HP is not full, your HP 'Resting' 
+	set will be equipped. If your MP is below maximum value, your MP 'Resting_Refresh' 
+	gear set will be equipped. 
 --]]
 	
 	['Resting_Regen'] = { 
@@ -128,12 +126,6 @@ local sets = {
 	},
 	
 	['Resting_Refresh'] = {
-	},
-	
-	-- If your subjob can use magic, then place any Spell Interruption Rate down 
-	-- gear into the "SIR" gear set. This set is equipped in the gcinclude.HandleMidcast
-	-- function that all spells go through.
-	['SIR'] = {
 	},
 	
 --[[
@@ -145,22 +137,6 @@ local sets = {
 	['Start_Weapons'] = {
         Main = { 'Mythril Lance', 'Pitchfork +1' },
         Ammo = 'Happy Egg',
-	},
-	
---[[
-	Magic accuracy gear for either/or/both player and pet
---]]
-
-	['Macc'] = {
-		Rings = 'Tamas Ring',
-    },
-
---[[
-	Magic Attack Bonus (MAB) is used for more than just spells, so it is broken out.
-	MAB only affects damage dealing spells and elemental weapon skills
---]]
-
-	['MAB'] = {
 	},
 	
 --[[
@@ -211,8 +187,11 @@ local sets = {
 	will help you to decide what gear to include. 
 --]]	
 
-	['Midcast'] = {
-	},
+--[[
+	**************************
+	* Midcast: Healing Magic *
+	**************************
+--]]
 
 --[[
 	Healing Magic: consisting of all light-based spells, removes 
@@ -224,14 +203,6 @@ local sets = {
 	Healing spells: cures, curagas, raises, reraises, blindna, cursna,
 	paralyna, poisona, silena, stona, and viruna.
 --]]
-
---[[
-	These two sets are used for all non-cure Healing Magic spells. 
-	Only healing magic skill is of any importance here. You might 
-	want to use these sets as subsets for subsequent cure-based sets.
---]]
-	['HealingMagic'] = {
-	},
 
 --[[	
 	Curing magic addresses healing players/npcs. Each time a cure 
@@ -285,6 +256,21 @@ local sets = {
 
 	['OffensiveCuring'] = {
 	},
+
+--[[
+	This set is used for all non-cure Healing Magic spells. Only 
+	healing magic skill is of any importance here. You might want 
+	to use this set as a subset for the other cure-based sets.
+--]]
+
+	['HealingMagic'] = {
+	},
+
+--[[
+	****************************
+	* Midcast: Enhancing Magic *
+	****************************
+--]]
 	
 --[[
 	Enhancing Magic: This type of magic includes a wide variety of spells 
@@ -297,18 +283,6 @@ local sets = {
 	dread), escape, teleport spells, warp spells, en- spells (except 
 	enlight.)
 --]]
-
---[[
-	These two sets are the generic equipment sets used to cover spells not 
-	defined in subsequent gear sets. Enhancing magic skill determines potency 
-	(if appropriate) and decreases the likelihood of an enhancing spell 
-	being interrupted. Enhancing magic is not affected by magic affinity, 
-	so elemental staves are not needed, but en- spells can be affected by 
-	the day/weather effects.
---]]
-
-	['EnhancingMagic'] = {
-	},
 
 --[[
 	There are two versions of barspells: elemental and status, both of which
@@ -358,11 +332,18 @@ local sets = {
 	},
 	
 --[[
-	Spikes, place an elemental buff around the player which causes damage/
-	status effect to any monster that hits the player. Each type of spike 
+	Spikes place an elemental buff around the player which causes damage/
+	status effects to any monster that hits the player. Each type of spike 
 	spell has a different formula for how much damage they do and only 
 	some potentially add a status effect. All spikes all are based on INT 
 	and Enhancing Magic Skill.
+	
+	The maximum damage is determined by INT. Enhancing Magic Skill helps
+	spikes do full damage while lessening the likelihood of the spell being
+	resisted.
+	
+	Blaze Spikes: integer(integer(((INT+2)/12) + 4) * (1 + (MAB/100)))
+	Ice/Shock spikes: integeer(integer(((INT+10)/20) + 2) * (1 + (MAB/100)))
 --]]
 	
 	['Spike'] = {
@@ -425,8 +406,26 @@ local sets = {
 --]]
 	
 	['Phalanx'] = {
-	},	
+	},
+	
+--[[
+	This set handles the rest of the enhancing spells not covered by barspell,
+	en-spells, spikes, and the individual enhancing spell gear sets. Enhancing 
+	magic skill determines potency (if appropriate) and decreases the 
+	likelihood of an enhancing spell being interrupted. Enhancing magic is not 
+	affected by magic affinity, so elemental staves are not needed, but en- 
+	spells can be affected by the day/weather effects.
+--]]
 
+	['EnhancingMagic'] = {
+	},
+
+--[[
+	****************************
+	* Midcast: Elemental Magic *
+	****************************
+--]]
+	
 --[[
 	Elemental Magic: This type of magic consists of nukes, ancient magic (a type
 	of nuke), and elemental debuffs. Elemental Magic Skill determines the accuracy
@@ -485,6 +484,12 @@ local sets = {
 	},
 
 --[[
+	**********************
+	* Midcast: Summoning *
+	**********************
+--]]
+
+--[[
 	Summoning: This type of magic is used when a summoner casts either an
 	avatar or an elemental spirit. It is a very straightforward type of
 	magic. Summoning Magic Skill mostly affect elemental spirits, decreasing
@@ -499,6 +504,12 @@ local sets = {
 	},
 
 --[[
+	***********************
+	* Midcast: Dark Magic *
+	***********************
+--]]
+
+--[[
 	Dark Magic: This type of magic is used to absorb from a target, whether
 	stats, mana, or HP. Further, it can weaken an enemy's attack while applying
 	a DoT debuff, stun, and move a k.o.'ed player. Dark Magic Skill determines
@@ -510,9 +521,6 @@ local sets = {
 	drain, stun and tractor.
 --]]
 	
-	['DarkMagic'] = {
-	},
-
 --[[
 	There's 9 absorb spells (although some are currently out of era). If not
 	resisted, they drain a specific stat from the target based on the caster's
@@ -566,6 +574,14 @@ local sets = {
 	},
 
 --[[
+	This last gear set, DarkMagic, covers all Dark Magic spells not covered
+	by the previous three gear sets. 
+--]]
+
+	['DarkMagic'] = {
+	},
+
+--[[
 	Currently Dread Spikes are out of era, but they're introduced in ToAU,
 	so I've included them here. At the moment the code only applies a generic
 	spell invocation.
@@ -573,9 +589,12 @@ local sets = {
 	
 --	['Dread'] = {
 --	},
-	
---	['Tank_Dread'] = {
---	},
+
+--[[
+	*************************
+	* Midcast: Divine Magic *
+	*************************
+--]]
 
 --[[
 	Divine Magic: damages or debilitates opponents with light elemental
@@ -628,7 +647,28 @@ local sets = {
 	},
 
 --[[
-	Enfeebling Magic: TBD
+	*****************************
+	* Midcast: Enfeebling Magic *
+	****************************
+--]]
+
+--[[
+	Enfeebling Magic: this class of spells apply a debilitating status effect
+	(debuff) to one or more targets. Enfeebling Magic Skill is used to determine
+	the accuracy of enfeebling magic and to decrease the likelihood of a spell
+	caster being interrupted when casting enfeebling magic.
+	
+	Enfeebling Spells: bind, blinds, blindgas, dias, diagas, dispel, gravity, 
+	paralyzes, poisons, poisongas, sleeps, sleepgas, silence, and slows.
+	
+	There are two types of enfeebling spells, those dependent on INT (gravity,
+	bind, blind, dispel, sleep, sleepga, poison, and poisonga) and those
+	dependent on MND (paralyze, silence, slow, slowga, frazzlke, distract,
+	dia, and diaga).
+	
+	After the appropriate gear set is equipped, an elemental obi might be
+	equipped (for day/weather effect) and an elemental staff (for magic
+	affinity.)
 --]]
 	
 	['EnfeeblingINT'] = {
@@ -641,29 +681,76 @@ local sets = {
 	},
 
 --[[
-	Singing: TBD
+	********************
+	* Midcast: Singing *
+	********************
+--]]
+
+--[[
+	Singing: is a general category only available to BRD (/BRD can do songs,
+	but not equip instruments.) Unlike magic spells songs effectiveness is
+	determined from a player's singing skill and instrument skill. (Wind and
+	string instruments have different instrument skills.) A song's accuracy
+	depends on CHR and the combined skill level (singing and instrument)
+	multiplied by a scaling factor. Songs, once started, can not be interrupted.
+	Songs either apply a buff to party members or debuff targets. Two active
+	buffs can be applied to party members (assuming the bard has an instrument).
+	
+	Song types: carols, enfeebling, threnodies, recovery/misc, status enhancing,
+	and status resistance.
+--]]
+
+--[[
+	EnhancementSinging contains gear that enhances party members is some specific
+	manner. Included are: minne, minuet, paeon, pastoral, madigal, mambo, etude,
+	operetta, ballad, march, prelude, aubade, carol, mazurka, gavotte, capriccio,
+	fantasia, hymnus, and round.
 --]]
 
 	['EnhancementSinging'] = {
 	},
-	
-	['Tank_EnhancementSinging'] = {
-	},
+
+--[[
+	EnfeeblingSinging contains gear that debuffs targets. Included are: requiem,
+	threnody, lullaby, finale, elegy, and virelai.
+--]]
 	
 	['EnfeeblingSinging'] = {
 	},
-	
-	['Tank_EnfeeblingSinging'] = {
-	},
 
 --[[
-	Ninjutsu:
+	********************
+	* Midcast: Ninjusu *
+	********************
 --]]
+
+--[[
+	Ninjutsu: this is a means for ninjas to cast magic-like abilities that
+	use ninja tools instead of MP. Ninjutsu Skill affects spell interruption
+	rate, potency, and magic accuracy of ninjutsu spells.
+	
+	There are three types of affects: buffs, debuffs, ane elemental-based
+	damage spells. Buffs include: tonko, utsusemi, and monomi. Debuffs
+	include: kurayami, hojo, dokumori, and jubaku. And elemental damage
+	spells include: katon, suiton, raiton, doton, huton, and hyoton. 
+--]]
+
 	['NinjutsuBuff'] = {
 	},
+
+-- An elemental stave will be checked for after the debuff set is loaded.
 	
 	['NinjutsuDebuff'] = {
 	},
+
+--[[
+	Ninjutsu Elemental spells not only damages the target but also lowers the
+	target's resistance to the element that the ninjutsu's spell element is
+	dominant to. (Ex, casting Hyoton deals ice damage and lowers resistance
+	to fire damage.) Gear with Damage Enhancement should be included with this
+	set. An elemental obi will be checked for and an elemental staff for magic
+	affinity.
+--]]
 	
 	['NinjutsuElemental'] = {
 	},
@@ -672,45 +759,18 @@ local sets = {
 	Blue Magic: Until the release of Treasures of Aht Urghan is close to a 
 	release, there's no point in fleshing this out, especially since this job
 	is being majorly altered.
---]]
 
---[[
 	Geomancy Magic: Until the release of Seekers of Adoulin is close to a 
 	reality, there's no point in fleshing this out.
 --]]
 
--- old midcast sets included during the transition	
-
-	['Healing'] = {
-    },
-
-	['Dark'] = {
-    },
-
-	['Divine'] = {
-	},
-	
-	['Enfeebling'] = {
-	},
-	
-	['Enhancing'] = {
-	},
-	
-	['Elemental'] = {
-	},
-
-	['Ninjutsu'] = {
-	},
-
--- stat based gear sets are no longer supported beyond as a subset. They
--- need to be integrated into the appropriate sets.	
-
-	['INT'] = {
-    },
-
-	['MND'] = {
-		Rings = 'Tranquility Ring',
-    },
+--[[
+	Weapon skills are driven specifically by one or more stats. In addition,
+	attack power can be very advantageous. Listed below is an AttackPower
+	set which is actually a subset to be included in each of the weapon
+	skill gear sets. It will be used for default gear. Any additional gear
+	will override slots from the AttackPower subset.
+--]]
 	
 --[[
 	The following weapon skill gearsets are defined by the stat they emphasize. Listed are all of the sets that
@@ -725,8 +785,18 @@ local sets = {
 	create a custom gear set to support the skill. Remember, weapon skill sets
 	are named WS_attr. If you name the set appropriately, that set will auto-
 	matically be called when you use the weapon skill.
+	
+	Most weapon skills emphasize one or more primary stats, so the following
+	gear sets are broken out by which primary stat is featured. (I have
+	included what weapon skills use that stat. Besides the primary stats
+	though, gear with attack power should also be included. The AttackPower
+	gear set is not directly equipped, but rather used as a subset. It is
+	recommended that it be included in each weaponskill gear set.	
 --]]
 
+	['AttackPower'] = {
+	},
+	
 --[[
 		* Strength based *
 		
@@ -737,6 +807,7 @@ local sets = {
 -]]
 	
 	['WS_STR'] = {
+		Subset = 'AttackPower',	
 		Head  = 'Mrc.Cpt. Headgear',
         Neck  = 'Spike Necklace',
 		Body  = 'Wonder Kaftan',
@@ -753,6 +824,7 @@ local sets = {
 --]]
 
 	['WS_STRAGI'] = {
+		Subset = 'AttackPower',	
         Head  = { 'Empress Hairpin', 'Mrc.Cpt. Headgear' },
         Neck  = 'Spike Necklace',
 		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },
@@ -768,6 +840,7 @@ local sets = {
 --]]
 
 	['WS_STRDEX'] = {
+		Subset = 'AttackPower',	
         Head = { 'Empress Hairpin', 'Mrc.Cpt. Headgear' },
         Neck = 'Spike Necklace',
 		Body = 'Wonder Kaftan',
@@ -786,6 +859,7 @@ local sets = {
 --]]
 	
 	['WS_STRINT'] = {
+		Subset = 'AttackPower',	
         Head = 'Mrc.Cpt. Headgear',
 		Neck = 'Spike Necklace',
 		Body = 'Wonder Kaftan',
@@ -804,6 +878,7 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
+		Subset = 'AttackPower',	
 		Head = 'Mrc.Cpt. Headgear',
         Neck = { 'Promise Badge', 'Justice Badge' },
         Rings = { 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Kshama Ring No.9', 'Courage Ring', 'Tranquility Ring' },
@@ -819,6 +894,7 @@ local sets = {
 --]]
 	
 	['WS_CHR'] = {
+		Subset = 'AttackPower',	
 		Head = 'Entrancing Ribbon',
 		Neck = 'Flower Necklace',
 		Waist = 'Corsette',
@@ -831,6 +907,7 @@ local sets = {
 --]]
 	
 	['WS_DEX'] = {
+		Subset = 'AttackPower',	
         Head  = { 'Empress Hairpin', 'Mrc.Cpt. Headgear' },
         Neck  = 'Spike Necklace',
 		Body  = { 'Brigandine Armor', 'Mrc.Cpt. Doublet' },
@@ -845,6 +922,7 @@ local sets = {
 --]]
 	
 	['WS_DEXINT'] = {
+		Subset = 'AttackPower',	
         Head  = { 'Empress Hairpin', 'Mrc.Cpt. Headgear' },
         Neck  = 'Spike Necklace',
 		Body  = { 'Brigandine Armor', 'Mrc.Cpt. Doublet' },
@@ -859,6 +937,7 @@ local sets = {
 --]]
 
 	['WS_INTMND'] = {
+		Subset = 'AttackPower',	
         Neck = { 'Promise Badge', 'Justice Badge' },
 		Body = 'Wonder Kaftan',
         Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
@@ -873,6 +952,7 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
+		Subset = 'AttackPower',	
         Neck = { 'Promise Badge', 'Justice Badge' },
 		Body = 'Wonder Kaftan',
         Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
@@ -887,6 +967,7 @@ local sets = {
 --]]
 
 	['WS_Skill'] = {
+		Subset = 'AttackPower',	
     },
 
 --[[
@@ -896,6 +977,7 @@ local sets = {
 --]]
 
 	['WS_HP'] = {
+		Subset = 'AttackPower',	
         Ears = 'Physical Earring',
         Body = { 'Wonder Kaftan', 'Brigandine' },
         Hands = 'Wonder Mitts',
@@ -1191,7 +1273,6 @@ function profile.OnLoad()
 	
 	-- Coded order of operation override
 	gcinclude.settings.priorityEngaged = 'CEF';
-	gcinclude.settings.priorityMidCast = 'ABCDEGHF';
 	gcinclude.settings.priorityWeaponSkill = 'ADBE';
 	
 	-- Set your job macro toolbar defaults here. Which set depends on the subjob
@@ -1566,14 +1647,8 @@ function profile.HandleMidcast()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Call the common HandleMidcast now
-	-- Note: uncomment the line after this comment block and comment out the 
-	-- next one if you want the old midcast routine to be called. If you
-	-- want the new midcast, the first line should be commented out and the
-	-- second line enabled.
-	--gcinclude.HandleMidcast();
-	gcinclude.fHandleMidcast();
-	
-	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited midcast set
+	gcinclude.HandleMidcast();
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandleMidcast
 
 --[[
@@ -1618,9 +1693,7 @@ end		-- HandleMidshot
 --]]
 
 function profile.HandleWeaponskill()
-	local ws = gData.GetAction();
 	local canWS = gcinclude.CheckWsBailout();
-	local cKey;
 	
 	-- If conditions would cause the weaponskill to fail, the action will be
 	-- cancelled so you do not lose your tp.

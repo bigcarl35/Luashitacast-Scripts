@@ -148,7 +148,7 @@ local sets = {
 	},
 
 --[[
-	Similar to accuracy except will be used on ranged attacks
+	Similar to the accuracy set, the Ranged_Accuracy set will be used on ranged attacks
 --]]
 
 	['Ranged_Accuracy'] = {
@@ -196,13 +196,7 @@ local sets = {
 	['Resting_Refresh'] = {
 		Main = 'Pluto\'s Staff//WSWAP//MSJ',	
 	},
-	
-	-- If your subjob can use magic, then place any Spell Interruption Rate down 
-	-- gear into the "SIR" gear set. This set is equipped in the gcinclude.HandleMidcast
-	-- function that all spells go through.
-	['SIR'] = {
-	},
-	
+
 --[[
 	Start weapons are where you define what you want the first row of equipment to look 
 	like when you either log in as a THF or switch your main job to THF. Any other gear 
@@ -215,22 +209,6 @@ local sets = {
 		Range = 'Thug\'s Zamburak',
 		Ammo  = 'Acid Bolt',
     },
-	
---[[
-	Magic accuracy gear for the player and/or if you have a pet
---]]
-
-	['Macc'] = {
-        Ring1 = 'Tamas Ring',
-    },
-
---[[
-	Magic Attack Bonus (MAB) is used for more than just spells, so it is broken out.
-	MAB only affects damage dealing spells and elemental weapon skills
---]]
-
-	['MAB'] = {
-	},
 	
 --[[
 	Preshot is the first stage of when a ranged shot is being performed. This is where 
@@ -292,8 +270,11 @@ local sets = {
 	will help you to decide what gear to include. 
 --]]	
 
-	['Midcast'] = {
-	},
+--[[
+	**************************
+	* Midcast: Healing Magic *
+	**************************
+--]]
 
 --[[
 	Healing Magic: consisting of all light-based spells, removes 
@@ -306,17 +287,6 @@ local sets = {
 	paralyna, poisona, silena, stona, and viruna.
 --]]
 
---[[
-	These two sets are used for all non-cure Healing Magic spells. 
-	Only healing magic skill is of any importance here. You might 
-	want to use these sets as subsets for subsequent cure-based sets.
---]]
-	['HealingMagic'] = {
-	},
-	
-	['Tank_HealingMagic'] = {
-	},
-	
 --[[	
 	Curing magic addresses healing players/npcs. Each time a cure 
 	spell is cast, a power calculation is performed to determine 
@@ -336,7 +306,6 @@ local sets = {
 			Cure		100		 20		 30
 			Cure II		170		 75		 90
 			Cure III	300		160		190
-			Cure IV		460		330		390
 			Curaga		170		 75		 90
 			Curaga II	300		160		190
 	
@@ -380,11 +349,29 @@ local sets = {
 --]]
 
 	['OffensiveCuring'] = {
+		Subset = 'CuringMagic',	
 	},
 	
 	['Tank_OffensiveCuring'] = {
 	},
 
+--[[
+	This set is used for all non-cure Healing Magic spells. Only 
+	healing magic skill is of any importance here. You might want 
+	to use this set as a subset for the other cure-based sets.
+--]]
+	['HealingMagic'] = {
+	},
+	
+	['Tank_HealingMagic'] = {
+	},
+
+--[[
+	****************************
+	* Midcast: Enhancing Magic *
+	****************************
+--]]
+	
 --[[
 	Enhancing Magic: This type of magic includes a wide variety of spells 
 	that enhances players as well as movement spells. It's sort of a catch 
@@ -397,21 +384,6 @@ local sets = {
 	enlight.)
 --]]
 
---[[
-	These two sets are the generic equipment sets used to cover spells not 
-	defined in subsequent gear sets. Enhancing magic skill determines potency 
-	(if appropriate) and decreases the likelihood of an enhancing spell 
-	being interrupted. Enhancing magic is not affected by magic affinity, 
-	so elemental staves are not needed, but en- spells can be affected by 
-	the day/weather effects.
---]]
-
-	['EnhancingMagic'] = {
-	},
-	
-	['Tank_EnhancingMagic'] = {
-	},
-	
 --[[
 	There are two versions of barspells: elemental and status, both of which
 	increase the magic evasion of a player from the element/status named.
@@ -466,11 +438,18 @@ local sets = {
 	},
 
 --[[
-	Spikes, place an elemental buff around the player which causes damage/
-	status effect to any monster that hits the player. Each type of spike 
+	Spikes place an elemental buff around the player which causes damage/
+	status effects to any monster that hits the player. Each type of spike 
 	spell has a different formula for how much damage they do and only 
 	some potentially add a status effect. All spikes all are based on INT 
 	and Enhancing Magic Skill.
+	
+	The maximum damage is determined by INT. Enhancing Magic Skill helps
+	spikes do full damage while lessening the likelihood of the spell being
+	resisted.
+	
+	Blaze Spikes: integer(integer(((INT+2)/12) + 4) * (1 + (MAB/100)))
+	Ice/Shock spikes: integeer(integer(((INT+10)/20) + 2) * (1 + (MAB/100)))
 --]]
 	
 	['Spike'] = {
@@ -517,6 +496,7 @@ local sets = {
 	},
 	
 	['Tank_Sneak'] = {
+		Subset = 'Sneak',
 	},
 
 --[[
@@ -529,6 +509,7 @@ local sets = {
 	},
 	
 	['Tank_Invisible'] = {
+		Subset = 'Invisible',
 	},
 
 --[[
@@ -548,8 +529,30 @@ local sets = {
 	},	
 
 	['Tank_Phalanx'] = {
+		Subset = 'Phalanx',
 	},
 
+--[[
+	This set handles the rest of the enhancing spells not covered by barspell,
+	en-spells, spikes, and the individual enhancing spell gear sets. Enhancing 
+	magic skill determines potency (if appropriate) and decreases the 
+	likelihood of an enhancing spell being interrupted. Enhancing magic is not 
+	affected by magic affinity, so elemental staves are not needed, but en- 
+	spells can be affected by the day/weather effects.
+--]]
+
+	['EnhancingMagic'] = {
+	},
+	
+	['Tank_EnhancingMagic'] = {
+	},
+
+--[[
+	****************************
+	* Midcast: Elemental Magic *
+	****************************
+--]]
+	
 --[[
 	Elemental Magic: This type of magic consists of nukes, ancient magic (a type
 	of nuke), and elemental debuffs. Elemental Magic Skill determines the accuracy
@@ -612,6 +615,12 @@ local sets = {
 	
 	['Tank_ElementalDebuff'] = {
 	},
+
+--[[
+	**********************
+	* Midcast: Summoning *
+	**********************
+--]]
 	
 --[[
 	Summoning: This type of magic is used when a summoner casts either an
@@ -629,6 +638,12 @@ local sets = {
 	
 	['Tank_Summoning'] = {
 	},
+
+--[[
+	***********************
+	* Midcast: Dark Magic *
+	***********************
+--]]
 	
 --[[
 	Dark Magic: This type of magic is used to absorb from a target, whether
@@ -642,12 +657,6 @@ local sets = {
 	drain, stun and tractor.
 --]]
 	
-	['DarkMagic'] = {
-	},
-	
-	['Tank_DarkMagic'] = {
-	},
-
 --[[
 	There's 9 absorb spells (although some are currently out of era). If not
 	resisted, they drain a specific stat from the target based on the caster's
@@ -710,6 +719,17 @@ local sets = {
 	},
 
 --[[
+	This last gear set, DarkMagic, covers all Dark Magic spells not covered
+	by the previous three gear sets. 
+--]]
+
+	['DarkMagic'] = {
+	},
+	
+	['Tank_DarkMagic'] = {
+	},
+	
+--[[
 	Currently Dread Spikes are out of era, but they're introduced in ToAU,
 	so I've included them here. At the moment the code only applies a generic
 	spell invocation.
@@ -720,6 +740,12 @@ local sets = {
 	
 --	['Tank_Dread'] = {
 --	},
+
+--[[
+	*************************
+	* Midcast: Divine Magic *
+	*************************
+--]]
 
 --[[
 	Divine Magic: damages or debilitates opponents with light elemental
@@ -779,9 +805,30 @@ local sets = {
 	
 	['Tank_EnhanceDivine'] = {
 	},
+
+--[[
+	*****************************
+	* Midcast: Enfeebling Magic *
+	****************************
+--]]
 	
 --[[
-	Enfeebling Magic: TBD
+	Enfeebling Magic: this class of spells apply a debilitating status effect
+	(debuff) to one or more targets. Enfeebling Magic Skill is used to determine
+	the accuracy of enfeebling magic and to decrease the likelihood of a spell
+	caster being interrupted when casting enfeebling magic.
+	
+	Enfeebling Spells: bind, blinds, blindgas, dias, diagas, dispel, gravity, 
+	paralyzes, poisons, poisongas, sleeps, sleepgas, silence, and slows.
+	
+	There are two types of enfeebling spells, those dependent on INT (gravity,
+	bind, blind, dispel, sleep, sleepga, poison, and poisonga) and those
+	dependent on MND (paralyze, silence, slow, slowga, frazzlke, distract,
+	dia, and diaga).
+	
+	After the appropriate gear set is equipped, an elemental obi might be
+	equipped (for day/weather effect) and an elemental staff (for magic
+	affinity.)
 --]]
 	
 	['EnfeeblingINT'] = {
@@ -798,9 +845,32 @@ local sets = {
 	
 	['Tank_EnfeeblingMND'] = {
 	},
+
+--[[
+	********************
+	* Midcast: Singing *
+	********************
+--]]
 	
 --[[
-	Singing: TBD
+	Singing: is a general category only available to BRD (/BRD can do songs,
+	but not equip instruments.) Unlike magic spells songs effectiveness is
+	determined from a player's singing skill and instrument skill. (Wind and
+	string instruments have different instrument skills.) A song's accuracy
+	depends on CHR and the combined skill level (singing and instrument)
+	multiplied by a scaling factor. Songs, once started, can not be interrupted.
+	Songs either apply a buff to party members or debuff targets. Two active
+	buffs can be applied to party members (assuming the bard has an instrument).
+	
+	Song types: carols, enfeebling, threnodies, recovery/misc, status enhancing,
+	and status resistance.
+--]]
+
+--[[
+	EnhancementSinging contains gear that enhances party members is some specific
+	manner. Included are: minne, minuet, paeon, pastoral, madigal, mambo, etude,
+	operetta, ballad, march, prelude, aubade, carol, mazurka, gavotte, capriccio,
+	fantasia, hymnus, and round.
 --]]
 
 	['EnhancementSinging'] = {
@@ -808,27 +878,56 @@ local sets = {
 	
 	['Tank_EnhancementSinging'] = {
 	},
+
+--[[
+	EnfeeblingSinging contains gear that debuffs targets. Included are: requiem,
+	threnody, lullaby, finale, elegy, and virelai.
+--]]
 	
 	['EnfeeblingSinging'] = {
 	},
 	
 	['Tank_EnfeeblingSinging'] = {
-	},
+	}, 
 
 --[[
-	Ninjutsu:
+	********************
+	* Midcast: Ninjusu *
+	********************
+--]]
+
+--[[
+	Ninjutsu: this is a means for ninjas to cast magic-like abilities that
+	use ninja tools instead of MP. Ninjutsu Skill affects spell interruption
+	rate, potency, and magic accuracy of ninjutsu spells.
+	
+	There are three types of affects: buffs, debuffs, ane elemental-based
+	damage spells. Buffs include: tonko, utsusemi, and monomi. Debuffs
+	include: kurayami, hojo, dokumori, and jubaku. And elemental damage
+	spells include: katon, suiton, raiton, doton, huton, and hyoton.
 --]]
 	['NinjutsuBuff'] = {
 	},
 	
 	['Tank_NinjutsuBuff'] = {
 	},
+
+-- An elemental stave will be checked for after the debuff set is loaded.
 	
 	['NinjutsuDebuff'] = {
 	},
 	
 	['Tank_NinjutsuDebuff'] = {
 	},
+
+--[[
+	Ninjutsu Elemental spells not only damages the target but also lowers the
+	target's resistance to the element that the ninjutsu's spell element is
+	dominant to. (Ex, casting Hyoton deals ice damage and lowers resistance
+	to fire damage.) Gear with Damage Enhancement should be included with this
+	set. An elemental obi will be checked for and an elemental staff for magic
+	affinity.
+--]]
 	
 	['NinjutsuElemental'] = {
 	},
@@ -840,61 +939,18 @@ local sets = {
 	Blue Magic: Until the release of Treasures of Aht Urghan is close to a 
 	release, there's no point in fleshing this out, especially since this job
 	is being majorly altered.
---]]
 
---[[
 	Geomancy Magic: Until the release of Seekers of Adoulin is close to a 
 	reality, there's no point in fleshing this out.
 --]]
 
--- old midcast sets included during the transition	
-
-	['Healing'] = {
-    },
-	
-	['Dark'] = {
-    },
-
-	['Divine'] = {
-	},
-
-	['Enfeebling'] = {
-	},
-
-	['Enhancing'] = {
-	},
-
-	['Elemental'] = {
-	},
-
-	['Ninjutsu'] = {
-	},
-
--- stat based gear sets are no longer supported beyond as a subset. They
--- need to be integrated into the appropriate sets.
-	['INT'] = {
-		Head  = 'Rogue\'s Bonnet',
-        Rings = 'Tamas Ring',
-        Waist = 'Mrc.Cpt. Belt',
-        Feet  = 'Mannequin Pumps',	
-    },
-
-	['Tank_INT'] = {
-		Subset = 'INT',
-	},
-
-	['MND'] = {
-        Neck = { 'Promise Badge', 'Justice Badge' },
-        Body = 'Wonder Kaftan',
-        Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
-        Feet = 'Mannequin Pumps',
-	},
-	
-	['Tank_MND'] = {
-		Subset = 'MND',
-	},
+--[[
+	Weapon skills are driven specifically by one or more stats. In addition,
+	attack power can be very advantageous. Listed below is an AttackPower
+	set which is actually a subset to be included in each of the weapon
+	skill gear sets. It will be used for default gear. Any additional gear
+	will override slots from the AttackPower subset.
+--]]
 	
 --[[
 	The following weapon skill gearsets are defined by the stat they emphasize. Listed are all of the sets that
@@ -909,8 +965,18 @@ local sets = {
 	create a custom gear set to support the skill. Remember, weapon skill sets
 	are named WS_attr. If you name the set appropriately, that set will auto-
 	matically be called when you use the weapon skill.
+
+	Most weapon skills emphasize one or more primary stats, so the following
+	gear sets are broken out by which primary stat is featured. (I have
+	included what weapon skills use that stat. Besides the primary stats
+	though, gear with attack power should also be included. The AttackPower
+	gear set is not directly equipped, but rather used as a subset. It is
+	recommended that it be included in each weaponskill gear set.	
 --]]
 
+	['AttackPower'] = {
+	},
+	
 --[[
 		* Strength based *
 		
@@ -920,6 +986,7 @@ local sets = {
 -]]
 	
 	['WS_STR'] = {
+		Subset = 'AttackPower',		
         Head  = 'Mrc.Cpt. Headgear',
         Neck  = 'Spike Necklace',
         Body  = { 'Narasimha\'s Vest', 'Wonder Kaftan' },
@@ -930,9 +997,6 @@ local sets = {
         Legs  = 'Wonder Braccae',
         Feet  = { 'Creek F clomps', 'Wonder Clomps' },
     },
-
-	['Tank_WS_STR'] = {
-	},
 	
 --[[
 		* Strength and Agility based, ranged *
@@ -943,6 +1007,7 @@ local sets = {
 --]]
 
 	['WS_RANGED_STRAGI'] = {
+		Subset = 'AttackPower',		
         Head = 'Empress Hairpin',
         Neck = 'Spike Necklace',
         Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },
@@ -954,9 +1019,6 @@ local sets = {
         Legs = 'Wonder Braccae',
         Feet = { 'Creek F clomps', 'Bounding Boots' },
     },
-
-	['Tank_WS_RANGED_STRAGI'] = {
-	},
 		
 --[[
 		* Strength and Dexterity based, even weighting *
@@ -968,6 +1030,7 @@ local sets = {
 --]]
 
 	['WS_STRDEX'] = {
+		Subset = 'AttackPower',		
         Head  = { 'Assassin\'s Bonnet', 'Empress Hairpin' },
         Neck  = 'Spike Necklace',
         Body  = 'Brigandine',
@@ -978,9 +1041,6 @@ local sets = {
         Legs  = { 'Wonder Braccae' },
         Feet  = { 'Creek F clomps', 'Bounding Boots' },
     },
-
-	['Tank_WS_STRDEX'] = {
-	},
 	
 --[[
 		* Strength and Intelligence based, even weighting *
@@ -989,6 +1049,7 @@ local sets = {
 --]]
 	
 	['WS_STRINT'] = {
+		Subset = 'AttackPower',	
         Head  = 'Rogue\'s Bonnet',
         Neck  = 'Spike Necklace',
         Body  = { 'Narasimha\'s Vest', 'Wonder Kaftan' },
@@ -999,9 +1060,6 @@ local sets = {
         Legs  = 'Wonder Braccae',
         Feet  = 'Wonder Clomps',
     },
-
-	['Tank_WS_STRINT'] = {
-	},
 	
 --[[
 		* Strength and Mind based, even weighting *
@@ -1011,6 +1069,7 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
+		Subset = 'AttackPower',		
         Head  = 'Mrc.Cpt. Headgear',
         Neck  = { 'Promise Badge', 'Justice Badge' },
 		Ears  = 'Geist Earring',
@@ -1022,9 +1081,6 @@ local sets = {
         Legs  = 'Wonder Braccae',
         Feet  = { 'Creek F clomps', 'Wonder Clomps' },
     },
-
-	['Tank_WS_STRMND'] = {
-	},
 	
 --[[
 		* Agility based, ranged *
@@ -1035,6 +1091,7 @@ local sets = {
 --]]
 
 	['WS_RANGED_AGI'] = {
+		Subset = 'AttackPower',		
         Head  = 'Empress Hairpin',
         Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },
         Body  = { 'Assassin\'s Vest', 'Mrc.Cpt. Doublet' },
@@ -1044,9 +1101,6 @@ local sets = {
         Feet  = 'Bounding Boots',
     },
 	
-	['Tank_WS_RANGED_AGI'] = {
-	},
-	
 --[[
 		* Charisma based *
 		
@@ -1054,15 +1108,13 @@ local sets = {
 --]]
 	
 	['WS_CHR'] = {
+		Subset = 'AttackPower',		
         Head  = { 'Panther Mask', 'Entrancing Ribbon' },
         Neck  = 'Flower Necklace',
 		Ears  = 'Beastly Earrings',
         Waist = 'Corsette',
 		Feet  = 'Assassin\'s Poulaines',
     },
-
-	['Tank_WS_CHR'] = {
-	},
 	
 --[[
 		* Dexterity based *
@@ -1071,6 +1123,7 @@ local sets = {
 --]]
 	
 	['WS_DEX'] = {
+		Subset = 'AttackPower',		
         Head  = { 'Assassin\'s Bonnet', 'Empress Hairpin' },
         Neck  = 'Spike Necklace',
         Body  = 'Brigandine',
@@ -1080,9 +1133,6 @@ local sets = {
 		Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },
         Feet  = 'Bounding Boots',
     },
-
-	['Tank_WS_DEX'] = {
-	},
 	
 --[[
 		* Dexterity and Agility based *
@@ -1091,6 +1141,7 @@ local sets = {
 --]]
 	
 	['WS_DEXAGI'] = {
+		Subset = 'AttackPower',		
         Head  = { 'Assassin\'s Bonnet', 'Empress Hairpin' },
         Neck  = 'Spike Necklace',
         Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },
@@ -1101,9 +1152,6 @@ local sets = {
 		Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },
         Feet  = 'Bounding Boots',
     },
-
-	['Tank_WS_DEXAGI'] = {
-	},
 	
 --[[
 		* Dexterity and Charisma based *
@@ -1114,6 +1162,7 @@ local sets = {
 --]]
 	
 	['WS_DEXCHR'] = {
+		Subset = 'AttackPower',		
         Head  = { 'Assassin\'s Bonnet', 'Empress Hairpin' },
         Neck  = 'Spike Necklace',
 		Ears  = 'Beastly Earring',
@@ -1124,9 +1173,6 @@ local sets = {
 		Waist = 'Corsette',
         Feet  = 'Bounding Boots',
     },
-
-	['Tank_WS_DEXCHR'] = {
-	},
 		
 --[[
 		* Dexterity and Intelligence based *
@@ -1135,6 +1181,7 @@ local sets = {
 --]]
 	
 	['WS_DEXINT'] = {
+		Subset = 'AttackPower',		
         Head  = { 'Assassin\'s Bonnet', 'Rogue\'s Bonnet', 'Empress Hairpin' },
         Neck  = 'Spike Necklace',
         Body  = 'Brigandine',
@@ -1145,9 +1192,6 @@ local sets = {
         Feet  = 'Bounding Boots',
     },
 
-	['Tank_WS_DEXINT'] = {
-	},
-	
 --[[
 		* Mind based *
 		
@@ -1155,6 +1199,7 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
+		Subset = 'AttackPower',		
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = 'Brigandine',
         Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
@@ -1162,9 +1207,6 @@ local sets = {
         Legs  = 'Wonder Braccae',
         Feet  = 'Mannequin Pumps',
     },
-
-	['Tank_WS_MND'] = {
-	},
 		
 --[[
 		* Vitality based *
@@ -1175,13 +1217,11 @@ local sets = {
 --]]
 
 	['WS_VIT'] = {
+		Subset = 'AttackPower',		
         Body  = { 'Narasimha\'s Vest', 'Brigandine' },
         Waist = { 'Warwolf Belt', 'Warrior\'s Belt' },
         Legs  = { 'Wonder Braccae', 'San. Trousers', 'Ryl.Ftm. Trousers' },
     },
-
-	['Tank_WS_VIT'] = {
-	},
 	
 --[[
 		* Skill based *
@@ -1190,10 +1230,8 @@ local sets = {
 --]]
 
 	['WS_Skill'] = {
+		Subset = 'AttackPower',		
     },
-
-	['Tank_WS_Skill'] = {
-	},
 	
 --[[
 		* HP based *
@@ -1202,6 +1240,7 @@ local sets = {
 --]]
 
 	['WS_HP'] = {
+		Subset = 'AttackPower',		
 		Head  = { 'Assassin\'s Bonnet', 'Rogue\'s Bonnet' },
         Neck  = 'Promise Badge',
 		Ears  = { 'Physical Earring', 'Ethereal Earring' },
@@ -1212,9 +1251,6 @@ local sets = {
         Legs  = 'Wonder Braccae',
 		Feet  = { 'Creek F Clomps', 'Wonder Clomps', 'Creek F Clomps' }, 
     },
-
-	['Tank_WS_HP'] = {
-	},
 		
 --[[
 	Kite is used for kiting. Emphasis should be placed on gear that increases 
@@ -1924,8 +1960,7 @@ end		-- HandlePrecast
 --]]
 
 function profile.HandleMidcast()
-	local bTank = gcdisplay.GetToggle('Tank');
-	
+
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
 		return;
 	end
@@ -1934,20 +1969,8 @@ function profile.HandleMidcast()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Call the common HandleMidcast now
-	-- Note: uncomment the line after this comment block and comment out the 
-	-- next one if you want the old midcast routine to be called. If you
-	-- want the new midcast, the first line should be commented out and the
-	-- second line enabled.
-	--gcinclude.HandleMidcast();
-	gcinclude.fHandleMidcast();
-
-	if bTank then
-		gcinclude.settings.priorityMidCast = 'ACBDEGHF';
-	else
-		gcinclude.settings.priorityMidCast = 'ABCDEGHF';	
-	end	
-	
-	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited midcast set
+	gcinclude.HandleMidcast();
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandleMidcast
 
 --[[
@@ -2020,9 +2043,7 @@ end		-- HandleMidshot
 --]]
 
 function profile.HandleWeaponskill()
-	local ws = gData.GetAction();
 	local canWS = gcinclude.CheckWsBailout();
-	local cKey;
 	
 	-- If conditions would cause the weaponskill to fail, the action will be
 	-- cancelled so you do not lose your tp.
