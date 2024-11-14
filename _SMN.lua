@@ -118,6 +118,9 @@ local sets = {
 --]]
 
 	['Ranged_Accuracy'] = {
+		Head  = 'Optical Hat',
+		Neck  = 'Peacock Amulet',
+		Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
 	},
 	
 --[[
@@ -128,9 +131,12 @@ local sets = {
 --]]
 	
 	['Evasion'] = {
+		Main  = 'Wind Staff',
 		Head  = { 'Optical Hat', 'Empress Hairpin' },
-		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Genin Earring//SJNIN', 'Drone Earring' },
 		Neck  = 'Spirit Torque',
+		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Genin Earring//SJNIN', 'Drone Earring' },
+		Body  = 'Summoner\'s Dblt.//IF:VERMILLION CLOAK', -- V.Cloak has -10 eva. Anything better than that
+		Waist = 'Swift Belt//IF:TILT BELT', -- Tilt belt has -5 eva, anything better than that
 		Hands = 'Battle Gloves',
 		Legs  = { 'Evoker\'s Spats', 'Shep. Hose//PETF'},
     },
@@ -242,10 +248,38 @@ local sets = {
 --]]
 
 	['Midshot'] = {
+		Main  = 'Vulcan\'s Staff',
 		Head  = 'Optical Hat',
 		Neck  = 'Peacock Amulet',
 		Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
     },
+
+--[[
+	The following two sets are to be used as subsets. They're baseline for
+	intellegence and mind. Once you get to individual sets, include one of
+	these or ignore them and be explicit on the gear in that set.
+--]]
+	['INT'] = {
+		Body  = 'Errant Robe',
+		Hands = 'Errant Cuffs',
+		Rings = { 'Tamas Ring', 'Flame Ring' },
+		Waist = 'Mrc.Cpt. Belt',
+		Legs  = 'Errant Slops',
+		Feet  = 'Rostrum Pumps',
+		Feet  = 'Mannequin Pumps',	
+	},
+	
+	['MND'] = {
+		Neck  = { 'Promise Badge', 'Justice Badge' },
+		Ears  = 'Geist Earring',
+		Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
+		Hands = 'Baron\'s Cuffs',
+		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
+		Back  = 'White Cape',
+		Waist = 'Friar\'s Rope',
+		Legs  = { 'Errant Slops', 'Summoner\'s Spats', 'Wonder Braccae', 'Shep. Hose' },
+		Feet  = { 'Rostrum Pumps', 'Mannequin Pumps', 'Seer\'s Pumps' },	
+	},
 	
 --[[
 	Spells are a bit different. Each type of spell can have it's own enhancement gear 
@@ -332,6 +366,7 @@ local sets = {
 --]]	
 	
 	['CuringMagic'] = {
+		Subset = 'MND',
 	},	
 	
 --[[
@@ -349,6 +384,8 @@ local sets = {
 --]]
 
 	['OffensiveCuring'] = {
+		Subset = 'MND',
+		Neck = 'Uggalepih Pendant//SPECIAL',		
 	},
 
 --[[
@@ -441,6 +478,8 @@ local sets = {
 --]]
 	
 	['Spike'] = {
+		Subset = 'INT',
+		Neck  = 'Uggalepih Pendant//SPECIAL',
 	},
 	
 --[[
@@ -466,6 +505,7 @@ local sets = {
 --]]
 
 	['Stoneskin'] = {
+		Subset = 'MND',	
 	},	
 
 --[[
@@ -545,8 +585,8 @@ local sets = {
 	reduce your elemental damage by 20% ("nuke wall"), excluding skillchains.	
 --]]
 	['ElementalNuke'] = {
-		Rings = 'Tamas Earring',
-		Feet  = 'Mannequin Pumps',
+		Subset = 'INT',
+		Neck  = 'Uggalepih Pendant//SPECIAL',
 	},	
 
 --[[
@@ -574,6 +614,7 @@ local sets = {
 --]]
 
 	['ElementalDebuff'] = {
+		Subset = 'INT',
 	},
 
 --[[
@@ -699,7 +740,7 @@ local sets = {
 	Divine Magic: damages or debilitates opponents with light elemental
 	spells. It is especially effective against undead monsters, especially
 	spells like banish whose properties are enhanced against undead.
-	Divine Magic Skill determines accuracy and resuces spell interruption
+	Divine Magic Skill determines accuracy and reduces spell interruption
 	by the caster. It does not affect damage at all, except for enlight
 	which sets a starting damage point.
 	
@@ -718,6 +759,8 @@ local sets = {
 --]]
 
 	['OffensiveDivine'] = {
+		Subset = 'MND',
+		Neck  = 'Uggalepih Pendant//SPECIAL',
 	},
 
 --[[
@@ -771,12 +814,11 @@ local sets = {
 --]]
 	
 	['EnfeeblingINT'] = {
+		Subset = 'INT',
 	},
 
 	['EnfeeblingMND'] = {
-	    Neck  = { 'Promise Badge', 'Justice Badge' },
-        Rings = { 'Tamas Ring', 'Tranquility Ring' },
-        Waist = 'Friar\'s Rope',
+		Subset = 'MND',		
 	},
 
 --[[
@@ -852,6 +894,8 @@ local sets = {
 --]]
 	
 	['NinjutsuElemental'] = {
+		Subset = 'INT',
+		Neck  = 'Uggalepih Pendant//SPECIAL',		
 	},
 
 --[[
@@ -895,6 +939,8 @@ local sets = {
 --]]
 
 	['AttackPower'] = {
+		Ears  = { 'Ethereal Earring', 'Fang Earring' },
+		Waist = 'Hierarch Belt//IF:SWIFT BELT',	-- Swift belt has -5 attack, take the MP
 	},
 	
 --[[
