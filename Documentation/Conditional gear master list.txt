@@ -45,9 +45,7 @@ want me to add any more.
 //ARC_CIRCLE	Equip if player has Arcane Circle buff
 //ARCHERY		Equip if Range is a Bow
 //AXE			Equip if Main is an Axe
-~//BARSPELL		Equip if player has "bar" type buff
-~//BARELE		Equip if player has an elemental bar spell buff
-~//BARSTATUS	Equip if player has a status bar spell buff
+//BARSPELL		Equip if player has "bar" type buff
 //BOUND			Equip if player is bound
 //BLINDED		Equip if player blinded
 //CARBY			Equip if player has a pet and it is Carbuncle
@@ -75,7 +73,7 @@ want me to add any more.
 //GSWORD		Equip if Main is a Great Sword
 //H2H			Equip if Main is a Hand-to-Hand
 //HOLY_CIRCLE	Equip if player has Holy Circle buff
-//HORN			Equip if wind setting is true
+//HORN			Equip if instrument setting is horn
 //HP"conditional"#	Equip if HP meets condition
 //HPP"conditional"#	Equip if HP% meets condition
 //IDLE			Equip if Idle is true (part of tanking configuration)
@@ -94,6 +92,7 @@ want me to add any more.
 //NO_SMNPET		Equip if player has no pet or pet is not a smn avatar
 //NOT_"day"		Equip if the day's name does not match the specified day, eg. //NOT_FIRESDAY
 //NOT_OWN		Equip if region not controlled by player's nation
+//NOT_TANK		Equip if tank disabled
 //NOT_WTH:"weather" Equip if theweather does not match the specified weather
 //NOT_WTH-DAY	Equip if the weather does not match the day's element
 //NOT_WSWAP	Equip if WSWAP is turned off
@@ -118,13 +117,15 @@ want me to add any more.
 //SMNPET		Equip if player has a summoner's avatar out
 //SMNPETMD		Equip if pet's element matches the day's element
 //SMNPETMW		Equip if player's pet's element matches current weather
+//SO:"type"		Equip if song be cast is of type: ballad,carol,elegy,etude,finale,hymnus,lullaby,
+					madrigal,mambo,march,mazurka,minne,minuet,paeon,prelude,requiem,threnody,virelai
 //SPECIAL		Equip if the special comparisons match
 //SPELL:root	Equip if the spell being cast contains the "root"
-~//SPIKE		Equip if player has a spike spell buff: blaze,ice,shock,dread
+//SPIKE			Equip if player has a spike spell buff: blaze,ice,shock,dread
 //SPIRIT:ES		Equip if avatar being summoned is an elemental spirit
 //SPIRIT:EP		Equip if current pet is an elemental spirit
 //STAVE			Equip if Main is a Staff
-//STRING		Equip if wind setting is false
+//STRING		Equip if instrument setting is string
 //SWORD			Equip if Main is a Sword
 //TANK			Equip if Tank is toggled on
 //THROWING		Equip if Ammo is thrown
