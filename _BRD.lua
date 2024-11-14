@@ -140,6 +140,18 @@ local sets = {
     },
 
 --[[
+	The following two sets are to be used as subsets. They're baseline for
+	intellegence and mind. Once you get to individual sets, include one of
+	these or ignore them and be explicit on the gear in that set.
+--]]
+
+	['INT'] = {	
+	},
+	
+	['MND'] = {
+	},
+	
+--[[
 	SingingPrecast is the first stage of when a song is sung. It is where
 	you specify fastcast and song spellcasting reduction gear.
 --]]

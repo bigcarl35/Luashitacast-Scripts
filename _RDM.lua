@@ -202,6 +202,18 @@ local sets = {
 
 	['Tank_Midshot'] = {
 	},
+
+--[[
+	The following two sets are to be used as subsets. They're baseline for
+	intellegence and mind. Once you get to individual sets, include one of
+	these or ignore them and be explicit on the gear in that set.
+--]]
+
+	['INT'] = {	
+	},
+	
+	['MND'] = {
+	},
 	
 --[[
 	Spells are a bit different. Each type of spell can have it's own enhancement gear as well as 

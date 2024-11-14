@@ -157,6 +157,18 @@ local sets = {
     },
 
 --[[
+	The following two sets are to be used as subsets. They're baseline for
+	intellegence and mind. Once you get to individual sets, include one of
+	these or ignore them and be explicit on the gear in that set.
+--]]
+
+	['INT'] = {	
+	},
+	
+	['MND'] = {
+	},
+	
+--[[
 	Spells are a bit different. Each type of spell can have it's own enhancement gear as well as 
 	stat based gear. (In some cases individual spells have special entries.) These sets do not 
 	include elemental gear which is	dependent on day/weather/weapon skill.

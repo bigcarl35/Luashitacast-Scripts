@@ -259,6 +259,7 @@ local sets = {
 	intellegence and mind. Once you get to individual sets, include one of
 	these or ignore them and be explicit on the gear in that set.
 --]]
+
 	['INT'] = {
 		Body  = 'Errant Robe',
 		Hands = 'Errant Cuffs',
