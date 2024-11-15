@@ -4,7 +4,7 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the SMN job.
 	
-	Gear Sets last updated: November 12, 2024
+	Gear Sets last updated: November 15, 2024
 	Code update: November 14, 2024
 --]]
 
@@ -244,14 +244,17 @@ local sets = {
 	
 --[[
 	Midshot is the second stage of a ranged shot. This is where you place
-	Ranged Attack, Ranged Damage, recycle, etc.
+	Ranged Accuracy, Ranged Attack, Ranged Damage, Crit. Rate, Crit. Damage,
+	Store TP, recycle, etc.
 --]]
 
 	['Midshot'] = {
 		Main  = 'Vulcan\'s Staff',
 		Head  = 'Optical Hat',
 		Neck  = 'Peacock Amulet',
-		Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
+		Ears  = 'Brutal Earring',
+		Neck  = 'Peacock Amulet',
+		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
     },
 
 --[[
@@ -761,7 +764,7 @@ local sets = {
 
 	['OffensiveDivine'] = {
 		Subset = 'MND',
-		Neck  = 'Uggalepih Pendant//SPECIAL',
+		Neck   = 'Uggalepih Pendant//SPECIAL',
 	},
 
 --[[

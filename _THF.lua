@@ -4,7 +4,7 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the THF job.
 	
-	Gear Sets last updated: November 12, 2024
+	Gear Sets last updated: November 15, 2024
 	Code update: November 12, 2024
 --]]
 
@@ -99,14 +99,14 @@ local sets = {
 --]]
 
 	['TP'] = {
-        Head  = { 'Panther Mask', 'Rogue\'s Bonnet', 'Empress Hairpin' },
+        Head  = { 'Panther Mask', 'Empress Hairpin' },
         Neck  = { 'Opo-opo necklace//SLEPT', 'Peacock Amulet', 'Spike Necklace' },
-        Ears  = { 'Bat Earring//BLINDED', 'Coral Earring//DT_MAGICAL', 'Brutal Earring', 'Coral Earring', 'Fang Earring', 'Reraise Earring', 'Physical Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
-        Body  = { 'Rapparee Harness', 'Brigandine', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
+        Ears  = { 'Bat Earring//BLINDED', 'Coral Earring//DT_MAGICAL', 'Brutal Earring', 'Coral Earring', 'Fang Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
+        Body  = { 'Rapparee Harness', 'Assassin\'s Vest', 'Brigandine', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
         Hands = { 'Rogue\'s Armlets', 'Battle Gloves' },
         Rings = { 'Kshama Ring No.2', 'Balance Ring', 'Courage Ring' },
-        Back  = { 'Forager\'s Mantle', 'Amemet Mantle', 'Raptor Mantle', 'Ram Mantle' },
-        Waist = { 'Swift Belt', 'Mrc.Cpt. Belt' },
+        Back  = { 'Forager\'s Mantle', 'Amemet Mantle', 'Ram Mantle' },
+        Waist = { 'Swift Belt', 'Warwolf Belt', 'Mrc.Cpt. Belt' },
         Legs  = { 'Bravo\'s Subligar', 'Wonder Braccae', 'San. Trousers', 'Ryl.Ftm. Trousers' },
         Feet  = { 'Assassin\'s Pouln.', 'Creek F Clomps', 'Bounding Boots' },
     },
@@ -138,13 +138,7 @@ local sets = {
     },
 
 	['Tank_Accuracy'] = {
-        Head  = 'Empress Hairpin',
-        Neck  = { 'Peacock Amulet', 'Spike Necklace' },
-        Body  = { 'Brigandine', 'Mrc.Cpt. Doublet' },
-        Hands = 'Battle Gloves',
-        Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },
-        Waist = { 'Life Belt', 'Tilt Belt', 'Mrc.Cpt. Belt' },
-        Feet  = 'Bounding Boots',	
+		Subset = 'Accuracy',
 	},
 
 --[[
@@ -152,6 +146,11 @@ local sets = {
 --]]
 
 	['Ranged_Accuracy'] = {
+		Head = 'Optical Hat',
+		Neck = 'Peacock Amulet',
+		Body = 'Rapparee Harness',
+		Back = 'Psilos Mantle',
+		Legs = 'Bravo Subligar',
 	},
 
 	['Tank_Ranged_Accuracy'] = {
@@ -165,6 +164,7 @@ local sets = {
 	
 	['Evasion'] = {
         Head  = { 'Optical Hat', 'Empress Hairpin' },
+		Neck  = 'Spirit Torque',
         Ears  = { 'Reraise Earring', 'Genin Earring//SJNIN', 'Drone Earring' },
         Body  = { 'Scorpion Harness', 'Mrc.Cpt. Doublet' },
         Hands = 'Battle Gloves',
@@ -172,13 +172,7 @@ local sets = {
     },
 
 	['Tank_Evasion'] = {
-        Head  = 'Empress Hairpin',
-        Ears  = { 'Reraise Earring', 'Genin Earring//SJNIN', 'Drone Earring' },
-        Body  = 'Mrc.Cpt. Doublet',
-        Hands = 'Battle Gloves',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs  = 'San. Trousers',
-        Feet  = 'Bounding Boots',	
+		Subset = 'Evasion',
 	},
 		
 --[[
@@ -217,6 +211,10 @@ local sets = {
 --]]
 
 	['Preshot'] = {
+		Head  = 'Panther Mask',
+		Body  = 'Rapparee Harness',
+		Waist = 'Swift Belt',
+		Legs  = 'Bravo Subligar',
     },
 	
 	['Tank_Preshot'] = {
@@ -224,14 +222,16 @@ local sets = {
 	
 --[[
 	Midshot is the second stage of a ranged shot. This is where you place
-	Ranged Attack, Ranged Damage, recycle, etc.
+	Ranged Accuracy, Ranged Attack, Ranged Damage, Crit. Rate, Crit. Damage,
+	Store TP, recycle, etc.
 --]]
 
 	['Midshot'] = {
+		Head  = 'Optical Hat',
 		Neck  = 'Peacock Amulet',
 		Body  = 'Rapparee Harness',
 		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
-		Back  = 'Psilos Mantle',
+		Back  = { 'Psilos Mantle', 'Amemet Mantle' },
 		Legs  = 'Bravo\'s Subligar',
     },
 
@@ -245,9 +245,22 @@ local sets = {
 --]]
 
 	['INT'] = {	
+		Head  = 'Rogue\'s Bonnet',
+		Body  = 'Baron\'s Saio',
+		Rings = 'Tamas Ring',
+		Waist = 'Mrc.Cpt. Belt',
+		Feet  = 'Mannequin Pumps',
 	},
 	
 	['MND'] = {
+		Neck  = { 'Promise Badge', 'Justice Badge' },
+		Ears  = 'Geist Earring',
+		Body  = { 'Wonder Kaftan', 'Baron\'s Saio' },
+		Hands = 'Baron\'s Cuffs',
+		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
+		Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
+		Legs  = 'Wonder Braccae',
+		Feet  = 'Mannequin Pumps',
 	},
 	
 --[[
@@ -259,10 +272,12 @@ local sets = {
 	cast gear, and spell interruption rate
 --]]
 
-	['Precast'] = {							
+	['Precast'] = {	
+		Ears = 'Loquac. Earring',
 	},
 
 	['Tank_Precast'] = {
+		Subset = 'Precast',
 	},
 	
 --[[
@@ -336,13 +351,8 @@ local sets = {
 --]]	
 	
 	['CuringMagic'] = {
-		Neck  = 'Promise Badge',
-		Ears  = 'Geist Earring',
-		Body  = 'Wonder Kaftan',
-		Rings = 'Tamas Ring',
-		Back  = 'White Cape',
-		Legs  = 'Wonder Braccae',
-		Feet  = 'Mannequin Pumps',
+		Subset = 'MND',
+		Waist  = { 'Warwolf Belt', 'Mrc.Cpt. Belt', 'Warrior\'s Belt' },
 	},
 	
 	['Tank_CuringMagic'] = {
@@ -465,6 +475,8 @@ local sets = {
 --]]
 	
 	['Spike'] = {
+		Subset = 'INT',
+		Neck   = 'Uggalepih Pendant//SPECIAL',	
 	},
 	
 	['Tank_Spike'] = {
@@ -493,9 +505,11 @@ local sets = {
 --]]
 
 	['Stoneskin'] = {
+		Subset = 'MND',
 	},
 	
 	['Tank_Stoneskin'] = {
+		Subset = 'Stoneskin',
 	},
 
 --[[
@@ -591,8 +605,8 @@ local sets = {
 	reduce your elemental damage by 20% ("nuke wall"), excluding skillchains.	
 --]]
 	['ElementalNuke'] = {
-		Rings = 'Tamas Earring',
-		Feet  = 'Mannequin Pumps',
+		Subset = 'INT',
+		Neck   = 'Uggalepih Pendant//SPECIAL', 
 	},
 	
 	['Tank_ElementalNuke'] = {
@@ -623,6 +637,8 @@ local sets = {
 --]]
 
 	['ElementalDebuff'] = {
+		Subset = 'INT',
+		Neck   = 'Uggalepih Pendant//SPECIAL', 	
 	},
 	
 	['Tank_ElementalDebuff'] = {
@@ -646,6 +662,7 @@ local sets = {
 --]]
 
 	['Summoning'] = {
+		Neck = 'Smn. Torque',	
 	},
 	
 	['Tank_Summoning'] = {
@@ -844,15 +861,14 @@ local sets = {
 --]]
 	
 	['EnfeeblingINT'] = {
+		Subset = 'INT',
 	},
 	
 	['Tank_EnfeeblingINT'] = {
 	},
 	
 	['EnfeeblingMND'] = {
-	    Neck  = { 'Promise Badge', 'Justice Badge' },
-        Rings = { 'Tamas Ring', 'Tranquility Ring' },
-        Waist = 'Friar\'s Rope',
+		Subset = 'MND',
 	},
 	
 	['Tank_EnfeeblingMND'] = {
@@ -942,6 +958,7 @@ local sets = {
 --]]
 	
 	['NinjutsuElemental'] = {
+		Subset = 'INT',	
 	},
 	
 	['Tank_NinjutsuElemental'] = {
@@ -987,6 +1004,9 @@ local sets = {
 --]]
 
 	['AttackPower'] = {
+		Ears  = { 'Ethereal Earring', 'Fang Earring' },
+		Back  = { 'Forager\'s Mantle', 'Psilos Mantle', 'Amemet Mantle' },
+		Waist = 'Warwolf Belt//IF:SWIFT BELT',		
 	},
 	
 --[[
@@ -1001,7 +1021,7 @@ local sets = {
 		Subset = 'AttackPower',		
         Head  = 'Mrc.Cpt. Headgear',
         Neck  = 'Spike Necklace',
-        Body  = { 'Narasimha\'s Vest', 'Wonder Kaftan' },
+        Body  = { 'Narasimha\'s Vest', 'Rogue\'s Vest', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
         Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
@@ -1020,16 +1040,16 @@ local sets = {
 
 	['WS_RANGED_STRAGI'] = {
 		Subset = 'AttackPower',		
-        Head = 'Empress Hairpin',
-        Neck = 'Spike Necklace',
-        Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },
-        Body = { 'Assassin\'s Vest', 'Wonder Kaftan' },
+        Head  = 'Empress Hairpin',
+        Neck  = 'Spike Necklace',
+        Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },
+        Body  = { 'Assassin\'s Vest', 'Rogue\'s Vest', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
         Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
 		Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },
-        Legs = 'Wonder Braccae',
-        Feet = { 'Creek F clomps', 'Bounding Boots' },
+        Legs  = { 'Rogue\'s Culottes', 'Wonder Braccae' },
+        Feet  = { 'Creek F clomps', 'Bounding Boots' },
     },
 		
 --[[
@@ -1045,13 +1065,13 @@ local sets = {
 		Subset = 'AttackPower',		
         Head  = { 'Assassin\'s Bonnet', 'Empress Hairpin' },
         Neck  = 'Spike Necklace',
-        Body  = 'Brigandine',
+        Body  = { 'Narasimha\'s Vest', 'Brigandine' },
         Hands = { 'Rogue Armlets', 'Wonder Mitts' },
         Rings = { 'Flame Ring', 'Kshama Ring No.2', 'Sun Ring', 'Sun Ring', 'Balance Ring', 'Courage Ring' },
         Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
 		Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },
-        Legs  = { 'Wonder Braccae' },
-        Feet  = { 'Creek F clomps', 'Bounding Boots' },
+        Legs  = 'Wonder Braccae',
+        Feet  = { 'Creek F clomps', 'Rogue\'s Poulaines', 'Bounding Boots' },
     },
 	
 --[[
@@ -1062,9 +1082,9 @@ local sets = {
 	
 	['WS_STRINT'] = {
 		Subset = 'AttackPower',	
-        Head  = 'Rogue\'s Bonnet',
+        Head  = { 'Rogue\'s Bonnet', 'Mrc.Cpt. Headgear' },
         Neck  = 'Spike Necklace',
-        Body  = { 'Narasimha\'s Vest', 'Wonder Kaftan' },
+        Body  = { 'Narasimha\'s Vest', 'Rogue\'s Vest', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
         Rings = { 'Tamas Ring', 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
         Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
@@ -1085,7 +1105,7 @@ local sets = {
         Head  = 'Mrc.Cpt. Headgear',
         Neck  = { 'Promise Badge', 'Justice Badge' },
 		Ears  = 'Geist Earring',
-        Body  = { 'Narasimha\'s Vest', 'Wonder Kaftan' },
+        Body  = { 'Narasimha\'s Vest', 'Rogue\'s Vest', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
         Rings = { 'Tamas Ring', 'Flame Ring', 'Kshama Ring No.9', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tranquility Ring' },
         Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
@@ -1124,6 +1144,8 @@ local sets = {
         Head  = { 'Panther Mask', 'Entrancing Ribbon' },
         Neck  = 'Flower Necklace',
 		Ears  = 'Beastly Earrings',
+		Hands = 'Assassin\'s Armlets',
+		Rings = { 'Moon Ring', 'Moon Ring' },
         Waist = 'Corsette',
 		Feet  = 'Assassin\'s Poulaines',
     },
@@ -1143,7 +1165,7 @@ local sets = {
         Rings = { 'Kshama Ring No.2', 'Balance Ring' },
         Back  = 'Assassin\'s Cape',
 		Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },
-        Feet  = 'Bounding Boots',
+        Feet  = { 'Rogue\'s Poulaines', 'Bounding Boots' },
     },
 	
 --[[
@@ -1162,7 +1184,7 @@ local sets = {
         Rings = { 'Kshama Ring No.2', 'Balance Ring' },
         Back  = 'Assassin\'s Cape',
 		Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },
-        Feet  = 'Bounding Boots',
+        Feet  = { 'Rogue\'s Poulaines', 'Bounding Boots' },
     },
 	
 --[[
@@ -1175,15 +1197,15 @@ local sets = {
 	
 	['WS_DEXCHR'] = {
 		Subset = 'AttackPower',		
-        Head  = { 'Assassin\'s Bonnet', 'Empress Hairpin' },
+        Head  = { 'Assassin\'s Bonnet', 'Empress Hairpin', 'Entrancing Ribbon' },
         Neck  = 'Spike Necklace',
 		Ears  = 'Beastly Earring',
         Body  = { 'Brigandine', 'Mrc.Cpt. Doublet' },
 		Hands = 'Rogue Armlets',
-        Rings = { 'Kshama Ring No.2', 'Balance Ring' },
+        Rings = { 'Kshama Ring No.2', 'Moon Ring', 'Moon Ring', 'Balance Ring' },
         Back  = 'Assassin\'s Cape',
 		Waist = 'Corsette',
-        Feet  = 'Bounding Boots',
+        Feet  = { 'Rogue\'s Poulaines', 'Bounding Boots' },
     },
 		
 --[[
@@ -1194,7 +1216,7 @@ local sets = {
 	
 	['WS_DEXINT'] = {
 		Subset = 'AttackPower',		
-        Head  = { 'Assassin\'s Bonnet', 'Rogue\'s Bonnet', 'Empress Hairpin' },
+        Head  = { 'Rogue\'s Bonnet', 'Empress Hairpin' },
         Neck  = 'Spike Necklace',
         Body  = 'Brigandine',
 		Hands = 'Rogue Armlets',
@@ -1213,7 +1235,8 @@ local sets = {
 	['WS_MND'] = {
 		Subset = 'AttackPower',		
         Neck  = { 'Promise Badge', 'Justice Badge' },
-        Body  = 'Brigandine',
+        Body  = 'Wonder Kaftan',
+		Hands = 'Baron\'s Cuffs',
         Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs  = 'Wonder Braccae',
@@ -1256,12 +1279,12 @@ local sets = {
 		Head  = { 'Assassin\'s Bonnet', 'Rogue\'s Bonnet' },
         Neck  = 'Promise Badge',
 		Ears  = { 'Physical Earring', 'Ethereal Earring' },
-        Body  = { 'Assassin\'s Vest', 'Rogue\'s Vest', 'Wonder Kaftan' },
+        Body  = 'Wonder Kaftan',
         Hands = { 'Wonder Mitts', 'Rogue\'s Armlets' },
 		Rings = 'Toreador\'s Ring',
         Waist = 'Powerful Rope',
-        Legs  = 'Wonder Braccae',
-		Feet  = { 'Creek F Clomps', 'Wonder Clomps', 'Creek F Clomps' }, 
+        Legs  = { 'Wonder Braccae', 'Rogue\'s Culottes' },
+		Feet  = { 'Creek F Clomps', 'Wonder Clomps' }, 
     },
 		
 --[[
@@ -1344,6 +1367,7 @@ local sets = {
 	['Charm'] = {
 	    Head = 'Entrancing Ribbon',
         Neck = 'Flower Necklace',
+		Hands = 'Assassin\'s Armlets',
 		Rings = { 'Moon Ring', 'Moon Ring' },
         Waist = 'Corsette',
     },
