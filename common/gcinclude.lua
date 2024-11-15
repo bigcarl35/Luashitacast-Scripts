@@ -72,10 +72,10 @@ gcinclude.settings = {
 	DefaultSongTarget = 't';  -- What to use in MaxSong if no target specified
 	--
 	priorityEngaged = 'CEF'; 		-- indicates order of steps for engagement
-	priorityMidCast = 'ABCDEFGH';	-- indicates order of steps for spell midcast
 	priorityWeaponSkill = 'ADBE';	-- indicates order of steps for a weapon skill
 	--
 	bAutoStaveSwapping = true;		-- indicates if elemental stave swapping should occur automatically
+	bGc = false;			-- indicates if /gc has been run
 };
 
 -- The following arrays are used by the functions contained in this file. Probably best to leave them alone
@@ -486,6 +486,14 @@ gcinclude.tSpell = {
 	['nin-buff']   = { 'tonko','utsusemi','monomi' },
 	['nin-debuff'] = { 'kurayami','hojo','dokumori','jubaku' },
 	['nin-ele']    = { 'katon','suiton','raiton','doton','huton','hyoton' },
+	['brd-enh']	   = {
+					 'minne','minuet','paeon','pastoral','madrigal','mambo',
+					 'operetta','etude','ballad','march','prelude','aubade',
+					 'carol','mazurka','gavotte','capriccio','fantasia',
+					 'hymnus','round'
+					 },
+	['brd-enf']	   = { 'requiem','threnody','lullaby','finale','elegy','virelai' },
+	
 };
 
 --[[
@@ -1790,9 +1798,8 @@ end		-- gcinclude.ClearSet
 function gcinclude.fMagicalSubJob()
 	local player = gData.GetPlayer();
 	local sj = player.SubJob;
-	local sList = gcinclude._sMagicJobs;
 	
-	return (string.find(sList,sj) ~= nil);
+	return (string.find(gcinclude._sMagicJobs,sj) ~= nil);
 end		-- gcinclude.fMagicalSubJob
 
 --[[
@@ -2440,6 +2447,37 @@ function fCheckAccuracySlots(sSlot)
 	return false;
 end		-- fCheckAccuracySlots
 
+--[[
+	fBardSongType determines if bard song being cast is of the type being passed.
+	Returned is true or false
+--]]
+
+function fBardSongType(sType)
+	local spell = gData.GetAction();
+	local bGood = false;
+	
+	if sType == nil or spell.Name == nil then
+		return false;
+	end
+	
+	sType = string.lower(sType);
+	
+	if sType == 'enh' then
+		for i,j in pairs(gcinclude.tSpell['brd-enh']) do
+			if string.find(string.lower(spell.Name,j)) ~= nil then
+				bGood = true;
+				break;
+			end			
+		end
+	else
+		for i,j in pairs(gcinclude.tSpell['brd-enf']) do
+			if string.find(string.lower(spell.Name,j)) ~= nil then
+				bGood = true;
+				break;
+			end			
+		end
+	end
+end		-- fBardSongType
 
 --[[
 	fCheckInline checks for a simple conditional on the item passed into it.
@@ -2572,6 +2610,13 @@ function fCheckInline(gear,sSlot)
 			bgood = not gcinclude.fSummonerPet();
 		elseif suCode == 'NOT_OWN' then						-- Player in area not controlled by their nation
 			bGood = (gcdisplay.GetCycle('Region') == 'Not Owned');
+		elseif suCode == 'NOT_TANK' then					-- TANK is disabled
+			local x = gcdisplay.GetToggle('Tank');
+			if x == nil or x == false then
+				bGood = true;
+			else
+				bGood = false;
+			end		
 		elseif suCode == 'NOT_WSWAP' then					-- WSWAP is disabled
 			bGood = (gcinclude.settings.bWSOverride == false or gcdisplay.GetToggle('WSwap') == false);
 		elseif string.sub(suCode,1,8) == 'NOT_WTH:' then	-- Does the weather not match
@@ -2641,10 +2686,15 @@ function fCheckInline(gear,sSlot)
 			local s = string.lower(string.sub(suCode,4,-1));
 			bGood = (string.find(string.lower(spell.Name),s) ~= nil);
 		elseif suCode == 'SPECIAL' then
-			if sSlot ~= 'subset' then
-				bGood = fValidateSpecial(sSlot,sGear);
-			else	-- Invalid inline for a subset
+			-- Skip SPECIAL if /gc not run. (Sometimes errors.)
+			if gcinclude.settings.bGc == false then
 				bGood = false;
+			else
+				if sSlot ~= 'subset' then
+					bGood = fValidateSpecial(sSlot,sGear);
+				else	-- Invalid inline for a subset
+					bGood = false;
+				end
 			end
 		elseif string.sub(suCode,1,6) == 'SPELL:' then
 			-- Make sure a spell is being cast
@@ -2655,9 +2705,9 @@ function fCheckInline(gear,sSlot)
 		elseif suCode == 'SPIKE' then						-- does player have a spike buff
 			bGood = (fBuffed('Spike'));
 		elseif suCode == 'SPIRIT:ES' then					-- Pet being summoned is a spirit
-			bGood = (string.find(gcinclude.tSpell['spirits'],string.lower(spell.Name)) ~= nil);
+			bGood = (table.find(gcinclude.tSpell['spirits'],string.lower(spell.Name)) ~= nil);
 		elseif suCode == 'SPIRIT:EP' then					-- Current pet is a spirit
-			bGood = (pet ~= nil and string.find(gcinclude.tSpell['spirits'],string.lower(pet.Name)) ~= nil);
+			bGood = (pet ~= nil and table.find(gcinclude.tSpell['spirits'],string.lower(pet.Name)) ~= nil);
 		elseif suCode == 'STRING' then						-- Is the bard's instrument a string instrument
 			if player.MainJob == 'BRD' then
 				bGood = (gcdisplay.GetCycle('Instrument') == 'String');
@@ -3698,7 +3748,8 @@ function gcinclude.HandleCommands(args)
 			bForce = false;
 		end
 		GearCheck(sList,bForce);
-		gcinclude.basetime = 0;		-- Kill reminder
+		gcinclude.basetime = 0;			-- Kill reminder
+		gcinclude.settings.bGc = true;	-- indicates /gc was run
     elseif args[1] == 'gcmessages' then		-- turns feedback on/off for all commands
 		gcinclude.settings.Messages = not gcinclude.settings.Messages;
 		if gcinclude.settings.Messages then
@@ -4055,29 +4106,6 @@ function fGetRoot(sSpellName,bVersion)
 end		-- fGetRoot
 
 --[[
-	fWhichStat determines if the passed spell has a stat associated with it
---]]
-
-function fWhichStat(sSpellName)
-	local root = nil;
-	local tbl;
-	
-	if sSpellName == nil then
-		print('Warning: fWhichStat - spellName is nil');
-		return;
-	end
-	
-	root = fGetRoot(sSpellName);
-	if table.find(gcinclude.tSpell['int'],root) ~= nil then		-- if not nil then the "root" was found
-		return 'INT';
-	elseif table.find(gcinclude.tSpell['mnd'],root) ~= nil then	-- if not nil then the "root" was found
-		return 'MND';	
-	else	
-		return;	
-	end
-end		-- fWhichStat
-
---[[
 	CheckWsBailout determines if there's a debuff that will inhibit automatic cancelling of a weapons
 	skill or if insufficient TP exist to do a weapon skill
 --]]
@@ -4209,10 +4237,55 @@ function gcinclude.Initialize()
 end		-- gcinclude.Initialize
 
 --[[
-	fMidcastSinging handles all of the equipment management when a song is cast.
+	HandlePrecast equips the appropriate precast gear
 --]]
 
-function fMidcastSinging()
+function gcinclude.HandlePrecast()
+	local spell = gData.GetAction();
+	local bTank = gcdisplay.GetToggle('Tank');
+	
+	if bTank == nil then
+		bTank = false;
+	end
+	
+	if spell.Skill == 'Singing' then
+		gcinclude.MoveToCurrent(gProfile.Sets.SingingPrecast,gProfile.Sets.CurrentGear);
+	else
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Precast,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.Precast,gProfile.Sets.CurrentGear);
+		end
+	end
+end		-- HandlePrecast
+
+--[[
+	MidcastSinging handles all of the equipment management when a song is cast.
+--]]
+
+function MidcastSinging()
+	local spell = gData.GetAction();
+	local bTank = gcdisplay.GetToggle('Tank');
+	
+	if bTank == nil then
+		bTank = false;
+	end
+	
+	if fBardSongType('enh') == true then
+		-- Enhancement song
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnhancementSinging,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.EnhancementSinging,gProfile.Sets.CurrentGear);
+		end
+	elseif fBardSongType('enf') == true then
+		-- Enfeebling song
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnfeeblingSinging,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.EnfeeblingSinging,gProfile.Sets.CurrentGear);
+		end		
+	end
 end
 
 --[[
@@ -4706,7 +4779,7 @@ function MidcastGeomancy()
 end		-- MidcastGeomancy
 
 --[[
-	fMidcastNinjutsu handles all of the equipment management when a ninjutsu spell
+	MidcastNinjutsu handles all of the equipment management when a ninjutsu spell
 	is cast.
 --]]
 
@@ -4768,17 +4841,16 @@ function MidcastNinjutsu()
 end		-- MidcastNinjutsu
 
 --[[
-	fHandleMidcast is a coordinating routine that's used to call the independent types
+	HandleMidcast is a coordinating routine that's used to call the independent types
 	of magic routines. Unlike the previous implementation, the multitude of tiers are
 	collapsed to help give the player agency.
 --]]
 
-function gcinclude.fHandleMidcast()
+function gcinclude.HandleMidcast()
 	local spell = gData.GetAction();
 	
 	if spell.Skill == 'Singing' then
-		gcinclude.HandleMidcast(gcdisplay.GetToggle('Tank') == true);
-		--MidcastSinging();
+		MidcastSinging();
 	elseif spell.Skill == 'Healing Magic' then
 		MidcastHealingMagic();
 	elseif spell.Skill == 'Dark Magic' then
@@ -4800,128 +4872,7 @@ function gcinclude.fHandleMidcast()
 	elseif spell.Skill == 'Ninjutsu' then
 		MidcastNinjutsu();
 	end
-end		-- fMidcastNinjutsu
-
---[[
-	HandleMidcast is the second function invoked when a player casts a spell. It equips gear appropriate for 
-	magic skill, duration, magic attack bonus, magic accuracy, and potency. There's an order to how the pieces 
-	are loaded: INT/MND, spell specific, macc, magic skill, obi, ele swap. This routine is called from a stub
-	function of the same name in the job file.
---]]
-
-function gcinclude.HandleMidcast(bTank)
-	local player = gData.GetPlayer();
-	local spell = gData.GetAction();
-	local obi,sEle;
-	local sSet,sGear;
-	local cKey;
-
-	if bTank == nil then		-- Need to check because of transition state of change
-		bTank = false;
-	end
-	
-	gcinclude.settings.priorityMidCast = string.upper(gcinclude.settings.priorityMidCast);
-	for i = 1,string.len(gcinclude.settings.priorityMidCast),1 do
-		cKey = string.sub(gcinclude.settings.priorityMidCast,i,i);
-		sGear = nil;
-		
-		if cKey == 'A' then				-- midcast gear
-			gcinclude.MoveToCurrent(gProfile.Sets.Midcast,gProfile.Sets.CurrentGear);
-		elseif cKey == 'B' then			-- Spell Interruption Rate gear
-			if spell.Skill ~= 'Singing' then
-				gcinclude.MoveToCurrent(gProfile.Sets.SIR,gProfile.Sets.CurrentGear);
-			end
-		elseif cKey == 'C' then			-- INT/MND gear?
-			sSet = fWhichStat(spell.Name);
-			if sSet ~= nil then
-				if sSet == 'MND' then
-					if bTank == true then
-						gcinclude.MoveToCurrent(gProfile.Sets.Tank_MND,gProfile.Sets.CurrentGear);
-					else
-						gcinclude.MoveToCurrent(gProfile.Sets.MND,gProfile.Sets.CurrentGear);
-					end
-				elseif sSet == 'INT' then
-					if bTank == true then
-						gcinclude.MoveToCurrent(gProfile.Sets.Tank_INT,gProfile.Sets.CurrentGear);
-					else
-						gcinclude.MoveToCurrent(gProfile.Sets.INT,gProfile.Sets.CurrentGear);
-					end
-				end
-			end
-		elseif cKey == 'D' then			-- Magic Skill Type		
-			-- Now process for the skill type
-			if spell.Skill == 'Healing Magic' then
-				gcinclude.MoveToCurrent(gProfile.Sets.Healing,gProfile.Sets.CurrentGear);
-			elseif spell.Skill == 'Dark Magic' then
-				gcinclude.MoveToCurrent(gProfile.Sets.Dark,gProfile.Sets.CurrentGear);
-			elseif spell.Skill == 'Divine Magic' then
-				gcinclude.MoveToCurrent(gProfile.Sets.Divine,gProfile.Sets.CurrentGear);
-			elseif spell.Skill == 'Enfeebling Magic' then				
-				gcinclude.MoveToCurrent(gProfile.Sets.Enfeebling,gProfile.Sets.CurrentGear);
-			elseif spell.Skill == 'Enhancing Magic' then
-				gcinclude.MoveToCurrent(gProfile.Sets.Enhancing,gProfile.Sets.CurrentGear);
-			elseif spell.Skill == 'Elemental Magic' then
-				gcinclude.MoveToCurrent(gProfile.Sets.Elemental,gProfile.Sets.CurrentGear);
-			elseif spell.Skill == 'Ninjutsu' then
-				gcinclude.MoveToCurrent(gProfile.Sets.Ninjutsu,gProfile.Sets.CurrentGear);
-			elseif spell.Skill == 'Summoning' then	
-				gcinclude.MoveToCurrent(gProfile.Sets.Summoning,gProfile.Sets.CurrentGear);
-			end
-
-			-- See if Magic Attack Bonus useful. It only affects offensive spells. (In the case
-			-- of dia or bio, it only affects the initial hit and not the dot aspects of those
-			-- spells.) Ninjutsu is affected by Ninjutsu Magic Attack Bonus. Filter out the
-			-- easy ones even though, in certain circumstances, some of these would be positively
-			-- affected by MAB.
-			
-			if string.find('Healing Magic,Enfeebling Magic,Enhancing Magic,Ninjutsu,Summoning,Singing',spell.Skill) == nil then
-				gcinclude.MoveToCurrent(gProfile.Sets.MAB,gProfile.Sets.CurrentGear);
-			end
-		elseif cKey == 'E' then			--Magical accuracy
-			gcinclude.FractionalAccuracy(gProfile.Sets.Macc);
-		elseif cKey == 'F' then			-- Spell specific gear
-			if string.match(spell.Name, 'Stoneskin') then
-				if bTank == true then
-					gcinclude.MoveToCurrent(gProfile.Sets.TANK_MND,gProfile.Sets.CurrentGear);
-				else				
-					gcinclude.MoveToCurrent(gProfile.Sets.MND,gProfile.Sets.CurrentGear);
-				end
-				-- Now load the specific stoneskin set	
-				gcinclude.MoveToCurrent(gProfile.Sets.Stoneskin,gProfile.Sets.CurrentGear);
-			elseif string.match(spell.Name, 'Drain') then
-				gcinclude.MoveToCurrent(gProfile.Sets.Drain,gProfile.Sets.CurrentGear);
-			elseif string.match(spell.Name, 'Aspir') then
-				gcinclude.MoveToCurrent(gProfile.Sets.Aspir,gProfile.Sets.CurrentGear);
-			elseif string.match(spell.Name, 'Sneak') then
-				gcinclude.MoveToCurrent(gProfile.Sets.Sneak,gProfile.Sets.CurrentGear);
-			elseif string.match(spell.Name, 'Invisible') then
-				gcinclude.MoveToCurrent(gProfile.Sets.Invisible,gProfile.Sets.CurrentGear);
-			elseif string.match(spell.Name, 'Phalanx') then
-				gcinclude.MoveToCurrent(gProfile.Sets.Phalanx,gProfile.Sets.CurrentGear);
-			end
-		elseif cKey == 'G' then				-- Elemental Obi
-			if spell.Skill ~= 'Summoning' then
-				local sRoot = fGetRoot(spell.Name);
-				sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',sRoot);
-				if sGear ~= nil then
-					gProfile.Sets.CurrentGear['Waist'] = sGear;
-				end
-			end
-		elseif cKey == 'H' then				-- Elemental Stave
-			if spell.Skill == 'Singing' then
-				sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','SongAffinity',spell.Name);
-			elseif spell.Skill ~= 'Summoning' then
-				sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
-			-- The elemental staff has no effect on the summons. It does have an effect if
-			-- you have a pet out. Skip it here, but make sure handles in the job file.
-			end
-		
-			if sGear ~= nil then
-				gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
-			end
-		end
-	end
-end		-- gcinclude.HandleMidcast
+end		-- MidcastNinjutsu
 
 --[[
 	gcinclude.fHandleWeaponskill loads the appropriate gear for the weapon skill
