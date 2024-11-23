@@ -75,6 +75,7 @@ gcinclude.settings = {
 	priorityWeaponSkill = 'ADBE';	-- indicates order of steps for a weapon skill
 	--
 	bAutoStaveSwapping = true;		-- indicates if elemental stave swapping should occur automatically
+	bFractional = true;		-- indicates if fractional accuracy enabled; disabled means predefined
 	bGc = false;			-- indicates if /gc has been run
 };
 
@@ -109,7 +110,6 @@ gcinclude.BluMagTH = T{'Actinic Burst','Dream Flower','Subduction'};
 gcinclude.Elements = T{'Thunder', 'Blizzard', 'Fire', 'Stone', 'Aero', 'Water', 'Light', 'Dark'};
 gcinclude.HelixSpells = T{'Ionohelix', 'Cryohelix', 'Pyrohelix', 'Geohelix', 'Anemohelix', 'Hydrohelix', 'Luminohelix', 'Noctohelix'};
 gcinclude.StormSpells = T{'Thunderstorm', 'Hailstorm', 'Firestorm', 'Sandstorm', 'Windstorm', 'Rainstorm', 'Aurorastorm', 'Voidstorm'};
-gcinclude.NinNukes = T{'Katon: Ichi', 'Katon: Ni', 'Katon: San', 'Hyoton: Ichi', 'Hyoton: Ni', 'Hyoton: San', 'Huton: Ichi', 'Huton: Ni', 'Huton: San', 'Doton: Ichi', 'Doton: Ni', 'Doton: San', 'Raiton: Ichi', 'Raiton: Ni', 'Raiton: San', 'Suiton: Ichi', 'Suiton: Ni', 'Suiton: San'};
 gcinclude.Rolls = T{{'Fighter\'s Roll',5,9}, {'Monk\'s Roll',3,7}, {'Healer\'s Roll',3,7}, {'Corsair\'s Roll',5,9}, {'Ninja Roll',4,8},{'Hunter\'s Roll',4,8}, {'Chaos Roll',4,8}, {'Magus\'s Roll',2,6}, {'Drachen Roll',4,8}, {'Choral Roll',2,6},{'Beast Roll',4,8}, {'Samurai Roll',2,6}, {'Evoker\'s Roll',5,9}, {'Rogue\'s Roll',5,9}, {'Warlock\'s Roll',4,8},
 	{'Puppet Roll',3,7}, {'Gallant\'s Roll',3,7}, {'Wizard\'s Roll',5,9}, {'Dancer\'s Roll',3,7}, {'Scholar\'s Roll',2,6},{'Naturalist\'s Roll',3,7}, {'Runeist\'s Roll',4,8}, {'Bolter\'s Roll',3,9}, {'Caster\'s Roll',2,7}, {'Courser\'s Roll',3,9},{'Blitzer\'s Roll',4,9}, {'Tactician\'s Roll',5,8}, {'Allies\' Roll',3,10}, {'Miser\'s Roll',5,7},
 	{'Companion\'s Roll',2,10},{'Avenger\'s Roll',4,8},}; -- {name,lucky,unlucky}
@@ -1418,7 +1418,7 @@ function SetVariables()
 	gcdisplay.CreateToggle('Eva', false);
 	
 	if string.find('BLM,SMN',player.MainJob) == nil then
-		gcdisplay.CreateToggle('WSwap',(string.find('WHM,BRD',player.MainJob) ~= nil));
+		gcdisplay.CreateToggle('WSwap',(string.find('WHM,BRD,RDM',player.MainJob) ~= nil));
 	end
 
 	-- Job specific toggles	
@@ -1503,9 +1503,9 @@ function fGearCheckItem(sSlot,sName,bAccess,bForce)
 	if iPos ~= nil then
 		sName = string.sub(sName,1,iPos-1);
 	end	
-	
-	-- See if item already registered
 
+
+	-- See if item already registered
 	if gcinclude.GearDetails[sSlot][sName] == nil or 
 		gcinclude.GearDetails[sSlot]['num'] == nil or 
 		bForce == true then
@@ -2165,26 +2165,20 @@ end		-- fMakeCodeTable
 --]]
 
 function fValidInlineDynamicCode(suCode)
-	local bPct = false;
 	local iOff = 0;	
 	local sOperator,sRoot,ival;
 	local tComparators = { 'EQ', 'LT', 'LE', 'GT', 'GE', 'NE'};
 	
-	if string.find('TP.,TPP,MP.,MPP,HP.,HPP',string.sub(suCode,1,3)) ~= nil then
+	if string.find('TP.,TPP,MP.,MPP,HP.,HPP,LVL',string.sub(suCode,1,3)) ~= nil then
 		if string.sub(suCode,3,1) ~= '.' then
-			bPct = true;
 			iOff = 1;
 		end
 		
-		sRoot = string.sub(suCode,1,2+iOff);
-		
+		sRoot = string.sub(suCode,1,2+iOff);		
 		sOperator = string.sub(suCode,4+iOff,5+iOff);
+		
 		if table.find(tComparators,sOperator) ~= nil then
-			if bVisual == true then
-				ival = tonumber(string.sub(suCode,7+iOff,-2));
-			else
-				ival = tonumber(string.sub(suCode,7+iOff,-1));
-			end
+			ival = tonumber(string.sub(suCode,7+iOff,-1));
 			return true,sRoot,sOperator,ival;
 		else
 			return false;
@@ -2195,81 +2189,58 @@ function fValidInlineDynamicCode(suCode)
 end		-- fValidInlineCode
 
 --[[
-	fEvalCodedComparison parses the passed conditional and determines if it is 
-	true or not. Result is passed back
+	fEvalComparison builds the comparison check and then evaluates it
 --]]
 
-function fEvalCodedComparison(sRoot,sOperator,ival,sGear)
-	local player = gData.GetPlayer();
+function fEvalComparison(sOperator,ival,iP)
 	local bGood = false;
 	
-	if sRoot == 'TP' or sRoot == 'TPP' then		-- TP is straightforward
-		local iTP;
-		
-		if sRoot == 'TPP' then
-			iTP = player.TP/10;
-		else
-			iTP = player.TP;
-		end
-		
-		if sOperator == 'EQ' then
-			bGood = (iTP == ival);
-		elseif sOperator == 'LT' then
-			bGood = (iTP < ival);
-		elseif sOperator == 'LE' then
-			bGood = (iTP <= ival);
-		elseif sOperator == 'GT' then
-			bGood = (iTP > ival);
-		elseif sOperator == 'GE' then
-			bGood = (iTP >= ival);
-		else
-			bGood = (iTP ~= ival);
-		end
-	elseif sRoot == 'MP'  or sRoot == 'MPP' then	
-		local iMP;
-		
-		if sRoot == 'MPP' then
-			iMP = player.MPP;			
-		else
-			iMP = player.MP;
-		end
-			
-		if sOperator == 'EQ' then
-			bGood = (iMP == ival);
-		elseif sOperator == 'LT' then
-			bGood = (iMP < ival);
-		elseif sOperator == 'LE' then
-			bGood = (iMP <= ival);
-		elseif sOperator == 'GT' then
-			bGood = (iMP > ival);
-		elseif sOperator == 'GE' then
-			bGood = (iMP >= ival);
-		else
-			bGood = (iMP ~= ival);
-		end
-	elseif sRoot == 'HP' or sRoot == 'HPP' then
-		local iHP;
-		
-		if sRoot == 'HPP' then
-			iMP = player.HPP;
-		else
-			iMP = player.HP;
-		end
-		
-		if sOperator == 'EQ' then
-			bGood = (iHP == ival);
-		elseif sOperator == 'LT' then
-			bGood = (iHP < ival);
-		elseif sOperator == 'LE' then
-			bGood = (iHP <= ival);
-		elseif sOperator == 'GT' then
-			bGood = (iHP > ival);
-		elseif sOperator == 'GE' then
-			bGood = (iHP >= ival);
-		else
-			bGood = (iHP ~= ival);
-		end
+	if sOperator == 'EQ' then
+		bGood = (iP == ival);
+	elseif sOperator == 'LT' then
+		bGood = (iP < ival);
+	elseif sOperator == 'LE' then
+		bGood = (iP <= ival);
+	elseif sOperator == 'GT' then
+		bGood = (iP > ival);
+	elseif sOperator == 'GE' then
+		bGood = (iP >= ival);
+	else
+		bGood = (iP ~= ival);
 	end
+	return bGood;
+end		-- fEvalComparison
+
+--[[
+	fEvalCodedComparison parses the passed conditional and determines the appropriate
+	value to compare. Returned is true or not.
+--]]
+
+function fEvalCodedComparison(sRoot,sOperator,ival)
+	local player = gData.GetPlayer();
+	local iP = -1;
+	local bGood = false;
+	
+	if sRoot == 'TP' then
+		iP = player.TP;
+	elseif sRoot == 'TPP' then
+		iP = player.TP/10;
+	elseif sRoot == 'MP' then
+		iP = player.MP;
+	elseif sRoot == 'MPP' then
+		iP = player.TP/10;
+	elseif sRoot == 'HP' then
+		iP = player.HP;
+	elseif sRoot == 'HPP' then
+		iP = player.HPP;
+	elseif sRoot == 'LVL' then
+		iP = player.MainJobSync;
+	end
+	
+	if iP > -1 then
+		bGood = fEvalComparison(sOperator,ival,iP)
+	end
+	
 	return bGood;
 end		-- fEvalCodedComparison
 
@@ -2527,12 +2498,6 @@ function fCheckInline(gear,sSlot)
 			bGood = (gSet['Range'] ~= nil and table.find(gProfile.WeaponType[suCode],gSet['Range']) ~= nil);
 		elseif suCode == 'ABSORB' then										-- Spell is an Absorb- type
 			bGood = (table.find(gcinclude.tSpell['absorb'],string.lower(spell.Name)));
-		elseif suCode == 'ACCURACY' then
-			if sSlot ~= 'subset' then
-				bGood = (fCheckAccuracySlots(sSlot) == true);
-			else	-- Invalid inline for a subset
-				bGood = false;
-			end
 		elseif suCode == 'BARSPELL' then					--  Player has a "bar" buff
 			bGood = (fBuffed('Bar',true));
 		elseif suCode == 'BOUND' then						-- Player is bound
@@ -2545,8 +2510,6 @@ function fCheckInline(gear,sSlot)
 			bGood = fBuffed('Cover');
 		elseif string.sub(suCode,1,3) == 'CR:' then			-- Crafting
 			bGood = (gcinclude.Craft == string.sub(suCode,4,-1));
-		elseif suCode == 'CURE' then						-- Cure spell cast
-			bGood = (string.find('cure,curaga',fGetRoot(spell.Name)) ~= nil);
 		elseif suCode == 'CURSED' then						-- Player is cursed
 			bGood = fBuffed('Curse');
 		elseif suCode == 'DAYTIME' then						-- Time is daytime
@@ -2563,6 +2526,16 @@ function fCheckInline(gear,sSlot)
 			bGood = (gcdisplay.GetCycle('DT') == 'P');			
 		elseif suCode == 'DUSK2DAWN' then					-- Time between dusk and dawn
 			bGood = gcinclude.CheckTime(timestamp.hour,DUSK2DAWN,false);
+		elseif table.find(gcinclude.tSpell['enspell'],string.lower(suCode)) ~= nil then		-- En*
+			bGood = fBuffed(suCode);
+		elseif suCode == 'ENANY' then						-- check for any en- spell
+			bGood = false;
+			for i,j in pairs(gcinclude.tSpell['enspell']) do
+				if fBuffed(j) == true then
+					bGood = true;
+					break;
+				end
+			end
 		elseif suCode == 'EVASION' then
 			bGood = (gcdisplay.GetToggle('Eva') == true);	
 		elseif suCode == 'FULLMOON' then					-- Moon phase: Full Moon
@@ -2578,26 +2551,19 @@ function fCheckInline(gear,sSlot)
 				bGood = false;
 			end
 		elseif string.find(suCode,'IF:') then
-			-- Currently only tests the piece currently equipped. I probably
-			-- should check the temporary set too at some point.
+			bGood = false;		
 			if sSlot ~= 'subset' then
 				local sCur = gData.GetEquipSlot(sSlot);
 				local sItem = string.sub(suCode,4,-1);
 				bGood = (string.lower(sItem) == string.lower(sCur));
-			else	-- Invalid inline for a subset
-				bGood = false;
-			end		
---		elseif string.find(suCode,'IFC:') then
---			Needs to be implemented			
+			end				
 		elseif string.find(suCode,'LVLDIV') then			-- Player's level divisable by #
 			local iDiv = tonumber(string.sub(suCode,7,-1));
 			if iDiv > 0 then
 				bGood = (math.floor(player.MainJobSync/iDiv) == player.MainJobSync/iDiv);
 			else
 				bGood = false;
-			end
---		elseif string.find(suCode,'LVL') then
---			Needs to be implemented		
+			end	
 		elseif suCode == 'MSJ' then							-- Magical subjob
 			bGood = (string.find(gcinclude._sMagicJobs,sj) ~= nil);
 		elseif suCode == 'NEWMOON' then						-- Moon phase: New Moon
@@ -2682,9 +2648,9 @@ function fCheckInline(gear,sSlot)
 			else
 				bGood = false;
 			end			
-		elseif string.sub(suCode,1,3) == 'SO:' then			-- Is song being cast of type
+		elseif string.sub(suCode,1,3) == 'SP:' then			-- Is song/spell being cast of type
 			local s = string.lower(string.sub(suCode,4,-1));
-			bGood = (string.find(string.lower(spell.Name),s) ~= nil);
+			bGood = (string.find(string.lower(spell.Name),s) ~= nil);			
 		elseif suCode == 'SPECIAL' then
 			-- Skip SPECIAL if /gc not run. (Sometimes errors.)
 			if gcinclude.settings.bGc == false then
@@ -2705,9 +2671,9 @@ function fCheckInline(gear,sSlot)
 		elseif suCode == 'SPIKE' then						-- does player have a spike buff
 			bGood = (fBuffed('Spike'));
 		elseif suCode == 'SPIRIT:ES' then					-- Pet being summoned is a spirit
-			bGood = (string.find(gcinclude.tSpell['spirits'],string.lower(spell.Name)) ~= nil);
+			bGood = (table.find(gcinclude.tSpell['spirits'],string.lower(spell.Name)) ~= nil);
 		elseif suCode == 'SPIRIT:EP' then					-- Current pet is a spirit
-			bGood = (pet ~= nil and string.find(gcinclude.tSpell['spirits'],string.lower(pet.Name)) ~= nil);
+			bGood = (pet ~= nil and table.find(gcinclude.tSpell['spirits'],string.lower(pet.Name)) ~= nil);
 		elseif suCode == 'STRING' then						-- Is the bard's instrument a string instrument
 			if player.MainJob == 'BRD' then
 				bGood = (gcdisplay.GetCycle('Instrument') == 'String');
@@ -2748,11 +2714,12 @@ function fCheckInline(gear,sSlot)
 			else
 				bGood = false;
 			end						 
-		elseif string.find('TP.,TPP,MP.,MPP,HP.,HPP',string.sub(suCode,1,3)) ~= nil then
+		elseif string.find('TP.,TPP,MP.,MPP,HP.,HPP,LVL',string.sub(suCode,1,3)) ~= nil then
+			-- Note: LVLDIV will not proc since processed prior to hitting here
 			local sRoot,sOperator,ival;
 			bGood,sRoot,sOperator,ival = fValidInlineDynamicCode(suCode);		
 			if bGood == true then
-				bGood = fEvalCodedComparison(sRoot,sOperator,ival,sGear);
+				bGood = fEvalCodedComparison(sRoot,sOperator,ival);
 			else
 				bGood = false;
 			end
@@ -2827,8 +2794,36 @@ function RegionControlDisplay()
 end		-- RegionControlDisplay
 
 function gcinclude.t1()
-	print('Testing for a Bar- buff');
-	print(fBuffed('Bar',true));
+	local pEntity = AshitaCore:GetMemoryManager():GetEntity();
+	local myIndex = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0);
+    local petIndex = AshitaCore:GetMemoryManager():GetEntity():GetPetTargetIndex(myIndex);
+	local targetIndex = gData.GetTargetIndex();
+	local x,y,z;
+	
+	if petIndex ~= nil and petIndex > 0 then
+		x = math.pow(pEntity:GetLocalPositionX(myIndex) - pEntity:GetLocalPositionX(petIndex),2);
+		y = math.pow(pEntity:GetLocalPositionY(myIndex) - pEntity:GetLocalPositionY(petIndex),2);
+		z = math.pow(pEntity:GetLocalPositionZ(myIndex) - pEntity:GetLocalPositionZ(petIndex),2);
+		print(string.format('Player to Pet: %d.1', math.sqrt(x+y+z)));
+		print(math.sqrt(AshitaCore:GetMemoryManager():GetEntity():GetDistance(petIndex)));		
+	end
+
+	if targetIndex ~= nil and targetIndex > 0 then
+		x = math.pow(pEntity:GetLocalPositionX(myIndex) - pEntity:GetLocalPositionX(targetIndex),2);
+		y = math.pow(pEntity:GetLocalPositionY(myIndex) - pEntity:GetLocalPositionY(targetIndex),2);
+		z = math.pow(pEntity:GetLocalPositionZ(myIndex) - pEntity:GetLocalPositionZ(targetIndex),2);	
+		print(string.format('Player to target: %d.1', math.sqrt(x+y+z)));
+		print(math.sqrt(AshitaCore:GetMemoryManager():GetEntity():GetDistance(targetIndex)));				
+	end
+	
+	if petIndex ~= nil and petIndex > 0 and targetIndex ~= nil and targetIndex > 0 then
+		x = math.pow(pEntity:GetLocalPositionX(petIndex) - pEntity:GetLocalPositionX(targetIndex),2);
+		y = math.pow(pEntity:GetLocalPositionY(petIndex) - pEntity:GetLocalPositionY(targetIndex),2);
+		z = math.pow(pEntity:GetLocalPositionZ(petIndex) - pEntity:GetLocalPositionZ(targetIndex),2);	
+		print(string.format('Pet to target: %d.1', math.sqrt(x+y+z)));
+		print(math.sqrt(AshitaCore:GetMemoryManager():GetEntity():GetDistance(petIndex)));
+		print(math.sqrt(AshitaCore:GetMemoryManager():GetEntity():GetDistance(targetIndex)));
+	end
 end		-- gcinclude.t1
 
 --[[

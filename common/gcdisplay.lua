@@ -15,6 +15,7 @@ local SubLV = 0;
 local Main = 'FOO';
 local Sub = 'BAR';
 local Locks = 'None';
+local AccType = 'F';
 local AccTier = 'None';
 local JobBar = T{['GSwap'] = {'ALL','MS'},
 				 ['DT'] = {'ALL','MS'},
@@ -191,8 +192,7 @@ function gcdisplay.Update()
 	MainLV =player:GetMainJobLevel();
 	SubLV = player:GetSubJobLevel();
 	Main = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", MID);
-	Sub = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", SID);
-	
+	Sub = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", SID);	
 end		-- gcdisplay.Update
 
 --[[
