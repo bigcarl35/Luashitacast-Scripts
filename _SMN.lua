@@ -1414,9 +1414,7 @@ function HandlePetAction(Pet,PetAction)
 			end
 		end
 	else
-		-- Must be a /BST charmed pet. Since the accuracy sets are based on
-		-- a SMN's avatar, if you want accuracy gear here, you must use the
-		-- //ACCURACY inline in the specified Pet_xxx sets, accordingly.
+		-- Must be a /BST charmed pet.
 		if (gcinclude.BstPetAttack:contains(PetAction.Name)) then				-- Pet Attack
 			gcinclude.MoveToCurrent(sets.Pet_Attack,sets.CurrentGear);		
 		elseif (gcinclude.BstPetMagicAttack:contains(PetAction.Name)) then		-- Pet Magical Attack

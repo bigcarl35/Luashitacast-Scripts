@@ -69,13 +69,8 @@ local sets = {
 --]]
 
 	['Default'] = {
-		Main  =  { 'Fencing Degen//WSWAP', 'Rose Wand +1//WSWAP', 'Solid Wand//WSWAP', 'Yew Wand//WSWAP' },
-		Head   = { 'Lilac Corsage//TOWN', 'Silver Hairpin +1' },
-		Body   = { 'Ducal Aketon//TOWN-AK', 'Warlock\'s Tabard', 'Brigandine', 'Ctr. Scale Mail', 'Baron\'s Saio', 'Beetle harness', 'Angler\'s Tunica' },
-		Hands  = { 'Duelist\'s Gloves', 'Warlock\'s Gloves' },
-		Rings  = { 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
-		Legs   = { 'Duelist\'s Tights', 'Warlock\'s Tights' },
-		Feet   = { 'Duelist\'s Boots', 'Warlock\'s Boots', 'Mannequin Pumps' },
+		Subset = 'TP',
+		Body   = 'Ducal Aketon//TOWN-AK',
 	},
 	
 	['Tank_Default'] = {
@@ -91,14 +86,14 @@ local sets = {
 
 	['TP'] = {
         Head  = { 'Warlock\'s Chapeau', 'Silver Hairpin +1' },
-        Neck  = { 'Spirit Torque', 'Justice Badge' },
+        Neck  = { 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
         Ears  = { 'Geist Earring', 'Energy Earring +1', 'Energy Earring +1' },
         Body  = { 'Warlock\'s Tabard', 'Brigandine', 'Angler\'s Tunica' },
 		Back  = 'White Cape',
         Hands = { 'Warlock\'s Gloves', 'Baron\'s Cuffs', 'Battle gloves' },
         Rings = { 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
         Waist = { 'Powerful Rope', 'Friar\'s Rope' },
-        Legs  = { 'Warlock\'s Tights', 'Wonder Braccae', 'San. Trousers', 'Ryl.Ftm. trousers' },
+        Legs  = { 'Duelist\'s Tights', 'Warlock\'s Tights', 'Wonder Braccae', 'San. Trousers', 'Ryl.Ftm. trousers' },
         Feet  = { 'Duelist\'s Boots', 'Warlock\'s Boots', 'Mannequin Pumps', 'Bounding boots' },
     },
 
@@ -183,9 +178,9 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-		Main = { 'Fencing Degen', 'Solid Wand', 'Yew Wand' },
-		Sub = 'Fish Scale Shield',
-		Ammo = 'Fortune Egg',
+		Main  =  { 'Ebony Wand +1//WSWAP', 'Rose Wand +1//WSWAP', 'Solid Wand//WSWAP', 'Yew Wand//WSWAP' },
+		Sub   = 'Fish Scale Shield',
+		Ammo  = 'Fortune Egg',
     },
 	
 --[[
@@ -219,34 +214,6 @@ local sets = {
 
 	['Tank_Midshot'] = {
 		Subset = 'Midshot',
-	},
-
---[[
-	The following two sets are to be used as subsets. They're baseline for
-	intellegence and mind. Once you get to individual sets, include one of
-	these or ignore them and be explicit on the gear in that set.
---]]
-
-	['INT'] = {	
-		Main  = 'Ice Staff//WSWAP',
-		Head  = 'Warlock\'s Chapeau',
-		Body  = 'Baron\'s Saio',
-		Hands = 'Duelist\'s Gloves',
-		Waist = 'Mrc.Cpt. Belt',
-		Feet  = { 'Warlock\'s Boots', 'Mannequin Pumps' },
-	},
-	
-	['MND'] = {
-		Main  = 'Water Staff//WSWAP',
-		Neck  = { 'Promise Badge', 'Justice Badge' },
-		Ears  = 'Geist Earring',
-		Body  = 'Wonder Kaftan',
-		Hands = 'Baron\'s Cuffs',
-		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
-		Back  = 'White Cape',
-		Waist = 'Friar\'s Rope',
-		Legs  = { 'Warlock\'s Tights', 'Wonder Braccae' },
-		Feet  = { 'Duelist\'s Boots', 'Mannequin Pumps' }, 
 	},
 	
 --[[
@@ -1439,8 +1406,36 @@ local sets = {
 	['CurrentGear'] = { },	
 	
 --[[
-								*** Custom Sets Go below this comment ***
+			*** Custom Sets Go below this comment ***
 --]]
+	
+--[[
+	The following two sets are to be used as subsets. They're baseline for
+	intellegence and mind. Once you get to individual sets, include one of
+	these or ignore them and be explicit on the gear in that set.
+--]]
+
+	['INT'] = {	
+		Main  = 'Ice Staff//WSWAP',
+		Head  = 'Warlock\'s Chapeau',
+		Body  = 'Baron\'s Saio',
+		Hands = 'Duelist\'s Gloves',
+		Waist = 'Mrc.Cpt. Belt',
+		Feet  = { 'Warlock\'s Boots', 'Mannequin Pumps' },
+	},
+	
+	['MND'] = {
+		Main  = 'Water Staff//WSWAP',
+		Neck  = { 'Promise Badge', 'Justice Badge' },
+		Ears  = 'Geist Earring',
+		Body  = 'Wonder Kaftan',
+		Hands = 'Baron\'s Cuffs',
+		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
+		Back  = 'White Cape',
+		Waist = 'Friar\'s Rope',
+		Legs  = { 'Warlock\'s Tights', 'Wonder Braccae' },
+		Feet  = { 'Duelist\'s Boots', 'Mannequin Pumps' }, 
+	},
 
 };
 
@@ -1456,7 +1451,7 @@ profile.WeaponType = {
 				  'Wind Staff', 'Auster\'s Staff', 'Earth Staff', 'Terra\'s Staff',
 				  'Thunder Staff', 'Jupiter\'s Staff', 'Water Staff', 'Neptune\'s Staff',
 				  'Light Staff', 'Apollo\'s Staff', 'Dark Staff', 'Pluto\'s Staff' },
-	['CLUB']  =  { 'Warp Cudgel', 'Rose Wand +1', 'Solid Wand', 'Yew Wand', 'Pilgrim\'s Wand' },
+	['CLUB']  =  { 'Warp Cudgel', 'Ebony Wand +1', 'Rose Wand +1', 'Solid Wand', 'Yew Wand', 'Pilgrim\'s Wand' },
 };
 
 -- Accuracy Sets are predefined /acc commands. You identify them by a name and
@@ -1555,7 +1550,7 @@ function profile.OnLoad()
 		gcinclude.offhand = nil;
 	else
 		gcinclude.offhand = sets.CurrentGear['Sub'];
-	end	
+	end		
 end		-- OnLoad
 
 --[[
