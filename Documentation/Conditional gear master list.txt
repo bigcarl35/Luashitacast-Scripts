@@ -41,7 +41,6 @@ Here's a list of all the "Inline" conditionals currently supported. Let me know 
 want me to add any more.
 
 //ABSORB		Equip if an absorb spell cast
-//ACCURACY		Equip if 'Acc' enabled
 //ARC_CIRCLE	Equip if player has Arcane Circle buff
 //ARCHERY		Equip if Range is a Bow
 //AXE			Equip if Main is an Axe
@@ -52,9 +51,8 @@ want me to add any more.
 //CLUB			Equip if Main is a Club
 //COVER			Equip if Cover is active
 //CR:"craft"	Equip if the crafting code passed matches the master crafting setting
-//CURE			Equip if spell being cast is a cure/curaga spell
 //"day"			Equip if the day's name matches the specified day, eg. //FIRESDAY
-//CURSED			Equip if player is cursed
+//CURSED		Equip if player is cursed
 //DAGGER		Equip if Main is a Dagger
 //DAYTIME		Equip if it's daytime
 //DB:BPP		Equip if debuff cycle set to BPP (blind,poison,paralyze)
@@ -64,7 +62,8 @@ want me to add any more.
 //DT_MAGICAL	Equip item if damage taken is set to magical
 //DT_PHYSICAL	Equip item if damage taken is set to physical
 //DUSK2DAWN		Equip if it's between dusk and dawn
-~//EN"spell"		Equip if player has en- spell buff
+//EN"spell"		Equip if player has en- spell buff
+//ENANY			Equip if player has any en- spell buff
 //EVASION		Equip if 'Eva' enabled
 //FULLMOON		Equip if moon phase is full moon
 //GA:"gather"	Equip if the gathering code passed matches the master gathering setting
@@ -78,9 +77,8 @@ want me to add any more.
 //HPP"conditional"#	Equip if HP% meets condition
 //IDLE			Equip if Idle is true (part of tanking configuration)
 //IF:"gear"		Equip if wearing that gear in the tested slot
-~//IFC:"gear"	Equip if wearing that gear in any slot (currently wearing or building gear)
 //KATANA		Equip if Main is a Katana
-~//LVL"conditional"# Equip if player's level meets the conditional setting
+//LVL"conditional"# Equip if player's level meets the conditional setting
 //LVLDIV#		Equip if player's level is evenly divisible by #
 //MARKSMANSHIP	Equip if Range is a Gun/Crossbow
 //MSJ			Equip if player's subjob is magical
@@ -105,7 +103,7 @@ want me to add any more.
 //PETNF			Equip if player has a pet and it is not fighting
 //PETRIFIED		Equip if player is petrified
 //PJP"job"		Equip if a player in the party is "job" (ex., BRD)
-//PJPNM"job"	Equip if a player in the party is "job" (ex., BRD), exclude current player
+//PJPNM"job"	Equip if a player in the party is "job" (ex., BRD), excluding current player
 //POISONED 		Equip if player is poisoned
 //POLEARM		Equip if Main is a Polearm
 //SCYTHE		Equip if Main is a Scythe
@@ -117,10 +115,8 @@ want me to add any more.
 //SMNPET		Equip if player has a summoner's avatar out
 //SMNPETMD		Equip if pet's element matches the day's element
 //SMNPETMW		Equip if player's pet's element matches current weather
-//SO:"type"		Equip if song be cast is of type: ballad,carol,elegy,etude,finale,hymnus,lullaby,
-					madrigal,mambo,march,mazurka,minne,minuet,paeon,prelude,requiem,threnody,virelai
+//SP:"type"		Equip if song/spell being cast matches "type" substring
 //SPECIAL		Equip if the special comparisons match
-//SPELL:root	Equip if the spell being cast contains the "root"
 //SPIKE			Equip if player has a spike spell buff: blaze,ice,shock,dread
 //SPIRIT:ES		Equip if avatar being summoned is an elemental spirit
 //SPIRIT:EP		Equip if current pet is an elemental spirit
