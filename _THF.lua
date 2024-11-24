@@ -239,9 +239,13 @@ local sets = {
 	},
 
 --[[
-	The following two sets are to be used as subsets. They're baseline for
-	intellegence and mind. Once you get to individual sets, include one of
-	these or ignore them and be explicit on the gear in that set.
+	*************************
+	* Spell Casting Subsets *
+	*************************
+	
+	The following sets are to be used as subsets. Once you get to individual 
+	sets, include one of these or ignore them and be explicit on the gear in 
+	that set.
 --]]
 
 	['INT'] = {	
@@ -249,7 +253,7 @@ local sets = {
 		Body  = 'Baron\'s Saio',
 		Rings = 'Tamas Ring',
 		Waist = 'Mrc.Cpt. Belt',
-		Feet  = 'Mannequin Pumps',
+		Feet  = 'Mannequin Pumps',	
 	},
 	
 	['MND'] = {
@@ -260,7 +264,13 @@ local sets = {
 		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
 		Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
 		Legs  = 'Wonder Braccae',
-		Feet  = 'Mannequin Pumps',
+		Feet  = 'Mannequin Pumps',	
+	},
+
+	['Enmity_Plus'] = {
+	},
+	
+	['Enmity_Minus'] = {
 	},
 	
 --[[
@@ -1333,6 +1343,18 @@ local sets = {
         Feet = 'Bounding Boots',	
 	},
 	
+	['SATA'] = {
+		Head = 'Empress Hairpin',
+		Neck  = 'Spike Necklace',
+        Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },
+        Body = { 'Assassin\'s Vest', 'Mrc.Cpt. Doublet' },
+		Hands = 'Rogue\'s Armlets',
+		Rings = { 'Kshama Ring No.2', 'Balance Ring' },
+        Back  = 'Assassin\'s Cape',
+		Waist = 'Mrc.Cpt. Belt',
+        Feet = 'Bounding Boots',
+	},
+	
 	['Mug'] = {
 		Head = 'Assassin\'s Bonnet', 
 	},
@@ -1674,6 +1696,8 @@ function profile.HandleDefault()
 	local ew = gData.GetEquipment();
 	local zone = gData.GetEnvironment();
 	local bTank = gcdisplay.GetToggle('Tank');
+	local bSA = gcinclude.fBuffed('Sneak Attack');
+	local bTA = gcinclude.fBuffed('Trick Attack');
 	local eWeap = nil;
 	local cKey;
 
@@ -1736,38 +1760,51 @@ function profile.HandleDefault()
 	
 	-- Now process the player status accordingly	
 	if player.Status == 'Engaged' then
-		if bTank == true then
-			gcinclude.MoveToCurrent(sets.Tank_TP,sets.CurrentGear);
+		-- If sneak attack or trick attack up, make sure the appropriate gear set is
+		-- equipped to maximize the damage. Note that if a weapon skill follows, the
+		-- weapon skill set will take priority.
+		if bSA == true or bTA == true then
+			if bSA == true and bTA == true then		-- SATA
+				gcinclude.MoveToCurrent(sets.SATA,sets.CurrentGear);
+			elseif bSA == true then					-- SA
+				gcinclude.MoveToCurrent(sets.SneakAttack,sets.CurrentGear);
+			else									-- TA
+				gcinclude.MoveToCurrent(sets.TrickAttack,sets.CurrentGear);
+			end
 		else
-			gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
-		end
-		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
-		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
-			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
-			if cKey == 'C' then		-- Evasion			
-				if gcdisplay.GetToggle('Eva') == true then
+			if bTank == true then
+				gcinclude.MoveToCurrent(sets.Tank_TP,sets.CurrentGear);
+			else
+				gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
+			end
+			gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
+			for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
+				cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
+				if cKey == 'C' then		-- Evasion			
+					if gcdisplay.GetToggle('Eva') == true then
+						if bTank == true then
+							gcinclude.MoveToCurrent(sets.Tank_Evasion,sets.CurrentGear);
+						else			
+							gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
+						end				
+					end			
+				elseif cKey == 'E' then		-- Accuracy
 					if bTank == true then
-						gcinclude.MoveToCurrent(sets.Tank_Evasion,sets.CurrentGear);
-					else			
-						gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
-					end				
-				end			
-			elseif cKey == 'E' then		-- Accuracy
-				if bTank == true then
-					gcinclude.FractionalAccuracy(sets.Tank_Accuracy);
-				else
-					gcinclude.FractionalAccuracy(sets.Accuracy);
-				end
-			elseif cKey == 'F' then		-- Kiting
-				if (gcdisplay.GetToggle('Kite') == true) then
-					gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
+						gcinclude.FractionalAccuracy(sets.Tank_Accuracy);
+					else
+						gcinclude.FractionalAccuracy(sets.Accuracy);
+					end
+				elseif cKey == 'F' then		-- Kiting
+					if (gcdisplay.GetToggle('Kite') == true) then
+						gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
+					end
 				end
 			end
-		end
 		
-		if gcdisplay.GetToggle('TH') == true then
-			gcinclude.MoveToCurrent(sets.TH,sets.CurrentGear);
-		end			
+			if gcdisplay.GetToggle('TH') == true then
+				gcinclude.MoveToCurrent(sets.TH,sets.CurrentGear);
+			end
+		end
 	elseif player.Status == 'Resting' then	
 		-- Player kneeling. Priority (low to high): Resting,refresh	
 		if player.HP < player.MaxHP then
