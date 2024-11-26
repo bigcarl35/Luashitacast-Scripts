@@ -21,8 +21,8 @@ local JobBar = T{['GSwap'] = {'ALL','MS'},
 				 ['DT'] = {'ALL','MS'},
 				 ['Kite'] = {'ALL','MS'},
 				 ['Eva'] = {'ALL','MS'},
+				 ['Idle'] = {'ALL','MS'},
 				 ['Tank'] = {'PLD,NIN,RUN,WAR,DRK,THF,RDM','M'},
-				 ['Idle'] = {'PLD,NIN,RUN,WAR,DRK,THF,RDM','M'},
 				 ['WSwap'] = {'-SMN,BLM','M'},		-- Some jobs swap weapons all the time
 				 ['TH'] = {'THF','M'},
 				 ['AJug'] = {'BST','M'},
@@ -54,6 +54,7 @@ function gcdisplay.ShowHelp()
 	print(chat.header('Help'):append(chat.message('/wsdistance [#] -- Toggles whether a distance check is done for non-ranged weaponskills and how far. Default TRUE at ' .. tostring(gcinclude.settings.WSdistance) .. ' yalms.')));
 	print(chat.header('Help'):append(chat.message('/dt -- Indicates type of damage taken set should be used: Physical is assumed.')));
 	print(chat.header('Help'):append(chat.message('/kite -- Equips defined movement set.')));
+	print(chat.header('Help'):append(chat.message('/idle -- Toggles whether \'Travel\' gear is equipped when idle. Default is TRUE.')));
 	print(chat.header('Help'):append(chat.message('/wswap -- Toggles whether weapons will be swapped as needed. Default is FALSE to preserve TP.')));
 	print(chat.header('Help'):append(chat.message('/eva -- Toggles whether evasion set should be equipped or not. Default is FALSE.')));
 	print(chat.header('Help'):append(chat.message('/acc -- Toggle whether accuracy gear should override melee/weapon skill gear. Default is FALSE')));
@@ -74,7 +75,6 @@ function gcdisplay.ShowHelp()
 
 	if string.find('PLD,NIN,DRK,WAR,THF,RDM,RUN',Main) ~= nil then
 		print(chat.header('Help'):append(chat.message('/tank -- Toggles whether tanking TP gear set should be equipped. Default is TRUE for PLD,NIN,RUN and FALSE for DRK,WAR,THF,RDM.')));
-		print(chat.header('Help'):append(chat.message('/idle -- Toggles whether \'Travel\' gear is equipped when idle. Default is TRUE.')));
 	end
 	
 	if Main == 'BST' then
@@ -394,10 +394,15 @@ function gcdisplay.Initialize()
 		end
 		
 		-- Accuracy slots
+		local c = 'P';
+		if gcinclude.settings.bFractional == true then
+			c = 'F';
+		end
+		
 		if AccTier ~= 'None' then
-			display = display .. ' | Acc: ' .. fColor('green',AccTier);
+			display = display .. ' | Acc-' .. c .. ': ' .. fColor('green',AccTier);
 		else
-			display = display .. ' | Acc: ' .. fColor('red',AccTier);
+			display = display .. ' | Acc-' .. c .. ': ' .. fColor('red',AccTier);
 		end
 		
 		-- Locks

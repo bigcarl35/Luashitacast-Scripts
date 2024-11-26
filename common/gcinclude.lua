@@ -76,6 +76,7 @@ gcinclude.settings = {
 	--
 	bAutoStaveSwapping = true;		-- indicates if elemental stave swapping should occur automatically
 	bFractional = true;		-- indicates if fractional accuracy enabled; disabled means predefined
+	iPredefinedTier = 0;	-- indicates current level or predefined accuracy; 0 for none
 	bGc = false;			-- indicates if /gc has been run
 };
 
@@ -453,7 +454,7 @@ gcinclude.tSpell = {
 				     },
 	['mnd']		   = {
 					'paralyze','slow','slowga','frazzle','distract',
-					'dia','diaga','silence'
+					'silence'
 				     },
 	['eDebuff']	   = { 'drown','burn','frost','choke','rasp','shock' },
 	['barspell']   = { 
@@ -1083,7 +1084,7 @@ function RegionDisplay()
 		if table.find(j['zones'],zoneId) ~= nil then
 			if j['own'] == gcinclude.OwnNation then
 				gcdisplay.SetCycle('Region','Owned');
-			elseif j['own'] == 0 and fBuffed('Signet') == false then
+			elseif j['own'] == 0 and gcinclude.fBuffed('Signet') == false then
 				gcdisplay.SetCycle('Region','N/A');
 			else
 				gcdisplay.SetCycle('Region','Not Owned');
@@ -1119,7 +1120,7 @@ end		-- DB_ShowIt
 	
 function gcinclude.Message(toggle, status)
 	if toggle ~= nil and status ~= nil then
-		print(chat.header('GCinclude'):append(chat.message(toggle .. ' is now ' .. tostring(status))))
+		print(chat.header('Message'):append(chat.message(toggle .. ' is now ' .. tostring(status))))
 	end
 end		-- gcinclude.Message
 
@@ -1370,15 +1371,13 @@ function RefreshVariables()
 	-- They are the ones that sometimes don't get created.
 	
 	-- WSwap
-	gcdisplay.CreateToggle('WSwap',(string.find('WHM,BRD',player.MainJob) ~= nil));
+	gcdisplay.CreateToggle('WSwap',(string.find('WHM,BRD,RDM',player.MainJob) ~= nil));
 	
-	-- Tank and Idle
+	-- Tank
 	if string.find('PLD,NIN,RUN',player.MainJob) ~= nil then
 		gcdisplay.CreateToggle('Tank',true);
-		gcdisplay.CreateToggle('Idle',true);
 	elseif string.find('DRK,WAR,THF,RDM,BLU',player.MainJob) ~= nil then
 		gcdisplay.CreateToggle('Tank',false);
-		gcdisplay.CreateToggle('Idle',true);
 	end
 
 	-- THF: TH
@@ -1416,7 +1415,8 @@ function SetVariables()
 	gcdisplay.CreateToggle('GSwap', true);
 	gcdisplay.CreateToggle('Kite', false);
 	gcdisplay.CreateToggle('Eva', false);
-	
+	gcdisplay.CreateToggle('Idle',true);
+		
 	if string.find('BLM,SMN',player.MainJob) == nil then
 		gcdisplay.CreateToggle('WSwap',(string.find('WHM,BRD,RDM',player.MainJob) ~= nil));
 	end
@@ -1424,10 +1424,8 @@ function SetVariables()
 	-- Job specific toggles	
 	if string.find('PLD,NIN,RUN',player.MainJob) ~= nil then
 		gcdisplay.CreateToggle('Tank',true);
-		gcdisplay.CreateToggle('Idle',true);
 	elseif string.find('DRK,WAR,THF,RDM,BLU',player.MainJob) ~= nil then
 		gcdisplay.CreateToggle('Tank',false);
-		gcdisplay.CreateToggle('Idle',true);
 	end
 	
 	if player.MainJob == 'THF' then
@@ -2228,7 +2226,7 @@ function fEvalCodedComparison(sRoot,sOperator,ival)
 	elseif sRoot == 'MP' then
 		iP = player.MP;
 	elseif sRoot == 'MPP' then
-		iP = player.TP/10;
+		iP = player.MPP;
 	elseif sRoot == 'HP' then
 		iP = player.HP;
 	elseif sRoot == 'HPP' then
@@ -2322,7 +2320,7 @@ end		-- fValidateSpecial
 	The passed buff name can be a substring, but that can also lead to miss identifications.
 --]]
 
-function fBuffed(test,bStart)
+function gcinclude.fBuffed(test,bStart)
 	local buffs = AshitaCore:GetMemoryManager():GetPlayer():GetBuffs();
 	local pos;
 
@@ -2499,25 +2497,25 @@ function fCheckInline(gear,sSlot)
 		elseif suCode == 'ABSORB' then										-- Spell is an Absorb- type
 			bGood = (table.find(gcinclude.tSpell['absorb'],string.lower(spell.Name)));
 		elseif suCode == 'BARSPELL' then					--  Player has a "bar" buff
-			bGood = (fBuffed('Bar',true));
+			bGood = (gcinclude.fBuffed('Bar',true));
 		elseif suCode == 'BOUND' then						-- Player is bound
-			bGood = fBuffed('Bind');
+			bGood = gcinclude.fBuffed('Bind');
 		elseif suCode == 'BLINDED' then						-- Player is blind
-			bGood = fBuffed('Blind');
+			bGood = gcinclude.fBuffed('Blind');
 		elseif suCode == 'CARBY' then						-- Pet is carbuncle
 			bGood = (fIsPetNamed('Carbuncle'));
 		elseif suCode == 'COVER' then						-- Player has cast cover
-			bGood = fBuffed('Cover');
+			bGood = gcinclude.fBuffed('Cover');
 		elseif string.sub(suCode,1,3) == 'CR:' then			-- Crafting
 			bGood = (gcinclude.Craft == string.sub(suCode,4,-1));
 		elseif suCode == 'CURSED' then						-- Player is cursed
-			bGood = fBuffed('Curse');
+			bGood = gcinclude.fBuffed('Curse');
 		elseif suCode == 'DAYTIME' then						-- Time is daytime
 			bGood = gcinclude.CheckTime(timestamp.hour,'Daytime',false);
 		elseif string.sub(suCode,1,3) == 'DB:' then
 			bGood = (player.MainJob == 'BST' and string.upper(string.sub(suCode,4,-1)) == string.upper(gcdisplay.GetCycle('DB')));	
 		elseif suCode == 'DOOMED' then						-- Player is doomed or baned
-			bGood = (fBuffed('Doom') or fBuffed('Bane'));
+			bGood = (gcinclude.fBuffed('Doom') or gcinclude.fBuffed('Bane'));
 		elseif suCode == 'DT_BREATH' then
 			bGood = (gcdisplay.GetCycle('DT') == 'B');
 		elseif suCode == 'DT_MAGICAL' then
@@ -2527,11 +2525,11 @@ function fCheckInline(gear,sSlot)
 		elseif suCode == 'DUSK2DAWN' then					-- Time between dusk and dawn
 			bGood = gcinclude.CheckTime(timestamp.hour,DUSK2DAWN,false);
 		elseif table.find(gcinclude.tSpell['enspell'],string.lower(suCode)) ~= nil then		-- En*
-			bGood = fBuffed(suCode);
+			bGood = gcinclude.fBuffed(suCode);
 		elseif suCode == 'ENANY' then						-- check for any en- spell
 			bGood = false;
 			for i,j in pairs(gcinclude.tSpell['enspell']) do
-				if fBuffed(j) == true then
+				if gcinclude.fBuffed(j) == true then
 					bGood = true;
 					break;
 				end
@@ -2545,11 +2543,7 @@ function fCheckInline(gear,sSlot)
 		elseif suCode == 'HORN' then						-- Is the bard's instrument a horn
 			bGood = (gcdisplay.GetCycle('Instrument') == 'Horn');
 		elseif suCode == 'IDLE' then
-			if string.find(gcinclude._TankJobList,player.MainJob) ~= nil then
-				bGood = gcdisplay.GetToggle('Idle');
-			else
-				bGood = false;
-			end
+			bGood = gcdisplay.GetToggle('Idle');
 		elseif string.find(suCode,'IF:') then
 			bGood = false;		
 			if sSlot ~= 'subset' then
@@ -2583,6 +2577,8 @@ function fCheckInline(gear,sSlot)
 			else
 				bGood = false;
 			end		
+		elseif suCode == 'NOT_UTSUSEMI' then				-- Utsusemi buff is absent
+			bGood = (gcinclude.fBuffed('Copy') == false);
 		elseif suCode == 'NOT_WSWAP' then					-- WSWAP is disabled
 			bGood = (gcinclude.settings.bWSOverride == false or gcdisplay.GetToggle('WSwap') == false);
 		elseif string.sub(suCode,1,8) == 'NOT_WTH:' then	-- Does the weather not match
@@ -2593,7 +2589,7 @@ function fCheckInline(gear,sSlot)
 		elseif suCode == 'OWN' then							-- Player in area controlled by their nation
 			bGood = (gcdisplay.GetCycle('Region') == 'Owned');
 		elseif suCode == 'PARALYZED' then					-- Player is paralyzed
-			bGood = fBuffed('Paralysis');
+			bGood = gcinclude.fBuffed('Paralysis');
 		elseif string.sub(suCode,1,5) == 'PARTY' then		-- is player in a party/alliance
 			if suCode == 'PARTY' then
 				bGood = (party.InParty == true);
@@ -2614,7 +2610,7 @@ function fCheckInline(gear,sSlot)
 		elseif suCode == 'PETFNPF' then						-- Is player's pet fighting, but not the player
 			bGood = (pet ~= nil and pet.Status == 'Engaged' and player.Status ~= 'Engaged');
 		elseif suCode == 'PETRIFIED' then					-- Player is petrified
-			bGood = fBuffed('Petrify');
+			bGood = gcinclude.fBuffed('Petrify');
 		elseif string.sub(suCode,1,3) == 'PJP' and string.len(suCode) == 6 then	
 			local s = string.sub(suCode,4,-1);
 			bGood=(fCheckPartyJob(s,false));		-- party has job: //PJP"job"
@@ -2622,15 +2618,15 @@ function fCheckInline(gear,sSlot)
 			local s = string.sub(suCode,6,-1);
 			bGood=(fCheckPartyJob(s,true));		-- party has job: //PJPNM"job", not including player
 		elseif suCode == 'POISONED' then					-- Player is poisoned
-			bGood = fBuffed('Poison');
+			bGood = gcinclude.fBuffed('Poison');
 		elseif suCode == 'SHINING_RUBY' then				-- Player has shining ruby
-			bGood = fBuffed('Shining');	
+			bGood = gcinclude.fBuffed('Shining');	
 		elseif suCode == 'SILENCED' then					-- Player is silenced
-			bGood = fBuffed('Silence');
+			bGood = gcinclude.fBuffed('Silence');
 		elseif string.sub(suCode,1,2) == 'SJ' and string.len(suCode) == 5 then	
 			bGood = (string.sub(suCode,3,-1) == sj);		-- subjob is: //SJ"job"
 		elseif suCode == 'SLEPT' then						-- Player is slept
-			bGood = fBuffed('Sleep');
+			bGood = gcinclude.fBuffed('Sleep');
 		elseif string.sub(suCode,1,4) == 'SMN:' then
 			bGood = (string.lower(spell.Name) == string.lower(string.sub(suCode,5,-1)));
 		elseif suCode == 'SMNPET' then						-- Is player's pet a summoned avatar
@@ -2669,7 +2665,7 @@ function fCheckInline(gear,sSlot)
 			end
 			bGood = (string.find(fGetRoot(spell.Name),string.lower(string.sub(suCode,7,-1))) ~= nil);
 		elseif suCode == 'SPIKE' then						-- does player have a spike buff
-			bGood = (fBuffed('Spike'));
+			bGood = (gcinclude.fBuffed('Spike'));
 		elseif suCode == 'SPIRIT:ES' then					-- Pet being summoned is a spirit
 			bGood = (table.find(gcinclude.tSpell['spirits'],string.lower(spell.Name)) ~= nil);
 		elseif suCode == 'SPIRIT:EP' then					-- Current pet is a spirit
@@ -2724,9 +2720,9 @@ function fCheckInline(gear,sSlot)
 				bGood = false;
 			end
 		elseif suCode == 'UTSUSEMI' then
-			bGood = fBuffed('Copy');						-- copy image (#)
+			bGood = gcinclude.fBuffed('Copy');						-- copy image (#)
 		elseif suCode == 'WEAKENED' then					-- Player is weakend
-			bGood = (fBuffed('Weakness') or fBuffed('Weakened'));
+			bGood = (gcinclude.fBuffed('Weakness') or gcinclude.fBuffed('Weakened'));
 		elseif suCode == 'WSWAP' then						-- Weapon swapping enabledB
 			bGood = (gcinclude.settings.bWSOverride == true or gcdisplay.GetToggle('WSwap') == true);
 		elseif string.sub(suCode,1,4) == 'WTH:' then		-- Does the weather match
@@ -2781,7 +2777,7 @@ function RegionControlDisplay()
 		else
 			for ii,jj in pairs(sAreas) do
 				if ii == j['own'] then
-					if j['own'] == 0 and fBuffed('Signet') == true then
+					if j['own'] == 0 and gcinclude.fBuffed('Signet') == true then
 						print(chat.message(i .. ' = ' .. jj .. ', but not owned gear works'));
 					else
 						print(chat.message(i ..' = ' .. jj));
@@ -2977,7 +2973,82 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 end		-- gcinclude.MoveToCurrent
 
 --[[
-	EquipTheGear makes sure that the passed gear set doesn't have an item in a slot
+	CheckForExceptions makes sure that pieces that must remain in place will remain
+	in place before equipping new gear
+--]]
+
+function CheckForExceptions(tSet)
+	local msg;
+	local sList = nil;
+	local gear = gData.GetEquipment();
+		
+	if gcinclude.fBuffed('Enchantment') == true then	
+	-- If 'High Brth. Mantle' enchantment going, keep equipped
+		if gear.Back ~= nil then
+			if gear.Back.Name == 'High Brth. Mantle' and tSet['Back'] ~= 'High Brth. Mantle' then
+				tSet['Back'] = 'High Brth. Mantle';
+				sList = 'High Breath Mantle';
+			elseif gear.Back.Name == 'Breath Mantle' and tSet['Back'] ~= 'Breath Mantle' then
+				tSet['Back'] = 'Breath Mantle';
+				sList = 'Breath Mantle';
+			end
+		end
+		
+		if gear.Ring1 ~= nil then
+			-- Albatross Ring can be on either finger. If enchant going, keep equipped
+			if gear.Ring1.Name == 'Albatross Ring' and tSet['Ring1'] ~= 'Albatross Ring' then
+				tSet['Ring1'] = 'Albatross Ring';
+				if sList == nil then
+					sList = 'Albatross Ring';
+				else
+					sList = sList .. ',' .. 'Albatross Ring';
+				end
+			elseif gear.Ring2.Name == 'Albatross Ring' and tSet['Ring2'] ~= 'Albatross Ring' then
+				tSet['Ring2'] = 'Albatross Ring';
+				if sList == nil then
+					sList = 'Albatross Ring';
+				else
+					sList = sList .. ',' .. 'Albatross Ring';
+				end
+			end	
+		end
+		
+		if gear.Main ~= nil then
+			-- 'High Mana Wand' and 'Mana Wand' have to be equipped if enchantment going
+			if gear.Main.Name == 'High Mana Wand' and tSet['Main'] ~= 'High Mana Wand' then
+				tSet['Main'] = 'High Mana Wand';
+				if sList == nil then
+					sList = 'High Mana Wand';
+				else
+					sList = sList .. ',' .. 'High Mana Wand';
+				end
+			elseif gear.Main.Name == 'Mana Wand' and tSet['Main'] ~= 'Mana Wand' then
+				tSet['Main'] = 'Mana Wand';
+				if sList == nil then
+					sList = 'Mana Wand';
+				else
+					sList = sList .. ',' .. 'Mana Wand';
+				end			
+			end
+		end
+		
+		if sList ~= nil then
+			msg = 'Because of enchantment, the following must be equipped: ' .. sList;
+			if string.find(gcinclude.GearWarnings,msg) == nil then
+				print(chat.message(msg));
+				if gcinclude.GearWarnings == '' then
+					gcinclude.GearWarnings = msg;
+				else
+					gcinclude.GearWarnings = gcinclude.GearWarnings .. ',' .. msg;
+				end
+			end
+		end
+	end	
+end
+
+--[[
+	
+	ar makes sure that the passed gear set doesn't have an item in a slot
 	that is being blocked by another item (e.g., no head gear if a vermillion cloak
 	is in the body slot.) It the equips the gear set.
 --]]
@@ -3034,6 +3105,8 @@ function gcinclude.EquipTheGear(tSet,bOverride)
 			tSet['Ring2'] = hold;
 		end
 	end
+	
+	CheckForExceptions(tSet);
 	
 	gFunc.ForceEquipSet(tSet);
 end			-- gcinclude.EquipTheGear
@@ -3784,20 +3857,12 @@ function gcinclude.HandleCommands(args)
 		toggle = 'Kite Set';
 		status = gcdisplay.GetToggle('Kite');
 	elseif (args[1] == 'idle') then			-- Turns on/off whether movement gear is equipped
-		if string.find(gcinclude._TankJobList,player.MainJob) ~= nil then
-			gcdisplay.AdvanceToggle('Idle');
-			toggle = 'Idle';
-			status = gcdisplay.GetToggle('Idle');
-		else
-			print(chat.header('HandleCommands'):append(chat.message('Error: Your job does not support the idle command. Ignoring')));
-		end
+		gcdisplay.AdvanceToggle('Idle');
+		toggle = 'Idle';
+		status = gcdisplay.GetToggle('Idle');
 	elseif (args[1] == 'tank') then			-- Turns on/off whether tanking gear is equipped
 		if string.find(gcinclude._TankJobList,player.MainJob) ~= nil then
 			gcdisplay.AdvanceToggle('Tank');
-			if gcdisplay.GetToggle('Tank') == false and gcdisplay.GetToggle('Idle') == false then
-				gcdisplay.SetToggle('Idle',true);
-				print(chat.header('HandleCommands'):append(chat.message('FYI: Since you disabled \'Tank\', \'Idle\' has been turned on.')));
-			end
 			toggle = 'Tank Set';
 			status = gcdisplay.GetToggle('Tank');
 		else
@@ -3851,39 +3916,45 @@ function gcinclude.HandleCommands(args)
 		end
 		toggle = 'Debuf';
 		status = gcdisplay.GetCycle('DB');
-	elseif (args[1] == 'lock' or args[1] == 'acc') then
-		local sTarget = 'locks';
-		if args[1] == 'acc' then
-			sTarget = 'acc';
-		end
-
+	elseif (args[1] == 'acc') then
+		local bSkip = false;
 		if args[2] ~= nil then
-			if sTarget == 'acc' and string.sub(args[2],1,1) == '-' then
-				args[2] = fWhichAccuracySet(string.sub(args[2],2,-1));
-			end
-			LockUnlock(sTarget,'lock',args[2]);
-		end
-		sList = fGetLockedList(sTarget);		
-		if sList ~= nil then
-			if sTarget == 'locks' then
-				print(chat.message('The following slot(s) are locked: ' .. sList));
+			local Ua = string.upper(args[2]);
+			if Ua == 'P' then
+				gcinclude.settings.bFractional = false;
+				bSkip = true;
+			elseif Ua == 'F' then
+				gcinclude.settings.bFractional = true;
+				bSkip = true;
 			else
-				print(chat.message('The following slot(s) of accuracy are used: ' .. sList));
+				if string.sub(args[2],1,1) == '-' then
+					args[2] = fWhichAccuracySet(string.sub(args[2],2,-1));
+				end
+				LockUnlock('acc','lock',args[2]);
 			end
-		else
-			if sTarget == 'locks' then
-				print(chat.message('All slots are unlocked'));
+		end	
+		if bSkip == false then
+			sList = fGetLockedList('acc');
+			if sList ~= nil then
+				print(chat.message('The following slot(s) of accuracy are used: ' .. sList));
 			else
 				print(chat.message('All accuracy slots are reset'));
-			end
-		end
-		
-		if sTarget == 'locks' then 
-			gcdisplay.SetSlots('locks',gcinclude.LocksNumeric);
-		else
+			end	
 			gcdisplay.SetSlots('acc',gcinclude.AccNumeric);
+			gcinclude.CheckLockAccCollision('acc');
 		end
-		gcinclude.CheckLockAccCollision(sTarget);
+	elseif (args[1] == 'lock') then
+		if args[2] ~= nil then
+			LockUnlock('lock','lock',args[2]);
+		end
+		sList = fGetLockedList('lock');		
+		if sList ~= nil then
+			print(chat.message('The following slot(s) are locked: ' .. sList));
+		else
+			print(chat.message('All slots are unlocked'));
+		end	
+		gcdisplay.SetSlots('locks',gcinclude.LocksNumeric);
+		gcinclude.CheckLockAccCollision('lock');
 	elseif (args[1] == 'unlock' or args[1] == 'nac') then
 		local sTarget = 'locks';
 		if args[1] == 'nac' then
@@ -4555,13 +4626,20 @@ function MidcastEnfeeblingMagic()
 		else
 			gcinclude.MoveToCurrent(gProfile.Sets.EnfeeblingINT,gProfile.Sets.CurrentGear);
 		end		
-	else
-		-- MND: paralyze,silence,slow,slowga,frazzle,distract,dia,diaga
+	elseif table.find(gcinclude.tSpell['mnd'],root) ~= nil then
+		-- MND: paralyze,silence,slow,slowga,frazzle,distract
 		if bTank == true then
 			gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnfeeblingMND,gProfile.Sets.CurrentGear);
 		else
 			gcinclude.MoveToCurrent(gProfile.Sets.EnfeeblingMND,gProfile.Sets.CurrentGear);
-		end			
+		end	
+	else
+		-- dia and diaga
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnfeeblingMagic,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.EnfeeblingMagic,gProfile.Sets.CurrentGear);
+		end		
 	end
 	
 	-- See if an elemental obi would make sense for the Magical Elemental accuracy
