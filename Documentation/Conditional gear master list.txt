@@ -91,6 +91,7 @@ want me to add any more.
 //NOT_"day"		Equip if the day's name does not match the specified day, eg. //NOT_FIRESDAY
 //NOT_OWN		Equip if region not controlled by player's nation
 //NOT_TANK		Equip if tank disabled
+//NOT_UTSUSEMI	Equip if Utsusemi buff is not up
 //NOT_WTH:"weather" Equip if theweather does not match the specified weather
 //NOT_WTH-DAY	Equip if the weather does not match the day's element
 //NOT_WSWAP	Equip if WSWAP is turned off
