@@ -59,8 +59,8 @@ local sets = {
 		Neck   = { 'Opo-opo necklace//SLEPT', 'Peacock Amulet', 'Spike Necklace' },
 		Body   = { 'Ducal Aketon//TOWN-AK', 'Gaudy Harness//MSJ//MP.LT.50', 'Narasimha\'s Vest', 'Ducal Aketon' },
 		Hands  = { 'Thick Mufflers', 'Battle Gloves' },
-        Rings  = { 'Flame Ring', 'Tamas Ring//MSJ', 'Sun Ring' },
-        Back   = { 'Forager\'s Mantle', 'Ram Mantle' },
+        Rings  = { 'Flame Ring', 'Tamas Ring//MSJ', 'Sun Ring', 'Sun Ring' },
+        Back   = { 'Forager\'s Mantle', 'Amemet Mantle', 'Ram Mantle' },
         Waist  = { 'Swift Belt', 'Warrior\'s Belt' },
         Legs   = { 'Thick Breeches', 'Ryl.Ftm. Trousers' },
         Feet   = { 'Thick Sollerets', 'Bounding Boots' },
@@ -76,15 +76,15 @@ local sets = {
 --]]
 
 	['TP'] = {
-        Head   = { 'Shep. Bonnet//PET', 'Panther Mask', 'Monster Helm', 'Beast Helm +1', 'Shep. Bonnet', 'Empress Hairpin', 'Silver Hairpin +1//MSJ' },
+        Head   = { 'Shep. Bonnet//PET', 'Panther Mask', 'Empress Hairpin', 'Silver Hairpin +1//MSJ' },
         Neck   = { 'Opo-opo necklace//SLEPT', 'Peacock Amulet', 'Spike Necklace' },
 		Ears   = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Coral Earring//DT_MAGICAL', 'Beastly Earring', 'Brutal Earring', 'Genin Earring//SJNIN', 'Bat Earring//MSJ', 'Fang Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ', 'Reraise Earring' },
         Body   = { 'Gaudy Harness//MSJ//MP.LT.50', 'Narasimha\'s Vest', 'Scorpion Harness', 'Gaudy Harness', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
-        Hands  = { 'Thick Mufflers', 'Beast Gloves', 'Wonder Mitts', 'Battle Gloves', 'Ryl.Ftm. Gloves' },
+        Hands  = { 'Thick Mufflers', 'Beast Gloves', 'Ogre Gloves', 'Wonder Mitts', 'Battle Gloves', 'Ryl.Ftm. Gloves' },
         Rings  = { 'Flame Ring', 'Tamas Ring//MSJ', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Kshama Ring No.2', 'Balance Ring' },
-        Back   = { 'Forager\'s Mantle', 'Psilos Mantle', 'Raptor Mantle', 'Ram Mantle' },
+        Back   = { 'Forager\'s Mantle', 'Psilos Mantle', 'Amemet Mantle', 'Raptor Mantle', 'Ram Mantle' },
         Waist  = { 'Swift Belt', 'Tilt Belt', 'Warrior\'s Belt' },
-        Legs   = { 'Thick Breeches', 'Monster Trousers', 'Beast Trousers', 'Shep. Hose', 'San. Trousers', 'Ryl.Ftm. Trousers' },
+        Legs   = { 'Thick Breeches', 'Monster Trousers', 'Shep. Hose', 'San. Trousers', 'Ryl.Ftm. Trousers' },
         Feet   = { 'Thick Sollerets', 'Monster Gaiters', 'Beast Gaiters', 'Wonder Clomps', 'Bounding Boots' },
     },
 	
@@ -101,11 +101,11 @@ local sets = {
 	['Accuracy'] = {
 		Ammo  = 'Orphic Egg//PJPBRD',
         Head  = { 'Bst. Helm +1//PETFNPF', 'Optical Hat', 'Shep. Bonnet//PETF' } ,
-        Neck  = 'Peacock Amulet',
+        Neck  = { 'Peacock Amulet', 'Spike Necklace' },
         Body  = { 'Scorpion Harness', 'Narasimha\'s Vest', 'Beast Jackcoat' },
         Hands = { 'Thick Mufflers', 'Battle Gloves' },
 		Ears  = { 'Beastly Earring//PETF', 'Pilferer\'s Earring//SJTHF' },
-		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },
+		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },
         Back  = 'Psilos Mantle',		
         Waist = { 'Life Belt', 'Monster Belt', 'Tilt Belt', 'Swift Belt' },
         Legs  = { 'Thick Breeches', 'Monster Trousers' },
@@ -117,6 +117,9 @@ local sets = {
 --]]
 
 	['Ranged_Accuracy'] = {
+		Head = 'Optical Hat',
+		Neck = { 'Peacock Amulet', 'Reraise Gorget' },
+		Back = 'Psilos Mantle',
 	},
 	
 --[[
@@ -133,7 +136,8 @@ local sets = {
         Body  = { 'Scorpion Harness', 'Narasimha\'s Vest' },
 		Hands = 'Battle Gloves',
         Legs  = { 'Shep. Hose//PETFNPF', 'San. Trousers' },
-		Feet  = 'Bounding Boots',	-- default gear is thick sollerets which are -2 eva
+		Waist = 'Life Belt//IF:TILT Belt',	-- -5 eva on tilt belt
+		Feet  = 'Bounding Boots//IF:THICK SOLLERETS',	-- -2 eva on thick sollerets
     },
 	
 --[[
@@ -170,11 +174,14 @@ local sets = {
 --]]
 
 	['Preshot'] = {
+		Head  = 'Panther Mask',
+		Waist = 'Swift Belt',
     },
-	
+-- Got this far ***	
 --[[
 	Midshot is the second stage of a ranged shot. This is where you place
-	Ranged Attack, Ranged Damage, recycle, etc.
+	Ranged Accuracy, Ranged Attack, Ranged Damage, Crit. Rate, Crit. Damage,
+	Store TP, recycle, etc.
 --]]
 
 	['Midshot'] = {
@@ -185,15 +192,25 @@ local sets = {
     },
 
 --[[
-	The following two sets are to be used as subsets. They're baseline for
-	intellegence and mind. Once you get to individual sets, include one of
-	these or ignore them and be explicit on the gear in that set.
+	*************************
+	* Spell Casting Subsets *
+	*************************
+	
+	The following sets are to be used as subsets. Once you get to individual 
+	sets, include one of these or ignore them and be explicit on the gear in 
+	that set.
 --]]
 
-	['INT'] = {	
+	['INT'] = {
 	},
 	
 	['MND'] = {
+	},
+
+	['Enmity_Plus'] = {
+	},
+	
+	['Enmity_Minus'] = {
 	},
 	
 --[[
@@ -718,6 +735,9 @@ local sets = {
         Waist = 'Friar\'s Rope',
 	},
 
+	['EnfeeblingMagic'] = {
+	},
+	
 --[[
 	********************
 	* Midcast: Singing *
@@ -1187,6 +1207,9 @@ local sets = {
 	
 	['TrickAttack'] = {
 	},
+
+	['SATA'] = {
+	},
 	
 	['Mug'] = {
 	},
@@ -1628,6 +1651,8 @@ function profile.HandleDefault()
 	local player = gData.GetPlayer();
 	local zone = gData.GetEnvironment();	
 	local ew = gData.GetEquipment();
+	local bSA = gcinclude.fBuffed('Sneak Attack');
+	local bTA = gcinclude.fBuffed('Trick Attack');	
 	local eWeap = nil;
 	local cKey;
 
@@ -1688,24 +1713,39 @@ function profile.HandleDefault()
 	end
 
 	-- Start with the default set
-	gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+	if gcdisplay.GetToggle('Idle') == true then
+		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+	end
 				
 	-- Now process the player status accordingly
-	if (player ~= nil and player.Status == 'Engaged') or (pet ~= nil and pet.Status == 'Engaged') then
-		gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
-		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
-		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
-			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
-			if cKey == 'C' then		-- Evasion			
-				if gcdisplay.GetToggle('Eva') == true then
-					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
+	if (player.Status == 'Engaged') or (pet ~= nil and pet.Status == 'Engaged') then
+		-- If sneak attack or trick attack up, make sure the appropriate gear set is
+		-- equipped to maximize the damage. Note that if a weapon skill follows, the
+		-- weapon skill set will take priority.
+		if bSA == true or bTA == true then
+			if bSA == true and bTA == true then		-- SATA
+				gcinclude.MoveToCurrent(sets.SATA,sets.CurrentGear);
+			elseif bSA == true then					-- SA
+				gcinclude.MoveToCurrent(sets.SneakAttack,sets.CurrentGear);
+			else									-- TA
+				gcinclude.MoveToCurrent(sets.TrickAttack,sets.CurrentGear);
+			end
+		else	
+			gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
+			gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
+			for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
+				cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
+				if cKey == 'C' then		-- Evasion			
+					if gcdisplay.GetToggle('Eva') == true then
+						gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
+					end
+				elseif cKey == 'E' then		-- Accuracy	
+					gcinclude.FractionalAccuracy(sets.Accuracy);
+				elseif cKey == 'F' then		-- Kiting
+					if (gcdisplay.GetToggle('Kite') == true) then
+						gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
+					end
 				end
-			elseif cKey == 'E' then		-- Accuracy	
-				gcinclude.FractionalAccuracy(sets.Accuracy);
-			elseif cKey == 'F' then		-- Kiting
-				if (gcdisplay.GetToggle('Kite') == true) then
-					gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
-				end				
 			end
 		end
 	elseif player.Status == 'Resting' then
@@ -1723,11 +1763,15 @@ function profile.HandleDefault()
 		end
 	elseif pet ~= nil then
 		-- Player idling with pet
-		gcinclude.MoveToCurrent(sets.Default_WPet,sets.CurrentGear);
+		if gcdisplay.GetToggle('Idle') == true then
+			gcinclude.MoveToCurrent(sets.Default_WPet,sets.CurrentGear);
+		end
 	else
 		-- Assume idling. While there's no idle set, just use the 
 		-- "Default" set
-		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+		if gcdisplay.GetToggle('Idle') == true then
+			gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+		end
 	end
 			
 	-- In case the pet is a summoned pet...
@@ -1741,8 +1785,10 @@ function profile.HandleDefault()
 	-- And make sure a weapon equipped. (Going into a capped area can cause no 
 	-- weapon to be equipped.)
 	local gear = gData.GetEquipment();
-	if gear.Main == nil then
-		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
+	if gear.Main ~= nil then
+		if gear.Main.Name == nil then
+			gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
+		end
 	end
 	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set

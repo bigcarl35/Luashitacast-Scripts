@@ -884,6 +884,12 @@ local sets = {
 	['Tank_EnfeeblingMND'] = {
 	},
 
+	['EnfeeblingMagic'] = {
+	},
+	
+	['Tank_EnfeeblingMagic'] = {
+	},
+	
 --[[
 	********************
 	* Midcast: Singing *
@@ -1752,10 +1758,12 @@ function profile.HandleDefault()
 	end
 	
 	-- Start with the default set
-	if bTank == true then
-		gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
-	else
-		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+	if gcdisplay.GetToggle('Idle') == true then
+		if bTank == true then
+			gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+		end
 	end
 	
 	-- Now process the player status accordingly	
@@ -1823,11 +1831,13 @@ function profile.HandleDefault()
 	else									
 		-- Assume idling. While there's no idle set, just use the 
 		-- "Default" set
-	if bTank == true then
-		gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
-	else
-		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
-	end
+		if gcdisplay.GetToggle('Idle') == true then
+			if bTank == true then
+				gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
+			else
+				gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+			end
+		end
 	end
 		
 	-- In case the pet is a summoned pet...
@@ -1840,8 +1850,10 @@ function profile.HandleDefault()
 	
 	-- And make sure a weapon equipped. (Going into a capped area can cause no weapon to be equipped.)
 	local gear = gData.GetEquipment();
-	if gear.Main == nil then
-		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
+	if gear.Main ~= nil then
+		if gear.Main.Name == nil then
+			gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
+		end
 	end
 	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set

@@ -75,6 +75,7 @@ local sets = {
 	
 	['Tank_Default'] = {
 		Subset = 'Default',
+		Back   = 'High Brth. Mantle',
 	},
 	
 --[[
@@ -224,9 +225,13 @@ local sets = {
 	},
 
 --[[
-	The following two sets are to be used as subsets. They're baseline for
-	intellegence and mind. Once you get to individual sets, include one of
-	these or ignore them and be explicit on the gear in that set.
+	*************************
+	* Spell Casting Subsets *
+	*************************
+	
+	The following sets are to be used as subsets. Once you get to individual 
+	sets, include one of these or ignore them and be explicit on the gear in 
+	that set.
 --]]
 
 	['INT'] = {	
@@ -234,7 +239,10 @@ local sets = {
 		Hands = 'Abs. Gauntlets +1',
 		Rings = { 'Tamas Ring', 'Flame Ring' },
 		Waist = 'Mrc.Cpt. Belt',
-		Legs  = 'Chaos Flanchard',
+		Legs  = 'Chaos Flanchard',	
+	},
+	
+	['Tank_INT'] = {
 	},
 	
 	['MND'] = {
@@ -245,7 +253,16 @@ local sets = {
 		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
 		Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
 		Legs  = { 'Abyss Flanchard', 'Wonder Braccae' },
-		Feet  = { 'Chs. Sollerets +1', 'Mannequin Pumps' },
+		Feet  = { 'Chs. Sollerets +1', 'Mannequin Pumps' },	
+	},
+	
+	['Tank_MND'] = {
+	},
+	
+	['Enmity_Plus'] = {
+	},
+	
+	['Enmity_Minus'] = {
 	},
 	
 --[[
@@ -883,6 +900,12 @@ local sets = {
 	['Tank_EnfeeblingMND'] = {
 	},
 
+	['EnfeeblingMagic'] = {
+	},
+	
+	['Tank_EnfeeblingMagic'] = {
+	},
+	
 --[[
 	********************
 	* Midcast: Singing *
@@ -1379,6 +1402,17 @@ local sets = {
 		Feet = 'Bounding Boots',
 	},
 	
+	['SATA'] = {
+		Head = 'Empress Hairpin',
+		Neck = 'Spike Necklace',
+		Ears = 'Drone Earring',
+		Body = 'Brigandine',
+		Hands = 'Abs. Gauntlets +1',
+		Rings = { 'Kshama Ring No.2', 'Balance Ring' },
+		Waist = 'Warwolf Belt',		
+		Feet = 'Bounding Boots',	
+	},
+	
 	['Mug'] = {
 	},
 	
@@ -1475,7 +1509,7 @@ profile.WeaponType = {
 	['SCYTHE'] = { 'Y\'s Scythe','Tredecim Scythe','Suzaku\'s Scythe', 'Raven Scythe' },
 	['DAGGER'] = { 'Heart Snatcher', 'Anubis\'s Knife', 'Garuda\'s Dagger', 'Bone Knife' },
 	['SWORD']  = { 'Ifrit\'s Blade', 'Bee Spatha' },
-	['GSWORD'] = { 'Balmung','Skofnung', 'Zweihander' },
+	['GSWORD'] = { 'Martial Sword', 'Balmung','Skofnung', 'Zweihander' },
 	['H2H']    = { 'Lgn. Knuckles' },
 	['AXE']    = { 'Maneater', 'Tabarzin', 'Fransisca', 'Darksteel Axe' },
 	['GAXE']   = { 'Byakko\'s Axe', 'Axe of Trials', 'Rampager', 'Horror Voulge', 'Neckchopper' },
@@ -1484,6 +1518,16 @@ profile.WeaponType = {
 				  'Wind Staff', 'Auster\'s Staff', 'Earth Staff', 'Terra\'s Staff',
 				  'Thunder Staff', 'Jupiter\'s Staff', 'Water Staff', 'Neptune\'s Staff',
 				  'Light Staff', 'Apollo\'s Staff', 'Dark Staff', 'Pluto\'s Staff' },	
+};
+profile.PreDefAcc = {
+	[1]  = { 
+		['Slot'] = 'Rings', 
+		['Item'] = { 'Toreador Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring' } 
+		},
+	[2]  = { 
+		['Slot'] = 'Neck', 
+		['Item'] = 'Peacock Amulet' 
+		},		
 };
 
 -- Accuracy Sets are predefined /acc commands. You identify them by a name and
@@ -1506,7 +1550,7 @@ profile.sAmmo = nil;		-- /BST specific. Name of ammo equipped
 
 function HandlePetAction(PetAction)
 	local pet = gData.GetPet();
-	
+
 	-- Only gear swap if this flag is true and the pet is a BST pet
 	if gcdisplay.GetToggle('GSwap') == false or gcinclude.fSummonerPet() == true then
 		return;
@@ -1518,7 +1562,8 @@ function HandlePetAction(PetAction)
 		gcinclude.MoveToCurrent(sets.Pet_Matt,sets.CurrentGear);
 	elseif (gcinclude.BstPetMagicAccuracy:contains(PetAction.Name)) then	-- Pet Magical Accuracy Attack
 		gcinclude.MoveToCurrent(sets.Pet_Macc,sets.CurrentGear);
-    end
+	end
+	
 	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandlePetAction
 
@@ -1623,6 +1668,8 @@ function profile.HandleDefault()
 	local zone = gData.GetEnvironment();
 	local ew = gData.GetEquipment();
 	local bTank = gcdisplay.GetToggle('Tank');
+	local bSA = gcinclude.fBuffed('Sneak Attack');
+	local bTA = gcinclude.fBuffed('Trick Attack');
 	local eWeap = nil;
 	local cKey;
 
@@ -1677,39 +1724,54 @@ function profile.HandleDefault()
 	end
 		
 	-- Start with the default set
-	if bTank == true then
-		gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
-	else
-		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+	if gcdisplay.GetToggle('Idle') == true then
+		if bTank == true then
+			gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+		end
 	end
 		
 	-- Now process the player status accordingly		
-	if player ~= nil and player.Status == 'Engaged' then
-		if bTank == true then
-			gcinclude.MoveToCurrent(sets.Tank_TP,sets.CurrentGear);
-		else
-			gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
-		end
-		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
-		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
-			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
-			if cKey == 'C' then		-- Evasion			
-				if gcdisplay.GetToggle('Eva') == true then	
-					if bTank == true then
-						gcinclude.MoveToCurrent(sets.Tank_Evasion,sets.CurrentGear);
-					else			
-						gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
+	if player.Status == 'Engaged' then
+		-- If sneak attack or trick attack up, make sure the appropriate gear set is
+		-- equipped to maximize the damage. Note that if a weapon skill follows, the
+		-- weapon skill set will take priority.
+		if bSA == true or bTA == true then
+			if bSA == true and bTA == true then		-- SATA
+				gcinclude.MoveToCurrent(sets.SATA,sets.CurrentGear);
+			elseif bSA == true then					-- SA
+				gcinclude.MoveToCurrent(sets.SneakAttack,sets.CurrentGear);
+			else									-- TA
+				gcinclude.MoveToCurrent(sets.TrickAttack,sets.CurrentGear);
+			end
+		else	
+			if bTank == true then
+				gcinclude.MoveToCurrent(sets.Tank_TP,sets.CurrentGear);
+			else
+				gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
+			end
+			gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
+			for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
+				cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
+				if cKey == 'C' then		-- Evasion			
+					if gcdisplay.GetToggle('Eva') == true then	
+						if bTank == true then
+							gcinclude.MoveToCurrent(sets.Tank_Evasion,sets.CurrentGear);
+						else			
+							gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
+						end
 					end
-				end
-			elseif cKey == 'E' then		-- Accuracy	
-				if bTank == true then
-					gcinclude.FractionalAccuracy(sets.Tank_Accuracy);
-				else
-					gcinclude.FractionalAccuracy(sets.Accuracy);
-				end
-			elseif cKey == 'F' then		-- Kiting
-				if (gcdisplay.GetToggle('Kite') == true) then
-					gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
+				elseif cKey == 'E' then		-- Accuracy	
+					if bTank == true then
+						gcinclude.FractionalAccuracy(sets.Tank_Accuracy);
+					else
+						gcinclude.FractionalAccuracy(sets.Accuracy);
+					end
+				elseif cKey == 'F' then		-- Kiting
+					if (gcdisplay.GetToggle('Kite') == true) then
+						gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
+					end
 				end
 			end				
 		end
@@ -1731,10 +1793,12 @@ function profile.HandleDefault()
 	else
 		-- Assume idling. While there's no idle set, just use the 
 		-- "Default" set	
-		if bTank == true then
-			gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
-		else
-			gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+		if gcdisplay.GetToggle('Idle') == true then
+			if bTank == true then
+				gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
+			else
+				gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+			end
 		end
 	end
 				
@@ -1748,10 +1812,12 @@ function profile.HandleDefault()
 	
 	-- And make sure a weapon equipped. (Going into a capped area can cause no weapon to be equipped.)
 	local gear = gData.GetEquipment();
-	if gear.Main == nil then
-		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
+	if gear.Main ~= nil then
+		if gear.Main.Name == nil then
+			gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
+		end
 	end
-	
+
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set
 	
 	-- Lastly, update the display, just in case

@@ -197,15 +197,31 @@ local sets = {
 	},
 
 --[[
-	The following two sets are to be used as subsets. They're baseline for
-	intellegence and mind. Once you get to individual sets, include one of
-	these or ignore them and be explicit on the gear in that set.
+	*************************
+	* Spell Casting Subsets *
+	*************************
+	
+	The following sets are to be used as subsets. Once you get to individual 
+	sets, include one of these or ignore them and be explicit on the gear in 
+	that set.
 --]]
 
 	['INT'] = {	
 	},
 	
+	['Tank_INT'] = {
+	},
+	
 	['MND'] = {
+	},
+	
+	['Tank_MND'] = {
+	},
+	
+	['Enmity_Plus'] = {
+	},
+	
+	['Enmity_Minus'] = {
 	},
 	
 --[[
@@ -819,6 +835,12 @@ local sets = {
 	['Tank_EnfeeblingMND'] = {
 	},
 
+	['EnfeeblingMagic'] = {
+	},
+	
+	['Tank_EnfeeblingMagic'] = {
+	},
+	
 --[[
 	********************
 	* Midcast: Singing *
@@ -1280,6 +1302,9 @@ local sets = {
 	
 	['TrickAttack'] = {
 	},
+
+	['SATA'] = {
+	},
 	
 	['Mug'] = {
 	},
@@ -1525,7 +1550,9 @@ function profile.HandleDefault()
 	local player = gData.GetPlayer();
 	local zone = gData.GetEnvironment();
 	local ew = gData.GetEquipment();
-	local bTank = gcdisplay.GetToggle('Tank');	
+	local bTank = gcdisplay.GetToggle('Tank');
+	local bSA = gcinclude.fBuffed('Sneak Attack');
+	local bTA = gcinclude.fBuffed('Trick Attack');	
 	local eWeap = nil;
 	local cKey;
 
@@ -1580,37 +1607,52 @@ function profile.HandleDefault()
 	end
 	
 	-- Start with the default set
-	if bTank == true then
-		gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
-	else
-		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+	if gcdisplay.GetToggle('Idle') == true then
+		if bTank == true then
+			gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+		end
 	end
 		
 	-- Now process the player status accordingly
 	if player.Status == 'Engaged' then
-		if bTank == true then
-			gcinclude.MoveToCurrent(sets.Tank_TP,sets.CurrentGear);
-		else
-			gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
-		end
-		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
-		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
-			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
-			if cKey == 'C' then		-- Evasion			
-				if bTank == true then
-					gcinclude.MoveToCurrent(sets.Tank_Evasion,sets.CurrentGear);
-				else			
-					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
-				end		
-			elseif cKey == 'E' then		-- Accuracy	
-				if bTank == true then
-					gcinclude.FractionalAccuracy(sets.Tank_Accuracy);
-				else
-					gcinclude.FractionalAccuracy(sets.Accuracy);
-				end
-			elseif cKey == 'F' then		-- Kiting
-				if (gcdisplay.GetToggle('Kite') == true) then
-					gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
+		-- If sneak attack or trick attack up, make sure the appropriate gear set is
+		-- equipped to maximize the damage. Note that if a weapon skill follows, the
+		-- weapon skill set will take priority.
+		if bSA == true or bTA == true then
+			if bSA == true and bTA == true then		-- SATA
+				gcinclude.MoveToCurrent(sets.SATA,sets.CurrentGear);
+			elseif bSA == true then					-- SA
+				gcinclude.MoveToCurrent(sets.SneakAttack,sets.CurrentGear);
+			else									-- TA
+				gcinclude.MoveToCurrent(sets.TrickAttack,sets.CurrentGear);
+			end
+		else	
+			if bTank == true then
+				gcinclude.MoveToCurrent(sets.Tank_TP,sets.CurrentGear);
+			else
+				gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
+			end
+			gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
+			for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
+				cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
+				if cKey == 'C' then		-- Evasion			
+					if bTank == true then
+						gcinclude.MoveToCurrent(sets.Tank_Evasion,sets.CurrentGear);
+					else			
+						gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
+					end		
+				elseif cKey == 'E' then		-- Accuracy	
+					if bTank == true then
+						gcinclude.FractionalAccuracy(sets.Tank_Accuracy);
+					else
+						gcinclude.FractionalAccuracy(sets.Accuracy);
+					end
+				elseif cKey == 'F' then		-- Kiting
+					if (gcdisplay.GetToggle('Kite') == true) then
+						gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
+					end
 				end
 			end				
 		end
@@ -1632,10 +1674,12 @@ function profile.HandleDefault()
 	else									
 		-- Assume idling. While there's no idle set, just use the 
 		-- "Default" set
-		if bTank == true then
-			gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
-		else
-			gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+		if gcdisplay.GetToggle('Idle') == true then
+			if bTank == true then
+				gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
+			else
+				gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
+			end
 		end
 	end
 		
@@ -1649,9 +1693,11 @@ function profile.HandleDefault()
 	
 	-- And make sure a weapon equipped. (Going into a capped area can cause no weapon to be equipped.)
 	local gear = gData.GetEquipment();
-	if gear.Main == nil then
-		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
-	end		
+	if gear.Main ~= nil then
+		if gear.Main.Name == nil then
+			gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
+		end
+	end	
 		
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set
 					
