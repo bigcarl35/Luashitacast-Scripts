@@ -1,6 +1,10 @@
 local gcinclude = T{};
 
 require 'common'
+
+version = { ['author']	= 'Paiine',
+ 		    ['name']	= 'Luashitacast (Karma)',
+			['version']	= 1.5 };
 	
 --[[
 	This file contains routines that are used with Luashitacast across any supported job.
@@ -76,7 +80,7 @@ gcinclude.settings = {
 	--
 	bAutoStaveSwapping = true;		-- indicates if elemental stave swapping should occur automatically
 	bFractional = true;		-- indicates if fractional accuracy enabled; disabled means predefined
-	iPredefinedTier = 0;	-- indicates current level or predefined accuracy; 0 for none
+	iPredefinedTier = 0;	-- indicates current level of predefined accuracy; 0 for none
 	bGc = false;			-- indicates if /gc has been run
 };
 
@@ -84,7 +88,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','maxsong','maxspell','nac','petfood','rc','rv','sbp','showit','string','tank','th','unlock','wsdistance','wswap','t1'};
+gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','maxsong','maxspell','nac','petfood','rc','rv','sbp','showit','string','tank','th','unlock','ver','wsdistance','wswap','t1'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T{'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T{'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -1036,6 +1040,31 @@ ashita.events.register('packet_in', 'packet_in_callback1', function (e)
 end);
 
 --[[
+	DisplayVerion shows the name of the addon and the version along with the
+	changelog since the last release.
+--]]
+
+function DisplayVersion()
+	local bSkip = false;
+	local rfn = gProfile.FilePath:reverse();
+	
+	-- remove the job file from path, add changelog
+	rfn = string.sub(rfn,string.find(rfn,'\\'),-1);
+	rfn = rfn:reverse() .. 'Documentation\\changelog.txt';
+
+	print(chat.message(' '));	
+	print(chat.message(version.name .. ' Version: ' .. tostring(version.version)));
+	for line in io.lines (rfn) do
+		if bSkip == false then
+			print(chat.message(' '));
+			print(chat.message('Changes since last release:'));
+			bSkip = true;
+		end
+		print(chat.message(line));
+	end
+end
+
+--[[
 	StartReminder is a simple routine used to delay the printing of a reminder from
 	the start of running this code. It compares a base time (is seconds) with "now"
 	and after 15 secs prints the reminder, then disables itself.
@@ -1518,10 +1547,10 @@ function fGearCheckItem(sSlot,sName,bAccess,bForce)
 			
 			-- Save item w/details
 			gcinclude.GearDetails[sSlot][sName] = { 
-				['level'] = item.Level,
-				['job'] = bJob, 
+				['level']	   = item.Level,
+				['job']        = bJob, 
 				['accessible'] = bAccessible, 
-				['desc'] = item.Description[1]
+				['desc'] 	   = item.Description[1]
 			};
 			-- Bump counter
 			if not bThere then
@@ -3791,8 +3820,6 @@ function gcinclude.HandleCommands(args)
 	if not gcinclude.AliasList:contains(args[1]) then return end
 
 	local player = gData.GetPlayer();
-	local toggle = nil;
-	local status = nil;
 	local sList, sKey, sSet;
 	
 	-- Clear out the local copy of current gear
@@ -3801,8 +3828,6 @@ function gcinclude.HandleCommands(args)
 	args[1] = string.lower(args[1]);
 	if (args[1] == 'gswap') then			-- turns gear swapping on or off
 		gcdisplay.AdvanceToggle('GSwap');
-		toggle = 'Gear Swap';
-		status = gcdisplay.GetToggle('GSwap');
 	elseif args[1] == 't1' then				-- This is a test invoker
 		gcinclude.t1();
 	elseif args[1] == 'gc' then
@@ -3850,57 +3875,39 @@ function gcinclude.HandleCommands(args)
 			end				
 			gcdisplay.SetCycle('DT',sType);
 		end
-		toggle = 'DT';
-		status = gcdisplay.GetCycle('DT');
 	elseif (args[1] == 'kite') then			-- Turns on/off whether movement gear is equipped
 		gcdisplay.AdvanceToggle('Kite');
-		toggle = 'Kite Set';
-		status = gcdisplay.GetToggle('Kite');
 	elseif (args[1] == 'idle') then			-- Turns on/off whether movement gear is equipped
 		gcdisplay.AdvanceToggle('Idle');
-		toggle = 'Idle';
-		status = gcdisplay.GetToggle('Idle');
 	elseif (args[1] == 'tank') then			-- Turns on/off whether tanking gear is equipped
 		if string.find(gcinclude._TankJobList,player.MainJob) ~= nil then
 			gcdisplay.AdvanceToggle('Tank');
-			toggle = 'Tank Set';
-			status = gcdisplay.GetToggle('Tank');
 		else
 			print(chat.header('HandleCommands'):append(chat.message('Error: Your job does not support the tanking option. Ignoring command')))
 		end				
 	elseif (args[1] == 'eva') then			-- Turns on/off whether evasion gear should be equipped
 		gcdisplay.AdvanceToggle('Eva');
-		toggle = 'Evasion';
-		status = gcdisplay.GetToggle('Eva');
 	elseif (args[1] == 'wswap') then		-- Turns on/off whether weapon swapping is permitted
 		if gcinclude.settings.bWSOverride == false then
 			gcdisplay.AdvanceToggle('WSwap');
-			toggle = 'Weapon Swap';
-			status = gcdisplay.GetToggle('WSwap');
 		else
 			print(chat.header('HandleCommands'):append(chat.message('Error: Weapon swapping always enabled on ' .. player.MainJob .. '. Ignoring command')))
 		end		
 	elseif (args[1] == 'sbp') then			-- Turns on/off whether the blood pact message is shown
 		if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
 			gcdisplay.AdvanceToggle('sBP');
-			toggle = 'Show Blood Pact';
-			status = gcdisplay.GetToggle('sBP');
 		else
 			print(chat.header('HandleCommands'):append(chat.message('Error: /sBP is only available to summoners. Ignoring command')));
 		end
 	elseif (args[1] == 'ajug') then			-- Turns on/off whether Automatic Jug assignment enabled
 		if player.MainJob == 'BST' then
 			gcdisplay.AdvanceToggle('AJug');
-			toggle = 'Automated Jug Management';
-			status = gcdisplay.GetToggle('AJug');
 		else
 			print(chat.header('HandleCommands'):append(chat.message('Error: /AJug is only available to beastmasters. Ignoring command')));
 		end	
 	elseif (args[1] == 'th') then			-- Turns on/off whether TH gear should be equipped
 		if player.MainJob == 'THF' then
 			gcdisplay.AdvanceToggle('TH');
-			toggle = 'Treasure Hunter';
-			status = gcdisplay.GetToggle('TH');
 		else
 			print(chat.header('HandleCommands'):append(chat.message('Error: /TH is only available to thieves. Ignoring command')));
 		end			
@@ -3914,8 +3921,6 @@ function gcinclude.HandleCommands(args)
 		else
 			print(chat.header('HandleCommands'):append(chat.message('Your job does not support that command. Ignoring.')));
 		end
-		toggle = 'Debuf';
-		status = gcdisplay.GetCycle('DB');
 	elseif (args[1] == 'acc') then
 		local bSkip = false;
 		if args[2] ~= nil then
@@ -4024,9 +4029,6 @@ function gcinclude.HandleCommands(args)
 			
 			gcinclude.EquipTheGear(gcinclude.sets.CurrentGear,true);
 			fLockSlotsBySet(gcinclude.sets.CurrentGear);
-
-			toggle = 'Gear Swap';
-			status = gcdisplay.GetToggle('GSwap');
 		else
 			print(chat.header('HandleCommands'):append(chat.message('Error: No set specified for /gearset. Command ignored.')));
 		end	
@@ -4037,19 +4039,17 @@ function gcinclude.HandleCommands(args)
 			else
 				gcdisplay.SetCycle('Instrument',gcinclude.STRING);
 			end
-			toggle = 'Toggle Instrument';
-			status = gcdisplay.GetCycle('Instrument');
 		else
 			print(chat.header('HandleCommands'):append(chat.message('Your job does not support that command. Ignoring.')));
 		end
 	elseif (args[1] == 'maxspell') then			-- Determines highest level spell to cast
 		MaxSpell(args[2],args[3],true);
-		toggle = 'MaxSpell';
 	elseif (args[1] == 'maxsong') then			-- Determines highest level song to cast
 		MaxSong(args[2],args[3],true);
-		toggle = 'MaxSong';
 	elseif args[1] == 'equipit' or args[1] == 'ei' then			-- Equip specified item
 		EquipItem(args);
+	elseif args[1] == 'ver' then				-- Display version/change log
+		DisplayVersion();
 	end
 
 	if gcinclude.settings.Messages then
