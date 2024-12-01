@@ -2,13 +2,10 @@ local profile = {};
 gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 
 --[[
-	This file contains all the gear sets associated with the DRG job. While it isn't outside of the realm of 
-	possibility that the subjob might be able to use gear sets too, that is not the emphasis of this program. 
-	It is tailored to handle all the aspects of DRG. If you desire a gear set change to strengthen an ability
-	from your subjob that is not supported by this program, you probably will have to make a custom gear set 
-	and use the /gearset command to use it.
+	This file contains all the gear sets associated with the DRG job.
 	
-	Gear Sets last updated: June 21, 2024
+	Gear Sets last updated: November 12, 2024
+	Code update: November 12, 2024	
 --]]
 
 local sets = {
@@ -19,57 +16,71 @@ local sets = {
 	items identified, usually ordered by level: Body = { 'Vermillion Cloak//CARBY','Austere Robe' },
 	Any item that has a // appended to it contains an inline conditional. The // code is a test
 	to see if the item should be equipped. The level is still checked, but if the inline coded
-	test is successful, that piece of gear will be loaded. Currently nothing checks to see
-	if that item can be equipped by the job it's associated with let alone whether the player
-	even has it accessible. Those are all planned for the future. In the mean time the onus is
-	on the player to create the correct definitions.
+	test is successful, that piece of gear will be loaded. If you've done a /gc command,
+	the item's suitability for the job and accessibility will also be checked.
 		
-	It is recommended that the gear sets not include any gear found in the top line of your 
-	equipment grid (main hand, off hand, ranged weapon, ammo). Doing so will mean that TP will be 
-	reset to 0 whenever gear is changed which can be very frustrating. Further, any time you do 
-	change a weapon, it will convert back to what was defined in a set.	Believe me, it's no fun	
-	fighting Luashitacast!
-
-	Also, not all sets need to be defined. There is nothing wrong with leaving a set "empty", but don't delete any
-	of the sets. All the ones listed here (except for any custom sets) are expected to exist by Luashitacast.
+	Not all sets need to be defined. There is nothing wrong with leaving a set "empty", but don't
+	delete any of the sets. All the ones listed here (except for any custom sets) are expected to 
+	exist by Luashitacast.
 		
 	*** Note ***
-	Unlike when summoner is used as a subjob, /bst's pets are charmed at the max level of your BST or the level
-	of your PLD, whichever is lower. That means you can charm higher level mobs than you would expect with /bst.
-	Just note though that you can't have two pets, so if you have charmed a pet with /bst, you can't summon your
-	avatar and visa versa.
+	/SMN has a problem in that their pet is the level of the subjob, which is not very useful. 
+	As a result, /SMN pet actions are treated "as is" without gearset swap support.	As for /DRG,
+	please note that the wyvern can't be summoned.
 	
 	*** Note 2 ***
-	No gear that supports bard songs can be worn by any job except a bard, no there's no support given here for
-	/BRD.	
+	No gear that supports bard songs can be worn by any job except a bard, so there's no explicit
+	support given here for /BRD.
+
+	
+	Horizon changes from retail:
+		- Moderate changes to artifact armor
+		- Moderate changes to Gungnir
+		- Ancient Circle now increases damage dealt by the party to dragon enemies. The recast has
+		  been increased to 10 minutes
+		- Steady Wing (an out of era skill) has had it's level changed from 95 to 30
 --]]
 
 --[[
-	The TP sets are used when you are fighting. The accuracy set will be used if /acc is specified
-	and the evasion set if /eva is specified. Please note that if you have a subjob that can use a
-	pet, none of the abilities are supported here. Only main jobs that have pets (SMN,BST) support
-	pet actions.
+	The "default" gear set is what is worn when you're not fighting (either you or your pet)
+	and you're not resting. It covers everything else: idling, traveling, in town, etc. This 
+	set displays what your character looks like most of the	time. This set does not 
+	distinguish the type of activities you're doing by default, so use inlines accordingly.
+--]]
+
+	['Default'] = {
+		Head   = { 'Lilac Corsage//TOWN', 'Empress Hairpin' },
+		Body   = { 'Ducal Aketon//TOWN-AK', 'Wyvern Mail', 'Brigandine', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Angler\'s Tunica' },
+	},
+	
+--[[
+	The TP set is used when you are fighting. The accuracy is addressed separately in a fractional 
+	manner. The evasion set if equipped if /eva is specified. Please note that there are no specific
+	gearsets associated with the dragoon's wyvern when it comes to fighting.
 --]]
 
 	['TP'] = {
-        Head  = 'Empress Hairpin',
-        Neck  = { 'Peacock Amulet', 'Spike Necklace' },
-        Ears  = { 'Pilferer\'s Earring//SJTHF', 'Genin Earring//SJNIN', 'Drone Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ', 'Physical Earring', 'Reraise Earring' },
-        Body  = { 'Wyvern Mail', 'Brigandine', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Angler\'s Tunica' },
-        Hands = { 'Wonder Mitts', 'Battle Gloves' },
-        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Kshama Ring No.2', 'Balance Ring' },
-		Back  = { 'Raptor Mantle', 'Ram Mantle' },
-        Waist = { 'Swift Belt', 'Life Belt', 'Tilt Belt', 'Powerful Rope//MSJ', 'Warrior\'s Belt' },
-        Legs  = { 'Drachen Brais//ACCESSIBLE', 'Wonder Braccae', 'Shep. Hose', 'Ryl.Ftm. Trousers' },
-        Feet  = { 'Mannequin Pumps//MSJ', 'Bounding Boots' },
+		Subset = 'Default',
+        Head   = 'Empress Hairpin',
+        Neck   = { 'Opo-opo necklace//SLEPT', 'Peacock Amulet', 'Spike Necklace' },
+        Ears   = { 'Bat Earring//BLINDED', 'Pilferer\'s Earring//SJTHF', 'Genin Earring//SJNIN', 'Drone Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ', 'Physical Earring', 'Reraise Earring' },
+        Body   = { 'Wyvern Mail', 'Brigandine', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Angler\'s Tunica' },
+        Hands  = { 'Wonder Mitts', 'Battle Gloves' },
+        Rings  = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Kshama Ring No.2', 'Balance Ring' },
+		Back   = { 'Raptor Mantle', 'Ram Mantle' },
+        Waist  = { 'Swift Belt', 'Life Belt', 'Tilt Belt', 'Powerful Rope//MSJ', 'Warrior\'s Belt' },
+        Legs   = { 'Drachen Brais', 'Wonder Braccae', 'Shep. Hose', 'Ryl.Ftm. Trousers' },
+        Feet   = { 'Mannequin Pumps//MSJ', 'Bounding Boots' },
     },
 	
 --[[
-	If an accuracy emphasis is desired, the following set will replace the gear appropriately.
-	Remember that DEX converts to accuracy: (horizon) for every 1 point of DEX you get 
-	0.70 points of accuracy if wielding a 2H weapon, 0.65 for a 1H weapon, and 0.60 for H2H. 
-	Tank_Accuracy is a subset of Accuracy. It lets you specify what accuracy gear to equip 
-	that doesn't compromise your tanking set as much as a full-blown accuracy set would.
+	If an accuracy emphasis is desired, the following set will replace the gear, appropriately.
+	Unlike TP though, accuracy is applied one slot at a time in a fractionalized manner using
+	the /acc command.
+	
+	Include equipment with accuracy bonus and DEX. Remember, DEX converts to accuracy: (horizon) 
+	for every 1 point of DEX you get 0.70 points of accuracy if wielding a 2H weapon, 0.65 for 
+	a 1H weapon, and 0.60 for H2H. 
 --]]
 	
 	['Accuracy'] = {
@@ -78,12 +89,22 @@ local sets = {
         Hands = 'Battle Gloves',
 		Rings = { 'Woodsman Ring','Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },
 		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt' },
-		Legs  = 'Drachen Brais//ACCESSIBLE',
+		Legs  = 'Drachen Brais',
 		Feet = 'Bounding Boots',
     },
+
+--[[
+	Similar to the accuracy set, the Ranged_Accuracy set will be used on ranged attacks
+--]]
+
+	['Ranged_Accuracy'] = {
+	},
 	
 --[[
-	If evasion wanted, equip evasion gear
+	If evasion wanted, equip evasion gear. Remember that AGI converts to evasion: for 
+	every 2 points of AGI you get 1 point of evasion. Note that if you leave the body
+	slot empty, but designate a piece of head gear and the previous body slot had a
+	multi-slot body piece (like Vermillion Cloak), then body slot will be left empty.	
 --]]
 	
 	['Evasion'] = {
@@ -93,37 +114,11 @@ local sets = {
         Legs = { 'Shep. Hose//PET','San. Trousers' },
 		Feet = 'Bounding Boots',
     },
-
---[[
-	The "Travel" gear set is what is worn when you're not fighting (either
-	you or your pet), you're not resting. It's a good place to put gear 
-	that increases your movement speed. (Not to be confused with the 
-	['Movement'] gear set which is used when you're kiting.) This is also 
-	where you put gear that is adventageous if you have a pet present 
-	(i.e., lower perpetuation cost, etc.)
---]]
-		
-	['Travel'] = {
-	},
 	
 --[[
-	The Idle_Regen and Idle_Refresh gear sets replace the normal Idle set when the player's HP or MP
-	go below a set percentage (defined in gcinclude.lua, but can be overriden in profile.OnLoad function).
---]]
-	
-	['Idle_Regen'] = {
-	},
-	
-	['Idle_Refresh'] = {
-	},
-		
---[[
-	When you are resting (kneeling down), your HP 'Resting' set will be equipped. If your subjob
-	uses MP and your MP is below the set threshhold (defined by gcinclude.settings.RefreshGearMP), 
-	your MP 'Resting_Refresh' gear set will be equipped. Regardless of which set is equipped, 
-	assuming that your subjob uses magic, you have a Dark/Pluto staff accessible, weapon swapping 
-	is enabled (/wswap), and your MP is not at maximum, the Dark/Pluto staff will automatically be 
-	equipped.
+	When you are resting (kneeling down), if your HP is not full, your HP 'Resting' 
+	set will be equipped. If your MP is below maximum value, your MP 'Resting_Refresh' 
+	gear set will be equipped. 
 --]]
 	
 	['Resting_Regen'] = { 
@@ -133,17 +128,10 @@ local sets = {
 	['Resting_Refresh'] = {
 	},
 	
-	-- If you have any Spell Interruption Rate down gear, put them into the "SIR" gear set.
-	-- This gear set is equipped in the HandleMidcast function that all spells go through.
-	-- Currently only gear equippable by any job is applicable here. There's no gear that's 
-	-- specific for DRG that gives spell interruption rate down.
-	['SIR'] = {
-	},
-	
 --[[
-	Start weapons are where you define what you want the first row of equipment to look like when you
-	either log in as a SMN or you switch your main job to SMN. Any other gear you mention will be overridden
-	by the Idle or Town set, so no need to include here.
+	Start weapons are where you define what you want the first row of equipment to look 
+	like when you either log in as a DRG or switch your main job to DRG. Any other gear 
+	you mention will be overridden by the Idle or Town set, so no need to include here.
 --]]
 
 	['Start_Weapons'] = {
@@ -152,56 +140,17 @@ local sets = {
 	},
 	
 --[[
-	Specify what you want to wear around town.
---]]
-	
-	['Town'] = {
-		Head = 'Lilac Corsage',
-		Body = 'Ducal Aketon//AK:OMNI',
-    },
-	
---[[
-	Damage reduction gear depends on the type of damage. The most common is physical, but there's times when
-	you'll want to reduce magic damage or breath damage. The three gear sets are defined below. The correct
-	one will be equipped depending on how DT is set. Please consider not including gear that doesn't have 
-	any damage taken property so other wanted stats can shine through.
---]]
-
-	['DT_Physical'] = {
-	},
-	
-	['DT_Magical'] = {
-    },
-	
-	['DT_Breath'] = { 
-	},
-	
---[[
-	Magic accuracy gear
---]]
-
-	['Macc'] = {
-		Rings = 'Tamas Ring',
-    },
-
---[[
-	Magic Attack Bonus (MAB) is used for more than just spells, so it is broken out
---]]
-
-	['MAB'] = {
-	},
-	
---[[
-	Preshot is the first stage of when a ranged shot is being performed. This is where you place any 
-	gear that reduces the time it takes to shoot (snap shot, rapid shot, haste).
+	Preshot is the first stage of when a ranged shot is being performed. This is where 
+	you place any gear that reduces the time it takes to shoot (snap shot, rapid shot, 
+	quick shot, and haste).
 --]]
 
 	['Preshot'] = {
     },
 	
 --[[
-	Midshot is the second stage of a ranged shot. This is where you place Ranged Accuracy, Ranged 
-	Attack or Ranged Damage gear.
+	Midshot is the second stage of a ranged shot. This is where you place
+	Ranged Attack, Ranged Damage, recycle, etc.
 --]]
 
 	['Midshot'] = {
@@ -209,6 +158,28 @@ local sets = {
 		Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	
     },
 
+--[[
+	*************************
+	* Spell Casting Subsets *
+	*************************
+	
+	The following sets are to be used as subsets. Once you get to individual 
+	sets, include one of these or ignore them and be explicit on the gear in 
+	that set.
+--]]
+
+	['INT'] = {
+	},
+	
+	['MND'] = {
+	},
+
+	['Enmity_Plus'] = {
+	},
+	
+	['Enmity_Minus'] = {
+	},
+	
 --[[
 	Spells are a bit different. Each type of spell can have it's own enhancement gear as well as 
 	stat based gear. (In some cases individual spells have special entries.) These sets do not 
@@ -222,119 +193,609 @@ local sets = {
 	},
 
 --[[
-	The second stage is Midcast. This is where you'll want to equip magic attack, or magic enhancing 
-	gear. (Magic Attack Bonus also happens here, but is broken out into it's own gear set. See MAB.)
+	The second stage is Midcast. This is where you equip gear that gives 
+	magic attack, enhancing bonuses, potency improvements, duration
+	enhancements, recast reduction gear, etc. This implementation breaks 
+	out the midcast into separate routines based on the magic type: 
+	healing, divine, elemental, enhancing, enfeebling, summoning, ninjutsu,
+	and song. Within each routine there's further logic breaking down
+	functional paths. Based on spell (or song), the appropriate gear set
+	is equipped.
+	
+	Every gear set will have an alternative "tanking" version if your
+	main job supports tanking (DRG does not.) I've included details on
+	what each gear set is suppose to feature and what stats you should
+	be emphasizing. Further, where appropriate, any formulas/charts that
+	will help you to decide what gear to include. 
 --]]	
 
-	['Midcast'] = {
-	},
-
 --[[
-	Further, there is a break out for each type of spell. I've included a comment on the type of attributes
-	the piece of gear should have. While the spell might have other attributes than those listed, the ones I have
-	listed have gear that a DRG or anyone can wear.
+	**************************
+	* Midcast: Healing Magic *
+	**************************
 --]]
 
-	-- Healing: Healing Magic Skill. Currently only a Healing Earring affects healing spells from a sub job. No other gear
-    -- gives bonuses to Healing magic from a sub job. Also, gear with MND bonuses will boost cure spell's potency, but MND 
-	-- gear is automatically equipped prior to the Healing set being equipped in the HandleMidcast function. There's no need 
-	-- to include MND gear here.
-	['Healing'] = {
-    },
-
-	-- Dark: Dark Magic Skill. Currently only gear equippable by any job gives is applicable here. There's no gear that's 
-	-- specific for DRG that gives any dark magic skill.	
-	['Dark'] = {
-    },
-
-	-- Divine: Divine Magic Skill.	
-	['Divine'] = {
-	},
-	
-	-- Enfeebling Magic Skill.	Currently only gear equippable by any job gives is applicable here. There's no gear that's 
-	-- specific for DRG that gives any enfeebling magic skill.	
-	['Enfeebling'] = {
-	},
-	
-	-- Enhancing: There is no gear that a DRG can wear to enhance any magic spell. Leave the Enhancing gear sets empty.
-	['Enhancing'] = {
-	},
-	
-	-- Elemental: Elemental Magic Skill. Currently only gear equippable by any job gives is applicable here. There's no gear
-	-- that's specific for DRG that gives any elemental magic skill. Note: don't include elemental staves or elemental 
-	-- obis/gorgets here, that is done automatically in the HandlePrecast/HandleMidcast functions (if /wswap is enabled).
-	['Elemental'] = {
-	},
-
-	-- Ninjutsu: There is no gear that a DRG can wear to add Ninjutsu skill. Leave the following two
-	-- gear sets empty.	
-	['Ninjutsu'] = {			-- Ninjutsu Skill, magic burst bonus, magic attack bonus
-	},
-	
-	-- Summoning: Summoning Magic Skill and Avatar Perpetuation Cost. Currently only gear equippable by any job gives
-	-- is applicable here. There's no gear that's specific for DRG that gives any summoning skill. Note: currently on 
-	-- HorizonXI summoning skills are ignored. Any gear piece that only gives summoning skill will be commented out	
-	['Summoning'] = {
-	},
-	
 --[[
-	Next is stat-based gear, (in this case intelligence or mind)
+	Healing Magic: consisting of all light-based spells, removes 
+	some debuffs on players, buffs the caster, cures the health of 
+	players or npcs, or causing damage to undead monsters. Healing 
+	magic skill affects the	potency of cures while decreasing the 
+	likelihood of the caster being interrupted.
+	
+	Healing spells: cures, curagas, raises, reraises, blindna, cursna,
+	paralyna, poisona, silena, stona, and viruna.
 --]]
 
-	['INT'] = {
-        Rings = 'Tamas Ring',
-		Feet  = 'Mannequin Pumps',
-    },
+--[[	
+	Curing magic addresses healing players/npcs. Each time a cure 
+	spell is cast, a power calculation is performed to determine 
+	the base effect of the spell. After that, any bonuses will be 
+	applied. What this means is that MND, VIT and healing magic 
+	skill impact your power rating, but once the cap is hit, they 
+	have no more influence.
 	
-	['MND'] = {
-        Neck  = { 'Promise Badge', 'Justice Badge' },
-		Body  = 'Wonder Kaftan',
-        Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
-		Legs  = 'Wonder Braccae',
-        Waist = 'Friar\'s Rope',
-		Feet  = 'Mannequin Pumps',
-    },
-
---[[
-	Some spells are special cases, so they have individual gears sets.
---]]
+		power = (MND*3) + VIT + (Healing Magic Skill*0.6)
 	
-	-- Stoneskin: Stoneskin Enhancement, Mind, and Enhancing Magic Skill. Mind is 3x more important than enhancing
-	-- Magic Skill. The only piece of gear a DRG can wear to enhance stoneskin is a Stone Gorget. There's no gear
-	-- that a DRG (or any job) can wear to enhance magic. Don't include mind gear here, that's already equipped.
-	-- This gear set has no effect on Titan's Earthen Ward blood pact.
-	['Stoneskin'] = {
+	This chart lists all /WHM or /RDM curing spells, the power cap, 
+	and the effect on HP baseline. Curaga spells are included too.
+		
+			Spell		cap		low		high
+			-----		---		---		---
+			Cure		100		 20		 30
+			Cure II		170		 75		 90
+			Cure III	300		160		190
+			Curaga		170		 75		 90
+			Curaga II	300		160		190
+	
+	At this point, any bonuses from day's element, weather, elemental
+	staff, or gear/food with potency affects will be tacked on. Because
+	cure potency is applied after the power cap is determined, it's a
+	very attractive parameter to boost up. Just remember though that 
+	cure potency is capped at 50%. Light's day and/or light weather 
+	has a 33% chance to boost the cure's effecacy by 10% each (25% 
+	if double light weather.) Casting cures on darksday or in dark 
+	weather has an equal chance of a penalty.
+	
+	Once the "CuringMagic" set is equipped, the midcast routine will
+	also check to see if you have an Apollo/Light staff for it's Cure 
+	Potency.
+--]]	
+	
+	['CuringMagic'] = {
 	},	
 	
-	-- Drain: Drain Enhancement, Dark Magic Skill, Dark Magic Accuracy. Currently no gear supports Drain enhancement.
-	-- Drain is part of Dark Magic, so Potency which is based on dark magic skill will already be loaded in HandleMidcast 
-	-- function and need not be repeated here. No current gear supports dark magic accuracy for any job. Magic attack 
-	-- bonus and magic critical hit have no effect on potency. Leave the two Drain gear sets empty.
-	['Drain'] = {
-    },
+--[[
+	As for the offensive use of cure spells against undead monsters, 
+	most of	what was said about CuringMagic is true except cure potency. 
+	This has no effect on undead monsters.
 	
-	-- Aspir: Aspir Enhancement, Dark Magic Skill, Dark Magic Accuracy. Currently no gear equippable by a
-	-- DRG enhances Aspir. Aspir is part of Dark Magic, so potency which is based on dark magic skill will
-	-- already be loaded in HandleMidcast function and need not be repeated here. No current gear supports
-	-- dark magic accuracy for any job. Magic attack bonus and magic critical hit have no effect on potency.
-	-- Leave the two Aspir gear sets empty.
-	['Aspir'] = {
-    },
+	After the OffensiveCuring set is equipped, the midcast routine will 
+	see if a Korin Obi can be equipped to take advantage of the 100% 
+	proc rate of the day's element/weather. Also, like normal curing 
+	magic, an Apollo/Light staff will be check for,	but not for the 
+	cure potency. Rather, for magic affinity.
+--]]
+
+	['OffensiveCuring'] = {
+	},
+
+--[[
+	This set is used for all non-cure Healing Magic spells. Only 
+	healing magic skill is of any importance here. You might want 
+	to use this set as a subset for the other cure-based sets.
+--]]
+
+	['HealingMagic'] = {
+	},
+
+--[[
+	****************************
+	* Midcast: Enhancing Magic *
+	****************************
+--]]
 	
-	-- Sneak: Enhances Sneak and Enhances Stealth. Currently on Dream Boots +1 enhances sneak and is equippable
-	-- by any job. (Attained through the Starlight Celebration.) No gear for any job supports Enhances Stealth
-	-- yet.
+--[[
+	Enhancing Magic: This type of magic includes a wide variety of spells 
+	that enhances players as well as movement spells. It's sort of a catch 
+	all category.
+	
+	Enhancing Spells: bar/ra elemental spells, bar/ra status spells, blink,
+	aquaveil, stoneskin, phalanx, protect/ra spells, shell/ra spells, erase,
+	regen, refresh, deoderize, invisible, sneak, haste, spike spells (not
+	dread), escape, teleport spells, warp spells, en- spells (except 
+	enlight.)
+--]]
+
+--[[
+	There are two versions of barspells: elemental and status, both of which
+	increase the magic evasion of a player from the element/status named.
+	Only one barspell of each type can be enabled at the same time. Pairing 
+	barspells that have the same element increases magic evasion further 
+	(ex: barparalyze and barblizzard).
+	
+	The potency of an elemental barspell depends only on Enhancing Magic
+	Skill as follows:
+	
+		Resistance = 40 + floor(Enhancing Magic Skill / 5)
+		if Enhancing Magic Skill is above 300:
+			Resistance = 25 + floor(Enhancing Magic Skill / 4)
+	
+	You can increase the resistence through gear or WHM category 1 merits.
+	* There's a cap of 500 Enhancing Magic Skill, but that might be from the
+	  99 era.
+	
+	Little is known about the potency of barstatus spells, but enhancing
+	magic skill does affect the duration.
+	
+		duration(seconds) = Enhancing Magic Skill x 2
+--]]
+
+	['Barspell'] = {
+	},
+	
+--[[
+	Enspells buff the player's melee weapon so that when they hit, there's
+	also elemental damage being applied. The amount of damage is calculated 
+	when the weapon hits.
+	
+		Base Damage = floor(6 * E / 100) + 3 if E <= 200
+					  floor(5 * E / 100) + 5 if E > 200
+			where E is your Enhancing Magic Skill
+		
+	When WotG comes out, Enspells II are introduced which are fairly amazing.
+	I'll update this comment when that occurs.
+	
+	Enspells are also affected by corresponding day's element and weather,
+	but not magic affinity. The appropriate obi will automatically be equipped
+	if the conditions are met.
+--]]
+
+	['Enspell'] = {
+	},
+	
+--[[
+	Spikes place an elemental buff around the player which causes damage/
+	status effects to any monster that hits the player. Each type of spike 
+	spell has a different formula for how much damage they do and only 
+	some potentially add a status effect. All spikes all are based on INT 
+	and Enhancing Magic Skill.
+	
+	The maximum damage is determined by INT. Enhancing Magic Skill helps
+	spikes do full damage while lessening the likelihood of the spell being
+	resisted.
+	
+	Blaze Spikes: integer(integer(((INT+2)/12) + 4) * (1 + (MAB/100)))
+	Ice/Shock spikes: integeer(integer(((INT+10)/20) + 2) * (1 + (MAB/100)))
+--]]
+	
+	['Spike'] = {
+	},
+	
+--[[
+	The rest of the the gear sets for Enhancing Magic are for specific
+	spells: stoneskin, sneak, invisible, and phalanx. Include gear in
+	the appropriate set that enhances the named spell accordingly.
+
+	Stoneskin absorbs a set amount of damage before wearing off. How much
+	it absorbs depends on the caster's MND and Enhancing Magic Skill.
+	
+		Base = floor(Enhancing Magic Skill/3 + MND)
+		
+		if Base < 80, then absorbed amount equals base
+		if 80 <= Base < 130, then absorbed amount = floor((2 * Base) - 60)
+		if 130 <= Base, then absorbed amount = floor((3 * Base) - 190)
+		
+		Absorbed damage is capped at 350
+		
+	Any equipment that enhances stoneskin grants a flat bonus to the spell's
+	effect that can go past the natural cap. This equipment must be worn by
+	the player who has stoneskin cast on them. (At this time only the caster
+	can be the reciever.)
+--]]
+
+	['Stoneskin'] = {
+	},	
+
+--[[
+	Sneak's duration is variable, but the duration maxes at about 5 
+	minutes. Include any gear that enhances this buff.
+--]]
+
 	['Sneak'] = {
 		Feet = 'Dream Boots +1',
 	},
-	
-	-- Invisible: Enhances Invisible Effect. Currently only Dream Mittens +1 enhances invisible and is equippable
-	-- by any job. (Attained through the Starlight Celebration.)	
+
+--[[
+	Invisible's duration is variable, but the duration maxes at 
+	about 5 minutes. Include any gear that enhances this buff.
+--]]	
+
 	['Invisible'] = {
 		Hands = 'Dream Mittens +1',
 	},
+
+--[[
+	Phalanx gives the reciever a certain amount of damage resistance.
+	The amount of resistance is calculated after every hit taken and is 
+	a function of the caster's Enhancing Magic Skill at the time the 
+	spell was cast.
 	
-	-- Note: Phalanx does have gear that supports the spell, but it is out of era
+		resistance = floor ((E / 10) - 2) if E <= 300
+					 floor(((E - 300.5) / 28.5) + 28) if E > 300
+			where E is the caster's Enhancing Magic Skill
+		
+		The resistance caps at 35.
+--]]
+	
+	['Phalanx'] = {
+	},
+	
+--[[
+	This set handles the rest of the enhancing spells not covered by barspell,
+	en-spells, spikes, and the individual enhancing spell gear sets. Enhancing 
+	magic skill determines potency (if appropriate) and decreases the 
+	likelihood of an enhancing spell being interrupted. Enhancing magic is not 
+	affected by magic affinity, so elemental staves are not needed, but en- 
+	spells can be affected by the day/weather effects.
+--]]
+
+	['EnhancingMagic'] = {
+	},
+
+--[[
+	****************************
+	* Midcast: Elemental Magic *
+	****************************
+--]]
+	
+--[[
+	Elemental Magic: This type of magic consists of nukes, ancient magic (a type
+	of nuke), and elemental debuffs. Elemental Magic Skill determines the accuracy
+	and help resist spell interuptions. It has no effect on damage except for the
+	meteor skill which is out of era. All elemental spells are consider to be
+	either a nuke or debuff.
+	
+	Elemental spells: aeros, aerogas, blizzards, blizzagas, burn, burst, drown
+	fires, firagas, flare, flood, quake, rasp, sjhock, stones, stonegas, thunders,
+	thundagas, tornado, waters, and watergas.
+	
+	Elemental magic and ancient magic is grouped together. CaLculating magic
+	damage is an extensive process. (If you want to see all of the gory details,
+	please refer to the Elemental Magic section in the magic.txt file found in
+	the Documentation subdirectory.)
+	
+	The important things to remember are: the difference between the caster's 
+	INT and the monster's INT (dINT) scales the	wider the gap becomes. The 
+	nuke spell's tier caps the dINT that is counted, so a tier 1 caps at 100,
+	tier 2 at 200, etc. Magic affinity and day/weather can boost/penalize 
+	damge. Hitting a single target does more damage (even with an AoE spell)
+	than two or more targets. Boosting Magic Attack Bonus (MAB) will increase
+	damage. Hitting NMs with the same spell within 5 seconds again will 
+	reduce your elemental damage by 20% ("nuke wall"), excluding skillchains.	
+--]]
+	['ElementalNuke'] = {
+		Rings = 'Tamas Earring',
+		Feet  = 'Mannequin Pumps',
+	},	
+
+--[[
+	Elemental debuffs work in a simlar fashion to elemental nukes except they
+	apply a damge over time (DOT) debuff and lessen a primary stat. How effective
+	the elemental debuff is depends strictly on the caster's INT.
+	
+		  1 -  39 INT: 1 hp/tic and  -5 to the stat
+		 40 -  69 INT: 2 hp/tic and  -7 to the stat
+		 70 -  99 INT: 3 hp/tic and  -9 to the stat
+		100 - 149 INT: 4 hp/tic and -11 to the stat
+		>150 INT:	   5 hp/tic and -13 to the stat
+	
+	A target can be afflicted by as many as three different elemental debuffs
+	as long as the spells' element doesn't interact with each other. So,
+	rasp (earth, Dex down), Drown (water, STR down), and Frost (ice, AGI down)
+	can coexist and Burn (fire, INT down), Choke (wind, VIT down), and Shock
+	(lightning, MND down) can coexist. (Note that the damage done by an
+	elemental debuff can wake up a player/monster that is sleeping.) Elemental
+	Magic Skill, Magic Affinity, and Magic Accuracy increase the likelihood of
+	the debuff not being resisted.
+	
+	An elemental obi and elemental staff (with //WSWAP) will be equipped if 
+	available automatically.
+--]]
+
+	['ElementalDebuff'] = {
+	},
+
+--[[
+	**********************
+	* Midcast: Summoning *
+	**********************
+--]]
+
+--[[
+	Summoning: This type of magic is used when a summoner casts either an
+	avatar or an elemental spirit. It is a very straightforward type of
+	magic. Summoning Magic Skill mostly affect elemental spirits, decreasing
+	the wait time between when the spirit is summoned and it casts a spell
+	and the wait time between spells. Further, the intelligence of the AI
+	increases. The spirit will cast more powerful spells and more appropriate
+	spells more often. Summoning magic skill also descreases the likelihood
+	of a summons being interrupted.
+--]]
+
+	['Summoning'] = {
+	},
+
+--[[
+	***********************
+	* Midcast: Dark Magic *
+	***********************
+--]]
+
+--[[
+	Dark Magic: This type of magic is used to absorb from a target, whether
+	stats, mana, or HP. Further, it can weaken an enemy's attack while applying
+	a DoT debuff, stun, and move a k.o.'ed player. Dark Magic Skill determines
+	accuracy, potency of some spells (not absorbs), and descreases the 
+	likelihood of the caster being interrupted.
+	
+	Dark Magic Spells: absorb accuracy, absorb AGI, absorb CHR, absorb DEX, 
+	absorb INT, absorb MND, absorb STR, absorb TP, absorb VIT, aspir, bios,
+	drain, stun and tractor.
+--]]
+	
+--[[
+	There's 9 absorb spells (although some are currently out of era). If not
+	resisted, they drain a specific stat from the target based on the caster's
+	level:
+	
+		base absorbed = floor (3 + (job level) / 5)
+	
+	Dark magic skill has no effect on absorb spell, but do affect accuracy.
+	Absorb spells resisted will have their duration cut in half or be completely
+	resisted. Equipment that "Enhances" an absorb spell will increase the spells
+	duration. Equipment that "Augments" an absorb spell will increase the spells
+	potency.
+--]]
+	
+	['Absorb'] = {
+	},
+
+--[[
+	Drain steals HP from the target and absorbs it into the caster's HP pool.
+	Base potency depends strictly on the caster's Dark Magic Skill:
+	
+		0 - 299 skill: floor((dark magic skill / 3) + 20)
+		>= 300 skill: floor(dark magic skill * 0.9)
+	
+	The minimum potency is 50% of the maximum potency and the actual potency
+	of the spell (when unresisted) will randomly fall between the minimum and
+	the maximum.  All enhancements from gear, weather, and magic burst bonuses
+	are applied after the base potency is determined. Drain is not affected 
+	by magic attack bonus and magic crit+ hit on gear.
+--]]
+
+	['Drain'] = {
+	},
+
+--[[
+	Aspir steals MP from the target and absorbs it into the caster's MP pool
+	(assuminging the target has any MP.) Base potency depends strictly on the
+	caster's Dark Magic Skill:
+	
+		0 - 300 skill: floor(skill / 3) + 20
+		>= 300 skill: floor(skill * 0.4)
+
+	The minimum potency is 50% of the maximum potency and the actual potency
+	of the spell (when unresisted) will randomly fall between the minimum and
+	the maximum. All enhancements from gear, weather, and magic burst bonuses
+	are applied after the base potency is determined. Aspir is not affected 
+	by magic attack bonus and magic crit+ hit on gear.	
+--]]
+
+	['Aspir'] = {
+	},
+
+--[[
+	This last gear set, DarkMagic, covers all Dark Magic spells not covered
+	by the previous three gear sets. 
+--]]
+
+	['DarkMagic'] = {
+	},
+
+--[[
+	Currently Dread Spikes are out of era, but they're introduced in ToAU,
+	so I've included them here. At the moment the code only applies a generic
+	spell invocation.
+--]]
+	
+--	['Dread'] = {
+--	},
+
+--[[
+	*************************
+	* Midcast: Divine Magic *
+	*************************
+--]]
+
+--[[
+	Divine Magic: damages or debilitates opponents with light elemental
+	spells. It is especially effective against undead monsters, especially
+	spells like banish whose properties are enhanced against undead.
+	Divine Magic Skill determines accuracy and resuces spell interruption
+	by the caster. It does not affect damage at all, except for enlight
+	which sets a starting damage point.
+	
+	Divine Magic: banishes, banishga, enlight, flash and holy.
+	
+	Offensive Divine spells (banish, banishga, holy, and enlight) groups 
+	spells that either just do damage or successive damage as in the case 
+	of enlight.
+	
+	The banish spells accuracy, besides from divine magic spell, can be
+	affected by magic accuracy from equipment. Damage resist rates depend
+	on the difference in MND between caster and target. Banish does 50%
+	more damage to undead.
+	
+	An elemental obi will be checked for as well as an elemental staff.
+--]]
+
+	['OffensiveDivine'] = {
+	},
+
+--[[
+	Enfeebling divine spell (flash) afflicts the target with accuracy 
+	reduction (similar to blind) with a weakening effect over time till
+	it runs out. Duration is subject to resists and partial resists
+	although can last 12 seconds if not resisted. It also generates a
+	significant amount of volitile and cumulative enmity.
+--]]	
+	
+	['EnfeebleDivine'] = {
+	},
+
+--[[
+	Enlight is the only enhancing divine spell. It  enhances the paladin's 
+	weapon with light starting at a fixed point based on their divine 
+	magic skill. Each hit the value will go down 1 until 0 is hit. Multihit 
+	weapons work with enlight. Enlight also provides +10 enmity. The base 
+	damage starts at:
+	
+		Divine magic skill < 150: (divine magic skill /  30) + 10
+		Divine magic skill >= 150: (divine magic skill / 15) + 5
+--]]
+		
+	['EnhanceDivine'] = {
+	},
+
+--[[
+	*****************************
+	* Midcast: Enfeebling Magic *
+	****************************
+--]]
+
+--[[
+	Enfeebling Magic: this class of spells apply a debilitating status effect
+	(debuff) to one or more targets. Enfeebling Magic Skill is used to determine
+	the accuracy of enfeebling magic and to decrease the likelihood of a spell
+	caster being interrupted when casting enfeebling magic.
+	
+	Enfeebling Spells: bind, blinds, blindgas, dias, diagas, dispel, gravity, 
+	paralyzes, poisons, poisongas, sleeps, sleepgas, silence, and slows.
+	
+	There are two types of enfeebling spells, those dependent on INT (gravity,
+	bind, blind, dispel, sleep, sleepga, poison, and poisonga) and those
+	dependent on MND (paralyze, silence, slow, slowga, frazzlke, distract,
+	dia, and diaga).
+	
+	After the appropriate gear set is equipped, an elemental obi might be
+	equipped (for day/weather effect) and an elemental staff (for magic
+	affinity.)
+--]]
+	
+	['EnfeeblingINT'] = {
+	},
+
+	['EnfeeblingMND'] = {
+	    Neck  = { 'Promise Badge', 'Justice Badge' },
+        Rings = { 'Tamas Ring', 'Tranquility Ring' },
+        Waist = 'Friar\'s Rope',
+	},
+
+	['EnfeeblingMagic'] = {
+	},
+	
+--[[
+	********************
+	* Midcast: Singing *
+	********************
+--]]
+
+--[[
+	Singing: is a general category only available to BRD (/BRD can do songs,
+	but not equip instruments.) Unlike magic spells songs effectiveness is
+	determined from a player's singing skill and instrument skill. (Wind and
+	string instruments have different instrument skills.) A song's accuracy
+	depends on CHR and the combined skill level (singing and instrument)
+	multiplied by a scaling factor. Songs, once started, can not be interrupted.
+	Songs either apply a buff to party members or debuff targets. Two active
+	buffs can be applied to party members (assuming the bard has an instrument).
+	
+	Song types: carols, enfeebling, threnodies, recovery/misc, status enhancing,
+	and status resistance.
+--]]
+
+--[[
+	EnhancementSinging contains gear that enhances party members is some specific
+	manner. Included are: minne, minuet, paeon, pastoral, madigal, mambo, etude,
+	operetta, ballad, march, prelude, aubade, carol, mazurka, gavotte, capriccio,
+	fantasia, hymnus, and round.
+--]]
+
+	['EnhancementSinging'] = {
+	},
+
+--[[
+	EnfeeblingSinging contains gear that debuffs targets. Included are: requiem,
+	threnody, lullaby, finale, elegy, and virelai.
+--]]
+	
+	['EnfeeblingSinging'] = {
+	},
+
+--[[
+	********************
+	* Midcast: Ninjusu *
+	********************
+--]]
+
+--[[
+	Ninjutsu: this is a means for ninjas to cast magic-like abilities that
+	use ninja tools instead of MP. Ninjutsu Skill affects spell interruption
+	rate, potency, and magic accuracy of ninjutsu spells.
+	
+	There are three types of affects: buffs, debuffs, ane elemental-based
+	damage spells. Buffs include: tonko, utsusemi, and monomi. Debuffs
+	include: kurayami, hojo, dokumori, and jubaku. And elemental damage
+	spells include: katon, suiton, raiton, doton, huton, and hyoton. 
+--]]
+
+	['NinjutsuBuff'] = {
+	},
+
+-- An elemental stave will be checked for after the debuff set is loaded.
+	
+	['NinjutsuDebuff'] = {
+	},
+
+--[[
+	Ninjutsu Elemental spells not only damages the target but also lowers the
+	target's resistance to the element that the ninjutsu's spell element is
+	dominant to. (Ex, casting Hyoton deals ice damage and lowers resistance
+	to fire damage.) Gear with Damage Enhancement should be included with this
+	set. An elemental obi will be checked for and an elemental staff for magic
+	affinity.
+--]]
+	
+	['NinjutsuElemental'] = {
+	},
+
+--[[
+	Blue Magic: Until the release of Treasures of Aht Urghan is close to a 
+	release, there's no point in fleshing this out, especially since this job
+	is being majorly altered.
+
+	Geomancy Magic: Until the release of Seekers of Adoulin is close to a 
+	reality, there's no point in fleshing this out.
+--]]
+
+--[[
+	Weapon skills are driven specifically by one or more stats. In addition,
+	attack power can be very advantageous. Listed below is an AttackPower
+	set which is actually a subset to be included in each of the weapon
+	skill gear sets. It will be used for default gear. Any additional gear
+	will override slots from the AttackPower subset.
+--]]
 	
 --[[
 	The following weapon skill gearsets are defined by the stat they emphasize. Listed are all of the sets that
@@ -342,10 +803,25 @@ local sets = {
 	skill combination the set applies to.
 	
 	DRG can use the following weapons: polearm (A+), staff (B-), sword (A-), club(E), dagger (E).
-	Any other weapon will have no weaponskill available. Weapon skill sets are named based on stat(s) used, 
-	regardless of weapon
+
+	Please note that on Horizon you may have access to some weapon skills
+	through your subjob. While not explicitly supported here, the appropriate
+	weapon skill set will be loaded. If not listed below, you might have to
+	create a custom gear set to support the skill. Remember, weapon skill sets
+	are named WS_attr. If you name the set appropriately, that set will auto-
+	matically be called when you use the weapon skill.
+	
+	Most weapon skills emphasize one or more primary stats, so the following
+	gear sets are broken out by which primary stat is featured. (I have
+	included what weapon skills use that stat. Besides the primary stats
+	though, gear with attack power should also be included. The AttackPower
+	gear set is not directly equipped, but rather used as a subset. It is
+	recommended that it be included in each weaponskill gear set.	
 --]]
 
+	['AttackPower'] = {
+	},
+	
 --[[
 		* Strength based *
 		
@@ -356,6 +832,7 @@ local sets = {
 -]]
 	
 	['WS_STR'] = {
+		Subset = 'AttackPower',	
 		Head  = 'Mrc.Cpt. Headgear',
         Neck  = 'Spike Necklace',
 		Body  = 'Wonder Kaftan',
@@ -372,6 +849,7 @@ local sets = {
 --]]
 
 	['WS_STRAGI'] = {
+		Subset = 'AttackPower',	
         Head  = { 'Empress Hairpin', 'Mrc.Cpt. Headgear' },
         Neck  = 'Spike Necklace',
 		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },
@@ -382,11 +860,12 @@ local sets = {
 --[[
 		* Strength and Dexterity based, even weighting *
 		
-		Polearm: Penta Thrust
+		Polearm: Penta Thrust,Geirskogul
 		Sword: Fast Blade
 --]]
 
 	['WS_STRDEX'] = {
+		Subset = 'AttackPower',	
         Head = { 'Empress Hairpin', 'Mrc.Cpt. Headgear' },
         Neck = 'Spike Necklace',
 		Body = 'Wonder Kaftan',
@@ -405,6 +884,7 @@ local sets = {
 --]]
 	
 	['WS_STRINT'] = {
+		Subset = 'AttackPower',	
         Head = 'Mrc.Cpt. Headgear',
 		Neck = 'Spike Necklace',
 		Body = 'Wonder Kaftan',
@@ -417,12 +897,13 @@ local sets = {
 --[[
 		* Strength and Mind based, even weighting *
 		
-		Staff: Starburst,Retribution
+		Staff: Retribution
 		Sword: Shining Blade,Seraph Blade	
 		Club: Shining Strike
 --]]
 
 	['WS_STRMND'] = {
+		Subset = 'AttackPower',	
 		Head = 'Mrc.Cpt. Headgear',
         Neck = { 'Promise Badge', 'Justice Badge' },
         Rings = { 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Kshama Ring No.9', 'Courage Ring', 'Tranquility Ring' },
@@ -432,25 +913,13 @@ local sets = {
     },
 
 --[[
-		* Agility based *
-		
-		Polearm: Geirskogul
---]]
-
-	['WS_AGI'] = {
-		Head = 'Empress Hairpin',
-		Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },
-		Body = 'Mrc.Cpt. Doublet',
-		Feet = 'Bounding Boots',
-    },
-	
---[[
 		* Charisma based *
 		
 		Dagger: Shadowstitch
 --]]
 	
 	['WS_CHR'] = {
+		Subset = 'AttackPower',	
 		Head = 'Entrancing Ribbon',
 		Neck = 'Flower Necklace',
 		Waist = 'Corsette',
@@ -463,6 +932,7 @@ local sets = {
 --]]
 	
 	['WS_DEX'] = {
+		Subset = 'AttackPower',	
         Head  = { 'Empress Hairpin', 'Mrc.Cpt. Headgear' },
         Neck  = 'Spike Necklace',
 		Body  = { 'Brigandine Armor', 'Mrc.Cpt. Doublet' },
@@ -477,6 +947,7 @@ local sets = {
 --]]
 	
 	['WS_DEXINT'] = {
+		Subset = 'AttackPower',	
         Head  = { 'Empress Hairpin', 'Mrc.Cpt. Headgear' },
         Neck  = 'Spike Necklace',
 		Body  = { 'Brigandine Armor', 'Mrc.Cpt. Doublet' },
@@ -491,6 +962,7 @@ local sets = {
 --]]
 
 	['WS_INTMND'] = {
+		Subset = 'AttackPower',	
         Neck = { 'Promise Badge', 'Justice Badge' },
 		Body = 'Wonder Kaftan',
         Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
@@ -505,6 +977,7 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
+		Subset = 'AttackPower',	
         Neck = { 'Promise Badge', 'Justice Badge' },
 		Body = 'Wonder Kaftan',
         Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
@@ -519,6 +992,7 @@ local sets = {
 --]]
 
 	['WS_Skill'] = {
+		Subset = 'AttackPower',	
     },
 
 --[[
@@ -528,6 +1002,7 @@ local sets = {
 --]]
 
 	['WS_HP'] = {
+		Subset = 'AttackPower',	
         Ears = 'Physical Earring',
         Body = { 'Wonder Kaftan', 'Brigandine' },
         Hands = 'Wonder Mitts',
@@ -537,11 +1012,12 @@ local sets = {
     },
 	
 --[[
-	Movement tends to be used for kiting. Emphasis should be placed on gear that increases movement speed, but you 
-	might also want gear that has evasion. The choice is yours.
+	Kite is used for kiting. Emphasis should be placed on gear that increases 
+	movement speed, but you might also want gear that has evasion. The choice
+	is yours.
 --]]
 
-	['Movement'] = { 
+	['Kite'] = { 
 	},
 
 --[[
@@ -555,7 +1031,7 @@ local sets = {
 	},
 	
 	['AncientCircle'] = {
-		Legs  = 'Drachen Brais//ACCESSIBLE',
+		Legs  = 'Drachen Brais',
     },
 	
 	['Jump'] = {
@@ -634,6 +1110,9 @@ local sets = {
 	},
 	
 	['TrickAttack'] = {
+	},
+
+	['SATA'] = {
 	},
 	
 	['Mug'] = {
@@ -748,15 +1227,6 @@ profile.AccuracySet = {
 	['base'] = 'Rings,Body',
 };
 
--- RegionControlGear identifies a piece of gear that can be used to automatically
--- determine if the player is currently in a zone controlled by their nation or
--- not. The definition includes the name of the piece of gear, what slot does it
--- equip in (do not use RINGS or EARS, use RING1 and EAR1), whether HP or MP 
--- is affected, and whether the piece requires region ownership or not the region 
--- ownership.
-profile.RegionControlGear = { 'Republican Gold Medal','Neck','MP',false };
-profile.NeutralControlGear = 'Smn. Torque';	-- has to match RegionControlGear slot
-
 profile.Sets = sets;
 profile.sjb = nil;
 profile.bAmmo = false;
@@ -764,19 +1234,18 @@ profile.sAmmo = nil;
 
 --[[
 	HandlePetAction equips the appropriate gear set based on the type of action
-	the pet is trying to perform. (This is specifically rage blood pacts.)
+	the pet is trying to perform. Please note that only BST pets are supported,
+	not SMN avatars.
 --]]
 
-local function HandlePetAction(PetAction)
+function HandlePetAction(PetAction)
 	local pet = gData.GetPet();
 	
-	-- Only gear swap if this flag is true
-	if gcdisplay.GetToggle('GSwap') == false or string.find(gcinclude.SummonSkill,pet.Name) ~= nil then
+	-- Only gear swap if this flag is true and the pet is a BST pet
+	if gcdisplay.GetToggle('GSwap') == false or gcinclude.fSummonerPet() == true then
 		return;
 	end
 
-	-- Only /BST pet attacks have associated gear sets because /smn pets are at most half the
-	-- level of your BST level
 	if (gcinclude.BstPetAttack:contains(PetAction.Name)) then				-- Pet Attack
 		gcinclude.MoveToCurrent(sets.Pet_Attack,sets.CurrentGear);
 	elseif (gcinclude.BstPetMagicAttack:contains(PetAction.Name)) then		-- Pet Magical Attack
@@ -789,47 +1258,50 @@ end		-- HandlePetAction
 
 --[[
 	SetSubjobSet is used to pick the appropriate set for the loaded macrobook based on
-	which subjob is current. (If no change has occurred since the last time it was called,
-	nothing is checked/changed.)
+	which subjob is current. 
 --]]
 
-local function SetSubjobSet(chkSJ)
-	local subs = {['WAR'] = 1, ['MNK'] = 0, ['WHM'] = 1, ['BLM'] = 0, ['RDM'] = 0, ['THF'] = 0,
-				 ['PLD'] = 0, ['DRK'] = 0, ['BST'] = 0, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = 0,
-				 ['SAM'] = 0, ['NIN'] = 0, ['DRG'] = nil, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
-				 ['DNC'] = 0, ['SCH'] = 0, ['GEO'] = 0, ['RUN'] = 0};
-	local sj = nil;
+function SetSubjobSet(chkSJ)
+	-- "chkSJ" is the key for what toolbar is shown. All jobs are defined in the subs table.
+	-- A value of 0 means that job is not configured. All values > 0 indicate which toolbar
+	-- is to be displayed. The player must change the entries in this table to match their
+	-- needs.
+	local tSubs = {
+		['WAR'] = 1, ['MNK'] = 0, ['WHM'] = 1, ['BLM'] = 0, ['RDM'] = 0, ['THF'] = 0,
+		['PLD'] = 0, ['DRK'] = 0, ['BST'] = 0, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = 0,
+		['SAM'] = 0, ['NIN'] = 0, ['DRG'] = 0, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
+		['DNC'] = 0, ['SCH'] = 0, ['GEO'] = 0, ['RUN'] = 0};
+	local sj = 1;	-- Default toolbar
 
-	if (profile.sjb == nil or (chkSJ ~= nil and chkSJ ~= 'NON' and chkSJ ~= profile.sjb)) then	-- Compare the stored subjob with the current subjob
-		if subs[chkSJ] ~= nil and subs[chkSJ] > 0 then
-			sj = subs[chkSJ];
-		else
-			sj = 1;					-- Default set
-		end
-
-		AshitaCore:GetChatManager():QueueCommand(1, '/macro set '..tostring(sj));
-		if chkSJ ~= nil and chkSJ ~= 'NON' then
-			profile.sjb = chkSJ;
+	if chkSJ == nil or chkSJ == 'NON' or 
+		(profile.sjb ~= nil and profile.sjb == chkSJ) then
+		return;
+	end
+	
+	-- Compare the stored subjob with the current subjob
+	if profile.sjb == nil or chkSJ ~= profile.sjb then	
+		if tSubs[chkSJ] > 0 then
+			sj = tSubs[chkSJ];
 		end
 	end
+
+	AshitaCore:GetChatManager():QueueCommand(1, '/macro set '..tostring(sj));
+	profile.sjb = chkSJ;
 end		-- SetSubjobSet
 
 --[[
 	OnLoad is run whenever you log into your BST or change your job to BST
 --]]
 
-profile.OnLoad = function()
+function profile.OnLoad()
 	local player = gData.GetPlayer();
 
 	gSettings.AllowAddSet = true;
 	gcinclude.Initialize();
-	gcinclude.settings.RegenGearHPP = 50;
-    gcinclude.settings.RefreshGearMPP = 60;
 	
 	-- Coded order of operation override
-	gcinclude.settings.priorityEngaged = 'CEFGH';
-	gcinclude.settings.priorityMidCast = 'ABCDEFGH';
-	gcinclude.settings.priorityWeaponSkill = 'ABDE';
+	gcinclude.settings.priorityEngaged = 'CEF';
+	gcinclude.settings.priorityWeaponSkill = 'ADBE';
 	
 	-- Set your job macro toolbar defaults here. Which set depends on the subjob
 	AshitaCore:GetChatManager():QueueCommand(1, '/macro book 15');		-- DRG
@@ -852,7 +1324,7 @@ end		-- OnLoad
 	OnUnload is run when you change to another job
 --]]
 
-profile.OnUnload = function()
+function profile.OnUnload()
 	gcinclude.Unload();
 end		-- OnUnload
 
@@ -861,7 +1333,7 @@ end		-- OnUnload
 	of in gcinclude.HandleCommands are specific to BST or the help system, which has been tailored to BST.
 --]]
 
-profile.HandleCommand = function(args)
+function profile.HandleCommand(args)
 	if args[1] == 'help' then
 		gcdisplay.ShowHelp();
 	elseif args[1] == 'petfood' then			-- Supported since pet food is not job specific, but very niche
@@ -876,15 +1348,19 @@ end		-- HandleCommand
 	their pet.
 --]]
 	
-profile.HandleDefault = function()
+function profile.HandleDefault()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();	
 	local player = gData.GetPlayer();
 	local zone = gData.GetEnvironment();
 	local ew = gData.GetEquipment();
+	local bSA = gcinclude.fBuffed('Sneak Attack');
+	local bTA = gcinclude.fBuffed('Trick Attack');	
 	local eWeap = nil;
 	local cKey,sGear;
 
+	gcinclude.StartReminder();		-- See if reminder should be printed
+	
 	-- Only pet actions from BST are supported.
 	if (petAction ~= nil and player.SubJob == 'BST') then
 		HandlePetAction(petAction);
@@ -902,6 +1378,7 @@ profile.HandleDefault = function()
 
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
+		gcdisplay.Update();		-- in case something has changed
 		return;
 	end
 
@@ -924,40 +1401,46 @@ profile.HandleDefault = function()
 			gcinclude.weapon ~= nil and 
 			gcdisplay.GetToggle('WSwap') == true and 
 			eWeap ~= gcinclude.weapon then
-		sets.CurrentGear['Main'] = gcinclude.weapon;
-		sets.CurrentGear['Sub'] = gcinclude.offhand;
+		if gcinclude.fIsLocked('main') == false then
+			sets.CurrentGear['Main'] = gcinclude.weapon;
+		end
+		if gcinclude.fIsLocked('sub') == false then
+			sets.CurrentGear['Sub'] = gcinclude.weapon;
+		end
 	end
 
-	-- The default set is the TP gear set. Load it up
-	gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
+	-- Start with the default set
+	gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 		
 	-- Now process the player status accordingly
-	if (player ~= nil and player.Status == 'Engaged') then
-		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
-		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
-			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
-			if cKey == 'C' then		-- Evasion			
-				if gcdisplay.GetToggle('Eva') == true then
-					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
-				end		
-			elseif cKey == 'E' then		-- Accuracy	
-				gcinclude.FractionalAccuracy(sets.Accuracy,nil);
-			elseif cKey == 'F' then		-- Kiting
-				if (gcdisplay.GetToggle('Kite') == true) then
-					gcinclude.MoveToCurrent(sets.Movement,sets.CurrentGear);
-				end	
-			elseif cKey == 'G' then		-- common buffs/debuffs
-				gcinclude.CheckCommonDebuffs(sets.CurrentGear);	
-			elseif cKey == 'H' then		-- Damage Taken gear
-				if (gcdisplay.GetCycle('DT') ~= gcinclude.OFF) then
-					if gcdisplay.GetCycle('DT') == 'Physical' then
-						gcinclude.MoveToCurrent(sets.DT_Physical,sets.CurrentGear);
-					elseif gcdisplay.GetCycle('DT') == 'Magical' then
-						gcinclude.MoveToCurrent(sets.DT_Magical,sets.CurrentGear);
-					elseif gcdisplay.GetCycle('DT') == 'Breath' then
-						gcinclude.MoveToCurrent(sets.DT_Breath,sets.CurrentGear);
-					end
-				end	
+	if player.Status == 'Engaged' then
+		-- If sneak attack or trick attack up, make sure the appropriate gear set is
+		-- equipped to maximize the damage. Note that if a weapon skill follows, the
+		-- weapon skill set will take priority.
+		if bSA == true or bTA == true then
+			if bSA == true and bTA == true then		-- SATA
+				gcinclude.MoveToCurrent(sets.SATA,sets.CurrentGear);
+			elseif bSA == true then					-- SA
+				gcinclude.MoveToCurrent(sets.SneakAttack,sets.CurrentGear);
+			else									-- TA
+				gcinclude.MoveToCurrent(sets.TrickAttack,sets.CurrentGear);
+			end
+		else	
+			gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
+			gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
+			for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
+				cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
+				if cKey == 'C' then		-- Evasion			
+					if gcdisplay.GetToggle('Eva') == true then
+						gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
+					end	
+				elseif cKey == 'E' then		-- Accuracy	
+					gcinclude.FractionalAccuracy(sets.Accuracy);
+				elseif cKey == 'F' then		-- Kiting
+					if (gcdisplay.GetToggle('Kite') == true) then
+						gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
+					end	
+				end
 			end				
 		end
 	elseif player.Status == 'Resting' then	
@@ -966,50 +1449,35 @@ profile.HandleDefault = function()
 			gcinclude.MoveToCurrent(sets.Resting_Regen,sets.CurrentGear);
 		end
 		
-		if gcinclude.MagicalJob('S') == true and player.MP < player.MaxMP then
+		if gcinclude.fMagicalSubJob() == true and player.MP < player.MaxMP then
 			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
-			gcinclude.SwapToStave('dark',false,sets.CurrentGear);		
+			if gcdisplay.GetToggle('WSwap') == true then
+				local sStave = gcinclude.fCheckForEleGear('staff','dark');
+				if sStave ~= nil then
+					gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);
+				end
+			end		
 		end
-		
-		-- Check for common debuffs
-		gcinclude.CheckCommonDebuffs(sets.CurrentGear);
 	else	
-		-- Assume idling. There's no idle set, just idle conditions
-
-		-- See if in a town		
-		if (zone.Area ~= nil and table.find(gcinclude.Towns,zone.Area)) then
-			gcinclude.MoveToCurrent(sets.Town,sets.CurrentGear);	
-		else
-			gcinclude.MoveToCurrent(sets.Travel,sets.CurrentGear);
-			
-			-- if the player's HP is below the threshold setting, equip the idle regen gear
-			if player.HPP < gcinclude.settings.RegenGearHPP then
-				gcinclude.MoveToCurrent(sets.Idle_Regen,sets.CurrentGear);
-			end
-			
-			-- if the player's MP is below the threshold setting, equip the idle refresh gear
-			if player.MPP < gcinclude.settings.RefreshGearMPP then
-				gcinclude.MoveToCurrent(sets.Idle_Refresh,sets.CurrentGear);
-			end	
-			
-			-- Check for common debuffs
-			gcinclude.CheckCommonDebuffs(sets.CurrentGear);	
-		end
+		-- Assume idling. While there's no idle set, just use the 
+		-- "Default" set
+		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 	end
-	
-	-- Make sure to equip the appropriate elemental staff for the current pet (/smn only)
-	if (pet ~= nil and player.SubJob == 'SMN') then
-		local pName = string.lower(pet.Name);
-		if string.find(gcinclude.SummonSkill,pName) ~= nil then
-			local pEle = gcinclude.SummonStaves[string.lower(pet.Name)];
-			gcinclude.SwapToStave(pEle,false,sets.CurrentGear);
+		
+	-- In case the pet is a summoned pet...
+	if gcinclude.fSummonerPet() == true then
+		local sStave = gcinclude.fCheckForElementalGearByValue('staff','Summons',pet.Name);
+		if sStave ~= nil then
+			gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);
 		end
 	end
 	
 	-- And make sure a weapon equipped. (Going into a capped area can cause no weapon to be equipped.)
 	local gear = gData.GetEquipment();
-	if gear.Main == nil then
-		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
+	if gear.Main ~= nil then
+		if gear.Main.Name == nil then
+			gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
+		end
 	end
 	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set
@@ -1022,7 +1490,7 @@ end		-- HandleDefault
 	HandleAbility is used to change the player's gear appropriately.
 --]]
 
-profile.HandleAbility = function()
+function profile.HandleAbility()
 	local ability = gData.GetAction();
 	local eq = gData.GetEquipment();
 	
@@ -1067,7 +1535,10 @@ profile.HandleAbility = function()
 	-- /BST
 	elseif string.match(ability.Name, 'Charm') then			-- assumes /bst	
 		gcinclude.MoveToCurrent(sets.Charm,sets.CurrentGear);
-		gcinclude.SwapToStave('light',false,sets.CurrentGear);
+		local sStave = gcinclude.fCheckForEleGear('staff','light');
+		if sStave ~= nil then
+			gcinclude.fSwapToStave(sStave,false,sets.CurrentGear);
+		end
 	elseif string.match(ability.Name, 'Reward') then
 		-- Pet reward. Make sure that pet food already equipped
 		if profile.sAmmo == nil or string.find(string.lower(profile.sAmmo),'pet f') == nil then		-- something else equipped
@@ -1158,7 +1629,7 @@ end		-- HandleAbility
 	is supported
 --]]
 
-profile.HandleItem = function()
+function profile.HandleItem()
 	local item = gData.GetAction();
 	local bShow = false;
 
@@ -1190,10 +1661,7 @@ end		-- HandleItem
 	Fast Cast, cast time reduction, and quick cast gear in anticipation of a spell
 --]]
 
-profile.HandlePrecast = function()
-    local spell = gData.GetAction();
-	local obi;
-	local mSet;
+function profile.HandlePrecast()
 		
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
@@ -1204,13 +1672,7 @@ profile.HandlePrecast = function()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- Equip the precast gear set
-	gcinclude.MoveToCurrent(sets.Precast,sets.CurrentGear);
-		
-	-- See if an elemental obi should be equipped
-	obi = gcinclude.CheckEleSpells(spell.Name,gcinclude.MagicEleAcc,gcinclude.OBI,nil);
-	if obi ~= nil then
-		sets.CurrentGear['Waist'] = obi;
-	end
+	gcinclude.HandlePrecast();
 	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandlePrecast
 
@@ -1220,7 +1682,7 @@ end		-- HandlePrecast
 	are loaded: INT/MND, spell specific, macc, magic skill, obi, ele swap	
 --]]
 
-profile.HandleMidcast = function()
+function profile.HandleMidcast()
 
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
 		return;
@@ -1231,8 +1693,7 @@ profile.HandleMidcast = function()
 	
 	-- Call the common HandleMidcast now
 	gcinclude.HandleMidcast();
-	
-	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited midcast set
+	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandleMidcast
 
 --[[
@@ -1240,7 +1701,7 @@ end		-- HandleMidcast
 	and Ranged Shot Speed Gear for a ranged attack
 --]]
 
-profile.HandlePreshot = function()
+function profile.HandlePreshot()
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
 	end
@@ -1256,7 +1717,7 @@ end		-- HandlePreshot
 	and Damage gear for a ranged attack
 --]]
 
-profile.HandleMidshot = function()
+function profile.HandleMidshot()
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
 		return;
@@ -1266,7 +1727,8 @@ profile.HandleMidshot = function()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
-
+	gcinclude.FractionalAccuracy(gProfile.Sets.Ranged_Accuracy);
+	
 	-- Equip the composited Midshot set
 	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandleMidshot
@@ -1275,10 +1737,8 @@ end		-- HandleMidshot
 	HandleWeaponskill loads the gear appropriately for the weapon skill you're doing
 --]]
 
-profile.HandleWeaponskill = function()
-	local ws = gData.GetAction();
+function profile.HandleWeaponskill()
 	local canWS = gcinclude.CheckWsBailout();
-	local cKey;
 	
 	-- If conditions would cause the weaponskill to fail, the action will be
 	-- cancelled so you do not lose your tp.
@@ -1296,7 +1756,7 @@ profile.HandleWeaponskill = function()
 	gcinclude.ClearSet(sets.CurrentGear);
 
 	-- Call the common weaponskill handler
-	gcinclude.HandleWeaponskill(false);
+	gcinclude.fHandleWeaponskill();
 	
 	-- Equip the composited weaponskill set		
 	gcinclude.EquipTheGear(sets.CurrentGear);

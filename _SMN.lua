@@ -4,7 +4,7 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the SMN job.
 	
-	Gear Sets last updated: November 12, 2024
+	Gear Sets last updated: November 15, 2024
 	Code update: November 14, 2024
 --]]
 
@@ -244,20 +244,27 @@ local sets = {
 	
 --[[
 	Midshot is the second stage of a ranged shot. This is where you place
-	Ranged Attack, Ranged Damage, recycle, etc.
+	Ranged Accuracy, Ranged Attack, Ranged Damage, Crit. Rate, Crit. Damage,
+	Store TP, recycle, etc.
 --]]
 
 	['Midshot'] = {
 		Main  = 'Vulcan\'s Staff',
 		Head  = 'Optical Hat',
 		Neck  = 'Peacock Amulet',
-		Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
+		Ears  = 'Brutal Earring',
+		Neck  = 'Peacock Amulet',
+		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
     },
 
 --[[
-	The following two sets are to be used as subsets. They're baseline for
-	intellegence and mind. Once you get to individual sets, include one of
-	these or ignore them and be explicit on the gear in that set.
+	*************************
+	* Spell Casting Subsets *
+	*************************
+	
+	The following sets are to be used as subsets. Once you get to individual 
+	sets, include one of these or ignore them and be explicit on the gear in 
+	that set.
 --]]
 
 	['INT'] = {
@@ -280,6 +287,12 @@ local sets = {
 		Waist = 'Friar\'s Rope',
 		Legs  = { 'Errant Slops', 'Summoner\'s Spats', 'Wonder Braccae', 'Shep. Hose' },
 		Feet  = { 'Rostrum Pumps', 'Mannequin Pumps', 'Seer\'s Pumps' },	
+	},
+
+	['Enmity_Plus'] = {
+	},
+	
+	['Enmity_Minus'] = {
 	},
 	
 --[[
@@ -822,6 +835,9 @@ local sets = {
 		Subset = 'MND',		
 	},
 
+	['EnfeeblingMagic'] = {
+	},
+	
 --[[
 	********************
 	* Midcast: Singing *
@@ -1225,6 +1241,9 @@ local sets = {
 	['TrickAttack'] = {
 	},
 	
+	['SATA'] = {
+	},
+	
 	['Mug'] = {
 	},
 	
@@ -1411,9 +1430,7 @@ function HandlePetAction(Pet,PetAction)
 			end
 		end
 	else
-		-- Must be a /BST charmed pet. Since the accuracy sets are based on
-		-- a SMN's avatar, if you want accuracy gear here, you must use the
-		-- //ACCURACY inline in the specified Pet_xxx sets, accordingly.
+		-- Must be a /BST charmed pet.
 		if (gcinclude.BstPetAttack:contains(PetAction.Name)) then				-- Pet Attack
 			gcinclude.MoveToCurrent(sets.Pet_Attack,sets.CurrentGear);		
 		elseif (gcinclude.BstPetMagicAttack:contains(PetAction.Name)) then		-- Pet Magical Attack
@@ -1525,6 +1542,8 @@ function profile.HandleDefault()
 	local player = gData.GetPlayer();
 	local zone = gData.GetEnvironment();
 	local ew = gData.GetEquipment();
+	local bSA = gcinclude.fBuffed('Sneak Attack');
+	local bTA = gcinclude.fBuffed('Trick Attack');	
 	local eWeap = nil;
 	local cKey,sGear;
 
@@ -1591,20 +1610,33 @@ function profile.HandleDefault()
 	gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 	
 	-- Now process the pet/player statuses accordingly.
-	if (pet ~= nil and pet.Status == 'Engaged') or (player ~= nil and player.Status == 'Engaged') then
-		gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
-		gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
-		for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
-			cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
-			if cKey == 'C' then		-- Evasion
-				if gcdisplay.GetToggle('Eva') == true then
-					gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
-				end
-			elseif cKey == 'E' then		-- Accuracy
-				gcinclude.FractionalAccuracy(sets.Accuracy);
-			elseif cKey == 'F' then		-- Kiting
-				if (gcdisplay.GetToggle('Kite') == true) then
-					gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
+	if (pet ~= nil and pet.Status == 'Engaged') or (player.Status == 'Engaged') then
+		-- If sneak attack or trick attack up, make sure the appropriate gear set is
+		-- equipped to maximize the damage. Note that if a weapon skill follows, the
+		-- weapon skill set will take priority.
+		if bSA == true or bTA == true then
+			if bSA == true and bTA == true then		-- SATA
+				gcinclude.MoveToCurrent(sets.SATA,sets.CurrentGear);
+			elseif bSA == true then					-- SA
+				gcinclude.MoveToCurrent(sets.SneakAttack,sets.CurrentGear);
+			else									-- TA
+				gcinclude.MoveToCurrent(sets.TrickAttack,sets.CurrentGear);
+			end
+		else	
+			gcinclude.MoveToCurrent(sets.TP,sets.CurrentGear);
+			gcinclude.settings.priorityEngaged = string.upper(gcinclude.settings.priorityEngaged);
+			for i = 1,string.len(gcinclude.settings.priorityEngaged),1 do
+				cKey = string.sub(gcinclude.settings.priorityEngaged,i,i);
+				if cKey == 'C' then		-- Evasion
+					if gcdisplay.GetToggle('Eva') == true then
+						gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
+					end
+				elseif cKey == 'E' then		-- Accuracy
+					gcinclude.FractionalAccuracy(sets.Accuracy);
+				elseif cKey == 'F' then		-- Kiting
+					if (gcdisplay.GetToggle('Kite') == true) then
+						gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
+					end
 				end
 			end
 		end
@@ -1618,10 +1650,11 @@ function profile.HandleDefault()
 		if player.MP < player.MaxMP then
 			gcinclude.MoveToCurrent(sets.Resting_Refresh,sets.CurrentGear);
 		end
-
 	elseif gcinclude.fSummonerPet() then
 		-- Player idling with pet
-		gcinclude.MoveToCurrent(sets.Default_WPet,sets.CurrentGear);
+		if gcdisplay.GetToggle('Idle') == true then
+			gcinclude.MoveToCurrent(sets.Default_WPet,sets.CurrentGear);
+		end
 	else
 		-- Assume player idling without pet or /subjob's pet
 		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
@@ -1639,8 +1672,10 @@ function profile.HandleDefault()
 	
 	-- And make sure a weapon equipped. (Going into a capped area can cause no weapon to be equipped.)
 	local gear = gData.GetEquipment();
-	if gear.Main == nil then
-		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
+	if gear.Main ~= nil then
+		if gear.Main.Name == nil then
+			gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
+		end
 	end
 	
 	-- Equip the composited HandleDefault set
