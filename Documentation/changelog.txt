@@ -1,3 +1,16 @@
+- Removed Attk and Def from display bar.
+
+- Fixed 'Lock' display. Typo caused locks not to display correctly.
+
+- Added location name below minimap.
+
+- You can move display bar or minimap legend and the new position will automatically
+  be saved. When next you load luashitacast, the position(s) will be remembered.
+
+- Changed "idle" to only be recognized by inline conditional //IDLE
+
+Version: 1.5
+
 - When Sneak Attack or Trick Attack is used, the DEX/AGI gear set stays equipped 
   when player is engaged until they hit a target or the buff goes away (expires
   or is cancelled.)
