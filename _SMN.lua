@@ -1607,9 +1607,7 @@ function profile.HandleDefault()
 	end
 
 	-- Start with the default set
-	if gcdisplay.GetToggle('Idle') == true then
-		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
-	end
+	gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 	
 	-- Now process the pet/player statuses accordingly.
 	if (pet ~= nil and pet.Status == 'Engaged') or (player.Status == 'Engaged') then
@@ -1659,9 +1657,7 @@ function profile.HandleDefault()
 		end
 	else
 		-- Assume player idling without pet or /subjob's pet
-		if gcdisplay.GetToggle('Idle') == true then
-			gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
-		end
+		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 	end
 		
 	-- Make sure to equip the appropriate elemental staff (if appropriate)

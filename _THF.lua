@@ -4,7 +4,7 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the THF job.
 	
-	Gear Sets last updated: November 15, 2024
+	Gear Sets last updated: November 27, 2024
 	Code update: November 12, 2024
 --]]
 
@@ -1061,7 +1061,7 @@ local sets = {
         Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },
         Body  = { 'Assassin\'s Vest', 'Rogue\'s Vest', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
-        Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
+        Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Kshama Ring No.3', 'Courage Ring' },
         Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
 		Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },
         Legs  = { 'Rogue\'s Culottes', 'Wonder Braccae' },
@@ -1143,6 +1143,7 @@ local sets = {
         Head  = 'Empress Hairpin',
         Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },
         Body  = { 'Assassin\'s Vest', 'Mrc.Cpt. Doublet' },
+		Rings = 'Kshama Ring No.3',
         Back  = 'Assassin\'s Cape',
 		Waist = 'Mrc.Cpt. Belt',
 		Legs  = 'Rogue\'s Culottes',
@@ -1169,7 +1170,7 @@ local sets = {
 --[[
 		* Dexterity based *
 		
-		Dagger: Wasp Sting,Viper Bite,Dancing Edge,Eviseration
+		Dagger: Wasp Sting,Viper Bite,Dancing Edge
 --]]
 	
 	['WS_DEX'] = {
@@ -1197,7 +1198,7 @@ local sets = {
         Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },
         Body  = { 'Assassin\'s Vest', 'Brigandine' },
 		Hands = 'Rogue Armlets',
-        Rings = { 'Kshama Ring No.2', 'Balance Ring' },
+        Rings = { 'Kshama Ring No.2', 'Kshama Ring No.3', 'Balance Ring' },
         Back  = 'Assassin\'s Cape',
 		Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },
         Feet  = { 'Rogue\'s Poulaines', 'Bounding Boots' },
@@ -1344,6 +1345,7 @@ local sets = {
         Head = 'Empress Hairpin',
         Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },
         Body = { 'Assassin\'s Vest', 'Mrc.Cpt. Doublet' },
+		Rings = 'Kshama Ring No.3',
         Back  = 'Assassin\'s Cape',
 		Waist = 'Mrc.Cpt. Belt',
         Feet = 'Bounding Boots',	
@@ -1758,12 +1760,10 @@ function profile.HandleDefault()
 	end
 	
 	-- Start with the default set
-	if gcdisplay.GetToggle('Idle') == true then
-		if bTank == true then
-			gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
-		else
-			gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
-		end
+	if bTank == true then
+		gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
+	else
+		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 	end
 	
 	-- Now process the player status accordingly	
@@ -1831,12 +1831,10 @@ function profile.HandleDefault()
 	else									
 		-- Assume idling. While there's no idle set, just use the 
 		-- "Default" set
-		if gcdisplay.GetToggle('Idle') == true then
-			if bTank == true then
-				gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
-			else
-				gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
-			end
+		if bTank == true then
+			gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 		end
 	end
 		

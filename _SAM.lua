@@ -1361,9 +1361,7 @@ function profile.HandleDefault()
 	end
 	
 	-- Clear out the CurrentGear in case of leftovers
-	if gcdisplay.GetToggle('Idle') == true then
-		gcinclude.ClearSet(sets.CurrentGear);
-	end
+	gcinclude.ClearSet(sets.CurrentGear);
 	
 	-- If player is not resting and has MP and has swapped weapons, set the weapon back to what 
 	-- they had before the switch
@@ -1431,9 +1429,7 @@ function profile.HandleDefault()
 	else
 		-- Assume idling. While there's no idle set, just use the 
 		-- "Default" set
-		if gcdisplay.GetToggle('Idle') == true then
-			gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
-		end
+		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 	end
 		
 	-- In case the pet is a summoned pet...

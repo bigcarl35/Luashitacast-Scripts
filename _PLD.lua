@@ -74,7 +74,7 @@ local sets = {
 	['Default'] = {
 		Subset = 'TP',
 		Head   = { 'Lilac Corsage//TOWN', 'Mandra. Masque' },
-		Body   = { 'Ducal Aketon//TOWN-AK', 'HorizonXI Shirt' },
+		Body   = { 'Ducal Aketon//TOWN-AK', 'Choc. Jack Coat' },
 	},
 	
 	['Tank_Default'] = {
@@ -1550,12 +1550,10 @@ function profile.HandleDefault()
 	end
 
 	-- Start with the default set
-	if gcdisplay.GetToggle('Idle') == true then
-		if bTank == true then
-			gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
-		else
-			gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
-		end
+	if bTank == true then
+		gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
+	else
+		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 	end
 			
 	-- Now process the player status accordingly
@@ -1619,12 +1617,10 @@ function profile.HandleDefault()
 	else
 		-- Assume idling. While there's no idle set, just use the 
 		-- "Default" set
-		if gcdisplay.GetToggle('Idle') == true then
-			if bTank == true then
-				gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
-			else
-				gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
-			end
+		if bTank == true then
+			gcinclude.MoveToCurrent(sets.Tank_Default,sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 		end
 	end
 		

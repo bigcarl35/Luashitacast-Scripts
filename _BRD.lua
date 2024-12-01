@@ -64,6 +64,7 @@ local sets = {
 		Head  = 'Horror Head',
 		Neck  = 'Justice Badge',
 		Ears  = {'Physical Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
+		Body  = 'Choc. Jack Coat',
 		Hands = 'Ryl.Ftm. Gloves',
 		Rings = { 'Astral Ring', 'Astral Ring' },
 		Legs  = 'Field Hose',
@@ -120,6 +121,9 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
+		Main = { 'Brass Dagger','Bronze Knife' },
+		Sub  = 'Hatchling Shield',
+		Range = 'Flute',
     },
 
 --[[
@@ -1358,9 +1362,7 @@ function profile.HandleDefault()
 	end
 	
 	-- Start with the default set
-	if gcdisplay.GetToggle('Idle') == true then
-		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
-	end
+	gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 		
 	-- Now process the player status accordingly
 	if player.Status == 'Engaged' then
@@ -1411,9 +1413,7 @@ function profile.HandleDefault()
 	else									
 		-- Assume idling. While there's no idle set, just use the 
 		-- "Default" set
-		if gcdisplay.GetToggle('Idle') == true then
-			gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
-		end
+		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 	end
 	
 	-- In case the pet is a summoned pet...

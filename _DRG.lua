@@ -1410,9 +1410,7 @@ function profile.HandleDefault()
 	end
 
 	-- Start with the default set
-	if gcdisplay.GetToggle('Idle') == true then
-		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
-	end
+	gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 		
 	-- Now process the player status accordingly
 	if player.Status == 'Engaged' then
@@ -1463,9 +1461,7 @@ function profile.HandleDefault()
 	else	
 		-- Assume idling. While there's no idle set, just use the 
 		-- "Default" set
-		if gcdisplay.GetToggle('Idle') == true then
-			gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
-		end
+		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 	end
 		
 	-- In case the pet is a summoned pet...
