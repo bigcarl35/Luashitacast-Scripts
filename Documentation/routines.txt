@@ -258,6 +258,9 @@ gcdisplay.CreateCycle(name, values)
 
 gcdisplay.GetCycle(name)
 	Returns the value of the specified cycle variable
+
+gcdisplay.GetPos(sWhich)
+	Returns the position and visibility of the specified display element
 	
 gcdisplay.GetToggle(name)
 	Gets the current value of the specied toggle variable
@@ -268,6 +271,13 @@ gcdisplay.Initialize
 gcdisplay.SetCycle(name,val) returns T/F
 	Explicitly sets the value for the specified cycle variable
 
+gcdisplay.SetPos(sWhich,iX,iY,bVis)
+	Assigns the passed position and visiblity settings to the appropriate display
+	element.
+
+gcdisplay.SetTargetLine(sVal)
+	Stores the passed value into the local variable TargetLine
+	
 gcdisplay.SetSlots(sTarget,sLList)
 	Stores the specified list of locks/accuracy slots, for displaying on the display bar
 	

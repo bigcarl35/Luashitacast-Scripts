@@ -1,108 +1,32 @@
 To do list:
-----------   
-- Support explicit pre/mid sets that can be specified instead of the current iterative
-  method.
-    
+----------      
 - Determine how far a pet is away from a target
+
+- Need list of hybrid weapon skills. 
+
+- recheck smn roles in gcinclude. (ASB code says Burning Strike is hybrid)
+
+- Instead of an automatic progressive accuracy approach, how about adding
+  a predefined accuracy path. /acc=P|F will toggle between predefined and 
+  fractional.
   
-- Add day, time, moon phase, weather, zone (location) to display bar
-
-Change Midcast section. Instead of what we're currently doing, have it broken out by
-the type of spell (i.e., a section for each type: [Healing], ['elemental'], etc.)
-Each section has it's own set and you use inline codes for the variations:
-
-['Enhancing'] = {
-	Body = 'Blessed Bliaut//BARSPELL',
-	},
-
-So, Magic Attack Bonus would be applied with all magic attack spells including hybrid
-weapon skills. I.e., apply MAB to elemental offence spells, dots like dia and bio
-that have an initial attack damage, etc.
-
-Individual spells of the "type" would be included in each section
-Common routines included with each type: obi and elemental stave
-
-- Need list of hybrid weapon skills
-
-- recheck smn roles in gcinclude
-
-- Problem on DRK, reference to "invisible" not defined. Think some special circumstances
-  arose with the Uggy Pendant //SPECIAL check. Try to keep an eye open for that happening
-  again. Unable to repeat.
+  Predefined:
+  - List of gear ordered by priority.
+  - /acc +{#}|{max}		Boost to # place, absent assumes bump by 1, or max
+  - /nac {-}{#}|{min}	Downgrade to # place, absent assumes down by 1, or min
   
-  Update: have repeated. Think it's an issue of the item not being correctly instantiated.
-  Reloading Luashitacast fixed the problem. I'm guessing that /GC would also resolve the
-  issue. (Oh, in this case, it was me equipping a Balmung that caused the problem.)
-
-- Y's scythe +1 dark affinity
+  Fractional:
+  - Gear addressed by slot
+  - /acc #|slot name{,#|slot,...}	Equip based on slots
+  - /nac {#|slot name,...}			Remove by slots
   
+- Consider removing /nac, have /acc do everything
+
 Ongoing questions
 -----------------
 - How does the client know that it should display "Downloading Data"?
 - Timing issues are the bane of my existence...
-
-New since last release
-----------------------
-- Complete rebase of code. Better consistency, more efficient, more encompassing
-- Dynamic equipment table implemented and integrated. Cuts down on calls to the
-  server, helping reduce lag and stuttering especially in level capped areas.
-- Added automatic support for the elemental staves, obis, and gorgets via the
-  /gc command.
-- Travel gear set has become the default set except when tanking is indicated,
-  TP_Tank is then the default.
-- Display bar is updated even if /GSWAP is off
-- Numerous inline conditionals added. //accessible has become obsolete, all gear's
-  accessibility is automatically checked now
-- Elemental gear swapping now based on magical affinity, summons, magical elemental
-  accuracy, and elemental weapon skill, where appropriate instead of the matching the
-  element of the spell/weaponskill. Weather and day are still considered, where 
-  appropriate.
-- Table added and integrated to handle multi-slot gear
-- Reordered midcast so that specific spell's gear are equipped last
-- Fractional sets now supported, although only used internally
-- INT set equipped when using ninjutsu
-- /gearset or /gs no longer disables /GSWAP. Instead, the set is equipped and the
-  associated slots are locked. (Note: if weapons included in gearset, regardless
-  of the /WSWAP setting, they will be equipped. This exception is true for both
-  /gearset and /equipit.)
-- Inline conditional //ACCESSIBLE is no longer needed as now all gear's accessibility
-  is checked automatically.
-- Double checked all of the weapon skills to make sure the correct stats were being
-  emphasized. (Horizon has changed more than I thought.)
-- Renamed "Travel" gear set to "Default" gear set. Got rid of "Town", "Idle_Regen",
-  "Idle_Refresh" and "Damage Taken". Gear from the first three can be added to 
-  "Default" with the appropriate inlines and the last one should be added to "TP". 
-  Got rid of gcinclude.settings.RegenGearHPP and gcinclude.settings.RefreshGearHPP. 
-  now handled with conditionals. I've removed the common debuffs above the ordered
-  priorityEngaged list. (Where it was before it had too high a priority for such
-  an incidental action.)
-- There's a timing issue that can pop up when you login or change jobs. It causes
-  all gear except what you were wearing last time you were that job to be considered
-  inaccessible. By typing /gc after the client download has completed, you force the
-  program to try again. This pretty much addresses the problem.
-- There's another timing issue. Sometimes the display bar will be missing some options
-  that are job specific. Has to do with the client communication not being complete
-  when the variables for the display bar were created. If you type /rv, the program
-  will "refresh" the "variables" and the toolbar should be the way you expect it.
-- Town set has been merged into default set with conditionals added for "town" 
-  recognition.
-- Subset is now supported including the fractional aspects for accuracy and gear sets
-  in general.
-- Added BARSPELL support
-- Added Default_WPet to Summoner's job. (It's a variation on the default set when the
-  player has a summoned pet out.)
-- Linked dynamic gear structure to elemental gear structure
-- New versions of MaxSpell and MaxSong. Checks for conditions and easier to extend.
-- Switched to new version of elemental magic table. Got the code changed accordingly.
-
-10/13/24
-- Add "San" ninjutsu to tiered spell list, offensive spells only
-- DefaultTarget changed to DefaultSpellTarget and new  default target for songs 
-  named DefaultSongTarget
-- Added bard song affinities 
-- Removed elemental staff support when summoning an avatar/spirit. Elemental staff
-  support still exists when you have a summoned avatar/spirit pet out.
-
+ 
 Done
 ----
 - Debuff Reward on BST? -- do /petfood min, reward
@@ -228,14 +152,50 @@ Done
 - Modified ShowIt to remove variables that were dropped and added display of the dynamic
   gear list
 - Add /gc reminder to SetVariables function
-  
- Possibly in the future
- ---------------------- 
-- Add Event to display bar. Values: none, assault, besieged, campaign, garrison, salvage,
+- /ei w/o parameters lists all codes and the item it equips
+- Add day, time, moon phase, weather, --zone (location) to display bar
+- Consider splitting out ranged WS from the melee WS. ex: WS_RANGED_AGI for Hot Shot, etc
+- Y's scythe +1 dark affinity. This is a specialty case specifically for DRK. If
+  WSWAP is enabled, Y's Scythe equipped, casting a dark spell, and the player has
+  a dark staff, but not a pluto staff, the dark staff should not be equipped. Losing
+  the tp would be wasted.
+- Add inline conditional for root spell recognition. EX: gear//SPELL:POISON
+- Check that zone id's correct. There's a descrepancy in the master list...
+- Change Midcast section. Instead of what we're currently doing, have it broken out by
+  the type of spell (i.e., a section for each type: [Healing], ['elemental'], etc.)
+  Each section has it's own set and you use inline codes for the variations:
+
+  ['Enhancing'] = {
+ 	  Body = 'Blessed Bliaut//BARSPELL',
+  },
+
+  So, Magic Attack Bonus would be applied with all magic attack spells including hybrid
+  weapon skills. I.e., apply MAB to elemental offence spells, dots like dia and bio
+  that have an initial attack damage, etc.
+
+  Individual spells of the "type" would be included in each section
+  Common routines included with each type: obi and elemental stave  
+ - add AttackPower subset, remove Tank_WS_*, fix comments
+ - Removed the following inline conditionals (obsolete): //ACCURACY, //CURE, //SPELL:,
+   //IFC:
+ - Added the following inline conditionals: //EN"spell", //ENANY, //LVL"condition"
+ - Changed //SO: to //SP:. Now handles both songs and spells. 
+ - When SA or TA is used, the DEX gear stays equipped when player is engaged until they
+   hit a target or the buff wears out.
+ - Certain items grant an "enchantment" buff when used. When enabled, the item will 
+   remain equipped until the buff wears out or the item is physically unequipped.
+ - Idle has been added to the display bar for all jobs. When enabled, Default gear will
+   be equipped when the player is idling. (This use to be a tank-only option.) Idle
+   behavior has been removed from /TANK.
+ - Added inline conditional //NOT_UTSUSEMI
+ - Added legend bar showing zone name below minimap. Also, moving either the
+   display bar or the zone bar, the position will be remembered between sessions.
+ 
+Possibly in the future
+---------------------- 
+ - Add Event to display bar. Values: none, assault, besieged, campaign, garrison, salvage,
   Fellow
   
-- Add slot for equipit (explicit slot?), would be nice to detect cooldown  
-
 - Need to be able to search storage slips
 
 - Add an inline conditional to a slot name. It implies that all gear in that slot's
@@ -269,7 +229,12 @@ Done
   (name, description, etc), but not how many charges are left or what is the cool 
   down on the item. I'm guessing this is sent in a packet, maybe upon zoning. A 
   comparison to a master clock? More investigation is needed.
-  
+
+- Double Midcast -- Looking at the sample code that obijam linked, this is not
+	generalized. This would be specific for a spell. You need to know a priori
+	the fast cast value, the casting gear reduction, the packet delay, the cast
+	delay to determine if there's enough time for an addition midcast call.
+	
   Not Doing
 ---------
 - /equipit needs //inline support. 
@@ -325,3 +290,22 @@ Done
   
 - Need to add ninjutsu affinities. Ninjutsu does not use elemental affinity, so
   equipping and elemental staff will have no effect
+  
+- Problem on DRK, reference to "invisible" not defined. Think some special circumstances
+  arose with the Uggy Pendant //SPECIAL check. Try to keep an eye open for that happening
+  again. Unable to repeat.
+  
+  Update: have repeated. Think it's an issue of the item not being correctly instantiated.
+  Reloading Luashitacast fixed the problem. I'm guessing that /GC would also resolve the
+  issue. (Oh, in this case, it was me equipping a Balmung that caused the problem.)
+  
+  Update 2: pretty sure /gc fixes this problem
+  
+  Fix: //SPECIAL will always return false until /gc run.
+  
+- When I added a pluto's staff and reran /gc, it did not recognize the pluto's staff.
+  But when I reloaded luashitacast, it did recognize it and since I've changed jobs,
+  it always recognizes it. 
+  
+  Only happened once. Unless it can be demonstrated again, it'll just remain an oddity.
+
