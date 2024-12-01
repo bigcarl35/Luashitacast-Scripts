@@ -1,0 +1,33 @@
+- Removed Attk and Def from display bar.
+
+- Fixed 'Lock' display. Typo caused locks not to display correctly.
+
+- Added location name below minimap.
+
+- You can move display bar or minimap legend and the new position will automatically
+  be saved. When next you load luashitacast, the position(s) will be remembered.
+
+- Changed "idle" to only be recognized by inline conditional //IDLE
+
+Version: 1.5
+
+- When Sneak Attack or Trick Attack is used, the DEX/AGI gear set stays equipped 
+  when player is engaged until they hit a target or the buff goes away (expires
+  or is cancelled.)
+  
+- Certain items grant an "enchantment" buff when used. When enabled, the item will 
+  remain equipped until the buff wears out or the item is physically unequipped.
+  
+- Idle has been added to the display bar for all jobs. When enabled, "Default" gear 
+  will be equipped when the player is idling. (This use to be a tank-only option.)
+  Idle behavior has been removed from the //TANK inline conditional.
+  
+- Added inline conditional //NOT_UTSUSEMI
+
+- Changed inline conditional //SO: to //SP:. Now handles both songs and spells.
+
+- Added the following inline conditionals: //EN"spell", //ENANY, //LVL"condition".
+  Removed the following inline conditionals (obsolete): //ACCURACY, //CURE, 
+  //SPELL:
+  
+- Added /ver command to display version of this code and the latest change log.
