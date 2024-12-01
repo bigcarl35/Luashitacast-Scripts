@@ -8,24 +8,24 @@ local gcdisplay = {};
 local fonts = require('fonts');
 local Toggles = {};
 local Cycles = {};
-local Def = 0;
-local Attk = 0;
 local MainLV = 0;
 local SubLV = 0;
 local Main = 'FOO';
 local Sub = 'BAR';
 local Locks = 'None';
+--local TargetLine = 'This is a test';
+local AccType = 'F';
 local AccTier = 'None';
 local JobBar = T{['GSwap'] = {'ALL','MS'},
 				 ['DT'] = {'ALL','MS'},
 				 ['Kite'] = {'ALL','MS'},
 				 ['Eva'] = {'ALL','MS'},
+				 ['Idle'] = {'ALL','MS'},
 				 ['Tank'] = {'PLD,NIN,RUN,WAR,DRK,THF,RDM','M'},
-				 ['Idle'] = {'PLD,NIN,RUN,WAR,DRK,THF,RDM','M'},
 				 ['WSwap'] = {'-SMN,BLM','M'},		-- Some jobs swap weapons all the time
-				 ['TH'] = {'THF','M'},				-- THF field, only valid if THF is main job
-				 ['AJug'] = {'BST','M'},			-- BST field, only valid if BST is main job
-				 ['DB'] = {'BST','M'},				-- BST field, only valid if BST is main job
+				 ['TH'] = {'THF','M'},
+				 ['AJug'] = {'BST','M'},
+				 ['DB'] = {'BST','M'},
 				 ['Region'] = {'ALL','MS'},
 				 ['Instrument'] = {'BRD','M'},
 				 ['sBP'] = {'SMN','MS'}};
@@ -34,18 +34,32 @@ local fontSettings = T{
 	visible = true,
 	font_family = 'Arial',
 	font_height = 14,
-	color = 0xFFFFFFFF,
-	position_x = 300,
+	color = 0xFFFFFFFF,			-- White
+	position_x = 325,
 	position_y = 0,
 	background = T{
 		visible = true,
-		color = 0xFF000000,
+		color = 0xFF000000,		-- Black
+	}
+};
+
+local FS2 = T{
+	visible = true,
+	font_family = 'Arial',
+	font_height = 14,
+	color = 0xFFFFFFFF,			-- White
+	position_x = 2033,
+	position_y = 322,
+	background = T{
+		visible = true,
+		color = 0xFF000000,		-- Black
 	}
 };
 
 --[[
 	ShowHelp Displays help for all the commands across jobs
 --]]
+
 function gcdisplay.ShowHelp()
 	print(chat.header('Help'):append(chat.message('The following commands are available to use from within Luashitacast. These are targetting either your specific job or are available across all jobs.\n')));
 	print(chat.header('Help'):append(chat.message('Commands for all jobs: ')));
@@ -53,6 +67,7 @@ function gcdisplay.ShowHelp()
 	print(chat.header('Help'):append(chat.message('/wsdistance [#] -- Toggles whether a distance check is done for non-ranged weaponskills and how far. Default TRUE at ' .. tostring(gcinclude.settings.WSdistance) .. ' yalms.')));
 	print(chat.header('Help'):append(chat.message('/dt -- Indicates type of damage taken set should be used: Physical is assumed.')));
 	print(chat.header('Help'):append(chat.message('/kite -- Equips defined movement set.')));
+	print(chat.header('Help'):append(chat.message('/idle -- Toggles whether \'Travel\' gear is equipped when idle. Default is TRUE.')));
 	print(chat.header('Help'):append(chat.message('/wswap -- Toggles whether weapons will be swapped as needed. Default is FALSE to preserve TP.')));
 	print(chat.header('Help'):append(chat.message('/eva -- Toggles whether evasion set should be equipped or not. Default is FALSE.')));
 	print(chat.header('Help'):append(chat.message('/acc -- Toggle whether accuracy gear should override melee/weapon skill gear. Default is FALSE')));
@@ -65,8 +80,7 @@ function gcdisplay.ShowHelp()
 	print(chat.header('Help'):append(chat.message('/maxsong name [back] -- Determines the highest level song your current jobs can cast that has the passed name or next to highest')));
 	print(chat.header('Help'):append(chat.message('/equipit code|name [slot] [1|2] --Equips specified item in the specified slot and turns off /gswap.')));
 	print(chat.header('Help'):append(chat.message('/rc -- Displays who controls what region')));
-	print(chat.header('Help'):append(chat.message('/petfood [name|ALL|MAX|MIN] --Equips the specified pet food or determines best food and equips it.')));
-	print(chat.header('Help'):append(chat.message('/slot name|pos gear --Locks the specified gear slot and loads the passed gear into said slot')));
+	print(chat.header('Help'):append(chat.message('/petfood name --Equips the specified pet food.')));
 
 	if string.find('SMN,BLM',Main) == nil then
 		print(chat.header('Help'):append(chat.message('/wswap -- Toggles whether automatic weapon swapping is permitted. Default is FALSE.')));
@@ -74,7 +88,6 @@ function gcdisplay.ShowHelp()
 
 	if string.find('PLD,NIN,DRK,WAR,THF,RDM,RUN',Main) ~= nil then
 		print(chat.header('Help'):append(chat.message('/tank -- Toggles whether tanking TP gear set should be equipped. Default is TRUE for PLD,NIN,RUN and FALSE for DRK,WAR,THF,RDM.')));
-		print(chat.header('Help'):append(chat.message('/idle -- Toggles whether \'Travel\' gear is equipped when idle. Default is TRUE.')));
 	end
 	
 	if Main == 'BST' then
@@ -184,17 +197,35 @@ end		-- gcdisplay.AdvanceToggle
 
 function gcdisplay.Update()
 	local player = AshitaCore:GetMemoryManager():GetPlayer();
-	
+	local pEntity = AshitaCore:GetMemoryManager():GetEntity();
+	local myIndex = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0);
+	local currentZoneID = AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0);
+    local currentZoneName = AshitaCore:GetResourceManager():GetString('zones.names', currentZoneID);
 	local MID = player:GetMainJob();
 	local SID = player:GetSubJob();
-	Def = player:GetDefense();
-	Attk = player:GetAttack();
-	MainLV =player:GetMainJobLevel();
-	SubLV = player:GetSubJobLevel();
-	Main = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", MID);
-	Sub = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", SID);
 	
+	MainLV	= player:GetMainJobLevel();
+	SubLV	= player:GetSubJobLevel();
+	Main	= AshitaCore:GetResourceManager():GetString("jobs.names_abbr", MID);
+	Sub		= AshitaCore:GetResourceManager():GetString("jobs.names_abbr", SID);	
+	
+	if gcdisplay.FO2 ~= nil then
+		gcdisplay.FO2.text = currentZoneName;
+	end
 end		-- gcdisplay.Update
+
+--[[
+	SetTargetLine stores the formatted target line in gcdisplay
+
+
+function gcdisplay.SetTargetLine(sVal)
+	if sVal == nil then
+		TargetLine = 'This is a test';
+	else
+		targetLine = sVal;
+	end
+end
+--]]
 
 --[[
 	CreateToggle creates a binary variable that can be turrned on or off
@@ -242,6 +273,10 @@ function gcdisplay.GetCycle(name)
 	end
 end		-- gcdisplay.GetCycle
 
+--[[
+	SetSlots stores the list of locks or accuracy slots, for displaying
+--]]
+
 function gcdisplay.SetSlots(sTarget,sLList)
 	if sTarget == 'locks' then
 		Locks = sLList;
@@ -258,6 +293,10 @@ function gcdisplay.Unload()
 	if (gcdisplay.FontObject ~= nil) then
 		gcdisplay.FontObject:destroy();
 	end
+	if (gcdisplay.FO2 ~= nil) then
+		gcdisplay.FO2:destroy();
+	end	
+	
 	ashita.events.unregister('d3d_present', 'gcdisplay_present_cb');
 	ashita.events.unregister('command', 'gcdisplay_cb');
 end		-- gcdisplay.Unload
@@ -294,47 +333,191 @@ function gcdisplay.bDisplayIt(s)
 end		-- gcdisplay.bDisplayIt
 
 --[[
+	fColor will return the colorized string according to the keyword's color. All
+	colors are denoted in hex
+--]]
+
+function fColor(skw,sMsg)
+	local tkwEle = {	-- cOORRGGBB where OO is opacity, RR red, GG green, BB blue
+		{ ['kw'] = 'firesday',		 ['color'] = '|cFFFF0000|' }, -- red
+		{ ['kw'] = 'earthsday',		 ['color'] = '|cFFC19A6B|' }, -- camel
+		{ ['kw'] = 'watersday',		 ['color'] = '|cFF1F51FF|' }, -- neon blue
+		{ ['kw'] = 'windsday',		 ['color'] = '|cFF4CBB17|' }, -- kelly green
+		{ ['kw'] = 'iceday',		 ['color'] = '|cFF00FFFF|' }, -- aqua
+		{ ['kw'] = 'lightningday',   ['color'] = '|cE1C16EFF|' }, -- "light purple"
+		{ ['kw'] = 'lightsday', 	 ['color'] = '|cFFFFFFFF|' }, -- white
+		{ ['kw'] = 'darksday', 		 ['color'] = '|cFF71797E|' }, -- steel gray
+		{ ['kw'] = 'clear', 		 ['color'] = '|cFFA7C7E7|' }, -- pastel blue
+		{ ['kw'] = 'sunshine', 		 ['color'] = '|cFFFFEA00|' }, -- bright yellow
+		{ ['kw'] = 'clouds', 		 ['color'] = '|cFFFFFDD0|' }, -- cream
+		{ ['kw'] = 'fog',	 		 ['color'] = '|cFFB2BEB5|' }, -- ash gray
+		{ ['kw'] = 'fire', 			 ['color'] = '|cFFFF0000|' }, -- red
+		{ ['kw'] = 'fire x2', 		 ['color'] = '|cFFFF0000|' }, -- red
+		{ ['kw'] = 'water', 		 ['color'] = '|cFF1F51FF|' }, -- neon blue
+		{ ['kw'] = 'water x2', 		 ['color'] = '|cFF1F51FF|' }, -- neon blue
+		{ ['kw'] = 'earth', 		 ['color'] = '|cFFC19A6B|' }, -- camel
+		{ ['kw'] = 'earth x2', 		 ['color'] = '|cFFC19A6B|' }, -- camel
+		{ ['kw'] = 'wind',	 		 ['color'] = '|cFF4CBB17|' }, -- kelly green
+		{ ['kw'] = 'wind x2', 		 ['color'] = '|cFF4CBB17|' }, -- kelly green
+		{ ['kw'] = 'ice',	 		 ['color'] = '|cFF00FFFF|' }, -- aqua
+		{ ['kw'] = 'ice x2', 		 ['color'] = '|cFF00FFFF|' }, -- aqua
+		{ ['kw'] = 'thunder', 		 ['color'] = '|cE1C16EFF|' }, -- "light purple"
+		{ ['kw'] = 'thunder x2',	 ['color'] = '|cE1C16EFF|' }, -- "light purple"
+		{ ['kw'] = 'light', 		 ['color'] = '|cFFFFFFFF|' }, -- white
+		{ ['kw'] = 'light x2', 		 ['color'] = '|cFFFFFFFF|' }, -- white
+		{ ['kw'] = 'dark',	 		 ['color'] = '|cFF71797E|' }, -- steel gray
+		{ ['kw'] = 'dark x2', 		 ['color'] = '|cFF71797E|' }, -- steel gray
+		{ ['kw'] = 'full moon',		 ['color'] = '|cFFFFFFFF|' }, -- white
+		{ ['kw'] = 'waning gibbous', ['color'] = '|cFFE5E4E2|' }, -- platinum
+		{ ['kw'] = 'last quarter', 	 ['color'] = '|cFFC0C0C0|' }, -- silver
+		{ ['kw'] = 'waning crescent',['color'] = '|cFF848884|' }, -- smoke
+		{ ['kw'] = 'new moon', 		 ['color'] = '|cFF71797E|' }, -- steel gray
+		{ ['kw'] = 'waxing crescent',['color'] = '|cFF848884|' }, -- smoke
+		{ ['kw'] = 'first quarter',  ['color'] = '|cFFC0C0C0|' }, -- silver
+		{ ['kw'] = 'waxing gibbous', ['color'] = '|cFFE5E4E2|' }, -- platinum
+		{ ['kw'] = 'green',			 ['color'] = '|cFF00FF00|' }, -- green
+		{ ['kw'] = 'red',			 ['color'] = '|cFFFF0000|' }, -- red
+	};
+	local sEnd = '|r';
+	local sfColor;
+	local sColor = nil;
+	
+	if skw == nil then
+		return ' ';
+	end
+	
+	skw = string.lower(skw);
+	for i,j in pairs(tkwEle) do
+		if j['kw'] == skw then
+			sColor = j['color'];
+			break;
+		end
+	end
+	
+	if sColor == nil then
+		sfColor = sMsg;
+	else
+		sfColor = sColor .. sMsg .. sEnd;
+	end
+	return sfColor;
+end		-- fColor
+
+--[[
+	gcdisplay.GetPos returns the position and visiblility of the requested
+	display element
+--]]
+
+function gcdisplay.GetPos(sWhich)
+	if sWhich == nil then
+		return nil,nil,nil;
+	elseif sWhich == 'dbar' then
+		return fontSettings.position_x,fontSettings.position_y,
+			fontSettings.visible;
+	elseif sWhich == 'legend' then
+		return FS2.position_x,FS2.position_y,FS2.visible;		
+	end
+end
+
+--[[
+	gcdisplay.SetPos assigns the passed position and visibility settings
+	to the appropriate display element
+--]]
+
+function gcdisplay.SetPos(sWhich,iX,iY,bVis)
+	
+	if sWhich == nil then
+		return;
+	end
+	
+	if sWhich == 'dbar' then
+		-- Sometimes there's a timing issue with the creation of
+		-- gcdisplay.FontObject and FO2. If that happens, adjust
+		-- the font definition
+		if gcdisplay.FontObject ~= nil then
+			gcdisplay.FontObject.position_x = iX;
+			gcdisplay.FontObject.position_y = iY;
+			gcdisplay.FontObject.visible = bVis;
+		else
+			fontSettings.position_x = iX;
+			fontSettings.position_y = iY;
+			fontSettings.visible = bVis;
+		end
+	elseif sWhich == 'legend' then
+		if gcdisplay.FO2 ~= nil then
+			gcdisplay.FO2.position_x = iX;
+			gcdisplay.FO2.position_y = iY;
+		else
+			FS2.position_x = iX;
+			FS2.position_y = iY;
+		end
+	end
+end
+
+--[[
 	Initialize creates the display bar
 --]]
 
 function gcdisplay.Initialize()
+	local pEntity = AshitaCore:GetMemoryManager():GetEntity();
+	local myIndex = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0);
+	local currentZoneID = AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0);
+	local currentZoneName = AshitaCore:GetResourceManager():GetString('zones.names', currentZoneID);
+
 	gcdisplay.Update();
 	gcdisplay.FontObject = fonts.new(fontSettings);	
+	gcdisplay.FO2 = fonts.new(FS2);
+--	gcdisplay.FO3 = fonts.new(FS3);
+	
 	ashita.events.register('d3d_present', 'gcdisplay_present_cb', function ()
-		local display = MainLV .. Main .. '/' .. SubLV .. Sub ..'   Attk:' .. Attk .. '   Def:' .. Def .. ' |';
+		local display = MainLV .. Main .. '/' .. SubLV .. Sub .. ' |';
 		for k, v in pairs(Toggles) do
 		
 			if gcdisplay.bDisplayIt(k) == true then
 				display = display .. '   ';
 				if (v == true) then
-					display = display .. '|cFF00FF00|' .. k .. '|r';
+					display = display .. fColor('green',k);
 				else
-					display = display .. '|cFFFF0000|' .. k .. '|r';
+					display = display .. fColor('red',k);
 				end
 			end
 		end
 		display = display .. ' |';
 		for key, value in pairs(Cycles) do
 			if gcdisplay.bDisplayIt(key) == true then
-				display = display .. '  ' .. key .. ': ' .. '|cFF00FF00|' .. value.Array[value.Index] .. '|r';
+				display = display .. '  ' .. key .. ': ' .. fColor('green',value.Array[value.Index]);
 			end
 		end
 		
 		-- Accuracy slots
+		local c = 'P';
+		if gcinclude.settings.bFractional == true then
+			c = 'F';
+		end
+		
 		if AccTier ~= 'None' then
-			display = display .. ' | Acc: ' .. '|cFF00FF00|' .. AccTier .. '|r';
+			display = display .. ' | Acc-' .. c .. ': ' .. fColor('green',AccTier);
 		else
-			display = display .. ' | Acc: ' .. '|cFFFF0000|' .. AccTier .. '|r';
+			display = display .. ' | Acc-' .. c .. ': ' .. fColor('red',AccTier);
 		end
 		
 		-- Locks
 		if Locks ~= 'None' then
-			display = display .. ' | Locks: ' .. '|cFF00FF00|' .. Locks .. '|r';
+			display = display .. ' | Locks: ' .. fColor('green',Locks);
 		else
-			display = display .. ' | Locks: ' .. '|cFFFF0000|' .. Locks .. '|r';
+			display = display .. ' | Locks: ' .. fColor('red',Locks);
 		end
-		
+
+		local env = gData.GetEnvironment();
+		display = display .. string.format(' | %s | %02d:%02d | %d%% %s | %s ',
+			fColor(env.Day,env.Day),env.Timestamp.hour,env.Timestamp.minute,env.MoonPercent,fColor(env.MoonPhase,env.MoonPhase),fColor(env.RawWeather,env.RawWeather));
 		gcdisplay.FontObject.text = display;
+		-- Update the font settings to make it easy to retrieve
+		fontSettings.position_x = gcdisplay.FontObject.position_x;
+		fontSettings.position_y = gcdisplay.FontObject.position_y;
+		fontSettings.visible = gcdisplay.FontObject.visible;
+		FS2.position_x = gcdisplay.FO2.position_x;
+		FS2.position_y = gcdisplay.FO2.position_y;
+		FS2.visible = gcdisplay.FO2.visible;
 	end);
 end		-- gcdisplay.Initialize
 
