@@ -4,7 +4,7 @@ require 'common'
 
 version = { ['author']	= 'Paiine',
  		    ['name']	= 'Luashitacast (Karma)',
-			['version']	= 1.5 };
+			['version']	= '1.5.1' };
 	
 --[[
 	This file contains routines that are used with Luashitacast across any supported job.
@@ -1057,7 +1057,6 @@ function DisplayVersion()
 	for line in io.lines (rfn) do
 		if bSkip == false then
 			print(chat.message(' '));
-			print(chat.message('Changes since last release:'));
 			bSkip = true;
 		end
 		print(chat.message(line));
@@ -2374,6 +2373,72 @@ function gcinclude.fBuffed(test,bStart)
 end
 
 --[[
+	SaveSettingFile overwrites the current display settings in the karma.txt
+	file with the current display settings.
+--]]
+
+function SaveSettingFile()
+	local rfn = gProfile.FilePath:reverse();
+print('save');
+	rfn = string.sub(rfn,string.find(rfn,'\\'),-1);
+	rfn = rfn:reverse() .. 'Documentation\\karma.txt';
+	
+	f = io.open(rfn, "w")
+	sX,sY,bVis = gcdisplay.GetPos('dbar');
+	f:write('dbar=' .. tostring(sX) .. ',' .. tostring(sY) .. ',' .. tostring(bVis) .. '\n');
+	sX,sY,bVis = gcdisplay.GetPos('legend');
+	f:write('legend=' .. tostring(sX) .. ',' .. tostring(sY) .. ',' .. tostring(bVis) .. '\n');
+	io.close(f);
+end
+
+--[[
+	LoadSettingFile determines if karma.txt exists. If not, it
+	creates it and populates it with the default values. It also
+	updates the display variables accordingly.
+--]]
+
+function LoadSettingFile()
+	local rfn = gProfile.FilePath:reverse();
+	local sX,sY,bVis,sWhich;
+	local x,y,vis,which;
+	local f,line,sRest;
+	
+	-- remove the job file from path, add settings
+	rfn = string.sub(rfn,string.find(rfn,'\\'),-1);
+	rfn = rfn:reverse() .. 'Documentation\\karma.txt';
+	
+	-- See if the file exists
+	f = io.open(rfn,"r")
+	if f == nil then
+		-- Create the file
+		SaveSettingFile();
+	else
+		io.close(f);
+	end
+	
+	-- Read in the settings and pass to the appropriate display element
+	for line in io.lines(rfn) do
+		which = string.find(line,'=');
+		if which ~= nil then
+			sWhich = string.sub(line,1,which-1);
+			sRest = string.sub(line,which+1,-1);
+			i = 0;
+			for w in sRest:gmatch("([^,]+)") do 
+				if i == 0 then
+					x = tonumber(w);
+				elseif i == 1 then
+					y = tonumber(w);
+				else
+					vis = (w == 'true');
+				end
+				i = i + 1;
+			end
+			gcdisplay.SetPos(sWhich,x,y,vis);
+		end		
+	end
+end
+
+--[[
 	fCheckItemOwned determines if the specified piece of gear is owned by 
 	the player. bAccessible further restricts the search to containers 
 	that are accessible when outside of your mog house. bOnce indicates 
@@ -2462,14 +2527,14 @@ function fBardSongType(sType)
 	
 	if sType == 'enh' then
 		for i,j in pairs(gcinclude.tSpell['brd-enh']) do
-			if string.find(string.lower(spell.Name,j)) ~= nil then
+			if string.find(string.lower(spell.Name),j) ~= nil then
 				bGood = true;
 				break;
 			end			
 		end
 	else
 		for i,j in pairs(gcinclude.tSpell['brd-enf']) do
-			if string.find(string.lower(spell.Name,j)) ~= nil then
+			if string.find(string.lower(spell.Name),j) ~= nil then
 				bGood = true;
 				break;
 			end			
@@ -2819,6 +2884,22 @@ function RegionControlDisplay()
 end		-- RegionControlDisplay
 
 function gcinclude.t1()
+	local x,y,vis;
+	
+	x,y,vis = gcdisplay.GetPos('dbar');
+	print('dbar = ' .. tostring(x) .. ',' .. tostring(y) .. ',' .. tostring(vis));
+	x,y,vis = gcdisplay.GetPos('legend');
+	print('legend = ' .. tostring(x) .. ',' .. tostring(y) .. ',' .. tostring(vis));
+	
+--[[
+	local pEntity = AshitaCore:GetMemoryManager():GetEntity();
+	local myIndex = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0);
+	local currentZoneID = AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0);
+    local currentZoneName = AshitaCore:GetResourceManager():GetString('zones.names', currentZoneID);
+	print(currentZoneName);
+	print(pEntity:GetLocalPositionX(myIndex),pEntity:GetLocalPositionY(myIndex));
+	print(' ');
+
 	local pEntity = AshitaCore:GetMemoryManager():GetEntity();
 	local myIndex = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0);
     local petIndex = AshitaCore:GetMemoryManager():GetEntity():GetPetTargetIndex(myIndex);
@@ -2849,6 +2930,7 @@ function gcinclude.t1()
 		print(math.sqrt(AshitaCore:GetMemoryManager():GetEntity():GetDistance(petIndex)));
 		print(math.sqrt(AshitaCore:GetMemoryManager():GetEntity():GetDistance(targetIndex)));
 	end
+--]]
 end		-- gcinclude.t1
 
 --[[
@@ -2890,6 +2972,9 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 		ts1 = tSet;
 	end
 	
+	if ts1 == nil then
+		return;
+	end
 	-- First walk through the gear slots looking for "subset"
 	for k,v in pairs(ts1) do
 		sK = string.lower(k);
@@ -3952,7 +4037,7 @@ function gcinclude.HandleCommands(args)
 		if args[2] ~= nil then
 			LockUnlock('lock','lock',args[2]);
 		end
-		sList = fGetLockedList('lock');		
+		sList = fGetLockedList('locks');		
 		if sList ~= nil then
 			print(chat.message('The following slot(s) are locked: ' .. sList));
 		else
@@ -4282,13 +4367,14 @@ function gcinclude.fPetReward(sFood,bMax)
 end		-- PetReward
 
 --[[
-	Unload ensures that the aliases are removed and the display objects are removed
+	Unload ensures that the display settings are saved, the aliases are removed,
+	and the display objects are removed
 --]]
 
 function gcinclude.Unload()
+	SaveSettingFile();
 	ClearAlias();
-	ashita.events.unregister('packet_in', 'packet_in_callback1');
-	
+	ashita.events.unregister('packet_in', 'packet_in_callback1');	
 	gcdisplay.Unload();
 end		-- gcinclude.Unload
 
@@ -4300,6 +4386,7 @@ function gcinclude.Initialize()
 	gcdisplay.Initialize:once(2);
 	SetVariables:once(2);
 	SetAlias:once(2);
+	LoadSettingFile();	
 end		-- gcinclude.Initialize
 
 --[[
