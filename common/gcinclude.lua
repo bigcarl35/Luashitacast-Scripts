@@ -1035,11 +1035,8 @@ ashita.events.register('packet_in', 'packet_in_callback1', function (e)
 		if gcdisplay ~= nil then
 			RegionDisplay();
 		end	
-	elseif (e.id == 0x0A) then
-		local bVis = (struct.unpack('B', e.data, 0x80 + 1) == 1)
-		gcdisplay.SetVisibility('legend',not bVis)
+		e.blocked = false;
 	end
-	e.blocked = false;
 end);
 
 --[[
@@ -2376,72 +2373,6 @@ function gcinclude.fBuffed(test,bStart)
 end
 
 --[[
-	SaveSettingFile overwrites the current display settings in the karma.txt
-	file with the current display settings.
---]]
-
-function SaveSettingFile()
-	local rfn = gProfile.FilePath:reverse();
-print('save');
-	rfn = string.sub(rfn,string.find(rfn,'\\'),-1);
-	rfn = rfn:reverse() .. 'Documentation\\karma.txt';
-	
-	f = io.open(rfn, "w")
-	sX,sY,bVis = gcdisplay.GetPos('dbar');
-	f:write('dbar=' .. tostring(sX) .. ',' .. tostring(sY) .. ',' .. tostring(bVis) .. '\n');
-	sX,sY,bVis = gcdisplay.GetPos('legend');
-	f:write('legend=' .. tostring(sX) .. ',' .. tostring(sY) .. ',' .. tostring(bVis) .. '\n');
-	io.close(f);
-end
-
---[[
-	LoadSettingFile determines if karma.txt exists. If not, it
-	creates it and populates it with the default values. It also
-	updates the display variables accordingly.
---]]
-
-function LoadSettingFile()
-	local rfn = gProfile.FilePath:reverse();
-	local sX,sY,bVis,sWhich;
-	local x,y,vis,which;
-	local f,line,sRest;
-	
-	-- remove the job file from path, add settings
-	rfn = string.sub(rfn,string.find(rfn,'\\'),-1);
-	rfn = rfn:reverse() .. 'Documentation\\karma.txt';
-	
-	-- See if the file exists
-	f = io.open(rfn,"r")
-	if f == nil then
-		-- Create the file
-		SaveSettingFile();
-	else
-		io.close(f);
-	end
-	
-	-- Read in the settings and pass to the appropriate display element
-	for line in io.lines(rfn) do
-		which = string.find(line,'=');
-		if which ~= nil then
-			sWhich = string.sub(line,1,which-1);
-			sRest = string.sub(line,which+1,-1);
-			i = 0;
-			for w in sRest:gmatch("([^,]+)") do 
-				if i == 0 then
-					x = tonumber(w);
-				elseif i == 1 then
-					y = tonumber(w);
-				else
-					vis = (w == 'true');
-				end
-				i = i + 1;
-			end
-			gcdisplay.SetPos(sWhich,x,y,vis);
-		end		
-	end
-end
-
---[[
 	fCheckItemOwned determines if the specified piece of gear is owned by 
 	the player. bAccessible further restricts the search to containers 
 	that are accessible when outside of your mog house. bOnce indicates 
@@ -2887,12 +2818,7 @@ function RegionControlDisplay()
 end		-- RegionControlDisplay
 
 function gcinclude.t1()
-	local x,y,vis;
-	
-	x,y,vis = gcdisplay.GetPos('dbar');
-	print('dbar = ' .. tostring(x) .. ',' .. tostring(y) .. ',' .. tostring(vis));
-	x,y,vis = gcdisplay.GetPos('legend');
-	print('legend = ' .. tostring(x) .. ',' .. tostring(y) .. ',' .. tostring(vis));
+	print('T1 has no routine atm.');
 	
 --[[
 	local pEntity = AshitaCore:GetMemoryManager():GetEntity();
@@ -3164,8 +3090,7 @@ function CheckForExceptions(tSet)
 end
 
 --[[
-	
-	ar makes sure that the passed gear set doesn't have an item in a slot
+	EquipTheGear makes sure that the passed gear set doesn't have an item in a slot
 	that is being blocked by another item (e.g., no head gear if a vermillion cloak
 	is in the body slot.) It the equips the gear set.
 --]]
@@ -4375,7 +4300,7 @@ end		-- PetReward
 --]]
 
 function gcinclude.Unload()
-	SaveSettingFile();
+	--SaveSettingFile();
 	ClearAlias();
 	ashita.events.unregister('packet_in', 'packet_in_callback1');	
 	gcdisplay.Unload();
@@ -4389,7 +4314,6 @@ function gcinclude.Initialize()
 	gcdisplay.Initialize:once(2);
 	SetVariables:once(2);
 	SetAlias:once(2);
-	LoadSettingFile();	
 end		-- gcinclude.Initialize
 
 --[[

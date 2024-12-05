@@ -10,10 +10,10 @@ local Toggles = {};
 local Cycles = {};
 local MainLV = 0;
 local SubLV = 0;
+local Zone = ' ';
 local Main = 'FOO';
 local Sub = 'BAR';
 local Locks = 'None';
---local TargetLine = 'This is a test';
 local AccType = 'F';
 local AccTier = 'None';
 local JobBar = T{['GSwap'] = {'ALL','MS'},
@@ -37,19 +37,6 @@ local fontSettings = T{
 	color = 0xFFFFFFFF,			-- White
 	position_x = 325,
 	position_y = 0,
-	background = T{
-		visible = true,
-		color = 0xFF000000,		-- Black
-	}
-};
-
-local FS2 = T{
-	visible = true,
-	font_family = 'Arial',
-	font_height = 14,
-	color = 0xFFFFFFFF,			-- White
-	position_x = 2033,
-	position_y = 322,
 	background = T{
 		visible = true,
 		color = 0xFF000000,		-- Black
@@ -207,25 +194,9 @@ function gcdisplay.Update()
 	MainLV	= player:GetMainJobLevel();
 	SubLV	= player:GetSubJobLevel();
 	Main	= AshitaCore:GetResourceManager():GetString("jobs.names_abbr", MID);
-	Sub		= AshitaCore:GetResourceManager():GetString("jobs.names_abbr", SID);	
-	
-	if gcdisplay.FO2 ~= nil then
-		gcdisplay.FO2.text = currentZoneName;
-	end
+	Sub		= AshitaCore:GetResourceManager():GetString("jobs.names_abbr", SID);
+	Zone    = currentZoneName;
 end		-- gcdisplay.Update
-
---[[
-	SetTargetLine stores the formatted target line in gcdisplay
-
-
-function gcdisplay.SetTargetLine(sVal)
-	if sVal == nil then
-		TargetLine = 'This is a test';
-	else
-		targetLine = sVal;
-	end
-end
---]]
 
 --[[
 	CreateToggle creates a binary variable that can be turrned on or off
@@ -293,9 +264,6 @@ function gcdisplay.Unload()
 	if (gcdisplay.FontObject ~= nil) then
 		gcdisplay.FontObject:destroy();
 	end
-	if (gcdisplay.FO2 ~= nil) then
-		gcdisplay.FO2:destroy();
-	end	
 	
 	ashita.events.unregister('d3d_present', 'gcdisplay_present_cb');
 	ashita.events.unregister('command', 'gcdisplay_cb');
@@ -403,70 +371,15 @@ function fColor(skw,sMsg)
 end		-- fColor
 
 --[[
-	gcdisplay.GetPos returns the position and visiblility of the requested
-	display element
---]]
-
-function gcdisplay.GetPos(sWhich)
-	if sWhich == nil then
-		return nil,nil,nil;
-	elseif sWhich == 'dbar' then
-		return fontSettings.position_x,fontSettings.position_y,
-			fontSettings.visible;
-	elseif sWhich == 'legend' then
-		return FS2.position_x,FS2.position_y,FS2.visible;		
-	end
-end
-
---[[
-	gcdisplay.SetPos assigns the passed position and visibility settings
-	to the appropriate display element
---]]
-
-function gcdisplay.SetPos(sWhich,iX,iY,bVis)
-	
-	if sWhich == nil then
-		return;
-	end
-	
-	if sWhich == 'dbar' then
-		-- Sometimes there's a timing issue with the creation of
-		-- gcdisplay.FontObject and FO2. If that happens, adjust
-		-- the font definition
-		if gcdisplay.FontObject ~= nil then
-			gcdisplay.FontObject.position_x = iX;
-			gcdisplay.FontObject.position_y = iY;
-			gcdisplay.FontObject.visible = bVis;
-		else
-			fontSettings.position_x = iX;
-			fontSettings.position_y = iY;
-			fontSettings.visible = bVis;
-		end
-	elseif sWhich == 'legend' then
-		if gcdisplay.FO2 ~= nil then
-			gcdisplay.FO2.position_x = iX;
-			gcdisplay.FO2.position_y = iY;
-		else
-			FS2.position_x = iX;
-			FS2.position_y = iY;
-		end
-	end
-end
-
---[[
 	Initialize creates the display bar
 --]]
 
 function gcdisplay.Initialize()
 	local pEntity = AshitaCore:GetMemoryManager():GetEntity();
 	local myIndex = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0);
-	local currentZoneID = AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0);
-	local currentZoneName = AshitaCore:GetResourceManager():GetString('zones.names', currentZoneID);
 
 	gcdisplay.Update();
 	gcdisplay.FontObject = fonts.new(fontSettings);	
-	gcdisplay.FO2 = fonts.new(FS2);
---	gcdisplay.FO3 = fonts.new(FS3);
 	
 	ashita.events.register('d3d_present', 'gcdisplay_present_cb', function ()
 		local display = MainLV .. Main .. '/' .. SubLV .. Sub .. ' |';
@@ -510,14 +423,8 @@ function gcdisplay.Initialize()
 		local env = gData.GetEnvironment();
 		display = display .. string.format(' | %s | %02d:%02d | %d%% %s | %s ',
 			fColor(env.Day,env.Day),env.Timestamp.hour,env.Timestamp.minute,env.MoonPercent,fColor(env.MoonPhase,env.MoonPhase),fColor(env.RawWeather,env.RawWeather));
+		display = display .. ' | ' .. Zone;
 		gcdisplay.FontObject.text = display;
-		-- Update the font settings to make it easy to retrieve
-		fontSettings.position_x = gcdisplay.FontObject.position_x;
-		fontSettings.position_y = gcdisplay.FontObject.position_y;
-		fontSettings.visible = gcdisplay.FontObject.visible;
-		FS2.position_x = gcdisplay.FO2.position_x;
-		FS2.position_y = gcdisplay.FO2.position_y;
-		FS2.visible = gcdisplay.FO2.visible;
 	end);
 end		-- gcdisplay.Initialize
 
