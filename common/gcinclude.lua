@@ -272,7 +272,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'fire',
 										['NQ'] = { ['Name'] = 'Ice staff', ['Ref'] = {} },
 										['HQ'] = {['Name'] = 'Aquilo\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'blizzaga','blizzard','freeze','frost','ice','enblizzard','jubaku','hyoton' },
+										['Affinity'] = { 'blizzaga','blizzard','freeze','frost','ice','enblizzard','jubaku','hyoton','bind','distract','paralyze' },
 										['SongAffinity'] = { 'wind threnody' },
 										['Summons'] = { 'shiva','ice spirit','icespirit','ice' },
 										},
@@ -280,7 +280,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'ice',
 										['NQ'] = { ['Name'] = 'Wind staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Auster\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'aero','aeroga','choke','tornado','enaero','huton' },
+										['Affinity'] = { 'aero','aeroga','choke','tornado','enaero','huton','gravity','silence' },
 										['SongAffinity'] = { 'earth threnody' },
 										['Summons'] = { 'garuda','air spirit','airspirit','air','siren' },
 										},
@@ -288,7 +288,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'wind',
 										['NQ'] = { ['Name'] = 'Earth staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Terra\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'quake','rasp','stone','stonega','enstone','hojo','doton' },
+										['Affinity'] = { 'quake','rasp','stone','stonega','enstone','hojo','doton','slow' },
 										['SongAffinity'] = { 'lightning threnody', 'battlefield elegy', 'carnage elegy' },
 										['Summons'] = {'titan','earth spirit','earthspirit','earth' },
 										},
@@ -304,7 +304,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'thunder',
 										['NQ'] = { ['Name'] = 'Water staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Neptune\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'drown','flood','poison','water','waterga','enwater','dokumori','suiton' },
+										['Affinity'] = { 'drown','flood','poison','poisonga','water','waterga','enwater','dokumori','suiton' },
 										['SongAffinity'] = { 'fire threnody' },
 										['Summons'] = { 'leviathan','water spirit','waterspirit','water' },
 										},
@@ -312,7 +312,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'dark',
 										['NQ'] = { ['Name'] = 'Light staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Apollo\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'banish','banishga','curaga','cure','dia','diaga','flash','holy','enlight' },
+										['Affinity'] = { 'banish','banishga','curaga','cure','dia','diaga','flash','holy','enlight','repose','inundation' },
 										['SongAffinity'] = { 'dark threnody', 'foe requiem', 'foe requiem ii', 'foe requiem iii', 'foe requiem iv', 'foe requiem v', 'foe requiem vi', 'foe lullaby', 'horde lullaby', 'magic finale', 'maiden\'s virelai' },
 										['Summons'] = {'carbuncle','light spirit','lightspirit','light','cait sith','caitsith','alexander'},
 										},
@@ -320,7 +320,7 @@ gcinclude.tElemental_gear = T{
 										['Weak'] = 'light',
 										['NQ'] = { ['Name'] = 'Dark staff', ['Ref'] = {} },
 										['HQ'] = { ['Name'] = 'Pluto\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'aspir','blind','bio','drain','sleep','sleepga','endark','kurayami' },
+										['Affinity'] = { 'absorb','aspir','blind','bio','dispel','drain','dread','frazzle','sleep','sleepga','endark','kurayami' },
 										['SongAffinity'] = { 'light threnody' },
 										['Summons'] = { 'fenrir','diabolos','dark spirit','darkspirit','dark','atomos','odin' },
 										},
@@ -1034,9 +1034,12 @@ ashita.events.register('packet_in', 'packet_in_callback1', function (e)
 		gcinclude.RegionControl['Tavnazia']['own'] = struct.unpack('B', e.data, 0x66)
 		if gcdisplay ~= nil then
 			RegionDisplay();
-		end
-		e.blocked = false;
+		end	
+	elseif (e.id == 0x0A) then
+		local bVis = (struct.unpack('B', e.data, 0x80 + 1) == 1)
+		gcdisplay.SetVisibility('legend',not bVis)
 	end
+	e.blocked = false;
 end);
 
 --[[
@@ -3673,7 +3676,7 @@ function gcinclude.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
 	else
 		sTarget = 'main';
 	end
-	
+
 	-- Then determine which gear is the appropriate one
 	for i,j in pairs(gcinclude.tElemental_gear[sWhat]) do
 		-- Looking for elemental entries. Ignore the rest
