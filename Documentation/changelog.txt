@@ -2,10 +2,7 @@
 
 - Fixed 'Lock' display. Typo caused locks not to display correctly.
 
-- Added location name below minimap.
-
-- You can move display bar or minimap legend and the new position will automatically
-  be saved. When next you load luashitacast, the position(s) will be remembered.
+- Added location name after weather on the display bar.
 
 - Changed "idle" to only be recognized by inline conditional //IDLE
 
