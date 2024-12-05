@@ -9,6 +9,9 @@
 
 - Changed "idle" to only be recognized by inline conditional //IDLE
 
+- Modified elemental stave table to include some enfeeble spells accidentally
+  omitted.
+  
 Version: 1.5
 
 - When Sneak Attack or Trick Attack is used, the DEX/AGI gear set stays equipped 
