@@ -2302,7 +2302,7 @@ function fValidateSpecial(sSlot,sGear)
 	if sGear == 'uggalepih pendant' then
 		-- Condition: MP% < 51. MAB bonus. Only visible gear, ignore all 
 		-- "Convert HP to MP" check outright first	
-		if (player.MPP < 51) then
+		if player.MPP < 51 then
 			return true;
 		else
 			local iMP = player.MP - rec['visible']['cHM'];
@@ -2313,7 +2313,7 @@ function fValidateSpecial(sSlot,sGear)
 		end
 	elseif sGear == 'parade gorget' then
 		-- Make sure player needs to have mp added
-		if ((player.MP/player.MaxMP) * 100) - gcinclude.settings.Tolerance > 0 then
+		if player.MPP - gcinclude.settings.Tolerance > 0 then
 			return false;
 		end
 		
@@ -2323,19 +2323,27 @@ function fValidateSpecial(sSlot,sGear)
 		local iaHP = math.floor(rec['invisible']['HP'] * (rec['invisible']['HPP'] * 0.01));
 		bGood = ((player.HP/(iHP - iaHP))*100 >= 85);
 	elseif sGear == 'sorcerer\'s ring' then
-		-- Condition: HP% < 76 and TP% < 100. Ignore HP+ (flat and percent) and
-		-- Convert HP to MP gear.
+		-- Condition: HP% < 76 and TP% < 100. 
+		-- Ignore HP+ (flat and percent) and Convert HP to MP/MP to HP gear.
+		
 		-- Check outright first	
-		if (player.HP/player.MaxHP)*100 < 76 and player.TP/10 < 100 then
+		if player.HPP < 76 and player.TP/10 < 100 then
 			return true;
 		else
-			local fHP = rec['visible']['HP'] + rec['invisible']['HP'];
-			local fCHPMP = rec['visible']['cHM'] + rec['invisible']['cHM'];
-			local fHPP = math.floor((rec['visible']['HPP'] + 
-				rec['invisible']['HPP']) * (fHP + fCHPMP) * 0.01);
-			if (player.HP - fHP - fHPP)/player.MaxHP < 76 and player.TP/10 < 100 then
+			local fHP   = rec['visible']['HP'] + rec['invisible']['HP'];
+			local fCH_M = (rec['visible']['cHM'] + rec['invisible']['cHM']) -
+						  (rec['visible']['cMH'] + rec['invisible']['cMH']);
+			local fHPP  = rec['visible']['HPP'] + rec['invisible']['HPP'];
+			local tHP   = player.HP - fHP - fCH_M;
+			local nHP   = tHP - (tHP x (fHPP * 0.01));
+
+			if ((nHP/player.MaxHP) * 100) < 76 and player.TP/10 < 100 then
 				return true;
 			end
+		end
+	elseif string.find('drake ring,shinobi ring,minstrel\'s ring',sGear) ~= nil then
+		if player.HPP <= 75 and player.TP/10 < 100 then
+			return true;
 		end
 	else
 		print(chat.header('fValidateSpecial'):append(chat.message('Warning: No special code exists for ' .. gear .. '. Ignoring piece.')));		
