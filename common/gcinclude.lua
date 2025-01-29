@@ -4,7 +4,7 @@ require 'common'
 
 version = { ['author']	= 'Paiine',
  		    ['name']	= 'Luashitacast (Karma)',
-			['version']	= '1.5.1' };
+			['version']	= '1.5.2' };
 	
 --[[
 	This file contains routines that are used with Luashitacast across any supported job.
@@ -46,10 +46,14 @@ gcinclude.sets = {
 
 --[[
 	The dispense set is used to equip items that have an ability to daily dispense items.
-	They're grouped here as a convenience.
+	They're grouped here as a convenience. Note that since Sub is specified, something has
+	to be specified in Main. If the Job file sees an empty Main, it assigns a default 
+	weapon. This was needed to get around a strange bug that sometimes occurred when
+	entering a level capped zone.
 --]]
 	['Dispense'] = {
 		Head = 'Dream Hat +1',
+		Main = 'Dream Bell',
 		Sub  = 'Hatchling Shield',
 	},
 	
@@ -72,6 +76,7 @@ gcinclude.settings = {
 	WSdistance = 4.7; 	 -- default max distance (yalms) to allow non-ranged WS to go off at if the above WScheck is true
 	bWSOverride = false; -- is the player playing a job where weapon swapping always happens, it is not optional?
 	Tolerance = 97;		 -- Comparison value %, cut-off for certain comparisons
+	TH_hits = 2;		 -- How many hits til TH gear no longer needed
 	DefaultSpellTarget = 't'; -- What to use in MaxSpell if no target specified
 	DefaultSongTarget = 't';  -- What to use in MaxSong if no target specified
 	--
@@ -895,11 +900,13 @@ gcinclude.tEquipIt = {
 	['purgo']  = { ['Name'] = 'Wonder Top +1', ['Slot'] = 'Body' },
 	['rre']    = { ['Name'] = 'Reraise Earring', ['Slot'] = 'Ear' },		
 	['rrg']    = { ['Name'] = 'Reraise Gorget', ['Slot'] = 'Neck' },		
-	['mandy']  = { ['Name'] = 'Mandra. Suit', ['Slot'] = 'Body', ['aSlots'] = 'Body,Legs' }
+	['mandy']  = { ['Name'] = 'Mandra. Suit', ['Slot'] = 'Body' },
+	['gob']    = { ['Name'] = 'Goblin Suit', ['Slot'] = 'Body' },	
 };
 
 -- List of items that inhibit more than the obvious gear slot. Add entries as you
--- need to, to account for the gear you use.
+-- need to, to account for the gear you use. Please note that ears and rings are
+-- not supported. Instead, you have to be explicit (eg. ring1, ring2, ear1, ear2)
 gcinclude.multiSlot = {
 	{ ['item'] = 'Vermillion Cloak', ['slot'] = 'Body', ['affected'] = 'Head' },
 	{ ['item'] = 'Royal Cloak', 	 ['slot'] = 'Body', ['affected'] = 'Head' },
@@ -997,6 +1004,14 @@ gcinclude.GearDetails = {
 	['legs']  = { ['num'] = 0, ['vis'] = true, {} },
 	['feet']  = { ['num'] = 0, ['vis'] = true, {} }
 };
+
+-- Keep track of the number of hits on monsters, identified by ID.
+-- Included is a time stamp for when the hit occurred. If 5 minutes
+-- go by and no hit has occurred, it is assumed that the monster is
+-- dead and the entry is removed.
+--
+-- Structure: Target ID, Hits, Last Touched
+gcinclude.THTrack = { };
 	
 gcinclude.OwnNation = -1; 
 gcinclude.fb = false;
@@ -1285,7 +1300,7 @@ function LockUnlock(sTarget,sType,sWhich)
 	if sTarget == 'acc' then
 		s = 'acc';
 	end
-	
+
 	sWhich = ',' .. string.lower(sWhich) .. ',';
 	for k,l in ipairs(gcinclude.tLocks) do
 		local sk = ',' .. tostring(k) .. ',';
@@ -1484,6 +1499,11 @@ end		-- SetVariables
 	and accessibility. Returned is a true/false which indicates that the item's level,
 	job, and accessibility is valid for equipping. Please note that an invalid item 
 	will return false.
+	
+		sSlot   - Name of the slot
+		sName   - Name of the item to check
+		bAccess - True = return accessibility, False = check job, access, and level
+		bForce  - Force an update of the gearDetail record
 --]]
 
 function fGearCheckItem(sSlot,sName,bAccess,bForce)
@@ -1507,11 +1527,11 @@ function fGearCheckItem(sSlot,sName,bAccess,bForce)
 	end
 	
 	if bAccess == nil then
-		bAccess = false,nil;
+		bAccess = false;
 	end
 
 	if bForce == nil then
-		bForce = false,nil;
+		bForce = false;
 	end
 	
 	sSlot = string.lower(sSlot);
@@ -1541,14 +1561,16 @@ function fGearCheckItem(sSlot,sName,bAccess,bForce)
 			bJob = (bit.band(item.Jobs,gcinclude.JobMask[player.MainJob]) == gcinclude.JobMask[player.MainJob]) or
 		  		   (bit.band(item.Jobs,gcinclude.JobMask['Alljobs']) == gcinclude.JobMask['Alljobs']);
 			bAccessible = fCheckItemOwned(sName,true,true);
-
+-- bOwn,bAccessible,bPorter = fCheckItemOwned(sName,true,true); -- future change
 			bThere = (gcinclude.GearDetails[sSlot][sName] ~= nil);
 			
 			-- Save item w/details
 			gcinclude.GearDetails[sSlot][sName] = { 
 				['level']	   = item.Level,
 				['job']        = bJob, 
+				--['own']		   = true, -- should be bOwn
 				['accessible'] = bAccessible, 
+				--['porter']	   = false, -- should be bPorter
 				['desc'] 	   = item.Description[1]
 			};
 			-- Bump counter
@@ -1633,8 +1655,8 @@ function GearCheck(sList,bForce)
 				for ii,jj in pairs(j) do
 					if table.find({ 'fire','ice','wind','earth','thunder','water',
 									'light','dark' },ii) ~= nil then
-						bGood,jj['NQ']['Ref'] = fGearCheckItem('main',jj['NQ']['Name']);
-						bGood,jj['HQ']['Ref'] = fGearCheckItem('main',jj['HQ']['Name']);
+						bGood,jj['NQ']['Ref'] = fGearCheckItem('main',jj['NQ']['Name'],false,bForce);
+						bGood,jj['HQ']['Ref'] = fGearCheckItem('main',jj['HQ']['Name'],false,bForce);
 						iCnt = iCnt + 2;
 					end
 					if math.floor(iCnt/50) == iCnt/50 then
@@ -1646,9 +1668,9 @@ function GearCheck(sList,bForce)
 					if table.find({ 'fire','ice','wind','earth','thunder','water',
 									'light','dark' },ii) ~= nil then
 						if i == 'obi' then
-							bGood,jj['Ref'] = fGearCheckItem('waist',jj['Name']);
+							bGood,jj['Ref'] = fGearCheckItem('waist',jj['Name'],false,bForce);
 						else
-							bGood,jj['Ref'] = fGearCheckItem('neck',jj['Name']);
+							bGood,jj['Ref'] = fGearCheckItem('neck',jj['Name'],false,bForce);
 						end
 						iCnt = iCnt + 1;
 						if math.floor(iCnt/50) == iCnt/50 then
@@ -2305,11 +2327,15 @@ function fValidateSpecial(sSlot,sGear)
 		if player.MPP < 51 then
 			return true;
 		else
-			local iMP = player.MP - rec['visible']['cHM'];
-			local imMP = player.MaxMP - rec['invisible']['MP'] - 
-				rec['invisible']['cMH'] - rec['invisible']['cHM'];
-			local iaMP = player.MaxMP * (rec['invisible']['MPP'] * 0.01);
-			bGood = ((iMP/(imMP - iaMP))*100 < 51);		
+			if rec['visible'] == nil then
+				return false;
+			else
+				local iMP = player.MP - rec['visible']['cHM'];
+				local imMP = player.MaxMP - rec['invisible']['MP'] - 
+					rec['invisible']['cMH'] - rec['invisible']['cHM'];
+				local iaMP = player.MaxMP * (rec['invisible']['MPP'] * 0.01);
+				bGood = ((iMP/(imMP - iaMP))*100 < 51);
+			end
 		end
 	elseif sGear == 'parade gorget' then
 		-- Make sure player needs to have mp added
@@ -2330,15 +2356,19 @@ function fValidateSpecial(sSlot,sGear)
 		if player.HPP < 76 and player.TP/10 < 100 then
 			return true;
 		else
-			local fHP   = rec['visible']['HP'] + rec['invisible']['HP'];
-			local fCH_M = (rec['visible']['cHM'] + rec['invisible']['cHM']) -
+			if rec['visible'] == nil then
+				return false;
+			else
+				local fHP   = rec['visible']['HP'] + rec['invisible']['HP'];
+				local fCH_M = (rec['visible']['cHM'] + rec['invisible']['cHM']) -
 						  (rec['visible']['cMH'] + rec['invisible']['cMH']);
-			local fHPP  = rec['visible']['HPP'] + rec['invisible']['HPP'];
-			local tHP   = player.HP - fHP - fCH_M;
-			local nHP   = tHP - (tHP x (fHPP * 0.01));
+				local fHPP  = rec['visible']['HPP'] + rec['invisible']['HPP'];
+				local tHP   = player.HP - fHP - fCH_M;
+				local nHP   = tHP - (tHP * (fHPP * 0.01));
 
-			if ((nHP/player.MaxHP) * 100) < 76 and player.TP/10 < 100 then
-				return true;
+				if ((nHP/player.MaxHP) * 100) < 76 and player.TP/10 < 100 then
+					return true;
+				end
 			end
 		end
 	elseif string.find('drake ring,shinobi ring,minstrel\'s ring',sGear) ~= nil then
@@ -2578,14 +2608,19 @@ function fCheckInline(gear,sSlot)
 			bGood = (gcinclude.Gather == string.sub(suCode,4,-1));
 		elseif suCode == 'HORN' then						-- Is the bard's instrument a horn
 			bGood = (gcdisplay.GetCycle('Instrument') == 'Horn');
-		elseif suCode == 'IDLE' then
+			elseif suCode == 'IDLE' then
 			bGood = gcdisplay.GetToggle('Idle');
 		elseif string.find(suCode,'IF:') then
 			bGood = false;		
 			if sSlot ~= 'subset' then
-				local sCur = gData.GetEquipSlot(sSlot);
-				local sItem = string.sub(suCode,4,-1);
-				bGood = (string.lower(sItem) == string.lower(sCur));
+				local tCur = gData.GetEquipment();				
+				if tCur[sSlot] == nil then					-- Data download issue
+					bGood = false;
+				else
+					local sCur = tCur[sSlot].Name;
+					local sItem = string.sub(suCode,4,-1);	
+					bGood = (string.lower(sItem) == string.lower(sCur));
+				end
 			end				
 		elseif string.find(suCode,'LVLDIV') then			-- Player's level divisable by #
 			local iDiv = tonumber(string.sub(suCode,7,-1));
@@ -2616,7 +2651,7 @@ function fCheckInline(gear,sSlot)
 		elseif suCode == 'NOT_UTSUSEMI' then				-- Utsusemi buff is absent
 			bGood = (gcinclude.fBuffed('Copy') == false);
 		elseif suCode == 'NOT_WSWAP' then					-- WSWAP is disabled
-			bGood = (gcinclude.settings.bWSOverride == false or gcdisplay.GetToggle('WSwap') == false);
+			bGood = (gcinclude.settings.bWSOverride == false and gcdisplay.GetToggle('WSwap') == false);
 		elseif string.sub(suCode,1,8) == 'NOT_WTH:' then	-- Does the weather not match
 			bGood = (string.find(string.upper(environ.Weather),string.sub(suCode,9,-1)) == nil);
 		elseif suCode == 'NOT_WTH-DAY' then					-- Weather does not match day's element
@@ -3098,13 +3133,73 @@ function CheckForExceptions(tSet)
 end
 
 --[[
+	fMultiSlotLockCheck determines if the passed item is a multislotted item and
+	whether there's a lock in place that would inhibit the equipping of the
+	item
+--]]
+
+function fMultiSlotLockCheck(sName)
+	local sAffected,sSlot,sMain;
+	local bGood = true;
+	local bMulti = false;
+	local bFound = false;
+	local sAllSlots = nil;
+	
+	if sName == nil then	-- Nothing specified, nothing to check
+		return true,false,nil;
+	end
+
+	-- Walk the list of multi-slotted items
+	for j,k in pairs(gcinclude.multiSlot) do
+		-- if there's a match
+		if string.lower(sName) == string.lower(k['item']) then
+			bFound = true;
+			bMulti = true;
+			sMain = k['slot'];
+			sAllSlots = k['slot'];
+			
+			-- Determine if any of the affected slots are locked
+			sAffected = k['affected'];			
+			while sAffected ~= nil and bGood do
+				iPos = string.find(sAffected,',');
+				if iPos ~= nil then
+					sSlot = string.sub(sAffected,1,iPos-1);
+					sAffected = string.sub(sAffected,iPos+1,-1);
+				else
+					sSlot = sAffected;
+					sAffected = nil;
+				end
+
+				if gcinclude.fIsLocked(sSlot) then
+					bGood = false;
+					break;
+				else
+					sAllSlots = sAllSlots .. ',' .. sSlot;
+				end
+			end
+			-- No need to check further items since we found a match
+			break;
+		end
+	end
+
+	-- Assuming a multislot item was matched and that the affected slots
+	-- are not locked, make sure the main slot the item is equipped into
+	-- is not locked.
+	if bGood and bFound then
+		bGood = not gcinclude.fIsLocked(sMain);
+	end
+	return bGood,bMulti,sAllSlots;
+end		-- fMultiSlotLockCheck
+
+--[[
 	EquipTheGear makes sure that the passed gear set doesn't have an item in a slot
 	that is being blocked by another item (e.g., no head gear if a vermillion cloak
 	is in the body slot.) It the equips the gear set.
 --]]
 
 function gcinclude.EquipTheGear(tSet,bOverride)
-	local sSlot;
+	local sSlot,bGood,bMulti,sSlots;
+	local iPos,sWhich;
 
 	if tSet == nil then
 		return;
@@ -3116,8 +3211,29 @@ function gcinclude.EquipTheGear(tSet,bOverride)
 	
 	-- Then deal with the multislot items
 	for j,k in pairs(gcinclude.multiSlot) do
-		if tSet[k['slot']] ~= nil and string.lower(tSet[k['slot']]) == string.lower(k['item']) then
-			tSet[k['affected']] = '';
+		if tSet[k['slot']] ~= nil and 
+				string.lower(tSet[k['slot']]) == string.lower(k['item']) then
+			bGood,bMulti,sSlots = fMultiSlotLockCheck(k['item']);	
+			if not bGood then
+				tSet[k['slot']] = '';
+			elseif bMulti then
+				-- The list includes the slot the item is equipped to. Remove
+				-- that and null out the affected slots.
+				while sSlots ~= nil do
+					iPos = string.find(sSlots,',');
+					if iPos ~= nil then
+						sWhich = string.sub(sSlots,1,iPos-1);
+						sSlots = string.sub(sSlots,iPos+1,-1);
+					else
+						sWhich = sSlots;
+						sSlots = nil;
+					end				
+					-- Empty the affected slots
+					if sWhich ~= k['slot'] then
+						tSet[sWhich] = '';
+					end
+				end			
+			end
 		end
 	end
 	
@@ -3431,7 +3547,7 @@ function MaxSpell(sSpell,sTarget,bCast)
 					tSpell[j['Tier']] = { ['Name'] = j['Name'], ['SID'] = j['SID'], ['MP'] = j['MP'] };						
 					iMax = iMax +  1;
 				else
-					print(chat.header('MaxSpell'):append(chat.message('FYI: You should be able to cast'.. j['Name'] .. ', but don\'t know it. Skipping')));
+					print(chat.header('MaxSpell'):append(chat.message('FYI: You should be able to cast '.. j['Name'] .. ', but don\'t know it. Skipping')));
 				end
 			end
 		end
@@ -3624,12 +3740,17 @@ function gcinclude.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
 					bGood,gcinclude.tElemental_gear[sWhat][i]['NQ']['Ref'] = 
 						fGearCheckItem(sTarget,gcinclude.tElemental_gear[sWhat][i]['NQ']['Name'],false,false);
 					-- Then determine if there's a staff that matches
-					if gcinclude.tElemental_gear[sWhat][i]['HQ']['Ref']['accessible'] == true then
-						return gcinclude.tElemental_gear[sWhat][i]['HQ']['Name'],i;
-					elseif gcinclude.tElemental_gear[sWhat][i]['NQ']['Ref']['accessible'] == true then
-						return gcinclude.tElemental_gear[sWhat][i]['NQ']['Name'],i;
-					else
+					if gcinclude.tElemental_gear[sWhat][i]['HQ']['Ref'] == nil then
+						print(chat.header('fCheckForElementalGearByValue'):append(chat.message('Ref is nil: ' .. sWhich .. ',' .. sElement)));
 						return nil;
+					else
+						if gcinclude.tElemental_gear[sWhat][i]['HQ']['Ref']['accessible'] == true then
+							return gcinclude.tElemental_gear[sWhat][i]['HQ']['Name'],i;
+						elseif gcinclude.tElemental_gear[sWhat][i]['NQ']['Ref']['accessible'] == true then
+							return gcinclude.tElemental_gear[sWhat][i]['NQ']['Name'],i;
+						else
+							return nil;
+						end
 					end
 				end
 			elseif sWhat == 'obi' or sWhat == 'gorget' then
@@ -3668,8 +3789,9 @@ function gcinclude.fSwapToStave(sStave,noSave,cs)
 	end
 	
 	-- Make sure that auto staves enabled and that locks will not prevent equipping a staff
+	-- Remember: both "main" and "sub" locks will cause a block
 	if gcinclude.settings.bAutoStaveSwapping == false or 
-			gcinclude.fIsLocked('main') == true then
+			(gcinclude.fIsLocked('main') == true or gcinclude.fIsLocked('sub') == true) then
 		return;
 	end
 	
@@ -3721,11 +3843,8 @@ end		-- gcinclude.fSwapToStave
 --]]
 
 function EquipItem(args)
-	local inventory = AshitaCore:GetMemoryManager():GetInventory();
-	local resources = AshitaCore:GetResourceManager();
-	local iName,iSlot,sLocks;
-	local containerID,itemEntry,item;
-	local bCharges,bCD;
+	local iName,iSlot,ref;
+	local bMulti,sSlots,bGood;
 		
 	if #args > 1 then
 		-- see if the item specified is a code	
@@ -3733,7 +3852,6 @@ function EquipItem(args)
 			if string.lower(k) == string.lower(args[2]) then
 				iName = v['Name'];
 				iSlot = v['Slot'];
-				sLocks = v['aSlots'];		
 				break;
 			end
 		end
@@ -3747,25 +3865,46 @@ function EquipItem(args)
 				end
 				iSlot = args[3];
 			else
-				print(chat.header('fEquipIt'):append(chat.message('Error: incomplete /equipit command: /equipit code|name slot. Command ignored.')));
+				print(chat.header('EquipItem'):append(chat.message('Error: incomplete /equipit command: /equipit code|name slot. Command ignored.')));
 				return;
 			end
 		end
-	
-		-- ring and ear need a slot appended to it. Just assume "1"
-		if string.find('ring,ear',string.lower(iSlot)) ~= nil then
-			iSlot = iSlot .. '1';
+
+		-- First check that it's a valid item and it's accessible
+		bGood,ref = fGearCheckItem(iSlot,iName,false,false);
+		if not bGood then
+			print(chat.header('EquipItem'):append(chat.message('Error: ' .. iName .. ' is either invalid, inaccessible, wrong level, or unusable by your job.')));
+			return;
 		end
 		
-		-- Make sure the slot is formatted right (assuming it's just a case issue)
-		iSlot = string.upper(string.sub(iSlot,1,1)) .. string.lower(string.sub(iSlot,2));
-		-- Now try and load the item
-		gFunc.ForceEquip(iSlot,iName);
-		if sLocks ~= nil then
-			LockUnlock('locks','lock',sLocks);
+		-- Now, see if this item is a multislot item. 
+		bGood,bMulti,sSlots = fMultiSlotLockCheck(iName);
+		if not bGood then
+			-- There's a lock blocking the equipping of this item. Let the 
+			-- User know.
+			print(chat.header('EquipItem'):append(chat.message('Unable to equip ' .. iName .. ' due to locks!')));
+			return;
 		else
-			LockUnlock('locks','lock',iSlot);
+			-- If item is not a multislot item, then make sure the item
+			-- slot is set.
+			if sSlots == nil then
+				sSlots = iSlot;
+			end
 		end
+
+		-- ring and ear need a slot appended to it. Just assume "1"
+		if not bMulti and string.find('ring,ear',string.lower(iSlot)) ~= nil then
+			iSlot = iSlot .. '1';
+			sSlots = iSlot;
+		end
+
+		-- Make sure the slot is formatted right (assuming it's just a case issue)
+		-- Note that if the item is multislotted, it is already formatted correctly
+		iSlot = string.upper(string.sub(iSlot,1,1)) .. string.lower(string.sub(iSlot,2));
+				
+		-- Now try and load the item	
+		gFunc.ForceEquip(iSlot,iName);	
+		LockUnlock('locks','lock',sSlots);
 		local sList = fGetLockedList('locks');
 		gcdisplay.SetSlots('locks',gcinclude.LocksNumeric);	
 	else
@@ -4034,7 +4173,7 @@ function gcinclude.HandleCommands(args)
 					-- Crafting set
 					gcinclude.Craft = sArg;
 					gcinclude.MoveToCurrent(gcinclude.sets.Crafting,gcinclude.sets.CurrentGear);					
-				else
+				else			
 					-- Gather set
 					gcinclude.Gather = sArg;
 					gcinclude.MoveToCurrent(gcinclude.sets.Gathering,gcinclude.sets.CurrentGear);
