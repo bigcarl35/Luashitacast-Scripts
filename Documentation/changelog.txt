@@ -1,36 +1,21 @@
-- Removed Attk and Def from display bar.
+- Added check for ['Ref'] being null in fCheckForElementalGearByValue. Added 
+  check for ['visible'] being null in fValidateSpecial.
 
-- Fixed 'Lock' display. Typo caused locks not to display correctly.
+- When checking for a multislot item, all affected slots are checked to make 
+  sure they are not locked. This is true for both normal gear swapping and
+  for /equipit.
 
-- Added location name below minimap.
-
-- You can move display bar or minimap legend and the new position will automatically
-  be saved. When next you load luashitacast, the position(s) will be remembered.
-
-- Changed "idle" to only be recognized by inline conditional //IDLE
-
-- Modified elemental stave table to include some enfeeble spells accidentally
-  omitted.
+- EquipIt now checks the validity of the item to equip, whether you can wear
+  it, and is it accessible.
   
-Version: 1.5
+- SwapToStave now checks both "Main" and "Sub for locks.
+  
+- /gc now updates existing records for elemental staves/gorgets/obis if the
+  record already exists. Previous behavior was an accidental oversight.
+  
+- //NOT_WSWAP wasn't working right, now it is.  //IF: was not working correctly,
+  it works now.
+  
+- Detection of storage slips have been added, but searching is not yet available.
 
-- When Sneak Attack or Trick Attack is used, the DEX/AGI gear set stays equipped 
-  when player is engaged until they hit a target or the buff goes away (expires
-  or is cancelled.)
-  
-- Certain items grant an "enchantment" buff when used. When enabled, the item will 
-  remain equipped until the buff wears out or the item is physically unequipped.
-  
-- Idle has been added to the display bar for all jobs. When enabled, "Default" gear 
-  will be equipped when the player is idling. (This use to be a tank-only option.)
-  Idle behavior has been removed from the //TANK inline conditional.
-  
-- Added inline conditional //NOT_UTSUSEMI
-
-- Changed inline conditional //SO: to //SP:. Now handles both songs and spells.
-
-- Added the following inline conditionals: //EN"spell", //ENANY, //LVL"condition".
-  Removed the following inline conditionals (obsolete): //ACCURACY, //CURE, 
-  //SPELL:
-  
-- Added /ver command to display version of this code and the latest change log.
+- Cleaned up some code, added more information to the gear piece records.
