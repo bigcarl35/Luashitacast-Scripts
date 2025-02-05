@@ -11,6 +11,8 @@ This repository contains my Luashitacast scripts that I have tailored to work on
 	Date:   October 2023
 	Server: HorizonXI (https://horizonxi.com/)
 
+**Please Note: Main** is no longer the current branch. You want to pull from **Karma**.  
+
 ## Supported commands
 
 The following commands are supported by this implementation of luashitacast.
