@@ -515,7 +515,7 @@ gcinclude.tSpell = {
 	are currently commented out.
 --]]
 
-gcinclude.GearWarnings = '';
+gcinclude.GearWarnings = nil;
 gcinclude.TMtest = {
 	['aero'] = {
 		{ ['Name'] = 'Aero', ['Tier'] = 1, ['SID'] = 154, ['MP'] = 6, ['RDM'] = 14, ['DRK'] = 17, ['BLM'] = 9, ['SCH'] = 12, ['GEO'] = 14 },
@@ -932,6 +932,17 @@ gcinclude.EQUIPABLE_NONHOLIDAY = {
 			gcinclude.STORAGES[11]		-- Wardrobe 2
 };
 
+gcinclude.NON_GEAR = {
+			gcinclude.STORAGES[1],		-- Inventory
+			gcinclude.STORAGES[2],		-- Safe
+			gcinclude.STORAGES[3],		-- Storage
+			gcinclude.STORAGES[5],		-- Locker
+			gcinclude.STORAGES[6],		-- Satchel
+			gcinclude.STORAGES[7],		-- Sack
+			gcinclude.STORAGES[8],		-- Case
+			gcinclude.STORAGES[10],		-- Safe 2
+};
+
 -- This is the job masks for gear that can be equipped. I have included all jobs
 -- including those not yet in the game on Horizon XI and the place holder jobs
 -- for future new jobs so that I don't have to keep the complete list around... lol.
@@ -977,6 +988,191 @@ gcinclude.RegionControl = {
 	['Dynamis']			= { ['own'] =  0, ['zones'] = {39,40,41,42,134,135,185,186,187,188}},
 	['Lumoria']			= { ['own'] =  0, ['zones'] = {33,34,35,36,37,38}},
 	['Promyvion']		= { ['own'] =  0, ['zones'] = {16,17,18,19,20,21,22,23,39,40,41,42}}
+};
+
+-- This structure tracks which storage slips you own and where they can be
+-- found. This list is currently restricted to those porter slips that are
+-- viable through ToAU. The storage slip IDs and item IDs were gotten from
+-- Windower4 libs/slips.lua and were checked in the AirSkyBoat source (at
+-- least the slip ids).
+gcinclude.Slips = {
+	[1]  = { 
+			['name'] = 'Storage Slip 01', ['id'] = 29312, 	-- Salvage,Nyzul,Einherjar,Assault
+			['location'] = nil,
+			['items'] = {
+			    16084,14546,14961,15625,15711,16085,14547,14962,15626,15712,16086, 
+				14548,14963,15627,15713,16087,14549,14964,15628,15714,16088,14550,
+				14965,15629,15715,16089,14551,14966,15630,15716,16090,14552,14967,
+				15631,15717,16091,14553,14968,15632,15718,16092,14554,14969,15633,
+				15719,16093,14555,14970,15634,15720,16094,14556,14971,15635,15721,
+				16095,14557,14972,15636,15722,16096,14558,14973,15637,15723,16097,
+				14559,14974,15638,15724,16098,14560,14975,15639,15725,16099,14561,
+				14976,15640,15726,16100,14562,14977,15641,15727,16101,14563,14978,
+				15642,15728,16102,14564,14979,15643,15729,16103,14565,14980,15644,
+				15730,16106,14568,14983,15647,15733,16107,14569,14984,15648,15734,
+				16108,14570,14985,15649,15735,16602,17741,18425,18491,18588,18717,
+				18718,18850,18943,16069,14530,14940,15609,15695,16062,14525,14933,
+				15604,15688,16064,14527,14935,15606,15690,18685,18065,17851,18686,
+				18025,18435,18113,17951,17715,18485,18408,18365,18583,18417,18388, 
+				16267,16268,16269,16228,16229,15911,15799,15800,15990,17745,18121,
+				16117,14577,17857 }, -- 168 items
+			['own'] = false, ['extra'] = nil },
+	[2]  = { 
+			['name'] = 'Storage Slip 02', ['id'] = 29313,	-- 73-75 Abjuratory,Tu'lia,Lumoria,Limbus,Unity Leader Shirts
+			['location'] = nil,
+			['items'] = { 
+				12421,12549,12677,12805,12933,13911,14370,14061,14283,14163,12429,
+				12557,12685,12813,12941,13924,14371,14816,14296,14175,13934,14387,
+				14821,14303,14184,13935,14388,14822,14304,14185,13876,13787,14006,
+				14247,14123,13877,13788,14007,14248,14124,13908,14367,14058,14280,
+				14160,13909,14368,14059,14281,14161,16113,14573,14995,15655,15740,
+				16115,14575,14997,15657,15742,16114,14574,14996,15656,15741,16116,
+				14576,14998,15658,15743,12818,18198,12946,18043,12690,17659,12296,
+				12434,15471,15472,15473,15508,15509,15510,15511,15512,15513,15514,
+				17710,17595,18397,18360,18222,17948,18100,15475,15476,15477,15488,
+				15961,14815,14812,14813,15244,15240,14488,14905,15576,15661,15241,
+				14489,14906,15577,15662,13927,14378,14076,14308,14180,13928,14379,
+				14077,14309,14181,10438,10276,10320,10326,10367,10439,10277,10321,
+				10327,10368,10440,10278,10322,10328,10369,10441,10279,10323,10329,
+				10370,25734,25735,25736,25737,25738,25739,25740,25741,25742,25743,
+				25744 },	-- 155 items
+			['own'] = false, ['extra'] = nil },
+	[3]  = { 
+			['name'] = 'Storage Slip 03', ['id'] = 29314,	-- Zeni,Campaign,Void Watch,Twilight,Vorac. Resurg. Rewards
+			['location'] = nil,			
+			['items'] = { 
+			    16155,11282,15021,16341,11376,16156,11283,15022,16342,11377,16157,
+				11284,15023,16343,11378,16148,14590,15011,16317,15757,16143,14591,
+				15012,16318,15758,16146,14588,15009,16315,15755,16147,14589,15010,
+				16316,15756,15966,15967,19041,17684,17685,11636,15844,15934,16258,
+				18735,18734,16291,16292,19042,15935,16293,16294,15936,18618,11588,
+				11545,16158,16159,16160,16149,14583,15007,16314,15751,16141,14581,
+				15005,16312,15749,16142,14582,15006,16313,15750,10876,10450,10500,
+				11969,10600,10877,10451,10501,11970,10601,10878,10452,10502,11971,
+				10602,19132,18551,11798,11362,11363,11625,15959,16259,22299,26414,
+				21623,26219,21886,23792,23793,23794,23795,23796,22032,22043 }, -- 109 items
+			 ['own'] = false, ['extra'] = nil },
+	[4]  = { 
+			 ['name'] = 'Storage Slip 04', ['id'] = 29315,	-- AF
+			 ['location'] = nil,
+			 ['items'] = { 
+				12511,12638,13961,14214,14089,12512,12639,13962,14215,14090,13855,
+				12640,13963,14216,14091,13856,12641,13964,14217,14092,12513,12642,
+				13965,14218,14093,12514,12643,13966,14219,14094,12515,12644,13967,
+				14220,14095,12516,12645,13968,14221,14096,12517,12646,13969,14222,
+				14097,13857,12647,13970,14223,14098,12518,12648,13971,14099,14224,
+				13868,13781,13972,14225,14100,13869,13782,13973,14226,14101,12519,
+				12649,13974,14227,14102,12520,12650,13975,14228,14103,15265,14521,
+				14928,15600,15684,15266,14522,14929,15601,15685,15267,14523,14930,
+				15602,15686,16138,14578,15002,15659,15746,16139,14579,15003,15660,
+				15747,16140,14580,15004,16311,15748,16678,17478,17422,17423,16829,
+				16764,17643,16798,16680,16766,17188,17812,17771,17772,16887,17532,
+				17717,18702,17858,19203,21461,21124,20776,27786,27926,28066,28206,
+				28346,27787,27927,28067,28207,28347 }, -- 138 items
+			 ['own'] = false, ['extra'] = nil },
+	[5]  = { 
+			 ['name'] = 'Storage Slip 05', ['id'] = 29316, 	-- AF+1
+			 ['location'] = nil,
+			 ['items'] = { 
+			    15225,14473,14890,15561,15352,15226,14474,14891,15562,15353,15227,
+				14475,14892,15563,15354,15228,14476,14893,15564,15355,15229,14477,
+				14894,15565,15356,15230,14478,14895,15566,15357,15231,14479,14896,
+				15567,15358,15232,14480,14897,15568,15359,15233,14481,14898,15569,
+				15360,15234,14482,14899,15570,15361,15235,14483,14900,15362,15571,
+				15236,14484,14901,15572,15363,15237,14485,14902,15573,15364,15238,
+				14486,14903,15574,15365,15239,14487,14904,15575,15366,11464,11291,
+				15024,16345,11381,11467,11294,15027,16348,11384,11470,11297,15030,
+				16351,11387,11475,11302,15035,16357,11393,11476,11303,15036,16358,
+				11394,11477,11304,15037,16359,11395}, -- 105 items
+			 ['own'] = false, ['extra'] = nil },
+	[6]  = { 
+			 ['name'] = 'Storage Slip 06', ['id'] = 29317, 	-- Relic
+			 ['location'] = nil,
+			 ['items'] = { 
+				15072,15087,15102,15117,15132,15871,15073,15088,15103,15118,15133,
+				15478,15074,15089,15104,15119,15134,15872,15075,15090,15105,15120,
+				15135,15874,15076,15091,15106,15121,15136,15873,15077,15092,15107,
+				15122,15137,15480,15078,15093,15108,15123,15138,15481,15079,15094,
+				15109,15124,15139,15479,15080,15095,15110,15125,15140,15875,15081,
+				15096,15111,15126,15141,15482,15082,15097,15112,15127,15142,15876,
+				15083,15098,15113,15128,15143,15879,15084,15099,15114,15129,15144,
+				15877,15085,15100,15115,15130,15145,15878,15086,15101,15116,15131,
+				15146,15484,11465,11292,15025,16346,11382,16244,11468,11295,15028,
+				16349,11385,15920,11471,11298,15031,16352,11388,16245,11478,11305,
+				15038,16360,11396,16248,11480,11307,15040,16362,11398,15925}, -- 120 items			 
+			 ['own'] = false, ['extra'] = nil },
+	[7]  = { 
+			 ['name'] = 'Storage Slip 07', ['id'] = 29318, 	-- Relic+1
+			 ['location'] = nil,
+			 ['items'] = {
+				15245,14500,14909,15580,15665,15246,14501,14910,15581,15666,15247,
+				14502,14911,15582,15667,15248,14503,14912,15583,15668,15249,14504,
+				14913,15584,15669,15250,14505,14914,15585,15670,15251,14506,14915,
+				15586,15671,15252,14507,14916,15587,15672,15253,14508,14917,15588,
+				15673,15254,14509,14918,15589,15674,15255,14510,14919,15590,15675,
+				15256,14511,14920,15591,15676,15257,14512,14921,15592,15677,15258,
+				14513,14922,15593,15678,15259,14514,14923,15594,15679,11466,11293,
+				15026,16347,11383,11469,11296,15029,16350,11386,11472,11299,15032,
+				16353,11389,11479,11306,15039,16361,11397,11481,11308,15041,16363,
+				11399}, -- 100 items
+			 ['own'] = false, ['extra'] = nil },
+	[8]  = { 
+			 ['name'] = 'Storage Slip 11', ['id'] = 29322, 	-- Scenario Rewards,Events
+			 ['location'] = nil,
+			 ['items'] = {
+				15297,15298,15299,15919,15929,15921,18871,16273,18166,18167,18256,
+				13216,13217,13218,15455,15456,181,182,183,184,129,11499,18502,
+				18855,19274,18763,19110,15008,17764,19101,365,366,367,15860,272,
+				273,274,275,276,11853,11956,11854,11957,11811,11812,11861,11862,
+				3676,18879,3647,3648,3649,3677,18880,18863,18864,15178,14519,
+				10382,11965,11967,15752,15179,14520,10383,11966,11968,15753,10875,
+				3619,3620,3621,3650,3652,10430,10251,10593,10431,10252,10594,
+				10432,10253,10595,10433,10254,10596,10429,10250,17031,17032,10807,
+				18881,10256,10330,10257,10331,10258,10332,10259,10333,10260,10334, 
+				10261,10335,10262,10336,10263,10337,10264,10338,10265,10339,10266,
+				10340,10267,10341,10268,10342,10269,10343,10270,10344,10271,10345,
+				10446,10447,426,10808,3654,265,266,267,269,270,271,18464,18545,
+				18563,18912,18913,10293,10809,10810,10811,10812,27803,28086,27804,
+				28087,27805,28088,27806,28089,27765,27911,27760,27906,27759,28661,
+				286,27757,27758,287,27899,28185,28324,27898,28655,27756,28511,
+				21118,27902,100,21117,87,20953,21280,28652,28650,27726,28509,
+				28651,27727,28510,27872,21113,27873,21114,20532,20533,27717,27718 }, -- 192 items
+			 ['own'] = false, ['extra'] = nil },
+	[9]  = { 
+			 ['name'] = 'Storage Slip 12', ['id'] = 29323,	-- Relic-1
+			 ['location'] = nil,
+			 ['items'] = {
+				2033,2034,2035,2036,2037,2038,2039,2040,2041,2042,2043,2044,2045,
+				2046,2047,2048,2049,2050,2051,2052,2053,2054,2055,2056,2057,2058,
+				2059,2060,2061,2062,2063,2064,2065,2066,2067,2068,2069,2070,2071,
+				2072,2073,2074,2075,2076,2077,2078,2079,2080,2081,2082,2083,2084,
+				2085,2086,2087,2088,2089,2090,2091,2092,2093,2094,2095,2096,2097,
+				2098,2099,2100,2101,2102,2103,2104,2105,2106,2107,2662,2663,2664,
+				2665,2666,2667,2668,2669,2670,2671,2672,2673,2674,2675,2676,2718,
+				2719,2720,2721,2722,2723,2724,2725,2726,2727}, -- 100 items
+			 ['own'] = false, ['extra'] = nil },
+--	['name'] = 'Storage Slip 08'	-- Empyrean
+--	['name'] = 'Storage Slip 09'	-- Empyrean+1
+--	['name'] = 'Storage Slip 10'	-- Empyrean+2
+--	['name'] = 'Storage Slip 13'	-- Relic+2 if augmented
+--	['name'] = 'Storage Slip 14'	-- 99 Nyzul,Einherjar,Salvage,Domain
+--	['name'] = 'Storage Slip 15'	-- Reforged AF
+--	['name'] = 'Storage Slip 16'	-- Reforged AF+1
+--	['name'] = 'Storage Slip 17'	-- Reforged Relic
+--	['name'] = 'Storage Slip 18'	-- Reforged Relic+1
+--	['name'] = 'Storage Slip 19'	-- Scenario Rewards II, Events
+--	['name'] = 'Storage Slip 20'	-- Reforged Empyrean
+--	['name'] = 'Storage Slip 21'	-- Reforged Empyrean+1
+--	['name'] = 'Storage Slip 22'	-- Scenario Rewards III, Events
+--	['name'] = 'Storage Slip 23'	-- Ambuscade Equipment
+--	['name'] = 'Storage Slip 24'	-- Reforged AF+2
+--	['name'] = 'Storage Slip 25'	-- Reforged AF+3
+--	['name'] = 'Storage Slip 26'	-- Reforged Relic+2
+--	['name'] = 'Storage Slip 27'	-- Reforged Relic+3
+--	['name'] = 'Storage Slip 28'	-- Ambuscade Weapons/Equipment
+--	['name'] = 'Storage Slip 29'	-- Reforged Empyrean+2
+--	['name'] = 'Storage Slip 30',	-- Reforged Empyrean+3
+--	['name'] = 'Storage Slip 31'	-- Scenario Rewards IV, Events
 };
 
 -- This structure will be dynamically populated by the GearCheck function.
@@ -1099,8 +1295,9 @@ function gcinclude.StartReminder()
 end
 
 --[[
-	fSummonerPet determines if the player has a SMN summoned pet. Returned is true
-	or false
+	fSummonerPet determines if the player has a SMN summoned pet. 
+	
+	Returned: True/False
 --]]
 
 function gcinclude.fSummonerPet()
@@ -1143,6 +1340,7 @@ end		-- RegionDisplay
 
 function DB_ShowIt()
 	local player = gData.GetPlayer();
+	local sSlip = fDisplaySlips(false);
 	
 	print(chat.message(' '));
 	print(chat.message('Settings'));
@@ -1153,6 +1351,11 @@ function DB_ShowIt()
 	print(chat.message('WScheck: ' .. tostring(gcinclude.settings.WScheck)));
 	print(chat.message('WSdistance: ' .. tostring(gcinclude.settings.WSdistance)));
 	print(chat.message('bWSOverride: ' .. tostring(gcinclude.settings.bWSOverride)));
+	if sSlip == nil then
+		print(chat.message('Slips: None'));
+	else
+		print(chat.message('Slips: ' .. sSlip));
+	end
 	print(chat.message(' '));
 	GearCheckList();
 end		-- DB_ShowIt
@@ -1190,6 +1393,8 @@ end		-- ClearAlias
 --[[
 	fIsLocked determines if the passed slot is locked. Please note that only slot
 	names are supported. Slot numbers will cause an error
+	
+	Returned: T/F
 --]]
 
 function gcinclude.fIsLocked(val)
@@ -1243,6 +1448,8 @@ end		-- fLockSlotsBySet
 
 --[[
 	fGetLockedList returns a comma delimited list or nil if all unlocked
+	
+	Returned: List of locked slots
 --]]
 
 function fGetLockedList(sTarget)
@@ -1321,8 +1528,9 @@ end		-- LockUnlock
 
 --[[
 	fElementByPetName determines what element is associated with the currently
-	summoned avatar/spirit and returns it. If the pet is unknown or from another
-	job, nil is returned
+	summoned avatar/spirit and returns it.
+	
+	Returned: element of current pet or nil
 --]]
 
 function fElementByPetName(pName)
@@ -1350,6 +1558,8 @@ end		-- fElementByPetName
 --[[
 	fCheckForEleGear determines if the player has the piece of elemental gear 
 	indicated by type and if it is accessible
+	
+	Returned: reference to the piece of gear	
 --]]
 
 function gcinclude.fCheckForEleGear(sType,sElement)
@@ -1494,6 +1704,98 @@ function SetVariables()
 end		-- SetVariables
 
 --[[
+	fDisplaySlips shows which storage slips the player owns. The passed in 
+	parameter indicates if just a list of slips are wanted or a detail of
+	which slips and where they can be found are wanted.
+
+	Returned: List of slips or nil	
+--]]
+
+function fDisplaySlips(bList)
+	local sOut = nil;
+	
+	if bList == nil then
+		bList = false;
+	end
+	
+	for i,j in ipairs(gcinclude.Slips) do
+		if j['own'] == true then
+			if bList then
+				print(j['name'] .. ' - ' .. j['location']['name']);
+			else
+				if sOut == nil then
+					sOut = string.sub(j['name'],-2,-1);
+				else
+					sOut = sOut .. ',' .. string.sub(j['name'],-2,-1);
+				end
+			end
+		end
+	end
+	return sOut;
+end		-- fDisplaySlips
+
+--[[
+	fWhichSlip determines which storage slip is being asked for by checking the
+	known list of storage slip names.
+
+	Returned: Slip name	
+--]]
+
+function fWhichSlip(sId)
+	local iWhich = nil;
+	
+	if sId ~= nil then
+		for i,j in pairs(gcinclude.Slips) do
+			if string.find(j['name'],sId) ~= nil then 
+				iWhich = i;
+				break;
+			end				
+		end
+	end
+	return iWhich;	
+end		-- fWhichSlip
+
+--[[
+	FindSlips determines what storage slips the player owns and where they are 
+	located. 
+--]]
+
+function FindSlips()
+	local inventory = AshitaCore:GetMemoryManager():GetInventory();
+	local resources = AshitaCore:GetResourceManager();
+	local containerID,id;
+
+	-- First, reset the Slips structure
+	for i,j in ipairs(gcinclude.Slips) do
+		j['own'] = false;
+		j['location'] = nil;
+		j['extra'] = nil;
+	end
+	
+	-- Now search for storage slips
+	for i,desc in pairs(gcinclude.NON_GEAR) do
+		containerID = desc['id'];
+		-- then loop through the container
+		for j = 1,inventory:GetContainerCountMax(containerID),1 do
+			itemEntry = inventory:GetContainerItem(containerID, j);
+			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
+				item = resources:GetItemById(itemEntry.Id);
+				if string.find(string.lower(item.Name[1]),'storage slip') ~= nil then			
+					id = fWhichSlip(string.sub(item.Name[1],-2,-1));
+					if id ~= nil then
+						gcinclude.Slips[id]['own'] = true;
+						gcinclude.Slips[id]['location'] = desc;
+						gcinclude.Slips[id]['extra'] = itemEntry.Extra;
+					else
+						print(chat.header('FindSlips'):append('Unrecognized storage slip found: ' .. item.Name[1] .. '. Skipping'));
+					end
+				end
+			end
+		end
+	end
+end		-- FindSlips
+
+--[[
 	fGearCheckItem process the specific item sent to it and where appropriate, populates
 	gcinclude.GearDetails. The details tracked are: item name, item level, can equip?, 
 	and accessibility. Returned is a true/false which indicates that the item's level,
@@ -1504,6 +1806,8 @@ end		-- SetVariables
 		sName   - Name of the item to check
 		bAccess - True = return accessibility, False = check job, access, and level
 		bForce  - Force an update of the gearDetail record
+
+	Returned: Accessibility,gear reference		
 --]]
 
 function fGearCheckItem(sSlot,sName,bAccess,bForce)
@@ -1550,10 +1854,9 @@ function fGearCheckItem(sSlot,sName,bAccess,bForce)
 		sName = string.sub(sName,1,iPos-1);
 	end	
 
-
 	-- See if item already registered
 	if gcinclude.GearDetails[sSlot][sName] == nil or 
-		gcinclude.GearDetails[sSlot]['num'] == nil or 
+		gcinclude.GearDetails[sSlot]['num'] == 0 or 
 		bForce == true then
 		-- Now process the item
 		item = AshitaCore:GetResourceManager():GetItemByName(sName,2);
@@ -1568,9 +1871,9 @@ function fGearCheckItem(sSlot,sName,bAccess,bForce)
 			gcinclude.GearDetails[sSlot][sName] = { 
 				['level']	   = item.Level,
 				['job']        = bJob, 
-				--['own']		   = true, -- should be bOwn
+				--['own']		   = true, -- bOwn
 				['accessible'] = bAccessible, 
-				--['porter']	   = false, -- should be bPorter
+				--['porter']	   = false, -- bPorter
 				['desc'] 	   = item.Description[1]
 			};
 			-- Bump counter
@@ -1613,7 +1916,12 @@ function GearCheck(sList,bForce)
 	end
 
 	if sList == nil then
-		-- Loop the two files
+		-- start with storage slips
+		print(chat.header('GearCheck'):append(chat.message('Starting to scan for storage slips')));
+		FindSlips();
+		print(chat.message('Found slips: ' .. fDisplaySlips(false)));
+		
+		-- now loop through the job file and gcinclude
 		for s,t in pairs(tTarget) do
 			if t == gProfile.Sets then
 				print(chat.header('GearCheck'):append(chat.message('Starting to scan the Job file')));
@@ -1740,6 +2048,8 @@ end		-- GearCheckList
 
 --[[
 	fIsPetNamed determines if that passed pet has the passed name
+	
+	Returned: T/F
 --]]
 
 function fIsPetNamed(sName)
@@ -1764,6 +2074,8 @@ end		-- fIsPetNamed
 	fCheckPartyJob determines if the party has a member of the passed job.
 	You can optionally state to not include yourself. By default, you're
 	always listed in the first slot of the party.
+
+	Returned: T/F	
 --]]
 
 function fCheckPartyJob(jobs,bNotMe)
@@ -1797,6 +2109,8 @@ end		-- fCheckPartyJob
 		Nighttime is 17:00 to 6:00, Daytime is 6:00 to 18:00, DUSK2DAWN: 17:00 to 7:00,
 		Dawn: 6:00 to 7:00, Day: 7:00 to 17:00, Dusk: 17:00 to 18:00, Evening: 18:00 to 20:00, 
 		DEADOFNIGHT: 20:00 to 4:00.
+
+	Returned: T/F
 --]]
 
 function gcinclude.CheckTime(hr,t,bReport)
@@ -1841,6 +2155,8 @@ end		-- gcinclude.ClearSet
 
 --[[
 	fMagicSubJob determines if the sub job can do magic
+
+	Returned: T/F	
 --]]
 
 function gcinclude.fMagicalSubJob()
@@ -1854,6 +2170,8 @@ end		-- gcinclude.fMagicalSubJob
 	fTallyGear tallies up all the MP and HP manipulations on the gear
 	currently equipped (and the passed gear, minus what is already in
 	that slot), both visible and invisible slots so that 
+
+	Returned: T/F/nil	
 --]]
 
 function fTallyGear(sGear,sSlot)
@@ -1948,7 +2266,9 @@ end
 	fParseDescriptionExceptions processes the descriptions for gear 
 	that requires special processing. It could have been included in
  	fParseDescription, but was extracted so that function would not 
-	be too long. Returned is the appropriate record.
+	be too long.
+	
+	Returned: T/F, item reference	
 --]]
 
 function fParseDescriptionExceptions(rec,sGear,sDesc)
@@ -2065,6 +2385,7 @@ end
 	like besieged, campaign, salvage, assault, etc. Will address as 
 	expansions are released on Horizon XI
 	
+	Returned: tallied structure	
 --]]
 
 function fParseDescription(item,sDesc)
@@ -2188,6 +2509,8 @@ end
 --[[
 	fMakeCodeTable takes the passed, // delimited list and returns the
 	individual codes in a table
+	
+	Returned: code table
 --]]
 
 function fMakeCodeTable(sList)
@@ -2210,6 +2533,8 @@ end		-- fMakeCodeTable
 --[[
 	fValidInlineDynamicCode checks that the formatting of the dynamic code is correct.
 	Returned is True or False and the individual pieces
+
+	Returned: T/F	
 --]]
 
 function fValidInlineDynamicCode(suCode)
@@ -2238,6 +2563,8 @@ end		-- fValidInlineCode
 
 --[[
 	fEvalComparison builds the comparison check and then evaluates it
+
+	Returned: T/F	
 --]]
 
 function fEvalComparison(sOperator,ival,iP)
@@ -2262,6 +2589,8 @@ end		-- fEvalComparison
 --[[
 	fEvalCodedComparison parses the passed conditional and determines the appropriate
 	value to compare. Returned is true or not.
+	
+	Returned: T/F
 --]]
 
 function fEvalCodedComparison(sRoot,sOperator,ival)
@@ -2295,6 +2624,8 @@ end		-- fEvalCodedComparison
 --[[
 	fValidSpecial sees if the passed gear's settings are valid. Returned is True
 	or False.
+	
+	Returned: T/F	
 --]]
 
 function fValidateSpecial(sSlot,sGear)
@@ -2384,6 +2715,8 @@ end		-- fValidateSpecial
 --[[
 	fBuffed determines if the player has the buff/debuff or not. Returned is True/False.
 	The passed buff name can be a substring, but that can also lead to miss identifications.
+
+	Returned: T/F
 --]]
 
 function gcinclude.fBuffed(test,bStart)
@@ -2417,6 +2750,8 @@ end
 	if the item only has to be found once before returning a result.
 	
 	Please note: currently searching storage slips are not supported
+	
+	Returned: T/F	
 --]]
 
 function fCheckItemOwned(sGear,bAccessible,bOnce)
@@ -2425,6 +2760,11 @@ function fCheckItemOwned(sGear,bAccessible,bOnce)
 	local containerID,itemEntry,item;
 	local bFound = false;
 	local tStorage = {};
+	local tOwned = {
+		['own'] = false, ['accessible'] = false, 
+		['porter'] = false, ['claim'] = false,
+		['count'] = 0, ['locations'] = nil
+	};
 	
 	-- Make sure a piece of gear specified
 	if sGear == nil then
@@ -2467,6 +2807,8 @@ end		-- fCheckItemOwned
 	fCheckAccuracySlots determines if the passed slot is one of the designated
 	accuracy slots. Please note if the slot is named "ears" or "rings" both
 	associated slots will be checked.
+
+	Returned: T/F	
 --]]
 
 function fCheckAccuracySlots(sSlot)
@@ -2484,7 +2826,8 @@ end		-- fCheckAccuracySlots
 
 --[[
 	fBardSongType determines if bard song being cast is of the type being passed.
-	Returned is true or false
+
+	Returned: T/F
 --]]
 
 function fBardSongType(sType)
@@ -2512,6 +2855,7 @@ function fBardSongType(sType)
 			end			
 		end
 	end
+	return bGood;
 end		-- fBardSongType
 
 --[[
@@ -2521,6 +2865,8 @@ end		-- fBardSongType
 
 	If the slot name is 'subset', then any checks that are on the slot will 
 	be ignored and the result passed back will be false
+	
+	Returned: T/F,gear name	
 --]]
 
 function fCheckInline(gear,sSlot)
@@ -2861,7 +3207,10 @@ function RegionControlDisplay()
 end		-- RegionControlDisplay
 
 function gcinclude.t1()
-	print('T1 has no routine atm.');
+	--FindSlips();
+	print('Slips: ' .. fDisplaySlips(false));
+	print(' ');
+	fDisplaySlips(true);
 	
 --[[
 	local pEntity = AshitaCore:GetMemoryManager():GetEntity();
@@ -3120,14 +3469,7 @@ function CheckForExceptions(tSet)
 		
 		if sList ~= nil then
 			msg = 'Because of enchantment, the following must be equipped: ' .. sList;
-			if string.find(gcinclude.GearWarnings,msg) == nil then
-				print(chat.message(msg));
-				if gcinclude.GearWarnings == '' then
-					gcinclude.GearWarnings = msg;
-				else
-					gcinclude.GearWarnings = gcinclude.GearWarnings .. ',' .. msg;
-				end
-			end
+			fDisplayOnce(msg);
 		end
 	end	
 end
@@ -3136,6 +3478,8 @@ end
 	fMultiSlotLockCheck determines if the passed item is a multislotted item and
 	whether there's a lock in place that would inhibit the equipping of the
 	item
+
+	Returned: good?,multi-slot?,list of slots
 --]]
 
 function fMultiSlotLockCheck(sName)
@@ -3302,6 +3646,8 @@ end		-- gcinclude.CheckLockAccCollision
 	getPairedAccuracySlotValues returns whether the ear slots or ring slots have been
 	designated for accuracy gear. This is needed to determine if both associated slots
 	need to be populated or just one of the slots.
+	
+	Returned: slot1?,slot2?
 --]]
 
 function getPairedAccuracySlotValues(sSlot)
@@ -3692,6 +4038,8 @@ end		-- MaxSong
 	sWhat		type of elemental gear to check: staff,obi,gorget
 	sWhich		which associated list to check: Affinity,Summons,MEacc,eleWS
 	sElement	the key to match in the appropriate list
+	
+	returns: Record of the item,element
 --]]
 
 function gcinclude.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
@@ -3699,11 +4047,11 @@ function gcinclude.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
 	local sRoot,bGood,sTarget;
 
 	-- Make sure locks won't block equipping the item
-	if sWhat == 'staff' and (gcinclude.fIsLocked('main') == true or gcinclude.fIsLocked('sub') == true) then
+	if sWhat == 'staff' and (gcinclude.fIsLocked('main') or gcinclude.fIsLocked('sub')) then -- staff
 		return nil,nil;
-	elseif sWhat == 'obi' and gcinclude.fIsLocked('waist') == true then
+	elseif sWhat == 'obi' and gcinclude.fIsLocked('waist') then -- obi
 		return nil,nil;
-	elseif gcinclude.fIsLocked('neck') == true then -- gorget
+	elseif gcinclude.fIsLocked('neck') then -- gorget
 		return nil,nil;
 	end
 		
@@ -3739,18 +4087,15 @@ function gcinclude.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
 						fGearCheckItem(sTarget,gcinclude.tElemental_gear[sWhat][i]['HQ']['Name'],false,false);
 					bGood,gcinclude.tElemental_gear[sWhat][i]['NQ']['Ref'] = 
 						fGearCheckItem(sTarget,gcinclude.tElemental_gear[sWhat][i]['NQ']['Name'],false,false);
-					-- Then determine if there's a staff that matches
-					if gcinclude.tElemental_gear[sWhat][i]['HQ']['Ref'] == nil then
-						print(chat.header('fCheckForElementalGearByValue'):append(chat.message('Ref is nil: ' .. sWhich .. ',' .. sElement)));
-						return nil;
+					-- Make sure ref in place before checking accessibility
+					if gcinclude.tElemental_gear[sWhat][i]['HQ']['Ref'] ~= nil and 
+					   gcinclude.tElemental_gear[sWhat][i]['HQ']['Ref']['accessible'] == true then
+						return gcinclude.tElemental_gear[sWhat][i]['HQ']['Name'],i;
+					elseif gcinclude.tElemental_gear[sWhat][i]['NQ']['Ref'] ~= nil and 
+					   gcinclude.tElemental_gear[sWhat][i]['NQ']['Ref']['accessible'] == true then
+						return gcinclude.tElemental_gear[sWhat][i]['NQ']['Name'],i;
 					else
-						if gcinclude.tElemental_gear[sWhat][i]['HQ']['Ref']['accessible'] == true then
-							return gcinclude.tElemental_gear[sWhat][i]['HQ']['Name'],i;
-						elseif gcinclude.tElemental_gear[sWhat][i]['NQ']['Ref']['accessible'] == true then
-							return gcinclude.tElemental_gear[sWhat][i]['NQ']['Name'],i;
-						else
-							return nil;
-						end
+						return nil;
 					end
 				end
 			elseif sWhat == 'obi' or sWhat == 'gorget' then
@@ -3772,6 +4117,27 @@ function gcinclude.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
 end		-- fCheckForElementalGearByValue
 
 --[[
+	fDisplayOnce will display the passed message if it hasn't been displayed
+	before. If it has been displayed, the message isn't repeated.
+--]]
+
+function fDisplayOnce(msg)
+
+	if msg == nil then
+		return;
+	end
+
+	if gcinclude.GearWarnings == nil or string.find(gcinclude.GearWarnings,msg) == nil then
+		print(chat.message(msg));
+		if gcinclude.GearWarnings == nil then
+			gcinclude.GearWarnings = msg;
+		else
+			gcinclude.GearWarnings = gcinclude.GearWarnings .. ',' .. msg;
+		end
+	end
+end		-- fDisplayOnce
+
+--[[
 	fSwapToStave determines if swapping your weapon out for one of the elemental staves makes
 	sense and does it for you while remembering what weapon/offhand you had equipped.
 --]]
@@ -3779,6 +4145,7 @@ end		-- fCheckForElementalGearByValue
 function gcinclude.fSwapToStave(sStave,noSave,cs)
 	local ew = gData.GetEquipment();
 	local player = gData.GetPlayer();
+	local msg = nil;
 	local sGear;
 	local eWeap = nil;
 	local eOff = nil;
@@ -3790,8 +4157,15 @@ function gcinclude.fSwapToStave(sStave,noSave,cs)
 	
 	-- Make sure that auto staves enabled and that locks will not prevent equipping a staff
 	-- Remember: both "main" and "sub" locks will cause a block
-	if gcinclude.settings.bAutoStaveSwapping == false or 
-			(gcinclude.fIsLocked('main') == true or gcinclude.fIsLocked('sub') == true) then
+	if gcinclude.settings.bAutoStaveSwapping == false then
+		msg = 'due to auto-swapping turned off!';
+	elseif gcinclude.fIsLocked('main') == true or gcinclude.fIsLocked('sub') == true then
+		msg = 'due to lock(s)!'
+	end
+	
+	if msg ~= nil then
+		msg = 'Warning: Unable to swap to a ' .. sStave .. ' ' .. msg;
+		fDisplayOnce(msg);
 		return;
 	end
 	
@@ -3804,7 +4178,7 @@ function gcinclude.fSwapToStave(sStave,noSave,cs)
 		eOff = ew['Sub'].Name;
 	end;
 
-	if (gcdisplay.GetToggle('WSwap') == true or gcinclude.settings.bWSOverride == true) then	
+	if (gcdisplay.GetToggle('WSwap') or gcinclude.settings.bWSOverride) then	
 		-- See if a current weapon is the one of the targetted staves
 		if not (eWeap == nil or (eWeap ~= nil and string.lower(eWeap) == string.lower(sStave))) then
 			-- save the weapon so it can be equipped again
@@ -3813,23 +4187,13 @@ function gcinclude.fSwapToStave(sStave,noSave,cs)
 				gcinclude.offhand = eOff;
 			end
 		end
-		
-		if sStave ~= nil then
-			-- Check versus level of player.
-			if player.MainJobSync >= gcinclude.tElemental_gear['staff']['level'] or
-				gcinclude.fIsLocked('main')	== true then
-				cs['Main'] = sStave;
-			else
-				local msg = 'Warning: Unable to swap to a ' .. sStave .. ' due to level or locks!';
-				if string.find(gcinclude.GearWarnings,msg) == nil then
-					print(chat.message(msg));
-					if gcinclude.GearWarnings == '' then
-						gcinclude.GearWarnings = msg;
-					else
-						gcinclude.GearWarnings = gcinclude.GearWarnings .. ',' .. msg;
-					end
-				end
-			end
+
+		-- Check versus level of player.
+		if player.MainJobSync >= gcinclude.tElemental_gear['staff']['level'] then
+			cs['Main'] = sStave;
+		else
+			msg = 'Warning: Unable to swap to a ' .. sStave .. ' due to level!';
+			fDisplayOnce(msg);
 		end
 	end
 end		-- gcinclude.fSwapToStave
@@ -3919,6 +4283,8 @@ end		-- EquipItem
 --[[
 	fGetTableByName returns the gear set that is associated with the set name passed to it.
 	It does this by walking the Sets (either gProfile.Sets or gcinclude.Sets)
+	
+	Returned: gearset/nil
 --]]
 
 function fGetTableByName(sName)
@@ -3954,6 +4320,8 @@ end		-- fGetTableByName
 	fWhichAccuracySet searches the player's AccuracySet for the named set and
 	returns the associated slots. If not found, an error message is displayed
 	and nil is returned.
+	
+	Returned: accuracy set name/nil
 --]]
 
 function fWhichAccuracySet(sId)
@@ -4219,6 +4587,8 @@ end		-- gcinclude.HandleCommands
 
 --[[
 	This function returns the weak element to the passed in element.
+	
+	Returned: element passed element is weak to
 --]]
 
 function fEleWeak(ele)
@@ -4296,6 +4666,8 @@ end		-- fCheckObiDW
 	
 	An optional parameter, bVersion, indicates if only the version should be cut off. (i.e., remove
 	the I, II, III portion, etc.)
+	
+	Returned: root of spell name
 --]]
 
 function fGetRoot(sSpellName,bVersion)
@@ -4334,6 +4706,8 @@ end		-- fGetRoot
 --[[
 	CheckWsBailout determines if there's a debuff that will inhibit automatic cancelling of a weapons
 	skill or if insufficient TP exist to do a weapon skill
+	
+	Returned: T/F
 --]]
 
 function gcinclude.CheckWsBailout()
