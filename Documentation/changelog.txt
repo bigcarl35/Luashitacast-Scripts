@@ -15,3 +15,7 @@
   
 - //NOT_WSWAP wasn't working right, now it is.  //IF: was not working correctly,
   it works now.
+  
+- Detection of storage slips have been added, but searching is not yet available.
+
+- Cleaned up some code, added more information to the gear piece records.
