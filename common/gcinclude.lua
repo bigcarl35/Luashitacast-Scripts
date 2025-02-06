@@ -4,7 +4,7 @@ require 'common'
 
 version = { ['author']	= 'Paiine',
  		    ['name']	= 'Luashitacast (Karma)',
-			['version']	= '1.5.2' };
+			['version']	= '1.5.3' };
 	
 --[[
 	This file contains routines that are used with Luashitacast across any supported job.
@@ -89,11 +89,16 @@ gcinclude.settings = {
 	bGc = false;			-- indicates if /gc has been run
 };
 
+-- Please note that on HorizonXI, item.Name[1] contains the English name of the item
+-- instead of item.Name[2] like it's suppose to. item.Name[2] has the Japanese name.
+-- This is very confusing and the source of many frustrations.
+
+
 -- The following arrays are used by the functions contained in this file. Probably best to leave them alone
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','maxsong','maxspell','nac','petfood','rc','rv','sbp','showit','string','tank','th','unlock','ver','wsdistance','wswap','t1'};
+gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','maxsong','maxspell','nac','petfood','rc','rv','sbp','showit','smg','string','tank','th','unlock','ver','wsdistance','wswap','t1'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T{'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T{'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -231,22 +236,38 @@ gcinclude._sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,SCH,GEO,RUN';
 
 -- The following structure is used for locks and accuracy
 gcinclude.tLocks = { 
-		 [1] = { ['slot'] = 'main',  ['lock'] = false, ['acc'] = false },
-		 [2] = { ['slot'] = 'sub',   ['lock'] = false, ['acc'] = false }, 
-		 [3] = { ['slot'] = 'range', ['lock'] = false, ['acc'] = false },
-		 [4] = { ['slot'] = 'ammo',  ['lock'] = false, ['acc'] = false },
-		 [5] = { ['slot'] = 'head',  ['lock'] = false, ['acc'] = false },  
-		 [6] = { ['slot'] = 'neck',  ['lock'] = false, ['acc'] = false },
-		 [7] = { ['slot'] = 'ear1',  ['lock'] = false, ['acc'] = false },  
-		 [8] = { ['slot'] = 'ear2',  ['lock'] = false, ['acc'] = false }, 
-		 [9] = { ['slot'] = 'body',  ['lock'] = false, ['acc'] = false },  
-		[10] = { ['slot'] = 'hands', ['lock'] = false, ['acc'] = false }, 
-		[11] = { ['slot'] = 'ring1', ['lock'] = false, ['acc'] = false }, 
-		[12] = { ['slot'] = 'ring2', ['lock'] = false, ['acc'] = false },
-		[13] = { ['slot'] = 'back',  ['lock'] = false, ['acc'] = false },  
-		[14] = { ['slot'] = 'waist', ['lock'] = false, ['acc'] = false },
-		[15] = { ['slot'] = 'legs',  ['lock'] = false, ['acc'] = false },  
-		[16] = { ['slot'] = 'feet',  ['lock'] = false, ['acc'] = false }
+		 [1] = { ['slot'] = 'main', ['mask'] = {1,3}, ['lock'] = false, 
+				 ['acc'] = false },
+		 [2] = { ['slot'] = 'sub', ['mask'] = {2}, ['lock'] = false,
+				 ['acc'] = false }, 
+		 [3] = { ['slot'] = 'range', ['mask'] = {4}, ['lock'] = false, 
+				 ['acc'] = false },
+		 [4] = { ['slot'] = 'ammo', ['mask'] = {8}, ['lock'] = false, 
+				 ['acc'] = false },
+		 [5] = { ['slot'] = 'head', ['mask'] = {16}, ['lock'] = false, 
+				 ['acc'] = false },  
+		 [6] = { ['slot'] = 'neck', ['mask'] = {512}, ['lock'] = false, 
+				 ['acc'] = false },
+		 [7] = { ['slot'] = 'ear1', ['mask'] = {2048,4096,6144}, ['lock'] = false, 
+				 ['acc'] = false },  
+		 [8] = { ['slot'] = 'ear2', ['mask'] = {2048,4096,6144}, ['lock'] = false, 
+				 ['acc'] = false }, 
+		 [9] = { ['slot'] = 'body', ['mask'] = {32}, ['lock'] = false, 
+				 ['acc'] = false },  
+		[10] = { ['slot'] = 'hands', ['mask'] = {64}, ['lock'] = false, 
+				 ['acc'] = false }, 
+		[11] = { ['slot'] = 'ring1', ['mask'] = {8192,16384,24576}, ['lock'] = false, 
+				 ['acc'] = false }, 
+		[12] = { ['slot'] = 'ring2', ['mask'] = {8192,16384,24576}, ['lock'] = false, 
+				 ['acc'] = false },
+		[13] = { ['slot'] = 'back', ['mask'] = {32768}, ['lock'] = false, 
+				 ['acc'] = false },  
+		[14] = { ['slot'] = 'waist', ['mask'] = {1024}, ['lock'] = false, 
+				 ['acc'] = false },
+		[15] = { ['slot'] = 'legs', ['mask'] = {128}, ['lock'] = false, 
+				 ['acc'] = false },  
+		[16] = { ['slot'] = 'feet', ['mask'] = {256}, ['lock'] = false, 
+				 ['acc'] = false }
 };
 					
 gcinclude.LocksNumeric = 'None';
@@ -887,7 +908,7 @@ gcinclude.tEquipIt = {
 	['dem']    = { ['Name'] = 'Dem Ring', ['Slot'] = 'Ring' },
 	['mea']    = { ['Name'] = 'Mea Ring', ['Slot'] = 'Ring' },
 	['holla']  = { ['Name'] = 'Holla Ring', ['Slot'] = 'Ring' },
-	['altep']  = { ['Name'] = 'Altepa Ring', ['Slot'] = 'Ring' },	
+	['altep']  = { ['Name'] = 'Altep Ring', ['Slot'] = 'Ring' },	
 	['yhoat']  = { ['Name'] = 'Yhoat Ring', ['Slot'] = 'Ring' },	
 	['vahzl']  = { ['Name'] = 'Vahzl Ring', ['Slot'] = 'Ring' },
 	['home']   = { ['Name'] = 'Homing Ring', ['Slot'] = 'Ring' },
@@ -926,6 +947,13 @@ gcinclude.EQUIPABLE = {
 			gcinclude.STORAGES[17]		-- Wardrobe 8
 };
 
+gcinclude.EQUIPABLE_LIST = {
+			gcinclude.STORAGES[1]['id'],	-- Inventory
+			gcinclude.STORAGES[9]['id'],	-- Wardrobe
+			gcinclude.STORAGES[11]['id'],	-- Wardrobe 2
+			gcinclude.STORAGES[17]['id']	-- Wardrobe 8
+};
+			
 gcinclude.EQUIPABLE_NONHOLIDAY = {
 			gcinclude.STORAGES[1],		-- Inventory
 			gcinclude.STORAGES[9],		-- Wardrobe
@@ -1185,20 +1213,20 @@ gcinclude.Slips = {
 -- is the piece accessible out of the moghouse. The item ID number will
 -- also be tracked for verification purposes, but not included in the search.)
 gcinclude.GearDetails = {
-	['main']  = { ['num'] = 0, ['vis'] = true, {} },		
-	['sub']   = { ['num'] = 0, ['vis'] = true, {} },
-	['range'] = { ['num'] = 0, ['vis'] = true, {} },
-	['ammo']  = { ['num'] = 0, ['vis'] = true, {} },
-	['head']  = { ['num'] = 0, ['vis'] = true, {} },
-	['neck']  = { ['num'] = 0, ['vis'] = false, {} },
-	['ears']  = { ['num'] = 0, ['vis'] = false, {} },
-	['body']  = { ['num'] = 0, ['vis'] = true, {} },
-	['hands'] = { ['num'] = 0, ['vis'] = true, {} },
-	['rings'] = { ['num'] = 0, ['vis'] = false, {} },
-	['back']  = { ['num'] = 0, ['vis'] = false, {} },
-	['waist'] = { ['num'] = 0, ['vis'] = false, {} },
-	['legs']  = { ['num'] = 0, ['vis'] = true, {} },
-	['feet']  = { ['num'] = 0, ['vis'] = true, {} }
+	['main']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },		
+	['sub']   = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+	['range'] = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+	['ammo']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+	['head']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+	['neck']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = false, {} },
+	['ears']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = false, {} },
+	['body']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+	['hands'] = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+	['rings'] = { ['num'] = 0, ['acc'] = 0, ['vis'] = false, {} },
+	['back']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = false, {} },
+	['waist'] = { ['num'] = 0, ['acc'] = 0, ['vis'] = false, {} },
+	['legs']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+	['feet']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} }
 };
 
 -- Keep track of the number of hits on monsters, identified by ID.
@@ -1575,32 +1603,26 @@ function gcinclude.fCheckForEleGear(sType,sElement)
 	if player.MainJobSync < gcinclude.tElemental_gear[sType]['level'] then
 		return nil;
 	end
-	
-	-- Now make sure the reference to the dynamic gear table is set
-	-- Remember, staves have two references and obi/gorget have one
-	if sType == 'staff' then
-		bGood,gcinclude.tElemental_gear[sType][sElement]['HQ']['Ref'] = 
-			fGearCheckItem('main',gcinclude.tElemental_gear[sType][sElement]['HQ']['Name'],false,false);
-		bGood,gcinclude.tElemental_gear[sType][sElement]['NQ']['Ref'] = 
-			fGearCheckItem('main',gcinclude.tElemental_gear[sType][sElement]['NQ']['Name'],false,false);
-	else	-- obis and gorgets have the same structure, so are combined here
-		bGood,gcinclude.tElemental_gear[sType][sElement]['Ref'] = 
-			fGearCheckItem('main',gcinclude.tElemental_gear[sType][sElement]['Name'],false,false);
-	end
 
-	-- Since we now know that the links to the dynamic table are there, process
-	-- the reference accordingly. For staff, check for HQ before looking at NQ
+	-- The links for the dynamic table will be there if /gc was run. If not,
+	-- then all elemental gear's ['Ref'] will be nil and skipped.
+	
+	-- Now process the reference accordingly. For staff, check for HQ before 
+	-- looking at NQ
 	if sType == 'staff' then
-		if gcinclude.tElemental_gear[sType][sElement]['HQ']['Ref']['accessible'] == true then
+		if gcinclude.tElemental_gear[sType][sElement]['HQ']['Ref'] ~= nil and
+			gcinclude.tElemental_gear[sType][sElement]['HQ']['Ref']['accessible'] == true then
 			return gcinclude.tElemental_gear[sType][sElement]['HQ']['Name'];
-		elseif gcinclude.tElemental_gear[sType][sElement]['NQ']['Ref']['accessible'] == true then
+		elseif gcinclude.tElemental_gear[sType][sElement]['NQ']['Ref'] ~= nil and
+			gcinclude.tElemental_gear[sType][sElement]['NQ']['Ref']['accessible'] == true then
 			return gcinclude.tElemental_gear[sType][sElement]['NQ']['Name'];
 		else
 			return nil;
 		end
 	else
 		-- Obi and Gorget have the same structure, so handle the same way
-		if gcinclude.tElemental_gear[sType][sElement]['Ref']['accessible'] == true	then
+		if gcinclude.tElemental_gear[sType][sElement]['Ref'] ~= nil and
+			gcinclude.tElemental_gear[sType][sElement]['Ref']['accessible'] == true	then
 			return gcinclude.tElemental_gear[sType][sElement]['Name'];
 		else
 			return nil;
@@ -1796,6 +1818,37 @@ function FindSlips()
 end		-- FindSlips
 
 --[[
+	fSlotMatch determines if the passed slot the gear piece is being loaded into
+	matches the item's slot designation. Returned is true or false
+--]]
+
+function fSlotMatch(sSlot,iSlot)
+	local bGood = false;
+	
+	sSlot = string.lower(sSlot);
+	
+	-- Make sure the composite slots are represented by an actual slot
+	if sSlot == 'rings' then
+		sSlot = 'ring1';
+	elseif sSlot == 'ears' then
+		sSlot = 'ear1';
+	end
+	
+	-- The lock list has all slots identified. The slot masks have been added
+	-- to the tLocks structure. Even though the mask is a bit pattern, the
+	-- composited value is included too. That's why I only need to look for
+	-- a match.
+	for i,j in ipairs(gcinclude.tLocks) do
+		if j['slot'] == sSlot then
+			bGood = (table.find(j['mask'],iSlot) ~= nil);
+			break;
+		end
+	end
+			
+	return bGood;
+end		-- fSlotMatch
+
+--[[
 	fGearCheckItem process the specific item sent to it and where appropriate, populates
 	gcinclude.GearDetails. The details tracked are: item name, item level, can equip?, 
 	and accessibility. Returned is a true/false which indicates that the item's level,
@@ -1805,37 +1858,40 @@ end		-- FindSlips
 		sSlot   - Name of the slot
 		sName   - Name of the item to check
 		bAccess - True = return accessibility, False = check job, access, and level
-		bForce  - Force an update of the gearDetail record
+		bCreate - Create record is missing
 
 	Returned: Accessibility,gear reference		
 --]]
 
-function fGearCheckItem(sSlot,sName,bAccess,bForce)
+function fGearCheckItem(sSlot,sName,bAccess,bCreate)
 	local player = gData.GetPlayer();
-	local bJob,bAccessible,bThere;
-	local iPos,iCnt;
+	local bJob,bAccessible,bSlot;
+	local iPos;
 	local item = {};
-	local rec = {};
+	local tOwned = {};
 	
 	-- Subsets are skipped
 	if string.lower(sSlot) == 'subset' then
 		return false,nil;
 	end
-	
+
+	-- Make sure "downloading data" is not in transition
 	if player.MainJob == nil or player.MainJob == 'NON' then
 		return false,nil;
 	end
-	
+
+	-- Required fields
 	if sSlot == nil or sName == nil then
 		return false,nil;
 	end
-	
+
+	-- Assume full check if absent
 	if bAccess == nil then
 		bAccess = false;
 	end
 
-	if bForce == nil then
-		bForce = false;
+	if bCreate == nil then
+		bCreate = false;
 	end
 	
 	sSlot = string.lower(sSlot);
@@ -1853,35 +1909,51 @@ function fGearCheckItem(sSlot,sName,bAccess,bForce)
 	if iPos ~= nil then
 		sName = string.sub(sName,1,iPos-1);
 	end	
-
-	-- See if item already registered
-	if gcinclude.GearDetails[sSlot][sName] == nil or 
-		gcinclude.GearDetails[sSlot]['num'] == 0 or 
-		bForce == true then
+	
+	-- If bCreate indicated, a new record will be created or an existing
+	-- record will be overriden.
+	if bCreate == true then
 		-- Now process the item
 		item = AshitaCore:GetResourceManager():GetItemByName(sName,2);
-		if item ~= nil then		
+		if item ~= nil then	
+			local bExist = (gcinclude.GearDetails[sSlot][sName] ~= nil); -- Note if existing record
 			bJob = (bit.band(item.Jobs,gcinclude.JobMask[player.MainJob]) == gcinclude.JobMask[player.MainJob]) or
 		  		   (bit.band(item.Jobs,gcinclude.JobMask['Alljobs']) == gcinclude.JobMask['Alljobs']);
-			bAccessible = fCheckItemOwned(sName,true,true);
--- bOwn,bAccessible,bPorter = fCheckItemOwned(sName,true,true); -- future change
-			bThere = (gcinclude.GearDetails[sSlot][sName] ~= nil);
-			
+			tOwned = fCheckItemOwned(item);
+			bAccessible = (tOwned['own'] == true and tOwned['accessible'] == true);
+			bSlot = fSlotMatch(sSlot,item.Slots);
+
 			-- Save item w/details
 			gcinclude.GearDetails[sSlot][sName] = { 
+				['id']		   = item.Id;
+				['valid']	   = true,
+				['slot']	   = bSlot, 
 				['level']	   = item.Level,
 				['job']        = bJob, 
-				--['own']		   = true, -- bOwn
+				['own']		   = tOwned['own'],
 				['accessible'] = bAccessible, 
-				--['porter']	   = false, -- bPorter
+				['porter']	   = tOwned['porter'],
+				--['claim']	   = tOwned['claim'],
+				['locations']  = tOwned['locations'],
 				['desc'] 	   = item.Description[1]
 			};
-			-- Bump counter
-			if not bThere then
-				gcinclude.GearDetails[sSlot]['num'] = gcinclude.GearDetails[sSlot]['num'] + 1;
+			if bSlot == false then
+				gcinclude.GearDetails[sSlot][sName]['valid'] = false;
 			end
+			if not bExist then
+				gcinclude.GearDetails[sSlot]['num'] = gcinclude.GearDetails[sSlot]['num'] + 1;
+				if bAccessible then
+					gcinclude.GearDetails[sSlot]['acc'] = gcinclude.GearDetails[sSlot]['acc'] + 1;			
+				end
+			end
+		else
+			-- This is an erroneous item
+			gcinclude.GearDetails[sSlot][sName] = { ['valid'] = false };
+			return false,gcinclude.GearDetails[sSlot][sName];
 		end
 	end
+
+	-- If it still doesn't exist, return that state
 	if gcinclude.GearDetails[sSlot][sName] == nil then
 		return false,nil;
 	else
@@ -1920,6 +1992,19 @@ function GearCheck(sList,bForce)
 		print(chat.header('GearCheck'):append(chat.message('Starting to scan for storage slips')));
 		FindSlips();
 		print(chat.message('Found slips: ' .. fDisplaySlips(false)));
+
+		-- next is EquipIt items
+		print(chat.header('GearCheck'):append(chat.message('Starting to scan EquipIt shortcut items')));
+		for s,t in pairs(gcinclude.tEquipIt) do
+			local sSlot = t['Slot'];
+			if string.find('Ring,Ear',sSlot) ~= nil then
+				sSlot = sSlot .. 's';
+			end
+			bGood,ref = fGearCheckItem(sSlot,t['Name'],false,true);
+			if ref ~= nil and ref['valid'] == false then
+				print(chat.header('GearCheck'):append(chat.message('Warning: Invalid EquipIt gear piece - ' .. t['Name'] .. ': ' .. s)));
+			end			
+		end
 		
 		-- now loop through the job file and gcinclude
 		for s,t in pairs(tTarget) do
@@ -1946,7 +2031,14 @@ function GearCheck(sList,bForce)
 						for ss,tt in pairs(ts) do						
 							-- Save the details if appropriate. Returned results are
 							-- ignored, but captured in case I change my mind.
-							bGood,ref = fGearCheckItem(jj,tt,false,bForce);
+							bGood,ref = fGearCheckItem(jj,tt,false,true);
+							if ref ~= nil then						
+								if ref['valid'] == false and ref['slot'] == nil then
+									print(chat.header('GearCheck'):append(chat.message('Warning: Invalid piece of gear - ' .. tt .. ' in ' .. j)));
+								elseif ref['slot'] == false then
+									print(chat.header('GearCheck'):append(chat.message('Warning: Invalid slot: ' .. jj .. ', gear - ' .. tt .. ' in ' .. j)));
+								end
+							end
 							iCnt = iCnt +1;
 							if math.floor(iCnt/50) == iCnt/50 then
 								print(chat.message(tostring(iCnt) .. ' sets processed...'));
@@ -1963,8 +2055,8 @@ function GearCheck(sList,bForce)
 				for ii,jj in pairs(j) do
 					if table.find({ 'fire','ice','wind','earth','thunder','water',
 									'light','dark' },ii) ~= nil then
-						bGood,jj['NQ']['Ref'] = fGearCheckItem('main',jj['NQ']['Name'],false,bForce);
-						bGood,jj['HQ']['Ref'] = fGearCheckItem('main',jj['HQ']['Name'],false,bForce);
+						bGood,jj['NQ']['Ref'] = fGearCheckItem('main',jj['NQ']['Name'],false,true);
+						bGood,jj['HQ']['Ref'] = fGearCheckItem('main',jj['HQ']['Name'],false,true);
 						iCnt = iCnt + 2;
 					end
 					if math.floor(iCnt/50) == iCnt/50 then
@@ -1976,9 +2068,9 @@ function GearCheck(sList,bForce)
 					if table.find({ 'fire','ice','wind','earth','thunder','water',
 									'light','dark' },ii) ~= nil then
 						if i == 'obi' then
-							bGood,jj['Ref'] = fGearCheckItem('waist',jj['Name'],false,bForce);
+							bGood,jj['Ref'] = fGearCheckItem('waist',jj['Name'],false,true);
 						else
-							bGood,jj['Ref'] = fGearCheckItem('neck',jj['Name'],false,bForce);
+							bGood,jj['Ref'] = fGearCheckItem('neck',jj['Name'],false,true);
 						end
 						iCnt = iCnt + 1;
 						if math.floor(iCnt/50) == iCnt/50 then
@@ -2009,7 +2101,7 @@ function GearCheckList()
 	
 	for i,j in pairs(gcinclude.GearDetails) do
 		print(chat.message(' '));
-		print(chat.message('Slot: ' .. i));
+		print(chat.message('Slot: ' .. i .. '[' .. tostring(j['acc']) .. '/' .. tostring(j['num']) .. ']'));
 		for ii,jj in pairs(j) do
 			bOnce = true;
 			sMsg = nil;
@@ -2020,20 +2112,24 @@ function GearCheckList()
 			end
 			if type(jj) == 'table' then 
 				for iii,jjj in pairs(jj) do
-					if iii ~= 'desc' then
-						if bOnce == true then
-							sMsg = sMsg .. iii .. ': '.. tostring(jjj);
-							bOnce = not bOnce;
-						else
-							if type(jjj) == 'boolean' then
-								sMsg = sMsg .. ', ' .. iii .. ': '
-								if jjj == false then
-									sMsg = sMsg .. chat.color1(8,tostring(jjj));
-								else
-									sMsg = sMsg .. chat.color1(2,tostring(jjj));
-								end
-							else
+					if iii == 'valid' and jjj == false then
+						sMsg = sMsg .. chat.color1(8,'Invalid');
+					else
+						if string.find('desc,id,valid',iii) == nil then
+							if bOnce == true then
 								sMsg = sMsg .. iii .. ': '.. tostring(jjj);
+								bOnce = not bOnce;
+							else
+								if type(jjj) == 'boolean' then
+									sMsg = sMsg .. ', ' .. iii .. ': '
+									if jjj == false then
+										sMsg = sMsg .. chat.color1(8,tostring(jjj));
+									else
+										sMsg = sMsg .. chat.color1(2,tostring(jjj));
+									end
+								else
+									sMsg = sMsg .. ', ' .. iii .. ': '.. tostring(jjj);
+								end
 							end
 						end
 					end
@@ -2196,15 +2292,7 @@ function fTallyGear(sGear,sSlot)
 	
 	sGear = string.lower(sGear);
 	sSlot = string.lower(sSlot);
-	
-	-- The passed item might not be in the dynamic table yet. Make
-	-- sure it is. Also, if it fails the equippable check, then 
-	-- there's no reason to go on
-	bGood,ref = fGearCheckItem(sSlot,sGear,false);
-	if bGood == false then
-		return false;
-	end
-	
+		
 	-- loop through the current gear, tallying up totals
 	for ii,jj in pairs(cur) do
 		-- when dealing with rings and earrings, use the grouping mechanism.
@@ -2225,38 +2313,37 @@ function fTallyGear(sGear,sSlot)
 		else
 			sPiece = string.lower(jj.Name);
 		end
-		-- Make sure that the item is in the dynamic table
-		bGood,ref = fGearCheckItem(lcii,sPiece,false);
-		if bGood == false then
-			return false;
-		end
-		item = fParseDescription(sPiece,gcinclude.GearDetails[lcii][sPiece]['desc']);
 		
-		-- Now tally the parsed description, divided between visible and invisible,
-		-- accordingly
-		if gcinclude.GearDetails[lcii]['vis'] == true then
-			sVis = 'visible';
-		else
-			sVis = 'invisible';
-		end
+		if gcinclude.GearDetails[lcii][sPiece] ~= nil and 
+			gcinclude.GearDetails[lcii][sPiece]['valid'] == true then
+			item = fParseDescription(sPiece,gcinclude.GearDetails[lcii][sPiece]['desc']);
+		
+			-- Now tally the parsed description, divided between visible and invisible,
+			-- accordingly
+			if gcinclude.GearDetails[lcii]['vis'] == true then
+				sVis = 'visible';
+			else
+				sVis = 'invisible';
+			end
 				
-		rec[sVis]['MP'] = rec[sVis]['MP'] + item['MP'];
-		rec[sVis]['MPP'] = rec[sVis]['MPP'] + item['MPP'];
-		rec[sVis]['HP'] = rec[sVis]['HP'] + item['HP'];
-		rec[sVis]['HPP'] = rec[sVis]['HPP'] + item['HPP'];
-		rec[sVis]['cHM'] = rec[sVis]['cHM'] + item['cHM'];
-		rec[sVis]['cMH'] = rec[sVis]['cMH'] + item['cMH'];
+			rec[sVis]['MP'] = rec[sVis]['MP'] + item['MP'];
+			rec[sVis]['MPP'] = rec[sVis]['MPP'] + item['MPP'];
+			rec[sVis]['HP'] = rec[sVis]['HP'] + item['HP'];
+			rec[sVis]['HPP'] = rec[sVis]['HPP'] + item['HPP'];
+			rec[sVis]['cHM'] = rec[sVis]['cHM'] + item['cHM'];
+			rec[sVis]['cMH'] = rec[sVis]['cMH'] + item['cMH'];
 		
-		local bOwn = (gcdisplay.GetCycle('Region') == 'Owned');
+			local bOwn = (gcdisplay.GetCycle('Region') == 'Owned');
 
-		if (item['own']['ctrl'] == 'T' and bOwn == true) or 
-		   (item['own']['ctrl'] == 'F' and bOwn == false) then
-			rec[sVis]['MP'] = rec[sVis]['MP'] + item['own']['MP'];
-			rec[sVis]['MPP'] = rec[sVis]['MPP'] + item['own']['MPP'];
-			rec[sVis]['HP'] = rec[sVis]['HP'] + item['own']['HP'];
-			rec[sVis]['HPP'] = rec[sVis]['HPP'] + item['own']['HPP'];
-			rec[sVis]['cHM'] = rec[sVis]['cHM'] + item['own']['cHM'];
-			rec[sVis]['cMH'] = rec[sVis]['cMH'] + item['own']['cMH'];
+			if (item['own']['ctrl'] == 'T' and bOwn == true) or 
+				(item['own']['ctrl'] == 'F' and bOwn == false) then
+				rec[sVis]['MP'] = rec[sVis]['MP'] + item['own']['MP'];
+				rec[sVis]['MPP'] = rec[sVis]['MPP'] + item['own']['MPP'];
+				rec[sVis]['HP'] = rec[sVis]['HP'] + item['own']['HP'];
+				rec[sVis]['HPP'] = rec[sVis]['HPP'] + item['own']['HPP'];
+				rec[sVis]['cHM'] = rec[sVis]['cHM'] + item['own']['cHM'];
+				rec[sVis]['cMH'] = rec[sVis]['cMH'] + item['own']['cMH'];
+			end
 		end
 	end
 	return rec;
@@ -2741,7 +2828,7 @@ function gcinclude.fBuffed(test,bStart)
 		end
 	end
 	return false;
-end
+end		--  gcinclude.fBuffed
 
 --[[
 	fCheckItemOwned determines if the specified piece of gear is owned by 
@@ -2754,53 +2841,58 @@ end
 	Returned: T/F	
 --]]
 
-function fCheckItemOwned(sGear,bAccessible,bOnce)
+function fCheckItemOwned(gear)
 	local inventory = AshitaCore:GetMemoryManager():GetInventory();
 	local resources = AshitaCore:GetResourceManager();
 	local containerID,itemEntry,item;
-	local bFound = false;
-	local tStorage = {};
 	local tOwned = {
 		['own'] = false, ['accessible'] = false, 
 		['porter'] = false, ['claim'] = false,
-		['count'] = 0, ['locations'] = nil
+		['locations'] = nil, ['error'] = nil
 	};
 	
 	-- Make sure a piece of gear specified
-	if sGear == nil then
-		return false;
+	if gear == nil then
+		tOwned['error'] = 'Invalid gear item';
+		return tOwned;
 	end
 	
-	-- If bOnce not specified, then assume true, only one item found is good enough
-	if bOnce == nil then
-		bOnce = true;
-	end
-	
-	-- If bAccessible not defined or is false, then search all containers
-	if bAccessible == nil or bAccessible == false then
-		tStorage = gcinclude.STORAGES;
-	else
-		tStorage = gcinclude.EQUIPABLE;
-	end
-	
-	for i,desc in pairs(tStorage) do
+	-- Loop through all searching for the passed gear piece
+	for i,desc in pairs(gcinclude.STORAGES) do
 		containerID = desc['id'];
 		-- then loop through the container
 		for j = 1,inventory:GetContainerCountMax(containerID),1 do
 			itemEntry = inventory:GetContainerItem(containerID, j);
 			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
 				item = resources:GetItemById(itemEntry.Id);
-				if string.lower(item.Name[1]) == string.lower(sGear) then
-					bFound = true;
-					if bOnce == true then
-						return true;
+				if item.Name[1] == gear.Name[1] then
+					tOwned['own'] = true;				
+					if tOwned['locations'] == nil then
+						tOwned['locations'] = ',' .. desc['name'] .. ',';
+					elseif string.find(tOwned['locations'],','..desc['name']..',') == nil then
+						tOwned['locations'] = tOwned['locations'] .. desc['name'] .. ',';
+					end
+					if table.find(gcinclude.EQUIPABLE_LIST,desc['id']) then
+						tOwned['accessible'] = true;
 					end
 				end
 			end
 		end
 	end
-	
-	return bFound;
+
+-- if locations defined, remove the encasing commas
+if tOwned['locations'] ~= nil then
+	tOwned['locations'] = string.sub(tOwned['locations'],2,-2);
+end
+
+--[[	
+	-- Then loop through storage slips to see if item stored
+	for i,desc in pairs(gcinclude.Slips) do
+		if desc['own'] == true and table.find(desc['items'],gear.Id) ~= nil then
+			
+	end
+--]]	
+	return tOwned;
 end		-- fCheckItemOwned
 
 --[[
@@ -3296,6 +3388,7 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 	if ts1 == nil then
 		return;
 	end
+	
 	-- First walk through the gear slots looking for "subset"
 	for k,v in pairs(ts1) do
 		sK = string.lower(k);
@@ -3358,7 +3451,7 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 				for kk,vv in pairs(ts) do
 					-- Make sure the item is noted in gcinclude.GearDetails
 					-- and that the level, job, and accessibility is good
-					bG,ref = fGearCheckItem(sK,vv,false);
+					bG,ref = fGearCheckItem(sK,vv,false,false);
 					if bG == true then
 						-- See if there's an inline conditional to be checked.
 						-- Note the need to distinguish which "ear" or "ring"
@@ -4095,7 +4188,7 @@ function gcinclude.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
 					   gcinclude.tElemental_gear[sWhat][i]['NQ']['Ref']['accessible'] == true then
 						return gcinclude.tElemental_gear[sWhat][i]['NQ']['Name'],i;
 					else
-						return nil;
+						return nil,nil;
 					end
 				end
 			elseif sWhat == 'obi' or sWhat == 'gorget' then
@@ -4105,7 +4198,8 @@ function gcinclude.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
 				end
 				
 				-- Then determine if there's an obi or gorget that matches
-				if gcinclude.tElemental_gear[sWhat][i]['Ref']['accessible'] == true then
+				if gcinclude.tElemental_gear[sWhat][i]['Ref'] ~= nil and
+					gcinclude.tElemental_gear[sWhat][i]['Ref']['accessible'] == true then
 					return gcinclude.tElemental_gear[sWhat][i]['Name'],i;
 				end
 			end
@@ -4207,7 +4301,7 @@ end		-- gcinclude.fSwapToStave
 --]]
 
 function EquipItem(args)
-	local iName,iSlot,ref;
+	local iName,iSlot,ref,msg;
 	local bMulti,sSlots,bGood;
 		
 	if #args > 1 then
@@ -4237,8 +4331,20 @@ function EquipItem(args)
 		-- First check that it's a valid item and it's accessible
 		bGood,ref = fGearCheckItem(iSlot,iName,false,false);
 		if not bGood then
-			print(chat.header('EquipItem'):append(chat.message('Error: ' .. iName .. ' is either invalid, inaccessible, wrong level, or unusable by your job.')));
-			return;
+			if ref ~= nil then
+				if ref['valid'] == false then
+					print(chat.header('EquipItem'):append(chat.message('Error: Invalid piece of gear specified - ' .. iName)));
+				elseif ref['accessible'] == false then	
+					print(chat.header('EquipItem'):append(chat.message('Error: Specified gear inaccessible - ' .. iName .. ': ' .. ref['locations'])));
+				elseif ref['job'] == false then
+					print(chat.header('EquipItem'):append(chat.message('Error: Specified gear not usable by your job - ' .. iName)));
+				else
+					print(chat.header('EquipItem'):append(chat.message('Error: Specified gear\'s level too high - ' .. iName .. ': ' .. tostring(ref['level']))));
+				end
+			else
+				print(chat.header('EquipItem'):append(chat.message('Error: Either parameters missing, data downloading, or gear record not created.')));
+				return;
+			end
 		end
 		
 		-- Now, see if this item is a multislot item. 
@@ -4529,6 +4635,17 @@ function gcinclude.HandleCommands(args)
 		RefreshVariables();
 	elseif (args[1] == 'showit') then						-- Shows debug info for specified type
 		DB_ShowIt();
+	elseif (args[1] == 'smg') then							-- Show My Gear
+		if #args == 1 then				-- Show a list of all gear
+			print('Will list all gear');
+		elseif args[2] ~= nil then
+			args[2] = string.lower(args[2]);
+			if args[2] == '-' then		-- Show a list of gear where accessible is false
+				print('Will list all gear that\'s inaccessible for whatever reason');
+			else						-- Show a list of gear for the specified set
+				print('Will list all gear associated with passed gear set');
+			end
+		end
 	elseif (args[1] == 'gearset' or args[1] == 'gs') then	-- Forces a gear set to be loaded and turns GSWAP off
 		if #args > 1 then
 			--gcinclude.ClearSet(gcinclude.sets.CurrentGear);
