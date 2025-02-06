@@ -1,21 +1,12 @@
-- Added check for ['Ref'] being null in fCheckForElementalGearByValue. Added 
-  check for ['visible'] being null in fValidateSpecial.
-
-- When checking for a multislot item, all affected slots are checked to make 
-  sure they are not locked. This is true for both normal gear swapping and
-  for /equipit.
-
-- EquipIt now checks the validity of the item to equip, whether you can wear
-  it, and is it accessible.
+- The dynamic gear table can now only be populated through the /gc command. The
+  piecemeal approach that was first implemented has been removed. This means that
+  if /gc is not run, no gear swapping will take place.
   
-- SwapToStave now checks both "Main" and "Sub for locks.
+- /gc now takes about 2 seconds to run (1/2 a second longer than before.) This is
+  because it is more thorough and tracks more information, including if gear is
+  stored on the Porter Moogle.
   
-- /gc now updates existing records for elemental staves/gorgets/obis if the
-  record already exists. Previous behavior was an accidental oversight.
+- Added a couple of counters to /showit. For each slot it shows the number of
+  owned and accessible gear/number of registered gear.
   
-- //NOT_WSWAP wasn't working right, now it is.  //IF: was not working correctly,
-  it works now.
-  
-- Detection of storage slips have been added, but searching is not yet available.
-
-- Cleaned up some code, added more information to the gear piece records.
+- /gc now checks that the gear is being targetted for the correct slot.
