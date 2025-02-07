@@ -238,7 +238,7 @@ gcinclude._sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,SCH,GEO,RUN';
 gcinclude.tLocks = { 
 		 [1] = { ['slot'] = 'main', ['mask'] = {1,3}, ['lock'] = false, 
 				 ['acc'] = false },
-		 [2] = { ['slot'] = 'sub', ['mask'] = {2}, ['lock'] = false,
+		 [2] = { ['slot'] = 'sub', ['mask'] = {2,3}, ['lock'] = false,
 				 ['acc'] = false }, 
 		 [3] = { ['slot'] = 'range', ['mask'] = {4}, ['lock'] = false, 
 				 ['acc'] = false },
@@ -1844,7 +1844,7 @@ function fSlotMatch(sSlot,iSlot)
 			break;
 		end
 	end
-			
+
 	return bGood;
 end		-- fSlotMatch
 
