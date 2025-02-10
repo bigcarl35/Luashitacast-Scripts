@@ -4,7 +4,7 @@ require 'common'
 
 version = { ['author']	= 'Paiine',
  		    ['name']	= 'Luashitacast (Karma)',
-			['version']	= '1.5.3' };
+			['version']	= '1.5.3a' };
 	
 --[[
 	This file contains routines that are used with Luashitacast across any supported job.
@@ -17,6 +17,8 @@ gcinclude.sets = {
 	smithing, and woodworking. It's possible that a player will have gear for more than one craft. There's
 	only one Crafting gear set, so you need to qualify each piece with what type of crafting the piece is
 	used for. (Ex: Body = 'Weaver\'s Apron//CR:CLOTH).
+	
+	Please note that Crafting sets ignore the /WSWAP	setting.
 --]]
 	['Crafting'] = {
 	},
@@ -24,6 +26,8 @@ gcinclude.sets = {
 --[[
 	There are seven gathering types: harvesting, excavtion, logging, and mining which are grouped in the H.E.L.M.
 	set. The other three types of gathering: digging, clamming and fishing, have their own gear.
+
+	Please note that Gathering sets ignore the /WSWAP setting.
 --]]
 
 	['Gathering'] = {
@@ -1692,8 +1696,8 @@ function SetVariables()
 	gcdisplay.CreateToggle('Eva', false);
 	gcdisplay.CreateToggle('Idle',true);
 		
-	if string.find('BLM,SMN',player.MainJob) == nil then
-		gcdisplay.CreateToggle('WSwap',(string.find('WHM,BRD,RDM',player.MainJob) ~= nil));
+	if player.MainJob ~= 'SMN' then
+		gcdisplay.CreateToggle('WSwap',(string.find('WHM,BLM,RDM',player.MainJob) ~= nil));
 	end
 
 	-- Job specific toggles	
@@ -1724,6 +1728,99 @@ function SetVariables()
 	gcdisplay.CreateCycle('DT', {[1] = gcinclude.OFF, [2] = gcinclude.PHY, [3] = gcinclude.MAG, [4] = gcinclude.BRE});
 	gcdisplay.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned', [3] = 'N/A'});
 end		-- SetVariables
+
+--[[
+	fSetColorText accepts a boolean and returns a color code to represent the
+	value: 2 - green, 8 - red, 107 - something else (probably yellow)
+--]]
+
+function fSetColorText(bVal)
+	local ic = 2;	-- Green
+	if bVal == nil then
+		ic = 107;	-- Other color
+	elseif bVal == false then
+		ic = 8;		-- Red
+	end
+	
+	return ic;	
+end		-- fSetColorText
+
+--[[
+	DisplayGDItems lists either all the dynamic gear definitions or just the
+	ones that are invalid or inaccessible, broken out by slot.
+--]]
+
+function DisplayGDItems(bWarn)
+	local bShow;
+	
+	if bWarn == nil then
+		bWarn = false;
+	end
+	
+	if bWarn == false then
+		print('The following is a complete list of all gear compiled during /gc');
+	else
+		print('The following lists all gear that\'s invalid or inaccessible');
+	end
+
+	for slot,name in pairs(gcinclude.GearDetails) do
+		print(chat.message(' '));
+		if bWarn == true then
+			print(chat.message('Slot: ' .. slot));
+		else
+			print(chat.message('Slot: ' .. slot .. '[' .. tostring(name['acc']) .. '/' .. tostring(name['num']) .. ']'));
+		end
+		
+		for i,j in pairs(name) do
+			if string.find('num,acc,vis',i) == nil then
+				bShow = (bWarn == false or j['valid'] == false or j['accessible'] == false);
+				if bShow == true and type(i) == 'string' then
+					DisplayItemStats(i,slot);
+				end
+			end
+		end
+	end
+end
+
+--[[
+	DisplayItemStats displays the item definition for the passed piece of gear
+	from the dynamic GearDetails table.
+--]]
+
+function DisplayItemStats(sName,sSlot)
+	local msg;
+	local tWhat;
+	
+	if sSlot == nil or sName == nil then
+		return;
+	end
+
+	if gcinclude.GearDetails[sSlot][sName] == nil then
+		-- You get here if the item isn't a valid item
+		print(sName .. ' - ' .. chat.color1(8,'Invalid item'));
+		return;
+	end
+	
+	tWhat = gcinclude.GearDetails[sSlot][sName];
+	-- You get here if the item is valid or it's invalid because the slot
+	-- is incorrect	
+	msg = '   ' .. string.upper(sName) .. ' - Valid: ' .. chat.color1(fSetColorText(tWhat['valid']),tWhat['valid']);
+	msg = msg .. ', Level: ' .. tostring(tWhat['level'],tostring(tWhat['level']));
+	msg = msg .. ', Own: ' .. chat.color1(fSetColorText(tWhat['own']),tWhat['own']);
+	msg = msg .. ', Slot: ' .. chat.color1(fSetColorText(tWhat['slot']),tWhat['slot']) .. ',';
+	print(msg);
+	msg = '      Accessible: ' .. chat.color1(fSetColorText(tWhat['accessible']),tWhat['accessible']);
+	msg = msg .. ', Job: ' .. chat.color1(fSetColorText(tWhat['job']),tWhat['job']);
+	msg = msg .. ', Porter: ' .. chat.color1(fSetColorText(tWhat['porter']),'NA');
+	msg = msg .. ', Claim: ' .. chat.color1(fSetColorText(tWhat['claim']),'NA,');
+	print(msg);
+	if tWhat['locations'] ~= nil then
+		msg = '      Location(s): ' .. tWhat['locations'];
+	else
+		msg = '      Location(s): ';
+	end
+	print(msg);
+end	-- DisplayItemStats
 
 --[[
 	fDisplaySlips shows which storage slips the player owns. The passed in 
@@ -1932,8 +2029,8 @@ function fGearCheckItem(sSlot,sName,bAccess,bCreate)
 				['job']        = bJob, 
 				['own']		   = tOwned['own'],
 				['accessible'] = bAccessible, 
-				['porter']	   = tOwned['porter'],
-				--['claim']	   = tOwned['claim'],
+				['porter']	   = nil, --tOwned['porter'],
+				['claim']	   = nil, -- tOwned['claim'],
 				['locations']  = tOwned['locations'],
 				['desc'] 	   = item.Description[1]
 			};
@@ -3299,11 +3396,10 @@ function RegionControlDisplay()
 end		-- RegionControlDisplay
 
 function gcinclude.t1()
-	--FindSlips();
-	print('Slips: ' .. fDisplaySlips(false));
-	print(' ');
-	fDisplaySlips(true);
-	
+
+	--DisplayItemStats('lilac corsage','head');
+	print(gcinclude.GearDetails['feet']['acc']);
+
 --[[
 	local pEntity = AshitaCore:GetMemoryManager():GetEntity();
 	local myIndex = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0);
@@ -3355,7 +3451,7 @@ end		-- gcinclude.t1
 	If nesting goes too deep, it will run out of memory.
 --]]
 
-function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
+function gcinclude.MoveToCurrent(tSet,tMaster,bOverride,bIgnoreWSWAP)
 	local player = gData.GetPlayer();
 	local item = {};
 	local ref = {};
@@ -3368,6 +3464,10 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 		return;
 	end
 
+	if bIgnoreWSWAP == nil then
+		bIgnoreWSWAP = false;
+	end
+	
 	-- bOverride indicates that weapons, if specified, will be
 	-- equipped regardless of the /WSWAP setting
 	if bOverride == nil then
@@ -3431,7 +3531,8 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 			if string.find('main,sub,range',sK) ~= nil then
 				bSkip = not (gcdisplay.GetToggle('WSwap') == true 
 						or gcinclude.settings.bWSOverride == true
-						or bOverride == true);
+						or bOverride == true
+						or bIgnoreWSWAP == true);
 			else
 				bSkip = false;
 			end		
@@ -4636,15 +4737,22 @@ function gcinclude.HandleCommands(args)
 	elseif (args[1] == 'showit') then						-- Shows debug info for specified type
 		DB_ShowIt();
 	elseif (args[1] == 'smg') then							-- Show My Gear
+		for i = 1,#args do
+			args[i] = string.lower(args[i]);
+		end
+			
 		if #args == 1 then				-- Show a list of all gear
-			print('Will list all gear');
+			DisplayGDItems(false);
 		elseif args[2] ~= nil then
-			args[2] = string.lower(args[2]);
-			if args[2] == '-' then		-- Show a list of gear where accessible is false
-				print('Will list all gear that\'s inaccessible for whatever reason');
-			else						-- Show a list of gear for the specified set
-				print('Will list all gear associated with passed gear set');
-			end
+			if args[2] == 'warn' then		-- Show a list of gear where accessible is false
+				DisplayGDItems(true);
+			elseif args[3] ~= nil then
+				if args[2] == 'slot' then
+					print('This will display gear for slot: ' .. args[3]);
+				else
+					print('This will display gear set: ' .. args[3]);				
+				end
+			end 
 		end
 	elseif (args[1] == 'gearset' or args[1] == 'gs') then	-- Forces a gear set to be loaded and turns GSWAP off
 		if #args > 1 then
@@ -4657,11 +4765,11 @@ function gcinclude.HandleCommands(args)
 				if string.find(sTmp,sArg) then
 					-- Crafting set
 					gcinclude.Craft = sArg;
-					gcinclude.MoveToCurrent(gcinclude.sets.Crafting,gcinclude.sets.CurrentGear);					
-				else			
-					-- Gather set
+					gcinclude.MoveToCurrent(gcinclude.sets.Crafting,gcinclude.sets.CurrentGear,false,true);					
+				else
+				-- Gather set
 					gcinclude.Gather = sArg;
-					gcinclude.MoveToCurrent(gcinclude.sets.Gathering,gcinclude.sets.CurrentGear);
+					gcinclude.MoveToCurrent(gcinclude.sets.Gathering,gcinclude.sets.CurrentGear,false,true);
 				end
 			else
 				local tTable = fGetTableByName(sArg);	-- Change string to table
@@ -4813,7 +4921,7 @@ function fGetRoot(sSpellName,bVersion)
 		end
 		
 		-- Only ninjutsu have a ":" in the name. Remove if found on the end
-		if string.sub(root,-1,1) == ':' then
+		if string.sub(root,-1,-1) == ':' then
 			root = string.sub(root,1,-2);
 		end
 	end
@@ -5512,23 +5620,24 @@ function MidcastNinjutsu()
 	local spell = gData.GetAction();
 	local root,bTank,sGear,sEle;
 	local pDay,pWeather;
-	
+
 	bTank = gcdisplay.GetToggle('Tank');
 	if bTank == nil then
 		bTank = false;
 	end
-	
+
 	root = fGetRoot(spell.Name);
-	
+
 	-- There's three types of ninjutsu: buff, debuff and elemental. Anything
 	-- else is a mystery and will be processed with the current gear.
 	if table.find(gcinclude.tSpell['nin-buff'],root) ~= nil then
 		-- Buff
+	
 		if bTank == true then
 			gcinclude.MoveToCurrent(gProfile.Sets.Tank_NinjutsuBuff,gProfile.Sets.CurrentGear);
-		else
+		else	
 			gcinclude.MoveToCurrent(gProfile.Sets.NinjutsuBuff,gProfile.Sets.CurrentGear);
-		end
+		end		
 	else
 		if table.find(gcinclude.tSpell['nin-debuff'],root) ~= nil then
 			-- Debuff
@@ -5573,7 +5682,7 @@ end		-- MidcastNinjutsu
 
 function gcinclude.HandleMidcast()
 	local spell = gData.GetAction();
-	
+
 	if spell.Skill == 'Singing' then
 		MidcastSinging();
 	elseif spell.Skill == 'Healing Magic' then
