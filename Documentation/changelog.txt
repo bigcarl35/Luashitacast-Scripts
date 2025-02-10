@@ -1,12 +1,12 @@
-- The dynamic gear table can now only be populated through the /gc command. The
-  piecemeal approach that was first implemented has been removed. This means that
-  if /gc is not run, no gear swapping will take place.
+- Fixed fGetRoot so that the ":" is removed from the root of ninjutsu
+  spells.
+
+- "/SMG" and "/SMG warn" work now. The first gives a complete list 
+  of the whole dynamic GearDetail table and the latter just those 
+  entries that are either invalid or non-accessible.
   
-- /gc now takes about 2 seconds to run (1/2 a second longer than before.) This is
-  because it is more thorough and tracks more information, including if gear is
-  stored on the Porter Moogle.
+- Changed BLM so that WSWAPping possible. (Forgot about the use of a
+  scythe.)
   
-- Added a couple of counters to /showit. For each slot it shows the number of
-  owned and accessible gear/number of registered gear.
-  
-- /gc now checks that the gear is being targetted for the correct slot.
+- Gathering and crafting sets ignore the weapon swap restriction when
+  a gear set is loaded (i.e., it ignores the /WSWAP setting.)
