@@ -138,7 +138,7 @@ local sets = {
 --[[
 	Preshot is the first stage of when a ranged shot is being performed. This is where 
 	you place any gear that reduces the time it takes to shoot (snap shot, rapid shot, 
-	quick shot, and haste).
+	quick shot, shot delay reduction, and ranged haste).
 --]]
 
 	['Preshot'] = {
@@ -470,7 +470,7 @@ local sets = {
 	reduce your elemental damage by 20% ("nuke wall"), excluding skillchains.	
 --]]
 	['ElementalNuke'] = {
-		Rings = 'Tamas Earring',
+		Rings = 'Tamas Ring',
 		Feet  = 'Mannequin Pumps',
 	},	
 
@@ -868,7 +868,7 @@ local sets = {
 		Hands = 'Wonder Mitts',
 		Rings = { 'Tamas Ring', 'Courage Ring', 'Tranquility Ring' },
 		Back  = 'White Cape',
-		Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Belt' },
+		Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
 		Legs  = 'Wonder Braccae',
 		Feet  = { 'Mannequin Pumps', 'Wonder Clomps' },
     },
@@ -1248,7 +1248,7 @@ function profile.OnLoad()
 
 	gSettings.AllowAddSet = true;
 	gcinclude.Initialize();
-	gcinclude.settings.bWSOverride = true;
+	gcinclude.settings.bWSOverride = false;
 	
 	-- Coded order of operation override
 	gcinclude.settings.priorityEngaged = 'CEF';
