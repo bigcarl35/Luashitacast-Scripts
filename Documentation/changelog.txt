@@ -1,3 +1,12 @@
+- Added support for storage slips and claim slips.
+
+- /SMG slot xx and /SMG gs xx now work. Slot lets you display one or
+  more slots and gs displays a gear set, in either the job or gcinclude.
+  
+- /Showit no longer displays all the gear. It displays system variables
+  and /gc has been run.
+
+Version 1.5.3a
 - Fixed fGetRoot so that the ":" is removed from the root of ninjutsu
   spells.
 
@@ -10,3 +19,5 @@
   
 - Gathering and crafting sets ignore the weapon swap restriction when
   a gear set is loaded (i.e., it ignores the /WSWAP setting.)
+  
+- Added storage slips 19 and 22.
