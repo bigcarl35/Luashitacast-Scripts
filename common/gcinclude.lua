@@ -4,7 +4,7 @@ require 'common'
 
 version = { ['author']	= 'Paiine',
  		    ['name']	= 'Luashitacast (Karma)',
-			['version']	= '1.5.3a' };
+			['version']	= '1.5.4' };
 	
 --[[
 	This file contains routines that are used with Luashitacast across any supported job.
@@ -1183,6 +1183,50 @@ gcinclude.Slips = {
 				2665,2666,2667,2668,2669,2670,2671,2672,2673,2674,2675,2676,2718,
 				2719,2720,2721,2722,2723,2724,2725,2726,2727}, -- 100 items
 			 ['own'] = false, ['extra'] = nil },
+	[10]  = { 
+			 ['name'] = 'Storage Slip 19', ['id'] = 29330,	-- Scenario Rewards II, Events
+			 ['location'] = nil,
+			 ['items'] = {
+				27715,27866,27716,27867,278,281,284,3680,3681,27859,28149,27860,
+				28150,21107,21108,27625,27626,26693,26694,26707,26708,27631,27632,
+				26705,26706,27854,27855,26703,26704,3682,3683,3684,3685,3686,3687,
+				3688,3689,3690,3691,3692,3693,3694,3695,21097,21098,26717,26718,
+				26728,26719,26720,26889,26890,21095,21096,26738,26739,26729,26730,
+				26788,26946,27281,27455,26789,3698,20713,20714,26798,26954,26799,
+				26955,3706,26956,26957,3705,26964,26965,27291,26967,27293,26966,
+				27292,26968,27294,21153,21154,21086,21087,25606,26974,27111,27296,
+				27467,25607,26975,27112,27297,27468,14195,14830,14831,13945,13946,
+				14832,13947,17058,13948,14400,14392,14393,14394,14395,14396,14397,
+				14398,14399,11337,11329,11330,11331,11332,11333,11334,11335,11336,
+				15819,15820,15821,15822,15823,15824,15825,15826,3670,3672,3661,
+				3595,3665,3668,3663,3674,3667,191,28,153,151,198,202,142,134,137,
+				340,341,334,335,337,339,336,342,338,3631,3632,3625,3626,3628,3630,
+				3627,3633,3629,25632,25633,25604,25713,27325,25714,27326,3651,25711,
+				25712,10925,10948,10949,10950,10951,10952,10953,10954,10955,25657,
+				25756,25658,25757,25909}, -- 192 items
+			 ['own'] = false, ['extra'] = nil },
+	[11]  = { 
+			 ['name'] = 'Storage Slip 22', ['id'] = 29333,	-- Scenario Rewards III, Events
+			 ['location'] = nil,
+			 ['items'] = {
+				25639,25715,25638,3707,3708,21074,26406,25645,25726,25648,25649,
+				25650,25758,25759,25672,25673,282,279,280,268,25670,25671,26520,
+				25652,25669,22017,22018,25586,25587,10384,10385,22019,22020,25722,
+				25585,25776,25677,25678,25675,25679,20668,20669,22069,25755,3722,
+				21608,3713,3714,3715,3717,3727,3728,20577,3726,20666,20667,21741, 
+				21609,3723,26410,26411,25850,21509,3725,3720,21658,26524,20665,
+				26412,21965,21966,21967,25774,25838,25775,25839,3724,3721,21682,
+				22072,21820,21821,23731,26517,23730,20573,20674,21742,21860,22065,
+				22039,22124,22132,3719,3738,26518,27623,21867,21868,22283,26516,
+				20933,20578,20568,3739,20569,20570,22288,26352,23737,22282,3740,
+				26545,21977,21978,3742,26519,26514,26515,3743,21636,23753,23754,
+				54,25910,20571,23790,23791,26489,22153,22154,20574,20675,21743,
+				21861,22066,3748,21638,23800,23801,3749,3750,22045,22046,3751,
+				26490,26546,22047,22048,22049,23803,23804,22051,22052,3752,23805,
+				25911,25912,3753,23806,3754,23810,23811,3755,26496,26497,21786,
+				21787,21996,21997,23802,25777,25778,21933,21934,21993,21994,23866,
+				20670,21537,21538,21572,23870,21760,23871,23872,23873,23874,20691}, -- 189 Items
+			 ['own'] = false, ['extra'] = nil },			 		 
 --	['name'] = 'Storage Slip 08'	-- Empyrean
 --	['name'] = 'Storage Slip 09'	-- Empyrean+1
 --	['name'] = 'Storage Slip 10'	-- Empyrean+2
@@ -1192,10 +1236,8 @@ gcinclude.Slips = {
 --	['name'] = 'Storage Slip 16'	-- Reforged AF+1
 --	['name'] = 'Storage Slip 17'	-- Reforged Relic
 --	['name'] = 'Storage Slip 18'	-- Reforged Relic+1
---	['name'] = 'Storage Slip 19'	-- Scenario Rewards II, Events
 --	['name'] = 'Storage Slip 20'	-- Reforged Empyrean
 --	['name'] = 'Storage Slip 21'	-- Reforged Empyrean+1
---	['name'] = 'Storage Slip 22'	-- Scenario Rewards III, Events
 --	['name'] = 'Storage Slip 23'	-- Ambuscade Equipment
 --	['name'] = 'Storage Slip 24'	-- Reforged AF+2
 --	['name'] = 'Storage Slip 25'	-- Reforged AF+3
@@ -1205,6 +1247,195 @@ gcinclude.Slips = {
 --	['name'] = 'Storage Slip 29'	-- Reforged Empyrean+2
 --	['name'] = 'Storage Slip 30',	-- Reforged Empyrean+3
 --	['name'] = 'Storage Slip 31'	-- Scenario Rewards IV, Events
+};
+
+-- This structure defines all the claim slips and what items are associated
+-- with them through ToAU. It is used to determine if an item in a gear set
+-- is stored on the Claim Storage NPC
+gcinclude.ClaimSlips = {
+	-- Level 24-30
+	{ ['name'] = 'Iron Chainmail Set', ['kid'] = 1920, ['own'] = false, 
+		['ids'] = {12424,12552,12680,12808,12936} },
+	{ ['name'] = 'Shade Harness Set', ['kid'] = 1921, ['own'] = false, 
+		['ids'] = {15165,14426,14858,14327,15315} },
+	{ ['name'] = 'Brass Scale Armor Set', ['kid'] = 1922, ['own'] = false, 
+		['ids'] = {12433,12561,12689,12817,12945} },
+	{ ['name'] = 'Wool Robe Set', ['kid'] = 1923, ['own'] = false, 
+		['ids'] = {12474,12602,12730,12858,12986} },
+	{ ['name'] = 'Eisenplatte Set', ['kid'] = 1924, ['own'] = false, 
+		['ids'] = {15167,14431,14860,14329,15317} },
+	{ ['name'] = 'Soil Gi Set', ['kid'] = 1925, ['own'] = false, 
+		['ids'] = {12458,12586,12714,12842,12970} },
+	{ ['name'] = 'Seer\'s Tunic Set', ['kid'] = 1926, ['own'] = false, 
+		['ids'] = {15163,14424,14856,14325,15313} },
+	{ ['name'] = 'Studded Armor Set', ['kid'] = 1927, ['own'] = false, 
+		['ids'] = {12442,12570,12698,12826,12954} },
+	{ ['name'] = 'Centurion\'s Scale Mail Set', ['kid'] = 1928, ['own'] = false, 
+		['ids'] = {12438,12566,12694,12822,12950} },
+	{ ['name'] = 'Mercenary Captain\'s Doublet Set', ['kid'] = 1929, ['own'] = false, 
+		['ids'] = {12470,12598,12726,12854,12982} },
+	{ ['name'] = 'Garish Tunic Set', ['kid'] = 1930, ['own'] = false, 
+		['ids'] = {15164,14425,14857,14326,15314} },
+	{ ['name'] = 'Noct Doublet Set', ['kid'] = 1931, ['own'] = false, 
+		['ids'] = {15161,14422,14854,14323,15311} },
+	-- Level 31-40
+	{ ['name'] = 'Custom Armor Set (H.M.)', ['kid'] = 1932, ['own'] = false, 
+		['ids'] = {12654,12761,12871,13015} },
+	{ ['name'] = 'Custom Armor Set (H.F.)', ['kid'] = 1933, ['own'] = false, 
+		['ids'] = {12655,12762,12872,13016} },
+	{ ['name'] = 'Magna Armor Set (E.M.)', ['kid'] = 1934, ['own'] = false, 
+		['ids'] = {12656,12763,12873,13017} },
+	{ ['name'] = 'Magna Armor Set (E.F.)', ['kid'] = 1935, ['own'] = false, 
+		['ids'] = {12657,12764,12874,13018} },
+	{ ['name'] = 'Wonder Armor Set (Taru)', ['kid'] = 1936, ['own'] = false, 
+		['ids'] = {12658,12765,12875,13019} },
+	{ ['name'] = 'Savage Armor Set (Mithra)', ['kid'] = 1937, ['own'] = false, 
+		['ids'] = {12659,12766,12876,13020} },
+	{ ['name'] = 'Elder Armor Set (Galka)', ['kid'] = 1938, ['own'] = false, 
+		['ids'] = {12660,12767,12877,13021} },
+	{ ['name'] = 'Linen Cloak Set', ['kid'] = 1939, ['own'] = false, 
+		['ids'] = {12610,12738,12866,12994} },
+	{ ['name'] = 'Padded Armor Set', ['kid'] = 1940, ['own'] = false, 
+		['ids'] = {12450,12578,12706,12836,12962} },
+	{ ['name'] = 'Silver Chainmail Set', ['kid'] = 1941, ['own'] = false, 
+		['ids'] = {12425,12553,12681,12809,12937} },
+	{ ['name'] = 'Gambison Set', ['kid'] = 1942, ['own'] = false, 
+		['ids'] = {12466,12594,12722,12850,12978} },
+	{ ['name'] = 'Iron Scail Mail Set', ['kid'] = 1943, ['own'] = false, 
+		['ids'] = {13871,13783,14001,14243,14118} },
+	{ ['name'] = 'Cuir Armor Set', ['kid'] = 1944, ['own'] = false, 
+		['ids'] = {12443,12571,12699,12827,12955} },
+	{ ['name'] = 'Velvet Robe Set', ['kid'] = 1945, ['own'] = false, 
+		['ids'] = {12475,12603,12731,12859,12987} },
+	{ ['name'] = 'Opaline Dress Set', ['kid'] = 1946, ['own'] = false, 
+		['ids'] = {13931,14384,14249,14116} },
+	{ ['name'] = 'Royal Squire\'s Chainmail Set', ['kid'] = 1947, ['own'] = false, 
+		['ids'] = {12431,12559,12687,12815,12943} },
+	{ ['name'] = 'Plate Armor Set', ['kid'] = 1948, ['own'] = false, 
+		['ids'] = {12416,12544,12672,12800,12928} },
+	{ ['name'] = 'Combat Castor\'s Set', ['kid'] = 1949, ['own'] = false, 
+		['ids'] = {12614,12743,12870,12998} },
+	{ ['name'] = 'Argent Set', ['kid'] = 1059, ['own'] = false, 
+		['ids'] = {11310,16365} },
+	-- Level 41-50
+	{ ['name'] = 'Alumine Haubert Set', ['kid'] = 1950, ['own'] = false, 
+		['ids'] = {15205,14444,14051,15402,15341} },
+	{ ['name'] = 'Carapace Armor Set', ['kid'] = 1951, ['own'] = false, 
+		['ids'] = {13711,13712,13713,12837,13715} },
+	{ ['name'] = 'Banded Mail Set', ['kid'] = 1952, ['own'] = false, 
+		['ids'] = {12426,12554,12682,12810,12938} },
+	{ ['name'] = 'Hara-Ate Set', ['kid'] = 1953, ['own'] = false, 
+		['ids'] = {12459,12587,12715,12843,12974} },
+	{ ['name'] = 'Raptor Armor Set', ['kid'] = 1954, ['own'] = false, 
+		['ids'] = {12444,12572,12700,12828,12956} },
+	{ ['name'] = 'Steel Scale Mail Set', ['kid'] = 1955, ['own'] = false, 
+		['ids'] = {13873,13785,14003,14245,14120} },
+	{ ['name'] = 'Wool Gambison Set', ['kid'] = 1956, ['own'] = false, 
+		['ids'] = {12467,12595,12723,12851,12979} },
+	{ ['name'] = 'Shinobi Gi Set', ['kid'] = 1957, ['own'] = false, 
+		['ids'] = {12460,12588,12716,12844,12972} },
+	{ ['name'] = 'Mythril Plate Armor Set', ['kid'] = 1962, ['own'] = false, 
+		['ids'] = {12417,12545,12673,12801,12929} },
+	{ ['name'] = 'Iron Musketeer\'s Cuirass Set', ['kid'] = 1958, ['own'] = false, 
+		['ids'] = {12422,12550,12678,12806,12934} },
+	{ ['name'] = 'Tactician Magician\'s Cloak Set', ['kid'] = 1959, ['own'] = false, 
+		['ids'] = {12478,12606,12734,12862,12990} },
+	{ ['name'] = 'White Cloak Set', ['kid'] = 1960, ['own'] = false, 
+		['ids'] = {12611, 12739, 12867, 12995} },
+	{ ['name'] = 'Austere Robe Set', ['kid'] = 1961, ['own'] = false, 
+		['ids'] = {13939,13814,14826,14310,14189} },
+	{ ['name'] = 'Crow Jupon Set', ['kid'] = 1963, ['own'] = false, 
+		['ids'] = {15242,14498,14907,15578,15663} },
+	-- Artifact Armor/High Level Gear
+	{ ['name'] = 'Fighter\'s Armor Set', ['kid'] = 654, ['own'] = false, 
+		['ids'] = {12511,12638,13961,14214,14089} },
+	{ ['name'] = 'Temple Attire Set', ['kid'] = 655, ['own'] = false, 
+		['ids'] = {12512,12639,13962,14215,14090} },
+	{ ['name'] = 'Healer\'s Attire Set', ['kid'] = 656, ['own'] = false, 
+		['ids'] = {13855,12640,13963,14216,14091} },
+	{ ['name'] = 'Wizard\'s Attire Set', ['kid'] = 657, ['own'] = false, 
+		['ids'] = {13856,12641,13964,14217,14092} },
+	{ ['name'] = 'Warlock\'s Attire Set', ['kid'] = 658, ['own'] = false, 
+		['ids'] = {12513,12642,13965,14218,14093} },
+	{ ['name'] = 'Rogue\'s Attire Set', ['kid'] = 659, ['own'] = false, 
+		['ids'] = {12514,12643,13966,14219,14094} },
+	{ ['name'] = 'Gallant Armor Set', ['kid'] = 660, ['own'] = false, 
+		['ids'] = {12515,12644,13967,14220,14095} },
+	{ ['name'] = 'Chaos Armor Set', ['kid'] = 661, ['own'] = false, 
+		['ids'] = {12516,12645,13968,14221,14096} },
+	{ ['name'] = 'Beast Armor Set', ['kid'] = 662, ['own'] = false, 
+		['ids'] = {12517,12646,13969,14222,14097} },
+	{ ['name'] = 'Choral Armor Set', ['kid'] = 663, ['own'] = false, 
+		['ids'] = {13857,12647,13970,14223,14098} },
+	{ ['name'] = 'Hunter\'s Attire Set', ['kid'] = 664, ['own'] = false, 
+		['ids'] = {12518,12648,13971,14224,14099} },
+	{ ['name'] = 'Myochin Armor Set', ['kid'] = 665, ['own'] = false, 
+		['ids'] = {13868,13781,13972,14225,14100} },
+	{ ['name'] = 'Ninja\'s Garb Set', ['kid'] = 666, ['own'] = false, 
+		['ids'] = {13869,13782,13973,14226,14101} },
+	{ ['name'] = 'Drachen Armor Set', ['kid'] = 667, ['own'] = false, 
+		['ids'] = {12519,12649,13974,14227,14102} },
+	{ ['name'] = 'Evoker\'s Attire Set', ['kid'] = 668, ['own'] = false, 
+		['ids'] = {12520,12650,13975,14228,14103} },
+	{ ['name'] = 'Magus Attire Set', ['kid'] = 1964, ['own'] = false, 
+		['ids'] = {15265,14521,14928,15600,15684} },
+	{ ['name'] = 'Corsair\'s Attire Set', ['kid'] = 1965, ['own'] = false, 
+		['ids'] = {15266,14522,14929,15601,15685} },
+	{ ['name'] = 'Puppetry Attire Set', ['kid'] = 1966, ['own'] = false, 
+		['ids'] = {15267,14523,14930,15602,15686} },
+	{ ['name'] = 'Dancer Attire Set (M)', ['kid'] = 1967, ['own'] = false, 
+		['ids'] = {16138,14578,15002,15659,15746} },
+	{ ['name'] = 'Dancer Attire Set (F)', ['kid'] = 1968, ['own'] = false, 
+		['ids'] = {16139,14579,15003,15660,15747} },
+	{ ['name'] = 'Scholar\'s Attire Set', ['kid'] = 1969, ['own'] = false, 
+		['ids'] = {16140,14580,15004,16311,15748} },
+	{ ['name'] = 'Amir Armor Set', ['kid'] = 1970, ['own'] = false, 
+		['ids'] = {16062,14525,14933,15604,15688} },
+	{ ['name'] = 'Pahluwan Armor Set', ['kid'] = 1971, ['own'] = false, 
+		['ids'] = {16069,14530,14940,15609,15695} },
+	{ ['name'] = 'Yigit Armor Set', ['kid'] = 1972, ['own'] = false, 
+		['ids'] = {16064,14527,14935,15606,15690} },
+	-- Relic Armor
+	{ ['name'] = 'Warrior\'s Armor Set', ['kid'] = 861, ['own'] = false, 
+		['ids'] = {15072,15087,15102,15117,15132} },
+	{ ['name'] = 'Melee Attire Set', ['kid'] = 862, ['own'] = false, 
+		['ids'] = {15073,15088,15103,15118,15133} },
+	{ ['name'] = 'Cleric\'s Attire Set', ['kid'] = 863, ['own'] = false, 
+		['ids'] = {15074,15089,15104,15119,15134} },
+	{ ['name'] = 'Sorcerer\'s Attire Set', ['kid'] = 864, ['own'] = false, 
+		['ids'] = {15075,15090,15105,15120,15135} },
+	{ ['name'] = 'Duelist\'s Armor Set', ['kid'] = 865, ['own'] = false, 
+		['ids'] = {15076,15091,15106,15121,15136} },
+	{ ['name'] = 'Assassin\'s Attire Set', ['kid'] = 866, ['own'] = false, 
+		['ids'] = {15077,15092,15107,15122,15137} },
+	{ ['name'] = 'Valor Armor Set', ['kid'] = 867, ['own'] = false, 
+		['ids'] = {15078,15093,15108,15123,15138} },
+	{ ['name'] = 'Abyss Armor Set', ['kid'] = 868, ['own'] = false, 
+		['ids'] = {15079,15094,15109,15124,15139} },
+	{ ['name'] = 'Monster Armor Set', ['kid'] = 869, ['own'] = false, 
+		['ids'] = {15080,15095,15110,15125,15140} },
+	{ ['name'] = 'Bard\'s Attire Set', ['kid'] = 870, ['own'] = false, 
+		['ids'] = {15081,15096,15111,15126,15141} },
+	{ ['name'] = 'Scout\'s Attire Set', ['kid'] = 871, ['own'] = false, 
+		['ids'] = {15082,15097,15112,15127,15142} },
+	{ ['name'] = 'Saotome Armor Set', ['kid'] = 872, ['own'] = false, 
+		['ids'] = {15083,15098,15113,15128,15143} },
+	{ ['name'] = 'Koga Garb Set', ['kid'] = 873, ['own'] = false, 
+		['ids'] = {15084,15099,15114,15129,15144} },
+	{ ['name'] = 'Wyrm Armor Set', ['kid'] = 874, ['own'] = false, 
+		['ids'] = {15085,15100,15115,15130,15145} },
+	{ ['name'] = 'Summoner\'s Attire Set', ['kid'] = 875, ['own'] = false, 
+		['ids'] = {15086,15101,15116,15131,15146} },
+	{ ['name'] = 'Mirage Attire Set', ['kid'] = 1054, ['own'] = false, 
+		['ids'] = {11465,11292,15025,16346,11382} },
+	{ ['name'] = 'Commodore Attire Set', ['kid'] = 1055, ['own'] = false, 
+		['ids'] = {11468,11295,15028,16349,11385} },
+	{ ['name'] = 'Pantin Attire Set', ['kid'] = 1056, ['own'] = false, 
+		['ids'] = {11471,11298,15031,16352,11388} },
+	{ ['name'] = 'Etoile Attire Set', ['kid'] = 1057, ['own'] = false, 
+		['ids'] = {11478,11305,15038,16360,11396} },
+	{ ['name'] = 'Argute Attire Set', ['kid'] = 1058, ['own'] = false, 
+		['ids'] = {11480,11307,15040,16362,11398} }
 };
 
 -- This structure will be dynamically populated by the GearCheck function.
@@ -1383,13 +1614,12 @@ function DB_ShowIt()
 	print(chat.message('WScheck: ' .. tostring(gcinclude.settings.WScheck)));
 	print(chat.message('WSdistance: ' .. tostring(gcinclude.settings.WSdistance)));
 	print(chat.message('bWSOverride: ' .. tostring(gcinclude.settings.bWSOverride)));
+	print(chat.message('GC run? ' .. tostring(gcinclude.settings.bGc)));
 	if sSlip == nil then
 		print(chat.message('Slips: None'));
 	else
 		print(chat.message('Slips: ' .. sSlip));
 	end
-	print(chat.message(' '));
-	GearCheckList();
 end		-- DB_ShowIt
 	
 --[[
@@ -1730,42 +1960,67 @@ function SetVariables()
 end		-- SetVariables
 
 --[[
-	fSetColorText accepts a boolean and returns a color code to represent the
-	value: 2 - green, 8 - red, 107 - something else (probably yellow)
+	fRemoveConditional takes the passed in string and removes any inline
+	conditional qualifier from it.
 --]]
 
-function fSetColorText(bVal)
-	local ic = 2;	-- Green
+function fRemoveConditional(g)
+	local iPos;
+	if g == nil then
+		return nil;
+	end
+	
+	iPos = string.find(g,'//');
+
+	if iPos ~= nil then
+		return string.sub(g,1,iPos-1);
+	else
+		return g;
+	end
+end		-- fRemoveConditional
+
+--[[
+	fSetColorText accepts a boolean and returns a color code to represent the
+	value: 2 - green, 8 - red, 107 - something else (probably yellow). bInvert
+	inverts the colors: 2 - red and 8 - green
+--]]
+
+function fSetColorText(bVal,bInvert)
+	local ic;
+	
+	if bInvert == nil then
+		bInvert = false;
+	end
+	
 	if bVal == nil then
 		ic = 107;	-- Other color
-	elseif bVal == false then
+	elseif (bVal == false and bInvert == false) or
+		(bVal == true and bInvert == true) then
 		ic = 8;		-- Red
+	else 
+		ic = 2;	-- Green
 	end
 	
 	return ic;	
 end		-- fSetColorText
 
 --[[
-	DisplayGDItems lists either all the dynamic gear definitions or just the
-	ones that are invalid or inaccessible, broken out by slot.
+	DisplayGD_AW lists either all the dynamic gear definitions or just the
+	ones that are invalid or inaccessible.
 --]]
 
-function DisplayGDItems(bWarn)
+function DisplayGD_AW(p1)
 	local bShow;
 	
-	if bWarn == nil then
-		bWarn = false;
-	end
-	
-	if bWarn == false then
+	if p1 == nil then
 		print('The following is a complete list of all gear compiled during /gc');
-	else
+	elseif p1 == 'warn' then
 		print('The following lists all gear that\'s invalid or inaccessible');
-	end
+	end	
 
 	for slot,name in pairs(gcinclude.GearDetails) do
 		print(chat.message(' '));
-		if bWarn == true then
+		if p1 ~= nil and string.find('slot,warn',p1) ~= nil then
 			print(chat.message('Slot: ' .. slot));
 		else
 			print(chat.message('Slot: ' .. slot .. '[' .. tostring(name['acc']) .. '/' .. tostring(name['num']) .. ']'));
@@ -1773,14 +2028,121 @@ function DisplayGDItems(bWarn)
 		
 		for i,j in pairs(name) do
 			if string.find('num,acc,vis',i) == nil then
-				bShow = (bWarn == false or j['valid'] == false or j['accessible'] == false);
+				bShow = (p1 == nil or j['valid'] == false or j['accessible'] == false);
 				if bShow == true and type(i) == 'string' then
 					DisplayItemStats(i,slot);
 				end
 			end
 		end
 	end
-end
+end		-- DisplayGD_AW
+
+--[[
+	DisplayGD_S lists all dynamic gear definitions associated with specific slot(s).
+--]]
+
+function DisplayGD_S(p1)
+
+	if p1 == nil then
+		return;
+	end
+	
+	print('The following lists all gear associated with slot(s): ' .. p1);
+	
+	for slot,name in pairs(gcinclude.GearDetails) do
+		if string.find(string.lower(p1),string.lower(slot)) ~= nil then
+			print(chat.message(' '));
+			print(chat.message('Slot: ' .. slot));
+
+			for i,j in pairs(name) do
+				if string.find('num,acc,vis',i) == nil then
+					if type(i) == 'string' then
+						DisplayItemStats(i,slot);
+					end
+				end
+			end
+		end
+	end
+end		-- DisplayGD_S
+
+--[[
+	DisplayGD_Gs lists all dynamic gear definitions associated with a specific gear set.
+--]]
+
+function DisplayGD_Gs(p1)
+	local str,tmp;
+	local tGs = {};
+	local gg = {};
+	local lPc = nil;
+
+	if p1 == nil then
+		return;
+	end
+		
+	-- first check gProfile.Sets. If not found, look in gcinclude.Sets.
+	tGs = fGetTableByName(p1);
+	if tGs == nil then
+		print(chat.message(p1 .. ': no such set exists!'));
+		return;
+	end
+	
+	print(chat.message('Gear set: ' .. string.upper(p1)));
+
+	-- Loop the entries first looking for subsets
+	for slot,j in pairs(tGs) do
+		if string.lower(slot) == 'subset' then
+			if j ~= nil then
+				-- then make sure that j is a table
+				gg = {};
+				if type(j) == 'string' then
+					gg[1] = j;
+				else
+					gg = j
+				end			
+				tmp = nil;
+				
+				for _,g in pairs(gg) do
+					if tmp == nil then
+						tmp = fRemoveConditional(g);
+					else
+						tmp = tmp .. ',' .. fRemoveConditional(g);
+					end
+					print(' ');
+					print(chat.message('Subset: ' .. tmp));
+				end	
+			end
+		end
+	end
+				
+	-- loop on the entries of the gear set
+	lPc = ',';
+	for slot,j in pairs(tGs) do	
+		if string.lower(slot) ~= 'subset' then
+			print(' ');
+			print(chat.message('Slot: ' .. slot));
+			-- make sure entry is not [slot] =
+			if j ~= nil then
+				gg = {};
+				-- then make sure that j is a table
+				if type(j) == 'string' then
+					gg[1] = j;
+				else
+					gg = j
+				end
+				
+				-- Now process the normal slot
+				local t;
+				for _,g in pairs(gg) do
+					t = string.upper(fRemoveConditional(g));
+					if string.find(lPc,t) == nil then
+						DisplayItemStats(t,slot);
+						lPc = lPc .. ',' ..t;
+					end						
+				end
+			end
+		end	
+	end	
+end		-- DisplayGD_Gs
 
 --[[
 	DisplayItemStats displays the item definition for the passed piece of gear
@@ -1790,11 +2152,15 @@ end
 function DisplayItemStats(sName,sSlot)
 	local msg;
 	local tWhat;
+	local tTrans = { [true] = 'Yes', [false] = 'No'};
 	
 	if sSlot == nil or sName == nil then
 		return;
 	end
-
+	
+	sSlot = string.lower(sSlot);
+	sName = string.lower(sName);
+	
 	if gcinclude.GearDetails[sSlot][sName] == nil then
 		-- You get here if the item isn't a valid item
 		print(sName .. ' - ' .. chat.color1(8,'Invalid item'));
@@ -1804,22 +2170,25 @@ function DisplayItemStats(sName,sSlot)
 	tWhat = gcinclude.GearDetails[sSlot][sName];
 	-- You get here if the item is valid or it's invalid because the slot
 	-- is incorrect	
-	msg = '   ' .. string.upper(sName) .. ' - Valid: ' .. chat.color1(fSetColorText(tWhat['valid']),tWhat['valid']);
+	msg = '   ' .. chat.color1(fSetColorText(nil), string.upper(sName)); 
 	msg = msg .. ', Level: ' .. tostring(tWhat['level'],tostring(tWhat['level']));
-	msg = msg .. ', Own: ' .. chat.color1(fSetColorText(tWhat['own']),tWhat['own']);
-	msg = msg .. ', Slot: ' .. chat.color1(fSetColorText(tWhat['slot']),tWhat['slot']) .. ',';
 	print(msg);
-	msg = '      Accessible: ' .. chat.color1(fSetColorText(tWhat['accessible']),tWhat['accessible']);
-	msg = msg .. ', Job: ' .. chat.color1(fSetColorText(tWhat['job']),tWhat['job']);
-	msg = msg .. ', Porter: ' .. chat.color1(fSetColorText(tWhat['porter']),'NA');
-	msg = msg .. ', Claim: ' .. chat.color1(fSetColorText(tWhat['claim']),'NA,');
+	print('      ' .. 'Own it? ' .. chat.color1(fSetColorText(tWhat['own']),tTrans[tWhat['own']]));
+	print('      ' .. 'Accessible? ' .. chat.color1(fSetColorText(tWhat['accessible']),tTrans[tWhat['accessible']]));
+	print('      Code Breakdown-');
+	msg = '         Valid? ' .. chat.color1(fSetColorText(tWhat['valid']),tTrans[tWhat['valid']]);
+	msg = msg .. ' Slot? ' .. chat.color1(fSetColorText(tWhat['slot']),tTrans[tWhat['slot']]);
+	msg = msg .. ' Job? ' .. chat.color1(fSetColorText(tWhat['job']),tTrans[tWhat['job']]);
+	msg = msg .. ' Porter? ' .. chat.color1(fSetColorText(tWhat['porter'],true),tTrans[tWhat['porter']]);
+	msg = msg .. ' Claim? ' .. chat.color1(fSetColorText(tWhat['claim'],true),tTrans[tWhat['claim']]);
 	print(msg);
 	if tWhat['locations'] ~= nil then
-		msg = '      Location(s): ' .. tWhat['locations'];
+		msg = '         Location(s): ' .. tWhat['locations'];
 	else
-		msg = '      Location(s): ';
+		msg = '         Location(s): ';
 	end
 	print(msg);
+	print(' ');
 end	-- DisplayItemStats
 
 --[[
@@ -2017,8 +2386,8 @@ function fGearCheckItem(sSlot,sName,bAccess,bCreate)
 			bJob = (bit.band(item.Jobs,gcinclude.JobMask[player.MainJob]) == gcinclude.JobMask[player.MainJob]) or
 		  		   (bit.band(item.Jobs,gcinclude.JobMask['Alljobs']) == gcinclude.JobMask['Alljobs']);
 			tOwned = fCheckItemOwned(item);
-			bAccessible = (tOwned['own'] == true and tOwned['accessible'] == true);
 			bSlot = fSlotMatch(sSlot,item.Slots);
+			bAccessible = (tOwned['own'] == true and tOwned['accessible'] == true);
 
 			-- Save item w/details
 			gcinclude.GearDetails[sSlot][sName] = { 
@@ -2029,8 +2398,8 @@ function fGearCheckItem(sSlot,sName,bAccess,bCreate)
 				['job']        = bJob, 
 				['own']		   = tOwned['own'],
 				['accessible'] = bAccessible, 
-				['porter']	   = nil, --tOwned['porter'],
-				['claim']	   = nil, -- tOwned['claim'],
+				['porter']	   = tOwned['porter'],
+				['claim']	   = tOwned['claim'],
 				['locations']  = tOwned['locations'],
 				['desc'] 	   = item.Description[1]
 			};
@@ -2074,10 +2443,12 @@ end	-- fGearCheckItem
 --]]
 
 function GearCheck(sList,bForce)
+	local player = AshitaCore:GetMemoryManager():GetPlayer();
 	local tTarget = { gProfile.Sets, gcinclude.Sets };
 	local ts = {};
 	local ref = {};
 	local iCnt = 0;
+	local ctr = 0;
 	local bGood;
 
 	if bUpdate == nil then
@@ -2090,6 +2461,16 @@ function GearCheck(sList,bForce)
 		FindSlips();
 		print(chat.message('Found slips: ' .. fDisplaySlips(false)));
 
+		-- then claim slips
+		print(chat.header('GearCheck'):append(chat.message('Starting to scan for claim slips')));
+		for i,j in pairs(gcinclude.ClaimSlips) do
+			if 	player:HasKeyItem(j['kid']) then
+				j['own'] = true;
+				ctr = ctr + 1;
+			end
+		end
+		print(chat.message('Found claim slips: ' .. tostring(ctr)));
+		
 		-- next is EquipIt items
 		print(chat.header('GearCheck'):append(chat.message('Starting to scan EquipIt shortcut items')));
 		for s,t in pairs(gcinclude.tEquipIt) do
@@ -2187,57 +2568,6 @@ function GearCheck(sList,bForce)
 		print(chat.message('   [' .. i .. '] - ' .. tostring(j['num'])));
 	end
 end		-- GearCheck
-
---[[
-	GearCheckList will list out the details of the dynamic table.
---]]
-
-function GearCheckList()
-	local sMsg;
-	local bOnce;
-	
-	for i,j in pairs(gcinclude.GearDetails) do
-		print(chat.message(' '));
-		print(chat.message('Slot: ' .. i .. '[' .. tostring(j['acc']) .. '/' .. tostring(j['num']) .. ']'));
-		for ii,jj in pairs(j) do
-			bOnce = true;
-			sMsg = nil;
-			if type(ii) ~= 'number' then
-				if string.find('desc,num,vis',ii) == nil then
-					sMsg = '   ' .. ii .. ' - ';
-				end
-			end
-			if type(jj) == 'table' then 
-				for iii,jjj in pairs(jj) do
-					if iii == 'valid' and jjj == false then
-						sMsg = sMsg .. chat.color1(8,'Invalid');
-					else
-						if string.find('desc,id,valid',iii) == nil then
-							if bOnce == true then
-								sMsg = sMsg .. iii .. ': '.. tostring(jjj);
-								bOnce = not bOnce;
-							else
-								if type(jjj) == 'boolean' then
-									sMsg = sMsg .. ', ' .. iii .. ': '
-									if jjj == false then
-										sMsg = sMsg .. chat.color1(8,tostring(jjj));
-									else
-										sMsg = sMsg .. chat.color1(2,tostring(jjj));
-									end
-								else
-									sMsg = sMsg .. ', ' .. iii .. ': '.. tostring(jjj);
-								end
-							end
-						end
-					end
-				end
-				if sMsg ~= nil then
-					print('   ' .. sMsg);
-				end
-			end
-		end
-	end	
-end		-- GearCheckList
 
 --[[
 	fIsPetNamed determines if that passed pet has the passed name
@@ -2927,6 +3257,14 @@ function gcinclude.fBuffed(test,bStart)
 	return false;
 end		--  gcinclude.fBuffed
 
+function fBit(p)
+    return 2 ^ (p - 1);
+end		-- fBit
+
+function fHasBit(x, p)
+    return x % (p + p) >= p;
+end		-- fHasBit
+
 --[[
 	fCheckItemOwned determines if the specified piece of gear is owned by 
 	the player. bAccessible further restricts the search to containers 
@@ -2977,18 +3315,52 @@ function fCheckItemOwned(gear)
 		end
 	end
 
--- if locations defined, remove the encasing commas
-if tOwned['locations'] ~= nil then
-	tOwned['locations'] = string.sub(tOwned['locations'],2,-2);
-end
+	-- if locations defined, remove the encasing commas
+	if tOwned['locations'] ~= nil then
+		tOwned['locations'] = string.sub(tOwned['locations'],2,-2);
+	end
 
---[[	
 	-- Then loop through storage slips to see if item stored
 	for i,desc in pairs(gcinclude.Slips) do
-		if desc['own'] == true and table.find(desc['items'],gear.Id) ~= nil then
-			
+		-- If item slip owned by player...
+		if desc['own'] == true then
+			local iPos = table.find(desc['items'],gear.Id);
+			-- See if the passed gear associated with that slip
+			if iPos ~= nil then	
+				-- Now figure out if the item is stored on that slip
+				local byte = struct.unpack('B',desc['extra'],math.floor((iPos - 1) / 8) + 1);
+				if byte < 0 then
+                    byte = byte + 256;
+                end
+				if (fHasBit(byte, fBit((iPos - 1) % 8 + 1))) then
+					-- Yup, add the slip name to the location
+					tOwned['own'] = true;
+					tOwned['porter'] = true;
+					if tOwned['locations'] == nil then
+						tOwned['locations'] = desc['name'];
+					else
+						tOwned['locations'] = tOwned['locations'] .. ', ' .. desc['name'];
+					end
+					break;
+				end
+			end			
+		end			
 	end
---]]	
+	
+	-- Lastly, see if stored on a claim slip
+	for i,desc in pairs(gcinclude.ClaimSlips) do
+		if desc['own'] == true and table.find(desc['ids'],gear.Id) ~= nil then
+			tOwned['own'] = true;
+			tOwned['claim'] = true;
+			if tOwned['locations'] == nil then
+				tOwned['locations'] = desc['name'];
+			else
+				tOwned['locations'] = tOwned['locations'] .. ', ' .. desc['name'];
+			end
+			break;
+		end
+	end
+	
 	return tOwned;
 end		-- fCheckItemOwned
 
@@ -3396,9 +3768,14 @@ function RegionControlDisplay()
 end		-- RegionControlDisplay
 
 function gcinclude.t1()
-
-	--DisplayItemStats('lilac corsage','head');
-	print(gcinclude.GearDetails['feet']['acc']);
+	local player = AshitaCore:GetMemoryManager():GetPlayer();
+	local CENTURION_SCALE_MAIL_CLAIM_SLIP = 1928;
+	local MRCCPT_DOUBLET_CLAIM_SLIP = 1929;
+	local cent = player:HasKeyItem(CENTURION_SCALE_MAIL_CLAIM_SLIP);
+	local mrc = player:HasKeyItem(MRCCPT_DOUBLET_CLAIM_SLIP);
+	
+	print('Cent: ' .. tostring(cent) .. ', ' .. 'Merc: ' .. tostring(mrc));
+	
 
 --[[
 	local pEntity = AshitaCore:GetMemoryManager():GetEntity();
@@ -3449,6 +3826,10 @@ end		-- gcinclude.t1
 	Update: support for subsets have been added. The subsets are processed first
 	(if present) then the rest of the set. Please note this is a recursive function.
 	If nesting goes too deep, it will run out of memory.
+	
+	Note: added the bIgnoreWSWAP parameter. This was added to override WSWAP when
+	crafting and gathering sets are loaded. This was needed since it's not uncommon
+	for these sets to have weapons of some sort to aid in the craft/gathering.
 --]]
 
 function gcinclude.MoveToCurrent(tSet,tMaster,bOverride,bIgnoreWSWAP)
@@ -3527,7 +3908,7 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride,bIgnoreWSWAP)
 		
 			-- if the slot to be populated is one that will reset the player's TP,
 			-- make sure that /WSWAP is true or that gcinclude.settings.bWSOverride 
-			-- is true.	
+			-- is true  or bIgnoreWSWAP is true.	
 			if string.find('main,sub,range',sK) ~= nil then
 				bSkip = not (gcdisplay.GetToggle('WSwap') == true 
 						or gcinclude.settings.bWSOverride == true
@@ -4736,21 +5117,17 @@ function gcinclude.HandleCommands(args)
 		RefreshVariables();
 	elseif (args[1] == 'showit') then						-- Shows debug info for specified type
 		DB_ShowIt();
-	elseif (args[1] == 'smg') then							-- Show My Gear
-		for i = 1,#args do
-			args[i] = string.lower(args[i]);
-		end
-			
+	elseif (args[1] == 'smg') then							-- Show My Gear			
 		if #args == 1 then				-- Show a list of all gear
-			DisplayGDItems(false);
+			DisplayGD_AW(nil);
 		elseif args[2] ~= nil then
-			if args[2] == 'warn' then		-- Show a list of gear where accessible is false
-				DisplayGDItems(true);
+			if string.lower(args[2]) == 'warn' then		-- Show a list of gear where accessible is false
+				DisplayGD_AW('warn');
 			elseif args[3] ~= nil then
 				if args[2] == 'slot' then
-					print('This will display gear for slot: ' .. args[3]);
+					DisplayGD_S(args[3]);
 				else
-					print('This will display gear set: ' .. args[3]);				
+					DisplayGD_Gs(args[3]);
 				end
 			end 
 		end
