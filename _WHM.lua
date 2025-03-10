@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the WHM job.
 	
-	Gear Sets last updated: November 12, 2024
-	Code update: November 12, 2024
+	Gear Sets last updated: March 9, 2025
+	Code update: March 9, 2025
 --]]
 
 local sets = {
@@ -62,9 +62,17 @@ local sets = {
 --]]
 	
 	['Default'] = {
-		Subset = 'TP',
-		Head   = { 'Lilac Corsage//TOWN', 'Silver Hairpin +1' },
-		Body   = { 'Ducal Aketon//TOWN-AK', 'Seer\'s Tunic', 'Angler\'s Tunica' },
+		Main   = 'Earth Staff',
+		Head   = { 'Lilac Corsage//TOWN', 'Healer\'s Cap', 'Cleric\'s Cap', 'Healer\'s Cap', 'Silver Hairpin +1' },
+        Neck   = { 'Rep.Gold Medal//NOT_OWN', 'Uggalepih Pendant//NIGHTTIME', 'Fenrir\'s Torque//DAYTIME', 'Spirit Torque', 'Justice Badge' },
+        Ears   = { 'Bat Earring//BLINDED', 'Geist Earring', 'Loquac. Earring', 'Geist Earring', 'Energy Earring +1', 'Energy Earring +1' },
+		Body   = { 'Ducal Aketon//TOWN-AK', 'Noble\'s Tunic', 'Healer\'s Bliaut', 'Vermillion Cloak', 'Seer\'s Tunic', 'Angler\'s Tunica' },
+        Hands  = { 'Blessed Mitts', 'Healer\'s Mitts', 'Devotee\'s Mitts', 'Baron\'s Cuffs' },
+        Rings  = { 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Tranquility Ring' },
+		Back   = { 'Blue Cape', 'Red Cape', 'White Cape', 'Mist Silk Cape' },  
+		Waist  = { 'Flagellant\'s Rope//PARALYZED', 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
+        Legs   = { 'Blessed Trousers', 'Healer\'s Pantaln.', 'Wonder Braccae',  'Baron\'s Slops', 'Fisherman\'s Hose' }, 
+		Feet   = { 'Blessed Pumps', 'Healer\'s Duckbills', 'Mannequin Pumps', 'Seer\'s Pumps', 'Waders' },
 	},
 	
 --[[
@@ -74,15 +82,7 @@ local sets = {
 --]]
 
 	['TP'] = {
-        Head = 'Silver Hairpin +1',
-        Neck = 'Justice Badge',
-        Ears = { 'Energy Earring +1', 'Energy Earring +1' },
-        Body = { 'Seer\'s Tunic', 'Angler\'s Tunica' },
-		Back = 'White Cape',
-        Hands = 'Baron\'s Cuffs',
-        Rings = { 'Tamas Ring', 'Tranquility Ring' },
-        Waist = 'Friar\'s Rope',
-        Feet = { 'Mannequin Pumps', 'Seer\'s Pumps' },
+		Subset = 'Default',
     },
 		
 --[[
@@ -96,18 +96,40 @@ local sets = {
 --]]
 	
 	['Accuracy'] = {
+		Head  = 'Optical Hat',
+		Neck  = 'Peacock Amulet',
         Hands = 'Battle Gloves',
-        Waist = 'Tilt Belt',
-		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },
+        Waist = { 'Life Belt', 'Tilt Belt' },
+		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },
     },
-
+		
 --[[
 	Similar to the accuracy set, the Ranged_Accuracy set will be used on ranged attacks
 --]]
 
 	['Ranged_Accuracy'] = {
 	},
-	
+
+--[[
+	Progressive is a new idea for handling accuracy/ranged accuracy. You create
+	stages to load accuracy gear from. Depending on what the player specifies,
+	that stage and any before it will be loaded. The intent is to replace the
+	Fractional Accuracy with this new system.
+--]]
+
+  ['Progressive'] = { 
+		['Accuracy'] = { 
+			[1] = { 
+				['Subset'] = 'Accuracy',
+			},
+		},
+		['Ranged_Accuracy'] = {
+			[1] = {
+				['Subset'] = 'Ranged_Accuracy',
+			}
+		}				
+  },
+  
 --[[
 	If evasion wanted, equip evasion gear. Remember that AGI converts to evasion: for 
 	every 2 points of AGI you get 1 point of evasion. Note that if you leave the body
@@ -116,7 +138,8 @@ local sets = {
 --]]
 	
 	['Evasion'] = {
-        Head = 'Empress Hairpin',
+        Head  = 'Empress Hairpin',
+		Ears  = 'Bat Earring//BLINDED',
         Hands = 'Battle Gloves',
     },
 			
@@ -133,9 +156,11 @@ local sets = {
 	},
 	
 	['Resting_Refresh'] = {
-		Main  = { 'Dark Staff//WSWAP', 'Blessed Hammer//WSWAP', 'Pilgrim\'s Wand//WSWAP' },
-        Body = 'Seer\'s Tunic',
-    },
+		Main  = { 'Pluto\'s Staff//WSWAP', 'Blessed Hammer//WSWAP', 'Pilgrim\'s Wand//WSWAP' },
+		Head  = { 'Hlr. Cap +1', 'Cleric\'s Cap', 'Healer\'s Cap' },
+        Body  = { 'Errant Hpl.', 'Noble\'s Tunic', 'Vermillion Cloak', 'Seer\'s Tunic' },
+		Legs  = 'Baron\'s Slops',
+	},
 	
 --[[
 	Start weapons are where you define what you want the first row of equipment to look 
@@ -144,15 +169,14 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-		Main = 'Solid Wand',
-		Sub = 'Fish Scale Shield',
-		Ammo = 'Fortune Egg',
+		Main = { 'Earth Staff', 'Rose Wand +1', 'Solid Wand', 'Yew Wand +1', 'Pilgrim\'s Wand' },
+		Ammo = { 'Hedgehog Bomb', 'Fortune Egg' },
     },
 	
 --[[
 	Preshot is the first stage of when a ranged shot is being performed. This is where 
 	you place any gear that reduces the time it takes to shoot (snap shot, rapid shot, 
-	quick shot, and haste).
+	quick shot, shot delay reduction, and ranged haste).
 --]]
 
 	['Preshot'] = {
@@ -164,8 +188,6 @@ local sets = {
 --]]
 
 	['Midshot'] = {
-		Neck  = 'Peacock Amulet',
-		Rings = { 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	
     },
 
 --[[
@@ -179,15 +201,32 @@ local sets = {
 --]]
 
 	['INT'] = {
+		Main  = 'Ice Staff//WSWAP',
+		Body  = 'Baron\'s Saio',
+		Rings = 'Tamas Ring',
+		Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },
+		Feet  = { 'Healer\'s Duckbills', 'Mannequin Pumps' },
 	},
 	
 	['MND'] = {
+		Main  = 'Water Staff//WSWAP',
+		Head  = 'Healer\'s Cap',
+		Neck  = { 'Promise Badge', 'Justice Badge' },
+		Ears  = 'Geist Earring',
+		Body  = 'Wonder Kaftan',
+		Hands = 'Baron\'s Cuffs',
+		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
+		Back  = 'White Cape',
+		Waist = { 'Penitent\'s Rope', 'Friar\'s Rope' },
+		Legs  = 'Wonder Braccae',
+		Feet  = 'Mannequin Pumps',
 	},
 
 	['Enmity_Plus'] = {
 	},
 	
 	['Enmity_Minus'] = {
+		Rings = 'Tamas Ring',
 	},
 	
 --[[
@@ -199,7 +238,9 @@ local sets = {
 	cast gear, and spell interruption rate
 --]]
 
-	['Precast'] = {							
+	['Precast'] = {	
+		Ears = { 'Loquac. Earring' },
+		Feet = { 'Cure Clogs//SP:CUR', 'Rostrum Pumps' },	
 	},
 
 --[[
@@ -276,6 +317,12 @@ local sets = {
 --]]	
 	
 	['CuringMagic'] = {
+		Subset = 'MND',
+		Main   = { 'Light Staff//WSWAP', 'Rose Wand +1', 'Solid Wand//WSWAP', 'Yew Wand +1//WSWAP' },
+		Body   = 'Noble\'s Tunic', 
+		Hands  = 'Healer\'s Mitts',
+		Legs   = 'Cleric\'s Pantaln.',
+		Feet   = 'Cure Clogs',	
 	},	
 	
 --[[
@@ -291,6 +338,8 @@ local sets = {
 --]]
 
 	['OffensiveCuring'] = {
+		Subset = 'CuringMagic',	
+		Neck   = 'Uggalepih Pendant//SPECIAL',	
 	},
 
 --[[
@@ -300,6 +349,8 @@ local sets = {
 --]]
 
 	['HealingMagic'] = {
+		Hands = 'Healer\'s Mitts',
+		Legs  = 'Cleric\'s Pantaln.',	
 	},
 
 --[[
@@ -345,6 +396,10 @@ local sets = {
 --]]
 
 	['Barspell'] = {
+		Head = 'Nashira Turban',
+		Body = 'Blessed Bliaut',
+		Legs = 'Cleric\'s Pantaln.',
+		Feet = 'Cleric\'s Duckbills',	
 	},
 	
 --[[
@@ -408,6 +463,7 @@ local sets = {
 --]]
 
 	['Stoneskin'] = {
+		Subset = 'MND',
 	},	
 
 --[[
@@ -454,6 +510,10 @@ local sets = {
 --]]
 
 	['EnhancingMagic'] = {
+		Head  = 'Nashira Turban', 	-- SIR and -Enmity
+		Hands = 'Cleric\'s Mitts//SP:REGEN',
+		Legs  = 'Blessed Trousers', -- Using 'Blessed Trousers' over 'Errant Slops' b/c of %haste and -Emnity over the +1 MND.
+		Feet  = { 'Cleric\'s Duckbills', 'Blessed Pumps' }, -- Using 'Blessed Pumps' over 'Errant Pigaches' b/c of %haste and -Emnity over the +2 MND.	
 	},
 
 --[[
@@ -488,8 +548,11 @@ local sets = {
 	reduce your elemental damage by 20% ("nuke wall"), excluding skillchains.	
 --]]
 	['ElementalNuke'] = {
-		Rings = 'Tamas Earring',
-		Feet  = 'Mannequin Pumps',
+		Subset = 'INT',
+		Main   = 'Ice Staff//WSWAP',		
+		Neck   = 'Uggalepih Pendant//SPECIAL', 
+		Rings  = 'Tamas Ring',		
+		Feet   = 'Mannequin Pumps',		
 	},	
 
 --[[
@@ -517,6 +580,9 @@ local sets = {
 --]]
 
 	['ElementalDebuff'] = {
+		Subset = 'INT',
+		Neck   = 'Uggalepih Pendant//SPECIAL', 
+		Feet   = 'Mannequin Pumps',	
 	},
 
 --[[
@@ -537,6 +603,7 @@ local sets = {
 --]]
 
 	['Summoning'] = {
+		Neck = 'Smn. Torque',	
 	},
 
 --[[
@@ -615,6 +682,7 @@ local sets = {
 --]]
 	
 	['DarkMagic'] = {
+		Neck  = 'Uggalepih Pendant//SPECIAL',	-- MAB	
 	},
 	
 --[[
@@ -655,6 +723,12 @@ local sets = {
 --]]
 
 	['OffensiveDivine'] = {
+		Subset = 'MND',
+		Head  = 'Nashira Turban',	-- -10% SIR, -5 enmity
+		Neck  = 'Uggalepih Pendant//SPECIAL',
+		Hands  = 'Cleric\'s Mitts//SP:BANISH',
+		Legs  = { 'Blessed Trousers', 'Healer\'s Pantaln.' },	-- %haste and -Emnity
+		Feet  = 'Blessed Pumps', 	-- %haste and -Emnity
 	},
 
 --[[
@@ -666,10 +740,11 @@ local sets = {
 --]]	
 	
 	['EnfeebleDivine'] = {
+		Subset = 'OffensiveDivine',
 	},
 
 --[[
-	Enlight is the only enhancing divine spell. It  enhances the paladin's 
+	Enlight is the only enhancing divine spell. It enhances the paladin's 
 	weapon with light starting at a fixed point based on their divine 
 	magic skill. Each hit the value will go down 1 until 0 is hit. Multihit 
 	weapons work with enlight. Enlight also provides +10 enmity. The base 
@@ -680,6 +755,7 @@ local sets = {
 --]]
 		
 	['EnhanceDivine'] = {
+		Legs = 'Healer\'s Pantaln.',
 	},
 
 --[[
@@ -708,15 +784,21 @@ local sets = {
 --]]
 	
 	['EnfeeblingINT'] = {
+		Subset = 'INT',
+		Neck   = 'Enfeebling Torque',
+		Body   = 'Healer\'s Bliaut',
 	},
 
 	['EnfeeblingMND'] = {
 	    Neck  = { 'Promise Badge', 'Justice Badge' },
+		Body  = 'Healer\'s Bliaut',
         Rings = { 'Tamas Ring', 'Tranquility Ring' },
         Waist = 'Friar\'s Rope',
 	},
 
 	['EnfeeblingMagic'] = {
+		Neck  = 'Enfeebling Torque',
+		Body  = 'Healer\'s Bliaut',
 	},
 	
 --[[
@@ -849,7 +931,7 @@ local sets = {
         Head = 'Mrc.Cpt. Headgear',
         Neck = 'Spike Necklace',
         Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
+        Hands = { 'Healer\'s Mitts', 'Wonder Mitts' },
         Rings = 'Courage Ring',
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
@@ -870,7 +952,7 @@ local sets = {
         Neck = 'Spike Necklace',
         Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },
         Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
+        Hands = { 'Healer\'s Mitts', 'Wonder Mitts' },
         Rings = 'Courage Ring',
         Back = 'White Cape',
         Waist = 'Mrc.Cpt. Belt',
@@ -892,7 +974,7 @@ local sets = {
         Head  = 'Empress Hairpin',
         Neck  = 'Spike Necklace',
         Body  = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
+        Hands = { 'Healer\'s Mitts', 'Wonder Mitts' },
         Ring  = { 'Kshama Ring No.2', 'Balance Ring', 'Courage Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs  = 'Wonder Braccae',
@@ -910,7 +992,7 @@ local sets = {
         Head = 'Mrc.Cpt. Headgear',
         Neck = 'Spike Necklace',
         Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
+        Hands = { 'Healer\'s Mitts', 'Wonder Mitts' },
         Rings = { 'Tamas Ring', 'Courage Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs = 'Wonder Braccae',
@@ -929,7 +1011,7 @@ local sets = {
         Head = 'Mrc.Cpt. Headgear',
         Neck = 'Justice Badge',
         Body = 'Wonder Kaftan',
-        Hands = 'Wonder Mitts',
+        Hands = { 'Healer\'s Mitts', 'Wonder Mitts' },
         Ring1 = { 'Tamas Ring', 'Courage Ring' },
         Back = 'White Cape',
         Waist = 'Mrc.Cpt. Belt',
@@ -1040,9 +1122,9 @@ local sets = {
 
 	['WS_VIT'] = {
 		Subset = 'AttackPower',	
-        Body = 'Wonder Kaftan',
-        Waist = 'Mrc.Cpt. Belt',
-        Legs = 'Wonder Braccae',
+        Body   = 'Wonder Kaftan',
+        Waist  = 'Mrc.Cpt. Belt',
+        Legs   = { 'Healer\'s Pantaln.', 'Wonder Braccae' },
     },
 
 --[[
@@ -1276,7 +1358,12 @@ local sets = {
 -- the weapons if you want to conditionally equip an item with a weapon skill
 -- attribute.
 profile.WeaponType = {
-	['CLUB']   = { 'Blessed Hammer', 'Solid Wand', 'Yew Wand', 'Pilgrim\'s Wand', 'Warp Cudgel' },
+	['CLUB']   = { 'Rose Wand +1', 'Blessed Hammer', 'Solid Wand', 'Yew Wand', 'Pilgrim\'s Wand', 'Warp Cudgel' },
+	['STAVE'] =  { 'Fire Staff', 'Vulcan\'s Staff', 'Ice Staff', 'Aquilo\'s Staff',
+				  'Wind Staff', 'Auster\'s Staff', 'Earth Staff', 'Terra\'s Staff',
+				  'Thunder Staff', 'Jupiter\'s Staff', 'Water Staff', 'Neptune\'s Staff',
+				  'Light Staff', 'Apollo\'s Staff', 'Dark Staff', 'Pluto\'s Staff',
+				  'Kukulcan\'s Staff' },	
 };
 
 -- Accuracy Sets are predefined /acc commands. You identify them by a name and
@@ -1493,7 +1580,7 @@ function profile.HandleDefault()
 						gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 					end	
 				elseif cKey == 'E' then		-- Accuracy	
-					gcinclude.FractionalAccuracy(sets.Accuracy);
+					gcinclude.ProgressiveAccuracy('Acc');
 				elseif cKey == 'F' then		-- Kiting
 					if (gcdisplay.GetToggle('Kite') == true) then
 						gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
@@ -1755,7 +1842,7 @@ function profile.HandleMidshot()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
-	gcinclude.FractionalAccuracy(gProfile.Sets.Ranged_Accuracy);
+	gcinclude.ProgressiveAccuracy('RAcc');
 	
 	-- Equip the composited Midshot set
 	gcinclude.EquipTheGear(sets.CurrentGear);			

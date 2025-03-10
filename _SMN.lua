@@ -4,8 +4,10 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the SMN job.
 	
-	Gear Sets last updated: November 15, 2024
-	Code update: November 14, 2024
+	Gear Sets last updated: March 9, 2025
+	Code update: March 9, 2025
+	
+	Role: any level
 --]]
 
 local sets = {
@@ -54,7 +56,7 @@ local sets = {
 	
 	['Default'] = {
 		Main  = 'Earth Staff//NO_PET',
-		Head  = { 'Lilac Corsage//TOWN', 'Austere Hat', 'Silver Hairpin +1' },
+		Head  = { 'Lilac Corsage//TOWN', 'Smn. Horn +1', 'Austere Hat', 'Silver Hairpin +1' },
 		Neck  = { 'Rep.Gold Medal//NOT_OWN','Uggalepih Pendant//NIGHTTIME', 'Fenrir\'s Torque//DAYTIME', 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
 		Ears  = { 'Bat Earring//BLINDED', 'Loquac. Earring', 'Coral Earring//DT_MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
 		Body  = { 'Ducal Aketon//TOWN-AK', 'Vermillion Cloak//MPP.LT.94', 'Summoner\'s Dblt.', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
@@ -104,13 +106,13 @@ local sets = {
 --]]
 		
 	['Accuracy'] = {
-        Head  = { 'Shep. Bonnet//PETF', 'Optical Hat' },
-		Ears  = 'Beastly Earring//PETF',
-		Neck  = 'Peacock Amulet',
-		Hands = { 'Carbuncle Mitts//CARBY', 'Smn. Bracers +1//SMNPET', 'Battle Gloves' },
-		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Jaeger Ring', 'Balance Ring' },
-		Waist = { 'Life Belt', 'Tilt Belt' },
-		Legs  = 'Evoker\'s Spats//PETF',
+        Head  = { 'Shep. Bonnet//PETF', 'Optical Hat', 'Empress Hairpin' },	-- Pet: +5 Acc/+3Macc, +10 Acc, +3 DEX
+		Ears  = 'Beastly Earring//PETF',	-- Pet: +10 Acc
+		Neck  = 'Peacock Amulet',			-- +10 Acc
+		Hands = 'Battle Gloves',			-- +3 Acc
+		Rings = { 'Toreador\'s Ring', 'Toreador\'s Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },	-- +7/+7/+5/+5, +4 Acc:+2 DEX, +2/2 DEX
+		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt', 'Mrc.Cpt. Belt' },	-- +10/5/3 Acc, +1 DEX
+		Legs  = 'Evoker\'s Spats//PETF',	-- Pet: enhanced acc
     },
 
 --[[
@@ -118,11 +120,44 @@ local sets = {
 --]]
 
 	['Ranged_Accuracy'] = {
-		Head  = 'Optical Hat',
-		Neck  = 'Peacock Amulet',
-		Rings = { 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
+		Head  = 'Optical Hat',		-- +10 RAcc
+		Neck  = 'Peacock Amulet',	-- +10 RAcc
+		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	-- +5/5/4/4/4 RAcc
 	},
-	
+
+--[[
+	Progressive is a new idea for handling accuracy/ranged accuracy. You create
+	stages to load accuracy gear from. Depending on what the player specifies,
+	that stage and any before it will be loaded. The intent is to replace the
+	Fractional Accuracy with this new system.
+--]]
+
+  ['Progressive'] = { 
+		['Accuracy'] = { 
+			[1] = { 
+				['Head'] = 'Accuracy::Head',
+				['Neck'] = 'Accuracy::Neck',
+				['Legs'] = 'Accuracy::Legs'
+			},
+			[2] = {
+				['Rings'] = 'Accuracy::Rings',
+				['Ears'] = 'Accuracy::Ears'
+			},
+			[3] = {	
+				['Subset'] = 'Accuracy' 
+			}
+		},
+		['Ranged_Accuracy'] = {
+			[1] = {
+				['Head'] = 'Ranged_Accuracy::Head',
+				['Neck'] = 'Peacock Amulet'
+			},
+			[2] = { 
+				['Subset'] = 'Ranged_Accuracy' 
+			}
+		}				
+  },
+  
 --[[
 	If evasion wanted, equip evasion gear. Remember that AGI converts to evasion: for 
 	every 2 points of AGI you get 1 point of evasion. Note that if you leave the body
@@ -131,14 +166,14 @@ local sets = {
 --]]
 	
 	['Evasion'] = {
-		Main  = 'Wind Staff',
-		Head  = { 'Optical Hat', 'Empress Hairpin' },
-		Neck  = 'Spirit Torque',
-		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Genin Earring//SJNIN', 'Drone Earring' },
-		Body  = 'Summoner\'s Dblt.//IF:VERMILLION CLOAK', -- V.Cloak has -10 eva. Anything better than that
-		Waist = 'Swift Belt//IF:TILT BELT', -- Tilt belt has -5 eva, anything better than that
-		Hands = 'Battle Gloves',
-		Legs  = { 'Evoker\'s Spats', 'Shep. Hose//PETF'},
+		Main  = 'Wind Staff',		-- +10 Eva
+		Head  = { 'Optical Hat', 'Empress Hairpin' },	-- +10/10 Eva
+		Neck  = 'Spirit Torque',	-- +5 Eva
+		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Reraise Earring', 'Genin Earring//SJNIN', 'Drone Earring' },	-- +15 Eva while blinded, +5/2 Eva, +4/3 AGI
+		Body  = 'Summoner\'s Dblt.//IF:Vermillion Cloak', -- V.Cloak has -10 eva. Anything better than that
+		Waist = 'Swift Belt//IF:Tilt Belt', -- Tilt belt has -5 eva, anything better than that
+		Hands = 'Battle Gloves',	-- +3 Eva
+		Legs  = { 'Evoker\'s Spats', 'Shep. Hose//PETF'},	-- Pet: enhanced accuracy, Pet: +3 Eva
     },
 
 --[[
@@ -163,7 +198,7 @@ local sets = {
 	-- abilities, or summoning skill defined here. The midcast happens when the actual 
 	-- blood pact goes off.	
 	['BP'] = {
-        Head  = { 'Summoner\'s Horn +1', 'Austere Hat' },
+        Head  = { 'Smn. Horn +1', 'Austere Hat' },
         Neck = 'Smn. Torque',
         Body  = { 'Summoner\'s Dblt.//SMNPETMD', 'Austere Robe' },
         Hands = { 'Carbuncle Mitts//CARBY', 'Smn. Bracers +1', 'Carbuncle Mitts' },
@@ -183,43 +218,43 @@ local sets = {
 	-- Physical rage blood pact: pet attack, pet accuracy, pet critical hit, blood pact 
 	-- physical damage
 	['SmnPhysical'] = {
-        Head  = 'Shep. Bonnet',
-		Ears  = 'Beastly Earring',
-		Legs  = 'Evoker\'s Spats',
-		Feet  = 'Summoner\'s Pgch.',
+        Head  = 'Shep. Bonnet',			-- Pet: +5 Acc
+		Ears  = 'Beastly Earring',		-- Pet: +10 Acc
+		Legs  = 'Evoker\'s Spats',		-- Avatar: Enhances Acc
+		Feet  = 'Summoner\'s Pgch.',	-- Avatar: Enhances Att
     },
 
 	-- Magical rage blood pact: pet magic attack burst, pet magical attack, pet magical
 	-- accuracy, and blood Pact magical damage
 	['SmnMagical'] = {
-	    Head = 'Shep. Bonnet',
-		Body = 'Summoner\'s Dblt.',
+	    Head = 'Shep. Bonnet',			-- Pet: +3 Macc
+		Body = 'Summoner\'s Dblt.',		-- Avatar: +3% Crit Rate
     },
 
 	-- Summoning skill rage blood pact. 
 	['SmnSkill'] = {
-        Head  = { 'Evoker\'s Horn', 'Austere Hat' },
-        Neck  = 'Smn. Torque',
-		Hands = 'Smn. Bracers +1',
-        Rings = 'Evoker\'s Ring',
-		Feet  = 'Nashira Crackows',
+        Head  = { 'Evoker\'s Horn', 'Austere Hat' },	-- +5/2 Summoning skill
+        Neck  = 'Smn. Torque',							-- +7 Summoning skill
+		Hands = 'Smn. Bracers +1',						-- +12 Summoning skill
+        Rings = 'Evoker\'s Ring',						-- +10 Summoning skill
+		Feet  = 'Nashira Crackows',						-- +5 Summoning skill
     },
 	
 	-- Accuracy blood pact: pet accuracy, pet magic accuracy
     ['SmnAccuracy'] = {
-        Head  = 'Shep. Bonnet',
-		Ears  = 'Beastly Earring',
-		Hands = 'Smn. Bracers +1',
-		Legs  = 'Evoker\'s Spats',
+        Head  = 'Shep. Bonnet',		-- Pet: +5 Acc/+3 Macc
+		Ears  = 'Beastly Earring',	-- Pet: +10 Acc
+		Hands = 'Smn. Bracers +1',	-- Avatar: Enhances Acc
+		Legs  = 'Evoker\'s Spats',	-- Avatar: Enhances Acc
     },
 	
 	-- Hybrid blood pact: 2x physical and 1x magical
     ['SmnHybrid'] = {
-        Head  = 'Shep. Bonnet',
-		Ears  = 'Beastly Earring',
-		Body  = { 'Summoner\'s Dblt.', 'Austere Robe' },	
-		Legs  = 'Evoker\'s Spats',
-		Feet  = 'Summoner\'s Pgch.',
+        Head  = 'Shep. Bonnet',			-- Pet: +5 Acc/+3 Macc
+		Ears  = 'Beastly Earring',		-- Pet: +10 Acc
+		Body  = 'Summoner\'s Dblt.',	-- Avatar: 3% Crit Rating	
+		Legs  = 'Evoker\'s Spats',		-- Avatar: Enhances Acc
+		Feet  = 'Summoner\'s Pgch.',	-- Avatar: Enhances Att
     },
 	
 --[[
@@ -229,14 +264,14 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-	    Main = { 'Earth Staff', 'Kukulcan\'s Staff', 'Solid Wand', 'Yew Wand' },
+	    Main = { 'Earth Staff', 'Kukulcan\'s Staff', 'Solid Wand', 'Pilgrim\'s Wand' },
 		Ammo = { 'Hedgehog Bomb', 'Fortune Egg' },
  	},
 
 --[[
 	Preshot is the first stage of when a ranged shot is being performed. This is where 
 	you place any gear that reduces the time it takes to shoot (snap shot, rapid shot, 
-	quick shot, and haste). 
+	quick shot, shot delay reduction, and ranged haste). 
 --]]
 
 	['Preshot'] = {
@@ -249,8 +284,9 @@ local sets = {
 --]]
 
 	['Midshot'] = {
-		Main  = 'Vulcan\'s Staff',
+		Main  = 'Vulcan\'s Staff',		-- +10 RAtt
 		Head  = 'Optical Hat',
+		Body  = 'Austere Robe//IF:Vermillion Cloak',
 		Neck  = 'Peacock Amulet',
 		Ears  = 'Brutal Earring',
 		Neck  = 'Peacock Amulet',
@@ -268,10 +304,10 @@ local sets = {
 --]]
 
 	['INT'] = {
-		Body  = 'Errant Robe',
+		Body  = 'Errant Hpl.',
 		Hands = 'Errant Cuffs',
 		Rings = { 'Tamas Ring', 'Flame Ring' },
-		Waist = 'Mrc.Cpt. Belt',
+		Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },
 		Legs  = 'Errant Slops',
 		Feet  = 'Rostrum Pumps',
 		Feet  = 'Mannequin Pumps',	
@@ -284,7 +320,7 @@ local sets = {
 		Hands = 'Baron\'s Cuffs',
 		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
 		Back  = 'White Cape',
-		Waist = 'Friar\'s Rope',
+		Waist = {'Penitent\'s Rope', 'Friar\'s Rope' },
 		Legs  = { 'Errant Slops', 'Summoner\'s Spats', 'Wonder Braccae', 'Shep. Hose' },
 		Feet  = { 'Rostrum Pumps', 'Mannequin Pumps', 'Seer\'s Pumps' },	
 	},
@@ -651,6 +687,7 @@ local sets = {
 	['Summoning'] = {
 		Head  = 'Austere Hat',
         Neck  = 'Smn. Torque',
+		Body  = 'Austere Robe//IF:Vermillion Cloak',	-- Needed to have a chest piece
 		Hands = { 'Smn. Bracers +1', 'Carbuncle Mitts' },
         Rings = 'Evoker\'s Ring',
 		Legs  = 'Evoker\'s Spats',
@@ -829,13 +866,16 @@ local sets = {
 	
 	['EnfeeblingINT'] = {
 		Subset = 'INT',
+		Neck   = 'Enfeebling Torque',
 	},
 
 	['EnfeeblingMND'] = {
-		Subset = 'MND',		
+		Subset = 'MND',	
+		Neck   = 'Enfeebling Torque',
 	},
 
 	['EnfeeblingMagic'] = {
+		Neck   = 'Enfeebling Torque',
 	},
 	
 --[[
@@ -956,6 +996,7 @@ local sets = {
 --]]
 
 	['AttackPower'] = {
+		Main  = 'Vulcan\'s Staff',	-- +10 Att
 		Ears  = { 'Ethereal Earring', 'Fang Earring' },
 		Waist = 'Hierarch Belt//IF:SWIFT BELT',	-- Swift belt has -5 attack, take the MP
 	},
@@ -973,10 +1014,10 @@ local sets = {
         Neck  = 'Spike Necklace',
         Body  = 'Wonder Kaftan',
         Hands = 'Wonder Mitts',
-		Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
+		Rings = { 'Flame Ring', 'Sun Ring', 'Kshama Ring No.8', 'Courage Ring' },
         Waist = 'Mrc.Cpt. Belt',
         Legs  = 'Wonder Braccae',
-        Feet  = { 'Creek F Clomps', 'Wonder Clumps' },
+        Feet  = { 'Creek F Clomps', 'Wonder Clomps' },
     },
 	
 --[[
@@ -987,14 +1028,14 @@ local sets = {
 	
 	['WS_STRINT'] = {
 		Subset = 'AttackPower',
-        Head  = { 'Summoner\'s Horn +1', 'Mrc.Cpt. Headgear' },
+        Head  = { 'Smn. Horn +1', 'Mrc.Cpt. Headgear' },
         Neck  = 'Spike Necklace',
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
-		Rings = { 'Tamas Ring', 'Flame Ring', 'Sun Ring', 'Courage Ring' },
-        Waist = 'Mrc.Cpt. Belt',
+		Rings = { 'Tamas Ring', 'Flame Ring', 'Kshama Ring No.8', 'Courage Ring' },
+        Waist = {'Penitent\'s Rope', 'Mrc.Cpt. Belt' },
         Legs  = 'Errant Slops',
-        Feet  = { 'Creek F Clomps', 'Wonder Clumps' },
+        Feet  = { 'Creek F Clomps', 'Wonder Clomps' },
     },
 
 --[[
@@ -1010,11 +1051,11 @@ local sets = {
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
-		Rings = { 'Tamas Ring', 'Flame Ring', 'Sun Ring', 'Kshama Ring No.9', 'Courage Ring', 'Tranquility Ring' },
+		Rings = { 'Tamas Ring', 'Flame Ring', 'Kshama Ring No.8', 'Kshama Ring No.9', 'Courage Ring', 'Tranquility Ring' },
         Back  = 'White Cape',
-        Waist = 'Mrc.Cpt. Belt',
+        Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },
         Legs  = { 'Errant Slops', 'Summoner\'s Spats', 'Wonder Braccae' },
-        Feet  = { 'Creek F Clomps', 'Wonder Clumps' },
+        Feet  = { 'Creek F Clomps', 'Wonder Clomps' },
     },
 
 --[[
@@ -1029,11 +1070,11 @@ local sets = {
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
-		Rings = { 'Tamas Ring', 'Flame Ring', 'Kshama Ring No.9', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tranquility Ring' },
+		Rings = { 'Tamas Ring', 'Flame Ring', 'Kshama Ring No.9', 'Sun Ring', 'Kshama Ring No.8', 'Courage Ring', 'Tranquility Ring' },
         Back  = 'White Cape',
-        Waist = 'Mrc.Cpt. Belt',
+        Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },
         Legs  = { 'Errant Slops', 'Summoner\'s Spats', 'Wonder Braccae' },
-        Feet  = { 'Creek F Clomps', 'Wonder Clumps' },
+        Feet  = { 'Creek F Clomps', 'Wonder Clomps' },
     },
 	
 --[[
@@ -1067,7 +1108,7 @@ local sets = {
         Neck  = 'Spike Necklace',
         Body  = { 'Errant Hpl.', 'Mrc.Cpt. Doublet' },
 		Rings  = { 'Tamas Ring', 'Kshama Ring No.2', 'Balance Ring' },
-        Waist = 'Mrc.Cpt. Belt',
+        Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },
         Legs  = 'Errant Slops',
         Feet  = { 'Rostrum Pumps', 'Mannequin Pumps' },
     },
@@ -1080,10 +1121,10 @@ local sets = {
 	
 	['WS_INT'] = {
 		Subset = 'AttackPower',
-		Head  = 'Summoner\'s Horn +1',
+		Head  = 'Smn. Horn +1',
         Rings = 'Tamas Ring',
 		Body  = 'Errant Hpl.',
-        Waist = 'Mrc.Cpt. Belt',
+        Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },
         Legs  = 'Errant Slops',
         Feet  = { 'Rostrum Pumps', 'Mannequin Pumps' },
     },
@@ -1096,11 +1137,11 @@ local sets = {
 	
 	['WS_INTMND'] = {
 		Subset = 'AttackPower',
-		Head  = 'Summoner\'s Horn +1',
+		Head  = 'Smn. Horn +1',
         Neck  = { 'Promise Badge', 'Justice Badge' },
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
 		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
-        Waist = 'Mrc.Cpt. Belt',
+        Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },
         Legs  = { 'Errant Slops', 'Summoner\'s Spats', 'Wonder Braccae' },
         Feet  = { 'Rostrum Pumps', 'Mannequin Pumps' },
     },
@@ -1136,7 +1177,7 @@ local sets = {
         Body  = { 'Errant Hpl.', 'Wonder Kaftan' },
 		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
         Back  = 'White Cape',
-        Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
+        Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
         Legs  = { 'Errant Slops', 'Summoner\'s Spats', 'Wonder Braccae' },
         Feet  = { 'Rostrum Pumps', 'Mannequin Pumps' },
     },
@@ -1506,7 +1547,7 @@ function profile.OnLoad()
 		gcinclude.offhand = nil;
 	else
 		gcinclude.offhand = sets.CurrentGear['Sub'];
-	end	
+	end
 end		-- OnLoad
 
 --[[
@@ -1632,7 +1673,8 @@ function profile.HandleDefault()
 						gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 					end
 				elseif cKey == 'E' then		-- Accuracy
-					gcinclude.FractionalAccuracy(sets.Accuracy);
+					gcinclude.ProgressiveAccuracy('Acc');
+					--gcinclude.FractionalAccuracy(sets.Accuracy);
 				elseif cKey == 'F' then		-- Kiting
 					if (gcdisplay.GetToggle('Kite') == true) then
 						gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
@@ -1955,7 +1997,7 @@ function profile.HandleMidshot()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
-	gcinclude.FractionalAccuracy(gProfile.Sets.Ranged_Accuracy);
+	gcinclude.ProgressiveAccuracy('RAcc');
 	
 	-- Equip the composited Midshot set
 	gcinclude.EquipTheGear(sets.CurrentGear);

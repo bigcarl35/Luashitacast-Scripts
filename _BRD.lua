@@ -90,7 +90,27 @@ local sets = {
 
 	['Ranged_Accuracy'] = {
 	},
-	
+
+--[[
+	Progressive is a new idea for handling accuracy/ranged accuracy. You create
+	stages to load accuracy gear from. Depending on what the player specifies,
+	that stage and any before it will be loaded. The intent is to replace the
+	Fractional Accuracy with this new system.
+--]]
+
+  ['Progressive'] = { 
+		['Accuracy'] = { 
+			[1] = { 
+				['Subset'] = 'Accuracy',
+			},
+		},
+		['Ranged_Accuracy'] = {
+			[1] = {
+				['Subset'] = 'Ranged_Accuracy',
+			}
+		}				
+  },
+  
 --[[
 	If evasion wanted, equip evasion gear. Remember that AGI converts to evasion: for every
 	2 points of AGI you get 1 point of evasion
@@ -129,7 +149,7 @@ local sets = {
 --[[
 	Preshot is the first stage of when a ranged shot is being performed. This is where 
 	you place any gear that reduces the time it takes to shoot (snap shot, rapid shot, 
-	quick shot, and haste).
+	quick shot, shot delay reduction, and ranged haste).
 --]]
 
 	['Preshot'] = {
@@ -466,7 +486,7 @@ local sets = {
 	reduce your elemental damage by 20% ("nuke wall"), excluding skillchains.	
 --]]
 	['ElementalNuke'] = {
-		Rings = 'Tamas Earring',
+		Rings = 'Tamas Ring',
 		Feet  = 'Mannequin Pumps',
 	},	
 
@@ -1387,7 +1407,7 @@ function profile.HandleDefault()
 						gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 					end			
 				elseif cKey == 'E' then		-- Accuracy	
-					gcinclude.FractionalAccuracy(sets.Accuracy);
+					gcinclude.ProgressiveAccuracy('Acc');
 				elseif cKey == 'F' then		-- Kiting
 					if (gcdisplay.GetToggle('Kite') == true) then
 						gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
@@ -1656,7 +1676,7 @@ function profile.HandleMidshot()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
-	gcinclude.FractionalAccuracy(gProfile.Sets.Ranged_Accuracy);
+	gcinclude.ProgressiveAccuracy('RAcc');
 	
 	-- Equip the composited Midshot set
 	gcinclude.EquipTheGear(sets.CurrentGear);	

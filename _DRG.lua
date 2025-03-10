@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the DRG job.
 	
-	Gear Sets last updated: November 12, 2024
-	Code update: November 12, 2024	
+	Gear Sets last updated: March 9, 2025
+	Code update: March 9, 2025	
 --]]
 
 local sets = {
@@ -66,7 +66,7 @@ local sets = {
         Ears   = { 'Bat Earring//BLINDED', 'Pilferer\'s Earring//SJTHF', 'Genin Earring//SJNIN', 'Drone Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ', 'Physical Earring', 'Reraise Earring' },
         Body   = { 'Wyvern Mail', 'Brigandine', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Angler\'s Tunica' },
         Hands  = { 'Wonder Mitts', 'Battle Gloves' },
-        Rings  = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Kshama Ring No.2', 'Balance Ring' },
+        Rings  = { 'Sun Ring', 'Kshama Ring No.8', 'Courage Ring', 'Kshama Ring No.2', 'Balance Ring' },
 		Back   = { 'Raptor Mantle', 'Ram Mantle' },
         Waist  = { 'Swift Belt', 'Life Belt', 'Tilt Belt', 'Powerful Rope//MSJ', 'Warrior\'s Belt' },
         Legs   = { 'Drachen Brais', 'Wonder Braccae', 'Shep. Hose', 'Ryl.Ftm. Trousers' },
@@ -98,8 +98,41 @@ local sets = {
 --]]
 
 	['Ranged_Accuracy'] = {
+		Head   = 'Optical Hat',		-- +10 RAcc
+		Neck   = { 'Peacock Amulet', 'Reraise Gorget' },	-- +10/3 RAcc
+		Hands  = 'Crimson Fng. Gnt.',	-- +10 RAcc (+10 RAtt)
+		Rings  = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	-- +5/5/4/4/4 RAcc	
 	},
-	
+
+--[[
+	Progressive is a new idea for handling accuracy/ranged accuracy. You create
+	stages to load accuracy gear from. Depending on what the player specifies,
+	that stage and any before it will be loaded. The intent is to replace the
+	Fractional Accuracy with this new system.
+--]]
+
+  ['Progressive'] = { 
+		['Accuracy'] = { 
+			[1] = { 
+				['Head'] = 'Accuracy::Head',
+				['Neck'] = 'Accuracy::Neck'
+				['Legs'] = 'Accuracy::Legs'
+			},
+			[2] = {
+				['Rings'] = 'Accuracy::Rings',
+				['Waist'] = 'Accuracy::Waist'
+			},
+			[3] = {
+				['Subset'] = 'Accuracy' 
+			}
+		},
+		['Ranged_Accuracy'] = {
+			[1] = {
+				['Subset'] = 'Ranged_Accuracy',
+			}
+		}				
+  },
+  
 --[[
 	If evasion wanted, equip evasion gear. Remember that AGI converts to evasion: for 
 	every 2 points of AGI you get 1 point of evasion. Note that if you leave the body
@@ -142,7 +175,7 @@ local sets = {
 --[[
 	Preshot is the first stage of when a ranged shot is being performed. This is where 
 	you place any gear that reduces the time it takes to shoot (snap shot, rapid shot, 
-	quick shot, and haste).
+	quick shot, shot delay reduction, and ranged haste).
 --]]
 
 	['Preshot'] = {
@@ -474,7 +507,7 @@ local sets = {
 	reduce your elemental damage by 20% ("nuke wall"), excluding skillchains.	
 --]]
 	['ElementalNuke'] = {
-		Rings = 'Tamas Earring',
+		Rings = 'Tamas Ring',
 		Feet  = 'Mannequin Pumps',
 	},	
 
@@ -837,7 +870,7 @@ local sets = {
         Neck  = 'Spike Necklace',
 		Body  = 'Wonder Kaftan',
 		Hands = 'Wonder Mitts',
-        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring' },
+        Rings = { 'Sun Ring', 'Kshama Ring No.8', 'Courage Ring' },
 		Legs  = 'Wonder Braccae',
 		Feet  = 'Wonder Clomps',
     },
@@ -853,7 +886,7 @@ local sets = {
         Head  = { 'Empress Hairpin', 'Mrc.Cpt. Headgear' },
         Neck  = 'Spike Necklace',
 		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },
-        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring' },
+        Rings = { 'Sun Ring', 'Kshama Ring No.8', 'Courage Ring' },
         Feet  = 'Bounding Boots',
     },
 	
@@ -870,7 +903,7 @@ local sets = {
         Neck = 'Spike Necklace',
 		Body = 'Wonder Kaftan',
 		Hands = 'Wonder Mitts',
-        Rings = { 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Kshama Ring No.2', 'Balance Ring' },
+        Rings = { 'Sun Ring', 'Kshama Ring No.8', 'Courage Ring', 'Kshama Ring No.2', 'Balance Ring' },
 		Legs = 'Wonder Braccae',
         Feet = 'Bounding Boots',
     },
@@ -889,7 +922,7 @@ local sets = {
 		Neck = 'Spike Necklace',
 		Body = 'Wonder Kaftan',
 		Hands = 'Wonder Mitts',
-        Rings = { 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
+        Rings = { 'Tamas Ring', 'Sun Ring', 'Kshama Ring No.8', 'Courage Ring' },
 		Legs = 'Wonder Braccae',
 		Feet = { 'Mannequin Pumps', 'Wonder Clomps' },
     },
@@ -906,7 +939,7 @@ local sets = {
 		Subset = 'AttackPower',	
 		Head = 'Mrc.Cpt. Headgear',
         Neck = { 'Promise Badge', 'Justice Badge' },
-        Rings = { 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Kshama Ring No.9', 'Courage Ring', 'Tranquility Ring' },
+        Rings = { 'Tamas Ring', 'Sun Ring', 'Kshama Ring No.8', 'Kshama Ring No.9', 'Courage Ring', 'Tranquility Ring' },
 		Waist = 'Friar\'s Rope',
 		Legs = 'Wonder Braccae',
 		Feet = { 'Mannequin Pumps', 'Wonder Clomps' },
@@ -935,7 +968,7 @@ local sets = {
 		Subset = 'AttackPower',	
         Head  = { 'Empress Hairpin', 'Mrc.Cpt. Headgear' },
         Neck  = 'Spike Necklace',
-		Body  = { 'Brigandine Armor', 'Mrc.Cpt. Doublet' },
+		Body  = { 'Brigandine', 'Mrc.Cpt. Doublet' },
         Rings = { 'Kshama Ring No.2', 'Balance Ring' },
         Feet  = 'Bounding Boots',
     },
@@ -950,7 +983,7 @@ local sets = {
 		Subset = 'AttackPower',	
         Head  = { 'Empress Hairpin', 'Mrc.Cpt. Headgear' },
         Neck  = 'Spike Necklace',
-		Body  = { 'Brigandine Armor', 'Mrc.Cpt. Doublet' },
+		Body  = { 'Brigandine', 'Mrc.Cpt. Doublet' },
         Rings = { 'Kshama Ring No.2', 'Balance Ring' },
         Feet  = 'Bounding Boots',
     },
@@ -1435,7 +1468,7 @@ function profile.HandleDefault()
 						gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 					end	
 				elseif cKey == 'E' then		-- Accuracy	
-					gcinclude.FractionalAccuracy(sets.Accuracy);
+					gcinclude.ProgressiveAccuracy('Acc');
 				elseif cKey == 'F' then		-- Kiting
 					if (gcdisplay.GetToggle('Kite') == true) then
 						gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
@@ -1727,7 +1760,7 @@ function profile.HandleMidshot()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
-	gcinclude.FractionalAccuracy(gProfile.Sets.Ranged_Accuracy);
+	gcinclude.ProgressiveAccuracy('RAcc');
 	
 	-- Equip the composited Midshot set
 	gcinclude.EquipTheGear(sets.CurrentGear);

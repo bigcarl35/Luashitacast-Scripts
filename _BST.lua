@@ -4,8 +4,10 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the BST job.
 	
-	Gear Sets last updated: November 12, 2024
-	Code update: November 12, 2024
+	Gear Sets last updated: March 9, 2025
+	Code update: March 9, 2025
+	
+	Role: end game, 50/60
 --]]
 
 local sets = {
@@ -55,15 +57,16 @@ local sets = {
 --]]
 
 	['Default'] = {
-		Head   = { 'Lilac Corsage//TOWN', 'Panther Mask', 'Empress Hairpin' },
+		Subset = 'TP',
+		Head   = { 'Lilac Corsage//TOWN', 'President. Hairpin//NOT_OWN//HPP.LT.94', 'Panther Mask', 'Empress Hairpin' },
 		Neck   = { 'Opo-opo necklace//SLEPT', 'Peacock Amulet', 'Spike Necklace' },
 		Body   = { 'Ducal Aketon//TOWN-AK', 'Gaudy Harness//MSJ//MP.LT.50', 'Narasimha\'s Vest', 'Ducal Aketon' },
-		Hands  = { 'Thick Mufflers', 'Battle Gloves' },
-        Rings  = { 'Flame Ring', 'Tamas Ring//MSJ', 'Sun Ring', 'Sun Ring' },
+		Hands  = { 'Battle Gloves' },
+        Rings  = { 'Flame Ring', 'Tamas Ring//MSJ', 'Sun Ring', 'Kshama Ring No.8',  },
         Back   = { 'Forager\'s Mantle', 'Amemet Mantle', 'Ram Mantle' },
         Waist  = { 'Swift Belt', 'Warrior\'s Belt' },
-        Legs   = { 'Thick Breeches', 'Ryl.Ftm. Trousers' },
-        Feet   = { 'Thick Sollerets', 'Bounding Boots' },
+        Legs   = { 'Monster Trousers', 'Tracker\'s Kecks', 'Ryl.Ftm. Trousers' },
+        Feet   = 'Bounding Boots',
 	},
 
 	['Default_WPet'] = {
@@ -80,12 +83,12 @@ local sets = {
         Neck   = { 'Opo-opo necklace//SLEPT', 'Peacock Amulet', 'Spike Necklace' },
 		Ears   = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Coral Earring//DT_MAGICAL', 'Beastly Earring', 'Brutal Earring', 'Genin Earring//SJNIN', 'Bat Earring//MSJ', 'Fang Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ', 'Reraise Earring' },
         Body   = { 'Gaudy Harness//MSJ//MP.LT.50', 'Narasimha\'s Vest', 'Scorpion Harness', 'Gaudy Harness', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
-        Hands  = { 'Thick Mufflers', 'Beast Gloves', 'Ogre Gloves', 'Wonder Mitts', 'Battle Gloves', 'Ryl.Ftm. Gloves' },
-        Rings  = { 'Flame Ring', 'Tamas Ring//MSJ', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Kshama Ring No.2', 'Balance Ring' },
+        Hands  = { 'Dusk Gloves', 'Beast Gloves', 'Ogre Gloves', 'Wonder Mitts', 'Battle Gloves', 'Ryl.Ftm. Gloves' },
+        Rings  = { 'Flame Ring', 'Tamas Ring//MSJ', 'Sun Ring', 'Kshama Ring No.8', 'Courage Ring', 'Kshama Ring No.2', 'Balance Ring' },
         Back   = { 'Forager\'s Mantle', 'Psilos Mantle', 'Amemet Mantle', 'Raptor Mantle', 'Ram Mantle' },
         Waist  = { 'Swift Belt', 'Tilt Belt', 'Warrior\'s Belt' },
-        Legs   = { 'Thick Breeches', 'Monster Trousers', 'Shep. Hose', 'San. Trousers', 'Ryl.Ftm. Trousers' },
-        Feet   = { 'Thick Sollerets', 'Monster Gaiters', 'Beast Gaiters', 'Wonder Clomps', 'Bounding Boots' },
+        Legs   = { 'Monster Trousers', 'Tracker\'s Kecks', 'Shep. Hose', 'San. Trousers', 'Ryl.Ftm. Trousers' },
+        Feet   = { 'Monster Gaiters', 'Beast Gaiters', 'Wonder Clomps', 'Bounding Boots' },
     },
 	
 --[[
@@ -100,16 +103,16 @@ local sets = {
 
 	['Accuracy'] = {
 		Ammo  = 'Orphic Egg//PJPBRD',
-        Head  = { 'Bst. Helm +1//PETFNPF', 'Optical Hat', 'Shep. Bonnet//PETF' } ,
-        Neck  = { 'Peacock Amulet', 'Spike Necklace' },
-        Body  = { 'Scorpion Harness', 'Narasimha\'s Vest', 'Beast Jackcoat' },
-        Hands = { 'Thick Mufflers', 'Battle Gloves' },
+        Head  = { 'Bst. Helm +1//PETFNPF', 'Optical Hat', 'Shep. Bonnet//PETF', 'Empress Hairpin' } ,
+        Neck  = { 'Peacock Amulet', 'Reraise Gorget', 'Spike Necklace' },
+        Body  = { 'Scorpion Harness', 'Narasimha\'s Vest', 'Beast Jackcoat', 'Brigandine', 'Mrc.Cpt. Doublet' },
+        Hands = 'Battle Gloves',
 		Ears  = { 'Beastly Earring//PETF', 'Pilferer\'s Earring//SJTHF' },
-		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },
+		Rings = { 'Toreador\'s Ring', 'Toreador\'s Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },
         Back  = 'Psilos Mantle',		
         Waist = { 'Life Belt', 'Monster Belt', 'Tilt Belt', 'Swift Belt' },
-        Legs  = { 'Thick Breeches', 'Monster Trousers' },
-        Feet  = 'Thick Sollerets',
+        Legs  = 'Monster Trousers',
+        Feet  = 'Bounding Boots',
     },	
 
 --[[
@@ -119,7 +122,9 @@ local sets = {
 	['Ranged_Accuracy'] = {
 		Head = 'Optical Hat',
 		Neck = { 'Peacock Amulet', 'Reraise Gorget' },
+		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
 		Back = 'Psilos Mantle',
+		Legs = 'Tracker\'s Kecks',
 	},
 	
 --[[
@@ -132,12 +137,12 @@ local sets = {
 	['Evasion'] = {
 		Ammo  = 'Orphic Egg//PJPBRD',
         Head  = { 'Optical Hat', 'Empress Hairpin' },
-		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Reraise Earring' },
-        Body  = { 'Scorpion Harness', 'Narasimha\'s Vest' },
+		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Reraise Earring', 'Genin Earring//SJNIN', 'Drone Earring' },	-- +15 Eva while blinded, +5/2 Eva, +4/3 AGI
+        Body  = { 'Scorpion Harness', 'Narasimha\'s Vest', 'Mrc.Cpt. Doublet' },
 		Hands = 'Battle Gloves',
         Legs  = { 'Shep. Hose//PETFNPF', 'San. Trousers' },
 		Waist = 'Life Belt//IF:TILT Belt',	-- -5 eva on tilt belt
-		Feet  = 'Bounding Boots//IF:THICK SOLLERETS',	-- -2 eva on thick sollerets
+		Feet  = 'Bounding Boots',
     },
 	
 --[[
@@ -147,6 +152,7 @@ local sets = {
 --]]
 	
 	['Resting_Regen'] = { 
+		Head = 'President. Hairpin//NOT_OWN',
 		Legs = 'Monster trousers',
 	},
 
@@ -170,7 +176,7 @@ local sets = {
 --[[
 	Preshot is the first stage of when a ranged shot is being performed. This is where 
 	you place any gear that reduces the time it takes to shoot (snap shot, rapid shot, 
-	quick shot, and haste).
+	quick shot, shot delay reduction, and ranged haste).
 --]]
 
 	['Preshot'] = {
@@ -188,7 +194,8 @@ local sets = {
 		Head  = 'Optical Hat',
 		Neck  = 'Peacock Amulet',
 		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	
-        Back = 'Psilos Mantle',
+        Back  = 'Psilos Mantle',
+		Legs  = 'Tracker\'s Kecks',
     },
 
 --[[
@@ -202,9 +209,11 @@ local sets = {
 --]]
 
 	['INT'] = {
+		Waist = 'Penitent\'s Rope', 
 	},
 	
 	['MND'] = {
+		Waist = 'Penitent\'s Rope', 
 	},
 
 	['Enmity_Plus'] = {
@@ -507,7 +516,7 @@ local sets = {
 	reduce your elemental damage by 20% ("nuke wall"), excluding skillchains.	
 --]]
 	['ElementalNuke'] = {
-		Rings = 'Tamas Earring',
+		Rings = 'Tamas Ring',
 		Feet  = 'Mannequin Pumps',
 	},	
 
@@ -853,6 +862,9 @@ local sets = {
 --]]
 
 	['AttackPower'] = {
+		Hands = 'Dusk Gloves',
+		Back  = 'Forager\'s Mantle',
+		Legs  = 'Tracker\'s Kecks',
 	},
 	
 --[[
@@ -872,7 +884,7 @@ local sets = {
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
         Body  = 'Narasimha\'s Vest',
         Hands = { 'Ogre Gloves', 'Wonder Mitts' },
-        Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
+        Rings = { 'Flame Ring', 'Sun Ring', 'Kshama Ring No.8', 'Courage Ring' },
         Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
 		Waist = 'Warwolf Belt',
         Legs  = 'Wonder Braccae',
@@ -892,7 +904,7 @@ local sets = {
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
         Body  = 'Narasimha\'s Vest',
         Hands = 'Wonder Mitts',
-        Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
+        Rings = { 'Flame Ring', 'Sun Ring', 'Kshama Ring No.8', 'Courage Ring' },
         Waist = 'Warwolf Belt',
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
         Legs  = { 'Ryl.Sqr. Breeches', 'Wonder Braccae' },
@@ -913,7 +925,7 @@ local sets = {
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
 		Body  = { 'Monster Jackcoat', 'Narasimha\'s vest', 'Wonder Kaftan' },
 		Hands = { 'Ogre gloves', 'Wonder Mitts' },
-		Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
+		Rings = { 'Flame Ring', 'Sun Ring', 'Kshama Ring No.8', 'Courage Ring' },
 		Waist = 'Warwolf Belt',
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
 		Legs  = 'Wonder braccae',
@@ -933,7 +945,7 @@ local sets = {
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
 		Body  = { 'Monster Jackcoat', 'Narasimha\'s vest', 'Wonder Kaftan' },
 		Hands = { 'Ogre gloves', 'Wonder Mitts' },
-		Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
+		Rings = { 'Flame Ring', 'Sun Ring', 'Kshama Ring No.8', 'Courage Ring' },
 		Waist = 'Warwolf Belt',
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
 		Legs  = 'Wonder braccae',
@@ -955,7 +967,7 @@ local sets = {
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
 		Body  = { 'Narasimha\'s vest', 'Wonder Kaftan' },
 		Hands = 'Ogre gloves',
-		Rings = { 'Flame Ring', 'Tamas Ring', 'Sun ring', 'Sun ring', 'Kshama Ring No.9', 'Courage Ring' },
+		Rings = { 'Flame Ring', 'Tamas Ring', 'Sun ring', 'Kshama Ring No.8', 'Kshama Ring No.9', 'Courage Ring' },
 		Waist = { 'Warwolf Belt', 'Friar\'s Rope' },
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
 		Legs  = 'Wonder braccae',
@@ -975,7 +987,7 @@ local sets = {
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
 		Body  = { 'Narasimha\'s vest', 'Beast Jackcoat', 'Wonder Kaftan' },
 		Hands = 'Ogre gloves',
-		Ring1 = { 'Flame Ring', 'Sun ring', 'Sun ring', 'Courage Ring' },
+		Ring1 = { 'Flame Ring', 'Sun ring', 'Kshama Ring No.8', 'Courage Ring' },
 		Waist = { 'Warwolf Belt', 'Warrior\'s belt' },
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle' },
 		Legs  = { 'Wonder braccae', 'Ryl.Ftm. Trousers' },
@@ -995,7 +1007,7 @@ local sets = {
         Head  = 'Empress Hairpin',
         Neck  = 'Spike Necklace',
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
-        Body  = { 'Brigandine', 'Mrc.Cot. Doublet' },
+        Body  = { 'Brigandine', 'Mrc.Cpt. Doublet' },
         Hands = 'Beast Gloves',
         Rings = { 'Kshama Ring No.2', 'Balance Ring' },
 		Waist = 'Warwolf Belt',
@@ -1023,13 +1035,13 @@ local sets = {
 	
 	['WS_DEXINT'] = {
 		Subset = 'AttackPower',	
-        Head  = { 'Beast Helm +1', 'Empress Hairpin' },
+        Head  = { 'Bst. Helm +1', 'Empress Hairpin' },
         Neck  = 'Spike Necklace',
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
         Body  = { 'Monster Jackcoat', 'Brigandine', 'Mrc.Cpt. Doublet' },
         Hands = 'Beast Gloves',
         Rings = { 'Tamas Ring', 'Kshama Ring No.2', 'Balance Ring' },
-		Waist = 'Warwolf Belt',
+		Waist = 'Penitent\'s Rope', 
 		Legs  = { 'Monster Trousers', 'Ryl.Sqr. Breeches' },
         Feet  = 'Bounding Boots',
     },
@@ -1062,12 +1074,12 @@ local sets = {
 
 	['WS_MND'] = {
 		Subset = 'AttackPower',	
-		Head  = 'Bst. Helm +1/ACCESSIBLE',
+		Head  = 'Bst. Helm +1//ACCESSIBLE',
         Neck  = { 'Promise Badge', 'Justice Badge' },
 		Ears  = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
         Body  = 'Wonder Kaftan',
         Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
-        Waist = 'Friar\'s Rope',
+        Waist = { 'Penitent\'s Rope', 'Friar\'s Rope' },
         Legs  = 'Wonder Braccae',
 		Feet  = 'Mannequin Pumps',
     },
@@ -1140,7 +1152,7 @@ local sets = {
 	
 	-- Tame success rate. Resistence depends on your INT vs target's INT
 	['Tame'] = {
-        Head = 'Beast Helm +1',
+        Head = 'Bst. Helm +1',
 		Body = 'Monster Jackcoat',
 		Rings = 'Tamas Ring',
 		Feet = 'Mannequin Pumps',
@@ -1163,7 +1175,7 @@ local sets = {
 	},
 
 	['Pet_Macc'] = {					-- Pet's Magical Accuracy
-		Head = { 'Beast Helm +1', 'Shep. Bonnet' },
+		Head = { 'Bst. Helm +1', 'Shep. Bonnet' },
 	},
 	
 	['Pet_Matt'] = {					-- Pet's Magical Attack
@@ -2063,7 +2075,7 @@ function profile.HandleMidshot()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
-	gcinclude.FractionalAccuracy(gProfile.Sets.Ranged_Accuracy);
+	gcinclude.ProgressiveAccuracy('RAcc');
 	
 	-- Equip the composited Midshot set
 	gcinclude.EquipTheGear(sets.CurrentGear);

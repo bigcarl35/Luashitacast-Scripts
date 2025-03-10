@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the SAM job.
 	
-	Gear Sets last updated: November 12, 2024
-	Code update: November 12, 2024
+	Gear Sets last updated: March 9, 2025
+	Code update: March 9, 2025
 --]]
 
 local sets = {
@@ -57,7 +57,9 @@ local sets = {
 	
 	['Default'] = {
 		Head    = { 'Lilac Corsage//TOWN', 'Empress Hairpin' },
-		Body    = { 'Ducal Aketon//TOWN-AK', 'Beetle Harness', 'Angler\'s Tunica' },
+		Body    = { 'Ducal Aketon//TOWN-AK', 'Ctr. Scale Mail', 'Beetle Harness', 'Angler\'s Tunica' },
+		Hands   = { 'Ctr. F. Gauntlets','Ryl.Ftm. Gloves' },
+		Legs    = 'Ctr. Cuisses',
 	},
 	
 --[[
@@ -76,7 +78,7 @@ local sets = {
 		Rings  = { 'Courage Ring', 'Balance Ring' },
 		Back   = 'Rabbit Mantle',
 		Waist  = 'Warrior\'s Belt',
-		Legs   = { 'Ctr. Cuissees', 'San. Trousers', 'Ryl.Ftm. Trousers' },
+		Legs   = { 'Ctr. Cuisses', 'San. Trousers', 'Ryl.Ftm. Trousers' },
 		Feet   = 'Bounding Boots',
     },
 	
@@ -93,7 +95,7 @@ local sets = {
 	['Accuracy'] = {
 		Head = 'Empress Hairpin',
 		Neck = 'Spike Necklace',
-		Rings = 'Balance Ring',
+		Rings = { 'Jaeger Ring', 'Balance Ring' },
 		Feet = 'Bounding Boots',
     },
 
@@ -145,7 +147,7 @@ local sets = {
 --[[
 	Preshot is the first stage of when a ranged shot is being performed. This is where 
 	you place any gear that reduces the time it takes to shoot (snap shot, rapid shot, 
-	quick shot, and haste).
+	quick shot, shot delay reduction, and ranged haste).
 --]]
 
 	['Preshot'] = {
@@ -475,7 +477,7 @@ local sets = {
 	reduce your elemental damage by 20% ("nuke wall"), excluding skillchains.	
 --]]
 	['ElementalNuke'] = {
-		Rings = 'Tamas Earring',
+		Rings = 'Tamas Ring',
 		Feet  = 'Mannequin Pumps',
 	},	
 
@@ -1403,7 +1405,7 @@ function profile.HandleDefault()
 						gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 					end			
 				elseif cKey == 'E' then		-- Accuracy	
-					gcinclude.FractionalAccuracy(sets.Accuracy);
+					gcinclude.ProgressiveAccuracy('Acc');
 				elseif cKey == 'F' then		-- Kiting
 					if (gcdisplay.GetToggle('Kite') == true) then
 						gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
@@ -1673,7 +1675,7 @@ function profile.HandleMidshot()
 	gcinclude.ClearSet(sets.CurrentGear);
 	
 	gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
-	gcinclude.FractionalAccuracy(gProfile.Sets.Ranged_Accuracy);
+	gcinclude.ProgressiveAccuracy('RAcc');
 	
 	-- Equip the composited Midshot set
 	gcinclude.EquipTheGear(sets.CurrentGear);	

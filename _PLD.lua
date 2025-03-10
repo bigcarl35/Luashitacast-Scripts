@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the PLD job.
 
-	Gear Sets last updated: November 12, 2024
-	Code update: November 12, 2024
+	Gear Sets last updated: March 9, 2025
+	Code update: March 9, 2025
 --]]
 
 local sets = {
@@ -135,7 +135,27 @@ local sets = {
 
 	['Tank_Ranged_Accuracy'] = {
 	},
-	
+
+--[[
+	Progressive is a new idea for handling accuracy/ranged accuracy. You create
+	stages to load accuracy gear from. Depending on what the player specifies,
+	that stage and any before it will be loaded. The intent is to replace the
+	Fractional Accuracy with this new system.
+--]]
+
+  ['Progressive'] = { 
+		['Accuracy'] = { 
+			[1] = { 
+				['Subset'] = 'Accuracy',
+			},
+		},
+		['Ranged_Accuracy'] = {
+			[1] = {
+				['Subset'] = 'Ranged_Accuracy',
+			}
+		}				
+  },
+  
 --[[
 	If evasion wanted, equip evasion gear. Remember that AGI converts to evasion: for 
 	every 2 points of AGI you get 1 point of evasion. Note that if you leave the body
@@ -177,7 +197,7 @@ local sets = {
 --[[
 	Preshot is the first stage of when a ranged shot is being performed. This is where 
 	you place any gear that reduces the time it takes to shoot (snap shot, rapid shot, 
-	quick shot, and haste).
+	quick shot, shot delay reduction, and ranged haste).
 --]]
 
 	['Preshot'] = {
@@ -569,7 +589,7 @@ local sets = {
 	reduce your elemental damage by 20% ("nuke wall"), excluding skillchains.	
 --]]
 	['ElementalNuke'] = {
-		Rings = 'Tamas Earring',
+		Rings = 'Tamas Ring',
 		Feet  = 'Mannequin Pumps',
 	},
 	
@@ -1587,11 +1607,7 @@ function profile.HandleDefault()
 						end
 					end
 				elseif cKey == 'E' then		-- Accuracy	
-					if bTank == true then
-						gcinclude.FractionalAccuracy(sets.Tank_Accuracy);
-					else
-						gcinclude.FractionalAccuracy(sets.Accuracy);
-					end
+					gcinclude.ProgressiveAccuracy('Acc');				
 				elseif cKey == 'F' then		-- Kiting
 					if (gcdisplay.GetToggle('Kite') == true) then
 						gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);

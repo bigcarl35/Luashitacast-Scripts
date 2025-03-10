@@ -4,8 +4,10 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the DRK job.
 
-	Gear Sets last updated: November 15, 2024	
-	Code update: November 14, 2024	
+	Gear Sets last updated: March 9, 2025
+	Code update: March 9, 2025
+	
+	Role: end game
 --]]
 
 local sets = {
@@ -71,6 +73,8 @@ local sets = {
 		Subset = 'TP',
 		Head   = { 'Lilac Corsage//TOWN' },
 		Body   = { 'Ducal Aketon//TOWN-AK' },
+		Legs   = 'Homam Cosciales',
+		Hands  = { 'Abs. Gauntlets +1', 'Crimson Fng. Gnt.' },
 	},
 	
 	['Tank_Default'] = {
@@ -90,12 +94,12 @@ local sets = {
         Neck  = { 'Parade Gorget//SPECIAL', 'Opo-opo necklace//SLEPT', 'Peacock Amulet', 'Spike Necklace' },
         Ears  = { 'Bat Earring//BLINDED', 'Coral Earring//DT_MAGICAL', 'Brutal Earring', 'Ethereal Earring', 'Coral Earring', 'Fang Earring', 'Genin Earring//SJNIN', 'Pilferer\'s Earring//SJTHF', 'Drone Earring', 'Energy Earring +1', 'Energy Earring +1' },
         Body  = { 'Plastron', 'Chaos Cuirass', 'Scorpion Harness', 'Brigandine', 'Beetle Harness' },        
-		Hands = { 'Abs. Gauntlets +1', 'Thick Mufflers', 'Wonder Mitts' },
-        Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tamas Ring', 'Kshama Ring No.2', 'Balance Ring' },
+		Hands = { 'Dusk Gloves', 'Abs. Gauntlets +1', 'Wonder Mitts' },
+        Rings = { 'Flame Ring', 'Kshama Ring No.8', 'Sun Ring', 'Courage Ring', 'Tamas Ring', 'Kshama Ring No.2', 'Balance Ring' },
         Back  = { 'Forager\'s Mantle', 'Psilos Mantle', 'Amemet Mantle', 'Raptor Mantle', 'Ram Mantle' },
         Waist = { 'Swift Belt', 'Powerful Rope', 'Friar\'s Rope' },
-        Legs  = { 'Thick Breeches', 'Ryl.Sqr. Breeches', 'San. Trousers' },
-        Feet  = { 'Chs. Sollerets +1', 'Thick Sollerets', 'Bounding Boots' },
+        Legs  = { 'Homam Cosciales', 'Chaos Flanchard', 'Tracker\'s Kecks', 'Ryl.Sqr. Breeches', 'San. Trousers' },
+        Feet  = { 'Chs. Sollerets +1', 'Bounding Boots' },
     },
 
 	['Tank_TP'] = {
@@ -116,14 +120,14 @@ local sets = {
 --]]
 		
 	['Accuracy'] = {
-		Head  = 'Optical Hat',
-		Neck  = 'Peacock Amulet',
-        Body  = { 'Abyss Cuirass', 'Scorpion Harness' },
-		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },
-		Hands = { 'Abs. Gauntlets +1', 'Thick Mufflers' }, -- DEX from +1 gauntlets > 3 acc
-		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt' },
-		Legs  = 'Thick Breeches',
-		Feet  = { 'Chs. Sollerets +1', 'Bounding Boots' }, -- Needed to override the default Thick Sollerets
+		Head  = { 'Optical Hat', 'Empress Hairpin' },		-- +10 Acc, +3 DEX
+		Neck  = { 'Peacock Amulet', 'Reraise Gorget' },		-- +10/3 Acc
+        Body  = { 'Abyss Cuirass', 'Scorpion Harness', 'Narasimha\'s Vest' },	-- +10/10/4 Acc
+		Rings = { 'Toreador\'s Ring', 'Toreador\'s Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },	-- +7/+7/+5/+5, +4 Acc:+2 DEX, +2/2 DEX
+		Hands = { 'Abs. Gauntlets +1', 'Battle Gloves' },	-- +5 DEX, +3 Acc
+		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt', 'Mrc.Cpt. Belt' },	-- +10/5/3 Acc, +1 DEX
+		Legs  = 'Homam Cosciales',	-- +3 Acc
+		Feet  = 'Bounding Boots',	-- +3 DEX
     },
 
 	['Tank_Accuracy'] = {
@@ -135,16 +139,59 @@ local sets = {
 --]]
 
 	['Ranged_Accuracy'] = {
-		Subset = 'Accuracy',
-		Neck   = 'Peacock Amulet',
-		Hands  = 'Crimson Fng. Gnt.',
-		Rings  = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
+		Head   = 'Optical Hat',		-- +10 RAcc
+		Neck   = { 'Peacock Amulet', 'Reraise Gorget' },	-- +10/3 RAcc
+		Hands  = 'Crimson Fng. Gnt.',	-- +10 RAcc (+10 RAtt)
+		Rings  = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	-- +5/5/4/4/4 RAcc
+		Back   = 'Psilos Mantle',		-- +1 RAcc (+12 RAtt)
+		Legs   = 'Tracker\'s Kecks',	-- +4 RAcc (+6 RAtt)
 	},
 
 	['Tank_Ranged_Accuracy'] = {
 		Subset = 'Ranged_Accuracy',
 	},
-	
+
+--[[
+	Progressive is a new idea for handling accuracy/ranged accuracy. You create
+	stages to load accuracy gear from. Depending on what the player specifies,
+	that stage and any before it will be loaded. The intent is to replace the
+	Fractional Accuracy with this new system.
+--]]
+
+  ['Progressive'] = { 
+		['Accuracy'] = { 
+			[1] = { 
+				['Head'] = 'Accuracy::Head',
+				['Neck'] = 'Accuracy::Neck',
+				['Body'] = 'Accuracy::Body'
+			},
+			[2] = {
+				['Hands'] = 'Accuracy::Hands',
+				['Legs']  = 'Accuracy::Legs',
+				['Feet']  = 'Accuracy::Feet'
+			},
+			[3] = {	
+				['Rings'] = 'Accuracy::Rings',
+			},
+			[4] = {
+				['Subset'] = 'Accuracy' 
+			}
+		},
+		['Ranged_Accuracy'] = {
+			[1] = {
+				['Neck'] = 'Ranged_Accuracy::Neck',
+				['Back'] = 'Ranged_Accuracy::Back'
+			},
+			[2] = { 
+				['Hands'] = 'Ranged_Accuracy::Hands',
+				['Legs']  = 'Ranged_Accuracy::Legs'
+			},
+			[3] = {
+				['Subset'] = 'Ranged_Accuracy'
+			}
+		}				
+  },
+  
 --[[
 	If evasion wanted, equip evasion gear. Remember that AGI converts to evasion: for every
 	2 points of AGI you get 1 point of evasion. Like TP and Accuracy, the evasion set has a
@@ -152,11 +199,13 @@ local sets = {
 --]]
 
 	['Evasion'] = {
-        Head = 'Empress Hairpin',
-		Neck = 'Spirit Torque',
-		Body = 'Scorpion Harness',
-		Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },		
-        Legs = { 'Chaos Flanchard', 'San. Trousers' },
+        Head  = { 'Optical Hat', 'Empress Hairpin' },	-- +10/10 Eva
+		Neck  = 'Spirit Torque',		-- +5 Eva
+		Body  = { 'Scorpion Harness', 'Narasimha\'s Vest' },	-- +10/4 Eva
+		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Reraise Earring', 'Genin Earring//SJNIN', 'Drone Earring' },	-- +15 Eva while blinded, +5/2 Eva, +4/3 AGI
+		Waist = 'Swift Belt//IF:Tilt Belt',	-- filler, Tilt Belt has -5 Eva
+        Legs  = { 'Chaos Flanchard', 'San. Trousers' },		-- +5/+2 Eva
+		Feet  = 'Bounding Boots',		-- +3 AGI
     },
 
 	['Tank_Evasion'] = {
@@ -175,9 +224,9 @@ local sets = {
 	},
 	
 	['Resting_Refresh'] = {
-		Main = 'Pluto\'s Staff//WSWAP',
-		Neck = 'Parade Gorget//SPECIAL',
-		Body = 'Plastron',		
+		Main = 'Pluto\'s Staff//WSWAP',		-- +10 MP/tick
+		Neck = 'Parade Gorget//SPECIAL',	-- Refresh
+		Body = 'Plastron',					-- Refresh	
 	},
 	
 --[[
@@ -187,18 +236,17 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-        Main = 'Y\'s Scythe',
+        Main = { 'Martial Sword//SJTHF', 'Y\'s Scythe' },
         Ammo = { 'Hedgehog Bomb', 'Fortune Egg' },
     },
 	
 --[[
 	Preshot is the first stage of when a ranged shot is being performed. This is where 
 	you place any gear that reduces the time it takes to shoot (snap shot, rapid shot, 
-	quick shot, and haste).
+	quick shot, shot delay reduction, and ranged haste).
 --]]
 
 	['Preshot'] = {	
-		Waist = 'Swift Belt',
     },
 	
 	['Tank_Preshot'] = {
@@ -212,12 +260,13 @@ local sets = {
 --]]
 
 	['Midshot'] = {	
-		Head  = 'Optical Hat',
-		Neck  = { 'Peacock Amulet', 'Reraise Gorget' },
-		Ears  = 'Brutal Earring',
-		Hands = 'Crimson Fng. Gnt.',
-		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },
-		Back  = { 'Psilos Mantle', 'Amemet Mantle' },
+		Head  = 'Optical Hat',			-- +10 Racc
+		Neck  = { 'Peacock Amulet', 'Reraise Gorget' },		-- +10/3 RAcc
+		Ears  = 'Brutal Earring',		-- Store TP +1
+		Hands = 'Crimson Fng. Gnt.',	-- +10 RAcc
+		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	-- +5/5/4/4/4 RAcc
+		Back  = { 'Psilos Mantle', 'Amemet Mantle' },		-- +1 RAcc/+12 RAtt, +10 RAtt
+		Legs  = 'Tracker\'s Kecks',		-- +4 RAcc/+6 RAtt
     },
 	
 	['Tank_Midshot'] = {
@@ -235,28 +284,33 @@ local sets = {
 --]]
 
 	['INT'] = {	
-		Body  = 'Baron\'s Saio',
-		Hands = 'Abs. Gauntlets +1',
-		Rings = { 'Tamas Ring', 'Flame Ring' },
-		Waist = 'Mrc.Cpt. Belt',
-		Legs  = 'Chaos Flanchard',	
+		Main  = 'Ice Staff//WSWAP',		-- +4 INT
+		Body  = 'Baron\'s Saio',		-- +1 INT
+		Hands = { 'Abs. Gauntlets +1', 'Errant Cuffs' },	-- +9/5 INT
+		Rings = { 'Tamas Ring', 'Flame Ring' },				-- +5/2 INT
+		Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },	-- +5/1 INT
+		Legs  = 'Chaos Flanchard',		-- +3 INT
+		Feet  = 'Mannequin Pumps',		-- +1 INT
 	},
 	
 	['Tank_INT'] = {
+		Subset = 'INT',
 	},
 	
 	['MND'] = {
-		Neck  = { 'Promise Badge', 'Justice Badge' },
-		Ears  = 'Geist Earring',
-		Body  = { 'Abyss Cuirass', 'Wonder Kaftan', 'Baron\'s Saio' },
-		Hands = 'Baron\'s Cuffs',
-		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },
-		Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
-		Legs  = { 'Abyss Flanchard', 'Wonder Braccae' },
-		Feet  = { 'Chs. Sollerets +1', 'Mannequin Pumps' },	
+		Main  = 'Water Staff//WSWAP',	-- +4 MND
+		Neck  = { 'Promise Badge', 'Justice Badge' },					-- +5/3 MND
+		Ears  = 'Geist Earring',		-- +1 MND
+		Body  = { 'Abyss Cuirass', 'Wonder Kaftan', 'Baron\'s Saio' },	-- +4/1/1 MND
+		Hands = 'Baron\'s Cuffs',		-- +1 MND
+		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },	-- +5/3/2 MND
+		Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt', 'Friar\'s Rope' },	-- +5/1/1 MND
+		Legs  = { 'Abyss Flanchard', 'Wonder Braccae' },		-- +5/2 MND
+		Feet  = { 'Chs. Sollerets +1', 'Mannequin Pumps' },		-- +5/2 MND
 	},
 	
 	['Tank_MND'] = {
+		Subset = 'MND',
 	},
 	
 	['Enmity_Plus'] = {
@@ -276,6 +330,7 @@ local sets = {
 
 	['Precast'] = {	
 		Ears = 'Loquac. Earring',
+		Legs = 'Homam Cosciales',
 	},
 
 	['Tank_Precast'] = {
@@ -360,6 +415,7 @@ local sets = {
 	},
 	
 	['Tank_CuringMagic'] = {
+		['Subset'] = 'CuringMagic'
 	},
 
 --[[
@@ -379,6 +435,7 @@ local sets = {
 	},
 	
 	['Tank_OffensiveCuring'] = {
+		Subset = 'CuringMagic',
 	},
 
 --[[
@@ -486,6 +543,7 @@ local sets = {
 	},
 	
 	['Tank_Spike'] = {
+		Subset = 'Spike',
 	},
 
 --[[
@@ -561,7 +619,6 @@ local sets = {
 	},	
 
 	['Tank_Phalanx'] = {
-		Subset = 'Phalanx',	
 	},
 
 --[[
@@ -619,6 +676,7 @@ local sets = {
 	},
 	
 	['Tank_ElementalNuke'] = {
+		Subset = 'ElementalNuke',
 	},
 
 --[[
@@ -653,6 +711,7 @@ local sets = {
 	},
 	
 	['Tank_ElementalDebuff'] = {
+		Subset = 'ElementalDebuff',
 	},
 
 --[[
@@ -677,6 +736,7 @@ local sets = {
 	},
 	
 	['Tank_Summoning'] = {
+		Subset = 'Summoning',
 	},
 
 --[[
@@ -718,6 +778,7 @@ local sets = {
 	},
 	
 	['Tank_Absorb'] = {
+		Subset = 'Absorb',
 	},
 
 --[[
@@ -741,6 +802,7 @@ local sets = {
 	},
 	
 	['Tank_Drain'] = {
+		Subset = 'Drain',
 	},
 
 --[[
@@ -765,6 +827,7 @@ local sets = {
 	},
 	
 	['Tank_Aspir'] = {
+		Subset = 'Aspir',
 	},
 
 --[[
@@ -779,6 +842,7 @@ local sets = {
 	},
 	
 	['Tank_DarkMagic'] = {
+		Subset = 'DarkMagic',
 	},
 	
 --[[
@@ -885,25 +949,32 @@ local sets = {
 	
 	['EnfeeblingINT'] = {
 		Subset = 'INT',
+		Neck   = 'Enfeebling Torque',
 		Body   = 'Chaos Cuirass',
 		Feet   = 'Abyss Sollerets',
 	},
 	
 	['Tank_EnfeeblingINT'] = {
+		Subset = 'EnfeeblingINT',
 	},
 	
 	['EnfeeblingMND'] = {
 		Subset = 'MND',
+		Neck   = 'Enfeebling Torque',
 		Body   = 'Chaos Cuirass',
+		Feet   = 'Abyss Sollerets',
 	},
 	
 	['Tank_EnfeeblingMND'] = {
+		Subset = 'EnfeeblingMND',
 	},
 
 	['EnfeeblingMagic'] = {
+		Neck = 'Enfeebling Torque',
 	},
 	
 	['Tank_EnfeeblingMagic'] = {
+		Subset = 'EnfeeblingMagic',
 	},
 	
 --[[
@@ -995,6 +1066,7 @@ local sets = {
 	},
 	
 	['Tank_NinjutsuElemental'] = {
+		Subset = 'INT',	
 	},
 
 --[[
@@ -1038,10 +1110,11 @@ local sets = {
 --]]
 
 	['AttackPower'] = {
-		Ears = { 'Ethereal Earring', 'Fang Earring', 'Beastly Earring//AXE' }, -- included axe skill here since it too is cross WS
-		Body = { 'Plastron', 'Chaos Cuirass' },
-		Back = { 'Forager\'s Mantle', 'Psilos Mantle', 'Amemet Mantle' },
-		Legs = 'Thick Breeches',
+		Ears  = { 'Ethereal Earring', 'Fang Earring', 'Beastly Earring//AXE' }, -- included axe skill here since it too is cross WS
+		Body  = { 'Plastron', 'Chaos Cuirass' },
+		Hands = 'Dusk Gloves',
+		Back  = { 'Forager\'s Mantle', 'Psilos Mantle', 'Amemet Mantle' },
+		Legs  = 'Tracker\'s Kecks',
 	},
 	
 --[[
@@ -1060,8 +1133,9 @@ local sets = {
 		Head  = 'Chaos Burgeonet',
         Neck  = 'Spike Necklace',
         Hands = { 'Wonder Mitts', 'Ryl.Ftm. Gloves' },
-        Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
-        Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },
+        Rings = { 'Flame Ring', 'Kshama Ring No.8', 'Sun Ring', 'Courage Ring' },
+        Body  = { 'Plastron', 'Chaos Cuirass', 'Wonder Kaftan' },
+		Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },
         Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
     },
 	
@@ -1077,10 +1151,10 @@ local sets = {
         Neck  = 'Spike Necklace',
         Ears  = { 'Genin Earring//SJNIN', 'Drone Earring', 'Beastly Earring//AXE', 'Ethereal Earring' },
         Body  = { 'Plastron', 'Chaos Cuirass', 'Wonder Kaftan' },
-        Hands = { 'Wonder Mitts', 'Thick Mufflers', 'Ryl.Ftm. Gloves' },
-        Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
+        Hands = { 'Wonder Mitts', 'Ryl.Ftm. Gloves' },
+        Rings = { 'Flame Ring', 'Kshama Ring No.8', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },
-        Legs  = { 'Thick Breeches', 'Ryl.Sqr. Breeches', 'Wonder Braccae' },
+        Legs  = { 'Ryl.Sqr. Breeches', 'Wonder Braccae' },
         Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps', 'Bounding Boots' },
     },
 		
@@ -1096,9 +1170,9 @@ local sets = {
         Neck  = 'Spike Necklace',
         Body  = { 'Plastron', 'Chaos Cuirass', 'Brigandine', 'Wonder Kaftan' },
         Hands = { 'Abs. Gauntlets +1', 'Wonder Mitts', 'Ryl.Ftm. Gloves' },
-        Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Kshama Ring No.2', 'Courage Ring', 'Balance Ring' },
+        Rings = { 'Flame Ring', 'Kshama Ring No.8', 'Sun Ring', 'Kshama Ring No.2', 'Courage Ring', 'Balance Ring' },
         Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },
-        Legs  = { 'Thick Breeches', 'Ryl.Sqr. Breeches', 'Wonder Braccae' },
+        Legs  = { 'Ryl.Sqr. Breeches', 'Wonder Braccae' },
         Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps', 'Bounding Boots' },
     },
 	
@@ -1116,9 +1190,9 @@ local sets = {
         Neck  = 'Spike Necklace',
         Body  = { 'Plastron', 'Chaos Cuirass', 'Wonder Kaftan' },
         Hands = { 'Abs. Gauntlets +1', 'Wonder Mitts', 'Ryl.Ftm. Gloves' },
-        Rings = { 'Flame Ring', 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
+        Rings = { 'Flame Ring', 'Tamas Ring', 'Kshama Ring No.8', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },
-        Legs  = { 'Thick Breeches', 'Wonder Braccae' },
+        Legs  = 'Wonder Braccae',
         Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
     },
 	
@@ -1134,9 +1208,9 @@ local sets = {
         Neck  = 'Spike Necklace',
         Body  = { 'Plastron', 'Chaos Cuirass', 'Wonder Kaftan' },
         Hands = { 'Abs. Gauntlets +1', 'Wonder Mitts', 'Ryl.Ftm. Gloves' },
-        Rings = { 'Flame Ring', 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
+        Rings = { 'Flame Ring', 'Tamas Ring', 'Kshama Ring No.8', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },
-        Legs  = { 'Thick Breeches', 'Wonder Braccae' },
+        Legs  = 'Wonder Braccae',
         Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
     },
 	
@@ -1155,7 +1229,7 @@ local sets = {
         Neck  = { 'Promise Badge', 'Justice Badge' },
 		Body  = { 'Plastron', 'Abyss Cuirass', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
-        Rings = { 'Flame Ring', 'Tamas Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring', 'Tranquility Ring' },
+        Rings = { 'Flame Ring', 'Tamas Ring', 'Kshama Ring No.8', 'Sun Ring', 'Courage Ring', 'Tranquility Ring' },
         Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },
         Legs  = 'Wonder Braccae',
         Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
@@ -1175,7 +1249,7 @@ local sets = {
         Neck  = 'Spike Necklace',
 		Body  = { 'Plastron', 'Abyss Cuirass', 'Wonder Kaftan' },
         Hands = 'Wonder Mitts',
-        Rings = { 'Flame Ring', 'Sun Ring', 'Sun Ring', 'Courage Ring' },
+        Rings = { 'Flame Ring', 'Kshama Ring No.8', 'Sun Ring', 'Courage Ring' },
         Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },
         Legs  = { 'Wonder Braccae', 'San. Trousers' },
         Feet  = { 'Chs. Sollerets +1', 'Creek F Clomps', 'Wonder Clomps' },
@@ -1260,7 +1334,7 @@ local sets = {
         Neck = { 'Promise Badge', 'Justice Badge' },
 		Body = { 'Abyss Cuirass', 'Wonder Kaftan' },
         Rings = { 'Tamas Ring', 'Tranquility Ring' },
-        Waist = 'Mrc.Cpt. Belt',
+        Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },
         Legs = 'Wonder Braccae',
 		Feet = { 'Chs. Sollerets +1', 'Mannequin Pumps' },
     },
@@ -1290,7 +1364,7 @@ local sets = {
         Hands  = { 'Crimson Fng. Gnt.', 'Chaos Gauntlets' },
         Rings  = 'Toreador\'s Ring',
         Waist  = 'Powerful Rope',
-        Legs   = { 'Wonder Braccae', 'Chaos Flanchard' },
+        Legs   = { 'Homam Cosciales', 'Wonder Braccae', 'Chaos Flanchard' },
         Feet   = { 'Creek F Clomps', 'Wonder Clomps', 'Chs. Sollerets +1' },
     },
 		
@@ -1311,7 +1385,7 @@ local sets = {
 	},
 	
 	['ArcaneCircle'] = {
-		Feet = 'Chaos Sollerets +1',
+		Feet = 'Chs. Sollerets +1',
     },
 	
 	['LastResort'] = {
@@ -1760,12 +1834,8 @@ function profile.HandleDefault()
 							gcinclude.MoveToCurrent(sets.Evasion,sets.CurrentGear);
 						end
 					end
-				elseif cKey == 'E' then		-- Accuracy	
-					if bTank == true then
-						gcinclude.FractionalAccuracy(sets.Tank_Accuracy);
-					else
-						gcinclude.FractionalAccuracy(sets.Accuracy);
-					end
+				elseif cKey == 'E' then		-- Accuracy
+					gcinclude.ProgressiveAccuracy('Acc');					
 				elseif cKey == 'F' then		-- Kiting
 					if (gcdisplay.GetToggle('Kite') == true) then
 						gcinclude.MoveToCurrent(sets.Kite,sets.CurrentGear);
@@ -2059,12 +2129,11 @@ function profile.HandleMidshot()
 	
 	if bTank == true then
 		gcinclude.MoveToCurrent(sets.Tank_Midshot,sets.CurrentGear);
-		gcinclude.FractionalAccuracy(gProfile.Sets.Tank_Ranged_Accuracy);
 	else
 		gcinclude.MoveToCurrent(sets.Midshot,sets.CurrentGear);
-		gcinclude.FractionalAccuracy(gProfile.Sets.Ranged_Accuracy);
 	end;
-				
+	gcinclude.ProgressiveAccuracy('RAcc');
+	
 	-- Equip the composited Midshot set	
 	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandleMidshot
