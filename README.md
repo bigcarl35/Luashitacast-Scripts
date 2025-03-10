@@ -11,16 +11,17 @@ This repository contains my Luashitacast scripts that I have tailored to work on
 	Date:   October 2023
 	Server: HorizonXI (https://horizonxi.com/)
 
-**Please Note: Main** is no longer the current branch. You want to pull from the **Karma** branch.  
+**Please Note: Main** is now back to the current branch. The Karma branch has an older version. Please pull only  
+from the main.  
 
 ## Supported commands
 
 The following commands are supported by this implementation of luashitacast.
 
+**/GC**: Performs a gear check. Has to be run for Luashitacast to work.  
 **/dt: [Physical|Magical|Breath]**: Defines type of damage taken gear to equip  
 **/kite**: Turns on/off equipping movement gear.  
-**/acc [all|#'s|names|-code]**: Indicates which slots from the accuracy set should be equipped.  
-**/nac [all|#'s|names|-code]**: Turns off the specified accuracy slots.  
+**/acc [?|stage #]**: Indicates the progressive accuracy stage that is equipped.  
 **/equipit** or **/ei "code|name" [1|2]**: Equips specified ring (coded or actual name) in the specified slot.
 Turns off /GSWAP.  
 **/debug**: Turns on/off displaying of all gear being equipped.  
