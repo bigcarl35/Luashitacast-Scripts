@@ -1,21 +1,28 @@
-- Added check for ['Ref'] being null in fCheckForElementalGearByValue. Added 
-  check for ['visible'] being null in fValidateSpecial.
+- For SMN, changed Blood Pact 'Burning Strike' from Magical to Hybrid 
 
-- When checking for a multislot item, all affected slots are checked to make 
-  sure they are not locked. This is true for both normal gear swapping and
-  for /equipit.
+- Changed /SMG from muli-parameters to val= as in /smg gs=tp or
+  /smg slot=hands, changed 'warn' option to 'noac'
 
-- EquipIt now checks the validity of the item to equip, whether you can wear
-  it, and is it accessible.
-  
-- SwapToStave now checks both "Main" and "Sub for locks.
-  
-- /gc now updates existing records for elemental staves/gorgets/obis if the
-  record already exists. Previous behavior was an accidental oversight.
-  
-- //NOT_WSWAP wasn't working right, now it is.  //IF: was not working correctly,
-  it works now.
-  
-- Detection of storage slips have been added, but searching is not yet available.
+- Updated help system to be current with all commands
 
-- Cleaned up some code, added more information to the gear piece records.
+- Added //EMPTY and //NOT_TH inline conditionals
+
+- Added slot referencing in sets (e.g., ['Hands'] = 'Accuracy::Hands')
+
+- Added GC to the display bar, indicating if run or not
+  
+- /GC reminder is displayed initially at 15 seconds after logging in/
+  changing jobs, and then repeatedly at 5 minute intervals
+  
+- Added processing of Progressive structure to the /GC command
+
+- Replaced fractional accuracy with progressive accuracy. This affects
+  accuracy, ranged accuracy and the associated tanking variations.
+  
+- Had to remove collision check between locks and accuracy. Progressive
+  accuracy makes it very difficult to track which equipment slots are
+  populated
+  
+- Adjusted code to address a LUA deficiency with the string.find() function.
+  Guessing our server updated the version of LUA we are using
+  

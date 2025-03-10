@@ -1,100 +1,27 @@
 To do list:
-----------   
-- Support explicit pre/mid sets that can be specified instead of the current iterative
-  method.
-    
+----------      
 - Determine how far a pet is away from a target
-  
-Look into item.RecastDelay (is this the item's cooldown?)
+    
+- Change locks to:
+	/lock #|name,... 	to lock
+	/lock				Removes all locks
+	
+	- Get rid of unlock
+	- Change log display to mixed ranged list
 
-- Add day, time, moon phase, weather, zone (location) to display bar
+- Why doesn't pet food load into the dynamic gear table?
 
-Change Midcast section. Instead of what we're currently doing, have it broken out by
-the type of spell (i.e., a section for each type: [Healing], ['elemental'], etc.)
-Each section has it's own set and you use inline codes for the variations:
-
-['Enhancing'] = {
-	Body = 'Blessed Bliaut//BARSPELL',
-	},
-
-So, Magic Attack Bonus would be applied with all magic attack spells including hybrid
-weapon skills. I.e., apply MAB to elemental offence spells, dots like dia and bio
-that have an initial attack damage, etc.
-
-Individual spells of the "type" would be included in each section
-Common routines included with each type: obi and elemental stave
-
-- Need list of hybrid weapon skills
-
-- Add //PETNF
-
-- recheck smn roles in gcinclude
-
-- modify equipit to check to see if the item is on cool down and to keep searching
-  for another one to equip
-
-- Problem on DRK, reference to "invisible" not defined. Think some special circumstances
-  arose with the Uggy Pendant //SPECIAL check. Try to keep an eye open for that happening
-  again. Unable to repeat.
+- TH really should be 1 hit then normal gear. Track with table [ID] = { 
+  ['Tagged'] = T/F, ts= timestamp }. Clean-up ever 5 minutes (configurable).
+  Instantiate when targetted. One hit, then swap to normal gear. Consider
+  routines in gcinclude since some gear in the future will be available
+  to all classes. (Note: emnity will apply TH as well as a hit.)
   
 Ongoing questions
 -----------------
 - How does the client know that it should display "Downloading Data"?
 - Timing issues are the bane of my existence...
-
-New since last release
-----------------------
-- Complete rebase of code. Better consistency, more efficient, more encompassing
-- Dynamic equipment table implemented and integrated. Cuts down on calls to the
-  server, helping reduce lag and stuttering especially in level capped areas.
-  - Added automatic support for the elemental staves, obis, and gorgets via the
-    /gc command.
-- Travel gear set has become the default set except when tanking is indicated,
-  TP_Tank is then the default.
-- Display bar is updated even if /GSWAP is off
-- Numerous inline conditionals added. //accessible has become obsolete, all gear's
-  accessibility is automatically checked now
-- Elemental gear swapping now based on magical affinity, summons, magical elemental
-  accuracy, and elemental weapon skill, where appropriate instead of the matching the
-  element of the spell/weaponskill. Weather and day are still considered, where 
-  appropriate.
-- Table added and integrated to handle multi-slot gear
-- Reordered midcast so that specific spell's gear are equipped last
-- Fractional sets now supported, although only used internally
-- INT set equipped when using ninjutsu
-- /gearset or /gs no longer disables /GSWAP. Instead, the set is equipped and the
-  associated slots are locked. (Note: if weapons included in gearset, regardless
-  of the /WSWAP setting, they will be equipped. This exception is true for both
-  /gearset and /equipit.)
-- Inline conditional //ACCESSIBLE is no longer needed as now all gear's accessibility
-  is checked automatically.
-- Double checked all of the weapon skills to make sure the correct stats were being
-  emphasized. (Horizon has changed more than I thought.)
-- Renamed "Travel" gear set to "Default" gear set. Got rid of "Town", "Idle_Regen",
-  "Idle_Refresh" and "Damage Taken". Gear from the first three can be added to 
-  "Default" with the appropriate inlines and the last one should be added to "TP". 
-  Got rid of gcinclude.settings.RegenGearHPP and gcinclude.settings.RefreshGearHPP. 
-  now handled with conditionals. I've removed the common debuffs above the ordered
-  priorityEngaged list. (Where it was before it had too high a priority for such
-  and incidental action.)
-- There's a timing issue that can pop up when you login or change jobs. It causes
-  all gear except what you were wearing last time you were that job to be considered
-  inaccessible. By typing /gc after the client download has completed, you force the
-  program to try again. This pretty much addresses the problem.
-- There's another timing issue. Sometimes the display bar will be missing some options
-  that are job specific. Has to do with the client communication not being complete
-  when the variables for the display bar were created. If you type /rv, the program
-  will "refresh" the "variables" and the toolbar should be the way you expect it.
-- Town set has been merged default set with conditionals added for "town" recognition.
-- Subset is now supported including the fractional aspects for accuracy and gear sets
-  in general.
-- Added BARSPELL support
-- Added Default_WPet to Summoner's job. (It's a variation on the default set when the
-  player has a summoned pet out.)
-- Linked dynamic gear structure to elemental gear structure
-- New versions of MaxSpell and MaxSong. Checks for conditions and easier to extend.
-- Switched to new version of elemental magic table. Got the code changed accordingly.
-
+ 
 Done
 ----
 - Debuff Reward on BST? -- do /petfood min, reward
@@ -142,7 +69,7 @@ Done
   of gear. Example: /slot neck|6 "Parade Gorget" (the second parameter can either be
   the slot name or the slot number.)
 - Added //ACCURACY inline to check if accuracy turned on. Removed accuracy option from
-  HandleWeaponskill. (Now the user must use //ACCURACCY in the weaponskill gear definition
+  HandleWeaponskill. (Now the user must use //ACCURACY in the weaponskill gear definition
   sets.)
 - Added conditional to see if the item you're equipping is accessible.
 - Came up with method to adjust HP with invisible boosts removed.
@@ -209,16 +136,112 @@ Done
 - Can I determine if a spell is on cd? or item on cd? (RecastDelay * 15(?)) If so, use
   in Maxspell.
 - Maxspell - possible, indicate two spells (max, -1)
+- Need conditional when player fighting but not pet
+- Add "San" ninjutsu to tiered spell list, offensive spells only
+- Renamed DefaultTarget to DefaultSpellTarget and named default target for song to 
+  DefaultSongTarget
+- Added bard song affinities 
+- Change to not use elemental staff when summoning an avatar, but rather swap
+  weapons once the pet is out.
+- Add //PETNF
+- Modified ShowIt to remove variables that were dropped and added display of the dynamic
+  gear list
+- Add /gc reminder to SetVariables function
+- /ei w/o parameters lists all codes and the item it equips
+- Add day, time, moon phase, weather, --zone (location) to display bar
+- Consider splitting out ranged WS from the melee WS. ex: WS_RANGED_AGI for Hot Shot, etc
+- Y's scythe +1 dark affinity. This is a specialty case specifically for DRK. If
+  WSWAP is enabled, Y's Scythe equipped, casting a dark spell, and the player has
+  a dark staff, but not a pluto staff, the dark staff should not be equipped. Losing
+  the tp would be wasted.
+- Add inline conditional for root spell recognition. EX: gear//SPELL:POISON
+- Check that zone id's correct. There's a descrepancy in the master list...
+- Change Midcast section. Instead of what we're currently doing, have it broken out by
+  the type of spell (i.e., a section for each type: [Healing], ['elemental'], etc.)
+  Each section has it's own set and you use inline codes for the variations:
+
+  ['Enhancing'] = {
+ 	  Body = 'Blessed Bliaut//BARSPELL',
+  },
+
+  So, Magic Attack Bonus would be applied with all magic attack spells including hybrid
+  weapon skills. I.e., apply MAB to elemental offence spells, dots like dia and bio
+  that have an initial attack damage, etc.
+
+  Individual spells of the "type" would be included in each section
+  Common routines included with each type: obi and elemental stave  
+ - add AttackPower subset, remove Tank_WS_*, fix comments
+ - Removed the following inline conditionals (obsolete): //ACCURACY, //CURE, //SPELL:,
+   //IFC:
+ - Added the following inline conditionals: //EN"spell", //ENANY, //LVL"condition"
+ - Changed //SO: to //SP:. Now handles both songs and spells. 
+ - When SA or TA is used, the DEX gear stays equipped when player is engaged until they
+   hit a target or the buff wears out.
+ - Certain items grant an "enchantment" buff when used. When enabled, the item will 
+   remain equipped until the buff wears out or the item is physically unequipped.
+ - Idle has been added to the display bar for all jobs. When enabled, Default gear will
+   be equipped when the player is idling. (This use to be a tank-only option.) Idle
+   behavior has been removed from /TANK.
+ - Added inline conditional //NOT_UTSUSEMI
+ - Added zone name to the display bar
+ - Check added to EquipTheGear when dealing with multislot items, make sure
+   both slots are not locked.
+- Consider how to tell when replacing a multislot item. (How to equip the other 
+  piece. Ex: V.Cloak to head/body pieces or normal piece to v.cloak.) The other
+  issue is that the 'affected' slot can be slots. Make sure that's supported.
+- SwapToStave now checks both "Main" and "Sub for locks
+- If you have a gear set that only specifies a "Sub" and the default "Main" is
+  a two-handed weapon, you have to specify a "Main" in that gear set. The
+  default behavior when the "Main" is empty is to load the default weapon which
+  if it is a two-hander, we remove the "Sub" you specified.  
+- Multislot items need their affected slots checked for locks when equipped via
+  the equipit command.
+- Add to equipit a check to make sure the Player has the item and that they
+  can equip it.
+- Basic structure for TH hit tracking in place.
+- /gc doesn't seem to force an overwrite on specifics if the piece of gear has
+  already been scanned.
+- Fixed //NOT_WSWAP and //IF:
+- Regarding gcinclude.GearDetails, revisit "num" for correctness. Also, change
+  "accessible" to a number (how many are accessible)
+- /gc now checks that the gear is being targetted for the correct slot.
+- Fixed fGetRoot so that the ":" is removed from ninjutsu spells.
+- New command: /SMG (show my gear) - Stand-alone, show everything. /SMG GS_Name -
+  Shows all details for that set. /SMG - - shows all gear that has a problem
+  being equipped: invalid, non-accessible, not owned, etc
+- Add check vs claim slips for gear
+- Change GearCheckList to provide more information. Right now the gear is shown
+  in either green meaning it's good or red meaning there's an issue. Consider
+  adding other colors: yellow for you own the item, but it's in a non-accessible 
+  inventory or purple if it's on the Porter Moogle. Add counter so you can tell
+  how many of the item found. Compare count w/accessible count: Blue if not all
+  accessible, green if all accessible.
+- Indicated Accuracy slot(s) should block all loaded sets if player TPing or 
+  WSing. (Exception is Kiting.) Problem: if accuracy set doesn't have something
+  to place into that slot...
   
- Possibly in the future
- ---------------------- 
-- Add Event to display bar. Values: none, assault, besieged, campaign, garrison, salvage,
+  Only time this is an issue is when dealing with rings and earrings. Checking
+  should only occur with these.
+- Need list of hybrid weapon skills. 
+- recheck smn roles in gcinclude. (ASB code says Burning Strike is hybrid)  
+- Change /SMG to /SMG slot=xx,xx or /SMG gs=xx
+
+	/SMG
+	/SMG noac
+	/SMG slot=x,y...
+	/SMG gs=x
+
+- Make it so you can pull a line from another set. 
+		Ex: head = { 'Lilac Corsage//TOWN','gs=TP:head' },
+  for load the corsage if in town, else process TP's head line
+
+  Syntax: 'Accuracy::Hands' for pulling the hands line from accuracy
+  
+Possibly in the future
+---------------------- 
+ - Add Event to display bar. Values: none, assault, besieged, campaign, garrison, salvage,
   Fellow
   
-- Add slot for equipit (explicit slot?), would be nice to detect cooldown  
-
-- Need to be able to search storage slips
-
 - Add an inline conditional to a slot name. It implies that all gear in that slot's
   definition has that conditional applied to it. Example:
   
@@ -241,9 +264,22 @@ Done
   
 	I think this one is doable!
 
-- Make it so you can pull a line from another set. 
-		Ex: head = { 'Lilac Corsage//TOWN','TP:head' },
-  for load the corsage if in town, else process TP's head line
+- modify equipit to check to see if the item is on cool down and to keep searching
+  for another one to equip. I know how to get the general information about an item 
+  (name, description, etc), but not how many charges are left or what is the cool 
+  down on the item. I'm guessing this is sent in a packet, maybe upon zoning. A 
+  comparison to a master clock? More investigation is needed.
+
+- Double Midcast -- Looking at the sample code that obijam linked, this is not
+	generalized. This would be specific for a spell. You need to know a priori
+	the fast cast value, the casting gear reduction, the packet delay, the cast
+	delay to determine if there's enough time for an addition midcast call.
+
+- Change /TH to turn TH on and then off after two hits. (Only need one hit and
+  then something more productive can be in the slot.) /TH ON does the same behavior
+  as now. Second /TH turns off regardless if on or awaiting 2 hits.
+
+- Make is so /SMG output can be directed to a file.
   
   Not Doing
 ---------
@@ -260,9 +296,8 @@ Done
 	(Support ALL). [Validate has been removed from luashitacast. At some point I'll
 	probably make it into a stand-alone addon.]
 	
-- Need to be able to search storage slips in validate. (Look to the Find addon code.)
-	Not doing since I only look in areas where accessible outside of moghouse and the
-	porter slips are not accessible unless talking to a porter moogle with your slip.
+	2/14/25 - /SMG does this partially. Not sure if the rest of validate should be
+	implemented too.
 	
 - Change ring swap in equipgear to if one found, remove from new set and move position
   for other ring/earring if needed. (This shouldn't be necessary.)
@@ -297,3 +332,27 @@ Done
   Gear that has hidden effects will not be supported since the details are not in the
   description.	(I'm just assuming that the conditions for the enchantment/activity
   were met.)
+    
+- Problem on DRK, reference to "invisible" not defined. Think some special circumstances
+  arose with the Uggy Pendant //SPECIAL check. Try to keep an eye open for that happening
+  again. Unable to repeat.
+  
+  Update: have repeated. Think it's an issue of the item not being correctly instantiated.
+  Reloading Luashitacast fixed the problem. I'm guessing that /GC would also resolve the
+  issue. (Oh, in this case, it was me equipping a Balmung that caused the problem.)
+  
+  Update 2: pretty sure /gc fixes this problem
+  
+  Fix: //SPECIAL will always return false until /gc run.
+
+- Consider removing /nac, have /acc do everything.
+
+  Not worth the effort.
+  
+- lc the commands so that upper case commands work too
+
+  Normal commands don't work if upper case. Leave alone, for consistency.
+  
+- Modify defaultTarget system to separate offensive and defensive targets.
+
+  Too conditional. Just have the player explicitly identify the target

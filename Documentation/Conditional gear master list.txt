@@ -41,7 +41,6 @@ Here's a list of all the "Inline" conditionals currently supported. Let me know 
 want me to add any more.
 
 //ABSORB		Equip if an absorb spell cast
-//ACCURACY		Equip if 'Acc' enabled
 //ARC_CIRCLE	Equip if player has Arcane Circle buff
 //ARCHERY		Equip if Range is a Bow
 //AXE			Equip if Main is an Axe
@@ -51,10 +50,9 @@ want me to add any more.
 //CARBY			Equip if player has a pet and it is Carbuncle
 //CLUB			Equip if Main is a Club
 //COVER			Equip if Cover is active
-//CR:"craft"	Equip if the crafting code passed matches the master crafting setting
-//CURE			Equip if spell being cast is a cure/curaga spell
-//"day"			Equip if the day's name matches the specified day, eg. //FIRESDAY
-//CURSED			Equip if player is cursed
+//CR:craft		Equip if the crafting code passed matches the master crafting setting
+//day			Equip if the day's name matches the specified day, eg. //FIRESDAY
+//CURSED		Equip if player is cursed
 //DAGGER		Equip if Main is a Dagger
 //DAYTIME		Equip if it's daytime
 //DB:BPP		Equip if debuff cycle set to BPP (blind,poison,paralyze)
@@ -64,34 +62,38 @@ want me to add any more.
 //DT_MAGICAL	Equip item if damage taken is set to magical
 //DT_PHYSICAL	Equip item if damage taken is set to physical
 //DUSK2DAWN		Equip if it's between dusk and dawn
-~//EN"spell"		Equip if player has en- spell buff
+//EMPTY			Equip if sloy in temporary set is empty
+//ENspell		Equip if player has en- spell buff
+//ENANY			Equip if player has any en- spell buff
 //EVASION		Equip if 'Eva' enabled
 //FULLMOON		Equip if moon phase is full moon
-//GA:"gather"	Equip if the gathering code passed matches the master gathering setting
+//GA:gather		Equip if the gathering code passed matches the master gathering setting
 //GAXE			Equip if Main is a Great Axe
 //GKATANA		Equip if Main is a Great Katana
 //GSWORD		Equip if Main is a Great Sword
 //H2H			Equip if Main is a Hand-to-Hand
 //HOLY_CIRCLE	Equip if player has Holy Circle buff
 //HORN			Equip if instrument setting is horn
-//HP"conditional"#	Equip if HP meets condition
-//HPP"conditional"#	Equip if HP% meets condition
+//HPconditional#	Equip if HP meets condition
+//HPPconditional#	Equip if HP% meets condition
 //IDLE			Equip if Idle is true (part of tanking configuration)
-//IF:"gear"		Equip if wearing that gear in the tested slot
-~//IFC:"gear"	Equip if wearing that gear in any slot (currently wearing or building gear)
+//IF:gear		Equip if wearing that gear in the tested slot
 //KATANA		Equip if Main is a Katana
-~//LVL"conditional"# Equip if player's level meets the conditional setting
+//LVLconditional # Equip if player's level meets the conditional setting
 //LVLDIV#		Equip if player's level is evenly divisible by #
 //MARKSMANSHIP	Equip if Range is a Gun/Crossbow
 //MSJ			Equip if player's subjob is magical
-//MP"conditional"#	Equip if MP meets condition
-//MPP"conditional"#	Equip if MP% meets condition
+//MPconditional#	Equip if MP meets condition
+//MPPconditional#	Equip if MP% meets condition
 //NEWMOON		Equip if moon phase is new moon
 //NIGHTTIME		Equip if it's nighttime
 //NO_PET		Equip if the player has no pet
 //NO_SMNPET		Equip if player has no pet or pet is not a smn avatar
-//NOT_"day"		Equip if the day's name does not match the specified day, eg. //NOT_FIRESDAY
+//NOT_day		Equip if the day's name does not match the specified day, eg. //NOT_FIRESDAY
 //NOT_OWN		Equip if region not controlled by player's nation
+//NOT_TANK		Equip if tank disabled
+//NOT_TH		Equip if TH disabled
+//NOT_UTSUSEMI	Equip if Utsusemi buff is not up
 //NOT_WTH:"weather" Equip if theweather does not match the specified weather
 //NOT_WTH-DAY	Equip if the weather does not match the day's element
 //NOT_WSWAP	Equip if WSWAP is turned off
@@ -103,23 +105,21 @@ want me to add any more.
 //PETFNPF		Equip if player has pet and it is fighting but the player is not fighting
 //PETNF			Equip if player has a pet and it is not fighting
 //PETRIFIED		Equip if player is petrified
-//PJP"job"		Equip if a player in the party is "job" (ex., BRD)
-//PJPNM"job"	Equip if a player in the party is "job" (ex., BRD), exclude current player
+//PJPjob		Equip if a player in the party is "job" (ex., BRD)
+//PJPNMjob		Equip if a player in the party is "job" (ex., BRD), excluding current player
 //POISONED 		Equip if player is poisoned
 //POLEARM		Equip if Main is a Polearm
 //SCYTHE		Equip if Main is a Scythe
 //SHINING_RUBY	Equip if player has the Shining Ruby buff
 //SILENCED		Equip if player is silenced
-//SJ"job"		Equip if player's subjob is "job" (i.e., THF, NIN, etc)
+//SJjob			Equip if player's subjob is "job" (i.e., THF, NIN, etc)
 //SLEPT			Equip if player is slept
-//SMN:"name"	Equip if the named avatar is being summoned
+//SMN:name		Equip if the named avatar is being summoned
 //SMNPET		Equip if player has a summoner's avatar out
 //SMNPETMD		Equip if pet's element matches the day's element
 //SMNPETMW		Equip if player's pet's element matches current weather
-//SO:"type"		Equip if song be cast is of type: ballad,carol,elegy,etude,finale,hymnus,lullaby,
-					madrigal,mambo,march,mazurka,minne,minuet,paeon,prelude,requiem,threnody,virelai
+//SP:type		Equip if song/spell being cast matches "type" substring
 //SPECIAL		Equip if the special comparisons match
-//SPELL:root	Equip if the spell being cast contains the "root"
 //SPIKE			Equip if player has a spike spell buff: blaze,ice,shock,dread
 //SPIRIT:ES		Equip if avatar being summoned is an elemental spirit
 //SPIRIT:EP		Equip if current pet is an elemental spirit
@@ -130,13 +130,13 @@ want me to add any more.
 //THROWING		Equip if Ammo is thrown
 //TOWN			Equip if in town
 //TOWN-AK		Equip ducal aketon or national aketon if in the appropriate town
-//TP"conditional"#	Equip if TP meets condition
-//TPP"conditional"#	Equip if TP% meets condition
+//TPconditional#	Equip if TP meets condition
+//TPPconditional#	Equip if TP% meets condition
 //UTSUSEMI		Equip if player has Utsusemi buff
 //WARD_CIRCLE	Equip if player has Warding Circle buff
 //WEAKENED		Equip if player is weakened
 //WSWAP			Equip if /WSWAP is on
-//WTH:"weather"	Equip if the specified weather matches the current weather
+//WTH:weather	Equip if the specified weather matches the current weather
 //WTH-DAY		Equip if the weather's element matches the day's element
 ~//XYZ_CHECK		Weird conditional. Equip if a party member has X's Knife equipped
 				and another has Y's Scythe equipped and Z's polearm
