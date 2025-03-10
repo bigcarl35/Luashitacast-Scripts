@@ -2077,8 +2077,8 @@ function SetVariables()
 	gcdisplay.CreateToggle('Eva', false);
 	gcdisplay.CreateToggle('Idle',true);
 		
-	if player.MainJob ~= 'SMN' then
-		gcdisplay.CreateToggle('WSwap',(string.find('WHM,BLM,RDM',player.MainJob) ~= nil));
+	if string.find('SMN,BLM',player.MainJob) == nil then
+		gcdisplay.CreateToggle('WSwap',(string.find('WHM,RDM',player.MainJob) ~= nil));
 	end
 
 	-- Job specific toggles	
@@ -6149,7 +6149,7 @@ function MidcastElementalMagic()
 	local spell = gData.GetAction();
 	local root,bTank,sGear,sEle;
 	local pDay,pWeather;
-print('Ele spell');	
+
 	bTank = gcdisplay.GetToggle('Tank');
 	if bTank == nil then
 		bTank = false;
