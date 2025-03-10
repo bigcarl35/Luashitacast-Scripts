@@ -103,7 +103,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','maxsong','maxspell','petfood','racc','rc','rv','sbp','showit','smg','string','tank','th','unlock','ver','wsdistance','wswap','t1'};
+gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','macc','maxsong','maxspell','petfood','racc','rc','rv','sbp','showit','smg','string','tank','th','unlock','ver','wsdistance','wswap','t1'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T{'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T{'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -237,7 +237,7 @@ gcinclude._TankJobList = 'PLD,NIN,RUN,DRK,WAR,THF,RDM,BLU';
 -- Define constants dealing with magic gear and jobs
 gcinclude.ELEMENT = 'ele';
 gcinclude.OBI = 'obi';
-gcinclude._sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,SCH,GEO,RUN';
+gcinclude._sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,BLU,SCH,GEO,RUN';
 
 -- The following structure is used for locks
 gcinclude.tLocks = { 
@@ -2026,6 +2026,12 @@ function RefreshVariables()
 	
 	-- WSwap
 	gcdisplay.CreateToggle('WSwap',(string.find('WHM,BRD,RDM',player.MainJob) ~= nil));
+
+	-- Macc
+	if string.find(gcinclude._sMagicJobs,player.MainJob) ~= nil or
+	   string.find(gcinclude._sMagicJobs,player.SubJob) ~= nil then
+		gcdisplay.CreateToggle('Macc',false);
+	end
 	
 	-- Tank
 	if string.find('PLD,NIN,RUN',player.MainJob) ~= nil then
@@ -2080,6 +2086,11 @@ function SetVariables()
 		gcdisplay.CreateToggle('Tank',true);
 	elseif string.find('DRK,WAR,THF,RDM,BLU',player.MainJob) ~= nil then
 		gcdisplay.CreateToggle('Tank',false);
+	end
+
+	if string.find(gcinclude._sMagicJobs,player.MainJob) ~= nil or
+	   string.find(gcinclude._sMagicJobs,player.SubJob) ~= nil then
+		gcdisplay.CreateToggle('Macc',false);
 	end
 	
 	if player.MainJob == 'THF' then
@@ -5137,6 +5148,13 @@ function gcinclude.HandleCommands(args)
 		gcdisplay.AdvanceToggle('Kite');
 	elseif (args[1] == 'idle') then			-- Turns on/off whether movement gear is equipped
 		gcdisplay.AdvanceToggle('Idle');
+	elseif (args[1] == 'macc') then			-- Turns on/off whether tanking gear is equipped
+		if string.find(gcinclude._sMagicJobs,player.MainJob) ~= nil or
+			string.find(gcinclude._sMagicJobs,player.SubJob) ~= nil then
+			gcdisplay.AdvanceToggle('Macc');
+		else
+			print(chat.header('HandleCommands'):append(chat.message('Error: Your job does not support the magic accuracy. Ignoring command')))
+		end
 	elseif (args[1] == 'tank') then			-- Turns on/off whether tanking gear is equipped
 		if string.find(gcinclude._TankJobList,player.MainJob) ~= nil then
 			gcdisplay.AdvanceToggle('Tank');
@@ -5664,15 +5682,14 @@ function MidcastHealingMagic()
 	local root,sGear,pDay,pWeather;
 	local bTank,sEle;
 	
-	bTank = gcdisplay.GetToggle('Tank');
-	if bTank == nil then
-		bTank = false;
-	end
-	
+	bTank = gcdisplay.GetToggle('Tank');	
 	root = fGetRoot(spell.Name);
 
 	if string.find('curaga,cure',root) == nil then
-		-- Start with the non-cure based spells
+		-- Start with the non-cure based spells. Even if magic accuracy
+		-- indicated, these spells always hit and thus do not need magic
+		-- accuracy. Further, an elemental stave will have no effect
+		-- either.
 		if bTank == true then
 			gcinclude.MoveToCurrent(gProfile.Sets.Tank_HealingMagic,gProfile.Sets.CurrentGear);
 		else
@@ -5708,6 +5725,15 @@ function MidcastHealingMagic()
 				end
 			end
 		end
+
+		-- See if Macc should be added
+		if gcdisplay.GetToggle('Macc') then
+			if bTank == true then
+				gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
+			else
+				gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
+			end		
+		end
 		
 		-- While the reasoning is different, both types of "cures" can use an elemental
 		-- stave. (Offensive cures take advantage of affinity while regular cures 
@@ -5737,10 +5763,6 @@ function MidcastDarkMagic()
 	local bTank,sEle;
 	
 	bTank = gcdisplay.GetToggle('Tank');
-	if bTank == nil then
-		bTank = false;
-	end
-	
 	root = fGetRoot(spell.Name);
 	
 	if table.find(gcinclude.tSpell['absorb'],root) ~= nil then
@@ -5749,6 +5771,15 @@ function MidcastDarkMagic()
 			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Absorb,gProfile.Sets.CurrentGear);
 		else
 			gcinclude.MoveToCurrent(gProfile.Sets.Absorb,gProfile.Sets.CurrentGear);
+		end
+		
+		-- See if Macc should be added
+		if gcdisplay.GetToggle('Macc') then
+			if bTank == true then
+				gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
+			else
+				gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
+			end		
 		end
 	elseif root == 'drain' then
 		if bTank == true then
@@ -5766,6 +5797,15 @@ function MidcastDarkMagic()
 				gProfile.Sets.CurrentGear['Waist'] = sGear;
 			end
 		end	
+
+		-- See if Macc should be added
+		if gcdisplay.GetToggle('Macc') then
+			if bTank == true then
+				gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
+			else
+				gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
+			end		
+		end
 		
 		-- And an elemental staff, for the affinity
 		sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
@@ -5779,7 +5819,8 @@ function MidcastDarkMagic()
 					ew['Main'] == 'Y\'s Scythe' and sGear == 'Dark Staff') then
 				gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
 			end
-		end	
+		end
+		
 	elseif root == 'aspir' then
 		if bTank == true then
 			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Aspir,gProfile.Sets.CurrentGear);
@@ -5806,6 +5847,15 @@ function MidcastDarkMagic()
 				gProfile.Sets.CurrentGear['Waist'] = sGear;
 			end
 		end	
+
+		-- See if Macc should be added
+		if gcdisplay.GetToggle('Macc') then
+			if bTank == true then
+				gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
+			else
+				gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
+			end		
+		end
 		
 		-- And an elemental staff, for the affinity
 		sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
@@ -5834,6 +5884,15 @@ function MidcastDarkMagic()
 		else
 			gcinclude.MoveToCurrent(gProfile.Sets.DarkMagic,gProfile.Sets.CurrentGear);
 		end
+		
+		-- See if Macc should be added
+		if gcdisplay.GetToggle('Macc') then
+			if bTank == true then
+				gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
+			else
+				gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
+			end		
+		end		
 	end
 end		-- MidcastDarkMagic
 
@@ -5873,6 +5932,15 @@ function MidcastDivineMagic()
 				gProfile.Sets.CurrentGear['Waist'] = sGear;
 			end
 		end	
+
+		-- See if Macc should be added
+		if gcdisplay.GetToggle('Macc') then
+			if bTank == true then
+				gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
+			else
+				gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
+			end		
+		end		
 	elseif table.find({'flash','repose'},root) ~= nil then
 		-- Enfeebling Divine
 		if bTank == true then
@@ -5880,6 +5948,15 @@ function MidcastDivineMagic()
 		else
 			gcinclude.MoveToCurrent(gProfile.Sets.EnfeebleDivine,gProfile.Sets.CurrentGear);
 		end
+		
+		-- See if Macc should be added
+		if gcdisplay.GetToggle('Macc') then
+			if bTank == true then
+				gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
+			else
+				gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
+			end		
+		end		
 	else
 		-- Enhancing Divine
 		if bTank == true then
@@ -5945,6 +6022,15 @@ function MidcastEnfeeblingMagic()
 		if pDay + pWeather > 0 then
 			gProfile.Sets.CurrentGear['Waist'] = sGear;
 		end
+	end
+
+	-- See if Macc should be added
+	if gcdisplay.GetToggle('Macc') then
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
+		end		
 	end
 		
 	-- And then if an elemental staff would be useful, for the affinity
@@ -6063,7 +6149,7 @@ function MidcastElementalMagic()
 	local spell = gData.GetAction();
 	local root,bTank,sGear,sEle;
 	local pDay,pWeather;
-	
+print('Ele spell');	
 	bTank = gcdisplay.GetToggle('Tank');
 	if bTank == nil then
 		bTank = false;
@@ -6094,6 +6180,15 @@ function MidcastElementalMagic()
 		if pDay + pWeather > 0 then
 			gProfile.Sets.CurrentGear['Waist'] = sGear;
 		end
+	end
+
+	-- See if Macc should be added
+	if gcdisplay.GetToggle('Macc') then
+		if bTank == true then
+			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
+		else
+			gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
+		end		
 	end
 		
 	-- And then if an elemental staff would be useful, for the affinity
