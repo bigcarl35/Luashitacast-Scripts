@@ -259,6 +259,22 @@ local sets = {
 
 	['Tank_Precast'] = {
 	},
+
+--[[
+	A lot of spells have a better chance of landing if you increase your
+	magic accuracy. By defining the Macc/Tank_Macc sets, if the option is 
+	enabled on your displaybar, the defined gear will be equipped on all 
+	spells where magic accuracy can have an effect. Alternatively, leave 
+	these gearsets empty and explicitly include magic accuracy gear in 
+	each of	the individual midcast gear sets. (Doing so removes the 
+	ability to optionally not include magic accuracy.)
+--]]
+	
+	['Macc'] = {
+	},
+	
+	['Tank_Macc'] = {
+	},
 	
 --[[
 	The second stage is Midcast. This is where you equip gear that gives 

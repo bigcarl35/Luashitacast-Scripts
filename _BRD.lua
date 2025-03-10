@@ -206,6 +206,19 @@ local sets = {
 	},
 
 --[[
+	A lot of spells have a better chance of landing if you increase your
+	magic accuracy. By defining the Macc set, if the option is enabled
+	on your displaybar, the defined gear will be equipped on all spells
+	where magic accuracy can have an effect. Alternatively, leave this
+	gearset empty and explicitly include magic accuracy gear in each of
+	the individual midcast gear sets. (Doing so removes the ability to
+	optionally not include magic accuracy.)
+--]]
+	
+	['Macc'] = {
+	},
+	
+--[[
 	The second stage is Midcast. This is where you equip gear that gives 
 	magic attack, enhancing bonuses, potency improvements, duration
 	enhancements, recast reduction gear, etc. This implementation breaks 
