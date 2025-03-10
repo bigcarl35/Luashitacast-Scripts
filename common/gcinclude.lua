@@ -4,7 +4,7 @@ require 'common'
 
 version = { ['author']	= 'Paiine',
  		    ['name']	= 'Luashitacast (Karma)',
-			['version']	= '1.5.2' };
+			['version']	= '1.5.5' };
 	
 --[[
 	This file contains routines that are used with Luashitacast across any supported job.
@@ -17,6 +17,8 @@ gcinclude.sets = {
 	smithing, and woodworking. It's possible that a player will have gear for more than one craft. There's
 	only one Crafting gear set, so you need to qualify each piece with what type of crafting the piece is
 	used for. (Ex: Body = 'Weaver\'s Apron//CR:CLOTH).
+	
+	Please note that Crafting sets ignore the /WSWAP	setting.
 --]]
 	['Crafting'] = {
 	},
@@ -24,6 +26,8 @@ gcinclude.sets = {
 --[[
 	There are seven gathering types: harvesting, excavtion, logging, and mining which are grouped in the H.E.L.M.
 	set. The other three types of gathering: digging, clamming and fishing, have their own gear.
+
+	Please note that Gathering sets ignore the /WSWAP setting.
 --]]
 
 	['Gathering'] = {
@@ -84,16 +88,22 @@ gcinclude.settings = {
 	priorityWeaponSkill = 'ADBE';	-- indicates order of steps for a weapon skill
 	--
 	bAutoStaveSwapping = true;		-- indicates if elemental stave swapping should occur automatically
-	bFractional = true;		-- indicates if fractional accuracy enabled; disabled means predefined
-	iPredefinedTier = 0;	-- indicates current level of predefined accuracy; 0 for none
-	bGc = false;			-- indicates if /gc has been run
+	--
+	bMinBasetime = 15;		-- minimum wait before reminding player to run /gc
+	bMaxBasetime = 300;		-- once reminder shown, switch to every 5 minutes
+	bGCReminder = false;	-- Has GC reminder been displayed yet
 };
+
+-- Please note that on HorizonXI, item.Name[1] contains the English name of the item
+-- instead of item.Name[2] like it's suppose to. item.Name[2] has the Japanese name.
+-- This is very confusing and the source of many frustrations.
+
 
 -- The following arrays are used by the functions contained in this file. Probably best to leave them alone
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','maxsong','maxspell','nac','petfood','rc','rv','sbp','showit','string','tank','th','unlock','ver','wsdistance','wswap','t1'};
+gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','maxsong','maxspell','petfood','racc','rc','rv','sbp','showit','smg','string','tank','th','unlock','ver','wsdistance','wswap','t1'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T{'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T{'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -104,9 +114,9 @@ gcinclude.BstPetAttack = T{'Foot Kick','Whirl Claws','Big Scissors','Tail Blow',
 gcinclude.BstPetMagicAttack = T{'Gloom Spray','Fireball','Acid Spray','Molting Plumage','Cursed Sphere','Nectarous Deluge','Charged Whisker','Nepenthic Plunge'};
 gcinclude.BstPetMagicAccuracy = T{'Toxic Spit','Acid Spray','Leaf Dagger','Venom Spray','Venom','Dark Spore','Sandblast','Dust Cloud','Stink Bomb','Slug Family','Intimidate','Gloeosuccus','Spider Web','Filamented Hold','Choke Breath','Blaster','Snow Cloud','Roar','Palsy Pollen','Spore','Brain Crush','Choke Breath','Silence Gas','Chaotic Eye','Sheep Song','Soporific','Predatory Glare','Sudden Lunge','Numbing Noise','Jettatura','Bubble Shower','Spoil','Scream','Noisome Powder','Acid Mist','Rhinowrecker','Swooping Frenzy','Venom Shower','Corrosive Ooze','Spiral Spin','Infrasonics','Hi-Freq Field','Purulent Ooze','Foul Waters','Sandpit','Infected Leech','Pestilent Plume'};
 gcinclude.SmnSkill = T{'Shining Ruby','Glittering Ruby','Crimson Howl','Inferno Howl','Frost Armor','Crystal Blessing','Aerial Armor','Hastega II','Fleet Wind','Hastega','Earthen Ward','Earthen Armor','Rolling Thunder','Lightning Armor','Soothing Current','Ecliptic Growl','Heavenward Howl','Ecliptic Howl','Noctoshield','Dream Shroud','Altana\'s Favor','Reraise','Reraise II','Reraise III','Raise','Raise II','Raise III','Wind\'s Blessing'};
-gcinclude.SmnMagical = T{'Searing Light','Meteorite','Holy Mist','Inferno','Fire II','Fire IV','Meteor Strike','Conflag Strike','Diamond Dust','Blizzard II','Blizzard IV','Heavenly Strike','Aerial Blast','Aero II','Aero IV','Wind Blade','Earthen Fury','Stone II','Stone IV','Geocrush','Judgement Bolt','Thunder II','Thunder IV','Thunderstorm','Thunderspark','Tidal Wave','Water II','Water IV','Grand Fall','Howling Moon','Lunar Bay','Ruinous Omen','Somnolence','Nether Blast','Night Terror','Level ? Holy','Burning Strike'};
+gcinclude.SmnMagical = T{'Searing Light','Meteorite','Holy Mist','Inferno','Fire II','Fire IV','Meteor Strike','Conflag Strike','Diamond Dust','Blizzard II','Blizzard IV','Heavenly Strike','Aerial Blast','Aero II','Aero IV','Wind Blade','Earthen Fury','Stone II','Stone IV','Geocrush','Judgement Bolt','Thunder II','Thunder IV','Thunderstorm','Thunderspark','Tidal Wave','Water II','Water IV','Grand Fall','Howling Moon','Lunar Bay','Ruinous Omen','Somnolence','Nether Blast','Night Terror','Level ? Holy'};
 gcinclude.SmnAccuracy = T{'Healing Ruby','Healing Ruby II','Whispering Wind','Spring Water','Diamond Storm','Sleepga','Shock Squall','Slowga','Tidal Roar','Pavor Nocturnus','Ultimate Terror','Nightmare','Mewing Lullaby','Eerie Eye'};
-gcinclude.SmnHybrid = T{'Flaming Crush'};
+gcinclude.SmnHybrid = T{'Burning Strike','Flaming Crush'};
 gcinclude.SmnBPRageList = 'Searing Light,Howling Moon,Inferno,Earthen Fury,Tidal Wave,Aerial Blast,Diamond Dust,Judgment Bolt,Ruinous Omen,Punch,Rock Throw,Barracuda Dive,Claw,Axe Kick,Shock Strike,Camisado,Poison Nails,Moonlit Charge,Crescent Fang,Fire II,Stone II,Water II,Blizzard II,Thunder II,Aero II,Thunderspark,Rock Buster,Burning Strike,Tail Whip,Double Punch,Megalith Throw,Double Slap,Meteorite,Fire IV,Stone IV,Water IV,Aero IV,Blizzard IV,Thunder IV,Eclipse Bite,Nether Blast,Flaming Crush,Mountain Buster,Spinning Dive,Predator Claws,Rush,Chaotic Strike';
 gcinclude.BluMagPhys = T{'Foot Kick','Sprout Smack','Wild Oats','Power Attack','Queasyshroom','Battle Dance','Feather Storm','Helldive','Bludgeon','Claw Cyclone','Screwdriver','Grand Slam','Smite of Rage','Pinecone Bomb','Jet Stream','Uppercut','Terror Touch','Mandibular Bite','Sickle Slash','Dimensional Death','Spiral Spin','Death Scissors','Seedspray','Body Slam','Hydro Shot','Frenetic Rip','Spinal Cleave','Hysteric Barrage','Asuran Claws','Cannonball','Disseverment','Ram Charge','Vertical Cleave','Final Sting','Goblin Rush','Vanity Dive','Whirl of Rage','Benthic Typhoon','Quad. Continuum','Empty Thrash','Delta Thrust','Heavy Strike','Quadrastrike','Tourbillion','Amorphic Spikes','Barbed Crescent','Bilgestorm','Bloodrake','Glutinous Dart','Paralyzing Triad','Thrashing Assault','Sinker Drill','Sweeping Gouge','Saurian Slide'};
 gcinclude.BluMagDebuff = T{'Filamented Hold','Cimicine Discharge','Demoralizing Roar','Venom Shell','Light of Penance','Sandspray','Auroral Drape','Frightful Roar','Enervation','Infrasonics','Lowing','CMain Wave','Awful Eye','Voracious Trunk','Sheep Song','Soporific','Yawn','Dream Flower','Chaotic Eye','Sound Blast','Blank Gaze','Stinking Gas','Geist Wall','Feather Tickle','Reaving Wind','Mortal Ray','Absolute Terror','Blistering Roar','Cruel Joke'};
@@ -229,24 +239,24 @@ gcinclude.ELEMENT = 'ele';
 gcinclude.OBI = 'obi';
 gcinclude._sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,SCH,GEO,RUN';
 
--- The following structure is used for locks and accuracy
+-- The following structure is used for locks
 gcinclude.tLocks = { 
-		 [1] = { ['slot'] = 'main',  ['lock'] = false, ['acc'] = false },
-		 [2] = { ['slot'] = 'sub',   ['lock'] = false, ['acc'] = false }, 
-		 [3] = { ['slot'] = 'range', ['lock'] = false, ['acc'] = false },
-		 [4] = { ['slot'] = 'ammo',  ['lock'] = false, ['acc'] = false },
-		 [5] = { ['slot'] = 'head',  ['lock'] = false, ['acc'] = false },  
-		 [6] = { ['slot'] = 'neck',  ['lock'] = false, ['acc'] = false },
-		 [7] = { ['slot'] = 'ear1',  ['lock'] = false, ['acc'] = false },  
-		 [8] = { ['slot'] = 'ear2',  ['lock'] = false, ['acc'] = false }, 
-		 [9] = { ['slot'] = 'body',  ['lock'] = false, ['acc'] = false },  
-		[10] = { ['slot'] = 'hands', ['lock'] = false, ['acc'] = false }, 
-		[11] = { ['slot'] = 'ring1', ['lock'] = false, ['acc'] = false }, 
-		[12] = { ['slot'] = 'ring2', ['lock'] = false, ['acc'] = false },
-		[13] = { ['slot'] = 'back',  ['lock'] = false, ['acc'] = false },  
-		[14] = { ['slot'] = 'waist', ['lock'] = false, ['acc'] = false },
-		[15] = { ['slot'] = 'legs',  ['lock'] = false, ['acc'] = false },  
-		[16] = { ['slot'] = 'feet',  ['lock'] = false, ['acc'] = false }
+		 [1] = { ['slot'] = 'main', ['mask'] = {1,3}, ['lock'] = false },
+		 [2] = { ['slot'] = 'sub', ['mask'] = {2,3}, ['lock'] = false }, 
+		 [3] = { ['slot'] = 'range', ['mask'] = {4}, ['lock'] = false },
+		 [4] = { ['slot'] = 'ammo', ['mask'] = {8}, ['lock'] = false },
+		 [5] = { ['slot'] = 'head', ['mask'] = {16}, ['lock'] = false },  
+		 [6] = { ['slot'] = 'neck', ['mask'] = {512}, ['lock'] = false },
+		 [7] = { ['slot'] = 'ear1', ['mask'] = {2048,4096,6144}, ['lock'] = false },  
+		 [8] = { ['slot'] = 'ear2', ['mask'] = {2048,4096,6144}, ['lock'] = false }, 
+		 [9] = { ['slot'] = 'body', ['mask'] = {32}, ['lock'] = false },  
+		[10] = { ['slot'] = 'hands', ['mask'] = {64}, ['lock'] = false }, 
+		[11] = { ['slot'] = 'ring1', ['mask'] = {8192,16384,24576}, ['lock'] = false }, 
+		[12] = { ['slot'] = 'ring2', ['mask'] = {8192,16384,24576}, ['lock'] = false },
+		[13] = { ['slot'] = 'back', ['mask'] = {32768}, ['lock'] = false },  
+		[14] = { ['slot'] = 'waist', ['mask'] = {1024}, ['lock'] = false },
+		[15] = { ['slot'] = 'legs', ['mask'] = {128}, ['lock'] = false },  
+		[16] = { ['slot'] = 'feet', ['mask'] = {256}, ['lock'] = false }
 };
 					
 gcinclude.LocksNumeric = 'None';
@@ -258,200 +268,200 @@ gcinclude._AllElements = 'fire,ice,wind,earth,thunder,water,light,dark';
 -- are now found in gcinclude.GearDetails with a reference to the appropriate record
 -- stored in REF
 gcinclude.tElemental_gear = T{	
-						['relic'] = {
-										['level'] = 75,
-										['type'] = 'STAVE',
-											{ ['Name'] = 'Claustrum', ['Ref'] = {} }
-									},
-						['staff'] = {
-									['level'] = 51,
-									['fire'] = { 
-										['Weak'] = 'water',
-										['NQ'] = { ['Name'] = 'Fire staff', ['Ref'] = {} },
-										['HQ'] = { ['Name'] = 'Vulcan\'s staff', ['Ref'] = {} }, 
-										['Affinity'] = { 'blaze','burn','firaga','fire','flare','enfire','katon' },
-										['SongAffinity'] = { 'ice threnody' },
-										['Summons'] = { 'ifrit','fire spirit','firespirit','fire' }
-										},
-									['ice'] = {
-										['Weak'] = 'fire',
-										['NQ'] = { ['Name'] = 'Ice staff', ['Ref'] = {} },
-										['HQ'] = {['Name'] = 'Aquilo\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'blizzaga','blizzard','freeze','frost','ice','enblizzard','jubaku','hyoton','bind','distract','paralyze' },
-										['SongAffinity'] = { 'wind threnody' },
-										['Summons'] = { 'shiva','ice spirit','icespirit','ice' },
-										},
-									['wind'] = {
-										['Weak'] = 'ice',
-										['NQ'] = { ['Name'] = 'Wind staff', ['Ref'] = {} },
-										['HQ'] = { ['Name'] = 'Auster\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'aero','aeroga','choke','tornado','enaero','huton','gravity','silence' },
-										['SongAffinity'] = { 'earth threnody' },
-										['Summons'] = { 'garuda','air spirit','airspirit','air','siren' },
-										},
-									['earth'] = { 
-										['Weak'] = 'wind',
-										['NQ'] = { ['Name'] = 'Earth staff', ['Ref'] = {} },
-										['HQ'] = { ['Name'] = 'Terra\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'quake','rasp','stone','stonega','enstone','hojo','doton','slow' },
-										['SongAffinity'] = { 'lightning threnody', 'battlefield elegy', 'carnage elegy' },
-										['Summons'] = {'titan','earth spirit','earthspirit','earth' },
-										},
-									['thunder'] = {
-										['Weak'] = 'earth',
-										['NQ'] = { ['Name'] = 'Thunder staff', ['Ref'] = {} },
-										['HQ'] = { ['Name'] = 'Jupiter\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'burst','shock','thundaga','thunder','enthunder','raiton' },
-										['SongAffinity'] = { 'water threnody' },
-										['Summons'] = { 'ramuh','thunder spirit','thunderspirit','thunder' },
-										},
-									['water'] = {
-										['Weak'] = 'thunder',
-										['NQ'] = { ['Name'] = 'Water staff', ['Ref'] = {} },
-										['HQ'] = { ['Name'] = 'Neptune\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'drown','flood','poison','poisonga','water','waterga','enwater','dokumori','suiton' },
-										['SongAffinity'] = { 'fire threnody' },
-										['Summons'] = { 'leviathan','water spirit','waterspirit','water' },
-										},
-									['light'] = { 
-										['Weak'] = 'dark',
-										['NQ'] = { ['Name'] = 'Light staff', ['Ref'] = {} },
-										['HQ'] = { ['Name'] = 'Apollo\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'banish','banishga','curaga','cure','dia','diaga','flash','holy','enlight','repose','inundation' },
-										['SongAffinity'] = { 'dark threnody', 'foe requiem', 'foe requiem ii', 'foe requiem iii', 'foe requiem iv', 'foe requiem v', 'foe requiem vi', 'foe lullaby', 'horde lullaby', 'magic finale', 'maiden\'s virelai' },
-										['Summons'] = {'carbuncle','light spirit','lightspirit','light','cait sith','caitsith','alexander'},
-										},
-									['dark'] = {
-										['Weak'] = 'light',
-										['NQ'] = { ['Name'] = 'Dark staff', ['Ref'] = {} },
-										['HQ'] = { ['Name'] = 'Pluto\'s staff', ['Ref'] = {} },
-										['Affinity'] = { 'absorb','aspir','blind','bio','dispel','drain','dread','frazzle','sleep','sleepga','endark','kurayami' },
-										['SongAffinity'] = { 'light threnody' },
-										['Summons'] = { 'fenrir','diabolos','dark spirit','darkspirit','dark','atomos','odin' },
-										},
-									},
-						['obi'] = {
-									['level'] = 71,
-									['fire'] = {
-										['Weak'] = 'water',
-										['Name'] = 'Karin obi', 
-										['Ref'] = {},
-										['MEacc'] = { 'burn','firaga','fire','flare','blaze','enfire','blaze','katon' },
-										['eleWS'] = { 'burning blade','red lotus blade','tachi: Kagero','flaming arrow','hot shot','wildfire' },
-									},
-									['ice'] = {
-										['Weak'] = 'fire',										
-										['Name'] = 'Hyorin obi', 
-										['Ref'] = {},
-										['MEacc'] = { 'frost','blizzaga','blizzard','freeze','paralyze','bind','distract','ice','enblizzard','hyoton' },
-										['eleWS'] = { 'frostbite','freezebite','herculean slash','blade: to' },
-										['Other'] = 'elemental magic',
-										},												 
-									['wind'] = {
-										['Weak'] = 'ice',
-										['Name'] = 'Furin obi', 
-										['Ref'] = {},
-										['MEacc'] = { 'choke','aero','aeroga','tornado','silence','gravity','flurry','enaero','huton' },
-										['eleWS'] = { 'gust slash','cyclone','aeolian edge','tachi: jinpu' },
-										},												 
-									['earth'] = { 
-										['Weak'] = 'wind',
-										['Name'] = 'Dorin obi', 
-										['Ref'] = {},
-										['MEacc'] = { 'rasp','quake','stone','stonega','slow','enstone','doton' },
-										['eleWS'] = { 'blade: chi','rock crusher','earth crusher' },
-										},
-									['thunder'] = { 
-										['Weak'] = 'earth',
-										['Name'] = 'Rairin obi', 
-										['Ref'] = {},
-										['MEacc'] = { 'shock','burst','thundaga','thunder','stun','enthunder','raiton' },
-										['eleWS'] = { 'cloudsplitter','thunder thrust','raiden thrust','tachi: goten' },
-										},
-									['water'] = { 
-										['Weak'] = 'thunder',
-										['Name'] = 'Suirin obi', 
-										['Ref'] = {},
-										['MEacc'] = { 'drown','flood','water','waterga','poison','enwater','suiton' },
-										['eleWS'] = { 'blade: teki','blade: yu' },
-										['Other'] = 'divine magic',
-										},
-									['light'] = {
-										['Weak'] = 'dark',
-										['Name'] = 'Korin obi', 
-										['Ref'] = {},
-										['MEacc'] = { 'banish','banishga','dia','diaga','flash','repose','holy','auspice','esuna','sacrifice','reprisal','cure','curaga','enlight' },
-										['eleWS'] = { 'shining blade','seraph blade','primal rend','tachi: koki','shining strike','seraph strike','starburst','sunburst','garland of bliss','trueflight' },
-										['Other'] = 'cure potency',
-										},
-									['dark'] = {
-										['Weak'] = 'light',
-										['Name'] = 'Anrin obi', 
-										['Ref'] = {},
-										['MEacc'] = { 'blind','bio','sleep','dispel','frazzle','drain','warp','tractor','aspir','escape','sleep','sleepga','retrace','endark' },
-										['eleWS'] = { 'energy steal','energy drain','sanguine blade','dark harvest','shadow of death','infernal scythe','blade: ei','starburst','sunburst','cataclysm','vidohunir','omniscience','leaden suite' },
-										},
-									},
-						['gorget'] = {
-									['level'] = 72,
-									['fire'] = { 
-										['Weak'] = 'water',
-										['Name'] = 'Flame gorget', 
-										['Ref'] = {},
-										['skillProp'] = { 'liquefaction','fusion' },
-										['eleWS'] = { 'arching arrow','ascetic\'s fury','asuran fists','atonement','blade: shun','decimation','detonator','drakesbane','dulling arrow','empyreal arrow','final heaven','flaming arrow','full swing','garland of bliss','heavy shot','hexa strike','hot shot','insurgency','knights of round','last stand','mandalic stab','mistral axe','metatron torment','realmrazer','red lotus blade','scourge','shijin spiral','sniper shot','spinning attack','spinning axe','stringing pummel','tachi: kagero','tachi: kasha','upheaval','wheeling thrust' },
-										},
-									['ice'] = {
-										['Weak'] = 'fire',
-										['Name'] = 'Snow gorget', 
-										['Ref'] = {},
-										['skillProp'] = { 'induration','distortion' },
-										['eleWS'] = { 'blade: to','blast arrow','cross reaper','death blossom','expiacion','freezebite','frostbite','full break','gate of tartarus','geirskogul','ground strike','guillotine','quietus','impulse drive','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','ruinator','raging rush','shadow of death','shattersoul','skullbreaker','smash axe','spiral hell','steel cyclone','tachi: gekko','tachi: hobaku','tachi: rana','tachi: yukikaze','tornado kick','vidohunir' },
-										},
-									['wind'] = {
-										['Weak'] = 'ice',
-										['Name'] = 'Breeze gorget', 
-										['Ref'] = {},
-										['skillProp'] = { 'detonation','fragmentation' },
-										['eleWS'] = { 'aeolian edge','backhand blow','black halo','blade: jin','blade: kamu','blade: to','camlann\'s torment','coronach','cyclone','dancing edge','death blossom','dragon kick','earth crusher','exenterator','freezebite','gale axe','ground strike','gust slash','king\'s justice','mordant rime','raging axe','randgrith','red lotus blade','resolution','ruinator','savage blade','shark bite','shell crusher','sidewinder','slug shot','spinning slash','steel cyclone','tachi: jinpu','tachi: kaiten','taichi: shoha','taichi: yukikaze','tornado kick','trueflight','true strike','victory smite','vidohunir' },
-										},
-									['earth'] = {
-										['Weak'] = 'wind',
-										['Name'] = 'Soil gorget', 
-										['Ref'] = {},
-										['skillProp'] = { 'scission','gravitation' },
-										['eleWS'] = { 'aeolian edge','asuran fists','avalanche axe','blade: ei','blade: ku','blade: ten','calamity','catastrophe','crescent moon','dancing edge','entropy','eviseration','exenterator','expiacion','fast blade','hard slash','impulse drive','iron tempest','king\'s justice','leaden salute','mercy stroke','nightmare scythe','omniscience','primal rend','pyrrhic kleos','rampage','requiscat','resolution','retibution','savage blade','seraph blade','shattersoul','shining blade','sickle moon','slice','spinning axe','spinning scythe','spiral hell','stardiver','stringing pummel','sturmwind','swift blade','tachi: enpi','tachi: jinpu','tachi: rana','trueflight','viper bite','vorpal blade','wasp sting' },
-										},
-									['thunder'] = {
-										['Weak'] = 'earth',
-										['Name'] = 'Thunder gorget', 
-										['Ref'] = {},
-										['skillProp'] = { 'impaction','fragmentation' },
-										['eleWS'] = { 'aeolian edge','apex arrow','armor break','avalanche axe','black halo','blade: chi','blade: jin','blade: kamu','blade: shun','calamity','camlann\'s torment','circle blade','combo','cyclone','death blossom','dragon kick','earth crusher','exenterator','flat blade','full swing','ground strike','heavy swing','howling fist','judgement','king\'s justice','leg sweep','mordant rime','raging axe','raging fist','raiden thrust','realmrazer','resolution','rock crusher','savage blade','seraph strike','shark bite','shield break','shining strike','shoulder tackle','sickle moon','skewer','spinning attack','spinning axe','tachi: goten','tachi: koki','tachi: shoha','thunder thrust','true strike','victory smite','vidohunir','vorpal blade','weapon break' },
-										},
-									['water'] = {
-										['Weak'] = 'thunder',
-										['Name'] = 'Aqua gorget', 
-										['Ref'] = {},
-										['skillProp'] = { 'reverberation','distortion' },
-										['eleWS'] = { 'atonement','blade: teki','brainshaker','circle blade','cross reaper','dark harvest','entropy','quietus','death blossom','decimation','expiacion','full break','garland of bliss','gate of tartarus','geirskogul','ground strike','last stand','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','primal rend','raging rush','retribution','ruinator','shadow of death','shockwave','shoulder tackle','sidewinder','skullbreaker','slug shot','smash axe','spinning scythe','spiral hell','split shot','steel cyclone','sturmwind','sunburst','tachi: gekko','tachi: koki','vidohunir','vorpal thrust' },
-										},
-									['light'] = {
-										['Weak'] = 'dark',
-										['Name'] = 'Light gorget', 
-										['Ref'] = {},
-										['skillProp'] = { 'transfixion','fusion','light' },
-										['eleWS'] = { 'apex arrow','arching arrow','ascetic\'s fury','atonement','blade: chi','blade: ku','blade: rin','blade: shun','blast arrow','blast shot','camlann\'s torment','decimation','detonator','double thrust','drakesbane','dulling arrow','empyreal arrow','eviseration','final heaven','flaming arrow','garland of bliss','heavy shot','hexa strike','hot shot','howling fist','insurgency','knight\'s of round','leaden salute','last stand','mandalic stab','metatron torment','mistral axe','omniscience','piercing arrow','power slash','realmrazer','raiden thrust','scourge','shijin spiral','sidewinder','skewer','slug shot','sniper shot','split shot','stardiver','tachi: enpi','tachi: goten','tachi: kasha','thunder thrust','torcleaver','victory smite','upheaval','vorpal scythe','vorpal thrust','wheeling thrust' },
-										},
-									['dark'] = {
-										['Weak'] = 'light',
-										['Name'] = 'Shadow gorget', 
-										['Ref'] = {},
-										['skillProp'] = { 'compression','gravitation','darkness' },
-										['eleWS'] = { 'asuran fists','black halo','blade: ei','blade: hi','blade: kamu','blade: ku','blade: ten','catastrophe','quietus','entropy','eviseration','impulse drive','insurgency','keen edge','leaden salute','mandalic stab','mercy stroke','requiscat','rundra\'s storm','nightmare scythe','omniscience','one inch punch','penta thrust','primal rend','retribution','shattersoul','starburst','stardiver','stringing pummel','sunburst','swift blade','tachi: kasha','tachi: rana','tachi: shoha','upheaval' },
-										},
-									['searched'] = false,	
-									},
+		['relic'] = {
+			['level'] = 75,
+			['type'] = 'STAVE',
+			{ ['Name'] = 'Claustrum', ['Ref'] = {} }
+		},
+		['staff'] = {
+			['level'] = 51,
+			['fire'] = { 
+				['Weak'] = 'water',
+				['NQ'] = { ['Name'] = 'Fire staff', ['Ref'] = {} },
+				['HQ'] = { ['Name'] = 'Vulcan\'s staff', ['Ref'] = {} }, 
+				['Affinity'] = { 'blaze','burn','firaga','fire','flare','enfire','katon' },
+				['SongAffinity'] = { 'ice threnody' },
+				['Summons'] = { 'ifrit','fire spirit','firespirit','fire' }
+			},
+			['ice'] = {
+				['Weak'] = 'fire',
+				['NQ'] = { ['Name'] = 'Ice staff', ['Ref'] = {} },
+				['HQ'] = {['Name'] = 'Aquilo\'s staff', ['Ref'] = {} },
+				['Affinity'] = { 'blizzaga','blizzard','freeze','frost','ice','enblizzard','jubaku','hyoton','bind','distract','paralyze' },
+				['SongAffinity'] = { 'wind threnody' },
+				['Summons'] = { 'shiva','ice spirit','icespirit','ice' },
+			},
+			['wind'] = {
+				['Weak'] = 'ice',
+				['NQ'] = { ['Name'] = 'Wind staff', ['Ref'] = {} },
+				['HQ'] = { ['Name'] = 'Auster\'s staff', ['Ref'] = {} },
+				['Affinity'] = { 'aero','aeroga','choke','tornado','enaero','huton','gravity','silence' },
+				['SongAffinity'] = { 'earth threnody' },
+				['Summons'] = { 'garuda','air spirit','airspirit','air','siren' },
+			},
+			['earth'] = { 
+				['Weak'] = 'wind',
+				['NQ'] = { ['Name'] = 'Earth staff', ['Ref'] = {} },
+				['HQ'] = { ['Name'] = 'Terra\'s staff', ['Ref'] = {} },
+				['Affinity'] = { 'quake','rasp','stone','stonega','enstone','hojo','doton','slow' },
+				['SongAffinity'] = { 'lightning threnody', 'battlefield elegy', 'carnage elegy' },
+				['Summons'] = {'titan','earth spirit','earthspirit','earth' },
+			},
+			['thunder'] = {
+				['Weak'] = 'earth',
+				['NQ'] = { ['Name'] = 'Thunder staff', ['Ref'] = {} },
+				['HQ'] = { ['Name'] = 'Jupiter\'s staff', ['Ref'] = {} },
+				['Affinity'] = { 'burst','shock','thundaga','thunder','enthunder','raiton' },
+				['SongAffinity'] = { 'water threnody' },
+				['Summons'] = { 'ramuh','thunder spirit','thunderspirit','thunder' },
+			},
+			['water'] = {
+				['Weak'] = 'thunder',
+				['NQ'] = { ['Name'] = 'Water staff', ['Ref'] = {} },
+				['HQ'] = { ['Name'] = 'Neptune\'s staff', ['Ref'] = {} },
+				['Affinity'] = { 'drown','flood','poison','poisonga','water','waterga','enwater','dokumori','suiton' },
+				['SongAffinity'] = { 'fire threnody' },
+				['Summons'] = { 'leviathan','water spirit','waterspirit','water' },
+			},
+			['light'] = { 
+				['Weak'] = 'dark',
+				['NQ'] = { ['Name'] = 'Light staff', ['Ref'] = {} },
+				['HQ'] = { ['Name'] = 'Apollo\'s staff', ['Ref'] = {} },
+				['Affinity'] = { 'banish','banishga','curaga','cure','dia','diaga','flash','holy','enlight','repose','inundation' },
+				['SongAffinity'] = { 'dark threnody', 'foe requiem', 'foe requiem ii', 'foe requiem iii', 'foe requiem iv', 'foe requiem v', 'foe requiem vi', 'foe lullaby', 'horde lullaby', 'magic finale', 'maiden\'s virelai' },
+				['Summons'] = {'carbuncle','light spirit','lightspirit','light','cait sith','caitsith','alexander'},
+			},
+			['dark'] = {
+				['Weak'] = 'light',
+				['NQ'] = { ['Name'] = 'Dark staff', ['Ref'] = {} },
+				['HQ'] = { ['Name'] = 'Pluto\'s staff', ['Ref'] = {} },
+				['Affinity'] = { 'absorb','aspir','blind','bio','dispel','drain','dread','frazzle','sleep','sleepga','endark','kurayami' },
+				['SongAffinity'] = { 'light threnody' },
+				['Summons'] = { 'fenrir','diabolos','dark spirit','darkspirit','dark','atomos','odin' },
+			},
+		},
+		['obi'] = {
+			['level'] = 71,
+			['fire'] = {
+				['Weak'] = 'water',
+				['Name'] = 'Karin obi', 
+				['Ref'] = {},
+				['MEacc'] = { 'burn','firaga','fire','flare','blaze','enfire','blaze','katon' },
+				['eleWS'] = { 'burning blade','red lotus blade','tachi: Kagero','flaming arrow','hot shot','wildfire' },
+			},
+			['ice'] = {
+				['Weak'] = 'fire',										
+				['Name'] = 'Hyorin obi', 
+				['Ref'] = {},
+				['MEacc'] = { 'frost','blizzaga','blizzard','freeze','paralyze','bind','distract','ice','enblizzard','hyoton' },
+				['eleWS'] = { 'frostbite','freezebite','herculean slash','blade: to' },
+				['Other'] = 'elemental magic',
+			},												 
+			['wind'] = {
+				['Weak'] = 'ice',
+				['Name'] = 'Furin obi', 
+				['Ref'] = {},
+				['MEacc'] = { 'choke','aero','aeroga','tornado','silence','gravity','flurry','enaero','huton' },
+				['eleWS'] = { 'gust slash','cyclone','aeolian edge','tachi: jinpu' },
+			},												 
+			['earth'] = { 
+				['Weak'] = 'wind',
+				['Name'] = 'Dorin obi', 
+				['Ref'] = {},
+				['MEacc'] = { 'rasp','quake','stone','stonega','slow','enstone','doton' },
+				['eleWS'] = { 'blade: chi','rock crusher','earth crusher' },
+			},
+			['thunder'] = { 
+				['Weak'] = 'earth',
+				['Name'] = 'Rairin obi', 
+				['Ref'] = {},
+				['MEacc'] = { 'shock','burst','thundaga','thunder','stun','enthunder','raiton' },
+				['eleWS'] = { 'cloudsplitter','thunder thrust','raiden thrust','tachi: goten' },
+			},
+			['water'] = { 
+				['Weak'] = 'thunder',
+				['Name'] = 'Suirin obi', 
+				['Ref'] = {},
+				['MEacc'] = { 'drown','flood','water','waterga','poison','enwater','suiton' },
+				['eleWS'] = { 'blade: teki','blade: yu' },
+				['Other'] = 'divine magic',
+			},
+			['light'] = {
+				['Weak'] = 'dark',
+				['Name'] = 'Korin obi', 
+				['Ref'] = {},
+				['MEacc'] = { 'banish','banishga','dia','diaga','flash','repose','holy','auspice','esuna','sacrifice','reprisal','cure','curaga','enlight' },
+				['eleWS'] = { 'shining blade','seraph blade','primal rend','tachi: koki','shining strike','seraph strike','starburst','sunburst','garland of bliss','trueflight' },
+				['Other'] = 'cure potency',
+			},
+			['dark'] = {
+				['Weak'] = 'light',
+				['Name'] = 'Anrin obi', 
+				['Ref'] = {},
+				['MEacc'] = { 'blind','bio','sleep','dispel','frazzle','drain','warp','tractor','aspir','escape','sleep','sleepga','retrace','endark' },
+				['eleWS'] = { 'energy steal','energy drain','sanguine blade','dark harvest','shadow of death','infernal scythe','blade: ei','starburst','sunburst','cataclysm','vidohunir','omniscience','leaden suite' },
+			},
+		},
+		['gorget'] = {
+			['level'] = 72,
+			['fire'] = { 
+				['Weak'] = 'water',
+				['Name'] = 'Flame gorget', 
+				['Ref'] = {},
+				['skillProp'] = { 'liquefaction','fusion' },
+				['eleWS'] = { 'arching arrow','ascetic\'s fury','asuran fists','atonement','blade: shun','decimation','detonator','drakesbane','dulling arrow','empyreal arrow','final heaven','flaming arrow','full swing','garland of bliss','heavy shot','hexa strike','hot shot','insurgency','knights of round','last stand','mandalic stab','mistral axe','metatron torment','realmrazer','red lotus blade','scourge','shijin spiral','sniper shot','spinning attack','spinning axe','stringing pummel','tachi: kagero','tachi: kasha','upheaval','wheeling thrust' },
+			},
+			['ice'] = {
+				['Weak'] = 'fire',
+				['Name'] = 'Snow gorget', 
+				['Ref'] = {},
+				['skillProp'] = { 'induration','distortion' },
+				['eleWS'] = { 'blade: to','blast arrow','cross reaper','death blossom','expiacion','freezebite','frostbite','full break','gate of tartarus','geirskogul','ground strike','guillotine','quietus','impulse drive','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','ruinator','raging rush','shadow of death','shattersoul','skullbreaker','smash axe','spiral hell','steel cyclone','tachi: gekko','tachi: hobaku','tachi: rana','tachi: yukikaze','tornado kick','vidohunir' },
+			},
+			['wind'] = {
+				['Weak'] = 'ice',
+				['Name'] = 'Breeze gorget', 
+				['Ref'] = {},
+				['skillProp'] = { 'detonation','fragmentation' },
+				['eleWS'] = { 'aeolian edge','backhand blow','black halo','blade: jin','blade: kamu','blade: to','camlann\'s torment','coronach','cyclone','dancing edge','death blossom','dragon kick','earth crusher','exenterator','freezebite','gale axe','ground strike','gust slash','king\'s justice','mordant rime','raging axe','randgrith','red lotus blade','resolution','ruinator','savage blade','shark bite','shell crusher','sidewinder','slug shot','spinning slash','steel cyclone','tachi: jinpu','tachi: kaiten','taichi: shoha','taichi: yukikaze','tornado kick','trueflight','true strike','victory smite','vidohunir' },
+			},
+			['earth'] = {
+				['Weak'] = 'wind',
+				['Name'] = 'Soil gorget', 
+				['Ref'] = {},
+				['skillProp'] = { 'scission','gravitation' },
+				['eleWS'] = { 'aeolian edge','asuran fists','avalanche axe','blade: ei','blade: ku','blade: ten','calamity','catastrophe','crescent moon','dancing edge','entropy','eviseration','exenterator','expiacion','fast blade','hard slash','impulse drive','iron tempest','king\'s justice','leaden salute','mercy stroke','nightmare scythe','omniscience','primal rend','pyrrhic kleos','rampage','requiscat','resolution','retibution','savage blade','seraph blade','shattersoul','shining blade','sickle moon','slice','spinning axe','spinning scythe','spiral hell','stardiver','stringing pummel','sturmwind','swift blade','tachi: enpi','tachi: jinpu','tachi: rana','trueflight','viper bite','vorpal blade','wasp sting' },
+			},
+			['thunder'] = {
+				['Weak'] = 'earth',
+				['Name'] = 'Thunder gorget', 
+				['Ref'] = {},
+				['skillProp'] = { 'impaction','fragmentation' },
+				['eleWS'] = { 'aeolian edge','apex arrow','armor break','avalanche axe','black halo','blade: chi','blade: jin','blade: kamu','blade: shun','calamity','camlann\'s torment','circle blade','combo','cyclone','death blossom','dragon kick','earth crusher','exenterator','flat blade','full swing','ground strike','heavy swing','howling fist','judgement','king\'s justice','leg sweep','mordant rime','raging axe','raging fist','raiden thrust','realmrazer','resolution','rock crusher','savage blade','seraph strike','shark bite','shield break','shining strike','shoulder tackle','sickle moon','skewer','spinning attack','spinning axe','tachi: goten','tachi: koki','tachi: shoha','thunder thrust','true strike','victory smite','vidohunir','vorpal blade','weapon break' },
+			},
+			['water'] = {
+				['Weak'] = 'thunder',
+				['Name'] = 'Aqua gorget', 
+				['Ref'] = {},
+				['skillProp'] = { 'reverberation','distortion' },
+				['eleWS'] = { 'atonement','blade: teki','brainshaker','circle blade','cross reaper','dark harvest','entropy','quietus','death blossom','decimation','expiacion','full break','garland of bliss','gate of tartarus','geirskogul','ground strike','last stand','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','primal rend','raging rush','retribution','ruinator','shadow of death','shockwave','shoulder tackle','sidewinder','skullbreaker','slug shot','smash axe','spinning scythe','spiral hell','split shot','steel cyclone','sturmwind','sunburst','tachi: gekko','tachi: koki','vidohunir','vorpal thrust' },
+			},
+			['light'] = {
+				['Weak'] = 'dark',
+				['Name'] = 'Light gorget', 
+				['Ref'] = {},
+				['skillProp'] = { 'transfixion','fusion','light' },
+				['eleWS'] = { 'apex arrow','arching arrow','ascetic\'s fury','atonement','blade: chi','blade: ku','blade: rin','blade: shun','blast arrow','blast shot','camlann\'s torment','decimation','detonator','double thrust','drakesbane','dulling arrow','empyreal arrow','eviseration','final heaven','flaming arrow','garland of bliss','heavy shot','hexa strike','hot shot','howling fist','insurgency','knight\'s of round','leaden salute','last stand','mandalic stab','metatron torment','mistral axe','omniscience','piercing arrow','power slash','realmrazer','raiden thrust','scourge','shijin spiral','sidewinder','skewer','slug shot','sniper shot','split shot','stardiver','tachi: enpi','tachi: goten','tachi: kasha','thunder thrust','torcleaver','victory smite','upheaval','vorpal scythe','vorpal thrust','wheeling thrust' },
+			},
+			['dark'] = {
+				['Weak'] = 'light',
+				['Name'] = 'Shadow gorget', 
+				['Ref'] = {},
+				['skillProp'] = { 'compression','gravitation','darkness' },
+				['eleWS'] = { 'asuran fists','black halo','blade: ei','blade: hi','blade: kamu','blade: ku','blade: ten','catastrophe','quietus','entropy','eviseration','impulse drive','insurgency','keen edge','leaden salute','mandalic stab','mercy stroke','requiscat','rundra\'s storm','nightmare scythe','omniscience','one inch punch','penta thrust','primal rend','retribution','shattersoul','starburst','stardiver','stringing pummel','sunburst','swift blade','tachi: kasha','tachi: rana','tachi: shoha','upheaval' },
+			},
+			['searched'] = false,	
+		},
 };
 
 -- Listed below are spells grouped by a dependency or a type. These are 
@@ -887,7 +897,7 @@ gcinclude.tEquipIt = {
 	['dem']    = { ['Name'] = 'Dem Ring', ['Slot'] = 'Ring' },
 	['mea']    = { ['Name'] = 'Mea Ring', ['Slot'] = 'Ring' },
 	['holla']  = { ['Name'] = 'Holla Ring', ['Slot'] = 'Ring' },
-	['altep']  = { ['Name'] = 'Altepa Ring', ['Slot'] = 'Ring' },	
+	['altep']  = { ['Name'] = 'Altep Ring', ['Slot'] = 'Ring' },	
 	['yhoat']  = { ['Name'] = 'Yhoat Ring', ['Slot'] = 'Ring' },	
 	['vahzl']  = { ['Name'] = 'Vahzl Ring', ['Slot'] = 'Ring' },
 	['home']   = { ['Name'] = 'Homing Ring', ['Slot'] = 'Ring' },
@@ -899,7 +909,8 @@ gcinclude.tEquipIt = {
 	['treat2'] = { ['Name'] = 'Treat Staff II', ['Slot'] = 'Main' },
 	['purgo']  = { ['Name'] = 'Wonder Top +1', ['Slot'] = 'Body' },
 	['rre']    = { ['Name'] = 'Reraise Earring', ['Slot'] = 'Ear' },		
-	['rrg']    = { ['Name'] = 'Reraise Gorget', ['Slot'] = 'Neck' },		
+	['rrg']    = { ['Name'] = 'Reraise Gorget', ['Slot'] = 'Neck' },
+	['rrh']    = { ['Name'] = 'Reraise Hairpin', ['Slot'] = 'Head' },
 	['mandy']  = { ['Name'] = 'Mandra. Suit', ['Slot'] = 'Body' },
 	['gob']    = { ['Name'] = 'Goblin Suit', ['Slot'] = 'Body' },	
 };
@@ -926,6 +937,13 @@ gcinclude.EQUIPABLE = {
 			gcinclude.STORAGES[17]		-- Wardrobe 8
 };
 
+gcinclude.EQUIPABLE_LIST = {
+			gcinclude.STORAGES[1]['id'],	-- Inventory
+			gcinclude.STORAGES[9]['id'],	-- Wardrobe
+			gcinclude.STORAGES[11]['id'],	-- Wardrobe 2
+			gcinclude.STORAGES[17]['id']	-- Wardrobe 8
+};
+			
 gcinclude.EQUIPABLE_NONHOLIDAY = {
 			gcinclude.STORAGES[1],		-- Inventory
 			gcinclude.STORAGES[9],		-- Wardrobe
@@ -1151,6 +1169,50 @@ gcinclude.Slips = {
 				2665,2666,2667,2668,2669,2670,2671,2672,2673,2674,2675,2676,2718,
 				2719,2720,2721,2722,2723,2724,2725,2726,2727}, -- 100 items
 			 ['own'] = false, ['extra'] = nil },
+	[10]  = { 
+			 ['name'] = 'Storage Slip 19', ['id'] = 29330,	-- Scenario Rewards II, Events
+			 ['location'] = nil,
+			 ['items'] = {
+				27715,27866,27716,27867,278,281,284,3680,3681,27859,28149,27860,
+				28150,21107,21108,27625,27626,26693,26694,26707,26708,27631,27632,
+				26705,26706,27854,27855,26703,26704,3682,3683,3684,3685,3686,3687,
+				3688,3689,3690,3691,3692,3693,3694,3695,21097,21098,26717,26718,
+				26728,26719,26720,26889,26890,21095,21096,26738,26739,26729,26730,
+				26788,26946,27281,27455,26789,3698,20713,20714,26798,26954,26799,
+				26955,3706,26956,26957,3705,26964,26965,27291,26967,27293,26966,
+				27292,26968,27294,21153,21154,21086,21087,25606,26974,27111,27296,
+				27467,25607,26975,27112,27297,27468,14195,14830,14831,13945,13946,
+				14832,13947,17058,13948,14400,14392,14393,14394,14395,14396,14397,
+				14398,14399,11337,11329,11330,11331,11332,11333,11334,11335,11336,
+				15819,15820,15821,15822,15823,15824,15825,15826,3670,3672,3661,
+				3595,3665,3668,3663,3674,3667,191,28,153,151,198,202,142,134,137,
+				340,341,334,335,337,339,336,342,338,3631,3632,3625,3626,3628,3630,
+				3627,3633,3629,25632,25633,25604,25713,27325,25714,27326,3651,25711,
+				25712,10925,10948,10949,10950,10951,10952,10953,10954,10955,25657,
+				25756,25658,25757,25909}, -- 192 items
+			 ['own'] = false, ['extra'] = nil },
+	[11]  = { 
+			 ['name'] = 'Storage Slip 22', ['id'] = 29333,	-- Scenario Rewards III, Events
+			 ['location'] = nil,
+			 ['items'] = {
+				25639,25715,25638,3707,3708,21074,26406,25645,25726,25648,25649,
+				25650,25758,25759,25672,25673,282,279,280,268,25670,25671,26520,
+				25652,25669,22017,22018,25586,25587,10384,10385,22019,22020,25722,
+				25585,25776,25677,25678,25675,25679,20668,20669,22069,25755,3722,
+				21608,3713,3714,3715,3717,3727,3728,20577,3726,20666,20667,21741, 
+				21609,3723,26410,26411,25850,21509,3725,3720,21658,26524,20665,
+				26412,21965,21966,21967,25774,25838,25775,25839,3724,3721,21682,
+				22072,21820,21821,23731,26517,23730,20573,20674,21742,21860,22065,
+				22039,22124,22132,3719,3738,26518,27623,21867,21868,22283,26516,
+				20933,20578,20568,3739,20569,20570,22288,26352,23737,22282,3740,
+				26545,21977,21978,3742,26519,26514,26515,3743,21636,23753,23754,
+				54,25910,20571,23790,23791,26489,22153,22154,20574,20675,21743,
+				21861,22066,3748,21638,23800,23801,3749,3750,22045,22046,3751,
+				26490,26546,22047,22048,22049,23803,23804,22051,22052,3752,23805,
+				25911,25912,3753,23806,3754,23810,23811,3755,26496,26497,21786,
+				21787,21996,21997,23802,25777,25778,21933,21934,21993,21994,23866,
+				20670,21537,21538,21572,23870,21760,23871,23872,23873,23874,20691}, -- 189 Items
+			 ['own'] = false, ['extra'] = nil },			 		 
 --	['name'] = 'Storage Slip 08'	-- Empyrean
 --	['name'] = 'Storage Slip 09'	-- Empyrean+1
 --	['name'] = 'Storage Slip 10'	-- Empyrean+2
@@ -1160,10 +1222,8 @@ gcinclude.Slips = {
 --	['name'] = 'Storage Slip 16'	-- Reforged AF+1
 --	['name'] = 'Storage Slip 17'	-- Reforged Relic
 --	['name'] = 'Storage Slip 18'	-- Reforged Relic+1
---	['name'] = 'Storage Slip 19'	-- Scenario Rewards II, Events
 --	['name'] = 'Storage Slip 20'	-- Reforged Empyrean
 --	['name'] = 'Storage Slip 21'	-- Reforged Empyrean+1
---	['name'] = 'Storage Slip 22'	-- Scenario Rewards III, Events
 --	['name'] = 'Storage Slip 23'	-- Ambuscade Equipment
 --	['name'] = 'Storage Slip 24'	-- Reforged AF+2
 --	['name'] = 'Storage Slip 25'	-- Reforged AF+3
@@ -1173,6 +1233,195 @@ gcinclude.Slips = {
 --	['name'] = 'Storage Slip 29'	-- Reforged Empyrean+2
 --	['name'] = 'Storage Slip 30',	-- Reforged Empyrean+3
 --	['name'] = 'Storage Slip 31'	-- Scenario Rewards IV, Events
+};
+
+-- This structure defines all the claim slips and what items are associated
+-- with them through ToAU. It is used to determine if an item in a gear set
+-- is stored on the Claim Storage NPC
+gcinclude.ClaimSlips = {
+	-- Level 24-30
+	{ ['name'] = 'Iron Chainmail Set', ['kid'] = 1920, ['own'] = false, 
+		['ids'] = {12424,12552,12680,12808,12936} },
+	{ ['name'] = 'Shade Harness Set', ['kid'] = 1921, ['own'] = false, 
+		['ids'] = {15165,14426,14858,14327,15315} },
+	{ ['name'] = 'Brass Scale Armor Set', ['kid'] = 1922, ['own'] = false, 
+		['ids'] = {12433,12561,12689,12817,12945} },
+	{ ['name'] = 'Wool Robe Set', ['kid'] = 1923, ['own'] = false, 
+		['ids'] = {12474,12602,12730,12858,12986} },
+	{ ['name'] = 'Eisenplatte Set', ['kid'] = 1924, ['own'] = false, 
+		['ids'] = {15167,14431,14860,14329,15317} },
+	{ ['name'] = 'Soil Gi Set', ['kid'] = 1925, ['own'] = false, 
+		['ids'] = {12458,12586,12714,12842,12970} },
+	{ ['name'] = 'Seer\'s Tunic Set', ['kid'] = 1926, ['own'] = false, 
+		['ids'] = {15163,14424,14856,14325,15313} },
+	{ ['name'] = 'Studded Armor Set', ['kid'] = 1927, ['own'] = false, 
+		['ids'] = {12442,12570,12698,12826,12954} },
+	{ ['name'] = 'Centurion\'s Scale Mail Set', ['kid'] = 1928, ['own'] = false, 
+		['ids'] = {12438,12566,12694,12822,12950} },
+	{ ['name'] = 'Mercenary Captain\'s Doublet Set', ['kid'] = 1929, ['own'] = false, 
+		['ids'] = {12470,12598,12726,12854,12982} },
+	{ ['name'] = 'Garish Tunic Set', ['kid'] = 1930, ['own'] = false, 
+		['ids'] = {15164,14425,14857,14326,15314} },
+	{ ['name'] = 'Noct Doublet Set', ['kid'] = 1931, ['own'] = false, 
+		['ids'] = {15161,14422,14854,14323,15311} },
+	-- Level 31-40
+	{ ['name'] = 'Custom Armor Set (H.M.)', ['kid'] = 1932, ['own'] = false, 
+		['ids'] = {12654,12761,12871,13015} },
+	{ ['name'] = 'Custom Armor Set (H.F.)', ['kid'] = 1933, ['own'] = false, 
+		['ids'] = {12655,12762,12872,13016} },
+	{ ['name'] = 'Magna Armor Set (E.M.)', ['kid'] = 1934, ['own'] = false, 
+		['ids'] = {12656,12763,12873,13017} },
+	{ ['name'] = 'Magna Armor Set (E.F.)', ['kid'] = 1935, ['own'] = false, 
+		['ids'] = {12657,12764,12874,13018} },
+	{ ['name'] = 'Wonder Armor Set (Taru)', ['kid'] = 1936, ['own'] = false, 
+		['ids'] = {12658,12765,12875,13019} },
+	{ ['name'] = 'Savage Armor Set (Mithra)', ['kid'] = 1937, ['own'] = false, 
+		['ids'] = {12659,12766,12876,13020} },
+	{ ['name'] = 'Elder Armor Set (Galka)', ['kid'] = 1938, ['own'] = false, 
+		['ids'] = {12660,12767,12877,13021} },
+	{ ['name'] = 'Linen Cloak Set', ['kid'] = 1939, ['own'] = false, 
+		['ids'] = {12610,12738,12866,12994} },
+	{ ['name'] = 'Padded Armor Set', ['kid'] = 1940, ['own'] = false, 
+		['ids'] = {12450,12578,12706,12836,12962} },
+	{ ['name'] = 'Silver Chainmail Set', ['kid'] = 1941, ['own'] = false, 
+		['ids'] = {12425,12553,12681,12809,12937} },
+	{ ['name'] = 'Gambison Set', ['kid'] = 1942, ['own'] = false, 
+		['ids'] = {12466,12594,12722,12850,12978} },
+	{ ['name'] = 'Iron Scail Mail Set', ['kid'] = 1943, ['own'] = false, 
+		['ids'] = {13871,13783,14001,14243,14118} },
+	{ ['name'] = 'Cuir Armor Set', ['kid'] = 1944, ['own'] = false, 
+		['ids'] = {12443,12571,12699,12827,12955} },
+	{ ['name'] = 'Velvet Robe Set', ['kid'] = 1945, ['own'] = false, 
+		['ids'] = {12475,12603,12731,12859,12987} },
+	{ ['name'] = 'Opaline Dress Set', ['kid'] = 1946, ['own'] = false, 
+		['ids'] = {13931,14384,14249,14116} },
+	{ ['name'] = 'Royal Squire\'s Chainmail Set', ['kid'] = 1947, ['own'] = false, 
+		['ids'] = {12431,12559,12687,12815,12943} },
+	{ ['name'] = 'Plate Armor Set', ['kid'] = 1948, ['own'] = false, 
+		['ids'] = {12416,12544,12672,12800,12928} },
+	{ ['name'] = 'Combat Castor\'s Set', ['kid'] = 1949, ['own'] = false, 
+		['ids'] = {12614,12743,12870,12998} },
+	{ ['name'] = 'Argent Set', ['kid'] = 1059, ['own'] = false, 
+		['ids'] = {11310,16365} },
+	-- Level 41-50
+	{ ['name'] = 'Alumine Haubert Set', ['kid'] = 1950, ['own'] = false, 
+		['ids'] = {15205,14444,14051,15402,15341} },
+	{ ['name'] = 'Carapace Armor Set', ['kid'] = 1951, ['own'] = false, 
+		['ids'] = {13711,13712,13713,12837,13715} },
+	{ ['name'] = 'Banded Mail Set', ['kid'] = 1952, ['own'] = false, 
+		['ids'] = {12426,12554,12682,12810,12938} },
+	{ ['name'] = 'Hara-Ate Set', ['kid'] = 1953, ['own'] = false, 
+		['ids'] = {12459,12587,12715,12843,12974} },
+	{ ['name'] = 'Raptor Armor Set', ['kid'] = 1954, ['own'] = false, 
+		['ids'] = {12444,12572,12700,12828,12956} },
+	{ ['name'] = 'Steel Scale Mail Set', ['kid'] = 1955, ['own'] = false, 
+		['ids'] = {13873,13785,14003,14245,14120} },
+	{ ['name'] = 'Wool Gambison Set', ['kid'] = 1956, ['own'] = false, 
+		['ids'] = {12467,12595,12723,12851,12979} },
+	{ ['name'] = 'Shinobi Gi Set', ['kid'] = 1957, ['own'] = false, 
+		['ids'] = {12460,12588,12716,12844,12972} },
+	{ ['name'] = 'Mythril Plate Armor Set', ['kid'] = 1962, ['own'] = false, 
+		['ids'] = {12417,12545,12673,12801,12929} },
+	{ ['name'] = 'Iron Musketeer\'s Cuirass Set', ['kid'] = 1958, ['own'] = false, 
+		['ids'] = {12422,12550,12678,12806,12934} },
+	{ ['name'] = 'Tactician Magician\'s Cloak Set', ['kid'] = 1959, ['own'] = false, 
+		['ids'] = {12478,12606,12734,12862,12990} },
+	{ ['name'] = 'White Cloak Set', ['kid'] = 1960, ['own'] = false, 
+		['ids'] = {12611, 12739, 12867, 12995} },
+	{ ['name'] = 'Austere Robe Set', ['kid'] = 1961, ['own'] = false, 
+		['ids'] = {13939,13814,14826,14310,14189} },
+	{ ['name'] = 'Crow Jupon Set', ['kid'] = 1963, ['own'] = false, 
+		['ids'] = {15242,14498,14907,15578,15663} },
+	-- Artifact Armor/High Level Gear
+	{ ['name'] = 'Fighter\'s Armor Set', ['kid'] = 654, ['own'] = false, 
+		['ids'] = {12511,12638,13961,14214,14089} },
+	{ ['name'] = 'Temple Attire Set', ['kid'] = 655, ['own'] = false, 
+		['ids'] = {12512,12639,13962,14215,14090} },
+	{ ['name'] = 'Healer\'s Attire Set', ['kid'] = 656, ['own'] = false, 
+		['ids'] = {13855,12640,13963,14216,14091} },
+	{ ['name'] = 'Wizard\'s Attire Set', ['kid'] = 657, ['own'] = false, 
+		['ids'] = {13856,12641,13964,14217,14092} },
+	{ ['name'] = 'Warlock\'s Attire Set', ['kid'] = 658, ['own'] = false, 
+		['ids'] = {12513,12642,13965,14218,14093} },
+	{ ['name'] = 'Rogue\'s Attire Set', ['kid'] = 659, ['own'] = false, 
+		['ids'] = {12514,12643,13966,14219,14094} },
+	{ ['name'] = 'Gallant Armor Set', ['kid'] = 660, ['own'] = false, 
+		['ids'] = {12515,12644,13967,14220,14095} },
+	{ ['name'] = 'Chaos Armor Set', ['kid'] = 661, ['own'] = false, 
+		['ids'] = {12516,12645,13968,14221,14096} },
+	{ ['name'] = 'Beast Armor Set', ['kid'] = 662, ['own'] = false, 
+		['ids'] = {12517,12646,13969,14222,14097} },
+	{ ['name'] = 'Choral Armor Set', ['kid'] = 663, ['own'] = false, 
+		['ids'] = {13857,12647,13970,14223,14098} },
+	{ ['name'] = 'Hunter\'s Attire Set', ['kid'] = 664, ['own'] = false, 
+		['ids'] = {12518,12648,13971,14224,14099} },
+	{ ['name'] = 'Myochin Armor Set', ['kid'] = 665, ['own'] = false, 
+		['ids'] = {13868,13781,13972,14225,14100} },
+	{ ['name'] = 'Ninja\'s Garb Set', ['kid'] = 666, ['own'] = false, 
+		['ids'] = {13869,13782,13973,14226,14101} },
+	{ ['name'] = 'Drachen Armor Set', ['kid'] = 667, ['own'] = false, 
+		['ids'] = {12519,12649,13974,14227,14102} },
+	{ ['name'] = 'Evoker\'s Attire Set', ['kid'] = 668, ['own'] = false, 
+		['ids'] = {12520,12650,13975,14228,14103} },
+	{ ['name'] = 'Magus Attire Set', ['kid'] = 1964, ['own'] = false, 
+		['ids'] = {15265,14521,14928,15600,15684} },
+	{ ['name'] = 'Corsair\'s Attire Set', ['kid'] = 1965, ['own'] = false, 
+		['ids'] = {15266,14522,14929,15601,15685} },
+	{ ['name'] = 'Puppetry Attire Set', ['kid'] = 1966, ['own'] = false, 
+		['ids'] = {15267,14523,14930,15602,15686} },
+	{ ['name'] = 'Dancer Attire Set (M)', ['kid'] = 1967, ['own'] = false, 
+		['ids'] = {16138,14578,15002,15659,15746} },
+	{ ['name'] = 'Dancer Attire Set (F)', ['kid'] = 1968, ['own'] = false, 
+		['ids'] = {16139,14579,15003,15660,15747} },
+	{ ['name'] = 'Scholar\'s Attire Set', ['kid'] = 1969, ['own'] = false, 
+		['ids'] = {16140,14580,15004,16311,15748} },
+	{ ['name'] = 'Amir Armor Set', ['kid'] = 1970, ['own'] = false, 
+		['ids'] = {16062,14525,14933,15604,15688} },
+	{ ['name'] = 'Pahluwan Armor Set', ['kid'] = 1971, ['own'] = false, 
+		['ids'] = {16069,14530,14940,15609,15695} },
+	{ ['name'] = 'Yigit Armor Set', ['kid'] = 1972, ['own'] = false, 
+		['ids'] = {16064,14527,14935,15606,15690} },
+	-- Relic Armor
+	{ ['name'] = 'Warrior\'s Armor Set', ['kid'] = 861, ['own'] = false, 
+		['ids'] = {15072,15087,15102,15117,15132} },
+	{ ['name'] = 'Melee Attire Set', ['kid'] = 862, ['own'] = false, 
+		['ids'] = {15073,15088,15103,15118,15133} },
+	{ ['name'] = 'Cleric\'s Attire Set', ['kid'] = 863, ['own'] = false, 
+		['ids'] = {15074,15089,15104,15119,15134} },
+	{ ['name'] = 'Sorcerer\'s Attire Set', ['kid'] = 864, ['own'] = false, 
+		['ids'] = {15075,15090,15105,15120,15135} },
+	{ ['name'] = 'Duelist\'s Armor Set', ['kid'] = 865, ['own'] = false, 
+		['ids'] = {15076,15091,15106,15121,15136} },
+	{ ['name'] = 'Assassin\'s Attire Set', ['kid'] = 866, ['own'] = false, 
+		['ids'] = {15077,15092,15107,15122,15137} },
+	{ ['name'] = 'Valor Armor Set', ['kid'] = 867, ['own'] = false, 
+		['ids'] = {15078,15093,15108,15123,15138} },
+	{ ['name'] = 'Abyss Armor Set', ['kid'] = 868, ['own'] = false, 
+		['ids'] = {15079,15094,15109,15124,15139} },
+	{ ['name'] = 'Monster Armor Set', ['kid'] = 869, ['own'] = false, 
+		['ids'] = {15080,15095,15110,15125,15140} },
+	{ ['name'] = 'Bard\'s Attire Set', ['kid'] = 870, ['own'] = false, 
+		['ids'] = {15081,15096,15111,15126,15141} },
+	{ ['name'] = 'Scout\'s Attire Set', ['kid'] = 871, ['own'] = false, 
+		['ids'] = {15082,15097,15112,15127,15142} },
+	{ ['name'] = 'Saotome Armor Set', ['kid'] = 872, ['own'] = false, 
+		['ids'] = {15083,15098,15113,15128,15143} },
+	{ ['name'] = 'Koga Garb Set', ['kid'] = 873, ['own'] = false, 
+		['ids'] = {15084,15099,15114,15129,15144} },
+	{ ['name'] = 'Wyrm Armor Set', ['kid'] = 874, ['own'] = false, 
+		['ids'] = {15085,15100,15115,15130,15145} },
+	{ ['name'] = 'Summoner\'s Attire Set', ['kid'] = 875, ['own'] = false, 
+		['ids'] = {15086,15101,15116,15131,15146} },
+	{ ['name'] = 'Mirage Attire Set', ['kid'] = 1054, ['own'] = false, 
+		['ids'] = {11465,11292,15025,16346,11382} },
+	{ ['name'] = 'Commodore Attire Set', ['kid'] = 1055, ['own'] = false, 
+		['ids'] = {11468,11295,15028,16349,11385} },
+	{ ['name'] = 'Pantin Attire Set', ['kid'] = 1056, ['own'] = false, 
+		['ids'] = {11471,11298,15031,16352,11388} },
+	{ ['name'] = 'Etoile Attire Set', ['kid'] = 1057, ['own'] = false, 
+		['ids'] = {11478,11305,15038,16360,11396} },
+	{ ['name'] = 'Argute Attire Set', ['kid'] = 1058, ['own'] = false, 
+		['ids'] = {11480,11307,15040,16362,11398} }
 };
 
 -- This structure will be dynamically populated by the GearCheck function.
@@ -1185,33 +1434,25 @@ gcinclude.Slips = {
 -- is the piece accessible out of the moghouse. The item ID number will
 -- also be tracked for verification purposes, but not included in the search.)
 gcinclude.GearDetails = {
-	['main']  = { ['num'] = 0, ['vis'] = true, {} },		
-	['sub']   = { ['num'] = 0, ['vis'] = true, {} },
-	['range'] = { ['num'] = 0, ['vis'] = true, {} },
-	['ammo']  = { ['num'] = 0, ['vis'] = true, {} },
-	['head']  = { ['num'] = 0, ['vis'] = true, {} },
-	['neck']  = { ['num'] = 0, ['vis'] = false, {} },
-	['ears']  = { ['num'] = 0, ['vis'] = false, {} },
-	['body']  = { ['num'] = 0, ['vis'] = true, {} },
-	['hands'] = { ['num'] = 0, ['vis'] = true, {} },
-	['rings'] = { ['num'] = 0, ['vis'] = false, {} },
-	['back']  = { ['num'] = 0, ['vis'] = false, {} },
-	['waist'] = { ['num'] = 0, ['vis'] = false, {} },
-	['legs']  = { ['num'] = 0, ['vis'] = true, {} },
-	['feet']  = { ['num'] = 0, ['vis'] = true, {} }
+	['main']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },		
+	['sub']   = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+	['range'] = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+	['ammo']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+	['head']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+	['neck']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = false, {} },
+	['ears']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = false, {} },
+	['body']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+	['hands'] = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+	['rings'] = { ['num'] = 0, ['acc'] = 0, ['vis'] = false, {} },
+	['back']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = false, {} },
+	['waist'] = { ['num'] = 0, ['acc'] = 0, ['vis'] = false, {} },
+	['legs']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+	['feet']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} }
 };
-
--- Keep track of the number of hits on monsters, identified by ID.
--- Included is a time stamp for when the hit occurred. If 5 minutes
--- go by and no hit has occurred, it is assumed that the monster is
--- dead and the entry is removed.
---
--- Structure: Target ID, Hits, Last Touched
-gcinclude.THTrack = { };
 	
 gcinclude.OwnNation = -1; 
-gcinclude.fb = false;
 gcinclude.basetime = os.time();
+gcinclude.tGearLine = {};
 
 gcinclude.Sets = gcinclude.sets;
 
@@ -1272,7 +1513,7 @@ function DisplayVersion()
 		end
 		print(chat.message(line));
 	end
-end
+end		-- DisplayVersion
 
 --[[
 	StartReminder is a simple routine used to delay the printing of a reminder from
@@ -1281,18 +1522,185 @@ end
 --]]
 
 function gcinclude.StartReminder()
-
-	if gcinclude.basetime == 0 then
+	local iTestVal = gcinclude.settings.bMinBasetime;
+	local iNow = os.time();
+	
+	if gcdisplay.GetGC() == true then
 		return;
 	end
 
-	if os.difftime(os.time(),gcinclude.basetime) >= 15 then
-		print(chat.message('************'));
-		print(chat.message('FYI: Remember to do a /gc once \'data download\' finishes'));
-		print(chat.message('************'));
-		gcinclude.basetime = 0;		
+	if gcinclude.settings.bGCReminder == true then
+		-- Since reminder already shown once, change the wait
+		-- interval from 15 seconds to 5 minutes
+		iTestVal = gcinclude.settings.bMaxBasetime;
 	end
-end
+	
+	if os.difftime(iNow,gcinclude.basetime) >= iTestVal then
+		print(chat.message('************'));
+		if iTestVal == gcinclude.settings.bMinBasetime then
+			print(chat.message('FYI: Remember to do a /gc once \'data download\' finishes'));
+		else
+			print(chat.message('FYI: Remember to do a /gc'));
+		end
+		print(chat.message('************'));
+		gcinclude.settings.bGCReminder = true;
+		-- Change the base to current so that comparison is from
+		-- now forward
+		gcinclude.basetime = iNow;
+	end
+end			-- gcinclude.StartReminder
+
+--[[
+	fReferenceCheck determines if any of the passed gear is actually
+	a reference to another set's slot.
+--]]
+
+function fReferenceCheck(ts)
+	local t = {};
+	local bFound = false;
+	
+	if ts == nil then
+		return false;
+	end
+
+	if type(ts) == 'string' then
+		t[1] = ts;
+	else
+		t = ts;
+	end
+	
+	for i,j in pairs(t) do
+		if string.find(j,'::') then
+			bFound = true;
+			break;
+		end
+	end
+	return bFound;
+end		-- fReferenceCheck
+
+--[[
+	TallyProgressiveCaps determines how many stages are defined in the 
+	Progressive entries structure: accuracy, tank accuracy, ranged
+	accuracy, and tank ranged accuracy.
+--]]
+
+function gcinclude.TallyProgressiveCaps()
+	local macc = 0;
+	local mtacc = 0;
+	local mracc = 0;
+	local mtracc = 0;
+	
+	if gProfile.Sets.Progressive ~= nil then
+		if gProfile.Sets.Progressive['Accuracy'] ~= nil then
+			for i,j in pairs(gProfile.Sets.Progressive['Accuracy']) do
+				macc = macc + 1;
+			end	
+		end
+
+		if gProfile.Sets.Progressive['Tank_Accuracy'] ~= nil then
+			for i,j in pairs(gProfile.Sets.Progressive['Tank_Accuracy']) do
+				mtacc = mtacc + 1;
+			end
+		else
+			mtacc = macc;	-- If tank_accuracy missing, use accuracy
+		end		
+
+		if gProfile.Sets.Progressive['Ranged_Accuracy'] ~= nil then
+			for i,j in pairs(gProfile.Sets.Progressive['Ranged_Accuracy']) do
+				mracc = mracc + 1;
+			end
+		end
+		
+		if gProfile.Sets.Progressive['Tank_Ranged_Accuracy'] ~= nil then
+			for i,j in pairs(gProfile.Sets.Progressive['Tank_Ranged_Accuracy']) do
+				mtracc = mtracc + 1;
+			end
+		else
+			mtracc = mracc;	-- If tank_ranged_accuracy missing, use ranged_accuracy
+		end
+	end
+	return macc,mtacc,mracc,mtracc;
+end		-- gcinclude.TallyProgressiveCaps
+
+--[[
+	fExpandGearLine takes the passed in line from a gear set and copies
+	it to the global tGearLine array. Subsets are ignored. If it encounters
+	an inline gear line reference, assuming that the attached (if present)
+	inline conditional is true, it will call itself again with that
+	reference so that a single, complete set of gear can be processed
+	from the calling routine.
+--]]
+
+function fExpandGearLine(sSlot,ts,sc)
+	local iPos,sval,sCode;
+	local t = {};
+
+	if sSlot == nil or ts == nil then
+		return false;
+	end
+	
+	if type(ts) == 'string' then
+		t[1] = ts;
+	else
+		t = ts;
+	end
+	
+	for i,j in pairs(t) do
+		iPos = string.find(j,'::');
+		if iPos ~= nil then
+			-- Found an inline reference
+			sval = string.sub(j,1,iPos-1);
+			-- Check for missing slot name, assume same as passed slot
+			if iPos + 2 >= string.length(j) then
+				s = sSlot;
+			else
+				s = string.sub(j,iPos+2,-1);
+			end
+			-- Check for valid conditional or lack of conditional
+			bGood,x = fCheckInline(sval,s,tss);
+			if bGood then
+				-- Since good, remove (if present) the conditional
+				iPos = string.find(s,'//');
+				if iPos ~= nil then
+					sCode = string.sub(s,iPos,-1);
+					s = string.sub(s,1,iPos-1);
+				else
+					sCode = nil;
+				end
+				
+				if sc ~= nil then
+					if sCode == nil then
+						sCode = sc;
+					else
+						sCode = sCode .. sc;
+					end
+				end
+
+				-- Now recurse this newly found inline reference				
+				x = fGetTableByName(sval);			
+				-- Make sure slot name formatted correctly
+				s = string.upper(string.sub(s,1,1)) .. string.sub(s,2,-1);				
+				-- If definition for referenced slot there, recurse the 
+				-- specified slot's definition
+				if x[s] ~= nil then					
+					bGood = fExpandGearLine(s,x[s],sCode);
+				end
+				-- Result is ignored since bad inline has no effect
+				-- on the global tGearLine array and good result is
+				-- already tallied.
+			end				
+		else
+			-- Treat the item as-is
+			local iCtr = #gcinclude.tGearLine + 1;
+			gcinclude.tGearLine[iCtr] = j		
+			if sc ~= nil then
+				 gcinclude.tGearLine[iCtr] = gcinclude.tGearLine[iCtr] .. sc;
+			end			
+			iCtr = iCtr + 1;
+		end
+	end
+	return true;
+end		-- fExpandGearLine
 
 --[[
 	fSummonerPet determines if the player has a SMN summoned pet. 
@@ -1351,13 +1759,12 @@ function DB_ShowIt()
 	print(chat.message('WScheck: ' .. tostring(gcinclude.settings.WScheck)));
 	print(chat.message('WSdistance: ' .. tostring(gcinclude.settings.WSdistance)));
 	print(chat.message('bWSOverride: ' .. tostring(gcinclude.settings.bWSOverride)));
+	print(chat.message('GC run? ' .. tostring(gcdisplay.GetGC())));
 	if sSlip == nil then
 		print(chat.message('Slips: None'));
 	else
 		print(chat.message('Slips: ' .. sSlip));
 	end
-	print(chat.message(' '));
-	GearCheckList();
 end		-- DB_ShowIt
 	
 --[[
@@ -1575,32 +1982,26 @@ function gcinclude.fCheckForEleGear(sType,sElement)
 	if player.MainJobSync < gcinclude.tElemental_gear[sType]['level'] then
 		return nil;
 	end
-	
-	-- Now make sure the reference to the dynamic gear table is set
-	-- Remember, staves have two references and obi/gorget have one
-	if sType == 'staff' then
-		bGood,gcinclude.tElemental_gear[sType][sElement]['HQ']['Ref'] = 
-			fGearCheckItem('main',gcinclude.tElemental_gear[sType][sElement]['HQ']['Name'],false,false);
-		bGood,gcinclude.tElemental_gear[sType][sElement]['NQ']['Ref'] = 
-			fGearCheckItem('main',gcinclude.tElemental_gear[sType][sElement]['NQ']['Name'],false,false);
-	else	-- obis and gorgets have the same structure, so are combined here
-		bGood,gcinclude.tElemental_gear[sType][sElement]['Ref'] = 
-			fGearCheckItem('main',gcinclude.tElemental_gear[sType][sElement]['Name'],false,false);
-	end
 
-	-- Since we now know that the links to the dynamic table are there, process
-	-- the reference accordingly. For staff, check for HQ before looking at NQ
+	-- The links for the dynamic table will be there if /gc was run. If not,
+	-- then all elemental gear's ['Ref'] will be nil and skipped.
+	
+	-- Now process the reference accordingly. For staff, check for HQ before 
+	-- looking at NQ
 	if sType == 'staff' then
-		if gcinclude.tElemental_gear[sType][sElement]['HQ']['Ref']['accessible'] == true then
+		if gcinclude.tElemental_gear[sType][sElement]['HQ']['Ref'] ~= nil and
+			gcinclude.tElemental_gear[sType][sElement]['HQ']['Ref']['accessible'] == true then
 			return gcinclude.tElemental_gear[sType][sElement]['HQ']['Name'];
-		elseif gcinclude.tElemental_gear[sType][sElement]['NQ']['Ref']['accessible'] == true then
+		elseif gcinclude.tElemental_gear[sType][sElement]['NQ']['Ref'] ~= nil and
+			gcinclude.tElemental_gear[sType][sElement]['NQ']['Ref']['accessible'] == true then
 			return gcinclude.tElemental_gear[sType][sElement]['NQ']['Name'];
 		else
 			return nil;
 		end
 	else
 		-- Obi and Gorget have the same structure, so handle the same way
-		if gcinclude.tElemental_gear[sType][sElement]['Ref']['accessible'] == true	then
+		if gcinclude.tElemental_gear[sType][sElement]['Ref'] ~= nil and
+			gcinclude.tElemental_gear[sType][sElement]['Ref']['accessible'] == true	then
 			return gcinclude.tElemental_gear[sType][sElement]['Name'];
 		else
 			return nil;
@@ -1670,8 +2071,8 @@ function SetVariables()
 	gcdisplay.CreateToggle('Eva', false);
 	gcdisplay.CreateToggle('Idle',true);
 		
-	if string.find('BLM,SMN',player.MainJob) == nil then
-		gcdisplay.CreateToggle('WSwap',(string.find('WHM,BRD,RDM',player.MainJob) ~= nil));
+	if player.MainJob ~= 'SMN' then
+		gcdisplay.CreateToggle('WSwap',(string.find('WHM,BLM,RDM',player.MainJob) ~= nil));
 	end
 
 	-- Job specific toggles	
@@ -1702,6 +2103,240 @@ function SetVariables()
 	gcdisplay.CreateCycle('DT', {[1] = gcinclude.OFF, [2] = gcinclude.PHY, [3] = gcinclude.MAG, [4] = gcinclude.BRE});
 	gcdisplay.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned', [3] = 'N/A'});
 end		-- SetVariables
+
+--[[
+	fRemoveConditional takes the passed in string and removes any inline
+	conditional qualifier from it.
+--]]
+
+function fRemoveConditional(g)
+	local iPos;
+	if g == nil then
+		return nil;
+	end
+	
+	iPos = string.find(g,'//');
+
+	if iPos ~= nil then
+		return string.sub(g,1,iPos-1);
+	else
+		return g;
+	end
+end		-- fRemoveConditional
+
+--[[
+	fSetColorText accepts a boolean and returns a color code to represent the
+	value: 2 - green, 8 - red, 107 - something else (probably yellow). bInvert
+	inverts the colors: 2 - red and 8 - green
+--]]
+
+function fSetColorText(bVal,bInvert)
+	local ic;
+	
+	if bInvert == nil then
+		bInvert = false;
+	end
+	
+	if bVal == nil then
+		ic = 107;	-- Other color
+	elseif (bVal == false and bInvert == false) or
+		(bVal == true and bInvert == true) then
+		ic = 8;		-- Red
+	else 
+		ic = 2;	-- Green
+	end
+	
+	return ic;	
+end		-- fSetColorText
+
+--[[
+	DisplayGD_AW lists either all the dynamic gear definitions or just the
+	ones that are invalid or inaccessible.
+--]]
+
+function DisplayGD_AW(p1)
+	local bShow;
+	
+	if p1 == nil then
+		print(chat.message('Complete list of all gear'));
+	elseif p1 == 'noac' then
+		print(chat.message('Invalid or inaccessible gear'));
+	end	
+
+	for slot,name in pairs(gcinclude.GearDetails) do
+		print(chat.message(' '));
+		if p1 ~= nil and string.lower(p1) == 'noac' then
+			print(chat.message('Slot: ' .. slot));
+		else
+			print(chat.message('Slot: ' .. slot .. '[' .. tostring(name['acc']) .. '/' .. tostring(name['num']) .. ']'));
+		end
+		
+		for i,j in pairs(name) do
+			if string.find('num,acc,vis',i) == nil then
+				bShow = (p1 == nil or j['valid'] == false or j['accessible'] == false);
+				if bShow == true and type(i) == 'string' then
+					DisplayItemStats(i,slot);
+				end
+			end
+		end
+	end
+end		-- DisplayGD_AW
+
+--[[
+	DisplayGD_S lists all dynamic gear definitions associated with specific slot(s).
+--]]
+
+function DisplayGD_S(p1)
+
+	if p1 == nil then
+		return;
+	end
+	
+	print(chat.message('Gear associated with slot(s): ' .. p1));
+	
+	for slot,name in pairs(gcinclude.GearDetails) do
+		if string.find(string.lower(p1),string.lower(slot)) ~= nil then
+			print(chat.message(' '));
+			print(chat.message('Slot: ' .. slot));
+
+			for i,j in pairs(name) do
+				if string.find('num,acc,vis',i) == nil then
+					if type(i) == 'string' then
+						DisplayItemStats(i,slot);
+					end
+				end
+			end
+		end
+	end
+end		-- DisplayGD_S
+
+--[[
+	DisplayGD_Gs lists all dynamic gear definitions associated with a specific gear set.
+--]]
+
+function DisplayGD_Gs(p1)
+	local str,tmp;
+	local tGs = {};
+	local gg = {};
+	local lPc = nil;
+
+	if p1 == nil then
+		return;
+	end
+		
+	-- first check gProfile.Sets. If not found, look in gcinclude.Sets.
+	tGs = fGetTableByName(p1);
+	if tGs == nil then
+		print(chat.message(p1 .. ': no such set exists!'));
+		return;
+	end
+	
+	print(' ');
+	print(chat.message('Gear set: ' .. string.upper(p1)));
+
+	-- Loop the entries first looking for subsets
+	for slot,j in pairs(tGs) do
+		if string.lower(slot) == 'subset' then
+			if j ~= nil then
+				-- then make sure that j is a table
+				gg = {};
+				if type(j) == 'string' then
+					gg[1] = j;
+				else
+					gg = j
+				end			
+				tmp = nil;
+				
+				for _,g in pairs(gg) do
+					if tmp == nil then
+						tmp = fRemoveConditional(g);
+					else
+						tmp = tmp .. ',' .. fRemoveConditional(g);
+					end
+					print(' ');
+					print(chat.message('Subset: ' .. tmp));
+				end	
+			end
+		end
+	end
+				
+	-- loop on the entries of the gear set
+	lPc = ',';
+	for slot,j in pairs(tGs) do	
+		if string.lower(slot) ~= 'subset' then
+			print(' ');
+			print(chat.message('Slot: ' .. slot));
+			-- make sure entry is not [slot] =
+			if j ~= nil then
+				gg = {};
+				-- then make sure that j is a table
+				if type(j) == 'string' then
+					gg[1] = j;
+				else
+					gg = j
+				end
+				
+				-- Now process the normal slot
+				local t;
+				for _,g in pairs(gg) do
+					t = string.upper(fRemoveConditional(g));
+					if string.find(lPc,t) == nil then
+						DisplayItemStats(t,slot);
+						lPc = lPc .. ',' ..t;
+					end						
+				end
+			end
+		end	
+	end	
+end		-- DisplayGD_Gs
+
+--[[
+	DisplayItemStats displays the item definition for the passed piece of gear
+	from the dynamic GearDetails table.
+--]]
+
+function DisplayItemStats(sName,sSlot)
+	local msg;
+	local tWhat;
+	local tTrans = { [true] = 'Yes', [false] = 'No'};
+	
+	if sSlot == nil or sName == nil then
+		return;
+	end
+	
+	sSlot = string.lower(sSlot);
+	sName = string.lower(sName);
+	
+	if gcinclude.GearDetails[sSlot][sName] == nil then
+		-- You get here if the item isn't a valid item
+		print(sName .. ' - ' .. chat.color1(8,'Invalid item'));
+		return;
+	end
+	
+	tWhat = gcinclude.GearDetails[sSlot][sName];
+	-- You get here if the item is valid or it's invalid because the slot
+	-- is incorrect	
+	msg = '   ' .. chat.color1(fSetColorText(nil), string.upper(sName)); 
+	msg = msg .. ', Level: ' .. tostring(tWhat['level'],tostring(tWhat['level']));
+	print(msg);
+	msg = '      ' .. 'Own it? ' .. chat.color1(fSetColorText(tWhat['own']),tTrans[tWhat['own']]);
+	msg = msg .. ', Accessible? ' .. chat.color1(fSetColorText(tWhat['accessible']),tTrans[tWhat['accessible']]);
+	print(msg);
+	print('      Code Breakdown-');
+	msg = '         Valid? ' .. chat.color1(fSetColorText(tWhat['valid']),tTrans[tWhat['valid']]);
+	msg = msg .. ' Slot? ' .. chat.color1(fSetColorText(tWhat['slot']),tTrans[tWhat['slot']]);
+	msg = msg .. ' Job? ' .. chat.color1(fSetColorText(tWhat['job']),tTrans[tWhat['job']]);
+	msg = msg .. ' Porter? ' .. chat.color1(fSetColorText(tWhat['porter'],true),tTrans[tWhat['porter']]);
+	msg = msg .. ' Claim? ' .. chat.color1(fSetColorText(tWhat['claim'],true),tTrans[tWhat['claim']]);
+	print(msg);
+	if tWhat['locations'] ~= nil then
+		msg = '         Location(s): ' .. tWhat['locations'];
+	else
+		msg = '         Location(s): ';
+	end
+	print(msg);
+	print(' ');
+end	-- DisplayItemStats
 
 --[[
 	fDisplaySlips shows which storage slips the player owns. The passed in 
@@ -1796,6 +2431,37 @@ function FindSlips()
 end		-- FindSlips
 
 --[[
+	fSlotMatch determines if the passed slot the gear piece is being loaded into
+	matches the item's slot designation. Returned is true or false
+--]]
+
+function fSlotMatch(sSlot,iSlot)
+	local bGood = false;
+	
+	sSlot = string.lower(sSlot);
+	
+	-- Make sure the composite slots are represented by an actual slot
+	if sSlot == 'rings' then
+		sSlot = 'ring1';
+	elseif sSlot == 'ears' then
+		sSlot = 'ear1';
+	end
+	
+	-- The lock list has all slots identified. The slot masks have been added
+	-- to the tLocks structure. Even though the mask is a bit pattern, the
+	-- composited value is included too. That's why I only need to look for
+	-- a match.
+	for i,j in ipairs(gcinclude.tLocks) do
+		if j['slot'] == sSlot then
+			bGood = (table.find(j['mask'],iSlot) ~= nil);
+			break;
+		end
+	end
+
+	return bGood;
+end		-- fSlotMatch
+
+--[[
 	fGearCheckItem process the specific item sent to it and where appropriate, populates
 	gcinclude.GearDetails. The details tracked are: item name, item level, can equip?, 
 	and accessibility. Returned is a true/false which indicates that the item's level,
@@ -1805,37 +2471,41 @@ end		-- FindSlips
 		sSlot   - Name of the slot
 		sName   - Name of the item to check
 		bAccess - True = return accessibility, False = check job, access, and level
-		bForce  - Force an update of the gearDetail record
+		bCreate - Create record is missing
 
-	Returned: Accessibility,gear reference		
+	Returned: Accessibility,gear reference
 --]]
 
-function fGearCheckItem(sSlot,sName,bAccess,bForce)
+function fGearCheckItem(sSlot,sName,bAccess,bCreate)
 	local player = gData.GetPlayer();
-	local bJob,bAccessible,bThere;
-	local iPos,iCnt;
+	local bJob,bAccessible,bSlot;
+	local iPos;
 	local item = {};
-	local rec = {};
+	local tOwned = {};
 	
-	-- Subsets are skipped
-	if string.lower(sSlot) == 'subset' then
-		return false,nil;
-	end
-	
-	if player.MainJob == nil or player.MainJob == 'NON' then
-		return false,nil;
-	end
-	
+	-- Required fields
 	if sSlot == nil or sName == nil then
 		return false,nil;
 	end
 	
+	-- Subsets and inline reference definitions are skipped
+	if string.lower(sSlot) == 'subset' 
+	   or string.find(sName,'::') ~= nil then
+		return false,nil;
+	end
+	
+	-- Make sure "downloading data" is not in transition
+	if player.MainJob == nil or player.MainJob == 'NON' then
+		return false,nil;
+	end
+
+	-- Assume full check if absent
 	if bAccess == nil then
 		bAccess = false;
 	end
 
-	if bForce == nil then
-		bForce = false;
+	if bCreate == nil then
+		bCreate = false;
 	end
 	
 	sSlot = string.lower(sSlot);
@@ -1853,35 +2523,51 @@ function fGearCheckItem(sSlot,sName,bAccess,bForce)
 	if iPos ~= nil then
 		sName = string.sub(sName,1,iPos-1);
 	end	
-
-	-- See if item already registered
-	if gcinclude.GearDetails[sSlot][sName] == nil or 
-		gcinclude.GearDetails[sSlot]['num'] == 0 or 
-		bForce == true then
+	
+	-- If bCreate indicated, a new record will be created or an existing
+	-- record will be overriden.
+	if bCreate == true then
 		-- Now process the item
 		item = AshitaCore:GetResourceManager():GetItemByName(sName,2);
-		if item ~= nil then		
+		if item ~= nil then	
+			local bExist = (gcinclude.GearDetails[sSlot][sName] ~= nil); -- Note if existing record
 			bJob = (bit.band(item.Jobs,gcinclude.JobMask[player.MainJob]) == gcinclude.JobMask[player.MainJob]) or
 		  		   (bit.band(item.Jobs,gcinclude.JobMask['Alljobs']) == gcinclude.JobMask['Alljobs']);
-			bAccessible = fCheckItemOwned(sName,true,true);
--- bOwn,bAccessible,bPorter = fCheckItemOwned(sName,true,true); -- future change
-			bThere = (gcinclude.GearDetails[sSlot][sName] ~= nil);
-			
+			tOwned = fCheckItemOwned(item);
+			bSlot = fSlotMatch(sSlot,item.Slots);
+			bAccessible = (tOwned['own'] == true and tOwned['accessible'] == true);
+
 			-- Save item w/details
 			gcinclude.GearDetails[sSlot][sName] = { 
+				['id']		   = item.Id;
+				['valid']	   = true,
+				['slot']	   = bSlot, 
 				['level']	   = item.Level,
 				['job']        = bJob, 
-				--['own']		   = true, -- bOwn
+				['own']		   = tOwned['own'],
 				['accessible'] = bAccessible, 
-				--['porter']	   = false, -- bPorter
+				['porter']	   = tOwned['porter'],
+				['claim']	   = tOwned['claim'],
+				['locations']  = tOwned['locations'],
 				['desc'] 	   = item.Description[1]
 			};
-			-- Bump counter
-			if not bThere then
-				gcinclude.GearDetails[sSlot]['num'] = gcinclude.GearDetails[sSlot]['num'] + 1;
+			if bSlot == false then
+				gcinclude.GearDetails[sSlot][sName]['valid'] = false;
 			end
+			if not bExist then
+				gcinclude.GearDetails[sSlot]['num'] = gcinclude.GearDetails[sSlot]['num'] + 1;
+				if bAccessible then
+					gcinclude.GearDetails[sSlot]['acc'] = gcinclude.GearDetails[sSlot]['acc'] + 1;			
+				end
+			end
+		else
+			-- This is an erroneous item	
+			gcinclude.GearDetails[sSlot][sName] = { ['valid'] = false };
+			return false,gcinclude.GearDetails[sSlot][sName];
 		end
 	end
+
+	-- If it still doesn't exist, return that state
 	if gcinclude.GearDetails[sSlot][sName] == nil then
 		return false,nil;
 	else
@@ -1896,7 +2582,7 @@ function fGearCheckItem(sSlot,sName,bAccess,bForce)
 end	-- fGearCheckItem
 
 --[[
-	This function will search and extract all the items from all the gear sets in the
+	GearCheck will search and extract all the items from all the gear sets in the
 	job file and gcinclude, populating gcinclude.GearDetails. The details tracked are: 
 	item name, item id, item level, can equip?, and accessibility. This information 
 	will be used by the functions for picking which piece to equip, which should speed 
@@ -1905,10 +2591,12 @@ end	-- fGearCheckItem
 --]]
 
 function GearCheck(sList,bForce)
+	local player = AshitaCore:GetMemoryManager():GetPlayer();
 	local tTarget = { gProfile.Sets, gcinclude.Sets };
 	local ts = {};
 	local ref = {};
 	local iCnt = 0;
+	local ctr = 0;
 	local bGood;
 
 	if bUpdate == nil then
@@ -1916,11 +2604,47 @@ function GearCheck(sList,bForce)
 	end
 
 	if sList == nil then
-		-- start with storage slips
+		-- Tallying counts from the Progressive structure
+		local macc,mtacc,mracc,mtracc = gcinclude.TallyProgressiveCaps();
+		gcdisplay.SetAccMax(macc,mtacc,mracc,mtracc);
+		
+		-- Now start with storage slips
 		print(chat.header('GearCheck'):append(chat.message('Starting to scan for storage slips')));
 		FindSlips();
 		print(chat.message('Found slips: ' .. fDisplaySlips(false)));
+
+		-- then claim slips
+		print(chat.header('GearCheck'):append(chat.message('Starting to scan for claim slips')));
+		for i,j in pairs(gcinclude.ClaimSlips) do
+			if 	player:HasKeyItem(j['kid']) then
+				j['own'] = true;
+				ctr = ctr + 1;
+			end
+		end
+		print(chat.message('Found claim slips: ' .. tostring(ctr)));
 		
+		-- next is EquipIt items
+		print(chat.header('GearCheck'):append(chat.message('Starting to scan EquipIt shortcut items')));
+		for s,t in pairs(gcinclude.tEquipIt) do
+			local sSlot = t['Slot'];
+			if string.find('Ring,Ear',sSlot) ~= nil then
+				sSlot = sSlot .. 's';
+			end
+			bGood,ref = fGearCheckItem(sSlot,t['Name'],false,true);
+			if ref ~= nil and ref['valid'] == false then
+				print(chat.header('GearCheck'):append(chat.message('Warning: Invalid EquipIt gear piece - ' .. t['Name'] .. ': ' .. s)));
+			end			
+		end
+
+		-- next is pet food since any job can equip it
+		print(chat.header('GearCheck'):append(chat.message('Starting to scan Pet Food items')));
+		for s,t in pairs(gcinclude.tPetFood) do
+			bGood,ref = fGearCheckItem('ammo',t['Name'],false,true);
+			if ref ~= nil and ref['valid'] == false then
+				print(chat.header('GearCheck'):append(chat.message('Warning: Invalid Pet Food - ' .. t['Name'] .. ': ' .. s)));
+			end			
+		end		
+	
 		-- now loop through the job file and gcinclude
 		for s,t in pairs(tTarget) do
 			if t == gProfile.Sets then
@@ -1931,7 +2655,10 @@ function GearCheck(sList,bForce)
 		
 			-- Loop the gear sets
 			for j,k in pairs(t) do
-				if j ~= 'CurrentGear' then			
+				-- Process if not either 'CurrentGear' or 'Progressive'. CurrentGear 
+				-- is a composite from other gear sets and Progressive has a 
+				-- complelely different structure, it will be processed elsewhere
+				if table.find({'CurrentGear','Progressive'},j) == nil then				
 					-- Loop the gear set slots
 					for jj,kk in pairs(k) do
 						ts = {};
@@ -1945,12 +2672,58 @@ function GearCheck(sList,bForce)
 						-- Now walk the list of gear
 						for ss,tt in pairs(ts) do						
 							-- Save the details if appropriate. Returned results are
-							-- ignored, but captured in case I change my mind.
-							bGood,ref = fGearCheckItem(jj,tt,false,bForce);
+							-- ignored, but captured in case I change my mind. Please
+							-- note that subsets are ignored in fGearCheckItem.
+							bGood,ref = fGearCheckItem(jj,tt,false,true);
+							if ref ~= nil then						
+								if ref['valid'] == false and ref['slot'] == nil then
+									print(chat.header('GearCheck'):append(chat.message('Warning: Invalid piece of gear - ' .. tt .. ' in ' .. j)));
+								elseif ref['slot'] == false then
+									print(chat.header('GearCheck'):append(chat.message('Warning: Invalid slot: ' .. jj .. ', gear - ' .. tt .. ' in ' .. j)));
+								end
+							end
 							iCnt = iCnt +1;
 							if math.floor(iCnt/50) == iCnt/50 then
 								print(chat.message(tostring(iCnt) .. ' sets processed...'));
 							end
+						end
+					end
+				elseif j == 'Progressive' then
+					-- Loop on type of progressive set			
+					for ij,ik in pairs(k) do
+						-- Loop on the progressive stages
+						for jj,jk in ipairs(ik) do
+							-- Loop on the line elements
+							for kj,kk in pairs(jk) do
+								ts = {};
+								-- Entries can be a table or a string. Make either case a table
+								if type(kk) == 'table' then
+									ts = kk;
+								else
+									ts[1] = kk;
+								end							
+								
+								-- Process the list of gear
+								for ss,tt in pairs(ts) do							
+									-- Subsets and inline references are ignored									
+									bGood,ref = fGearCheckItem(kj,tt,false,true);
+									if ref ~= nil then						
+										if ref['valid'] == false and ref['slot'] == nil then
+											print(chat.header('GearCheck'):append(chat.message('Warning: Invalid piece of gear - ' .. tt .. ' in Progressive:' .. ij .. ', Stage: ' .. tostring(jj) .. ', Slot: ' .. ss)));
+										elseif ref['slot'] == false then
+											print(chat.header('GearCheck'):append(chat.message('Warning: Invalid slot: ' .. ss .. ', gear - ' .. tt .. ' in Progressive:' .. ij)));
+										end
+									end
+									iCnt = iCnt +1;
+									if math.floor(iCnt/50) == iCnt/50 then
+										print(chat.message(tostring(iCnt) .. ' sets processed...'));
+									end										
+								end
+							end
+							iCnt = iCnt +1;
+							if math.floor(iCnt/50) == iCnt/50 then
+								print(chat.message(tostring(iCnt) .. ' sets processed...'));
+							end							
 						end
 					end
 				end
@@ -1963,8 +2736,8 @@ function GearCheck(sList,bForce)
 				for ii,jj in pairs(j) do
 					if table.find({ 'fire','ice','wind','earth','thunder','water',
 									'light','dark' },ii) ~= nil then
-						bGood,jj['NQ']['Ref'] = fGearCheckItem('main',jj['NQ']['Name'],false,bForce);
-						bGood,jj['HQ']['Ref'] = fGearCheckItem('main',jj['HQ']['Name'],false,bForce);
+						bGood,jj['NQ']['Ref'] = fGearCheckItem('main',jj['NQ']['Name'],false,true);
+						bGood,jj['HQ']['Ref'] = fGearCheckItem('main',jj['HQ']['Name'],false,true);
 						iCnt = iCnt + 2;
 					end
 					if math.floor(iCnt/50) == iCnt/50 then
@@ -1976,9 +2749,9 @@ function GearCheck(sList,bForce)
 					if table.find({ 'fire','ice','wind','earth','thunder','water',
 									'light','dark' },ii) ~= nil then
 						if i == 'obi' then
-							bGood,jj['Ref'] = fGearCheckItem('waist',jj['Name'],false,bForce);
+							bGood,jj['Ref'] = fGearCheckItem('waist',jj['Name'],false,true);
 						else
-							bGood,jj['Ref'] = fGearCheckItem('neck',jj['Name'],false,bForce);
+							bGood,jj['Ref'] = fGearCheckItem('neck',jj['Name'],false,true);
 						end
 						iCnt = iCnt + 1;
 						if math.floor(iCnt/50) == iCnt/50 then
@@ -1998,53 +2771,6 @@ function GearCheck(sList,bForce)
 		print(chat.message('   [' .. i .. '] - ' .. tostring(j['num'])));
 	end
 end		-- GearCheck
-
---[[
-	GearCheckList will list out the details of the dynamic table.
---]]
-
-function GearCheckList()
-	local sMsg;
-	local bOnce;
-	
-	for i,j in pairs(gcinclude.GearDetails) do
-		print(chat.message(' '));
-		print(chat.message('Slot: ' .. i));
-		for ii,jj in pairs(j) do
-			bOnce = true;
-			sMsg = nil;
-			if type(ii) ~= 'number' then
-				if string.find('desc,num,vis',ii) == nil then
-					sMsg = '   ' .. ii .. ' - ';
-				end
-			end
-			if type(jj) == 'table' then 
-				for iii,jjj in pairs(jj) do
-					if iii ~= 'desc' then
-						if bOnce == true then
-							sMsg = sMsg .. iii .. ': '.. tostring(jjj);
-							bOnce = not bOnce;
-						else
-							if type(jjj) == 'boolean' then
-								sMsg = sMsg .. ', ' .. iii .. ': '
-								if jjj == false then
-									sMsg = sMsg .. chat.color1(8,tostring(jjj));
-								else
-									sMsg = sMsg .. chat.color1(2,tostring(jjj));
-								end
-							else
-								sMsg = sMsg .. iii .. ': '.. tostring(jjj);
-							end
-						end
-					end
-				end
-				if sMsg ~= nil then
-					print('   ' .. sMsg);
-				end
-			end
-		end
-	end	
-end		-- GearCheckList
 
 --[[
 	fIsPetNamed determines if that passed pet has the passed name
@@ -2196,15 +2922,7 @@ function fTallyGear(sGear,sSlot)
 	
 	sGear = string.lower(sGear);
 	sSlot = string.lower(sSlot);
-	
-	-- The passed item might not be in the dynamic table yet. Make
-	-- sure it is. Also, if it fails the equippable check, then 
-	-- there's no reason to go on
-	bGood,ref = fGearCheckItem(sSlot,sGear,false);
-	if bGood == false then
-		return false;
-	end
-	
+		
 	-- loop through the current gear, tallying up totals
 	for ii,jj in pairs(cur) do
 		-- when dealing with rings and earrings, use the grouping mechanism.
@@ -2225,38 +2943,37 @@ function fTallyGear(sGear,sSlot)
 		else
 			sPiece = string.lower(jj.Name);
 		end
-		-- Make sure that the item is in the dynamic table
-		bGood,ref = fGearCheckItem(lcii,sPiece,false);
-		if bGood == false then
-			return false;
-		end
-		item = fParseDescription(sPiece,gcinclude.GearDetails[lcii][sPiece]['desc']);
 		
-		-- Now tally the parsed description, divided between visible and invisible,
-		-- accordingly
-		if gcinclude.GearDetails[lcii]['vis'] == true then
-			sVis = 'visible';
-		else
-			sVis = 'invisible';
-		end
+		if gcinclude.GearDetails[lcii][sPiece] ~= nil and 
+			gcinclude.GearDetails[lcii][sPiece]['valid'] == true then
+			item = fParseDescription(sPiece,gcinclude.GearDetails[lcii][sPiece]['desc']);
+		
+			-- Now tally the parsed description, divided between visible and invisible,
+			-- accordingly
+			if gcinclude.GearDetails[lcii]['vis'] == true then
+				sVis = 'visible';
+			else
+				sVis = 'invisible';
+			end
 				
-		rec[sVis]['MP'] = rec[sVis]['MP'] + item['MP'];
-		rec[sVis]['MPP'] = rec[sVis]['MPP'] + item['MPP'];
-		rec[sVis]['HP'] = rec[sVis]['HP'] + item['HP'];
-		rec[sVis]['HPP'] = rec[sVis]['HPP'] + item['HPP'];
-		rec[sVis]['cHM'] = rec[sVis]['cHM'] + item['cHM'];
-		rec[sVis]['cMH'] = rec[sVis]['cMH'] + item['cMH'];
+			rec[sVis]['MP'] = rec[sVis]['MP'] + item['MP'];
+			rec[sVis]['MPP'] = rec[sVis]['MPP'] + item['MPP'];
+			rec[sVis]['HP'] = rec[sVis]['HP'] + item['HP'];
+			rec[sVis]['HPP'] = rec[sVis]['HPP'] + item['HPP'];
+			rec[sVis]['cHM'] = rec[sVis]['cHM'] + item['cHM'];
+			rec[sVis]['cMH'] = rec[sVis]['cMH'] + item['cMH'];
 		
-		local bOwn = (gcdisplay.GetCycle('Region') == 'Owned');
+			local bOwn = (gcdisplay.GetCycle('Region') == 'Owned');
 
-		if (item['own']['ctrl'] == 'T' and bOwn == true) or 
-		   (item['own']['ctrl'] == 'F' and bOwn == false) then
-			rec[sVis]['MP'] = rec[sVis]['MP'] + item['own']['MP'];
-			rec[sVis]['MPP'] = rec[sVis]['MPP'] + item['own']['MPP'];
-			rec[sVis]['HP'] = rec[sVis]['HP'] + item['own']['HP'];
-			rec[sVis]['HPP'] = rec[sVis]['HPP'] + item['own']['HPP'];
-			rec[sVis]['cHM'] = rec[sVis]['cHM'] + item['own']['cHM'];
-			rec[sVis]['cMH'] = rec[sVis]['cMH'] + item['own']['cMH'];
+			if (item['own']['ctrl'] == 'T' and bOwn == true) or 
+				(item['own']['ctrl'] == 'F' and bOwn == false) then
+				rec[sVis]['MP'] = rec[sVis]['MP'] + item['own']['MP'];
+				rec[sVis]['MPP'] = rec[sVis]['MPP'] + item['own']['MPP'];
+				rec[sVis]['HP'] = rec[sVis]['HP'] + item['own']['HP'];
+				rec[sVis]['HPP'] = rec[sVis]['HPP'] + item['own']['HPP'];
+				rec[sVis]['cHM'] = rec[sVis]['cHM'] + item['own']['cHM'];
+				rec[sVis]['cMH'] = rec[sVis]['cMH'] + item['own']['cMH'];
+			end
 		end
 	end
 	return rec;
@@ -2741,7 +3458,15 @@ function gcinclude.fBuffed(test,bStart)
 		end
 	end
 	return false;
-end
+end		--  gcinclude.fBuffed
+
+function fBit(p)
+    return 2 ^ (p - 1);
+end		-- fBit
+
+function fHasBit(x, p)
+    return x % (p + p) >= p;
+end		-- fHasBit
 
 --[[
 	fCheckItemOwned determines if the specified piece of gear is owned by 
@@ -2754,75 +3479,93 @@ end
 	Returned: T/F	
 --]]
 
-function fCheckItemOwned(sGear,bAccessible,bOnce)
+function fCheckItemOwned(gear)
 	local inventory = AshitaCore:GetMemoryManager():GetInventory();
 	local resources = AshitaCore:GetResourceManager();
 	local containerID,itemEntry,item;
-	local bFound = false;
-	local tStorage = {};
 	local tOwned = {
 		['own'] = false, ['accessible'] = false, 
 		['porter'] = false, ['claim'] = false,
-		['count'] = 0, ['locations'] = nil
+		['locations'] = nil, ['error'] = nil
 	};
 	
 	-- Make sure a piece of gear specified
-	if sGear == nil then
-		return false;
+	if gear == nil then
+		tOwned['error'] = 'Invalid gear item';
+		return tOwned;
 	end
 	
-	-- If bOnce not specified, then assume true, only one item found is good enough
-	if bOnce == nil then
-		bOnce = true;
-	end
-	
-	-- If bAccessible not defined or is false, then search all containers
-	if bAccessible == nil or bAccessible == false then
-		tStorage = gcinclude.STORAGES;
-	else
-		tStorage = gcinclude.EQUIPABLE;
-	end
-	
-	for i,desc in pairs(tStorage) do
+	-- Loop through all searching for the passed gear piece
+	for i,desc in pairs(gcinclude.STORAGES) do
 		containerID = desc['id'];
 		-- then loop through the container
 		for j = 1,inventory:GetContainerCountMax(containerID),1 do
 			itemEntry = inventory:GetContainerItem(containerID, j);
 			if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
 				item = resources:GetItemById(itemEntry.Id);
-				if string.lower(item.Name[1]) == string.lower(sGear) then
-					bFound = true;
-					if bOnce == true then
-						return true;
+				if item.Name[1] == gear.Name[1] then
+					tOwned['own'] = true;				
+					if tOwned['locations'] == nil then
+						tOwned['locations'] = ',' .. desc['name'] .. ',';
+					elseif string.find(tOwned['locations'],','..desc['name']..',') == nil then
+						tOwned['locations'] = tOwned['locations'] .. desc['name'] .. ',';
+					end
+					if table.find(gcinclude.EQUIPABLE_LIST,desc['id']) then
+						tOwned['accessible'] = true;
 					end
 				end
 			end
 		end
 	end
+
+	-- if locations defined, remove the encasing commas
+	if tOwned['locations'] ~= nil then
+		tOwned['locations'] = string.sub(tOwned['locations'],2,-2);
+	end
+
+	-- Then loop through storage slips to see if item stored
+	for i,desc in pairs(gcinclude.Slips) do
+		-- If item slip owned by player...
+		if desc['own'] == true then
+			local iPos = table.find(desc['items'],gear.Id);
+			-- See if the passed gear associated with that slip
+			if iPos ~= nil then	
+				-- Now figure out if the item is stored on that slip
+				local byte = struct.unpack('B',desc['extra'],math.floor((iPos - 1) / 8) + 1);
+				if byte < 0 then
+                    byte = byte + 256;
+                end
+				if (fHasBit(byte, fBit((iPos - 1) % 8 + 1))) then
+					-- Yup, add the slip name to the location
+					tOwned['own'] = true;
+					tOwned['porter'] = true;
+					if tOwned['locations'] == nil then
+						tOwned['locations'] = desc['name'];
+					else
+						tOwned['locations'] = tOwned['locations'] .. ', ' .. desc['name'];
+					end
+					break;
+				end
+			end			
+		end			
+	end
 	
-	return bFound;
-end		-- fCheckItemOwned
-
---[[
-	fCheckAccuracySlots determines if the passed slot is one of the designated
-	accuracy slots. Please note if the slot is named "ears" or "rings" both
-	associated slots will be checked.
-
-	Returned: T/F	
---]]
-
-function fCheckAccuracySlots(sSlot)
-
-	sSlot = string.lower(sSlot);
-	for i,j in ipairs(gcinclude.tLocks) do
-		if j['slot'] == sSlot or 
-		   (sSlot == 'ears' and string.find('ear1,ear2',j['slot']) ~= nil and j['acc'] == true) or
-		   (sSlot == 'rings' and string.find('ring1,ring2',j['slot']) ~= nil and j['acc'] == true) then
-			return true;
+	-- Lastly, see if stored on a claim slip
+	for i,desc in pairs(gcinclude.ClaimSlips) do
+		if desc['own'] == true and table.find(desc['ids'],gear.Id) ~= nil then
+			tOwned['own'] = true;
+			tOwned['claim'] = true;
+			if tOwned['locations'] == nil then
+				tOwned['locations'] = desc['name'];
+			else
+				tOwned['locations'] = tOwned['locations'] .. ', ' .. desc['name'];
+			end
+			break;
 		end
 	end
-	return false;
-end		-- fCheckAccuracySlots
+	
+	return tOwned;
+end		-- fCheckItemOwned
 
 --[[
 	fBardSongType determines if bard song being cast is of the type being passed.
@@ -2869,7 +3612,7 @@ end		-- fBardSongType
 	Returned: T/F,gear name	
 --]]
 
-function fCheckInline(gear,sSlot)
+function fCheckInline(gear,sSlot,ts)
 	local player = gData.GetPlayer();
 	local party = gData.GetParty();
 	local pet = gData.GetPet();
@@ -2884,6 +3627,10 @@ function fCheckInline(gear,sSlot)
 	
 	if gear == nil then
 		return false,gear;
+	end
+	if ts == nil then
+
+		ts = gProfile.Sets.CurrentGear;
 	end
 	
 	iPos = string.find(gear,'//');
@@ -2938,6 +3685,8 @@ function fCheckInline(gear,sSlot)
 			bGood = gcinclude.CheckTime(timestamp.hour,DUSK2DAWN,false);
 		elseif table.find(gcinclude.tSpell['enspell'],string.lower(suCode)) ~= nil then		-- En*
 			bGood = gcinclude.fBuffed(suCode);
+		elseif suCode == 'EMPTY' then
+			bGood = (ts[sSlot] == nil or ts[sSlot] == '');
 		elseif suCode == 'ENANY' then						-- check for any en- spell
 			bGood = false;
 			for i,j in pairs(gcinclude.tSpell['enspell']) do
@@ -2994,6 +3743,13 @@ function fCheckInline(gear,sSlot)
 			else
 				bGood = false;
 			end		
+		elseif suCode == 'NOT_TH' then
+			local x = gcdisplay.GetToggle('TH');
+			if x == nil or x == false then
+				bGood = true;
+			else
+				bGood = false;
+			end
 		elseif suCode == 'NOT_UTSUSEMI' then				-- Utsusemi buff is absent
 			bGood = (gcinclude.fBuffed('Copy') == false);
 		elseif suCode == 'NOT_WSWAP' then					-- WSWAP is disabled
@@ -3066,7 +3822,7 @@ function fCheckInline(gear,sSlot)
 			bGood = (string.find(string.lower(spell.Name),s) ~= nil);			
 		elseif suCode == 'SPECIAL' then
 			-- Skip SPECIAL if /gc not run. (Sometimes errors.)
-			if gcinclude.settings.bGc == false then
+			if gcdisplay.GetGC() == false then
 				bGood = false;
 			else
 				if sSlot ~= 'subset' then
@@ -3206,11 +3962,8 @@ function RegionControlDisplay()
 	end
 end		-- RegionControlDisplay
 
-function gcinclude.t1()
-	--FindSlips();
-	print('Slips: ' .. fDisplaySlips(false));
-	print(' ');
-	fDisplaySlips(true);
+function gcinclude.t1(args)
+	
 	
 --[[
 	local pEntity = AshitaCore:GetMemoryManager():GetEntity();
@@ -3261,9 +4014,13 @@ end		-- gcinclude.t1
 	Update: support for subsets have been added. The subsets are processed first
 	(if present) then the rest of the set. Please note this is a recursive function.
 	If nesting goes too deep, it will run out of memory.
+	
+	Note: added the bIgnoreWSWAP parameter. This was added to override WSWAP when
+	crafting and gathering sets are loaded. This was needed since it's not uncommon
+	for these sets to have weapons of some sort to aid in the craft/gathering.
 --]]
 
-function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
+function gcinclude.MoveToCurrent(tSet,tMaster,bOverride,bIgnoreWSWAP)
 	local player = gData.GetPlayer();
 	local item = {};
 	local ref = {};
@@ -3276,6 +4033,10 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 		return;
 	end
 
+	if bIgnoreWSWAP == nil then
+		bIgnoreWSWAP = false;
+	end
+	
 	-- bOverride indicates that weapons, if specified, will be
 	-- equipped regardless of the /WSWAP setting
 	if bOverride == nil then
@@ -3296,6 +4057,7 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 	if ts1 == nil then
 		return;
 	end
+	
 	-- First walk through the gear slots looking for "subset"
 	for k,v in pairs(ts1) do
 		sK = string.lower(k);
@@ -3309,7 +4071,7 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 			
 			-- Then determine the appropriate set to load
 			for kk,vv in pairs(ts) do		
-				bGood,vRoot = fCheckInline(vv,'subset');			
+				bGood,vRoot = fCheckInline(vv,'subset',tMaster);			
 				if bGood == true then
 					gcinclude.MoveToCurrent(vRoot,tMaster,bOverride);
 					break;
@@ -3334,11 +4096,12 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 		
 			-- if the slot to be populated is one that will reset the player's TP,
 			-- make sure that /WSWAP is true or that gcinclude.settings.bWSOverride 
-			-- is true.	
+			-- is true  or bIgnoreWSWAP is true.	
 			if string.find('main,sub,range',sK) ~= nil then
 				bSkip = not (gcdisplay.GetToggle('WSwap') == true 
 						or gcinclude.settings.bWSOverride == true
-						or bOverride == true);
+						or bOverride == true
+						or bIgnoreWSWAP == true);
 			else
 				bSkip = false;
 			end		
@@ -3353,12 +4116,25 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 				end
 		
 				iNum = 1;
-
+				
+				-- Expand out external gear set slot definition (if present)
+				local tsb = {};
+				if fReferenceCheck(ts) == true then			
+					table.clear(gcinclude.tGearLine);
+					if fExpandGearLine(sK,ts) == true then
+						tsb = gcinclude.tGearLine;
+					else
+						tsb = nil;	-- Erroneous inline reference: missing slot or ts
+					end
+				else
+					tsb = ts;
+				end
+				
 				-- Walk list of items
-				for kk,vv in pairs(ts) do
+				for kk,vv in pairs(tsb) do
 					-- Make sure the item is noted in gcinclude.GearDetails
 					-- and that the level, job, and accessibility is good
-					bG,ref = fGearCheckItem(sK,vv,false);
+					bG,ref = fGearCheckItem(sK,vv,false,false);
 					if bG == true then
 						-- See if there's an inline conditional to be checked.
 						-- Note the need to distinguish which "ear" or "ring"
@@ -3368,7 +4144,7 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride)
 							stK = k;
 						end
 
-						bGood,vRoot = fCheckInline(vv,stK);
+						bGood,vRoot = fCheckInline(vv,stK,tMaster);
 
 						-- If the inline check returns true, process the gear piece
 						if bGood == true then
@@ -3622,48 +4398,83 @@ function gcinclude.EquipTheGear(tSet,bOverride)
 end			-- gcinclude.EquipTheGear
 
 --[[
-	CheckLockAccCollision checks to see if any of the slots associated with locks
-	clashes with slots associated with the accuracy. An appropriate warning is
-	issued if there's a problem.
+	ProgressiveAccuracy is a new form of applying accuracy gear which
+	depends on a list of successive stages. The Player predefines the
+	stages and based on the stage specified, all stages prior and up
+	to that stage will be equipped.
+	
+	Note: If TANK enabled, but the appropriate Tank_"set" is not
+	defined in the Progressive structure, the non-Tank version will
+	be used. (In this case it is assumed that inline conditionals
+	will distinguish between Tank_ and non-Tank_ gear.)
 --]]
 
-function gcinclude.CheckLockAccCollision(sFrom)
-	sFrom = string.lower(sFrom);
+function gcinclude.ProgressiveAccuracy(sType)
+	local bTank = gcdisplay.GetToggle('Tank');
+	local tmp,field;
+	local tField = {
+		['Acc']   = 'Accuracy',
+		['TAcc']  = 'Tank_Accuracy',
+		['RAcc']  = 'Ranged_Accuracy',
+		['TRAcc'] = 'Tank_Ranged_Accuracy'
+	};
 	
-	for i,j in ipairs(gcinclude.tLocks) do
-		if j['lock'] == true and j['acc'] == true then
-			if sFrom == 'locks' then
-				print(chat.message('Warning: one or more locks conflict with accuracy slots.'));
-			else
-				print(chat.message('Warning: one or more accuracy slots conflict with locks.'));			
+	if sType == nil then
+		sType = 'Acc';		-- The other valid type is RAcc
+	end
+	
+	if bTank == nil then
+		bTank = false;
+	end
+	
+	-- See if an accuracy stage has been set and determine the correct
+	-- reference code based on passed in type and whether Tank in on.
+	if sType == 'Acc' then
+		field = tField['Acc'];
+		if bTank == true and gcdisplay.GetAccMax('TAcc') > 0 then
+			tmp = 'TAcc';
+			if gProfile.Sets.Progressive[field] == nil then
+				field = tField['Acc'];
 			end
+		else
+			tmp = 'Acc';
+		end
+		
+		if gcdisplay.GetAccCur(tmp) == 0 then
 			return;
 		end
-	end
-end		-- gcinclude.CheckLockAccCollision
-
---[[
-	getPairedAccuracySlotValues returns whether the ear slots or ring slots have been
-	designated for accuracy gear. This is needed to determine if both associated slots
-	need to be populated or just one of the slots.
-	
-	Returned: slot1?,slot2?
---]]
-
-function getPairedAccuracySlotValues(sSlot)
-	local bS1 = false;
-	local bS2 = false;
-	local root = string.sub(string.lower(sSlot),1,-2);
-	
-	for i,j in ipairs(gcinclude.tLocks) do
-		if j['slot'] == root .. '1' and j['acc'] == true then
-			bS1 = true;
-		elseif j['slot'] == root .. '2' and j['acc'] == true then
-			bS2 = true;
+	elseif sType == 'RAcc' then
+		field = tField['RAcc'];
+		if bTank == true and gcdisplay.GetAccMax('TRAcc') > 0 then
+			tmp = 'TRAcc';
+			if gProfile.Sets.Progressive[field] == nil then
+				field = tField['RAcc'];
+			end			
+		else
+			tmp = 'RAcc';
 		end
+		
+		if gcdisplay.GetAccCur(tmp) == 0 then
+			return;
+		end	
+	else
+		return;
 	end
-	return bS1,bS2;
-end		-- getPairedAccuracySlotValues
+
+	if gProfile.Sets.Progressive[field] ~= nil then
+		local maxStage = gcdisplay.GetAccCur(tmp);
+		for i,j in ipairs(gProfile.Sets.Progressive[field]) do
+			if i <= maxStage then
+				gcinclude.MoveToCurrent(j,gProfile.Sets.CurrentGear);
+			else
+				break;
+			end
+		end		
+	else
+		local msg = field .. ' undefined in the Progressive structure';
+		fDisplayOnce(msg);
+	end	
+end		-- ProgressiveAccuracy
 
 --[[
 	FractionalSet is similar to FractionalAccuracy in that is equips part of a 
@@ -3743,96 +4554,6 @@ function gcinclude.FractionalSet(hs,sSlots)
 		end
 	end
 end	-- gcinclude.FractionalSet
-
---[[
-	FractionalAccuracy uses the stored accuracy slots and builds an equipment table
-	(from the appropriate accuracy set) and then equips said table. It is a replacement
-	for that On/Off accuracy implementation that was originally developed. This new
-	approach lets the user (through the /acc and /nac commands) specify which slots
-	accuracy gear should be equipped. This "fractional" approach lets the user decide
-	how much accuracy gear should be equipped.
---]]
-
-function gcinclude.FractionalAccuracy(accTbl)
-	local t,vRoot,bGood;
-	local s1,s2;
-	local tAcc = {};
-	local ts = {};
-	local bSubset = false;
-	local bFound = false;
-	
-	if gcinclude.AccNumeric == 'None' then
-		return;
-	end
-	
-	for i,j in pairs(accTbl) do
-		t = string.lower(i);
-		if t == 'subset' then
-			bSubset = true;
-		else
-			-- Special case for ears and rings. Deal with them
-			if t == 'ears' then
-				s1,s2 = getPairedAccuracySlotValues('ears');
-				if s1 == true and s2 == true then
-					tAcc[i] = j;
-					bFound = true;
-				elseif s1 == true then
-					tAcc['Ear1'] = j;
-					bFound = true;
-				elseif s2 == true then
-					tAcc['Ear2'] = j;
-					bFound = true;
-				end
-			elseif t == 'rings' then
-				s1,s2 = getPairedAccuracySlotValues('rings');
-				if s1 == true and s2 == true then
-					tAcc[i] = j;
-					bFound = true;					
-				elseif s1 == true then
-					tAcc['Ring1'] = j;
-					bFound = true;					
-				elseif s2 == true then
-					tAcc['Ring2'] = j;
-					bFound = true;
-				end					
-			else
-				-- Normal slots. Match it up
-				for ii,jj in pairs(gcinclude.tLocks) do			
-					if t == jj['slot'] and jj['acc'] == true then
-						tAcc[i] = j;
-						bFound = true;
-					end
-				end
-			end
-		end
-	end
-	
-	if bFound == true then
-		gcinclude.MoveToCurrent(tAcc,gProfile.Sets.CurrentGear);
-	else
-		if bSubset == true then
-			for i,j in pairs(accTbl) do
-			t = string.lower(i);
-			if t == 'subset' then
-				if type(j) == 'table' then
-						ts = k;
-					else
-						ts[j] = k;
-					end
-					
-					-- Then determine the appropriate set to load
-					for kk,vv in pairs(ts) do
-						bGood,vRoot = fCheckInline(vv,'subset');
-						if bGood == true then
-							gcinclude.FractionalAccuracy(vRoot);
-							break;
-						end
-					end
-				end
-			end
-		end
-	end
-end		-- gcinclude.FractionalAccuracy
 
 --[[
 	MaxSpell determines if the passed in spell is in the tiered list and then which
@@ -4095,7 +4816,7 @@ function gcinclude.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
 					   gcinclude.tElemental_gear[sWhat][i]['NQ']['Ref']['accessible'] == true then
 						return gcinclude.tElemental_gear[sWhat][i]['NQ']['Name'],i;
 					else
-						return nil;
+						return nil,nil;
 					end
 				end
 			elseif sWhat == 'obi' or sWhat == 'gorget' then
@@ -4105,7 +4826,8 @@ function gcinclude.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
 				end
 				
 				-- Then determine if there's an obi or gorget that matches
-				if gcinclude.tElemental_gear[sWhat][i]['Ref']['accessible'] == true then
+				if gcinclude.tElemental_gear[sWhat][i]['Ref'] ~= nil and
+					gcinclude.tElemental_gear[sWhat][i]['Ref']['accessible'] == true then
 					return gcinclude.tElemental_gear[sWhat][i]['Name'],i;
 				end
 			end
@@ -4121,19 +4843,38 @@ end		-- fCheckForElementalGearByValue
 	before. If it has been displayed, the message isn't repeated.
 --]]
 
-function fDisplayOnce(msg)
+function fDisplayOnce(msg,bOverride)
+	local tmp;
 
 	if msg == nil then
-		return;
+		return false;
 	end
 
-	if gcinclude.GearWarnings == nil or string.find(gcinclude.GearWarnings,msg) == nil then
+	if bOverride == nil then
+		bOverride = false;
+	end
+
+	-- Let's deal with a limitation of LUA. (Wanna guess how long
+	-- it took me to realize this was the problem? Yeah...)
+	if string.length(msg) > 40 then
+		tmp = string.sub(msg,1,40);
+	else
+		tmp = msg;
+	end
+	
+	if gcinclude.GearWarnings == nil or 
+		(gcinclude.GearWarnings ~= nil and 
+			string.find(gcinclude.GearWarnings,tmp) == nil) or
+		bOverride == true then
 		print(chat.message(msg));
 		if gcinclude.GearWarnings == nil then
 			gcinclude.GearWarnings = msg;
 		else
 			gcinclude.GearWarnings = gcinclude.GearWarnings .. ',' .. msg;
 		end
+		return true;
+	else
+		return false;
 	end
 end		-- fDisplayOnce
 
@@ -4207,7 +4948,7 @@ end		-- gcinclude.fSwapToStave
 --]]
 
 function EquipItem(args)
-	local iName,iSlot,ref;
+	local iName,iSlot,ref,msg;
 	local bMulti,sSlots,bGood;
 		
 	if #args > 1 then
@@ -4237,8 +4978,20 @@ function EquipItem(args)
 		-- First check that it's a valid item and it's accessible
 		bGood,ref = fGearCheckItem(iSlot,iName,false,false);
 		if not bGood then
-			print(chat.header('EquipItem'):append(chat.message('Error: ' .. iName .. ' is either invalid, inaccessible, wrong level, or unusable by your job.')));
-			return;
+			if ref ~= nil then
+				if ref['valid'] == false then
+					print(chat.header('EquipItem'):append(chat.message('Error: Invalid piece of gear specified - ' .. iName)));
+				elseif ref['accessible'] == false then	
+					print(chat.header('EquipItem'):append(chat.message('Error: Specified gear inaccessible - ' .. iName .. ': ' .. ref['locations'])));
+				elseif ref['job'] == false then
+					print(chat.header('EquipItem'):append(chat.message('Error: Specified gear not usable by your job - ' .. iName)));
+				else
+					print(chat.header('EquipItem'):append(chat.message('Error: Specified gear\'s level too high - ' .. iName .. ': ' .. tostring(ref['level']))));
+				end
+			else
+				print(chat.header('EquipItem'):append(chat.message('Error: Either parameters missing, data downloading, or gear record not created.')));
+				return;
+			end
 		end
 		
 		-- Now, see if this item is a multislot item. 
@@ -4317,37 +5070,15 @@ function fGetTableByName(sName)
 end		-- fGetTableByName
 
 --[[
-	fWhichAccuracySet searches the player's AccuracySet for the named set and
-	returns the associated slots. If not found, an error message is displayed
-	and nil is returned.
-	
-	Returned: accuracy set name/nil
---]]
-
-function fWhichAccuracySet(sId)
-
-	if sId == nil or gProfile.AccuracySet == nil then
-		return nil;
-	end
-	
-	for i,j in pairs(gProfile.AccuracySet) do
-		if string.lower(sId) == string.lower(i) then
-			return j;
-		end
-	end
-	print(chat.header('fWhichAccuracySet'):append(chat.message('Accuracy set: ' .. sId .. ' not found. Ignoring.')));
-	return nil;
-end		-- fWhichAccuracySet
-
---[[
 	HandleCommands processes any commands typed into luashitacast as defined in this file
 --]]
 
 function gcinclude.HandleCommands(args)
-
+	
 	if not gcinclude.AliasList:contains(args[1]) then return end
-
+	
 	local player = gData.GetPlayer();
+	local bTank = gcdisplay.GetToggle('Tank');
 	local sList, sKey, sSet;
 	
 	-- Clear out the local copy of current gear
@@ -4357,7 +5088,7 @@ function gcinclude.HandleCommands(args)
 	if (args[1] == 'gswap') then			-- turns gear swapping on or off
 		gcdisplay.AdvanceToggle('GSwap');
 	elseif args[1] == 't1' then				-- This is a test invoker
-		gcinclude.t1();
+		gcinclude.t1(args);
 	elseif args[1] == 'gc' then
 		local bForce = false;
 		local sList = nil;
@@ -4369,8 +5100,7 @@ function gcinclude.HandleCommands(args)
 			bForce = false;
 		end
 		GearCheck(sList,bForce);
-		gcinclude.basetime = 0;			-- Kill reminder
-		gcinclude.settings.bGc = true;	-- indicates /gc was run
+		gcdisplay.SetGC(true);
     elseif args[1] == 'gcmessages' then		-- turns feedback on/off for all commands
 		gcinclude.settings.Messages = not gcinclude.settings.Messages;
 		if gcinclude.settings.Messages then
@@ -4449,33 +5179,71 @@ function gcinclude.HandleCommands(args)
 		else
 			print(chat.header('HandleCommands'):append(chat.message('Your job does not support that command. Ignoring.')));
 		end
-	elseif (args[1] == 'acc') then
-		local bSkip = false;
-		if args[2] ~= nil then
-			local Ua = string.upper(args[2]);
-			if Ua == 'P' then
-				gcinclude.settings.bFractional = false;
-				bSkip = true;
-			elseif Ua == 'F' then
-				gcinclude.settings.bFractional = true;
-				bSkip = true;
+	elseif (args[1] == 'acc' or args[1] == 'racc') then
+		local tmp,narg;
+		local num = 0;		-- 0 means turn off that type of accuracy
+		local narg;
+		
+		if args[1] == 'acc' then
+			if bTank == true then
+				tmp = 'TAcc';
 			else
-				if string.sub(args[2],1,1) == '-' then
-					args[2] = fWhichAccuracySet(string.sub(args[2],2,-1));
-				end
-				LockUnlock('acc','lock',args[2]);
+				tmp = 'Acc';
 			end
-		end	
-		if bSkip == false then
-			sList = fGetLockedList('acc');
-			if sList ~= nil then
-				print(chat.message('The following slot(s) of accuracy are used: ' .. sList));
+		elseif args[1] == 'racc' then
+			if bTank == true then
+				tmp = 'TRAcc';
 			else
-				print(chat.message('All accuracy slots are reset'));
-			end	
-			gcdisplay.SetSlots('acc',gcinclude.AccNumeric);
-			gcinclude.CheckLockAccCollision('acc');
+				tmp = 'RAcc';
+			end
 		end
+		
+		if args[2] ~= nil then
+			if args[2] == '?' then
+				print(' ');
+				if string.find('Acc,TAcc',tmp) ~= nil then
+					print(chat.message(string.format('Accuracy at stage: %d',gcdisplay.GetAccCur('Acc'))));
+					if string.find(gcinclude._TankJobList,player.MainJob) ~= nil then
+						print(chat.message(string.format('Tank Accuracy at stage: %d',gcdisplay.GetAccCur('TAcc'))));
+					end
+				else
+					print(chat.message(string.format('Ranged Accuracy at stage: %d',gcdisplay.GetAccCur('RAcc'))));
+					if string.find(gcinclude._TankJobList,player.MainJob) ~= nil then
+						print(chat.message(string.format('Tank Ranged Accuracy at stage: %d',gcdisplay.GetAccCur('TRAcc'))));
+					end	
+				end
+				return;
+			end
+			narg = tonumber(args[2]);
+			if narg < 0 or narg > gcdisplay.GetAccMax(tmp) then
+				print(chat.message('Warning: Invalid stage. Number must be between 0 and ' .. tostring(gcdisplay.GetAccMax(tmp))));
+				return;
+			else
+				num = narg;
+			end
+		end
+		if num == 0 then
+			gcdisplay.SetAccCur(tmp,0);
+			-- Make sure that both tank and non-tank versions are turned off
+			if tmp == 'Acc' then
+				tmp = 'TAcc';
+			elseif tmp == 'TAcc' then
+				tmp = 'Acc';
+			elseif tmp == 'RAcc' then
+				tmp = 'TRAcc';
+			elseif tmp == 'TRAcc' then
+				tmp = 'RAcc';
+			end
+			gcdisplay.SetAccCur(tmp,0);
+			if tmp == 'Acc' or tmp == 'TAcc' then
+				print(chat.message('Accuracy has been turned off'));
+			else
+				print(chat.message('Ranged Accuracy has been turned off'));
+			end
+		else
+			gcdisplay.SetAccCur(tmp,num);
+			print(chat.message(string.format('%s stage set to %d',tmp,num)));
+		end				
 	elseif (args[1] == 'lock') then
 		if args[2] ~= nil then
 			LockUnlock('lock','lock',args[2]);
@@ -4487,51 +5255,42 @@ function gcinclude.HandleCommands(args)
 			print(chat.message('All slots are unlocked'));
 		end	
 		gcdisplay.SetSlots('locks',gcinclude.LocksNumeric);
-		gcinclude.CheckLockAccCollision('lock');
-	elseif (args[1] == 'unlock' or args[1] == 'nac') then
-		local sTarget = 'locks';
-		if args[1] == 'nac' then
-			sTarget = 'acc';
-		end
-
+	elseif (args[1] == 'unlock') then
 		if args[2] == nil then
 			args[2] = 'all';
 		end
 		
 		if args[2] ~= nil then
-			if sTarget == 'acc' and string.sub(args[2],1,1) == '-' then
-				args[2] = fWhichAccuracySet(string.sub(args[2],2,-1));
-			end
-			LockUnlock(sTarget,'unlock',args[2]);
+			LockUnlock('locks','unlock',args[2]);
 			if string.lower(args[2]) == 'all' then
-				if sTarget == 'locks' then
-					print(chat.message('All slots are unlocked'));
-				else
-					print(chat.message('All accuracy slots are reset'));
-				end
+				print(chat.message('All slots are unlocked'));
 			else
-				if sTarget == 'locks' then
-					print(chat.message('\'' .. args[2] .. '\' have been unlocked'));
-				else
-					print(chat.message('Accuracy slots: \'' .. args[2] .. '\' have been reset'));
-				end
+				print(chat.message('\'' .. args[2] .. '\' have been unlocked'));
 			end
 		end
-		sList = fGetLockedList(sTarget);
-		if sTarget == 'locks' then 
-			gcdisplay.SetSlots('locks',gcinclude.LocksNumeric);
-		else
-			gcdisplay.SetSlots('acc',gcinclude.AccNumeric);
-		end
+		sList = fGetLockedList('locks');
+		gcdisplay.SetSlots('locks',gcinclude.LocksNumeric);
 	elseif (args[1] == 'rc') then							-- Display region controls
 		RegionControlDisplay();
 	elseif (args[1] == 'rv') then
 		RefreshVariables();
 	elseif (args[1] == 'showit') then						-- Shows debug info for specified type
 		DB_ShowIt();
+	elseif (args[1] == 'smg') then							-- Show My Gear			
+		if #args == 1 then				-- Show a list of all gear
+			DisplayGD_AW(nil);
+		elseif args[2] ~= nil then
+			local ls = string.lower(args[2]);
+			if ls == 'noac' then		-- Show a list of gear where accessible is false
+				DisplayGD_AW('noac');
+			elseif string.len(ls) > 5 and string.sub(ls,1,5) == 'slot=' then
+				DisplayGD_S(string.sub(ls,6,-1));
+			elseif string.len(ls) > 3 and string.sub(ls,1,3) == 'gs=' then 
+				DisplayGD_Gs(string.sub(ls,4,-1));
+			end 
+		end
 	elseif (args[1] == 'gearset' or args[1] == 'gs') then	-- Forces a gear set to be loaded and turns GSWAP off
 		if #args > 1 then
-			--gcinclude.ClearSet(gcinclude.sets.CurrentGear);
 			local sArg = string.upper(args[2]);
 			local sTmp = ',' .. gcinclude.Crafting_Types .. ',';
 			local sTmp2 = ',' ..gcinclude.Gathering_Types .. ',';
@@ -4540,11 +5299,11 @@ function gcinclude.HandleCommands(args)
 				if string.find(sTmp,sArg) then
 					-- Crafting set
 					gcinclude.Craft = sArg;
-					gcinclude.MoveToCurrent(gcinclude.sets.Crafting,gcinclude.sets.CurrentGear);					
-				else			
-					-- Gather set
+					gcinclude.MoveToCurrent(gcinclude.sets.Crafting,gcinclude.sets.CurrentGear,false,true);					
+				else
+				-- Gather set
 					gcinclude.Gather = sArg;
-					gcinclude.MoveToCurrent(gcinclude.sets.Gathering,gcinclude.sets.CurrentGear);
+					gcinclude.MoveToCurrent(gcinclude.sets.Gathering,gcinclude.sets.CurrentGear,false,true);
 				end
 			else
 				local tTable = fGetTableByName(sArg);	-- Change string to table
@@ -4696,7 +5455,7 @@ function fGetRoot(sSpellName,bVersion)
 		end
 		
 		-- Only ninjutsu have a ":" in the name. Remove if found on the end
-		if string.sub(root,-1,1) == ':' then
+		if string.sub(root,-1,-1) == ':' then
 			root = string.sub(root,1,-2);
 		end
 	end
@@ -4731,6 +5490,7 @@ function gcinclude.CheckWsBailout()
 		
 	return true;
 end		-- gcinclude.CheckWsBailout
+
 --[[
 	PetReward scans all equipable storage containers for all of the pet foods and
 	tallies which ones the player has. Then, it picks the one likely to have the
@@ -4835,6 +5595,7 @@ function gcinclude.Initialize()
 	gcdisplay.Initialize:once(2);
 	SetVariables:once(2);
 	SetAlias:once(2);
+	gcdisplay.SetGC(false);
 end		-- gcinclude.Initialize
 
 --[[
@@ -5395,23 +6156,24 @@ function MidcastNinjutsu()
 	local spell = gData.GetAction();
 	local root,bTank,sGear,sEle;
 	local pDay,pWeather;
-	
+
 	bTank = gcdisplay.GetToggle('Tank');
 	if bTank == nil then
 		bTank = false;
 	end
-	
+
 	root = fGetRoot(spell.Name);
-	
+
 	-- There's three types of ninjutsu: buff, debuff and elemental. Anything
 	-- else is a mystery and will be processed with the current gear.
 	if table.find(gcinclude.tSpell['nin-buff'],root) ~= nil then
 		-- Buff
+	
 		if bTank == true then
 			gcinclude.MoveToCurrent(gProfile.Sets.Tank_NinjutsuBuff,gProfile.Sets.CurrentGear);
-		else
+		else	
 			gcinclude.MoveToCurrent(gProfile.Sets.NinjutsuBuff,gProfile.Sets.CurrentGear);
-		end
+		end		
 	else
 		if table.find(gcinclude.tSpell['nin-debuff'],root) ~= nil then
 			-- Debuff
@@ -5456,7 +6218,7 @@ end		-- MidcastNinjutsu
 
 function gcinclude.HandleMidcast()
 	local spell = gData.GetAction();
-	
+
 	if spell.Skill == 'Singing' then
 		MidcastSinging();
 	elseif spell.Skill == 'Healing Magic' then
@@ -5520,18 +6282,11 @@ function gcinclude.fHandleWeaponskill()
 	
 		elseif cKey == 'D' then		-- accuracy		
 			-- Next check on accuracy. Use Tank_accuracy if /tank = true
-			local b = gcdisplay.GetToggle('Tank');
 			if table.find(gcinclude.tWeaponSkills['RANGED_AGI'],lname) ~= nil or
 				table.find(gcinclude.tWeaponSkills['RANGED_STRAGI'],lname) ~= nil then
-				if b ~= nil and b == true then
-					gcinclude.FractionalAccuracy(gProfile.Sets.Tank_Ranged_Accuracy);
-				else
-					gcinclude.FractionalAccuracy(gProfile.Sets.Ranged_Accuracy);
-				end
-			elseif b ~= nil and b == true then
-				gcinclude.FractionalAccuracy(gProfile.Sets.Tank_Accuracy);
+				gcinclude.ProgressiveAccuracy('RAcc');
 			else
-				gcinclude.FractionalAccuracy(gProfile.Sets.Accuracy);
+				gcinclude.ProgressiveAccuracy('Acc');
 			end
 		elseif cKey == 'E' then		-- elemental obi
 --[[

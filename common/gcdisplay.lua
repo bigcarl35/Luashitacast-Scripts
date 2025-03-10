@@ -14,15 +14,20 @@ local Zone = ' ';
 local Main = 'FOO';
 local Sub = 'BAR';
 local Locks = 'None';
-local AccType = 'F';
-local AccTier = 'None';
+local Progressive = T {
+		['Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = 'Acc' },
+		['Tank_Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = 'TAcc' },
+		['Ranged_Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = 'RAcc' },
+		['Tank_Ranged_Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = 'TRAcc' }
+	};
+local bGC = false;
 local JobBar = T{['GSwap'] = {'ALL','MS'},
 				 ['DT'] = {'ALL','MS'},
 				 ['Kite'] = {'ALL','MS'},
 				 ['Eva'] = {'ALL','MS'},
 				 ['Idle'] = {'ALL','MS'},
 				 ['Tank'] = {'PLD,NIN,RUN,WAR,DRK,THF,RDM','M'},
-				 ['WSwap'] = {'-SMN,BLM','M'},		-- Some jobs swap weapons all the time
+				 ['WSwap'] = {'-SMN','M'},		-- Some jobs swap weapons all the time
 				 ['TH'] = {'THF','M'},
 				 ['AJug'] = {'BST','M'},
 				 ['DB'] = {'BST','M'},
@@ -50,58 +55,63 @@ local fontSettings = T{
 function gcdisplay.ShowHelp()
 	print(chat.header('Help'):append(chat.message('The following commands are available to use from within Luashitacast. These are targetting either your specific job or are available across all jobs.\n')));
 	print(chat.header('Help'):append(chat.message('Commands for all jobs: ')));
-	print(chat.header('Help'):append(chat.message('/gswap -- Toggles whether automatic gear swaps occur or not. Default is TRUE.')));
-	print(chat.header('Help'):append(chat.message('/wsdistance [#] -- Toggles whether a distance check is done for non-ranged weaponskills and how far. Default TRUE at ' .. tostring(gcinclude.settings.WSdistance) .. ' yalms.')));
-	print(chat.header('Help'):append(chat.message('/dt -- Indicates type of damage taken set should be used: Physical is assumed.')));
+	print(chat.header('Help'):append(chat.message('/acc [?|stage] -- indicates which accuracy stage should be equipped')));
+	print(chat.header('Help'):append(chat.message('/dt -- Indicates type of damage taken set should be used: Physical, Magical, Breath. Physical is assumed')));
+	print(chat.header('Help'):append(chat.message('/equipit|ei code|name [slot] [1|2] --Equips specified item in the specified slot and locks the affected slot(s)')));	
+	print(chat.header('Help'):append(chat.message('/eva -- Toggles whether evasion set should be equipped or not. Default is FALSE')));
+	print(chat.header('Help'):append(chat.message('/gc -- Builds a table of all your gear in your gearsets. Must be run for gearswapping')));	
+	print(chat.header('Help'):append(chat.message('/gearset|gs name -- Will equip the named gear set and then lock the affected slots')));
+	print(chat.header('Help'):append(chat.message('          [ALC|BON|CTH|COOK|GSM|LTH|SMT|WW] -- Equips the specified crafting gear')));
+	print(chat.header('Help'):append(chat.message('          [HELM|DIG|CLAM|FISH] -- Equips the specified gathering gear')));
+	print(chat.header('Help'):append(chat.message('/gswap -- Toggles whether automatic gear swaps occur or not. Default is TRUE')));
+	print(chat.header('Help'):append(chat.message('/help [command] -- Display this listing or specific details on the specified command')));
+	print(chat.header('Help'):append(chat.message('/idle -- Toggles whether \'Travel\' gear is equipped when idle. Default is TRUE')));
 	print(chat.header('Help'):append(chat.message('/kite -- Equips defined movement set.')));
-	print(chat.header('Help'):append(chat.message('/idle -- Toggles whether \'Travel\' gear is equipped when idle. Default is TRUE.')));
-	print(chat.header('Help'):append(chat.message('/wswap -- Toggles whether weapons will be swapped as needed. Default is FALSE to preserve TP.')));
-	print(chat.header('Help'):append(chat.message('/eva -- Toggles whether evasion set should be equipped or not. Default is FALSE.')));
-	print(chat.header('Help'):append(chat.message('/acc -- Toggle whether accuracy gear should override melee/weapon skill gear. Default is FALSE')));
-	print(chat.header('Help'):append(chat.message('/gearset|gs name [on]-- Will equip the named gear set and then disable GSwap unless optional parameter set to ON')));
-	print(chat.header('Help'):append(chat.message('          [ALC|BON|CTH|COOK|GSM|LTH|SMT|WW] -- Equips the specified crafting gear.')));
-	print(chat.header('Help'):append(chat.message('          [HELM|DIG|CLAM|FISH] -- Equips the specified gathering gear.')));
-	print(chat.header('Help'):append(chat.message('/lock [all|#\'s|names] -- Locks specified equipment slots disabling luashitacast from changing gear in those slots')));
-	print(chat.header('Help'):append(chat.message('/unlock [all|#\'s|names] -- Unlocks specified equipment slots enabling luashitacast on those slots')));
-	print(chat.header('Help'):append(chat.message('/maxspell name -- Determines the highest level spell your current jobs can cast that has the passed name')));
-	print(chat.header('Help'):append(chat.message('/maxsong name [back] -- Determines the highest level song your current jobs can cast that has the passed name or next to highest')));
-	print(chat.header('Help'):append(chat.message('/equipit code|name [slot] [1|2] --Equips specified item in the specified slot and turns off /gswap.')));
+	print(chat.header('Help'):append(chat.message('/lock [all|#\'s|names] -- Locks specified equipment slots disabling luashitacast from changing gear in those slots')));	
+	print(chat.header('Help'):append(chat.message('/maxsong name [target] -- Determines the highest level song your current job can cast that contains the passed name')));
+	print(chat.header('Help'):append(chat.message('/maxspell name [target] -- Determines the highest level spell your current job can cast that contains the passed name')));
+	print(chat.header('Help'):append(chat.message('/petfood name --Equips the specified pet food')));	
+	print(chat.header('Help'):append(chat.message('/racc [?|stage] -- indicates which ranged accuracy stage should be equipped')));
 	print(chat.header('Help'):append(chat.message('/rc -- Displays who controls what region')));
-	print(chat.header('Help'):append(chat.message('/petfood name --Equips the specified pet food.')));
-
-	if string.find('SMN,BLM',Main) == nil then
-		print(chat.header('Help'):append(chat.message('/wswap -- Toggles whether automatic weapon swapping is permitted. Default is FALSE.')));
+	print(chat.header('Help'):append(chat.message('/rv -- Refreshes the global variables, used to fix display bar issues')));
+	print(chat.header('Help'):append(chat.message('/showit -- Displays some global settings. Used mostly for debugging')));
+	print(chat.header('Help'):append(chat.message('/smg [slot=|gs=] -- Displays details on gear matching the query')));
+	
+	if string.find('PLD,NIN,DRK,WAR,THF,RDM,RUN',Main) ~= nil then
+		print(chat.header('Help'):append(chat.message('/tank -- Toggles whether tanking TP gear set should be equipped. Default is TRUE for PLD,NIN,RUN and FALSE for DRK,WAR,THF,RDM')));
 	end
 
-	if string.find('PLD,NIN,DRK,WAR,THF,RDM,RUN',Main) ~= nil then
-		print(chat.header('Help'):append(chat.message('/tank -- Toggles whether tanking TP gear set should be equipped. Default is TRUE for PLD,NIN,RUN and FALSE for DRK,WAR,THF,RDM.')));
+	print(chat.header('Help'):append(chat.message('/unlock [all|#\'s|names] -- Unlocks specified locked slots')));
+	print(chat.header('Help'):append(chat.message('/ver -- Displays Luashitacast\'s version and any patch notes')));
+	print(chat.header('Help'):append(chat.message('/wsdistance [#] -- Toggles whether a distance check is done for non-ranged weaponskills and how far. Default TRUE at ' .. tostring(gcinclude.settings.WSdistance) .. ' yalms')));
+	if string.find('SMN,BLM',Main) == nil then
+		print(chat.header('Help'):append(chat.message('/wswap -- Toggles whether weapons will be swapped as needed. Default depends on job, FALSE to preserve TP')));
 	end
 	
 	if Main == 'BST' then
 		print(chat.header('Help'):append(chat.message(' ')));
 		print(chat.header('Help'):append(chat.message('Command(s) specific for BST/ or /BST:')));
-		print(chat.header('Help'):append(chat.message('/ajug -- Toggles whether the automated jug pet system is enabled. Default is TRUE. (BST/ only)'))); 
-		print(chat.header('Help'):append(chat.message('/db [Norm|BPP|WSS] --Indicates body piece wanted for for debuffing your pet.')));
+		print(chat.header('Help'):append(chat.message('/ajug -- Toggles whether the automated jug pet system is enabled. Default is TRUE. (BST/* only)'))); 
+		print(chat.header('Help'):append(chat.message('/db [Norm|BPP|WSS] --Indicates body piece wanted for for debuffing your pet')));
 	end
 	
 	if Main == 'THF' then
-		print(chat.header('Help'):append(chat.message('/th -- Toggles whether treasure hunter gear should be equipped. Default is FALSE.')));
+		print(chat.header('Help'):append(chat.message('/th -- Toggles whether treasure hunter gear should be equipped. Default is FALSE')));
 	end
 	
 	if Main == 'SMN' or Sub == 'SMN' then
 		print(chat.header('Help'):append(chat.message(' ')));
 		print(chat.header('Help'):append(chat.message('Command(s) specific for SMN/ or /SMN:')));
-		print(chat.header('Help'):append(chat.message('/sbp -- Toggles whether offensive blood pacts will show a message in party chat. Default is True.')));
+		print(chat.header('Help'):append(chat.message('/sbp -- Toggles whether offensive blood pacts will show a message in party chat. Default is True')));
 	end
 	
 	if Main == 'BRD' then
 		print(chat.header('Help'):append(chat.message(' ')));
 		print(chat.header('Help'):append(chat.message('Command(s) specific for BRD/:')));
-		print(chat.header('Help'):append(chat.message('/horn -- Indicates that the instrument should be a wind instrument.')));	
-		print(chat.header('Help'):append(chat.message('/string -- Indicates that the instrument should be a stringed instrument.')));			
+		print(chat.header('Help'):append(chat.message('/horn -- Indicates that the instrument should be a wind instrument')));	
+		print(chat.header('Help'):append(chat.message('/string -- Indicates that the instrument should be a stringed instrument')));			
 	end
 	
-	print(chat.header('Help'):append(chat.message('/help [command] -- Display this listing or specific details on the specified command.')));	
 	print(chat.header('Help'):append(chat.message(' ')));
 	print(chat.header('Help'):append(chat.message('Some /lac commands of note:')));
 	print(chat.header('Help'):append(chat.message('/lac disable -- Disables all gear slots so that no automatic gear changes can occur.')));
@@ -114,6 +124,117 @@ function gcdisplay.ShowHelp()
 	print(chat.header('Help'):append(chat.message(' ')));
 	print(chat.header('Help'):append(chat.message('Please note that if you use style lock, you will not see the gear changing, but it is changing')))
 end		-- gcdisplay.ShowHelp
+
+--[[
+	SetAccMax is used to set the maximum number of stages for  
+	Progressive Accuracy, Tank Accuracy, Ranged Accuracy and Tank
+	Ranged Accuracy. These values are needed for the displaybar
+--]]
+
+function gcdisplay.SetAccMax(acc,tacc,racc,tracc)
+	if acc == nil then
+		acc = 0;
+	end
+
+	if tacc == nil then
+		tacc = 0;
+	end
+
+	if racc == nil then
+		racc = 0;
+	end
+
+	if tracc == nil then
+		tracc = 0;
+	end
+	
+	Progressive['Accuracy']['MaxStage'] = acc;
+	Progressive['Tank_Accuracy']['MaxStage'] = tacc;
+	Progressive['Ranged_Accuracy']['MaxStage'] = racc;
+	Progressive['Tank_Ranged_Accuracy']['MaxStage'] = tracc;
+end		-- gcdisplay.SetAccMax
+
+--[[
+	GetAccMax retrieves the maximum setting of the specified type 
+	of accuracy: Acc, TAcc, RAcc, and TRAcc.
+--]]
+
+function gcdisplay.GetAccMax(sType)
+	if sType == nil then
+		sType = 'Acc';
+	end
+	
+	if sType == 'Acc' then
+		return Progressive['Accuracy']['MaxStage'];
+	elseif sType == 'TAcc' then
+		return Progressive['Tank_Accuracy']['MaxStage'];
+	elseif sType == 'RAcc' then
+		return Progressive['Ranged_Accuracy']['MaxStage'];
+	elseif sType == 'TRAcc' then
+		return Progressive['Tank_Ranged_Accuracy']['MaxStage'];
+	end
+end		-- gcdisplay.GetAccMax
+
+--[[
+	GetAccCur retrieves the current setting of the specified type of
+	accuracy: Acc, TAcc, RAcc, and TRAcc.
+--]]
+
+function gcdisplay.GetAccCur(sType)
+	if sType == nil then
+		sType = 'Acc';
+	end
+	
+	if sType == 'Acc' then
+		return Progressive['Accuracy']['CurStage'];
+	elseif sType == 'TAcc' then
+		return Progressive['Tank_Accuracy']['CurStage'];
+	elseif sType == 'RAcc' then
+		return Progressive['Ranged_Accuracy']['CurStage'];
+	elseif sType == 'TRAcc' then
+		return Progressive['Tank_Ranged_Accuracy']['CurStage'];
+	end
+end		-- gcdisplay.GetAccCur
+
+--[[
+	SetAccCur sets the current stage level for the specified type of
+	accuracy. The passed in value is checked versus the maximum to
+	make sure the stage is valid.
+--]]
+	
+function gcdisplay.SetAccCur(sType,val)
+	if sType == nil then
+		sType = 'Acc';
+	end
+	
+	if val == nil then
+		val = 0;
+	elseif type(val) == 'string' then
+		val = tonumber(val);
+	end
+	
+	if sType == 'Acc' then
+		if val < 0 or val > Progressive['Accuracy']['MaxStage'] then
+			val = 0;
+		end
+		Progressive['Accuracy']['CurStage'] = val;
+	elseif sType == 'TAcc' then
+		if val < 0 or val > Progressive['Tank_Accuracy']['MaxStage'] then
+			val = 0;
+		end
+		Progressive['Tank_Accuracy']['CurStage'] = val;
+	elseif sType == 'RAcc' then
+		if val < 0 or val > Progressive['Ranged_Accuracy']['MaxStage'] then
+			val = 0;
+		end
+		Progressive['Ranged_Accuracy']['CurStage'] = val;	
+	elseif sType == 'TRAcc' then
+		if val < 0 or val > Progressive['Tank_Ranged_Accuracy']['MaxStage'] then
+			val = 0;
+		end
+		Progressive['Tank_Ranged_Accuracy']['CurStage'] = val;
+	end
+end		-- gcdisplay.SetAccCur
 
 --[[
 	AdvanceCycle moves the pointer in the Cycle to the next available value. If at the last value,
@@ -245,14 +366,36 @@ function gcdisplay.GetCycle(name)
 end		-- gcdisplay.GetCycle
 
 --[[
-	SetSlots stores the list of locks or accuracy slots, for displaying
+	SetGC indicates if the GC in the display bar should be
+	enabled/disabled
+--]]
+
+function gcdisplay.SetGC(bVal)
+	if bVal == nil then
+		bVal = false;
+	end
+	
+	bGC = bVal;
+end		-- gcdisplay.SetGC
+
+--[[
+	GetGC returns the value of bGC
+--]]
+
+function gcdisplay.GetGC()
+	if bGC == nil then
+		bGC = false;
+	end
+	
+	return bGC;
+end
+--[[
+	SetSlots stores the list of lock slots, for displaying
 --]]
 
 function gcdisplay.SetSlots(sTarget,sLList)
 	if sTarget == 'locks' then
 		Locks = sLList;
-	else
-		AccTier = sLList;
 	end
 end		-- gcdisplay.SetSlots
 
@@ -371,6 +514,53 @@ function fColor(skw,sMsg)
 end		-- fColor
 
 --[[
+	AccuracyDisplay generates the accuracy listing highlighting what
+	is currently enabled based on the passed sType. Returned is the
+	generated colorized string.
+--]]
+
+function gcdisplay.AccuracyDisplay(sType)
+	local msg;
+	local which = {};
+	
+	if sType == nil then
+		return "";
+	end
+	
+	for i,j in pairs(Progressive) do
+		if string.lower(sType) == string.lower(j['Abbr']) then
+			which = j;
+			break;
+		end
+	end
+	
+	if which == nil then
+		return "";
+	else
+		if which['MaxStage'] == 0 then
+			msg = ' ';
+		else		
+			for i=1,which['MaxStage'],1 do
+				if i <= which['CurStage'] then
+					if msg == nil then
+						msg = fColor('green',tostring(i))
+					else
+						msg = msg .. fColor('green',',' .. tostring(i))
+					end
+				else
+					if msg == nil then
+						msg = fColor('red',tostring(i))
+					else
+						msg = msg .. fColor('red',',' .. tostring(i))
+					end
+				end
+			end
+		end
+	end
+	return msg;
+end		-- gcdisplay.AccuracyDisplay
+
+--[[
 	Initialize creates the display bar
 --]]
 
@@ -383,34 +573,38 @@ function gcdisplay.Initialize()
 	
 	ashita.events.register('d3d_present', 'gcdisplay_present_cb', function ()
 		local display = MainLV .. Main .. '/' .. SubLV .. Sub .. ' |';
-		for k, v in pairs(Toggles) do
 		
+		if bGC == true then
+			display = display .. ' ' .. fColor('green','GC') .. ' ';
+		else
+			display = display .. ' ' .. fColor('red','GC') .. ' ';
+		end
+		display = display .. '|';
+			
+		for k, v in pairs(Toggles) do		
 			if gcdisplay.bDisplayIt(k) == true then
-				display = display .. '   ';
+				display = display .. ' ';
 				if (v == true) then
-					display = display .. fColor('green',k);
+					display = display .. fColor('green',k) .. ' ';
 				else
-					display = display .. fColor('red',k);
+					display = display .. fColor('red',k) .. ' ';
 				end
 			end
 		end
-		display = display .. ' |';
+		display = display .. '|';
 		for key, value in pairs(Cycles) do
 			if gcdisplay.bDisplayIt(key) == true then
 				display = display .. '  ' .. key .. ': ' .. fColor('green',value.Array[value.Index]);
 			end
 		end
 		
-		-- Accuracy slots
-		local c = 'P';
-		if gcinclude.settings.bFractional == true then
-			c = 'F';
-		end
-		
-		if AccTier ~= 'None' then
-			display = display .. ' | Acc-' .. c .. ': ' .. fColor('green',AccTier);
+		-- Accuracy
+		if gcdisplay.GetToggle('Tank') == true then
+			display = display .. ' | Acc: ' .. gcdisplay.AccuracyDisplay('TAcc');
+			display = display .. ' | Racc: ' .. gcdisplay.AccuracyDisplay('TRAcc');
 		else
-			display = display .. ' | Acc-' .. c .. ': ' .. fColor('red',AccTier);
+			display = display .. ' | Acc: ' .. gcdisplay.AccuracyDisplay('Acc');
+			display = display .. ' | Racc: ' .. gcdisplay.AccuracyDisplay('RAcc');
 		end
 		
 		-- Locks
