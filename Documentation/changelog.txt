@@ -23,6 +23,8 @@
   accuracy makes it very difficult to track which equipment slots are
   populated
   
-- Adjusted code to address a LUA deficiency with the string.find() function.
-  Guessing our server updated the version of LUA we are using
+- Adjusted code to address a LUA deficiency with the string.find() 
+  function. Guessing our server updated the version of LUA we are using
+  
+- Added Magical Accuracy sets (Macc and Tank_Macc)
   
