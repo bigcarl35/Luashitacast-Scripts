@@ -27,4 +27,7 @@
   function. Guessing our server updated the version of LUA we are using
   
 - Added Magical Accuracy sets (Macc and Tank_Macc)
+
+- Added /ptt to display distance between player's pet and the player's
+  target
   
