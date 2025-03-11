@@ -2650,7 +2650,7 @@ function GearCheck(sList,bForce)
 		-- next is pet food since any job can equip it
 		print(chat.header('GearCheck'):append(chat.message('Starting to scan Pet Food items')));
 		for s,t in pairs(gcinclude.tPetFood) do
-			bGood,ref = fGearCheckItem('ammo',t['Name'],false,true);
+			bGood,ref = fGearCheckItem('ammo',t['name'],false,true);
 			if ref ~= nil and ref['valid'] == false then
 				print(chat.header('GearCheck'):append(chat.message('Warning: Invalid Pet Food - ' .. t['Name'] .. ': ' .. s)));
 			end			
