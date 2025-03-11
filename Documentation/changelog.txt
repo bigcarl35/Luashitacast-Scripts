@@ -31,3 +31,5 @@
 - Added /ptt to display distance between player's pet and the player's
   target
   
+- Pet food now successfully is scanned via /GC
+  
