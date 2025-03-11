@@ -103,7 +103,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','macc','maxsong','maxspell','petfood','racc','rc','rv','sbp','showit','smg','string','tank','th','unlock','ver','wsdistance','wswap','t1'};
+gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','macc','maxsong','maxspell','petfood','ptt','racc','rc','rv','sbp','showit','smg','string','tank','th','unlock','ver','wsdistance','wswap','t1'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T{'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T{'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -3974,50 +3974,44 @@ function RegionControlDisplay()
 end		-- RegionControlDisplay
 
 function gcinclude.t1(args)
-	
-	
---[[
-	local pEntity = AshitaCore:GetMemoryManager():GetEntity();
-	local myIndex = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0);
-	local currentZoneID = AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0);
-    local currentZoneName = AshitaCore:GetResourceManager():GetString('zones.names', currentZoneID);
-	print(currentZoneName);
-	print(pEntity:GetLocalPositionX(myIndex),pEntity:GetLocalPositionY(myIndex));
-	print(' ');
+end
 
+--[[
+	ptt provides a simple answer to a request until a better answer
+	can be formulated. It's intended to help classes that control pets.
+	It displays the distance between the player and the pet, the player
+	and the target, and the pet and the target.
+--]]
+
+function ptt()
 	local pEntity = AshitaCore:GetMemoryManager():GetEntity();
 	local myIndex = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0);
     local petIndex = AshitaCore:GetMemoryManager():GetEntity():GetPetTargetIndex(myIndex);
 	local targetIndex = gData.GetTargetIndex();
 	local x,y,z;
 	
+	print(' ');
 	if petIndex ~= nil and petIndex > 0 then
-		x = math.pow(pEntity:GetLocalPositionX(myIndex) - pEntity:GetLocalPositionX(petIndex),2);
-		y = math.pow(pEntity:GetLocalPositionY(myIndex) - pEntity:GetLocalPositionY(petIndex),2);
-		z = math.pow(pEntity:GetLocalPositionZ(myIndex) - pEntity:GetLocalPositionZ(petIndex),2);
-		print(string.format('Player to Pet: %d.1', math.sqrt(x+y+z)));
-		print(math.sqrt(AshitaCore:GetMemoryManager():GetEntity():GetDistance(petIndex)));		
+		x = math.sqrt(AshitaCore:GetMemoryManager():GetEntity():GetDistance(petIndex));
+		print(chat.message(string.format('Player to pet: %.1f',x) .. 'm'));
+	else		
+		print(chat.message('You have no pet'));
 	end
 
 	if targetIndex ~= nil and targetIndex > 0 then
-		x = math.pow(pEntity:GetLocalPositionX(myIndex) - pEntity:GetLocalPositionX(targetIndex),2);
-		y = math.pow(pEntity:GetLocalPositionY(myIndex) - pEntity:GetLocalPositionY(targetIndex),2);
-		z = math.pow(pEntity:GetLocalPositionZ(myIndex) - pEntity:GetLocalPositionZ(targetIndex),2);	
-		print(string.format('Player to target: %d.1', math.sqrt(x+y+z)));
-		print(math.sqrt(AshitaCore:GetMemoryManager():GetEntity():GetDistance(targetIndex)));				
-	end
-	
+		x = math.sqrt(AshitaCore:GetMemoryManager():GetEntity():GetDistance(targetIndex));
+		print(chat.message(string.format('Player to target: %.1f',x) .. 'm'));
+	else
+		print(chat.message('You have no target'));
+	end	
+
 	if petIndex ~= nil and petIndex > 0 and targetIndex ~= nil and targetIndex > 0 then
 		x = math.pow(pEntity:GetLocalPositionX(petIndex) - pEntity:GetLocalPositionX(targetIndex),2);
-		y = math.pow(pEntity:GetLocalPositionY(petIndex) - pEntity:GetLocalPositionY(targetIndex),2);
-		z = math.pow(pEntity:GetLocalPositionZ(petIndex) - pEntity:GetLocalPositionZ(targetIndex),2);	
-		print(string.format('Pet to target: %d.1', math.sqrt(x+y+z)));
-		print(math.sqrt(AshitaCore:GetMemoryManager():GetEntity():GetDistance(petIndex)));
-		print(math.sqrt(AshitaCore:GetMemoryManager():GetEntity():GetDistance(targetIndex)));
-	end
---]]
-end		-- gcinclude.t1
-
+		y = math.pow(pEntity:GetLocalPositionY(petIndex) - pEntity:GetLocalPositionY(targetIndex),2);	
+		print(chat.message(string.format('Pet to target: %.1f', math.sqrt(x+y)) .. 'm'));
+	end	
+end		-- ptt
+	
 --[[
 	MoveToCurrent copies the gear defined in the passed set to current master
 	set. Nothing is displayed, this is just a transfer routine.
@@ -5155,6 +5149,8 @@ function gcinclude.HandleCommands(args)
 		else
 			print(chat.header('HandleCommands'):append(chat.message('Error: Your job does not support the magic accuracy. Ignoring command')))
 		end
+	elseif (args[1] == 'ptt') then
+		ptt();
 	elseif (args[1] == 'tank') then			-- Turns on/off whether tanking gear is equipped
 		if string.find(gcinclude._TankJobList,player.MainJob) ~= nil then
 			gcdisplay.AdvanceToggle('Tank');
