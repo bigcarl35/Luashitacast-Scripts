@@ -1624,14 +1624,6 @@ profile.WeaponType = {
 				  'Light Staff', 'Apollo\'s Staff', 'Dark Staff', 'Pluto\'s Staff' },	
 };
 
--- Accuracy Sets are predefined /acc commands. You identify them by a name and
--- a comma delimited list of slots. It's just a convenient shortcut mechanism.
-profile.AccuracySet = {
-	['b0'] = 'Rings,Hands',
-	['b1'] = 'Rings,Hands,Body',
-	['b2'] = 'Rings,Hands,Body,Waist',
-};
-
 profile.Sets = sets;
 profile.sjb = nil;
 profile.bAmmo = false;

@@ -1415,13 +1415,6 @@ profile.WeaponType = {
 	['DAGGER'] = { 'Garuda\'s Dagger' },
 };
 
--- Accuracy Sets are predefined for /acc commands. You identify them by a 
--- name and a comma delimited list of slots. It's just a convenient shortcut 
--- mechanism.
-profile.AccuracySet = {
-	['base'] = 'Rings,Body',
-};
-
 profile.Sets = sets;
 profile.sjb = nil;			-- Tracks subjob name
 profile.sPetAction = nil;	-- what was the last action by your avatar
@@ -1711,7 +1704,7 @@ function profile.HandleDefault()
 			gcinclude.MoveToCurrent(sets.Default_WPet,sets.CurrentGear);
 		end
 	else
-		-- Assume player idling without pet or /subjob's pet
+		-- Assume player idling without pet or /subjob's pet		
 		gcinclude.MoveToCurrent(sets.Default,sets.CurrentGear);
 	end
 		

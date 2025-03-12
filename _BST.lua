@@ -1340,7 +1340,7 @@ profile.JugPets = T {
 		['name'] = 'Tiger Familiar', ['min'] = 28, ['max'] = 40,
 		['have'] = false, ['fav'] = false
 	},
-	['grasshopper broth'] = { 
+	['grass. broth'] = { 
 		['name'] = 'Flytrap Familiar', ['min'] = 28, ['max'] = 40,
 		['have'] = false, ['fav'] = false
 	},
@@ -1368,7 +1368,7 @@ profile.JugPets = T {
 		['name'] = 'Crab Familiar', ['min'] = 23, ['max'] = 55,
 		['have'] = false, ['fav'] = false
 	},
-	['blood bath'] = { 
+	['blood broth'] = { 
 		['name'] = 'Mite Familiar', ['min'] = 43, ['max'] = 55,
 		['have'] = false, ['fav'] = false
 	},
@@ -1408,7 +1408,7 @@ profile.JugPets = T {
 		['name'] = 'Homunculus', ['min'] = 23, ['max'] = 75,
 		['have'] = false, ['fav'] = false
 	},
-	['n. grasshopper broth'] = { 
+	['n. grass. broth'] = { 
 		['name'] = 'Voracious Audrey', ['min'] = 53, ['max'] = 75,
 		['have'] = false, ['fav'] = false
 	},
@@ -1450,12 +1450,6 @@ profile.WeaponType = {
 				  'Wind Staff', 'Auster\'s Staff', 'Earth Staff', 'Terra\'s Staff',
 				  'Thunder Staff', 'Jupiter\'s Staff', 'Water Staff', 'Neptune\'s Staff',
 				  'Light Staff', 'Apollo\'s Staff', 'Dark Staff', 'Pluto\'s Staff' },	
-};
-
--- Accuracy Sets are predefined /acc commands. You identify them by a name and
--- a comma delimited list of slots. It's just a convenient shortcut mechanism.
-profile.AccuracySet = {
-	['base'] = 'Rings,Body',
 };
 
 profile.Sets = sets;

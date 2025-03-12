@@ -1151,12 +1151,6 @@ local sets = {
 profile.WeaponType = {
 };
 
--- Accuracy Sets are predefined /acc commands. You identify them by a name and
--- a comma delimited list of slots. It's just a convenient shortcut mechanism.
-profile.AccuracySet = {
-	['base'] = 'Rings,Body',
-};
-
 profile.Sets = sets;
 profile.sjb = nil;
 profile.bAmmo = false;
