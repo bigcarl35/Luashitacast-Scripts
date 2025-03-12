@@ -2655,7 +2655,18 @@ function GearCheck(sList,bForce)
 				print(chat.header('GearCheck'):append(chat.message('Warning: Invalid Pet Food - ' .. t['Name'] .. ': ' .. s)));
 			end			
 		end		
-	
+
+		-- next is jug pets, but only BST can equip them
+		if gData.GetPlayer().MainJob == 'BST' then
+			print(chat.header('GearCheck'):append(chat.message('Starting to scan Jug Pets')));
+			for s,t in pairs(gProfile.JugPets) do
+				bGood,ref = fGearCheckItem('ammo',s,false,true);
+				if ref ~= nil and ref['valid'] == false then
+					print(chat.header('GearCheck'):append(chat.message('Warning: Invalid Jug Pet - ' .. s .. ': ' .. s)));
+				end				
+			end
+		end
+		
 		-- now loop through the job file and gcinclude
 		for s,t in pairs(tTarget) do
 			if t == gProfile.Sets then
@@ -3716,7 +3727,7 @@ function fCheckInline(gear,sSlot,ts)
 			bGood = (gcdisplay.GetCycle('Instrument') == 'Horn');
 			elseif suCode == 'IDLE' then
 			bGood = gcdisplay.GetToggle('Idle');
-		elseif string.find(suCode,'IF:') then
+		elseif string.find(suCode,'IF:') then				-- Equip if current item is the named item
 			bGood = false;		
 			if sSlot ~= 'subset' then
 				local tCur = gData.GetEquipment();				
@@ -3726,6 +3737,19 @@ function fCheckInline(gear,sSlot,ts)
 					local sCur = tCur[sSlot].Name;
 					local sItem = string.sub(suCode,4,-1);	
 					bGood = (string.lower(sItem) == string.lower(sCur));
+				end
+			end	
+		elseif string.find(suCode,'IFNOE:') then			-- Equip if current item is not the named item or the slot is empty
+			bGood = false;		
+			if sSlot ~= 'subset' then
+				local tCur = gData.GetEquipment();
+				local sCur = tCur[sSlot].Name;
+				local sItem = string.sub(suCode,7,-1);
+				if tCur[sSlot] ~= nil and 
+					 string.lower(sCur) == string.lower(sItem) then					-- Data download issue
+					bGood = false;
+				else
+					bGood = true;
 				end
 			end				
 		elseif string.find(suCode,'LVLDIV') then			-- Player's level divisable by #
