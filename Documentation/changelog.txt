@@ -5,7 +5,7 @@
 
 - Updated help system to be current with all commands
 
-- Added //EMPTY and //NOT_TH inline conditionals
+- Added //EMPTY, //NOT_TH and //IFNOE inline conditionals
 
 - Added slot referencing in sets (e.g., ['Hands'] = 'Accuracy::Hands')
 
@@ -17,7 +17,7 @@
 - Added processing of Progressive structure to the /GC command
 
 - Replaced fractional accuracy with progressive accuracy. This affects
-  accuracy, ranged accuracy and the associated tanking variations.
+  accuracy, ranged accuracy and the associated tanking variations
   
 - Had to remove collision check between locks and accuracy. Progressive
   accuracy makes it very difficult to track which equipment slots are
@@ -32,4 +32,6 @@
   target
   
 - Pet food now successfully is scanned via /GC
+
+- Jug Pets on BST now successfully scanned via /GC
   

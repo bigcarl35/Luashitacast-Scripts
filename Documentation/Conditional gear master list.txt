@@ -78,6 +78,7 @@ want me to add any more.
 //HPPconditional#	Equip if HP% meets condition
 //IDLE			Equip if Idle is true (part of tanking configuration)
 //IF:gear		Equip if wearing that gear in the tested slot
+//IFNOE:gear	Equip if not wearing that gear in the tested slot
 //KATANA		Equip if Main is a Katana
 //LVLconditional # Equip if player's level meets the conditional setting
 //LVLDIV#		Equip if player's level is evenly divisible by #
