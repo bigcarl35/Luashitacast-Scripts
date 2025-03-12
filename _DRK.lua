@@ -144,7 +144,6 @@ local sets = {
 	['Ranged_Accuracy'] = {
 		Head   = 'Optical Hat',		-- +10 RAcc
 		Neck   = { 'Peacock Amulet', 'Reraise Gorget' },	-- +10/3 RAcc
-		Ears   = 'Beastly Earring',		-- +5 Axe/Polearm Skill
 		Hands  = 'Crimson Fng. Gnt.',	-- +10 RAcc
 		Rings  = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	-- +5/5/4/4/4 RAcc
 		Back   = 'Psilos Mantle',		-- +1 RAcc
@@ -302,7 +301,6 @@ local sets = {
 		Subset = 'INT',
 	},
 
--- Make sure: Spike Necklacce not equipped (-6 MND), Flame Ring (-2 MND)
 	['MND'] = {
 		Main  = { 'Water Staff//WSWAP', 'Pluto\'s Staff//WSWAP', 'Light Staff//WSWAP' },	-- +4/2/1 MND
 		Neck  = { 'Promise Badge', 'Justice Badge' },	-- +5/3 MND
