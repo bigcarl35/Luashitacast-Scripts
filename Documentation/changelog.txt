@@ -5,7 +5,9 @@
 
 - Updated help system to be current with all commands
 
-- Added //EMPTY, //NOT_TH and //IFNOE inline conditionals
+- Added spell type inline conditionals: //ELEMENTAL, //DARK, //HEALING,
+  //ENFEEBLING, //ENHANCING, //DIVINE, //SUMMONING, //NINJUTSU, and
+  //SINGING. Also added //EMPTY, //NOT_TH, //NOT_ME, and //IFNOE.
 
 - Added slot referencing in sets (e.g., ['Hands'] = 'Accuracy::Hands')
 

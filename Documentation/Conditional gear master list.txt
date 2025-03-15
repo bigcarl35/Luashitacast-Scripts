@@ -54,6 +54,7 @@ want me to add any more.
 //day			Equip if the day's name matches the specified day, eg. //FIRESDAY
 //CURSED		Equip if player is cursed
 //DAGGER		Equip if Main is a Dagger
+//DARK			Equip if the spell is a dark spell
 //DAYTIME		Equip if it's daytime
 //DB:BPP		Equip if debuff cycle set to BPP (blind,poison,paralyze)
 //DB:WSS		Equip if debuff cycle set to WSS (weight,slow,silence)
@@ -62,6 +63,7 @@ want me to add any more.
 //DT_MAGICAL	Equip item if damage taken is set to magical
 //DT_PHYSICAL	Equip item if damage taken is set to physical
 //DUSK2DAWN		Equip if it's between dusk and dawn
+//ELEMENTAL		Equip if spell is an elemental magic
 //EMPTY			Equip if sloy in temporary set is empty
 //ENspell		Equip if player has en- spell buff
 //ENANY			Equip if player has any en- spell buff
@@ -72,13 +74,14 @@ want me to add any more.
 //GKATANA		Equip if Main is a Great Katana
 //GSWORD		Equip if Main is a Great Sword
 //H2H			Equip if Main is a Hand-to-Hand
+//HEALING		Equip if the spell is a healing spell
 //HOLY_CIRCLE	Equip if player has Holy Circle buff
 //HORN			Equip if instrument setting is horn
 //HPconditional#	Equip if HP meets condition
 //HPPconditional#	Equip if HP% meets condition
 //IDLE			Equip if Idle is true (part of tanking configuration)
 //IF:gear		Equip if wearing that gear in the tested slot
-//IFNOE:gear	Equip if not wearing that gear in the tested slot
+//IFNOE:gear	Equip if not wearing that gear in the tested slot (if not or empty)
 //KATANA		Equip if Main is a Katana
 //LVLconditional # Equip if player's level meets the conditional setting
 //LVLDIV#		Equip if player's level is evenly divisible by #
@@ -91,6 +94,7 @@ want me to add any more.
 //NO_PET		Equip if the player has no pet
 //NO_SMNPET		Equip if player has no pet or pet is not a smn avatar
 //NOT_day		Equip if the day's name does not match the specified day, eg. //NOT_FIRESDAY
+//NOT_ME		Equip if the target is not me
 //NOT_OWN		Equip if region not controlled by player's nation
 //NOT_TANK		Equip if tank disabled
 //NOT_TH		Equip if TH disabled
