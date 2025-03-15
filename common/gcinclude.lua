@@ -3691,10 +3691,14 @@ function fCheckInline(gear,sSlot,ts)
 			bGood = (gcinclude.Craft == string.sub(suCode,4,-1));
 		elseif suCode == 'CURSED' then						-- Player is cursed
 			bGood = gcinclude.fBuffed('Curse');
+		elseif suCode == 'DARK' then						-- See if spell is dark
+			bGood = (spell.Skill == 'Dark Magic');
 		elseif suCode == 'DAYTIME' then						-- Time is daytime
 			bGood = gcinclude.CheckTime(timestamp.hour,'Daytime',false);
 		elseif string.sub(suCode,1,3) == 'DB:' then
 			bGood = (player.MainJob == 'BST' and string.upper(string.sub(suCode,4,-1)) == string.upper(gcdisplay.GetCycle('DB')));	
+		elseif suCode == 'DIVINE' then						-- See if spell is a divine spell
+			bGood = (spell.Skill == 'Divine Magic');
 		elseif suCode == 'DOOMED' then						-- Player is doomed or baned
 			bGood = (gcinclude.fBuffed('Doom') or gcinclude.fBuffed('Bane'));
 		elseif suCode == 'DT_BREATH' then
@@ -3707,8 +3711,12 @@ function fCheckInline(gear,sSlot,ts)
 			bGood = gcinclude.CheckTime(timestamp.hour,DUSK2DAWN,false);
 		elseif table.find(gcinclude.tSpell['enspell'],string.lower(suCode)) ~= nil then		-- En*
 			bGood = gcinclude.fBuffed(suCode);
+		elseif suCode == 'ELEMENTAL' then					-- See if spell is elemental
+			bGood = (spell.Skill == 'Elemental Magic');
 		elseif suCode == 'EMPTY' then
 			bGood = (ts[sSlot] == nil or ts[sSlot] == '');
+		elseif suCode == 'ENFEEBLING' then						-- See if spell is dark
+			bGood = (spell.Skill == 'Enfeebling Magic');
 		elseif suCode == 'ENANY' then						-- check for any en- spell
 			bGood = false;
 			for i,j in pairs(gcinclude.tSpell['enspell']) do
@@ -3717,12 +3725,16 @@ function fCheckInline(gear,sSlot,ts)
 					break;
 				end
 			end
+		elseif suCode == 'ENHANCING' then					-- See if spell is an enhancement
+			bGood = (spell.Skill == 'Enhancing Magic');
 		elseif suCode == 'EVASION' then
 			bGood = (gcdisplay.GetToggle('Eva') == true);	
 		elseif suCode == 'FULLMOON' then					-- Moon phase: Full Moon
 			bGood = (environ.MoonPhase == 'Full Moon');
 		elseif string.sub(suCode,1,3) == 'GA:' then			-- Gathering
 			bGood = (gcinclude.Gather == string.sub(suCode,4,-1));
+		elseif suCode == 'HEALING' then						-- See if spell is healing
+			bGood = (spell.Skill == 'Healing Magic');
 		elseif suCode == 'HORN' then						-- Is the bard's instrument a horn
 			bGood = (gcdisplay.GetCycle('Instrument') == 'Horn');
 			elseif suCode == 'IDLE' then
@@ -3765,10 +3777,17 @@ function fCheckInline(gear,sSlot,ts)
 			bGood = (environ.MoonPhase == 'New Moon');
 		elseif suCode == 'NIGHTTIME' then					-- Time is nighttime
 			bGood = gcinclude.CheckTime(timestamp.hour,'Nighttime',false);
+		elseif suCode == 'NINJUTSU' then					-- See if spell is a ninjutsu
+			bGood = (spell.Skill == 'Ninjutsu');
 		elseif suCode == 'NO_PET' then						-- Player has no avatar out
 			bGood = (pet == nil);
 		elseif suCode == 'NO_SMNPET' then					-- Player has no or non-smn pet
 			bgood = not gcinclude.fSummonerPet();
+		elseif suCode == 'NOT_ME' then
+			-- Equip if target is not me
+			local me = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0); --t:GetMemberIndex(0);
+			local tg = gData.GetTargetIndex();
+			bGood = (tg ~= me);
 		elseif suCode == 'NOT_OWN' then						-- Player in area not controlled by their nation
 			bGood = (gcdisplay.GetCycle('Region') == 'Not Owned');
 		elseif suCode == 'NOT_TANK' then					-- TANK is disabled
@@ -3829,6 +3848,8 @@ function fCheckInline(gear,sSlot,ts)
 			bGood = gcinclude.fBuffed('Poison');
 		elseif suCode == 'SHINING_RUBY' then				-- Player has shining ruby
 			bGood = gcinclude.fBuffed('Shining');	
+		elseif suCode == 'SINGING' then						-- See if spell is singing
+			bGood = (spell.Skill == 'Singing');
 		elseif suCode == 'SILENCED' then					-- Player is silenced
 			bGood = gcinclude.fBuffed('Silence');
 		elseif string.sub(suCode,1,2) == 'SJ' and string.len(suCode) == 5 then	
@@ -3884,6 +3905,8 @@ function fCheckInline(gear,sSlot,ts)
 			else
 				bGood = false;
 			end
+		elseif suCode == 'Summoning' then					-- See if spell is a summoning
+			bGood = (spell.Skill == 'Summoning');
 		elseif suCode == 'TANK' then
 			if string.find(gcinclude._TankJobList,player.MainJob) ~= nil then
 				bGood = (gcdisplay.GetToggle('Tank') == true);
@@ -5735,7 +5758,16 @@ function MidcastHealingMagic()
 					if pDay + pWeather > 0 then
 						gProfile.Sets.CurrentGear['Waist'] = sGear;
 					end
-				end			
+				end	
+
+				-- See if Macc should be added
+				if gcdisplay.GetToggle('Macc') then
+					if bTank == true then
+						gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
+					else
+						gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
+					end	
+				end				
 			else
 				-- This is the the type of curing magic most folks assume happens
 				if bTank == true then
@@ -5744,15 +5776,6 @@ function MidcastHealingMagic()
 					gcinclude.MoveToCurrent(gProfile.Sets.CuringMagic,gProfile.Sets.CurrentGear);
 				end
 			end
-		end
-
-		-- See if Macc should be added
-		if gcdisplay.GetToggle('Macc') then
-			if bTank == true then
-				gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
-			else
-				gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
-			end		
 		end
 		
 		-- While the reasoning is different, both types of "cures" can use an elemental
