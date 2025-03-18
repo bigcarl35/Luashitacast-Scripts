@@ -4,7 +4,7 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the PLD job.
 
-	Gear Sets last updated: March 9, 2025
+	Gear Sets last updated: March 17, 2025
 	Code update: March 9, 2025
 --]]
 
@@ -72,13 +72,16 @@ local sets = {
 --]]
 	
 	['Default'] = {
-		Subset = 'TP',
+		Subset = {
+			[1] = 'TP',
 		Head   = { 'Lilac Corsage//TOWN', 'Mandra. Masque' },
 		Body   = { 'Ducal Aketon//TOWN-AK', 'Choc. Jack Coat' },
 	},
 	
 	['Tank_Default'] = {
-		Subset = 'Default',
+		Subset = {
+			[1] = 'Default',
+		}
 	},
 	
 --[[
@@ -89,11 +92,11 @@ local sets = {
 --]]
 	
 	['TP'] = {
-		Head   = { 'Entrancing Ribbon', 'Mandra. Masque' },
+		Head   = 'Mandra. Masque',
 		Neck   = 'Justice Badge',
-		Ears   = { 'Physical Earring', 'Energy Earring +1' },
+		Ears   = { 'Physical Earring', 'Energy Earring +1', 'Energy Earring +1' },
 		Body   = 'Ducal Aketon',
-		Hands  = { 'Ryl.Ftm. Gloves', 'Fsh. Gloves' },
+		Hands  = 'Fsh. Gloves',
 		Rings  = { 'Astral Ring', 'Astral Ring' },
 		Legs   = 'Fisherman\'s Hose',
 		Feet   = { 'Bounding Boots', 'Waders' },
@@ -146,12 +149,16 @@ local sets = {
   ['Progressive'] = { 
 		['Accuracy'] = { 
 			[1] = { 
-				['Subset'] = 'Accuracy',
+				['Subset'] = {
+					[1] = 'Accuracy',
+				}
 			},
 		},
 		['Ranged_Accuracy'] = {
 			[1] = {
-				['Subset'] = 'Ranged_Accuracy',
+				['Subset'] = {
+					[1] = 'Ranged_Accuracy',
+				}
 			}
 		}				
   },
@@ -190,8 +197,6 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-		Main = 'Bee Spatha',
-		Sub  = 'Fish Scale Shield',
     },
 	
 --[[
@@ -271,6 +276,17 @@ local sets = {
 --]]
 	
 	['Macc'] = {
+		Subset = {
+			[1] = { 'Dark_Magic_Skill//DARK', 
+				   'Elemental_Magic_Skill//ELEMENTAL',
+				   'Enfeebling_Magic_Skill//ENFEEBLING',
+				   'Healing_Magic_Skill//HEALING',		-- Offensive healing only
+				   'Divine_Magic_Skill//DIVINE',
+				   'Ninjutsu_Skill//NINJUTSU',
+				   'CHR//SINGING',		-- Charisma provides accuracy w/singing
+				   }
+		},
+		Rings  = 'Tamas Ring',			-- +5 MAcc		
 	},
 	
 	['Tank_Macc'] = {
@@ -309,6 +325,9 @@ local sets = {
 	Healing spells: cures, curagas, raises, reraises, blindna, cursna,
 	paralyna, poisona, silena, stona, and viruna.
 --]]
+
+	['Healing_Magic_Skill'] = {
+	},
 	
 --[[	
 	Curing magic addresses healing players/npcs. Each time a cure 
@@ -348,14 +367,16 @@ local sets = {
 --]]	
 	
 	['CuringMagic'] = {
-		Subset = 'Enmity_Set//TANK',
-		Neck  = 'Promise Badge',
-		Ears  = 'Geist Earring',
-		Body  = 'Wonder Kaftan',
-		Rings = 'Tamas Ring',
-		Back  = 'White Cape',
-		Legs  = 'Wonder Braccae',
-		Feet  = 'Mannequin Pumps',
+		Subset = {
+			[1] = 'Enmity_Set//TANK',
+		},
+		Neck   = 'Promise Badge',
+		Ears   = 'Geist Earring',
+		Body   = 'Wonder Kaftan',
+		Rings  = 'Tamas Ring',
+		Back   = 'White Cape',
+		Legs   = 'Wonder Braccae',
+		Feet   = 'Mannequin Pumps',
 	},
 	
 	['Tank_CuringMagic'] = {
@@ -409,6 +430,9 @@ local sets = {
 	enlight.)
 --]]
 
+	['Enhancing_Magic_Skill'] = {
+	},
+	
 --[[
 	There are two versions of barspells: elemental and status, both of which
 	increase the magic evasion of a player from the element/status named.
@@ -509,7 +533,9 @@ local sets = {
 	},
 	
 	['Tank_Stoneskin'] = {
-		Subset = 'Stoneskin',
+		Subset = {
+			[1] = 'Stoneskin',
+		}
 	},
 
 --[[
@@ -555,7 +581,9 @@ local sets = {
 	},	
 
 	['Tank_Phalanx'] = {
-		Subset = 'Phalanx',
+		Subset = {
+			[1] = 'Phalanx',
+		}
 	},
 
 --[[
@@ -578,6 +606,9 @@ local sets = {
 	* Midcast: Elemental Magic *
 	****************************
 --]]
+
+	['Elemental_Magic_Skill'] = {
+	},
 	
 --[[
 	Elemental Magic: This type of magic consists of nukes, ancient magic (a type
@@ -647,6 +678,9 @@ local sets = {
 	* Midcast: Summoning *
 	**********************
 --]]
+
+	['Summoning_Skill'] = {
+	},
 	
 --[[
 	Summoning: This type of magic is used when a summoner casts either an
@@ -682,6 +716,9 @@ local sets = {
 	absorb INT, absorb MND, absorb STR, absorb TP, absorb VIT, aspir, bios,
 	drain, stun and tractor.
 --]]
+
+	['Dark_Magic_Skill'] = {
+	},
 
 --[[
 	There's 9 absorb spells (although some are currently out of era). If not
@@ -773,6 +810,9 @@ local sets = {
 	*************************
 --]]
 
+	['Divine_Magic_Skill'] = {
+	},
+	
 --[[
 	Divine Magic: damages or debilitates opponents with light elemental
 	spells. It is especially effective against undead monsters, especially
@@ -837,6 +877,9 @@ local sets = {
 	* Midcast: Enfeebling Magic *
 	****************************
 --]]
+
+	['Enfeebling_Magic_Skill'] = {
+	},
 	
 --[[
 	Enfeebling Magic: this class of spells apply a debilitating status effect
@@ -865,7 +908,7 @@ local sets = {
 	
 	['EnfeeblingMND'] = {
 	    Neck  = { 'Promise Badge', 'Justice Badge' },
-        Rings = { 'Tamas Ring', 'Tranquility Ring' },
+        Rings = 'Tamas Ring',
         Waist = 'Friar\'s Rope',
 	},
 	
@@ -898,6 +941,9 @@ local sets = {
 	and status resistance.
 --]]
 
+	['CHR'] = {		-- Charisma provides accuracy w/singing
+	},
+	
 --[[
 	EnhancementSinging contains gear that enhances party members is some specific
 	manner. Included are: minne, minuet, paeon, pastoral, madigal, mambo, etude,
@@ -928,6 +974,9 @@ local sets = {
 	********************
 --]]
 
+	['Ninjutsu_Skill'] = {
+	},
+	
 --[[
 	Ninjutsu: this is a means for ninjas to cast magic-like abilities that
 	use ninja tools instead of MP. Ninjutsu Skill affects spell interruption
@@ -1020,7 +1069,9 @@ local sets = {
 -]]
 	
 	['WS_STR'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 	
 --[[
@@ -1031,7 +1082,9 @@ local sets = {
 --]]
 
 	['WS_STRAGI'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 		
 --[[
@@ -1042,7 +1095,9 @@ local sets = {
 --]]
 
 	['WS_STRDEX'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 	
 --[[
@@ -1055,7 +1110,9 @@ local sets = {
 --]]
 	
 	['WS_STRINT'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 	
 --[[
@@ -1065,7 +1122,9 @@ local sets = {
 --]]
 	
 	['WS_STRINT_30_20'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 	
 --[[
@@ -1079,8 +1138,10 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
-		Subset = 'AttackPower',	
-		Neck = 'Justice Badge',
+		Subset = {
+			[1] = 'AttackPower',
+		},
+		Neck  = 'Justice Badge',
     },
 	
 --[[
@@ -1090,7 +1151,9 @@ local sets = {
 --]]
 	
 	['WS_STRVIT'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 	
 --[[
@@ -1100,7 +1163,9 @@ local sets = {
 --]]
 	
 	['WS_CHR'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 		
 --[[
@@ -1110,7 +1175,9 @@ local sets = {
 --]]
 	
 	['WS_DEX'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 	
 --[[
@@ -1118,7 +1185,9 @@ local sets = {
 --]]
 	
 	['WS_DEXCHR'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 
 --[[
@@ -1128,7 +1197,9 @@ local sets = {
 --]]
 	
 	['WS_DEXINT'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 	
 --[[
@@ -1138,7 +1209,9 @@ local sets = {
 --]]
 	
 	['WS_INT'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 	
 --[[
@@ -1148,8 +1221,10 @@ local sets = {
 --]]
 	
 	['WS_DEXMND'] = {
-		Subset = 'AttackPower',	
-		Neck = 'Justice Badge',
+		Subset = {
+			[1] = 'AttackPower',
+		},
+		Neck   = 'Justice Badge',
     },
 	
 --[[
@@ -1159,8 +1234,10 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
-		Subset = 'AttackPower',	
-		Neck = 'Justice Badge',
+		Subset = {
+			[1] = 'AttackPower',
+		},
+		Neck   = 'Justice Badge',
     },
 
 --[[
@@ -1170,7 +1247,9 @@ local sets = {
 --]]
 
 	['WS_Skill'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 		
 --[[
@@ -1180,7 +1259,9 @@ local sets = {
 --]]
 
 	['WS_HP'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 		
 --[[
@@ -1545,10 +1626,10 @@ function profile.HandleDefault()
 	-- Make sure the macro set is shown and that the display on the top of the screen is correct
 	-- in case the subjob was changed.	
 	SetSubjobSet(player.SubJob);
+	gcdisplay.Update();
 	
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
-		gcdisplay.Update();		-- in case something has changed
 		return;
 	end
 

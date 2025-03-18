@@ -4,7 +4,7 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the RDM job.
 	
-	Gear Sets last updated: March 14, 2025 (complete review)
+	Gear Sets last updated: March 17, 2025 (complete review)
 	Code update: March 9, 2025
 	
 	Role: End game
@@ -73,14 +73,14 @@ local sets = {
 	['Default'] = {
 		Main   = 'Earth Staff//WSWAP',
 		Head   = { 'Lilac Corsage//TOWN', 'President. Hairpin//NOT_OWN//HPP.LT.94', 'Duelist\'s Chapeau', 'Warlock\'s Chapeau', 'Silver Hairpin +1' },
-		Neck   = { 'Rep.Gold Medal//NOT_OWN', 'Uggalepih Pendant//NIGHTTIME', 'Fenrir\'s Torque//DAYTIME', 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
+		Neck   = { 'Rep.Gold Medal//NOT_OWN', 'Uggalepih Pendant//NIGHTTIME', 'Fenrir\'s Torque//DAYTIME', 'Spirit Torque', 'Justice Badge' },
 		Ears   = { 'Geist Earring', 'Energy Earring +1', 'Energy Earring +1' },
 		Body   = { 'Ducal Aketon//TOWN-AK', 'Vermillion Cloak//MPP.LT.90', 'Wlk. Tabard +1', 'Brigandine', 'Angler\'s Tunica' },
 		Hands  = { 'Duelist\'s Gloves//WSWAP', 'Wlk. Gloves +1', 'Baron\'s Cuffs', 'Battle gloves' },
 		Rings  = { 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
 		Back   = 'White Cape',
 		Waist  = { 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
-		Legs   = { 'Duelist\'s Tights', 'Warlock\'s Tights', 'Wonder Braccae', 'San. Trousers', 'Ryl.Ftm. trousers' },
+		Legs   = { 'Duelist\'s Tights', 'Warlock\'s Tights', 'Wonder Braccae' },
 		Feet   = { 'Duelist\'s Boots', 'Warlock\'s Boots', 'Mannequin Pumps', 'Bounding boots' },
 	},
 	
@@ -97,19 +97,21 @@ local sets = {
 
 	['TP'] = {
         Head  = { 'Duelist\'s Chapeau', 'Warlock\'s Chapeau', 'Silver Hairpin +1' },
-        Neck  = { 'Spike Necklace//NOT_WSWAP',  'Rep.Gold Medal//NOT_OWN', 'Uggalepih Pendant//NIGHTTIME', 'Fenrir\'s Torque//DAYTIME', 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
+        Neck  = { 'Spike Necklace//NOT_WSWAP',  'Rep.Gold Medal//NOT_OWN', 'Uggalepih Pendant//NIGHTTIME', 'Fenrir\'s Torque//DAYTIME', 'Spirit Torque', 'Justice Badge' },
         Ears  = { 'Ethereal Earring//NOT_WSWAP', 'Fang Earring//NOT_WSWAP', 'Geist Earring', 'Energy Earring +1', 'Energy Earring +1' },
         Body  = { 'Narasimha\'s Vest//NOT_WSWAP', 'Brigandine//NOT_WSWAP', 'Wlk. Tabard +1', 'Brigandine', 'Ctr. Scale Mail', 'Angler\'s Tunica' },
 		Back  = { 'Forager\'s Mantle', 'Psilos Mantle', 'Amemet Mantle', 'White Cape' },
         Hands = { 'Dusk Gloves//NOT_WSWAP', 'Duelist\'s Gloves//WSWAP', 'Wlk. Gloves +1', 'Baron\'s Cuffs', 'Battle gloves' },
         Rings = { 'Flame Ring//NOT_WSWAP', 'Kshama Ring No.8//NOT_WSWAP', 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
         Waist = { 'Swift Belt//NOT_WSWAP', 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
-        Legs  = { 'Duelist\'s Tights', 'Warlock\'s Tights', 'Wonder Braccae', 'Ryl.Ftm. trousers' },
+        Legs  = { 'Duelist\'s Tights', 'Warlock\'s Tights', 'Wonder Braccae' },
         Feet  = { 'Duelist\'s Boots', 'Warlock\'s Boots', 'Mannequin Pumps', 'Bounding boots' },
     },
 
 	['Tank_TP'] = {
-		Subset = 'TP',
+		Subset = {
+			[1] = 'TP',
+		}
 	},
 	
 --[[
@@ -126,9 +128,9 @@ local sets = {
 		Head  = { 'Optical Hat', 'Empress Hairpin' },		-- +10 Acc, +3 DEX
 		Neck  = { 'Peacock Amulet', 'Spike Necklace' },		-- +10 Acc, +3 DEX
 		Ears  = 'Beastly Earring//Pet',						-- +10 Pet Acc
-		Body  = { 'Scorpion Harness', 'Brigandine', 'Mrc.Cpt. Doublet' },	-- +10/4 Acc, +2/2/1 DEX
+		Body  = { 'Scorpion Harness', 'Brigandine' },	-- +10/4 Acc, +2/2 DEX
         Hands = { 'Wlk. Gloves +1', 'Battle Gloves' },		-- +6 DEX, +3 Acc
-		Rings = { 'Toreador\'s Ring', 'Toreador\'s Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },	-- +7/+7/+5/+5/4, +3DEX/+2 Acc, +2 DEX
+		Rings = { 'Toreador\'s Ring', 'Toreador\'s Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2' },	-- +7/+7/+5/+5/4, +3DEX/+2 Acc
 		Back  = 'Psilos Mantle',							-- +1 Acc
 		Waist = { 'Life Belt', 'Tilt Belt', 'Mrc.Cpt. Belt' },	-- +10/5 Acc, +1 DEX
 		Legs  = 'Duelist\'s Tights',						-- +5 DEX
@@ -136,7 +138,9 @@ local sets = {
     },
 
 	['Tank_Accuracy'] = {
-		Subset = 'Accuracy',
+		Subset = {
+			[1] = 'Accuracy',
+		}
 	},
 
 --[[
@@ -147,12 +151,14 @@ local sets = {
 		Head   = 'Optical Hat',			-- +10 RAcc
 		Neck   = 'Peacock Amulet',		-- +10 RAcc
 		Hands  = 'Crimson Fng. Gnt.',	-- +10 RAcc
-		Rings  = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	-- +5/5/4/4/4 RAcc
+		Rings  = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring' },	-- +5/5/4 RAcc
 		Back   = 'Psilos Mantle',		-- +1 RAcc
 	},
 
 	['Tank_Ranged_Accuracy'] = {
-		Subset = 'Ranged_Accuracy',
+		Subset = {
+			[1] = 'Ranged_Accuracy',
+		}
 	},
 
 --[[
@@ -176,7 +182,9 @@ local sets = {
 				['Rings'] = 'Accuracy::Rings',
 			},
 			[4] = {
-				['Subset'] = 'Accuracy' 
+				['Subset'] = {
+					[1] = 'Accuracy'
+				}
 			}
 		},
 		['Ranged_Accuracy'] = {
@@ -185,7 +193,9 @@ local sets = {
 				['Hands'] = 'Ranged_Accuracy::Hands',
 			},
 			[2] = { 
-				['Subset'] = 'Ranged_Accuracy' 
+				['Subset'] = {
+					[1] = 'Ranged_Accuracy' 
+				}
 			}
 		}				
   },
@@ -201,15 +211,16 @@ local sets = {
         Head  = { 'Optical Hat', 'Empress Hairpin' },			-- +10/10 Eva
 		Neck  = 'Spirit Torque',								-- +5 Eva
 		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Reraise Earring', 'Genin Earring//SJNIN', 'Drone Earring' },	-- +15 Eva while blinded, +5/2 Eva, +4/3 AGI
-		Body  = { 'Scorpion Harness', 'Mrc.Cpt. Doublet' },		-- +10 Eva, +1 AGI
+		Body  = 'Scorpion Harness',								-- +10 Eva
 		Hands = 'Battle Gloves',								-- +3 Eva
 		Waist = 'Swift Belt//IF:Tilt Belt',						-- filler, Tilt Belt has -5 Eva
-		Legs  = 'San. Trousers',								-- +2 Eva
 		Feet  = { 'Duelist\'s Boots', 'Bounding Boots' },		-- +5 Eva, +3 AGI
     },
 
 	['Tank_Evasion'] = {
-		Subset = 'Evasion',
+		Subset = {
+			[1] = 'Evasion',
+		}
 	},
 	
 --[[
@@ -254,7 +265,9 @@ local sets = {
     },
 	
 	['Tank_Preshot'] = {
-		Subset = 'Preshot',
+		Subset = {
+			[1] = 'Preshot',
+		}
 	},
 	
 --[[
@@ -273,7 +286,9 @@ local sets = {
     },
 
 	['Tank_Midshot'] = {
-		Subset = 'Midshot',
+		Subset = {
+			[1] = 'Midshot',
+		}
 	},
 
 --[[
@@ -298,7 +313,9 @@ local sets = {
 	},
 	
 	['Tank_INT'] = {
-		Subset = 'INT',
+		Subset = {
+			[1] = 'INT',
+		}
 	},
 	
 	['MND'] = {
@@ -315,7 +332,9 @@ local sets = {
 	},
 	
 	['Tank_MND'] = {
-		Subset = 'MND',
+		Subset = {
+			[1] = 'MND',
+		}
 	},
 	
 	['Enmity_Plus'] = {
@@ -359,7 +378,8 @@ local sets = {
 --]]
 	
 	['Macc'] = {
-		Subset = { 'Dark_Magic_Skill//DARK', 
+		Subset = {
+			[1] = {'Dark_Magic_Skill//DARK', 
 				   'Elemental_Magic_Skill//ELEMENTAL',
 				   'Enfeebling_Magic_Skill//ENFEEBLING',
 				   'Healing_Magic_Skill//HEALING',		-- Offensive healing only
@@ -367,12 +387,15 @@ local sets = {
 				   'Ninjutsu_Skill//NINJUTSU',
 				   'CHR//SINGING',		-- Charisma provides accuracy w/singing
 				   },
+			},
 		Rings  = 'Tamas Ring',			-- +5 MAcc
 		Feet   = 'Nashira Crackows',	-- +2 MAcc
 	},
 	
 	['Tank_Macc'] = {
-		Subset = 'Macc',
+		Subset = {
+			[1] = 'Macc',
+		}
 	},
 	
 --[[
@@ -452,7 +475,9 @@ local sets = {
 --]]	
 	
 	['CuringMagic'] = {
-		Subset = 'MND',
+		Subset = {
+			[1] = 'MND',
+		},
 		Main   = 'Light Staff//WSWAP',
 		Ammo   = 'Enmity_Minus::Ammo',			-- -1 Enmity
 		Body   = 'Wlk. Tabard +1//EMPTY',		-- -12% SIR
@@ -460,7 +485,9 @@ local sets = {
 	},
 	
 	['Tank_CuringMagic'] = {
-		Subset = 'CuringMagic',
+		Subset = {
+			[1] = 'CuringMagic',
+		}
 	},
 
 --[[
@@ -476,14 +503,18 @@ local sets = {
 --]]
 
 	['OffensiveCuring'] = {
-		Subset = 'CuringMagic',	
+		Subset = {
+			[1] = 'CuringMagic',	
+		},
 		Neck   = 'Uggalepih Pendant//SPECIAL',	-- +8 MAB if MP% < 51%
 		Body   = 'Wlk. Tabard +1//EMPTY',		-- -12% SIR
 		Feet   = 'Duelist\'s Boots',			-- +4 MAB
 	},
 	
 	['Tank_OffensiveCuring'] = {
-		Subset = 'CuringMagic',
+		Subset = {
+			[1] = 'CuringMagic',
+		}
 	},
 
 --[[
@@ -493,12 +524,16 @@ local sets = {
 --]]
 
 	['HealingMagic'] = {
-		Subset = 'Healing_Magic_Skill',
+		Subset = {
+			[1] = 'Healing_Magic_Skill',
+		},
 		Body   = 'Wlk. Tabard +1//EMPTY',		-- -12% SIR
 	},
 	
 	['Tank_HealingMagic'] = {
-		Subset = 'HealingMagic',
+		Subset = {
+			[1] = 'HealingMagic',
+		}
 	},
 
 --[[
@@ -549,12 +584,16 @@ local sets = {
 --]]
 
 	['Barspell'] = {
-		Subset = 'Enhancing_Magic_Skill',
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill',
+		},
 		Body   = 'Wlk. Tabard +1',		-- -12% SIR
 	},
 	
 	['Tank_Barspell'] = {
-		Subset = 'Barspell',
+		Subset = {
+			[1] = 'Barspell',
+		}
 	},
 	
 --[[
@@ -575,12 +614,16 @@ local sets = {
 --]]
 
 	['Enspell'] = {
-		Subset = 'Enhancing_Magic_Skill',
-		Body   = 'Wlk. Tabard +1',		-- -12% SIR
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill',
+		},
+		Body = 'Wlk. Tabard +1',		-- -12% SIR
 	},
 	
 	['Tank_Enspell'] = {
-		Subset = 'Enspell',
+		Subset = {
+			[1] = 'Enspell',
+		}
 	},
 
 --[[
@@ -599,7 +642,9 @@ local sets = {
 --]]
 	
 	['Spike'] = {
-		Subset = 'INT',
+		Subset = {
+			[1] = 'INT',
+		},
 		Neck   = 'Uggalepih Pendant//SPECIAL',	-- +8 MAB if MP% < 51%
 		Hands  = 'Enhancing_Magic_Skill::Hands//EMPTY',	-- Enhances Magic Skill
 		Legs   = { 'Duelist\'s Tights', 'Errant Slops', 'Enhancing_Magic_Skill::Legs' },	-- Enhances Spikes, +7 INT, Enhances Magic Skill
@@ -607,7 +652,9 @@ local sets = {
 	},
 	
 	['Tank_Spike'] = {
-		Subset = 'Spike',
+		Subset = {
+			[1] = 'Spike',
+		}
 	},
 
 --[[
@@ -633,14 +680,18 @@ local sets = {
 --]]
 
 	['Stoneskin'] = {
-		Subset = 'MND',
+		Subset = {
+			[1] = 'MND',
+		},
 		Body   = 'Wlk. Tabard +1//IFNOE:Errant Hpl.',	-- -12% Spell Interruption Rate
 		Hands  = 'Enhancing_Magic_Skill::Hands',	-- Enhancing Magic Skill
 		Legs   = 'Enhancing_Magic_Skill::Legs//IFNOE:Errant Slops',	-- Enhancement Magic Skill
 	},
 	
 	['Tank_Stoneskin'] = {
-		Subset = 'Stoneskin',
+		Subset = {
+			[1] = 'Stoneskin',
+		}
 	},
 
 --[[
@@ -654,7 +705,9 @@ local sets = {
 	},
 	
 	['Tank_Sneak'] = {
-		Subset = 'Sneak',	
+		Subset = {
+			[1] = 'Sneak',	
+		}
 	},
 
 --[[
@@ -668,7 +721,9 @@ local sets = {
 	},
 	
 	['Tank_Invisible'] = {
-		Subset = 'Invisible',	
+		Subset = {
+			[1] = 'Invisible',
+		}
 	},
 
 --[[
@@ -685,12 +740,16 @@ local sets = {
 --]]
 	
 	['Phalanx'] = {
-		Subset = 'Enhancing_Magic_Skill',
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill',
+		},
 		Body   = 'Wlk. Tabard +1',		-- -12% Spell Interruption Rate
 	},	
 
 	['Tank_Phalanx'] = {
-		Subset = 'Phalanx',	
+		Subset = {
+			[1] = 'Phalanx',
+		}
 	},
 
 --[[
@@ -703,7 +762,9 @@ local sets = {
 --]]
 
 	['EnhancingMagic'] = {
-		Subset = 'Enhancing_Magic_Skill',
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill',
+		},
 		Body   = 'Wlk. Tabard +1',		-- -12% Spell Interruption Rate
 		Rings  = { 'Dilation Ring//NOT_ME//SP:Refresh', 'Dilation Ring//NOT_ME//SP:Haste', 'Enmity_Minus::Rings' },
 		Hands  = 'Enmity_Minus::Hands',
@@ -711,7 +772,9 @@ local sets = {
 	},
 	
 	['Tank_EnhancingMagic'] = {
-		Subset = 'EnhancingMagic',
+		Subset = {
+			[1] = 'EnhancingMagic',
+		}
 	},
 
 --[[
@@ -754,14 +817,18 @@ local sets = {
 --]]
 
 	['ElementalNuke'] = {
-		Subset = 'INT',
+		Subset = {
+			[1] = 'INT',
+		},
 		Neck   = 'Uggalepih Pendant//SPECIAL',	-- +8 MAB if MP% < 51%		
 		Body   = 'Wlk. Tabard +1//EMPTY',		-- -12% SIR
 		Feet   = 'Duelist\'s Boots',			-- +4 MAB
 	},
 	
 	['Tank_ElementalNuke'] = {
-		Subset = 'ElementalNuke',
+		Subset = {
+			[1] = 'ElementalNuke',
+		}
 	},
 
 --[[
@@ -789,12 +856,16 @@ local sets = {
 --]]
 
 	['ElementalDebuff'] = {
-		Subset = 'INT',
+		Subset = {
+			[1] = 'INT',
+		},
 		Body   = 'Wlk. Tabard +1//EMPTY',		-- -12% SIR
 	},
 	
 	['Tank_ElementalDebuff'] = {
-		Subset = 'ElementalDebuff',
+		Subset = {
+			[1] = 'ElementalDebuff',
+		}
 	},
 
 --[[
@@ -820,12 +891,16 @@ local sets = {
 --]]
 
 	['Summoning'] = {
-		Subset = 'Summoning_Skill',	
+		Subset = {
+			[1] = 'Summoning_Skill',
+		},
 		Body   = 'Wlk. Tabard +1//EMPTY',		-- -12% SIR
 	},
 	
 	['Tank_Summoning'] = {
-		Subset = 'Summoning',
+		Subset = {
+			[1] = 'Summoning',
+		}
 	},
 
 --[[
@@ -865,13 +940,17 @@ local sets = {
 --]]
 	
 	['Absorb'] = {
-		Subset = 'Enmity_Minus',
+		Subset = {
+			[1] = 'Enmity_Minus',
+		},
 		Hands  = 'Dark_Magic_Skill::Hands',
 		Body   = 'Wlk. Tabard +1',		-- -12% SIR
 	},
 	
 	['Tank_Absorb'] = {
-		Subset = 'Absorb',
+		Subset = {
+			[1] = 'Absorb',
+		}
 	},
 
 --[[
@@ -889,13 +968,17 @@ local sets = {
 --]]
 
 	['Drain'] = {
-		Subset = 'Enmity_Minus',
+		Subset = {
+			[1] = 'Enmity_Minus',
+		},
 		Hands  = 'Dark_Magic_Skill::Hands',
 		Body   = 'Wlk. Tabard +1',		-- -12% SIR
 	},
 	
 	['Tank_Drain'] = {
-		Subset = 'Tank_Drain',
+		Subset = {
+			[1] = 'Tank_Drain',
+		}
 	},
 
 --[[
@@ -914,13 +997,17 @@ local sets = {
 --]]
 
 	['Aspir'] = {
-		Subset = 'Enmity_Minus',
+		Subset = {
+			[1] = 'Enmity_Minus',
+		},
 		Hands  = 'Dark_Magic_Skill::Hands',
 		Body   = 'Wlk. Tabard +1',		-- -12% SIR
 	},
 	
 	['Tank_Aspir'] = {
-		Subset = 'Aspir',
+		Subset = {
+			[1] = 'Aspir',
+		}
 	},
 
 --[[
@@ -929,7 +1016,9 @@ local sets = {
 --]]
 	
 	['DarkMagic'] = {
-		Subset = 'Enmity_Minus',	
+		Subset = {
+			[1] = 'Enmity_Minus',
+		},
 		Neck   = 'Uggalepih Pendant//SPECIAL',	-- +8 MAB if MP% < 51%
 		Body   = 'Wlk. Tabard +1',				-- -12% SIR
 		Hands  = 'Dark_Magic_Skill::Hands',
@@ -937,7 +1026,9 @@ local sets = {
 	},
 	
 	['Tank_DarkMagic'] = {
-		Subset = 'DarkMagic',
+		Subset = {
+			[1] = 'DarkMagic',
+		}
 	},
 	
 --[[
@@ -984,7 +1075,9 @@ local sets = {
 --]]
 
 	['OffensiveDivine'] = {
-		Subset = 'Enmity_Minus',	
+		Subset = { 
+			[1] = 'Enmity_Minus',
+		},
 		Main   = 'Water Staff//WSWAP',			-- +10 Divine Magic Skill
 		Neck   = 'Uggalepih Pendant//SPECIAL',	-- +8 MAB if MP% < 51%
 		Body   = 'Wlk. Tabard +1',				-- -12% SIR
@@ -992,7 +1085,9 @@ local sets = {
 	},
 	
 	['Tank_OffensiveDivine'] = {
-		Subset = 'OffensiveDivine',
+		Subset = {
+			[1] = 'OffensiveDivine',
+		}
 	},
 
 --[[
@@ -1004,7 +1099,9 @@ local sets = {
 --]]	
 	
 	['EnfeebleDivine'] = {
-		Subset = 'Enmity_Minus',	
+		Subset = {
+			[1] = 'Enmity_Minus',
+		},
 		Main   = 'Water Staff//WSWAP',			-- +10 Divine Magic Skill	
 		Body   = 'Wlk. Tabard +1',				-- -12% SIR
 		Neck   = { 'Enfeebling Torque', 'Uggalepih Pendant//SPECIAL' },
@@ -1012,7 +1109,9 @@ local sets = {
 	},
 	
 	['Tank_EnfeebleDivine'] = {
-		Subset = 'EnfeebleDivine',
+		Subset = {
+			[1] = 'EnfeebleDivine',
+		}
 	},
 
 --[[
@@ -1027,7 +1126,9 @@ local sets = {
 --]]
 		
 	['EnhanceDivine'] = {
-		Subset = 'Enmity_Minus',
+		Subset = {
+			[1] = 'Enmity_Minus',
+		},
 		Main   = 'Water Staff//WSWAP',
 		Body   = 'Wlk. Tabard +1',				-- -12% SIR
 		Neck   = { 'Enfeebling Torque', 'Uggalepih Pendant//SPECIAL' },
@@ -1035,7 +1136,9 @@ local sets = {
 	},
 	
 	['Tank_EnhanceDivine'] = {
-		Subset = 'EnhanceDivine',
+		Subset = {
+			[1] = 'EnhanceDivine',
+		}
 	},
 
 --[[
@@ -1070,32 +1173,44 @@ local sets = {
 --]]
 	
 	['EnfeeblingINT'] = {
-		Subset = 'INT',	
+		Subset = {
+			[1] = 'INT',
+		},
 		Head   = 'Enfeebling_Magic_Skill::Head',
 		Neck   = 'Enfeebling_Magic_Skill::Neck',
 		Body   = 'Wlk. Tabard +1//IF:Baron\'s Saio',
 	},
 	
 	['Tank_EnfeeblingINT'] = {
-		Subset = 'EnfeeblingINT',
+		Subset = {
+			[1] = 'EnfeeblingINT',
+		}
 	},
 	
 	['EnfeeblingMND'] = {
-		Subset = 'MND',
+		Subset = {
+			[1] = 'MND',
+		},
 		Head   = 'Enfeebling_Magic_Skill::Head',
 		Body   = 'Wlk. Tabard +1//IFNOE:Errant Hpl.',
 	},
 	
 	['Tank_EnfeeblingMND'] = {
-		Subset = 'EnfeeblingMND',
+		Subset = {
+			[1] = 'EnfeeblingMND',
+		}
 	},
 
 	['EnfeeblingMagic'] = {
-		Subset = 'Enfeebling_Magic_Skill',
+		Subset = {
+			[1] = 'Enfeebling_Magic_Skill',
+		}
 	},
 	
 	['Tank_EnfeeblingMagic'] = {
-		Subset = 'EnfeeblingMagic',
+		Subset = {
+			[1] = 'EnfeeblingMagic',
+		}
 	},
 	
 --[[
@@ -1108,12 +1223,10 @@ local sets = {
 	
 	['CHR'] = {		-- For singing Charisma is used for accuracy
 		Main  = 'Pluto\'s Staff//WSWAP',	-- +2 CHR
-		Head  = 'Entrancing Ribbon',		-- +2 CHR
 		Ears  = 'Beastly Earring',			-- +2 CHR
 		Body  = { 'Errant Hpl.', 'Brigandine//IF:Black Cotehardie' },	-- +10 CHR, filler to avoid -3 CHR
-		Neck  = { 'Star Necklace', 'Flower Necklace' },	-- +3/3 CHR		
-		Rings = { 'Moon Ring', 'Moon Ring' },
-		Waist = { 'Corsette', 'Mrc.Cpt. Belt' },	-- +5/1 CHR
+		Neck  = 'Flower Necklace',			-- +3 CHR
+		Waist = 'Mrc.Cpt. Belt',			-- +1 CHR
 		Legs  = 'Errant Slops',				-- +7 CHR
 	},
 	
@@ -1139,11 +1252,15 @@ local sets = {
 --]]
 
 	['EnhancementSinging'] = {
-		Subset = 'CHR',	
+		Subset = {
+			[1] = 'CHR',
+		}
 	},
 	
 	['Tank_EnhancementSinging'] = {
-		Subset = 'EnhancementSinging',
+		Subset = {
+			[1] = 'EnhancementSinging',
+		}
 	},
 
 --[[
@@ -1152,11 +1269,15 @@ local sets = {
 --]]
 	
 	['EnfeeblingSinging'] = {
-		Subset = 'CHR',	
+		Subset = {
+			[1] = 'CHR',
+		}
 	},
 	
 	['Tank_EnfeeblingSinging'] = {
-		Subset = 'EnfeeblingSinging',
+		Subset = {
+			[1] = 'EnfeeblingSinging',
+		}
 	},
 
 --[[
@@ -1202,7 +1323,9 @@ local sets = {
 --]]
 	
 	['NinjutsuElemental'] = {
-		Subset = 'INT',
+		Subset = {
+			[1] = 'INT',
+		},
 		Neck   = 'Uggalepih Pendant//SPECIAL',
 	},
 	
@@ -1266,12 +1389,13 @@ local sets = {
 -]]
 	
 	['WS_STR'] = {
-		Subset = 'AttackPower',	
-		Head   = 'Mrc.Cpt. Headgear',	-- +1 STR
+		Subset = {
+			[1] = 'AttackPower',
+		},
 		Neck   = 'Spike Necklace',		-- +3 STR
 		Body   = { 'Narasimha\'s Vest', 'Black Cotehardie', 'Wonder Kaftan' },		-- +3/3/1 STR
 		Hands  = { 'Ogre Gloves', 'Wonder Mitts' },			-- +6/3 STR
-		Rings  = { 'Flame Ring', 'Sun Ring', 'Kshama Ring No.8', 'Courage Ring' },	-- +5/3/3/2 STR
+		Rings  = { 'Flame Ring', 'Kshama Ring No.8' },		-- +5/3 STR
 		Back   = { 'Forager\'s Mantle', 'Amemet Mantle//EMPTY' },	-- +3/1 STR
 		Waist  = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },		-- +5/1 STR
 		Legs   = 'Wonder Braccae',		--  +1 STR
@@ -1287,13 +1411,15 @@ local sets = {
 --]]
 
 	['WS_RANGED_STRAGI'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		},
 		Head   = 'Empress Hairpin',								-- +3 AGI
 		Neck   = 'Spike Necklace',								-- +3 STR
 		Ears   = { 'Genin Earring//SJNIN', 'Drone Earring' },	-- +4 AGI SJ NIN, +3 AGI
-		Body   = { 'Black Cotehardie', 'Wonder Kaftan', 'Mrc.Cpt. Doublet' },	-- +3 STR/+3 AGI, +1/1 STR
+		Body   = { 'Black Cotehardie', 'Wonder Kaftan' },		-- +3 STR/+3 AGI
 		Hands  = { 'Ogre Gloves', 'Wonder Mitts' },				-- +6/3 STR
-		Rings  = { 'Flame Ring', 'Sun Ring', 'Kshama Ring No.8', 'Courage Ring' },	-- +5/3/3/2 STR
+		Rings  = { 'Flame Ring', 'Kshama Ring No.8' },			-- +5/3 STR
 		Back   = { 'Forager\'s Mantle', 'Amemet Mantle//EMPTY' },		-- +3/1 STR
 		Waist  = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },			-- +5 STR, +1 STR/+1 AGI
 		Legs   = 'Wonder Braccae',								-- +1 STR
@@ -1307,12 +1433,14 @@ local sets = {
 --]]
 
 	['WS_STRDEX'] = {
-		Subset = 'AttackPower',	
-		Head   = { 'Empress Hairpin', 'Mrc.Cpt. Headgear' },	-- +3 DEX, +1 STR
+		Subset = {
+			[1] = 'AttackPower',
+		},
+		Head   = 'Empress Hairpin',								-- +3 DEX,
 		Neck   = 'Spike Necklace',								-- +3 STR
-		Body   = { 'Black Cotehardie', 'Brigandine', 'Mrc.Cpt. Doublet' },	-- +3 STR/+2 DEX, +2 DEX, +1 STR/+1 DEX
+		Body   = { 'Black Cotehardie', 'Brigandine' },					-- +3 STR/+2 DEX, +2 DEX
 		Hands  = { 'Wlk. Gloves +1', 'Ogre Gloves', 'Wonder Mitts' },	-- +6 DEX, +6/3 STR
-		Rings  = { 'Flame Ring', 'Sun Ring', 'Kshama Ring No.8', 'Kshama Ring No.2', 'Courage Ring', 'Balance Ring' },	-- +5/3/3 STR, +3 DEX, +2 STR, +2 DEX
+		Rings  = { 'Flame Ring', 'Kshama Ring No.8', 'Kshama Ring No.2' },	-- +5/3 STR, +3 DEX
 		Back   = { 'Forager\'s Mantle', 'Amemet Mantle//EMPTY' },		-- +3/1 STR
 		Waist  = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },			-- +5 STR, +1 STR/+1 DEX
 		Legs   = { 'Duelist\'s Tights','Wonder Braccae' },		-- +5 DEX, +1 STR
@@ -1326,12 +1454,14 @@ local sets = {
 --]]
 	
 	['WS_STRINT'] = {
-		Subset = 'AttackPower',	
-		Head   = { 'Warlock\'s Chapeau', 'Mrc.Cpt. Headgear' },	-- +3 INT, +1 STR
+		Subset = {
+			[1] = 'AttackPower',
+		},
+		Head   = 'Warlock\'s Chapeau',							-- +3 INT
 		Neck   = 'Spike Necklace',								-- +3 STR
 		Body   = { 'Errant Hpl.', 'Black Cotehardie', 'Wonder Kaftan', 'Baron\'s Saio' },	-- +10 INT, +3 STR/+2 DEX, +1 STR, +1 INT
 		Hands  = { 'Errant Cuffs', 'Duelist\'s Gloves', 'Wonder Mitts' },	-- +5/4 INT, +3 STR
-		Rings  = { 'Flame Ring', 'Tamas Ring', 'Sun Ring', 'Kshama Ring No.8', 'Courage Ring' },	-- +5 STR/+2 INT, +5 INT, +3/2 STR
+		Rings  = { 'Flame Ring', 'Tamas Ring', 'Kshama Ring No.8' },	-- +5 STR/+2 INT, +5 INT
 		Back   = { 'Forager\'s Mantle', 'Amemet Mantle' },		-- +3/1 STR
 		Waist  = { 'Warwolf Belt', 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },	-- +5 STR, +5 INT, +1 STR/+1 INT
 		Legs   = { 'Errant Slops', 'Wonder Braccae' },			-- +7 INT, +1 STR
@@ -1347,13 +1477,14 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
-		Subset = 'AttackPower',	
-		Head   = 'Mrc.Cpt. Headgear',					-- +1 STR
+		Subset = {
+			[1] = 'AttackPower',
+		},
 		Ears   = { 'Geist Earring' },	-- +1 MND
 		Neck   = { 'Promise Badge', 'Justice Badge' },	-- +5/3 MND
 		Body   = { 'Errant Hpl.', 'Wonder Kaftan', 'Baron\'s Saio' },	-- +10 MND, +1 STR/+1 MND, +1 MND
 		Hands  = { 'Wonder Mitts', 'Baron\'s Cuffs//EMPTY' },	-- +2/1 MND
-		Rings  = { 'Tamas Ring', 'Flame Ring', 'Sun Ring', 'Kshama Ring No.8', 'Kshama Ring No.9', 'Courage Ring', 'Tranquility Ring' },	-- +5 MND, +5/3/3 STR, +3 MND, +2 STR, +2 MND
+		Rings  = { 'Tamas Ring', 'Flame Ring', 'Kshama Ring No.8', 'Kshama Ring No.9' },	-- +5 MND, +5/3 STR, +3 MND
 		Back   = { 'Forager\'s Mantle', 'White Cape', 'Amemet Mantle//EMPTY' },	-- +3 STR, +2 MND, +1 STR
 		Waist  = { 'Warwolf Belt', 'Penitent\'s Rope', 'Mrc.Cpt. Belt', 'Friar\'s Rope' },	-- +5 STR, +5 MND, +1 STR/+1 MND, +1 MND
 		Legs   = { 'Errant Slops', 'Warlock\'s Tights', 'Wonder Braccae' },	-- +7/3 MND, +2 MND/+1 STR
@@ -1367,14 +1498,10 @@ local sets = {
 --]]
 	
 	['WS_CHR'] = {
-		Subset = 'AttackPower',	
-		Head   = 'Entrancing Ribbon',		-- +2 CHR
-		Ears   = 'Beastly Earring',			-- +2 CHR
-		Body   = { 'Errant Hpl.', 'Brigandine//IF:Black Cotehardie' },	-- +10 CHR, filler to avoid -3 CHR
-		Neck   = { 'Star Necklace', 'Flower Necklace' },	-- +3/3 CHR		
-		Rings  = { 'Moon Ring', 'Moon Ring' },
-		Waist  = { 'Corsette', 'Mrc.Cpt. Belt' },	-- +5/1 CHR
-		Legs   = 'Errant Slops',				-- +7 CHR
+		Subset = {
+			[1] = 'AttackPower',
+			[2] = 'CHR',
+		},
     },
 	
 --[[
@@ -1384,12 +1511,14 @@ local sets = {
 --]]
 	
 	['WS_DEX'] = {
-		Subset = 'AttackPower',
+		Subset = {
+			[1] = 'AttackPower',
+		},
 		Head   = 'Empress Hairpin',		-- +3 DEX
 		Neck   = 'Spike Necklace',		-- +3 DEX
-		Body   = { 'Black Cotehardie', 'Brigandine', 'Mrc.Cpt. Doublet' },	-- +2/2/1 DEX
+		Body   = { 'Black Cotehardie', 'Brigandine' },	-- +2/2 DEX
 		Hands  = 'Wlk. Gloves +1',		-- +6 DEX
-		Rings  = { 'Kshama Ring No.2', 'Balance Ring' },	-- +3/2 DEX
+		Rings  = 'Kshama Ring No.2',	-- +3 DEX
 		Waist  = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },		-- +5/1 DEX
 		Legs   = 'Duelist\'s Tights',	-- +5 DEX
 		Feet   = 'Bounding Boots',		-- +3 DEX
@@ -1402,14 +1531,16 @@ local sets = {
 --]]
 	
 	['WS_DEXAGI'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		},
 		Head   = 'Empress Hairpin',		-- +3 DEX/+3 AGI
 		Neck   = 'Spike Necklace',		-- +3 DEX
 		Ears   = { 'Genin Earring//SJNIN', 'Drone Earring' },	-- +4 AGI if SJ NIN, +3 AGI
-		Body   = { 'Black Cotehardie', 'Brigandine', 'Mrc.Cpt. Doublet' },	-- +3 AGI/+2 DEX, 2 DEX, +1 AGI/+1 DEX
+		Body   = { 'Black Cotehardie', 'Brigandine' },			-- +3 AGI/+2 DEX, 2 DEX
 		Hands  = 'Wlk. Gloves +1',		-- +6 DEX
-		Rings  = { 'Kshama Ring No.3', 'Kshama Ring No.2', 'Balance Ring' },	-- +3 AGI, +3/2 DEX
-		Waist  = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },		-- +5 DEX, +1 DEX/+1 AGI
+		Rings  = { 'Kshama Ring No.3', 'Kshama Ring No.2' },	-- +3 AGI, +3 DEX
+		Waist  = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },			-- +5 DEX, +1 DEX/+1 AGI
 		Legs   = 'Duelist\'s Tights',	-- +5 DEX
 		Feet   = 'Bounding Boots',		-- +3 DEX/+3 AGI
     },
@@ -1421,12 +1552,14 @@ local sets = {
 --]]
 	
 	['WS_DEXINT'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		},
 		Head   = { 'Warlock\'s Chapeau', 'Empress Hairpin' },		-- +3 INT, +3 DEX
 		Neck   = 'Spike Necklace',		-- +3 DEX
-		Body   = { 'Errant Hpl.', 'Black Cotehardie', 'Brigandine', 'Mrc.Cpt. Doublet' },	-- +10 INT, +2 DEX/+2 INT, +2/1 DEX
+		Body   = { 'Errant Hpl.', 'Black Cotehardie', 'Brigandine' },	-- +10 INT, +2 DEX/+2 INT
 		Hands  = { 'Wlk. Gloves +1', 'Errant Cuffs', 'Duelist\'s Gloves' },		-- +6 DEX, +5/2 INT
-		Rings  = { 'Tamas Ring', 'Kshama Ring No.5', 'Kshama Ring No.2', 'Balance Ring' },	-- +5/3 INT, +3/2 DEX
+		Rings  = { 'Tamas Ring', 'Kshama Ring No.5', 'Kshama Ring No.2' },	-- +5/3 INT, +3 DEX
 		Waist  = { 'Warwolf Belt', 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },	-- +5 DEXm +5 INT, +1 DEX/+1 INT
 		Legs   = 'Errant Slops',	-- +7 INT
 		Feet   = 'Bounding Boots',	-- +3 DEX
@@ -1439,16 +1572,18 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
-		Subset = 'AttackPower',	
-		Neck  = { 'Promise Badge', 'Justice Badge' },		-- +5/3 MND
-		Ears  = 'Geist Earring',		-- +1 MND
-		Body  = { 'Errant Hpl.', 'Wonder Kaftan', 'Baron\'s Saio' },	-- +10/1/1 MND
-		Hands = { 'Wlk. Gloves +1', 'Baron\'s Cuffs' },		-- +2/1 MND
-		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },	-- +5/3/2 MND
-		Back  = 'White Cape',			-- +2 MND
-		Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt', 'Friar\'s Rope' },	-- +5/1/1 MND
-		Legs  = { 'Errant Slops', 'Warlock\'s Tights', 'Wonder Braccae' },	-- +7/3/2 MND
-		Feet  = { 'Duelist\'s Boots', 'Mannequin Pumps' }, 	-- +4/2 MND	
+		Subset = {
+			[1] = 'AttackPower',
+		},
+		Neck   = { 'Promise Badge', 'Justice Badge' },		-- +5/3 MND
+		Ears   = 'Geist Earring',		-- +1 MND
+		Body   = { 'Errant Hpl.', 'Wonder Kaftan', 'Baron\'s Saio' },	-- +10/1/1 MND
+		Hands  = { 'Wlk. Gloves +1', 'Baron\'s Cuffs' },		-- +2/1 MND
+		Rings  = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },	-- +5/3/2 MND
+		Back   = 'White Cape',			-- +2 MND
+		Waist  = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt', 'Friar\'s Rope' },	-- +5/1/1 MND
+		Legs   = { 'Errant Slops', 'Warlock\'s Tights', 'Wonder Braccae' },	-- +7/3/2 MND
+		Feet   = { 'Duelist\'s Boots', 'Mannequin Pumps' }, 	-- +4/2 MND	
     },
 	
 --[[
@@ -1458,7 +1593,9 @@ local sets = {
 --]]
 
 	['WS_Skill'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 	
 --[[
@@ -1468,17 +1605,19 @@ local sets = {
 --]]
 
 	['WS_HP'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		},
 		Ammo   = 'Happy Egg',		-- +1% HP
 		Head   = 'Duelist\'s Chapeau//IF:Empress Hairpin',	-- filler in case to offset -15 HP of Empress hairpin
-		Neck  = 'Promise Badge',	-- 10 HP
-		Ears  = { 'Physical Earring', 'Ethereal Earring' },	-- Convert 25 MP to HP, +15 HP
-		Body  = 'Wonder Kaftan',	-- +36 HP
-		Hands = { 'Crimson Fng. Gnt.', 'Dusk Gloves', 'Wonder Mitts' },	-- +20/20/12 HP
-		Rings  = { 'Bomb Queen Ring', 'Toreador\'s Ring', 'Toreador\'s Ring', 'Courage Ring//IF:Ether Ring', 'Balance Ring//IF:Astral Ring', 'Tranquility Ring//IF:Atral Ring' },		-- +75/10/10 HP, the rest removes -HP rings
-		Waist = { 'Powerful Rope', 'Warrior\'s Belt' },		-- +20/3 HP
-		Legs  = 'Wonder Braccae',	-- +21 HP
-		Feet  = { 'Creek F Clomps', 'Wonder Clomps' },		-- +35/20 HP
+		Neck   = 'Promise Badge',	-- 10 HP
+		Ears   = { 'Physical Earring', 'Ethereal Earring' },	-- Convert 25 MP to HP, +15 HP
+		Body   = 'Wonder Kaftan',	-- +36 HP
+		Hands  = { 'Crimson Fng. Gnt.', 'Dusk Gloves', 'Wonder Mitts' },		-- +20/20/12 HP
+		Rings  = { 'Bomb Queen Ring', 'Toreador\'s Ring', 'Toreador\'s Ring' },	-- +75/10/10 HP
+		Waist  = 'Powerful Rope',	-- +20 HP
+		Legs   = 'Wonder Braccae',	-- +21 HP
+		Feet   = { 'Creek F Clomps', 'Wonder Clomps' },		-- +35/20 HP
     },
 	
 --[[
@@ -1509,7 +1648,9 @@ local sets = {
 	--* BST *--
 	-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration)
 	['Charm'] = {
-	    Subset = 'CHR',
+	    Subset = {
+			[1] = 'CHR',
+		}
     },
 
 	['Reward'] = {
@@ -1574,7 +1715,7 @@ local sets = {
 		Head  = 'Empress Hairpin',							-- +3 DEX
 		Neck  = { 'Spike Necklace', 'Opo-opo Necklace' },	-- +3/3 DEX
 		Body  = 'Brigandine',								-- +2 DEX
-		Rings = { 'Kshama Ring No.2', 'Balance Ring' },		-- +3/2 DEX
+		Rings = 'Kshama Ring No.2',							-- +3 DEX
 		Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },		-- +5/1 DEX
 		Feet  = 'Bounding Boots',							-- +3 DEX
 	},
@@ -1595,7 +1736,7 @@ local sets = {
 		Neck = 'Spike Necklace',							-- +3 DEX
 		Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
 		Body = 'Brigandine',								-- +2 DEX
-		Rings = { 'Kshama Ring No.2', 'Kshama Ring No.3', 'Balance Ring' },	-- +3 DEX, +3 AGI, +2 DEX
+		Rings = { 'Kshama Ring No.2', 'Kshama Ring No.3' },	-- +3 DEX, +3 AGI
 		Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },		-- +5 DEX, +1 DEX/+1 AGI
 		Feet = 'Bounding Boots',
 	},
@@ -1858,10 +1999,10 @@ function profile.HandleDefault()
 	-- Make sure the macro set is shown and that the display on the top of the screen is correct
 	-- in case the subjob was changed.	
 	SetSubjobSet(player.SubJob);
-
+	gcdisplay.Update();
+	
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
-		gcdisplay.Update();		-- in case something has changed	
 		return;
 	end
 

@@ -4,7 +4,7 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the WAR job.
 	
-	Gear Sets last updated: March 9, 2025
+	Gear Sets last updated: March 17, 2025
 	Code update: March 9, 2025
 --]]
 
@@ -65,11 +65,13 @@ local sets = {
 	
 	['Default'] = {
 		Head   = { 'Lilac Corsage//TOWN', 'Empress Hairpin' },
-		Body   = { 'Ducal Aketon//TOWN-AK', 'Beetle Harness', 'Angler\'s Tunica' },
+		Body   = { 'Ducal Aketon//TOWN-AK', 'Angler\'s Tunica' },
 	},
 
 	['Tank_Default'] = {
-		Subset = 'Default',
+		Subset = {
+			[1] = 'Default',
+		}
 	},
 	
 --[[
@@ -83,16 +85,14 @@ local sets = {
 		Head = 'Empress Hairpin',
 		Neck = 'Spike Necklace',
 		Ears = { 'Physical Earring', 'Reraise Earring' },
-		Body = { 'Beetle Harness', 'Angler\'s Tunica' },
-		Hands = 'Ryl.Ftm. Gloves',
-		Rings = { 'Courage Ring', 'Balance Ring' },
-		Waist = 'Warrior\'s Belt',
-		Legs = { 'San. Trousers', 'Ryl.Ftm. Trousers' },
+		Body = 'Angler\'s Tunica',
 		Feet = 'Bounding Boots',
     },
 	
 	['Tank_TP'] = {
-		Subset = 'TP';	
+		Subset = {
+			[1] = 'TP';	
+		}
 	},
 	
 --[[
@@ -110,7 +110,7 @@ local sets = {
 	['Accuracy'] = {
 		Head  = 'Empress Hairpin',
 		Neck  = 'Spike Necklace',
-		Rings = { 'Kshama Ring No.2', 'Balance Ring' },
+		Rings = 'Kshama Ring No.2',
 		Feet  = 'Bounding Boots',
     },
 
@@ -138,12 +138,16 @@ local sets = {
   ['Progressive'] = { 
 		['Accuracy'] = { 
 			[1] = { 
-				['Subset'] = 'Accuracy',
+				['Subset'] = {
+					[1] = 'Accuracy',
+				}
 			},
 		},
 		['Ranged_Accuracy'] = {
 			[1] = {
-				['Subset'] = 'Ranged_Accuracy',
+				['Subset'] = {
+					[1] = 'Ranged_Accuracy',
+				}
 			}
 		}				
   },
@@ -187,7 +191,6 @@ local sets = {
 
 	['Start_Weapons'] = {
 		Main = { 'Neckchopper', 'Moth Axe' },
-		Range = 'Lgn. Crossbow',
     },
 	
 --[[
@@ -267,6 +270,17 @@ local sets = {
 --]]
 	
 	['Macc'] = {
+		Subset = {
+			[1] = { 'Dark_Magic_Skill//DARK', 
+				   'Elemental_Magic_Skill//ELEMENTAL',
+				   'Enfeebling_Magic_Skill//ENFEEBLING',
+				   'Healing_Magic_Skill//HEALING',		-- Offensive healing only
+				   'Divine_Magic_Skill//DIVINE',
+				   'Ninjutsu_Skill//NINJUTSU',
+				   'CHR//SINGING',		-- Charisma provides accuracy w/singing
+				   },
+		},
+		Rings  = 'Tamas Ring',			-- +5 MAcc
 	},
 	
 	['Tank_Macc'] = {
@@ -305,6 +319,9 @@ local sets = {
 	Healing spells: cures, curagas, raises, reraises, blindna, cursna,
 	paralyna, poisona, silena, stona, and viruna.
 --]]
+
+	['Healing_Magic_Skill'] = {
+	},
 	
 --[[	
 	Curing magic addresses healing players/npcs. Each time a cure 
@@ -403,6 +420,9 @@ local sets = {
 	enlight.)
 --]]
 
+	['Enhancing_Magic_Skill'] = {
+	},
+	
 --[[
 	There are two versions of barspells: elemental and status, both of which
 	increase the magic evasion of a player from the element/status named.
@@ -503,7 +523,9 @@ local sets = {
 	},
 	
 	['Tank_Stoneskin'] = {
-		Subset = 'Stoneskin',
+		Subset = {
+			[1] = 'Stoneskin',
+		}
 	},
 
 --[[
@@ -516,7 +538,9 @@ local sets = {
 	},
 	
 	['Tank_Sneak'] = {
-		Subset = 'Sneak',		
+		Subset = {
+			[1] = 'Sneak',
+		}
 	},
 
 --[[
@@ -529,7 +553,9 @@ local sets = {
 	},
 	
 	['Tank_Invisible'] = {
-		Subset = 'Invisible',	
+		Subset = {
+			[1] = 'Invisible',
+		}
 	},
 
 --[[
@@ -549,7 +575,9 @@ local sets = {
 	},	
 
 	['Tank_Phalanx'] = {
-		Subset = 'Phalanx',		
+		Subset = {
+			[1] = 'Phalanx',
+		}
 	},
 
 --[[
@@ -572,6 +600,9 @@ local sets = {
 	* Midcast: Elemental Magic *
 	****************************
 --]]
+
+	['Elemental_Magic_Skill'] = {
+	},
 	
 --[[
 	Elemental Magic: This type of magic consists of nukes, ancient magic (a type
@@ -642,6 +673,9 @@ local sets = {
 	* Midcast: Summoning *
 	**********************
 --]]
+
+	['Summoning_Skill'] = {
+	},
 	
 --[[
 	Summoning: This type of magic is used when a summoner casts either an
@@ -677,6 +711,9 @@ local sets = {
 	absorb INT, absorb MND, absorb STR, absorb TP, absorb VIT, aspir, bios,
 	drain, stun and tractor.
 --]]
+
+	['Dark_Magic_Skill'] = {
+	},
 	
 --[[
 	There's 9 absorb spells (although some are currently out of era). If not
@@ -739,7 +776,6 @@ local sets = {
 	['Tank_Aspir'] = {
 	},
 
-
 --[[
 	This last gear set, DarkMagic, covers all Dark Magic spells not covered
 	by the previous three gear sets. 
@@ -768,6 +804,9 @@ local sets = {
 	* Midcast: Divine Magic *
 	*************************
 --]]
+
+	['Divine_Magic_Skill'] = {
+	},
 
 --[[
 	Divine Magic: damages or debilitates opponents with light elemental
@@ -833,6 +872,9 @@ local sets = {
 	* Midcast: Enfeebling Magic *
 	****************************
 --]]
+
+	['Enfeebling_Magic_Skill'] = {
+	},
 	
 --[[
 	Enfeebling Magic: this class of spells apply a debilitating status effect
@@ -861,7 +903,7 @@ local sets = {
 	
 	['EnfeeblingMND'] = {
 	    Neck  = { 'Promise Badge', 'Justice Badge' },
-        Rings = { 'Tamas Ring', 'Tranquility Ring' },
+        Rings = 'Tamas Ring',
         Waist = 'Friar\'s Rope',
 	},
 	
@@ -894,6 +936,9 @@ local sets = {
 	and status resistance.
 --]]
 
+	['CHR'] = {		-- Charisma provides accuracy w/singing
+	},
+	
 --[[
 	EnhancementSinging contains gear that enhances party members is some specific
 	manner. Included are: minne, minuet, paeon, pastoral, madigal, mambo, etude,
@@ -924,6 +969,9 @@ local sets = {
 	********************
 --]]
 
+	['Ninjutsu_Skill'] = {
+	},
+	
 --[[
 	Ninjutsu: this is a means for ninjas to cast magic-like abilities that
 	use ninja tools instead of MP. Ninjutsu Skill affects spell interruption
@@ -1022,9 +1070,10 @@ local sets = {
 -]]
 	
 	['WS_STR'] = {
-		Subset = 'AttackPower',	
-		Neck  = 'Spike Necklace',
-		Rings = 'Courage Ring',
+		Subset = {
+			[1] = 'AttackPower',
+		},
+		Neck   = 'Spike Necklace',
     },
 	
 --[[
@@ -1036,11 +1085,12 @@ local sets = {
 --]]
 
 	['WS_STRAGI'] = {
-		Subset = 'AttackPower',	
-		Head  = 'Empress Hairpin',
-		Neck  = 'Spike Necklace',
-		Rings = 'Courage Ring',
-		Feet  = 'Bounding Boots',
+		Subset = {
+			[1] = 'AttackPower',
+		},
+		Head   = 'Empress Hairpin',
+		Neck   = 'Spike Necklace',
+		Feet   = 'Bounding Boots',
     },
 	
 --[[
@@ -1054,11 +1104,12 @@ local sets = {
 --]]
 
 	['WS_STRDEX'] = {
-		Subset = 'AttackPower',	
-		Head  = 'Empress Hairpin',
-		Neck  = 'Spike Necklace',
-		Rings = { 'Courage Ring', 'Balance Ring' },
-		Feet  = 'Bounding Boots',
+		Subset = {
+			[1] = 'AttackPower',
+		},
+		Head   = 'Empress Hairpin',
+		Neck   = 'Spike Necklace',
+		Feet   = 'Bounding Boots',
     },
 	
 --[[
@@ -1072,9 +1123,10 @@ local sets = {
 --]]
 	
 	['WS_STRINT'] = {
-		Subset = 'AttackPower',	
-		Neck  = 'Spike Necklace',
-		Rings = 'Courage Ring',	
+		Subset = {
+			[1] = 'AttackPower',
+		},
+		Neck   = 'Spike Necklace',	
     },
 	
 --[[
@@ -1084,9 +1136,10 @@ local sets = {
 --]]
 	
 	['WS_STRINT_30_20'] = {
-		Subset = 'AttackPower',	
-		Neck  = 'Spike Necklace',
-		Rings = 'Courage Ring',	
+		Subset = {
+			[1] = 'AttackPower',
+		},
+		Neck   = 'Spike Necklace',	
     },
 	
 --[[
@@ -1102,8 +1155,9 @@ local sets = {
 --]]
 
 	['WS_STRMND'] = {
-		Subset = 'AttackPower',	
-		Rings = 'Courage Ring',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 	
 --[[
@@ -1115,9 +1169,10 @@ local sets = {
 --]]
 
 	['WS_STRVIT'] = {
-		Subset = 'AttackPower',	
-		Neck  = 'Spike Necklace',
-		Rings = { 'Courage Ring', 'Tranquility Ring' },
+		Subset = {
+			[1] = 'AttackPower',
+		},
+		Neck   = 'Spike Necklace',
     },
 	
 --[[
@@ -1130,7 +1185,9 @@ local sets = {
 --]]
 
 	['WS_RANGED_STRAGI'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 
 --[[
@@ -1143,9 +1200,11 @@ local sets = {
 --]]
 
 	['WS_AGI'] = {
-		Subset = 'AttackPower',	
-		Head  = 'Empress Hairpin',
-		Feet = 'Bounding Boots',
+		Subset = {
+			[1] = 'AttackPower',
+		},
+		Head   = 'Empress Hairpin',
+		Feet   = 'Bounding Boots',
     },
 	
 --[[
@@ -1155,7 +1214,9 @@ local sets = {
 --]]
 	
 	['WS_CHR'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 	
 --[[
@@ -1165,7 +1226,9 @@ local sets = {
 --]]
 	
 	['WS_INT'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 	
 --[[
@@ -1175,9 +1238,10 @@ local sets = {
 --]]
 	
 	['WS_INTMND'] = {
-		Subset = 'AttackPower',	
-		Neck  = 'Justice Badge',
-		Rings = 'Tranquility Ring',
+		Subset = {
+			[1] = 'AttackPower',
+		},
+		Neck   = 'Justice Badge',
     },
 	
 --[[
@@ -1187,11 +1251,12 @@ local sets = {
 --]]
 	
 	['WS_DEX'] = {
-		Subset = 'AttackPower',	
-		Head  = 'Empress Hairpin',
-		Neck  = 'Spike Necklace',
-		Rings = 'Balance Ring',
-		Feet  = 'Bounding Boots',
+		Subset = {
+			[1] = 'AttackPower',
+		},
+		Head   = 'Empress Hairpin',
+		Neck   = 'Spike Necklace',
+		Feet   = 'Bounding Boots',
     },
 	
 --[[
@@ -1203,11 +1268,12 @@ local sets = {
 --]]
 	
 	['WS_DEXAGI'] = {
-		Subset = 'AttackPower',	
-		Head  = 'Empress Hairpin',
-		Neck  = 'Spike Necklace',
-		Rings = 'Balance Ring',
-		Feet  = 'Bounding Boots',	
+		Subset = {
+			[1] = 'AttackPower',
+		},
+		Head   = 'Empress Hairpin',
+		Neck   = 'Spike Necklace',
+		Feet   = 'Bounding Boots',	
     },
 	
 --[[
@@ -1217,11 +1283,12 @@ local sets = {
 --]]
 	
 	['WS_DEXINT'] = {
-		Subset = 'AttackPower',	
-		Head  = 'Empress Hairpin',
-		Neck  = 'Spike Necklace',
-		Rings = 'Balance Ring',
-		Feet  = 'Bounding Boots',	
+		Subset = {
+			[1] = 'AttackPower',
+		},
+		Head   = 'Empress Hairpin',
+		Neck   = 'Spike Necklace',
+		Feet   = 'Bounding Boots',	
     },
 	
 --[[
@@ -1231,8 +1298,9 @@ local sets = {
 --]]
 
 	['WS_MND'] = {
-		Subset = 'AttackPower',	
-		Rings = 'Tranquility Ring',
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 	
 --[[
@@ -1242,7 +1310,9 @@ local sets = {
 --]]
 
 	['WS_Skill'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 	
 --[[
@@ -1252,7 +1322,9 @@ local sets = {
 --]]
 
 	['WS_HP'] = {
-		Subset = 'AttackPower',	
+		Subset = {
+			[1] = 'AttackPower',
+		}
     },
 	
 --[[
@@ -1599,10 +1671,10 @@ function profile.HandleDefault()
 	-- Make sure the macro set is shown and that the display on the top of the screen is correct
 	-- in case the subjob was changed.	
 	SetSubjobSet(player.SubJob);
-
+	gcdisplay.Update();
+	
 	-- Only gear swap if this flag is true
 	if gcdisplay.GetToggle('GSwap') == false then
-		gcdisplay.Update();		-- in case something has changed	
 		return;
 	end
 
