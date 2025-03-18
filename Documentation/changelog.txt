@@ -1,3 +1,6 @@
+- Added slot name verification to all gear sets processed in /gc  
+
+Version 1.5.5  
 - For SMN, changed Blood Pact 'Burning Strike' from Magical to Hybrid 
 
 - Changed /SMG from muli-parameters to val= as in /smg gs=tp or
