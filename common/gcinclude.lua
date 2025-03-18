@@ -2258,15 +2258,15 @@ function DisplayGD_Gs(p1)
 				end			
 				tmp = nil;
 				
-				for _,g in pairs(gg) do
+				for _,g in ipairs(gg) do
 					if tmp == nil then
 						tmp = fRemoveConditional(g);
 					else
 						tmp = tmp .. ',' .. fRemoveConditional(g);
 					end
-					print(' ');
-					print(chat.message('Subset: ' .. tmp));
-				end	
+				end
+				print(' ');
+				print(chat.message('Subset: ' .. tmp));
 			end
 		end
 	end
@@ -2290,10 +2290,14 @@ function DisplayGD_Gs(p1)
 				-- Now process the normal slot
 				local t;
 				for _,g in pairs(gg) do
-					t = string.upper(fRemoveConditional(g));
-					if string.find(lPc,t) == nil then
-						DisplayItemStats(t,slot);
-						lPc = lPc .. ',' ..t;
+					if string.find(g,'::') ~= nil then
+						print(chat.message('   ' .. g));
+					else
+						t = string.upper(fRemoveConditional(g));
+						if string.find(lPc,t) == nil then
+							DisplayItemStats(t,slot);
+							lPc = lPc .. ',' ..t;
+						end
 					end						
 				end
 			end
@@ -3764,6 +3768,18 @@ function fCheckInline(gear,sSlot,ts)
 					bGood = true;
 				end
 			end				
+		elseif string.find(suCode,'IFOE:') then				-- Equip if current item is the named item or it's empty
+			bGood = false;		
+			if sSlot ~= 'subset' then
+				local tCur = gData.GetEquipment();
+				if tCur[sSlot] == nil then
+					bGood = true;
+				else
+					local sCur = tCur[sSlot].Name;
+					local sItem = string.sub(suCode,4,-1);	
+					bGood = (string.lower(sItem) == string.lower(sCur));
+				end
+			end	
 		elseif string.find(suCode,'LVLDIV') then			-- Player's level divisable by #
 			local iDiv = tonumber(string.sub(suCode,7,-1));
 			if iDiv > 0 then
@@ -4114,19 +4130,21 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride,bIgnoreWSWAP)
 	for k,v in pairs(ts1) do
 		sK = string.lower(k);
 		
-		if sK == 'subset' then		
-			if type(v) == 'table' then
-				ts = v;
-			else
-				ts[k] = v;
-			end
+		if sK == 'subset' then
+			for ki,vi in ipairs(v) do
+				if type(vi) == 'table' then
+					ts = vi;
+				else
+					ts[k] = vi;
+				end
 			
-			-- Then determine the appropriate set to load
-			for kk,vv in pairs(ts) do		
-				bGood,vRoot = fCheckInline(vv,'subset',tMaster);			
-				if bGood == true then
-					gcinclude.MoveToCurrent(vRoot,tMaster,bOverride);
-					break;
+				-- Then determine the appropriate set to load
+				for kk,vv in pairs(ts) do		
+					bGood,vRoot = fCheckInline(vv,'subset',tMaster);			
+					if bGood == true then
+						gcinclude.MoveToCurrent(vRoot,tMaster,bOverride);
+						break;
+					end
 				end
 			end			
 		end
@@ -4564,10 +4582,10 @@ function gcinclude.FractionalSet(hs,sSlots)
 			-- sure to match with the actual slot names
 			if string.find(sSlots,'ear') ~= nil and
 				(t == 'ears' or t == 'ear1' or t == 'ear2') then
-				tAcc[j] = k;
+					tAcc[j] = k;
 			elseif string.find(sSlots,'ring') ~= nil and 
 				(t == 'rings' or t == 'ring1' or t == 'ring2') then
-				tAcc[j] = k;
+					tAcc[j] = k;
 			-- at this point it's an exact match
 			elseif string.find(sSlots,t) ~= nil then
 				tAcc[j] = k;
@@ -4587,18 +4605,20 @@ function gcinclude.FractionalSet(hs,sSlots)
 			for j,k in pairs(ts) do
 				t = string.lower(j)
 				if t == 'subset' then
-					if type(k) == 'table' then
-						ts = k;
-					else
-						ts[j] = k;
-					end
+					for ji,ki in ipairs(k) do
+						if type(ki) == 'table' then
+							ts = ki;
+						else
+							ts[j] = ki;
+						end
 					
-					-- Then determine the appropriate set to load
-					for kk,vv in pairs(ts) do
-						bGood,vRoot = fCheckInline(vv,'subset');
-						if bGood == true then
-							gcinclude.FractionalSet(vRoot,sSlots)
-							break;
+						-- Then determine the appropriate set to load
+						for kk,vv in pairs(ts) do
+							bGood,vRoot = fCheckInline(vv,'subset');
+							if bGood == true then
+								gcinclude.FractionalSet(vRoot,sSlots)
+								break;
+							end
 						end
 					end
 				end
