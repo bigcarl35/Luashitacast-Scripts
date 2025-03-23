@@ -4,7 +4,7 @@ require 'common'
 
 version = { ['author']	= 'Paiine',
  		    ['name']	= 'Luashitacast (Karma)',
-			['version']	= '1.5.5' };
+			['version']	= '1.5.6' };
 	
 --[[
 	This file contains routines that are used with Luashitacast across any supported job.
@@ -142,6 +142,11 @@ gcinclude.Gathering_Types = 'HELM,DIG,CLAM,FISH';
 gcinclude.Craft=nil;
 gcinclude.Gather=nil;
 
+-- List of all valid slot names
+gcinclude.SlotNames = { 'subset','main','sub','range','ammo','head',
+	'neck','ear1','ear2','ears','body','hands','ring1','rings2',
+	'rings','back','waist','legs','feet' };
+	
 --[[
 	The following define all the weaponskills according to the desired stats
 --]]
@@ -2695,22 +2700,26 @@ function GearCheck(sList,bForce)
 							ts[1] = kk;
 						end
 			
-						-- Now walk the list of gear
-						for ss,tt in pairs(ts) do						
-							-- Save the details if appropriate. Returned results are
-							-- ignored, but captured in case I change my mind. Please
-							-- note that subsets are ignored in fGearCheckItem.
-							bGood,ref = fGearCheckItem(jj,tt,false,true);
-							if ref ~= nil then						
-								if ref['valid'] == false and ref['slot'] == nil then
-									print(chat.header('GearCheck'):append(chat.message('Warning: Invalid piece of gear - ' .. tt .. ' in ' .. j)));
-								elseif ref['slot'] == false then
-									print(chat.header('GearCheck'):append(chat.message('Warning: Invalid slot: ' .. jj .. ', gear - ' .. tt .. ' in ' .. j)));
+						if table.find(gcinclude.SlotNames,string.lower(jj)) == nil then
+							print(chat.header('GearCheck'):append(chat.message('Warning: Invalid slot name - ' .. jj .. ' in ' .. j)));
+						else
+							-- Now walk the list of gear
+							for ss,tt in pairs(ts) do						
+								-- Save the details if appropriate. Returned results are
+								-- ignored, but captured in case I change my mind. Please
+								-- note that subsets are ignored in fGearCheckItem.
+								bGood,ref = fGearCheckItem(jj,tt,false,true);
+								if ref ~= nil then						
+									if ref['valid'] == false and ref['slot'] == nil then
+										print(chat.header('GearCheck'):append(chat.message('Warning: Invalid piece of gear - ' .. tt .. ' in ' .. j)));
+									elseif ref['slot'] == false then
+										print(chat.header('GearCheck'):append(chat.message('Warning: Invalid slot: ' .. jj .. ', gear - ' .. tt .. ' in ' .. j)));
+									end
 								end
-							end
-							iCnt = iCnt +1;
-							if math.floor(iCnt/50) == iCnt/50 then
-								print(chat.message(tostring(iCnt) .. ' sets processed...'));
+								iCnt = iCnt +1;
+								if math.floor(iCnt/50) == iCnt/50 then
+									print(chat.message(tostring(iCnt) .. ' sets processed...'));
+								end
 							end
 						end
 					end
@@ -2720,7 +2729,7 @@ function GearCheck(sList,bForce)
 						-- Loop on the progressive stages
 						for jj,jk in ipairs(ik) do
 							-- Loop on the line elements
-							for kj,kk in pairs(jk) do
+							for kj,kk in pairs(jk) do							
 								ts = {};
 								-- Entries can be a table or a string. Make either case a table
 								if type(kk) == 'table' then
@@ -2729,22 +2738,26 @@ function GearCheck(sList,bForce)
 									ts[1] = kk;
 								end							
 								
-								-- Process the list of gear
-								for ss,tt in pairs(ts) do							
-									-- Subsets and inline references are ignored									
-									bGood,ref = fGearCheckItem(kj,tt,false,true);
-									if ref ~= nil then						
-										if ref['valid'] == false and ref['slot'] == nil then
-											print(chat.header('GearCheck'):append(chat.message('Warning: Invalid piece of gear - ' .. tt .. ' in Progressive:' .. ij .. ', Stage: ' .. tostring(jj) .. ', Slot: ' .. ss)));
-										elseif ref['slot'] == false then
-											print(chat.header('GearCheck'):append(chat.message('Warning: Invalid slot: ' .. ss .. ', gear - ' .. tt .. ' in Progressive:' .. ij)));
+								if table.find(gcinclude.SlotNames,string.lower(kj)) == nil then
+									print(chat.header('GearCheck'):append(chat.message('Warning: Invalid slot name - ' .. kj .. ' in Progressive ' .. ij)));
+								else								
+									-- Process the list of gear
+									for ss,tt in pairs(ts) do							
+										-- Subsets and inline references are ignored									
+										bGood,ref = fGearCheckItem(kj,tt,false,true);
+										if ref ~= nil then						
+											if ref['valid'] == false and ref['slot'] == nil then
+												print(chat.header('GearCheck'):append(chat.message('Warning: Invalid piece of gear - ' .. tt .. ' in Progressive:' .. ij .. ', Stage: ' .. tostring(jj) .. ', Slot: ' .. ss)));
+											elseif ref['slot'] == false then
+												print(chat.header('GearCheck'):append(chat.message('Warning: Invalid slot: ' .. ss .. ', gear - ' .. tt .. ' in Progressive:' .. ij)));
+											end
 										end
-									end
-									iCnt = iCnt +1;
-									if math.floor(iCnt/50) == iCnt/50 then
-										print(chat.message(tostring(iCnt) .. ' sets processed...'));
+										iCnt = iCnt +1;
+										if math.floor(iCnt/50) == iCnt/50 then
+											print(chat.message(tostring(iCnt) .. ' sets processed...'));
+										end
 									end										
-								end
+								end								
 							end
 							iCnt = iCnt +1;
 							if math.floor(iCnt/50) == iCnt/50 then
@@ -3772,11 +3785,11 @@ function fCheckInline(gear,sSlot,ts)
 			bGood = false;		
 			if sSlot ~= 'subset' then
 				local tCur = gData.GetEquipment();
-				if tCur[sSlot] == nil then
+				local sCur = tCur[sSlot].Name;
+				if sCur == nil then
 					bGood = true;
-				else
-					local sCur = tCur[sSlot].Name;
-					local sItem = string.sub(suCode,4,-1);	
+				else					
+					local sItem = string.sub(suCode,6,-1);
 					bGood = (string.lower(sItem) == string.lower(sCur));
 				end
 			end	
@@ -5140,6 +5153,71 @@ function fGetTableByName(sName)
 	
 	return nil;
 end		-- fGetTableByName
+
+--[[
+	SMGControl processes the /smg command line and coordinates the
+	creation of the appropriate report. Unlike before multiple types
+	of reports can be created in one invocation. The order of the
+	parameters are not fixed. The player can input any or all of
+	the parameters in one call.
+	
+	/smg {noac} gs=set name{,set name...} slot=slot name{,slot name...}
+		>{file name}
+	
+	"/smg" with no parameters is a display all command to the screen.
+	Limitations on the output window might clip this report if the
+	job has a large number of gear sets.
+	
+	"noac" is an optional parameter. It indicates that items from sets 
+	that can't be equipped should be displayed
+	
+	"gs=" indicates that the following one or more gear sets should
+	have their item definitions displayed
+	
+	"slot=" is similar to "gs=" except the player is targetting specific
+	slots across all sets although they can limit which sets by including
+	a "gs=" definition.
+	
+	">{filename}" indicates that the report's output should be redirected
+	to a file. This will specifically be in the Reports directory found
+	under ...HorizonXI\Game\config\addons\luashitacast. If a file name is
+	provided, it will be used. If one is not provided, a name will be
+	created for the report: character_job_date.rpt. Using an existing
+	file name will replace the contents.
+--]]
+--[[
+function SMGControl(args)
+	local bFile = false;
+	local bNoac = false;
+	local slots = {};
+	local gs{};
+
+-- The following is copied from the HandleCommands. It needs to be
+-- reworked.	
+	if #args == 1 then				-- Show a list of all gear
+		DisplayGD_AW(nil,nil);
+	else
+		for i=2,#args,1 do
+			args[i] = string.lower(args[1]));
+			if args[i] == 'noac' then
+				bNoac = true;
+			elseif string.find(args[i],'gs=') ~= nil then
+				args[i] = string.sub(args[i],4,-1);
+				if string.find(args[i],',') then
+				end
+			end
+			if args[2] ~= nil then
+		local ls = string.lower(args[2]);
+		if ls == 'noac' then		-- Show a list of gear where accessible is false
+			DisplayGD_AW('noac');
+		elseif string.len(ls) > 5 and string.sub(ls,1,5) == 'slot=' then
+			DisplayGD_S(string.sub(ls,6,-1));
+		elseif string.len(ls) > 3 and string.sub(ls,1,3) == 'gs=' then 
+			DisplayGD_Gs(string.sub(ls,4,-1));
+		end 
+	end
+end		-- SMGControl
+--]]
 
 --[[
 	HandleCommands processes any commands typed into luashitacast as defined in this file
