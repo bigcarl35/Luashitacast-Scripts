@@ -82,6 +82,7 @@ want me to add any more.
 //IDLE			Equip if Idle is true (part of tanking configuration)
 //IF:gear		Equip if wearing that gear in the tested slot
 //IFNOE:gear	Equip if not wearing that gear in the tested slot (if not or empty)
+//IFOE:gear		Equip if wearing specified item or empty
 //KATANA		Equip if Main is a Katana
 //LVLconditional # Equip if player's level meets the conditional setting
 //LVLDIV#		Equip if player's level is evenly divisible by #
