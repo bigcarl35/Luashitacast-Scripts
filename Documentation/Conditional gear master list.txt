@@ -58,15 +58,18 @@ want me to add any more.
 //DAYTIME		Equip if it's daytime
 //DB:BPP		Equip if debuff cycle set to BPP (blind,poison,paralyze)
 //DB:WSS		Equip if debuff cycle set to WSS (weight,slow,silence)
+//DIVINE		Equip if spell is an divine magic
 //DOOMED		Equip if player is doomed or baned
 //DT_BREATH		Equip item if damage taken is set to breath
 //DT_MAGICAL	Equip item if damage taken is set to magical
 //DT_PHYSICAL	Equip item if damage taken is set to physical
 //DUSK2DAWN		Equip if it's between dusk and dawn
 //ELEMENTAL		Equip if spell is an elemental magic
-//EMPTY			Equip if sloy in temporary set is empty
+//EMPTY			Equip if slot in temporary set is empty
+//EMPTY:#		Equip if ears/rings specific slot is empty
 //ENspell		Equip if player has en- spell buff
 //ENANY			Equip if player has any en- spell buff
+//ENHANCING		Equip if spell being cast is enhancing magic
 //EVASION		Equip if 'Eva' enabled
 //FULLMOON		Equip if moon phase is full moon
 //GA:gather		Equip if the gathering code passed matches the master gathering setting
@@ -81,17 +84,17 @@ want me to add any more.
 //HPPconditional#	Equip if HP% meets condition
 //IDLE			Equip if Idle is true (part of tanking configuration)
 //IF:gear		Equip if wearing that gear in the tested slot
-//IFNOE:gear	Equip if not wearing that gear in the tested slot (if not or empty)
-//IFOE:gear		Equip if wearing specified item or empty
+//IF-slot:gear	Equip if wearing specified item in specified slot
 //KATANA		Equip if Main is a Katana
 //LVLconditional # Equip if player's level meets the conditional setting
-//LVLDIV#		Equip if player's level is evenly divisible by #
+//LVLDIV:#		Equip if player's level is evenly divisible by #
 //MARKSMANSHIP	Equip if Range is a Gun/Crossbow
 //MSJ			Equip if player's subjob is magical
 //MPconditional#	Equip if MP meets condition
 //MPPconditional#	Equip if MP% meets condition
 //NEWMOON		Equip if moon phase is new moon
 //NIGHTTIME		Equip if it's nighttime
+//NINJUTSU		Equip if spell is ninjutsu
 //NO_PET		Equip if the player has no pet
 //NO_SMNPET		Equip if player has no pet or pet is not a smn avatar
 //NOT_day		Equip if the day's name does not match the specified day, eg. //NOT_FIRESDAY
@@ -105,7 +108,7 @@ want me to add any more.
 //NOT_WSWAP	Equip if WSWAP is turned off
 //OWN			Equip if region controlled by player's nation. (Does not include cities)
 //PARALYZED		Equip if player is paralyzed
-//PARTY#		Equip based on how large party is. # is number in party
+//PARTY[#]		Equip based on how large party is. # is number in party
 //PET			Equip if player has a pet
 //PETF			Equip if player has pet and it is fighting
 //PETFNPF		Equip if player has pet and it is fighting but the player is not fighting
@@ -118,6 +121,7 @@ want me to add any more.
 //SCYTHE		Equip if Main is a Scythe
 //SHINING_RUBY	Equip if player has the Shining Ruby buff
 //SILENCED		Equip if player is silenced
+//SINGING		Equip if the spell being cast is a song
 //SJjob			Equip if player's subjob is "job" (i.e., THF, NIN, etc)
 //SLEPT			Equip if player is slept
 //SMN:name		Equip if the named avatar is being summoned
@@ -131,13 +135,17 @@ want me to add any more.
 //SPIRIT:EP		Equip if current pet is an elemental spirit
 //STAVE			Equip if Main is a Staff
 //STRING		Equip if instrument setting is string
+//SUMMONING		Equip if spell is type summons
 //SWORD			Equip if Main is a Sword
 //TANK			Equip if Tank is toggled on
 //THROWING		Equip if Ammo is thrown
+//TH			Equip if TH is enabled
 //TOWN			Equip if in town
 //TOWN-AK		Equip ducal aketon or national aketon if in the appropriate town
 //TPconditional#	Equip if TP meets condition
 //TPPconditional#	Equip if TP% meets condition
+//UNLESS		Equip if not wearing the specified item in the slot
+//UNLESS-slot:gear	Equip if not wearing specified item in the specified slot
 //UTSUSEMI		Equip if player has Utsusemi buff
 //WARD_CIRCLE	Equip if player has Warding Circle buff
 //WEAKENED		Equip if player is weakened
