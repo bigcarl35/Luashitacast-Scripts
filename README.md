@@ -54,7 +54,6 @@ the default distance from 4.7 yalms to whatever you want.
 **/wswap**: Turns on/off whether automatic gear swapping allowed. All jobs except SMN and BLM
 where this is always true.  
 **/smg [gs=|slot=]** Displays details about all gear found in gear sets for either the specified gear set of slot.  
-
 **/AJug**: Toggles on/off whether automatic jug pet routine should be enabled. BST only.  
 **/DB: Norm|BPP|WSS**: Indicates which debuff reward should clear on pet. BST only.  
 **/Horn**: Indicates a horn instrument is equipped. BRD only.  
