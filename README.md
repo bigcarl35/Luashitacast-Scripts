@@ -21,7 +21,7 @@ The following commands are supported by this implementation of luashitacast.
 **/GC**: Performs a gear check. Has to be run for Luashitacast to work.  
 **/dt: [Physical|Magical|Breath]**: Defines type of damage taken gear to equip  
 **/kite**: Turns on/off equipping movement gear.  
-**/acc [?|stage #]**: Indicates the progressive accuracy stage that is equipped.  
+**/acc [?|stage #]**: Indicates the progressive accuracy stage to equipped.  
 **/equipit** or **/ei "code|name" [1|2]**: Equips specified ring (coded or actual name) in the specified slot.
 Turns off /GSWAP.  
 **/debug**: Turns on/off displaying of all gear being equipped.  
@@ -37,11 +37,14 @@ to PLD,NIN,DRK,WAR,THF,RUN,RDM.
 **/kite**: Equips movement and evasion gear for kiting.  
 **/lock: [all|#'s|names]**: Lock equipment slot(s) so luashitacast can't change item.  
 **/unlock [all,#'s|names]**: Unlocks the specified equipment slots so luashitacast can use.  
+**/macc**: Enabled/Disables equipping magical accuracy gear.  
 **/maxsong "name"**: Determines the highest level song player can perform that has either the
 common root name (see /maxsong) or the common buff name (e.g., paeon when
 performing one of the army paeon songs.)  
 **/maxspell "name"**: Determines the highest level spell player can cast that has the common root
 name (e.g., Cure gets you Cure III if you're 75 and /whm.)  
+**/racc [?|stage #]**: Indicates the progressive ranged accuracy stage to equipped.  
+**/rc**: Displays list of all regions and who controls them.  
 **/petfood [name]**: Equips the named pet food.  
 **/slot name|position gear**: Equips the passed piece of gear and locks the equipment slot.  
 **/tank**: Turns on/off equipping TP tank gear. Only available to: PLD,NIN,DRK,WAR,THF,RDM,RUN.  
@@ -50,6 +53,7 @@ name (e.g., Cure gets you Cure III if you're 75 and /whm.)
 the default distance from 4.7 yalms to whatever you want.  
 **/wswap**: Turns on/off whether automatic gear swapping allowed. All jobs except SMN and BLM
 where this is always true.  
+**/smg [gs=|slot=]** Displays details about all gear found in gear sets for either the specified gear set of slot.  
 
 **/AJug**: Toggles on/off whether automatic jug pet routine should be enabled. BST only.  
 **/DB: Norm|BPP|WSS**: Indicates which debuff reward should clear on pet. BST only.  
