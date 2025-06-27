@@ -117,7 +117,7 @@ local sets = {
 		Ears  = 'Beastly Earring//PETF',	-- Pet: +10 Acc
 		Body  = { 'Black Cotehardie', 'Mrc.Cpt. Doublet' },			-- +2/1 DEX
 		Hands = 'Battle Gloves',			-- +3 Acc
-		Rings = { 'Toreador\'s Ring', 'Toreador\'s Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2', 'Balance Ring' },	-- +7/+7/+5/+5, +4 Acc:+2 DEX, +2/2 DEX
+		Rings = { 'Toreador\'s Ring', 'Toreador\'s Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2' },	-- +7/+7/+5/+5, +4 Acc:+2 DEX, +2 DEX
 		Waist = { 'Life Belt', 'Tilt Belt', 'Mrc.Cpt. Belt' },	-- +10/5 Acc, +1 DEX
 		Legs  = 'Evoker\'s Spats//PETF',	-- Pet: enhanced acc
     },
@@ -129,7 +129,7 @@ local sets = {
 	['Ranged_Accuracy'] = {
 		Head  = 'Optical Hat',		-- +10 RAcc
 		Neck  = 'Peacock Amulet',	-- +10 RAcc
-		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Beetle Ring +1', 'Beetle Ring +1' },	-- +5/5/4/4/4 RAcc
+		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring' },	-- +5/5/4 RAcc
 	},
 
 --[[
