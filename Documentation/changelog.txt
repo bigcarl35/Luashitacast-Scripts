@@ -1,42 +1,33 @@
 - Added slot name verification to all gear sets processed in /GC  
 
-Version 1.5.5  
-- For SMN, changed Blood Pact 'Burning Strike' from Magical to Hybrid 
+- Changed a lot of inline conditionals:
+	New - //EMPTY:1, //EMPTY:2, //IF-slot:, //UNLESS, //UNLESS-slot:
+		  //ARC_CIRCLE, //HOLY_CIRCLE, //WARD_CIRCLE
+	Modified - //EMPTY, //IF
+	Removed - //IFNOE, //IFOE, //ABSORBCAST, //BARCAST, //SPIKECAST,
+			  //ENCAST, //DARK, //DIVINE, //ENHANCING, //ENFEEBLING,
+			  //HEALING, //NINJUTSU, //SINGING, //SUMMONING
 
-- Changed /SMG from muli-parameters to val= as in /smg gs=tp or
-  /smg slot=hands, changed 'warn' option to 'noac'
-
-- Updated help system to be current with all commands
-
-- Added spell type inline conditionals: //ELEMENTAL, //DARK, //HEALING,
-  //ENFEEBLING, //ENHANCING, //DIVINE, //SUMMONING, //NINJUTSU, and
-  //SINGING. Also added //EMPTY, //NOT_TH, //NOT_ME, //INOE, and //IFNOE.
-
-- Added slot referencing in sets (e.g., ['Hands'] = 'Accuracy::Hands')
-
-- Added GC to the display bar, indicating if run or not
+- Added Damage_Taken_x sets to job files. These should be used as
+  either subsets or via inline references.
   
-- /GC reminder is displayed initially at 15 seconds after logging in/
-  changing jobs, and then repeatedly at 5 minute intervals
+- Fixed a locking issue when multi-slotted items were equipped in
+  a /ei command
   
-- Added processing of Progressive structure to the /GC command
+- Fixed error caused when a subset has multiple conditional subsets
+  defined. Erroneously complained about a table...
+  
+- Fixed syntax in all HandleDefault routines in job files. Minor change
+  to syntax for recognizing if no weapon is equipped.
+  
+- Added //AQUAN and //AMORPH conditions. Have included all appropriate
+  monster names up through Wings of the Goddess.
 
-- Replaced fractional accuracy with progressive accuracy. This affects
-  accuracy, ranged accuracy and the associated tanking variations
-  
-- Had to remove collision check between locks and accuracy. Progressive
-  accuracy makes it very difficult to track which equipment slots are
-  populated
-  
-- Adjusted code to address a LUA deficiency with the string.find() 
-  function. Guessing our server updated the version of LUA we are using
-  
-- Added Magical Accuracy sets (Macc and Tank_Macc)
+- Added //PETNAME and //NOT_PETNAME conditions. These are tests for
+  specific pet names although //NOT_PETNAME will also be true if
+  the player has no pet. Added //BP:name to recognize when the
+  named blood pact is invoked.
 
-- Added /ptt to display distance between player's pet and the player's
-  target
-  
-- Pet food now successfully is scanned via /GC
-
-- Jug Pets on BST now successfully scanned via /GC
-  
+- Created document "Conditional gear by type.txt" which is a reorganization
+  of the "Conditional gear master.txt" file. Should be easier to use than
+  the "master" version.
