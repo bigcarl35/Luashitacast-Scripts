@@ -40,44 +40,41 @@ the double conditional shown above it.
 Here's a list of all the "Inline" conditionals currently supported. Let me know if you 
 want me to add any more.
 
-//ABSORB		Equip if an absorb spell cast
+//AMORPH		Equip if target is from the amorph family
+//AQUAN			Equip if target is from the aquan family
 //ARC_CIRCLE	Equip if player has Arcane Circle buff
-//ARCHERY		Equip if Range is a Bow
-//AXE			Equip if Main is an Axe
+//ARCHERY		Equip if weapon in Range is known in profile.WeaponType[Bow]
+//AXE			Equip if weapon in Main/Sub is known in profile.WeaponType[Axe]
 //BARSPELL		Equip if player has "bar" type buff
 //BOUND			Equip if player is bound
 //BLINDED		Equip if player blinded
+//BP:xxx		Equip if the blood pact being cast contains xxx
 //CARBY			Equip if player has a pet and it is Carbuncle
-//CLUB			Equip if Main is a Club
+//CLUB			Equip if weapon in Main/Sub is known in profile.WeaponType[Club]
 //COVER			Equip if Cover is active
 //CR:craft		Equip if the crafting code passed matches the master crafting setting
 //day			Equip if the day's name matches the specified day, eg. //FIRESDAY
 //CURSED		Equip if player is cursed
-//DAGGER		Equip if Main is a Dagger
-//DARK			Equip if the spell is a dark spell
+//DAGGER		Equip if weapon in Main/Sub is known in profile.WeaponType[Dagger]
 //DAYTIME		Equip if it's daytime
 //DB:BPP		Equip if debuff cycle set to BPP (blind,poison,paralyze)
 //DB:WSS		Equip if debuff cycle set to WSS (weight,slow,silence)
-//DIVINE		Equip if spell is an divine magic
 //DOOMED		Equip if player is doomed or baned
 //DT_BREATH		Equip item if damage taken is set to breath
 //DT_MAGICAL	Equip item if damage taken is set to magical
 //DT_PHYSICAL	Equip item if damage taken is set to physical
 //DUSK2DAWN		Equip if it's between dusk and dawn
-//ELEMENTAL		Equip if spell is an elemental magic
 //EMPTY			Equip if slot in temporary set is empty
-//EMPTY:#		Equip if ears/rings specific slot is empty
+//EMPTY:#		Equip if ears/rings specific slot is empty. Please note that command will not force loading into slot #. It just checks for absence.
 //ENspell		Equip if player has en- spell buff
 //ENANY			Equip if player has any en- spell buff
-//ENHANCING		Equip if spell being cast is enhancing magic
 //EVASION		Equip if 'Eva' enabled
 //FULLMOON		Equip if moon phase is full moon
 //GA:gather		Equip if the gathering code passed matches the master gathering setting
-//GAXE			Equip if Main is a Great Axe
-//GKATANA		Equip if Main is a Great Katana
-//GSWORD		Equip if Main is a Great Sword
-//H2H			Equip if Main is a Hand-to-Hand
-//HEALING		Equip if the spell is a healing spell
+//GAXE			Equip if weapon in Main is known in profile.WeaponType[Great Axe]
+//GKATANA		Equip if weapon in Main is known in profile.WeaponType[Great Katana]
+//GSWORD		Equip if weapon in Main is known in profile.WeaponType[Great Sword]
+//H2H			Equip if weapon in Main is known in profile.WeaponType[Hand to Hand]
 //HOLY_CIRCLE	Equip if player has Holy Circle buff
 //HORN			Equip if instrument setting is horn
 //HPconditional#	Equip if HP meets condition
@@ -85,22 +82,22 @@ want me to add any more.
 //IDLE			Equip if Idle is true (part of tanking configuration)
 //IF:gear		Equip if wearing that gear in the tested slot
 //IF-slot:gear	Equip if wearing specified item in specified slot
-//KATANA		Equip if Main is a Katana
+//KATANA		Equip if weapon in Main/Sub is known in profile.WeaponType[Katana]
 //LVLconditional # Equip if player's level meets the conditional setting
 //LVLDIV:#		Equip if player's level is evenly divisible by #
-//MARKSMANSHIP	Equip if Range is a Gun/Crossbow
+//MARKSMANSHIP	Equip if weapon in Range is known in profile.WeaponType[Gun,Crossbow]
 //MSJ			Equip if player's subjob is magical
 //MPconditional#	Equip if MP meets condition
 //MPPconditional#	Equip if MP% meets condition
 //NEWMOON		Equip if moon phase is new moon
 //NIGHTTIME		Equip if it's nighttime
-//NINJUTSU		Equip if spell is ninjutsu
 //NO_PET		Equip if the player has no pet
 //NO_SMNPET		Equip if player has no pet or pet is not a smn avatar
 //NOT_day		Equip if the day's name does not match the specified day, eg. //NOT_FIRESDAY
 //NOT_ME		Equip if the target is not me
 //NOT_OWN		Equip if region not controlled by player's nation
 //NOT_TANK		Equip if tank disabled
+//NOT_PETNAME:name	Equip if no pet or pet not named xxx
 //NOT_TH		Equip if TH disabled
 //NOT_UTSUSEMI	Equip if Utsusemi buff is not up
 //NOT_WTH:"weather" Equip if theweather does not match the specified weather
@@ -112,16 +109,15 @@ want me to add any more.
 //PET			Equip if player has a pet
 //PETF			Equip if player has pet and it is fighting
 //PETFNPF		Equip if player has pet and it is fighting but the player is not fighting
+//PETNAME:name	Equip if pet named xxx
 //PETNF			Equip if player has a pet and it is not fighting
 //PETRIFIED		Equip if player is petrified
 //PJPjob		Equip if a player in the party is "job" (ex., BRD)
 //PJPNMjob		Equip if a player in the party is "job" (ex., BRD), excluding current player
 //POISONED 		Equip if player is poisoned
-//POLEARM		Equip if Main is a Polearm
-//SCYTHE		Equip if Main is a Scythe
-//SHINING_RUBY	Equip if player has the Shining Ruby buff
+//POLEARM		Equip if weapon in Main is known in profile.WeaponType[Polearm]
+//SCYTHE		Equip if weapon in Main is known in profile.WeaponType[Scythe]
 //SILENCED		Equip if player is silenced
-//SINGING		Equip if the spell being cast is a song
 //SJjob			Equip if player's subjob is "job" (i.e., THF, NIN, etc)
 //SLEPT			Equip if player is slept
 //SMN:name		Equip if the named avatar is being summoned
@@ -133,13 +129,12 @@ want me to add any more.
 //SPIKE			Equip if player has a spike spell buff: blaze,ice,shock,dread
 //SPIRIT:ES		Equip if avatar being summoned is an elemental spirit
 //SPIRIT:EP		Equip if current pet is an elemental spirit
-//STAVE			Equip if Main is a Staff
+//STAVE			Equip if weapon in Main is known in profile.WeaponType[Staff]
 //STRING		Equip if instrument setting is string
-//SUMMONING		Equip if spell is type summons
-//SWORD			Equip if Main is a Sword
+//SWORD			Equip if weapon in Main/Sub is known in profile.WeaponType[Sword]
 //TANK			Equip if Tank is toggled on
-//THROWING		Equip if Ammo is thrown
-//TH			Equip if TH is enabled
+//TH			Equip if TH is enable
+//THROWING		Equip if weapon in Range/Amdmo is known in profile.WeaponType[Throwing]
 //TOWN			Equip if in town
 //TOWN-AK		Equip ducal aketon or national aketon if in the appropriate town
 //TPconditional#	Equip if TP meets condition
@@ -156,6 +151,8 @@ want me to add any more.
 				and another has Y's Scythe equipped and Z's polearm
 
 ~ not implemented yet
+
+82
 
 Out of era:				
 //AUTOMATON		Equip if player's automaton is active
