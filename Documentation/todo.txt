@@ -1,22 +1,111 @@
 To do list:
-----------      
-- Determine how far a pet is away from a target
-    
-- Change locks to:
-	/lock #|name,... 	to lock
-	/lock				Removes all locks
-	
-	- Get rid of unlock
-	- Change log display to mixed ranged list
-
-- Why doesn't pet food load into the dynamic gear table?
-
+----------       
 - TH really should be 1 hit then normal gear. Track with table [ID] = { 
-  ['Tagged'] = T/F, ts= timestamp }. Clean-up ever 5 minutes (configurable).
+  ['Tagged'] = T/F, ts= timestamp }. Clean-up every 5 minutes (configurable).
   Instantiate when targetted. One hit, then swap to normal gear. Consider
   routines in gcinclude since some gear in the future will be available
   to all classes. (Note: emnity will apply TH as well as a hit.)
+
+- Need to add to /GC validating codes, subsets, and references
+	"No match for reference: name::slot"
+	"No such gearset referenced in subset: subset name"
+
+- Track equipable consumables
+
+- Need pop-up to show /ptt (color coded, remembers where it was moved to.)
+
+- Add ability for /smg to output to a file. (Maybe GC to a file?)
+  |{filename} - The | indicates writing to a file. Player can designate
+  a file name. If absent, assume "character name_job_date.txt".
+
+- Change /smg to be parameter position independent. Also, make sure gs=
+  and slot= can accept a comma delimited list.
+
+- Wiggle room is too complicated. Change it over to "timed blocking".
+  By that I mean when a MPP/MP/HPP/HP comparison is found to be
+  happening, trigger a timer for that dynamic entry when the condition
+  is no longer true. This will effectively block that comparison until
+  the timer runs out. So, the end number instead of being "wiggle" 
+  room is instead how long to block the entry from being used (in 
+  seconds.)
   
+  Example:
+	Body = { 'Vermillion Cloak//MPP.LT.95:30', 'Summoner\'s Doublet' },
+
+  What that says is that while the MP% < 95% equip the V.Cloak. Once
+  this is no longer true, trigger a blocking mechanism for 30 seconds
+  so that the conditional V.Cloak is not considered valid and just
+  skipped. Once the timer runs out, it is a valid conditional again.
+  The player will need to determine how long the "blocking" should
+  occur. 30 seconds was just an example.
+
+  Dynamic table:
+	Entry = 'vermillion cloak//mpp.lt.95:30', -- lowercase for easy matching
+	Duration = 30,		-- how long to block (in seconds)
+	End_time = nil;		-- fill with time stamp for when countdown ends
+	
+  Logic:
+     Body = { 'Vermillion Cloak//MPP.LT.95:30', 'Summoner\'s Doublet' },
+
+	 This assumes that the conditional for the v.cloak is true. If false,
+	 the entry is just skipped.
+	 
+	 Clean out old entries (blocking has expired)
+	 if no entry in dynamic table for conditional exists then
+		make an entry for the conditional, end_time will be nil
+	 else	-- existing entry
+		if end_time set then	-- You know it hasn't expired
+			skip the conditional
+		else
+			if conditional no longer valid then
+				set end_time	-- start the block mechanism
+			else
+				use the conditional
+			end
+		end
+	 end		
+
+   Consider a caveat. If comparison is > 10% into condition, kill the
+   block.
+
+  Include feedback when locking starts and ends
+  
+- Skill chain detection for magic burst gearing (2nd midcast)
+
+- Detect player is closing an elemental skillchain (re: elemental obi)
+
+  The obi to equip has to be of the element of the skillchain and not
+  the element of the weaponskill. Further, if the skillchain is level
+  2 or 3, there's a priority order. (Priority indicates which element
+  will do the most damage.) The bonus from the obi is from the day's 
+  element/weather matching the skillchain's element.
+
+- Add support for an elemental gorget on a weapon skill.
+
+  Each weapon skill can have one or more elements associated with it.
+  Which gorget is equipped doesn't affect the skill chain, rather, it
+  affects the weapon skill. (Adjusts the fTP ~ +0.1 and adds 10 to
+  accuracy to all hits of the weapon skill.) So, you just need to
+  equip one of the elemental gorgets associated with the weapon skill.
+  
+- Make a grid to show locks. Maybe a template to place over HXUI's grid?
+
+- Day cycle pattern highlighting current.
+
+- New command for SMN, /EP. It will summon an elemental spirit that
+  matches either the weather or the day's element if the player has
+  that elemental spirit. If they don't it assumes a default spirit.
+
+- Support an exception on a subset so you can exclude certain slots.
+  This would be similar to the opposite of an inline reference.
+
+  Ex: MND||Main,Sub,range,ammo
+
+  This would load the subset MND, but exclude slots= MAIN, SUB, RANGE, and
+  AMMO.
+
+- Add resistant check based on target family type (ex. Fire for Orcs)
+
 Ongoing questions
 -----------------
 - How does the client know that it should display "Downloading Data"?
@@ -236,6 +325,20 @@ Done
   for load the corsage if in town, else process TP's head line
 
   Syntax: 'Accuracy::Hands' for pulling the hands line from accuracy
+- Determine how far a pet is away from a target
+- Look into forcing an order for subsets
+	Subset = { [1] = 'AttackPower', [2] = 'CHR' };
+- Have /GC check for slot name validity
+- Consider removing /nac, have /acc do everything.
+
+  Not worth the effort.
+- Fix clamming gear. Need to lock head slot and feet slot too.
+	  The problem is that when a multislotted item is equipped, only the main slot is
+	  locked and not the affected slots too.
+- Fixed issue where a subset consisted of a list of subsets. This now
+  works correctly.
+- Fixed a logic error in HandleDefault in the job files regarding a lack
+  of a weapon. It now processes correctly.
   
 Possibly in the future
 ---------------------- 
@@ -264,7 +367,7 @@ Possibly in the future
   
 	I think this one is doable!
 
-- modify equipit to check to see if the item is on cool down and to keep searching
+- modify equipit to checo see if the item is on cool down and to keep searching
   for another one to equip. I know how to get the general information about an item 
   (name, description, etc), but not how many charges are left or what is the cool 
   down on the item. I'm guessing this is sent in a packet, maybe upon zoning. A 
@@ -274,13 +377,9 @@ Possibly in the future
 	generalized. This would be specific for a spell. You need to know a priori
 	the fast cast value, the casting gear reduction, the packet delay, the cast
 	delay to determine if there's enough time for an addition midcast call.
-
-- Change /TH to turn TH on and then off after two hits. (Only need one hit and
-  then something more productive can be in the slot.) /TH ON does the same behavior
-  as now. Second /TH turns off regardless if on or awaiting 2 hits.
-
-- Make is so /SMG output can be directed to a file.
   
+- Support custom switches
+
   Not Doing
 ---------
 - /equipit needs //inline support. 
@@ -344,10 +443,6 @@ Possibly in the future
   Update 2: pretty sure /gc fixes this problem
   
   Fix: //SPECIAL will always return false until /gc run.
-
-- Consider removing /nac, have /acc do everything.
-
-  Not worth the effort.
   
 - lc the commands so that upper case commands work too
 
@@ -356,3 +451,30 @@ Possibly in the future
 - Modify defaultTarget system to separate offensive and defensive targets.
 
   Too conditional. Just have the player explicitly identify the target
+  
+- Change locks to:
+	/lock #|name,... 	to lock
+	/lock				Removes all locks
+	
+	- Get rid of unlock
+	- Change log display to mixed ranged list
+
+  While it sounds good, there's no way to tell if /lock was adding or
+  subtracting locks. It's not a sliding scale like the progressive
+  accuracy, so keeping /lock and /unlock commands just makes sense.
+
+  - Support the "OR" operator in conditionals. Using "||", what is to
+  the left must be true or anything to the right. Conditionals are
+  processed left to right. Multiple conditionals are currently ANDed
+  together, ex: //SMNPET//PETNAME:Carbuncle. Both conditionals must
+  be true for the test to be true. What this change preposes is
+  the possibility of a "this or that" comparison, ex:
+  //SMNPET//PETNAME:Carbuncle||//PETNAME:Ifrit. What this is saying
+  is that a summoned pet must exist and that pet must be named
+  Carbuncle or Ifrit.
+
+  This can be done currently another way:
+      xxx//SMNPET//PETNAME:Carbuncle,xxx/SMNPET//PETNAME:Ifrit
+
+  While it would be nice to have an "OR" operator, there are higher
+  priorities.

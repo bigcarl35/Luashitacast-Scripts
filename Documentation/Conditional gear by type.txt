@@ -102,7 +102,7 @@ Gear:
     //SPECIAL		Equip if the special comparisons match
         Gear supported -
             uggalepih pendant   MP% < 51% on visible gear, +8 MAB
-            parade gorget       HP>=85% on visible gear, adds refresh
+            parade gorget       HP%>=85% on visible gear, adds refresh
             sorcerer's ring     HP% < 76% and TP% < 100%, ignore HP+ and convert gear, +10 MAB
             drake ring          HP% < 75% and TP% < 100%, enhances Jump
             shinobi ring        HP% < 75% and TP% < 100%, +4% Haste
