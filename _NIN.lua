@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the NIN job.
 	
-	Gear Sets last updated: March 17, 2025
-	Code update: March 9, 2025
+	Gear Sets last updated: March 26, 2025
+	Code update: April 23, 2025
 --]]
 
 local sets = {
@@ -28,7 +28,9 @@ local sets = {
 	Example:
 	
 	['Tank_TP'] = {
-		Subset = 'TP',
+		Subset = {
+			[1] = 'TP'
+		}
 	}
 		
 	*** Note ***
@@ -68,7 +70,14 @@ local sets = {
 	
 	['Default'] = {
 		Head   = { 'Lilac Corsage//TOWN', 'Empress Hairpin' },
+		Neck   = 'Peacock Amulet',
+		Ears   = { 'Pilferer\'s Earring//SJTHF', 'Physical Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
 		Body   = { 'Ducal Aketon//TOWN-AK', 'Wonder Kaftan' },
+		Hands = 'Wonder Mitts',
+		Rings = 'Tamas Ring//MSJ',
+		Waist = 'Friar\'s Rope//MSJ',
+		Legs  = { 'Wonder Braccae', 'Fisherman\'s Hose' },
+		Feet  = { 'Mannequin Pumps//MSJ', 'Bounding Boots' },
 	},
 
 	['Tank_Default'] = {
@@ -85,15 +94,9 @@ local sets = {
 --]]
 	
 	['TP'] = {
-		Head  = 'Empress Hairpin',
-		Neck  = 'Peacock Amulet',
-		Ears  = { 'Pilferer\'s Earring//SJTHF', 'Physical Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
-		Body  = 'Wonder Kaftan',
-		Hands = 'Wonder Mitts',
-		Rings = 'Tamas Ring//MSJ',
-		Waist = 'Friar\'s Rope//MSJ',
-		Legs  = { 'Wonder Braccae', 'Fisherman\'s Hose' },
-		Feet  = { 'Mannequin Pumps//MSJ', 'Bounding Boots' },
+		Subset = {
+			[1] = 'Default',
+		},
     },
 	
 	['Tank_TP'] = {
@@ -190,6 +193,22 @@ local sets = {
 		Ears  = 'Drone Earring',
 		Feet  = 'Bounding Boots',	
 	},
+
+--[[
+	The damage taken sets are not equipped directly but rather from subsets. They're a
+	way to reduce a specific types of damage. As such they're optional and up to the 
+	player to decide if they should be defined and how they're used.
+--]]
+
+	['Damage_Taken_Breath'] = {
+	},
+	
+	['Damage_Taken_Physical'] = {
+	},
+	
+	['Damage_Taken_Magical'] = {
+		Ears = 'Coral Earring',		-- -1% damage reduction from magic
+	},
 	
 --[[
 	When you are resting (kneeling down), your HP 'Resting' set will be equipped. If your MP 
@@ -197,12 +216,29 @@ local sets = {
 	'Resting_Refresh' gear set will be equipped. Regardless of which set is equipped, if you
 	have a Dark/Pluto staff accessible, you've indicated that weapon swapping is permissible,
 	and your MP is not at maximum, the Dark/Pluto staff will automatically be equipped.
+		
+	The Damage_Taken_* sets are added as a subset to reduce damage accordingly because
+	you're in a vulnerable state.
 --]]
 	
 	['Resting_Regen'] = { 
+		Subset = {
+			[1] = { 
+				'Damage_Taken_Breath//DT_BREATH',
+				'Damage_Taken_Magical//DT_MAGICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL',
+			}
+		}
 	},
 	
 	['Resting_Refresh'] = {
+		Subset = {
+			[1] = { 
+				'Damage_Taken_Breath//DT_BREATH',
+				'Damage_Taken_Magical//DT_MAGICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL',
+			}
+		}	
 	},
 	
 --[[
@@ -582,7 +618,9 @@ local sets = {
 	},
 	
 	['Tank_Invisible'] = {
-		Subset = 'Invisible',	
+		Subset = {
+			[1] = 'Invisible'
+		}
 	},
 
 --[[
@@ -1741,10 +1779,8 @@ function profile.HandleDefault()
 
 	-- And make sure a weapon equipped. (Going into a capped area can cause no weapon to be equipped.)
 	local gear = gData.GetEquipment();
-	if gear.Main ~= nil then
-		if gear.Main.Name == nil then
-			gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
-		end
+	if gear.Main == nil or gear.Main.Name == nil then
+		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
 	end
 	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set

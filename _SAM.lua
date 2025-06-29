@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the SAM job.
 	
-	Gear Sets last updated: March 17, 2025
-	Code update: March 9, 2025
+	Gear Sets last updated: May 8, 2025
+	Code update: April 23, 2025
 --]]
 
 local sets = {
@@ -57,9 +57,15 @@ local sets = {
 	
 	['Default'] = {
 		Head    = { 'Lilac Corsage//TOWN', 'Empress Hairpin' },
+		Neck    = { 'Peacock Amulet', 'Spike Necklace' },
+		Ears    = { 'Reraise Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ', 'Physical Earring', 'Physical Earring' },
 		Body    = { 'Ducal Aketon//TOWN-AK', 'Ctr. Scale Mail', 'Angler\'s Tunica' },
-		Hands   = 'Ctr. F. Gauntlets',
-		Legs    = 'Ctr. Cuisses',
+		Hands   = 'Wonder Mitts',
+		Rings   = { 'Tamas Ring', 'Jaeger Ring' },
+		Back    = { 'Wolf Mantle', 'Rabbit Mantle' },
+		Waist   = 'Friar\'s Rope',
+		Legs    = { 'Ctr. Cuisses', 'Wonder Braccae' },
+		Feet    = 'Bounding Boots',
 	},
 	
 --[[
@@ -71,15 +77,7 @@ local sets = {
 	['TP'] = {
 		Subset = {
 			[1] = 'Default',
-		},
-		Head   = 'Empress Hairpin',
-		Neck   = 'Spike Necklace',
-		Ears   = { 'Reraise Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ', 'Physical Earring' },
-		Body   = { 'Ctr. Scale Mail', 'Angler\'s Tunica' },
-		Hands  = 'Ctr. F. Gauntlets',
-		Back   = 'Rabbit Mantle',
-		Legs   = 'Ctr. Cuisses',
-		Feet   = 'Bounding Boots',
+		}
     },
 	
 --[[
@@ -93,10 +91,11 @@ local sets = {
 --]]
 	
 	['Accuracy'] = {
-		Head = 'Empress Hairpin',
-		Neck = 'Spike Necklace',
-		Rings = 'Jaeger Ring',
-		Feet = 'Bounding Boots',
+		Head  = 'Empress Hairpin',
+		Neck  = { 'Peacock Amulet', 'Spike Necklace' },
+		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring' },
+		Waist = 'Tilt Belt',
+		Feet  = 'Bounding Boots',
     },
 
 --[[
@@ -104,6 +103,8 @@ local sets = {
 --]]
 
 	['Ranged_Accuracy'] = {
+		Neck = 'Peacock Amulet',
+		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring' },
 	},
 	
 --[[
@@ -114,10 +115,28 @@ local sets = {
 --]]
 	
 	['Evasion'] = {
-		Head = 'Empress Hairpin',
-		Feet = 'Bounding Boots',
+		Head  = 'Empress Hairpin',
+		Rings = { 'Jaeger Ring//IF:Woodsman Ring', 'Empress Band//IF:Woodsman Ring' },
+		Waist = 'Friar\'s Rope//IF:Tilt Belt',
+		Feet  = 'Bounding Boots',
     },
-		
+
+--[[
+	The damage taken sets are not equipped directly but rather from subsets. They're a
+	way to reduce a specific types of damage. As such they're optional and up to the 
+	player to decide if they should be defined and how they're used.
+--]]
+
+	['Damage_Taken_Breath'] = {
+	},
+	
+	['Damage_Taken_Physical'] = {
+	},
+	
+	['Damage_Taken_Magical'] = {
+		Ears = 'Coral Earring',		-- -1% damage reduction from magic
+	},
+	
 --[[
 	When you are resting (kneeling down), your HP 'Resting' set will be equipped. If your subjob
 	uses MP and your MP is below the set threshhold (defined by gcinclude.settings.RefreshGearMP), 
@@ -125,12 +144,29 @@ local sets = {
 	assuming that your subjob uses magic, you have a Dark/Pluto staff accessible, weapon swapping 
 	is enabled (/wswap), and your MP is not at maximum, the Dark/Pluto staff will automatically be 
 	equipped.
+		
+	The Damage_Taken_* sets are added as a subset to reduce damage accordingly because
+	you're in a vulnerable state.
 --]]
 	
 	['Resting_Regen'] = { 
+		Subset = {
+			[1] = { 
+				'Damage_Taken_Breath//DT_BREATH',
+				'Damage_Taken_Magical//DT_MAGICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL',
+			}
+		}	
 	},
 	
 	['Resting_Refresh'] = {
+		Subset = {
+			[1] = { 
+				'Damage_Taken_Breath//DT_BREATH',
+				'Damage_Taken_Magical//DT_MAGICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL',
+			}
+		}	
 	},
 	
 --[[
@@ -140,7 +176,7 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-		Main = 'Gunromaru',
+		Main = { 'Soboro Sukehiro', 'Ashura', 'Kanesada' },
 		Ammo = 'Happy Egg',		
     },
 	
@@ -172,15 +208,25 @@ local sets = {
 --]]
 
 	['INT'] = {
+		Rings = 'Tamas Ring',			-- +2~5 INT
+		Feet  = 'Mannequin Pumps',		-- +1 INT
 	},
 	
 	['MND'] = {
+		Neck  = 'Justice Badge',		-- +3 MND
+		Ears  = 'Geist Earring',		-- +1 MND
+		Body  = 'Wonder Kaftan',		-- +1 MND
+		Rings = 'Tamas Ring',			-- +2~5 MND	
+		Waist = 'Friar\'s Rope',		-- +1 MND
+		Legs  = 'Wonder Braccae',		-- +2 MND
+		Feet  = 'Mannequin Pumps',		-- +2 MND
 	},
 
 	['Enmity_Plus'] = {
 	},
 	
 	['Enmity_Minus'] = {
+		Rings = 'Tamas Ring',			-- -5 Enmity
 	},
 	
 --[[
@@ -292,6 +338,9 @@ local sets = {
 --]]	
 	
 	['CuringMagic'] = {
+		Subset = {
+			[1] = 'MND',
+		}
 	},	
 	
 --[[
@@ -307,6 +356,9 @@ local sets = {
 --]]
 
 	['OffensiveCuring'] = {
+		Subset = {
+			[1] = 'CuringMagic',
+		}
 	},
 
 --[[
@@ -316,6 +368,9 @@ local sets = {
 --]]
 
 	['HealingMagic'] = {
+		Subset = {
+			[1] = 'CuringMagic',
+		}
 	},
 
 --[[
@@ -510,8 +565,9 @@ local sets = {
 	reduce your elemental damage by 20% ("nuke wall"), excluding skillchains.	
 --]]
 	['ElementalNuke'] = {
-		Rings = 'Tamas Ring',
-		Feet  = 'Mannequin Pumps',
+		Subset = {
+			[1] = 'INT',
+		}
 	},	
 
 --[[
@@ -539,6 +595,9 @@ local sets = {
 --]]
 
 	['ElementalDebuff'] = {
+		Subset = {
+			[1] = 'ElementalNuke',
+		}	
 	},
 
 --[[
@@ -742,12 +801,15 @@ local sets = {
 --]]
 	
 	['EnfeeblingINT'] = {
+		Subset = {
+			[1] = 'INT',
+		}
 	},
 
 	['EnfeeblingMND'] = {
-	    Neck  = { 'Promise Badge', 'Justice Badge' },
-        Rings = 'Tamas Ring',
-        Waist = 'Friar\'s Rope',
+		Subset = {
+			[1] = 'MND',
+		}
 	},
 
 	['EnfeeblingMagic'] = {
@@ -892,6 +954,10 @@ local sets = {
 			[1] = 'AttackPower',
 		},
 		Neck   = 'Spike Necklace',
+		Body   = 'Wonder Kaftan',
+		Hands  = 'Wonder Mitts',
+		Legs   = 'Wonder Braccae',
+		Feet   = 'Wonder Clomps'
     },
 
 --[[
@@ -907,6 +973,10 @@ local sets = {
 			[1] = 'AttackPower',
 		},
 		Neck   = 'Spike Necklace',
+		Ears   = { 'Genin Earring//SJNIN', 'Drone Earring' },
+		Body   = 'Wonder Kaftan',
+		Hands  = 'Wonder Mitts',
+		Legs   = { 'Ctr. Cuisses', 'Wonder Braccae' },
 		Feet   = 'Bounding Boots',
     },
 	
@@ -921,6 +991,9 @@ local sets = {
 			[1] = 'AttackPower',
 		},
 		Neck   = 'Spike Necklace',
+		Body   = 'Wonder Kaftan',
+		Hands  = 'Wonder Mitts',
+		Legs   = 'Wonder Braccae',		
 		Feet   = 'Bounding Boots',
     },
 
@@ -936,6 +1009,10 @@ local sets = {
 			[1] = 'AttackPower',
 		},
 		Neck   = 'Spike Necklace',
+		Body   = 'Wonder Kaftan',
+		Hands  = 'Wonder Mitts',
+		Legs   = 'Ctr. Cuisses',		
+		Feet   = 'Bounding Boots',		
     },
 
 --[[
@@ -949,6 +1026,10 @@ local sets = {
 			[1] = 'AttackPower',
 		},
 		Neck   = 'Spike Necklace',
+		Body   = 'Wonder Kaftan',
+		Hands  = 'Wonder Mitts',
+		Legs   = 'Ctr. Cuisses',		
+		Feet   = 'Bounding Boots',
     },
 
 
@@ -964,7 +1045,11 @@ local sets = {
 		Subset = {
 			[1] = 'AttackPower',
 		},
-		Neck   = 'Spike Necklace',
+		Neck   = 'Justice Badge',		-- +3 MND
+		Body   = 'Wonder Kaftan',		-- +1 MND, +1 STR
+		Hands  = 'Wonder Mitts',		-- +3 STR
+		Legs   = 'Wonder Braccae',		-- +1 STR, +2 MND
+		Feet   = 'Wonder Clomps',		-- +2 STR
     },
 
 --[[
@@ -978,7 +1063,13 @@ local sets = {
 	['WS_RANGED_STRAGI'] = {
 		Subset = {
 			[1] = 'AttackPower',
-		}
+		},
+		Neck   = 'Spike Necklace',
+		Ears   = { 'Genin Earring//SJNIN', 'Drone Earring' },
+		Body   = 'Wonder Kaftan',
+		Hands  = 'Wonder Mitts',
+		Legs   = { 'Ctr. Cuisses', 'Wonder Braccae' },
+		Feet   = 'Bounding Boots',
     },
 	
 --[[
@@ -1003,6 +1094,7 @@ local sets = {
 		Subset = {
 			[1] = 'AttackPower',
 		},
+		Head   = 'Centurion\'s Visor',
 		Neck   = 'Spike Necklace',
 		Feet   = 'Bounding Boots',
     },
@@ -1017,8 +1109,11 @@ local sets = {
 		Subset = {
 			[1] = 'AttackPower',
 		},
+		Head   = 'Centurion\'s Visor',
+		Ears   = { 'Genin Earring//SJNIN', 'Drone Earring' },
 		Neck   = 'Spike Necklace',
-		Feet   = 'Bounding Boots',
+		Legs   = 'Ctr. Cuisses',
+		Feet   = { 'Bounding Boots', 'Ctr. Greaves' },
     },
 	
 --[[
@@ -1031,8 +1126,9 @@ local sets = {
 		Subset = {
 			[1] = 'AttackPower',
 		},
+		Head   = 'Centurion\'s Visor',
 		Neck   = 'Spike Necklace',
-		Feet   = 'Bounding Boots',	
+		Feet   = { 'Bounding Boots', 'Mannequin Pumps' },
     },
 
 --[[
@@ -1046,6 +1142,11 @@ local sets = {
 			[1] = 'AttackPower',
 		},
 		Neck   = 'Justice Badge',
+		Ears   = 'Geist Earring',
+		Body   = 'Wonder Kaftan',
+		Waist  = 'Friar\'s Rope',
+		Legs   = 'Wonder Braccae',
+		Feet   = 'Mannequin Pumps',
     },
 
 --[[
@@ -1069,7 +1170,13 @@ local sets = {
 	['WS_HP'] = {
 		Subset = {
 			[1] = 'AttackPower',
-		}
+		},
+		Ears  = { 'Physical Earring', 'Physical Earring' },
+		Body  = 'Wonder Kaftan',
+		Hands = 'Wonder Mitts',
+		Rings = { 'Empress Band//IF:Ether Ring', 'Empress Band//IF:Astral Ring', 'Empress Band//IF:Astral Ring' },
+		Legs  = 'Wonder Braccae',
+		Feet  = 'Wonder Clomps',
     },
 	
 --[[
@@ -1258,7 +1365,7 @@ local sets = {
 -- the weapons if you want to conditionally equip an item with a weapon skill
 -- attribute.
 profile.WeaponType = {
-	['GKATANA'] = { 'Gunromaru', 'Katayama', 'Mumeito' },
+	['GKATANA'] = { 'Gunromaru', 'Soboro Sukehiro', 'Magoroku', 'Ashura', 'Kanesada', 'Mumeito' },
 };
 
 profile.Sets = sets;
@@ -1508,10 +1615,8 @@ function profile.HandleDefault()
 	
 	-- And make sure a weapon equipped. (Going into a capped area can cause no weapon to be equipped.)
 	local gear = gData.GetEquipment();
-	if gear.Main ~= nil then
-		if gear.Main.Name == nil then
-			gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
-		end
+	if gear.Main == nil or gear.Main.Name == nil then
+		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
 	end	
 		
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set

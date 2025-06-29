@@ -4,7 +4,7 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the SMN job.
 	
-	Gear Sets last updated: June 27, 2025
+	Gear Sets last updated: June 28, 2025
 	Code update: April 23, 2025
 	
 	Role: any level
@@ -64,8 +64,8 @@ local sets = {
 		Rings = { 'Evoker\'s Ring', 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
 		Back  = { 'Blue Cape', 'White Cape' },
         Waist = { 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
-        Legs  = { 'Summoner\'s Spats', 'Evoker\'s Spats', 'Shep. Hose', 'Fisherman\'s Hose' }, 
-        Feet  = { 'Summoner\'s Pgch.', 'Mannequin Pumps', 'Seer\'s Pumps', 'Waders' },
+        Legs  = { 'Evk. Spats +1', 'Summoner\'s Spats', 'Shep. Hose', 'Fisherman\'s Hose' },
+        Feet  = { 'Summoner\'s Pgch.', 'Mannequin Pumps', 'Waders' },
 		Ammo  = { 'Hedgehog Bomb', 'Fortune Egg' },
 	},
 
@@ -76,8 +76,8 @@ local sets = {
 		Head   = { 'Smn. Horn +1//SMNPETMW' },		-- Avatar perpetuation cost -3 if pet's element matches weather, works w/storm spells
 		Hands  = 'Carbuncle Mitts//CARBY' ,			-- Halves perpetuation cost rounded down if pet is Carbuncle, applies before all other traits or gear
 		Body   = { 'Yinyang Robe//MPP.LT.94', 'Summoner\'s Dblt.//SMNPETMD', 'Vermillion Cloak//CARBY' },	-- Smn Dbl: Avatar perpetuation cost -3 if pet's element matches day's element
-		Legs   = { 'Summoner\'s Spats//SPIRIT:EP', 'Shep. Hose' },		-- Smn Spats: Shortens elemental spirit's casting delay'
-		Feet   = 'Evk. Pigaches +1//NOT_PETNAME:Carbuncle',		-- Avatar's perpetuation cost -1, ignoring for Carbuncle since already free with other gear effects
+		Legs   = { 'Summoner\'s Spats//SPIRIT:EP', 'Shep. Hose' },		-- Smn Spats: Shortens elemental spirit's casting delay
+		Feet   = 'Evk. Pigaches +1',				-- Avatar's perpetuation cost -1, enhanced evasion
 	},
 	
 --[[
@@ -94,6 +94,8 @@ local sets = {
 		Ears  = { 'Bat Earring//BLINDED//PETNF', 'Loquac. Earring', 'Beastly Earring//PETF', 'Coral Earring//DT_MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
         Body  = { 'Vermillion Cloak//CARBY','Summoner\'s Dblt.//SMNPETMD' },	-- Smn Dbl: Avatar perpetuation cost -3 if pet's element matches day's element
         Hands = { 'Carbuncle Mitts//CARBY' },		-- Halves perpetuation cost rounded down if pet is Carbuncle, applies before all other traits or gear effects
+        Legs  = 'Evk. Spats +1',					-- Avatar: Enh Acc
+        Feet  = { 'Summoner\'s Pgch.', 'Evk. Pigaches +1', 'Mannequin Pumps', 'Waders' },
 	},
 
 --[[
@@ -117,9 +119,9 @@ local sets = {
 		Ears  = 'Beastly Earring//PETF',	-- Pet: +10 Acc
 		Body  = { 'Black Cotehardie', 'Mrc.Cpt. Doublet' },			-- +2/1 DEX
 		Hands = 'Battle Gloves',			-- +3 Acc
-		Rings = { 'Toreador\'s Ring', 'Toreador\'s Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2' },	-- +7/+7/+5/+5, +4 Acc:+2 DEX, +2 DEX
+		Rings = { 'Toreador\'s Ring', 'Toreador\'s Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2' },	-- +7/+7/+5/+5/4/2 Acc
 		Waist = { 'Life Belt', 'Tilt Belt', 'Mrc.Cpt. Belt' },	-- +10/5 Acc, +1 DEX
-		Legs  = 'Evoker\'s Spats//PETF',	-- Pet: enhanced acc
+		Legs  = 'Evk. Spats +1//PETF',	-- Pet: enhanced acc
     },
 
 --[[
@@ -181,11 +183,11 @@ local sets = {
 		Ammo  = 'Orphic Egg//PJPBRD',					-- +1 Eva
 		Head  = { 'Optical Hat', 'Empress Hairpin' },	-- +10/10 Eva
 		Neck  = 'Spirit Torque',	-- +5 Eva
-		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Reraise Earring', 'Genin Earring//SJNIN', 'Drone Earring' },	-- +15 Eva while blinded, +5/2 Eva, +4/3 AGI
+		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Genin Earring//SJNIN', 'Drone Earring' },	-- +15 Eva while blinded, +5 Eva, +4/3 AGI
 		Body  = 'Summoner\'s Dblt.//IF:Vermillion Cloak',	-- Filler, V.Cloak has -10 eva
 		Waist = 'Swift Belt//IF:Tilt Belt', -- Filler, Tilt belt has -5 eva
 		Hands = 'Battle Gloves',	-- +3 Eva
-		Legs  = { 'Evoker\'s Spats', 'Shep. Hose//PET' },	-- +10 Eva, Pet: +3 Eva
+		Legs  = 'Shep. Hose//PET',	-- Pet: +3 Eva
     },
 
 --[[
@@ -293,7 +295,7 @@ local sets = {
         Head  = 'Shep. Bonnet',			-- Pet: +5 Acc
 		Ears  = 'Beastly Earring',		-- Pet: +10 Acc
 		Body  = 'Summoner\'s Dblt.',	-- Avatar: +3% Crit Rate
-		Legs  = 'Evoker\'s Spats',		-- Avatar: Enhances Acc
+		Legs  = 'Evk. Spats +1',		-- Avatar: Enhances Acc
 		Feet  = 'Summoner\'s Pgch.',	-- Avatar: Enhances Att
     },
 
@@ -326,7 +328,7 @@ local sets = {
         Head  = 'Shep. Bonnet',		-- Pet: +5 Acc/+3 Macc
 		Ears  = 'Beastly Earring',	-- Pet: +10 Acc
 		Hands = 'Smn. Bracers +1',	-- Avatar: Enhances Acc
-		Legs  = 'Evoker\'s Spats',	-- Avatar: Enhances Acc
+		Legs  = 'Evk. Spats +1',	-- Avatar: Enhances Acc
     },
 	
 	-- Hybrid blood pact: 2x physical and 1x magical
@@ -338,7 +340,7 @@ local sets = {
         Head  = 'Shep. Bonnet',			-- Pet: +5 Acc/+3 Macc
 		Ears  = 'Beastly Earring',		-- Pet: +10 Acc
 		Body  = 'Summoner\'s Dblt.',	-- Avatar: 3% Crit Rating	
-		Legs  = 'Evoker\'s Spats',		-- Avatar: Enhances Acc
+		Legs  = 'Evk. Spats +1',		-- Avatar: Enhances Acc
 		Feet  = 'Summoner\'s Pgch.',	-- Avatar: Enhances Att
     },
 
@@ -401,13 +403,14 @@ local sets = {
 	
 	['Enmity_Minus'] = {
 		Ammo  = 'Hedgehog Bomb',	-- -1 Enmity
-		-- Head  = 'Evoker\'s Horn//PET',	-- -3 Pet Enmity, not sure I want this
-		-- Body = 'Evoker\'s Doublet//PET,	-- -2 Pet Enmity, not sure I want this
-		Hands = 'Errant Cuffs',			-- -2 Enmity, 'Evoker\'s Bracers//PET',	-- -2 Pet Enmity, not sure I want this
-		Rings = 'Tamas Ring',			-- -5 Enmity
-		Waist = 'Penitent\'s Rope',		-- -3 Enmity
-		Legs  = 'Errant Slops',			-- -3 Enmity
-		-- Feet  = 'Evk. Pigaches +1',	-- -4 Pet Enmity, not sure I want this
+		-- Head  = 'Evoker\'s Horn//PET',		-- -3 Pet Enmity, not sure I want this
+		Neck  = 'Fenrir\'s Torque//NIGHTTIME',		-- -3 Emnity at night
+		-- Body = 'Evoker\'s Doublet//PET,		-- -2 Pet Enmity, not sure I want this
+		Hands = 'Errant Cuffs',					-- -2 Enmity, 'Evoker\'s Bracers//PET',	-- -2 Pet Enmity, not sure I want this
+		Rings = 'Tamas Ring',					-- -5 Enmity
+		Waist = 'Penitent\'s Rope',				-- -3 Enmity
+		Legs  = { 'Evk. Spats +1', 'Errant Slops' },	-- -3/-3 Enmity
+		-- Feet  = 'Evk. Pigaches +1',			-- -4 Pet Enmity, not sure I want this
 	},
 	
 --[[

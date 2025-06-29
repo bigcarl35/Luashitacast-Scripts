@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the WAR job.
 	
-	Gear Sets last updated: March 17, 2025
-	Code update: March 9, 2025
+	Gear Sets last updated: June 11, 2025
+	Code update: April 23, 2025
 --]]
 
 local sets = {
@@ -28,7 +28,9 @@ local sets = {
 	Example:
 	
 	['Tank_TP'] = {
-		Subset = 'TP',
+		Subset = {
+			[1] = 'TP'
+		}
 	}
 		
 	*** Note ***
@@ -64,14 +66,22 @@ local sets = {
 --]]
 	
 	['Default'] = {
-		Head   = { 'Lilac Corsage//TOWN', 'Empress Hairpin' },
-		Body   = { 'Ducal Aketon//TOWN-AK', 'Angler\'s Tunica' },
+		Head = { 'Lilac Corsage//TOWN', 'Centurion\'s Visor', 'Empress Hairpin' },
+		Neck = 'Spike Necklace',
+		Ears = { 'Physical Earring', 'Genin Earring//SJNIN', 'Physical Earring' },		
+		Body = { 'Ducal Aketon//TOWN-AK', 'Ctr. Scale Mail', 'Beetle Harness', 'Angler\'s Tunica' },
+		Hands = 'Ctr. F. Gauntlets',
+		Rings = { 'Sardonyx Ring', 'Sardonyx Ring' },
+		Back = 'Wolf Mantle',
+		Legs = 'Ctr. Cuisses',
+		Feet = 'Bounding Boots',
 	},
 
 	['Tank_Default'] = {
 		Subset = {
 			[1] = 'Default',
-		}
+		},
+		Ears = { 'Physical Earring', 'Physical Earring' },	
 	},
 	
 --[[
@@ -82,16 +92,14 @@ local sets = {
 --]]
 
 	['TP'] = {
-		Head = 'Empress Hairpin',
-		Neck = 'Spike Necklace',
-		Ears = { 'Physical Earring', 'Reraise Earring' },
-		Body = 'Angler\'s Tunica',
-		Feet = 'Bounding Boots',
-    },
+		Subset = {
+			[1] = 'Default'
+		}
+  },
 	
 	['Tank_TP'] = {
 		Subset = {
-			[1] = 'TP';	
+			[1] = 'Tank_Default';	
 		}
 	},
 	
@@ -109,13 +117,15 @@ local sets = {
 	
 	['Accuracy'] = {
 		Head  = 'Empress Hairpin',
-		Neck  = 'Spike Necklace',
+		Neck  = { 'Peacock Amulet', 'Spike Necklace' },
 		Rings = 'Kshama Ring No.2',
 		Feet  = 'Bounding Boots',
     },
 
 	['Tank_Accuracy'] = {
-		['Subset'] = 'Accuracy',
+		Subset = {
+			[1] = 'Accuracy'
+		}
 	},
 
 --[[
@@ -123,9 +133,13 @@ local sets = {
 --]]
 
 	['Ranged_Accuracy'] = {
+		Neck = 'Peacock Amulet',
 	},
 
 	['Tank_Ranged_Accuracy'] = {
+		Subset = {
+			[1] = 'Ranged_Accuracy'
+		}
 	},
 	
 --[[
@@ -167,7 +181,23 @@ local sets = {
 		Head = 'Empress Hairpin',
 		Feet = 'Bounding Boots',	
 	},
-			
+
+--[[
+	The damage taken sets are not equipped directly but rather from subsets. They're a
+	way to reduce a specific types of damage. As such they're optional and up to the 
+	player to decide if they should be defined and how they're used.
+--]]
+
+	['Damage_Taken_Breath'] = {
+	},
+	
+	['Damage_Taken_Physical'] = {
+	},
+	
+	['Damage_Taken_Magical'] = {
+		Ears = 'Coral Earring',		-- -1% damage reduction from magic
+	},
+	
 --[[
 	When you are resting (kneeling down), your HP 'Resting' set will be equipped. If your subjob
 	uses MP and your MP is below the set threshhold (defined by gcinclude.settings.RefreshGearMP), 
@@ -175,12 +205,29 @@ local sets = {
 	assuming that your subjob uses magic, you have a Dark/Pluto staff accessible, weapon swapping 
 	is enabled (/wswap), and your MP is not at maximum, the Dark/Pluto staff will automatically be 
 	equipped.
+		
+	The Damage_Taken_* sets are added as a subset to reduce damage accordingly because
+	you're in a vulnerable state.
 --]]
 	
 	['Resting_Regen'] = { 
+		Subset = {
+			[1] = { 
+				'Damage_Taken_Breath//DT_BREATH',
+				'Damage_Taken_Magical//DT_MAGICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL',
+			}
+		}	
 	},
 	
 	['Resting_Refresh'] = {
+		Subset = {
+			[1] = { 
+				'Damage_Taken_Breath//DT_BREATH',
+				'Damage_Taken_Magical//DT_MAGICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL',
+			}
+		}	
 	},
 	
 --[[
@@ -190,7 +237,7 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-		Main = { 'Neckchopper', 'Moth Axe' },
+		Main = 'Neckchopper',
     },
 	
 --[[
@@ -903,8 +950,8 @@ local sets = {
 	
 	['EnfeeblingMND'] = {
 	    Neck  = { 'Promise Badge', 'Justice Badge' },
-        Rings = 'Tamas Ring',
-        Waist = 'Friar\'s Rope',
+      Rings = 'Tamas Ring',
+      Waist = 'Friar\'s Rope',
 	},
 	
 	['Tank_EnfeeblingMND'] = {
@@ -1074,6 +1121,7 @@ local sets = {
 			[1] = 'AttackPower',
 		},
 		Neck   = 'Spike Necklace',
+		Rings  = { 'Sardonyx Ring','Sardonyx Ring'}
     },
 	
 --[[
@@ -1090,7 +1138,8 @@ local sets = {
 		},
 		Head   = 'Empress Hairpin',
 		Neck   = 'Spike Necklace',
-		Feet   = 'Bounding Boots',
+		Rings  = { 'Sardonyx Ring','Sardonyx Ring' },
+		Feet   = 'Bounding Boots'
     },
 	
 --[[
@@ -1109,7 +1158,8 @@ local sets = {
 		},
 		Head   = 'Empress Hairpin',
 		Neck   = 'Spike Necklace',
-		Feet   = 'Bounding Boots',
+		Rings  = { 'Sardonyx Ring','Sardonyx Ring' },	
+		Feet   = 'Bounding Boots'
     },
 	
 --[[
@@ -1126,7 +1176,8 @@ local sets = {
 		Subset = {
 			[1] = 'AttackPower',
 		},
-		Neck   = 'Spike Necklace',	
+		Neck   = 'Spike Necklace',
+		Rings  = { 'Sardonyx Ring','Sardonyx Ring'}
     },
 	
 --[[
@@ -1139,7 +1190,8 @@ local sets = {
 		Subset = {
 			[1] = 'AttackPower',
 		},
-		Neck   = 'Spike Necklace',	
+		Neck   = 'Spike Necklace',
+		Rings  = { 'Sardonyx Ring','Sardonyx Ring'}
     },
 	
 --[[
@@ -1157,8 +1209,9 @@ local sets = {
 	['WS_STRMND'] = {
 		Subset = {
 			[1] = 'AttackPower',
-		}
-    },
+		},
+		Rings  = { 'Sardonyx Ring','Sardonyx Ring'}
+  },
 	
 --[[
 		* Strength and Vitality based, even weighting *
@@ -1173,7 +1226,8 @@ local sets = {
 			[1] = 'AttackPower',
 		},
 		Neck   = 'Spike Necklace',
-    },
+		Rings  = { 'Sardonyx Ring','Sardonyx Ring'}
+  },
 	
 --[[
 		* Strength and Agility based, ranged *
@@ -1188,7 +1242,7 @@ local sets = {
 		Subset = {
 			[1] = 'AttackPower',
 		}
-    },
+  },
 
 --[[
 		* Agility based *
@@ -1256,6 +1310,7 @@ local sets = {
 		},
 		Head   = 'Empress Hairpin',
 		Neck   = 'Spike Necklace',
+		Hands  = 'Ctr. F. Gauntlets',
 		Feet   = 'Bounding Boots',
     },
 	
@@ -1273,6 +1328,8 @@ local sets = {
 		},
 		Head   = 'Empress Hairpin',
 		Neck   = 'Spike Necklace',
+		Hands  = 'Ctr. F. Gauntlets',
+		Legs   = 'Ctr. Cuisses',
 		Feet   = 'Bounding Boots',	
     },
 	
@@ -1288,6 +1345,7 @@ local sets = {
 		},
 		Head   = 'Empress Hairpin',
 		Neck   = 'Spike Necklace',
+		Hands  = 'Ctr. F. Gauntlets',
 		Feet   = 'Bounding Boots',	
     },
 	
@@ -1324,8 +1382,9 @@ local sets = {
 	['WS_HP'] = {
 		Subset = {
 			[1] = 'AttackPower',
-		}
-    },
+		},
+		Ears = { 'Physical Earring', 'Physical Earring' }
+  },
 	
 --[[
 	Kite is used for kiting. Emphasis should be placed on gear that increases 
@@ -1784,10 +1843,8 @@ function profile.HandleDefault()
 	
 	-- And make sure a weapon equipped. (Going into a capped area can cause no weapon to be equipped.)
 	local gear = gData.GetEquipment();
-	if gear.Main ~= nil then
-		if gear.Main.Name == nil then
-			gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
-		end
+	if gear.Main == nil or gear.Main.Name == nil then
+		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
 	end	
 		
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set

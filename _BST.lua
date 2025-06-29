@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the BST job.
 	
-	Gear Sets last updated: March 17, 2025
-	Code update: March 9, 2025
+	Gear Sets last updated: April 26, 2025
+	Code update: April 23, 2025
 	
 	Role: end game, 50/60
 --]]
@@ -57,18 +57,16 @@ local sets = {
 --]]
 
 	['Default'] = {
-		Subset = {
-			[1] = 'TP',
-		},
-		Head   = { 'Lilac Corsage//TOWN', 'President. Hairpin//NOT_OWN//HPP.LT.94', 'Panther Mask', 'Empress Hairpin' },
+		Head   = { 'Lilac Corsage//TOWN', 'President. Hairpin//NOT_OWN//HPP.LT.94', 'Empress Hairpin' },
 		Neck   = { 'Opo-opo necklace//SLEPT', 'Peacock Amulet', 'Spike Necklace' },
+		Ears   = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Coral Earring//DT_MAGICAL', 'Beastly Earring', 'Brutal Earring', 'Genin Earring//SJNIN', 'Bat Earring//MSJ', 'Fang Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
 		Body   = { 'Ducal Aketon//TOWN-AK', 'Gaudy Harness//MSJ//MP.LT.50', 'Narasimha\'s Vest', 'Ducal Aketon' },
-		Hands  = { 'Battle Gloves' },
-        Rings  = { 'Flame Ring', 'Tamas Ring//MSJ', 'Kshama Ring No.8',  },
-        Back   = { 'Forager\'s Mantle', 'Amemet Mantle', 'Ram Mantle' },
-        Waist  = 'Swift Belt',
+		Hands  = { 'Beast Gloves', 'Ogre Gloves', 'Wonder Mitts', 'Battle Gloves' },
+        Rings  = { 'Flame Ring', 'Tamas Ring//MSJ', 'Kshama Ring No.8', 'Kshama Ring No.2'  },
+        Back   = { 'Forager\'s Mantle', 'Amemet Mantle', 'Ram Mantle', 'Shep. Hose' },
+        Waist  = { 'Swift Belt', 'Tilt Belt' },
         Legs   = { 'Monster Trousers', 'Tracker\'s Kecks' },
-        Feet   = 'Bounding Boots',
+        Feet   = { 'Monster Gaiters', 'Beast Gaiters', 'Wonder Clomps', 'Bounding Boots' },
 	},
 
 	['Default_WPet'] = {
@@ -83,16 +81,13 @@ local sets = {
 --]]
 
 	['TP'] = {
-        Head   = { 'Shep. Bonnet//PET', 'Panther Mask', 'Empress Hairpin', 'Silver Hairpin +1//MSJ' },
-        Neck   = { 'Opo-opo necklace//SLEPT', 'Peacock Amulet', 'Spike Necklace' },
-		Ears   = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Coral Earring//DT_MAGICAL', 'Beastly Earring', 'Brutal Earring', 'Genin Earring//SJNIN', 'Bat Earring//MSJ', 'Fang Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ', 'Reraise Earring' },
+		Subset = {
+			[1] = 'Default',
+		},
+        Head   = { 'Shep. Bonnet//PET', 'Empress Hairpin', 'Silver Hairpin +1//MSJ' },
         Body   = { 'Gaudy Harness//MSJ//MP.LT.50', 'Narasimha\'s Vest', 'Scorpion Harness', 'Gaudy Harness', 'Wonder Kaftan', 'Angler\'s Tunica' },
-        Hands  = { 'Dusk Gloves', 'Beast Gloves', 'Ogre Gloves', 'Wonder Mitts', 'Battle Gloves' },
-        Rings  = { 'Flame Ring', 'Tamas Ring//MSJ', 'Kshama Ring No.8', 'Kshama Ring No.2', 'Balance Ring' },
+        Hands  = 'Dusk Gloves',
         Back   = { 'Forager\'s Mantle', 'Psilos Mantle', 'Amemet Mantle', 'Raptor Mantle' },
-        Waist  = { 'Swift Belt', 'Tilt Belt' },
-        Legs   = { 'Monster Trousers', 'Tracker\'s Kecks', 'Shep. Hose' },
-        Feet   = { 'Monster Gaiters', 'Beast Gaiters', 'Wonder Clomps', 'Bounding Boots' },
     },
 	
 --[[
@@ -148,19 +143,52 @@ local sets = {
 		Waist = 'Life Belt//IF:TILT Belt',	-- -5 eva on tilt belt
 		Feet  = 'Bounding Boots',
     },
+
+--[[
+	The damage taken sets are not equipped directly but rather from subsets. They're a
+	way to reduce a specific types of damage. As such they're optional and up to the 
+	player to decide if they should be defined and how they're used.
+--]]
+
+	['Damage_Taken_Breath'] = {
+	},
+	
+	['Damage_Taken_Physical'] = {
+	},
+	
+	['Damage_Taken_Magical'] = {
+		Ears = 'Coral Earring',		-- -1% damage reduction from magic
+	},
 	
 --[[
 	When you are resting (kneeling down), if your HP is not full, your HP 'Resting' 
 	set will be equipped. If your MP is below maximum value, your MP 'Resting_Refresh' 
 	gear set will be equipped. 
+		
+	The Damage_Taken_* sets are added as a subset to reduce damage accordingly because
+	you're in a vulnerable state.
 --]]
 	
 	['Resting_Regen'] = { 
+		Subset = {
+			[1] = { 
+				'Damage_Taken_Breath//DT_BREATH',
+				'Damage_Taken_Magical//DT_MAGICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL',
+			}
+		},	
 		Head = 'President. Hairpin//NOT_OWN',
 		Legs = 'Monster trousers',
 	},
 
 	['Resting_Refresh'] = {
+		Subset = {
+			[1] = { 
+				'Damage_Taken_Breath//DT_BREATH',
+				'Damage_Taken_Magical//DT_MAGICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL',
+			}
+		},	
 		Main = 'Pluto\'s Staff//WSWAP//MSJ',
 		Body = 'Gaudy Harness//MSJ//MP.LT.50',	
 	},
@@ -184,10 +212,9 @@ local sets = {
 --]]
 
 	['Preshot'] = {
-		Head  = 'Panther Mask',
 		Waist = 'Swift Belt',
     },
--- Got this far ***	
+
 --[[
 	Midshot is the second stage of a ranged shot. This is where you place
 	Ranged Accuracy, Ranged Attack, Ranged Damage, Crit. Rate, Crit. Damage,
@@ -1129,7 +1156,7 @@ local sets = {
 		Subset = {
 			[1] = 'AttackPower',
 		},
-		Head   = { 'Panther mask', 'Monster Helm' },
+		Head   = 'Monster Helm',
 		Neck   = 'Star Necklace',
 		Ears   = 'Beastly earring',
 		Body   = 'Gaudy harness',
@@ -1154,7 +1181,7 @@ local sets = {
         Neck   = { 'Promise Badge', 'Justice Badge' },
 		Ears   = 'Beastly Earring//AXE',		-- Boosted skill if using an axe
         Body   = 'Wonder Kaftan',
-        Rings  = { 'Tamas Ring', 'Kshama Ring No.9',
+        Rings  = { 'Tamas Ring', 'Kshama Ring No.9' },
         Waist  = { 'Penitent\'s Rope', 'Friar\'s Rope' },
         Legs   = 'Wonder Braccae',
 		Feet   = 'Mannequin Pumps',
@@ -1864,10 +1891,8 @@ function profile.HandleDefault()
 	-- And make sure a weapon equipped. (Going into a capped area can cause no 
 	-- weapon to be equipped.)
 	local gear = gData.GetEquipment();
-	if gear.Main ~= nil then
-		if gear.Main.Name == nil then
-			gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
-		end
+	if gear.Main == nil or gear.Main.Name == nil then
+		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
 	end
 	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set

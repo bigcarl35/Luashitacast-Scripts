@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the MNK job.
 	
-	Gear Sets last updated: March 17, 2025
-	Code update: March 9, 2025
+	Gear Sets last updated: June 21, 2025
+	Code update: April 23, 2025
 --]]
 
 local sets = {
@@ -59,11 +59,16 @@ local sets = {
 --]]
 
 	['Default'] = {
-		Subset = {
-			[1] = 'TP',
-		},
-		Head   = { 'Lilac Corsage//TOWN', 'Empress Hairpin', 'Entrancing Ribbon//SJBST' },
-		Body   = { 'Ducal Aketon//TOWN-AK', 'Beetle Harness', 'Angler\'s Tunica' },
+		Head  = { 'Lilac Corsage//TOWN', 'Empress Hairpin', 'Entrancing Ribbon' },
+		Neck  = { 'Spike Necklace', 'Justice Badge' },
+		Ears  = { 'Physical Earring', 'Physical Earring' },
+		Body  = { 'Ducal Aketon//TOWN-AK', 'Beetle Harness', 'Angler\'s Tunica' },
+		Hands = 'Battle Gloves',
+		Rings = { 'Sardonyx Ring','Sardonyx Ring' },
+		Waist = { 'Purple Belt', 'Friar\'s Rope' },
+		Back  = 'Dhalmel Mantle',
+		Legs  = { 'Beetle Subligar', 'Field Hose' },
+		Feet  = { 'Cotton Kyahan', 'Waders' }
 	},
 	
 --[[
@@ -73,12 +78,9 @@ local sets = {
 --]]
 
 	['TP'] = {
-		Head  = 'Empress Hairpin',
-		Neck  = { 'Spike Necklace', 'Justice Badge' },
-		Ears  = { 'Physical Earring', 'Reraise Earring' },
-		Body  = 'Angler\'s Tunica',
-		Legs  =  'Field Hose',
-		Feet  = 'Waders',
+		Subset = {
+			[1] = 'Default',
+		}
     },
 		
 --[[
@@ -137,7 +139,23 @@ local sets = {
 	['Evasion'] = {
 		Head = 'Empress Hairpin',
     },
-			
+
+--[[
+	The damage taken sets are not equipped directly but rather from subsets. They're a
+	way to reduce a specific types of damage. As such they're optional and up to the 
+	player to decide if they should be defined and how they're used.
+--]]
+
+	['Damage_Taken_Breath'] = {
+	},
+	
+	['Damage_Taken_Physical'] = {
+	},
+	
+	['Damage_Taken_Magical'] = {
+		Ears = 'Coral Earring',		-- -1% damage reduction from magic
+	},
+	
 --[[
 	When you are resting (kneeling down), your HP 'Resting' set will be equipped. If your subjob
 	uses MP and your MP is below the set threshhold (defined by gcinclude.settings.RefreshGearMP), 
@@ -145,12 +163,29 @@ local sets = {
 	assuming that your subjob uses magic, you have a Dark/Pluto staff accessible, weapon swapping 
 	is enabled (/wswap), and your MP is not at maximum, the Dark/Pluto staff will automatically be 
 	equipped.
+		
+	The Damage_Taken_* sets are added as a subset to reduce damage accordingly because
+	you're in a vulnerable state.
 --]]
 	
 	['Resting_Regen'] = { 
+		Subset = {
+			[1] = { 
+				'Damage_Taken_Breath//DT_BREATH',
+				'Damage_Taken_Magical//DT_MAGICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL',
+			}
+		}	
 	},
 	
 	['Resting_Refresh'] = {
+		Subset = {
+			[1] = { 
+				'Damage_Taken_Breath//DT_BREATH',
+				'Damage_Taken_Magical//DT_MAGICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL',
+			}
+		}	
 	},
 	
 --[[
@@ -906,7 +941,7 @@ local sets = {
 		Subset = {
 			[1] ='AttackPower',
 		},
-		Rings  = 'Courage Ring',
+		Rings  = { 'Courage Ring', 'Courage Ring' },
     },
 	
 --[[
@@ -1451,10 +1486,8 @@ function profile.HandleDefault()
 	
 	-- And make sure a weapon equipped. (Going into a capped area can cause no weapon to be equipped.)
 	local gear = gData.GetEquipment();
-	if gear.Main ~= nil then
-		if gear.Main.Name == nil then
-			gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
-		end
+	if gear.Main == nil or gear.Main.Name == nil then
+		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
 	end	
 		
 	gcinclude.EquipTheGear(sets.CurrentGear);

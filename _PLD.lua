@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the PLD job.
 
-	Gear Sets last updated: March 17, 2025
-	Code update: March 9, 2025
+	Gear Sets last updated: March 26, 2025
+	Code update: April 23, 2025
 --]]
 
 local sets = {
@@ -30,7 +30,9 @@ local sets = {
 	Example:
 	
 	['Tank_TP'] = {
-		Subset = 'TP',
+		Subset = {
+			[1] = 'TP'
+		}
 	}
 		
 	*** Note ***
@@ -72,10 +74,15 @@ local sets = {
 --]]
 	
 	['Default'] = {
-		Subset = {
-			[1] = 'TP',
 		Head   = { 'Lilac Corsage//TOWN', 'Mandra. Masque' },
-		Body   = { 'Ducal Aketon//TOWN-AK', 'Choc. Jack Coat' },
+		Neck   = 'Justice Badge',
+		Ears   = { 'Physical Earring', 'Energy Earring +1', 'Energy Earring +1' },
+		Body   = { 'Ducal Aketon//TOWN-AK', 'Angler\'s Tunica', 'Choc. Jack Coat' },
+		Hands  = { 'Battle Gloves', 'Dream Mittens +1//WEAKENED', 'Fsh. Gloves' },
+		Rings  = { 'Astral Ring', 'Astral Ring' },
+		Waist  = 'Friar\'s Rope',
+		Legs   = 'Fisherman\'s Hose',
+		Feet   = { 'Bounding Boots', 'Waders' },
 	},
 	
 	['Tank_Default'] = {
@@ -92,23 +99,15 @@ local sets = {
 --]]
 	
 	['TP'] = {
-		Head   = 'Mandra. Masque',
-		Neck   = 'Justice Badge',
-		Ears   = { 'Physical Earring', 'Energy Earring +1', 'Energy Earring +1' },
-		Body   = 'Ducal Aketon',
-		Hands  = 'Fsh. Gloves',
-		Rings  = { 'Astral Ring', 'Astral Ring' },
-		Legs   = 'Fisherman\'s Hose',
-		Feet   = { 'Bounding Boots', 'Waders' },
+		Subset = {
+			[1] = 'Default',
+		},
     },
 	
 	['Tank_TP'] = {
-		Head  = 'Mandra. Masque',
-		Neck  = 'Justice Badge',
-		Body  = 'Ducal Aketon',
-		Hands = 'Fsh. Gloves',
-		Legs  = 'Fisherman\'s Hose',
-		Feet  = 'Dream Boots',	
+		Subset = {
+			[1] = 'TP',
+		}
 	},
 	
 --[[
@@ -177,17 +176,50 @@ local sets = {
 	},
 
 --[[
+	The damage taken sets are not equipped directly but rather from subsets. They're a
+	way to reduce a specific types of damage. As such they're optional and up to the 
+	player to decide if they should be defined and how they're used.
+--]]
+
+	['Damage_Taken_Breath'] = {
+	},
+	
+	['Damage_Taken_Physical'] = {
+	},
+	
+	['Damage_Taken_Magical'] = {
+		Ears = 'Coral Earring',		-- -1% damage reduction from magic
+	},
+	
+--[[
 	When you are resting (kneeling down), your HP 'Resting' set will be equipped. If your MP 
 	is below the set threshhold (defined by gcinclude.settings.RefreshGearMP) though, your MP 
 	'Resting_Refresh' gear set will be equipped. Regardless of which set is equipped, if you
 	have a Dark/Pluto staff accessible, you've indicated that weapon swapping is permissible,
 	and your MP is not at maximum, the Dark/Pluto staff will automatically be equipped.
+		
+	The Damage_Taken_* sets are added as a subset to reduce damage accordingly because
+	you're in a vulnerable state.
 --]]
 	
 	['Resting_Regen'] = { 
+		Subset = {
+			[1] = { 
+				'Damage_Taken_Breath//DT_BREATH',
+				'Damage_Taken_Magical//DT_MAGICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL',
+			}
+		}	
 	},
 	
 	['Resting_Refresh'] = {
+		Subset = {
+			[1] = { 
+				'Damage_Taken_Breath//DT_BREATH',
+				'Damage_Taken_Magical//DT_MAGICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL',
+			}
+		}	
 	},
 	
 --[[
@@ -368,7 +400,7 @@ local sets = {
 	
 	['CuringMagic'] = {
 		Subset = {
-			[1] = 'Enmity_Set//TANK',
+			[1] = 'Enmity_Minus//TANK',
 		},
 		Neck   = 'Promise Badge',
 		Ears   = 'Geist Earring',
@@ -380,7 +412,9 @@ local sets = {
 	},
 	
 	['Tank_CuringMagic'] = {
-		Subset = 'CuringMagic',
+		Subset = {
+			[1] = 'CuringMagic'
+		}
 	},
 
 --[[
@@ -548,7 +582,9 @@ local sets = {
 	},
 	
 	['Tank_Sneak'] = {
-		Subset = 'Sneak',
+		Subset = {
+			[1] = 'Sneak'
+		}
 	},
 
 --[[
@@ -561,7 +597,9 @@ local sets = {
 	},
 	
 	['Tank_Invisible'] = {
-		Subset = 'Invisible',
+		Subset = {
+			[1] = 'Invisible'
+		}
 	},
 
 --[[
@@ -1741,10 +1779,8 @@ function profile.HandleDefault()
 
 	-- And make sure a weapon equipped. (Going into a capped area can cause no weapon to be equipped.)
 	local gear = gData.GetEquipment();
-	if gear.Main ~= nil then
-		if gear.Main.Name == nil then
-			gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
-		end
+	if gear.Main == nil or gear.Main.Name == nil then
+		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
 	end
 	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set

@@ -4,8 +4,8 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the WHM job.
 	
-	Gear Sets last updated: March 17, 2025
-	Code update: March 9, 2025
+	Gear Sets last updated: June 29, 2025
+	Code update: April 23, 2025
 --]]
 
 local sets = {
@@ -62,17 +62,17 @@ local sets = {
 --]]
 	
 	['Default'] = {
-		Main   = 'Earth Staff',
+		Main   = 'Earth Staff//WSWAP',
 		Head   = { 'Lilac Corsage//TOWN', 'Healer\'s Cap', 'Cleric\'s Cap', 'Healer\'s Cap', 'Silver Hairpin +1' },
         Neck   = { 'Rep.Gold Medal//NOT_OWN', 'Uggalepih Pendant//NIGHTTIME', 'Fenrir\'s Torque//DAYTIME', 'Spirit Torque', 'Justice Badge' },
-        Ears   = { 'Bat Earring//BLINDED', 'Geist Earring', 'Loquac. Earring', 'Geist Earring', 'Energy Earring +1', 'Energy Earring +1' },
-		Body   = { 'Ducal Aketon//TOWN-AK', 'Noble\'s Tunic', 'Healer\'s Bliaut', 'Vermillion Cloak', 'Seer\'s Tunic', 'Angler\'s Tunica' },
-        Hands  = { 'Blessed Mitts', 'Healer\'s Mitts', 'Devotee\'s Mitts', 'Baron\'s Cuffs' },
-        Rings  = { 'Tamas Ring', 'Ether Ring', 'Astral Ring' },
-		Back   = { 'Blue Cape', 'Red Cape', 'White Cape', 'Mist Silk Cape' },  
+        Ears   = { 'Bat Earring//BLINDED', 'Loquac. Earring', 'Geist Earring', 'Energy Earring +1', 'Energy Earring +1' },
+		Body   = { 'Ducal Aketon//TOWN-AK', 'Vermillion Cloak//MPP.LT.90', 'Healer\'s Bliaut', 'Vermillion Cloak', 'Seer\'s Tunic', 'Angler\'s Tunica' },
+        Hands  = { 'Healer\'s Mitts', 'Devotee\'s Mitts', 'Baron\'s Cuffs' },
+        Rings  = { 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
+		Back   = { 'Blue Cape', 'White Cape' },
 		Waist  = { 'Flagellant\'s Rope//PARALYZED', 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
-        Legs   = { 'Blessed Trousers', 'Healer\'s Pantaln.', 'Wonder Braccae',  'Baron\'s Slops', 'Fisherman\'s Hose' }, 
-		Feet   = { 'Blessed Pumps', 'Healer\'s Duckbills', 'Mannequin Pumps', 'Seer\'s Pumps', 'Waders' },
+        Legs   = { 'Healer\'s Pantaln.', 'Wonder Braccae', 'Baron\'s Slops', 'Fisherman\'s Hose' },
+		Feet   = { 'Healer\'s Duckbills', 'Mannequin Pumps', 'Waders' },
 	},
 	
 --[[
@@ -83,7 +83,7 @@ local sets = {
 
 	['TP'] = {
 		Subset = {
-			[1] = 'Default',
+			[1] = 'Default'
 		}
     },
 		
@@ -98,11 +98,11 @@ local sets = {
 --]]
 	
 	['Accuracy'] = {
-		Head  = 'Optical Hat',
-		Neck  = 'Peacock Amulet',
-        Hands = 'Battle Gloves',
-        Waist = { 'Life Belt', 'Tilt Belt' },
-		Rings = { 'Toreador\'s Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2' },
+		Head  = 'Optical Hat',					-- +10 Acc
+		Neck  = 'Peacock Amulet',				-- +10 Acc
+        Hands = 'Battle Gloves',				--  +3 Acc
+        Waist = { 'Life Belt', 'Tilt Belt' },	-- +10/5 Acc
+		Rings = { 'Toreador\'s Ring', 'Toreador\'s Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2' },	-- +7/7/5/5/4/2 Acc
     },
 		
 --[[
@@ -110,6 +110,9 @@ local sets = {
 --]]
 
 	['Ranged_Accuracy'] = {
+		Head   = 'Optical Hat',			-- +10 RAcc
+		Neck   = 'Peacock Amulet',		-- +10 RAcc
+		Rings  = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring' },	-- +5/5/4 RAcc
 	},
 
 --[[
@@ -140,11 +143,31 @@ local sets = {
 --]]
 	
 	['Evasion'] = {
-        Head  = 'Empress Hairpin',
-		Ears  = 'Bat Earring//BLINDED',
-        Hands = 'Battle Gloves',
+		Ammo  = 'Orphic Egg//PJPBRD',					--  +1 Eva
+        Head  = { 'Optical Hat', 'Empress Hairpin' },	-- +10/10 Eva
+        Neck  = 'Spirit Torque',						-- +5 Eva
+        Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Genin Earring//SJNIN', 'Drone Earring' },	-- +15 Eva while blinded, +5 Eva, +4/3 AGI
+        Hands = 'Battle Gloves',						--  +3 Eva
+        Waist = 'Swift Belt//IF:Tilt Belt',				-- filler: Tilt Belt has -5 Eva
     },
-			
+
+--[[
+	The damage taken sets are not equipped directly but rather from subsets. They're a
+	way to reduce a specific types of damage. As such they're optional and up to the 
+	player to decide if they should be defined and how they're used.
+--]]
+
+	['Damage_Taken_Breath'] = {
+	},
+	
+	['Damage_Taken_Physical'] = {
+		Main = 'Earth Staff//WSWAP'		-- -20% damage reduction from physical
+	},
+	
+	['Damage_Taken_Magical'] = {
+		Ears = 'Coral Earring',			-- -1% damage reduction from magic
+	},
+	
 --[[
 	When you are resting (kneeling down), your HP 'Resting' set will be equipped. If your subjob
 	uses MP and your MP is below the set threshhold (defined by gcinclude.settings.RefreshGearMP), 
@@ -152,16 +175,32 @@ local sets = {
 	assuming that your subjob uses magic, you have a Dark/Pluto staff accessible, weapon swapping 
 	is enabled (/wswap), and your MP is not at maximum, the Dark/Pluto staff will automatically be 
 	equipped.
+		
+	The Damage_Taken_* sets are added as a subset to reduce damage accordingly because
+	you're in a vulnerable state.
 --]]
 	
 	['Resting_Regen'] = { 
+		Subset = {
+			[1] = { 
+				'Damage_Taken_Breath//DT_BREATH',
+				'Damage_Taken_Magical//DT_MAGICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL'
+			}
+		}	
 	},
 	
 	['Resting_Refresh'] = {
+		Subset = {
+			[1] = { 
+				'Damage_Taken_Breath//DT_BREATH',
+				'Damage_Taken_Magical//DT_MAGICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL'
+			}
+		},	
 		Main  = { 'Pluto\'s Staff//WSWAP', 'Blessed Hammer//WSWAP', 'Pilgrim\'s Wand//WSWAP' },
-		Head  = { 'Hlr. Cap +1', 'Cleric\'s Cap', 'Healer\'s Cap' },
-        Body  = { 'Errant Hpl.', 'Noble\'s Tunic', 'Vermillion Cloak', 'Seer\'s Tunic' },
-		Legs  = 'Baron\'s Slops',
+        Body  = { 'Errant Hpl.', 'Vermillion Cloak', 'Seer\'s Tunic' },
+		Legs  = 'Baron\'s Slops'
 	},
 	
 --[[
@@ -171,7 +210,7 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-		Main = { 'Earth Staff', 'Rose Wand +1', 'Solid Wand', 'Yew Wand +1', 'Pilgrim\'s Wand' },
+		Main = { 'Earth Staff', 'Pilgrim\'s Wand' },
 		Ammo = { 'Hedgehog Bomb', 'Fortune Egg' },
     },
 	
@@ -190,6 +229,8 @@ local sets = {
 --]]
 
 	['Midshot'] = {
+		Main  = 'Vulcan\'s Staff//WSWAP',				-- +10 RAtt
+		Ears  = 'Brutal Earring',						-- Store TP +1
     },
 
 --[[
@@ -203,32 +244,39 @@ local sets = {
 --]]
 
 	['INT'] = {
-		Main  = 'Ice Staff//WSWAP',
-		Body  = 'Baron\'s Saio',
-		Rings = 'Tamas Ring',
-		Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },
-		Feet  = { 'Healer\'s Duckbills', 'Mannequin Pumps' },
+		Main  = 'Aquilo\'s Staff//WSWAP',						-- +5 INT
+		Body  = { 'Black Cotehardie', 'Baron\'s Saio' },		-- +2/1 INT
+		Rings = { 'Tamas Ring', 'Kshama Ring No.5' },			-- +5/3 INT
+		Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },		-- +5/1 INT
+		Legs  = 'Errant Slops',									-- +7 INT
+		Feet  = { 'Healer\'s Duckbills', 'Mannequin Pumps' }	-- +3/1 INT
 	},
 	
 	['MND'] = {
-		Main  = 'Water Staff//WSWAP',
-		Head  = 'Healer\'s Cap',
-		Neck  = { 'Promise Badge', 'Justice Badge' },
-		Ears  = 'Geist Earring',
-		Body  = 'Wonder Kaftan',
-		Hands = 'Baron\'s Cuffs',
-		Rings = { 'Tamas Ring', 'Kshama Ring No.9' },
-		Back  = 'White Cape',
-		Waist = { 'Penitent\'s Rope', 'Friar\'s Rope' },
-		Legs  = 'Wonder Braccae',
-		Feet  = 'Mannequin Pumps',
+		Main  = { 'Water Staff//WSWAP', 'Pluto\'s Staff//WSWAP', 'Light Staff//WSWAP' },	-- +4/2/1 MND
+		Head  = 'Healer\'s Cap',								-- +4 MND
+		Neck  = { 'Promise Badge', 'Justice Badge' },			-- +5/3 MND
+		Ears  = 'Geist Earring',								-- +1 MND
+		Body  = { 'Errant Hpl.', 'Wonder Kaftan', 'Baron\'s Saio' },						-- +10/1/1 MND
+		Hands = 'Baron\'s Cuffs',								-- +1 MND
+		Rings = { 'Tamas Ring', 'Kshama Ring No.9' },			-- +5/3 MND
+		Back  = 'White Cape',									-- +2 MND
+		Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt', 'Friar\'s Rope' },					-- +5/1/1 MND
+		Legs  = { 'Errant Slops', 'Wonder Braccae' },			-- +7/2 MND
+		Feet  = 'Mannequin Pumps'								-- +2 MND
 	},
 
 	['Enmity_Plus'] = {
 	},
 	
 	['Enmity_Minus'] = {
-		Rings = 'Tamas Ring',
+		Ammo  = 'Hedgehog Bomb',	-- -1 Enmity
+		Head  = 'Healer\'s Cap',	-- -1 Enmity
+		Body  = 'Healer\'s Bliaut',	-- -4 Enmity
+		Hands = 'Healer\'s Mitts',	-- -4 Enmity
+		Rings = 'Tamas Ring',		-- -5 Enmity
+		Waist = 'Penitent\'s Rope',	-- -3 Enmity
+		Legs  = 'Errant Slops'		-- -3 Enmity
 	},
 	
 --[[
@@ -241,8 +289,8 @@ local sets = {
 --]]
 
 	['Precast'] = {	
-		Ears = { 'Loquac. Earring' },
-		Feet = { 'Cure Clogs//SP:CUR', 'Rostrum Pumps' },	
+		Ears = 'Loquac. Earring',		-- Enhances Fastcast
+		Feet = 'Rostrum Pumps'			-- Enhances Fastcast
 	},
 
 --[[
@@ -263,11 +311,11 @@ local sets = {
 				   'Healing_Magic_Skill//HEALING',		-- Offensive healing only
 				   'Divine_Magic_Skill//DIVINE',
 				   'Ninjutsu_Skill//NINJUTSU',
-				   'CHR//SINGING',		-- Charisma provides accuracy w/singing
+				   'CHR//SINGING'		-- Charisma provides accuracy w/singing
 				   },
 		},
 		Rings  = 'Tamas Ring',			-- +5 MAcc
-		Feet   = 'Nashira Crackows',	-- +2 MAcc		
+		Feet   = 'Nashira Crackows',	-- +2 MAcc
 	},
 	
 --[[
@@ -305,6 +353,7 @@ local sets = {
 --]]
 
 	['Healing_Magic_Skill'] = {
+		Hands = 'Healer\'s Mitts'		-- +15 Healing magic skill
 	},
 	
 --[[	
@@ -348,13 +397,10 @@ local sets = {
 	
 	['CuringMagic'] = {
 		Subset = {
-			[1] = 'MND',
-		},
-		Main   = { 'Light Staff//WSWAP', 'Rose Wand +1', 'Solid Wand//WSWAP', 'Yew Wand +1//WSWAP' },
-		Body   = 'Noble\'s Tunic', 
-		Hands  = 'Healer\'s Mitts',
-		Legs   = 'Cleric\'s Pantaln.',
-		Feet   = 'Cure Clogs',	
+			[1] = 'Healing_Magic_Skill',
+			[2] = 'Enmity_Minus,'
+			[3] = 'MND'
+		}
 	},	
 	
 --[[
@@ -373,7 +419,7 @@ local sets = {
 		Subset = {
 			[1] = 'CuringMagic',	
 		},
-		Neck   = 'Uggalepih Pendant//SPECIAL',	
+		Neck   = 'Uggalepih Pendant//SPECIAL'	-- +8 MAB if MP% < 51%
 	},
 
 --[[
@@ -383,8 +429,10 @@ local sets = {
 --]]
 
 	['HealingMagic'] = {
-		Hands = 'Healer\'s Mitts',
-		Legs  = 'Cleric\'s Pantaln.',	
+		Subset = {
+			[1] = 'Healing_Magic_Skill',
+			[2] = 'MND'
+		}
 	},
 
 --[[
@@ -422,7 +470,7 @@ local sets = {
 		if Enhancing Magic Skill is above 300:
 			Resistance = 25 + floor(Enhancing Magic Skill / 4)
 	
-	You can increase the resistence through gear or WHM category 1 merits.
+	You can increase the resistence through gear or W-- +8 MAB if MP% < 51%HM category 1 merits.
 	* There's a cap of 500 Enhancing Magic Skill, but that might be from the
 	  99 era.
 	
@@ -433,10 +481,9 @@ local sets = {
 --]]
 
 	['Barspell'] = {
-		Head = 'Nashira Turban',
-		Body = 'Blessed Bliaut',
-		Legs = 'Cleric\'s Pantaln.',
-		Feet = 'Cleric\'s Duckbills',	
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill'
+		}
 	},
 	
 --[[
@@ -457,6 +504,9 @@ local sets = {
 --]]
 
 	['Enspell'] = {
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill'
+		}
 	},
 	
 --[[
@@ -475,6 +525,10 @@ local sets = {
 --]]
 	
 	['Spike'] = {
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill',
+			[2] = 'INT'
+		},
 	},
 	
 --[[
@@ -501,7 +555,8 @@ local sets = {
 
 	['Stoneskin'] = {
 		Subset = {
-			[1] = 'MND',
+			[1] = 'Enhancing_Magic_Skill',
+			[2] = 'MND'
 		}
 	},	
 
@@ -511,7 +566,10 @@ local sets = {
 --]]
 
 	['Sneak'] = {
-		Feet = 'Dream Boots +1',
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill'
+		},
+		Feet = 'Dream Boots +1',	-- Enhances Sneak
 	},
 
 --[[
@@ -520,7 +578,10 @@ local sets = {
 --]]	
 
 	['Invisible'] = {
-		Hands = 'Dream Mittens +1',
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill'
+		},
+		Hands = 'Dream Mittens +1'	-- Enhances Invisible
 	},
 
 --[[
@@ -537,6 +598,9 @@ local sets = {
 --]]
 	
 	['Phalanx'] = {
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill'
+		}
 	},	
 
 --[[
@@ -549,10 +613,9 @@ local sets = {
 --]]
 
 	['EnhancingMagic'] = {
-		Head  = 'Nashira Turban', 	-- SIR and -Enmity
-		Hands = 'Cleric\'s Mitts//SP:REGEN',
-		Legs  = 'Blessed Trousers', -- Using 'Blessed Trousers' over 'Errant Slops' b/c of %haste and -Emnity over the +1 MND.
-		Feet  = { 'Cleric\'s Duckbills', 'Blessed Pumps' }, -- Using 'Blessed Pumps' over 'Errant Pigaches' b/c of %haste and -Emnity over the +2 MND.	
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill'
+		}
 	},
 
 --[[
@@ -591,12 +654,11 @@ local sets = {
 --]]
 	['ElementalNuke'] = {
 		Subset = {
-			[1] = 'INT',
+			[1] = 'Elemental_Magic_Skill',
+			[2] = 'INT',
 		},
 		Main   = 'Ice Staff//WSWAP',		
-		Neck   = 'Uggalepih Pendant//SPECIAL', 
-		Rings  = 'Tamas Ring',		
-		Feet   = 'Mannequin Pumps',		
+		Neck   = 'Uggalepih Pendant//SPECIAL',	-- +8 MAB if MP% < 51%
 	},	
 
 --[[
@@ -625,10 +687,10 @@ local sets = {
 
 	['ElementalDebuff'] = {
 		Subset = {
-			[1] = 'INT',
+			[1] = 'Elemental_Magic_Skill',
+			[2] = 'INT'
 		},
-		Neck   = 'Uggalepih Pendant//SPECIAL', 
-		Feet   = 'Mannequin Pumps',	
+		Neck   = 'Uggalepih Pendant//SPECIAL' 	-- +8 MAB if MP% < 51%
 	},
 
 --[[
@@ -638,6 +700,7 @@ local sets = {
 --]]
 
 	['Summoning_Skill'] = {
+		Neck = 'Smn. Torque',		-- +7 Summoning magic skill
 	},
 	
 --[[
@@ -652,7 +715,9 @@ local sets = {
 --]]
 
 	['Summoning'] = {
-		Neck = 'Smn. Torque',	
+		Subset = {
+			[1] = 'Summoning_Skill'
+		}
 	},
 
 --[[
@@ -691,6 +756,9 @@ local sets = {
 --]]
 	
 	['Absorb'] = {
+		Subset = {
+			[1] = 'Dark_Magic_Skill'
+		}
 	},
 
 --[[
@@ -708,6 +776,9 @@ local sets = {
 --]]
 
 	['Drain'] = {
+		Subset = {
+			[1] = 'Dark_Magic_Skill'
+		}
 	},
 
 --[[
@@ -726,6 +797,9 @@ local sets = {
 --]]
 
 	['Aspir'] = {
+		Subset = {
+			[1] = 'Dark_Magic_Skill'
+		}
 	},
 
 --[[
@@ -734,7 +808,10 @@ local sets = {
 --]]
 	
 	['DarkMagic'] = {
-		Neck  = 'Uggalepih Pendant//SPECIAL',	-- MAB	
+		Subset = {
+			[1] = 'Dark_Magic_Skill'
+		},
+		Neck  = 'Uggalepih Pendant//SPECIAL',	-- +8 MAB if MP% < 51%
 	},
 	
 --[[
@@ -753,6 +830,7 @@ local sets = {
 --]]
 
 	['Divine_Magic_Skill'] = {
+		legs = 'Healer\'s Pantaln.'			-- +15 Divine magic skill
 	},
 	
 --[[
@@ -779,13 +857,11 @@ local sets = {
 
 	['OffensiveDivine'] = {
 		Subset = {
-			[1] = 'MND',
+			[1] = 'Divine_Magic_Skill',
+			[2] = 'MND'
 		},
-		Head  = 'Nashira Turban',	-- -10% SIR, -5 enmity
-		Neck  = 'Uggalepih Pendant//SPECIAL',
-		Hands  = 'Cleric\'s Mitts//SP:BANISH',
-		Legs  = { 'Blessed Trousers', 'Healer\'s Pantaln.' },	-- %haste and -Emnity
-		Feet  = 'Blessed Pumps', 	-- %haste and -Emnity
+		Head  = 'Nashira Turban',				-- -10% SIR, -5 enmity
+		Neck  = 'Uggalepih Pendant//SPECIAL'	-- +8 MAB if MP% < 51%
 	},
 
 --[[
@@ -814,7 +890,9 @@ local sets = {
 --]]
 		
 	['EnhanceDivine'] = {
-		Legs = 'Healer\'s Pantaln.',
+		Subset = {
+			[1] = 'Divine_Magic_Skill'
+		}
 	},
 
 --[[
@@ -824,6 +902,8 @@ local sets = {
 --]]
 
 	['Enfeebling_Magic_Skill'] = {
+		Body = 'Healer\'s Bliaut',		-- +10 Enfeebling magic skill
+		Neck = 'Enfeebling Torque',		--  +7 Enfeebling magic skill
 	},
 	
 --[[
@@ -847,22 +927,22 @@ local sets = {
 	
 	['EnfeeblingINT'] = {
 		Subset = {
-			[1] = 'INT',
-		},
-		Neck   = 'Enfeebling Torque',
-		Body   = 'Healer\'s Bliaut',
+			[1] = 'Enfeebling_Magic_Skill',
+			[2] = 'INT'
+		}
 	},
 
 	['EnfeeblingMND'] = {
-	    Neck  = { 'Promise Badge', 'Justice Badge' },
-		Body  = 'Healer\'s Bliaut',
-        Rings = 'Tamas Ring',
-        Waist = 'Friar\'s Rope',
+		Subset = {
+			[1] = 'Enfeebling_Magic_Skill',
+			[2] = 'MND'
+		}
 	},
 
 	['EnfeeblingMagic'] = {
-		Neck  = 'Enfeebling Torque',
-		Body  = 'Healer\'s Bliaut',
+		Subset = {
+			[1] = 'Enfeebling_Magic_Skill'
+		}
 	},
 	
 --[[
@@ -886,6 +966,13 @@ local sets = {
 --]]
 
 	['CHR'] = {		-- Charisma provides accuracy w/singing
+		Main  = 'Pluto\'s Staff//WSWAP',	-- +2 CHR
+		Head  = 'Entrancing Ribbon',		-- +2 CHR
+		Ears  = 'Beastly Earring',			-- +2 CHR
+		Body  = { 'Errant Hpl.', 'Brigandine//IF:Black Cotehardie' },	-- +10 CHR, filler to avoid -3 CHR
+		Neck  = 'Flower Necklace',			-- +3 CHR
+		Waist = 'Mrc.Cpt. Belt',			-- +1 CHR
+		Legs  = 'Errant Slops',				-- +7 CHR
 	},
 	
 --[[
@@ -896,6 +983,9 @@ local sets = {
 --]]
 
 	['EnhancementSinging'] = {
+		Subset = {
+			[1] = 'CHR'
+		}
 	},
 
 --[[
@@ -904,8 +994,11 @@ local sets = {
 --]]
 	
 	['EnfeeblingSinging'] = {
+		Subset = {
+			[1] = 'CHR'
+		}
 	},
-
+--  I got to here !!!
 --[[
 	********************
 	* Midcast: Ninjusu *
@@ -1047,7 +1140,7 @@ local sets = {
         Neck   = 'Spike Necklace',
         Body   = 'Wonder Kaftan',
         Hands  = { 'Healer\'s Mitts', 'Wonder Mitts' },
-        Ring   = 'Kshama Ring No.2',
+        Rings   = 'Kshama Ring No.2',
         Waist  = 'Mrc.Cpt. Belt',
         Legs   = 'Wonder Braccae',
         Feet   = 'Wonder Clomps',
@@ -1695,10 +1788,8 @@ function profile.HandleDefault()
 	
 	-- And make sure a weapon equipped. (Going into a capped area can cause no weapon to be equipped.)
 	local gear = gData.GetEquipment();
-	if gear.Main ~= nil then
-		if gear.Main.Name == nil then
-			gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
-		end
+	if gear.Main == nil or gear.Main.Name == nil then
+		gcinclude.MoveToCurrent(sets.Start_Weapons,sets.CurrentGear,true);
 	end
 	
 	gcinclude.EquipTheGear(sets.CurrentGear);		-- Equip the composited HandleDefault set
