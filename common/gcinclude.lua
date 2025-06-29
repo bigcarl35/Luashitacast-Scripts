@@ -18,7 +18,7 @@ gcinclude.sets = {
 	only one Crafting gear set, so you need to qualify each piece with what type of crafting the piece is
 	used for. (Ex: Body = 'Weaver\'s Apron//CR:CLOTH).
 	
-	Please note that Crafting sets ignore the /WSWAP	setting.
+	Please note that Crafting sets ignore the /WSWAP setting.
 --]]
 	['Crafting'] = {
 	},
@@ -80,7 +80,6 @@ gcinclude.settings = {
 	WSdistance = 4.7; 	 -- default max distance (yalms) to allow non-ranged WS to go off at if the above WScheck is true
 	bWSOverride = false; -- is the player playing a job where weapon swapping always happens, it is not optional?
 	Tolerance = 97;		 -- Comparison value %, cut-off for certain comparisons
-	TH_hits = 2;		 -- How many hits til TH gear no longer needed
 	DefaultSpellTarget = 't'; -- What to use in MaxSpell if no target specified
 	DefaultSongTarget = 't';  -- What to use in MaxSong if no target specified
 	--
@@ -226,6 +225,7 @@ gcinclude.tWeapontypeMelee = {
 	'KATANA', 'GKATANA', 'POLEARM' 
 };
 gcinclude.tWeapontypeRange = { 'ARCHERY', 'MARKSMANSHIP', 'THROWING' };
+
 -- define constants for DT so typos aren't made
 gcinclude.OFF = 'Off';
 gcinclude.PHY = 'Physical';
@@ -268,6 +268,128 @@ gcinclude.LocksNumeric = 'None';
 gcinclude.AccNumeric = 'None';
 
 gcinclude._AllElements = 'fire,ice,wind,earth,thunder,water,light,dark';
+
+-- Structure for defining all the members for a target's specific
+-- classification. Commonly used in reference to item's special
+-- requirements. Only families known to be used are included here.
+gcinclude.tTargetFamily = T{
+	['aquans'] = {
+		['crabs'] = {
+			'river crab','limicoline crab','palm crab','savanna crab','stone crab',
+			'tree crab','sand crab','mine crab','land crab','mole crab','mugger crab',
+			'vermivorous crab','wadi crab','coral crab','passage crab','ocean crab', 
+			'sea crab','thickshell','stag crab','triangle crab','snipper','snapper',
+			'blind crab','clipper','cutter','ghost crab','grindylow','gugru crab',
+			'crimson knight crab','knight crab','ironshell','bigclaw','jungle crab',
+			'cyan deep crab','submarine nipper','rock crab','scavanger crab',
+			'robber crab','greatclaw','aydeewa crab','wootzshell','sicklemoon crab',
+			'nipper','steelshell','mamook crab','carrion crab','kelp crab','angler crab',
+			'aquarius','cancer','cargo crab colin','duke decapod','king arthro',
+			'metal shears','tegmine','wake warder wanda','aphotic crab','bubbly bernie',
+			'bloody coffin','crabshaw','ferrocrab','heike crab','megapod megalops',
+			'metal crab','heavy metal crab','adamantshell','nightmare crab','overlord arthro',
+			'lord\'s bruiser','lord\'s wizard','poisonous crab'
+		},
+		['pugils'] = {
+			'pugil','cheval pugil','giddeus pugil','ghelbsa pugil','pug pugil',
+			'mud pugil','fighting pugil','giant pugil','sea pugil','puffer pugil',
+			'ocean pugil','land pugil','spring pugil','swamp pugil','sand pugil',
+			'davoi pugil','pirate pugil','bigjaw','ferocious pugil','fosse pugil',
+			'beach pugil','shoal pugil','quifim pugil','greater pugil','spinous pugil',
+			'fatty pugil','vepar','dagon','ocean jagil','gugru pugil','jagil',
+			'makara','apsaras','grotto pugil','cyan deep pugil','razorjaw pugil',
+			'thalassic pugil','abyssal pugil','canal pugil','stygian pugil',
+			'immolatory pugil','demonic pugil','azoth apsaras','terror pugil',
+			'mercurial makara','cave pugil','suhur mas','la vaule pugil','zazalda jagil',
+			'sicklemoon jagil','vozold jagil','sulphuric jagil',
+			'buburimboo','capricornus','hippomaritimus','lancet jagil',
+			'qoofim','sea hog','serra','swamfisk','ziphius','abhac','isonade',
+			'water leaper','odontotyrannus','blind moby','percipient fish',
+			'archer pugil','sniper pugil','aipaloovok','enhanced pugil',
+			'nightmare makaras'
+		},
+		['ruszors'] = {
+			'ruszor','savage ruszor', 'scylla'
+		},
+		['sea monks'] = {
+			'sea monk','sea bishop','kraken','colossal calamari','ocean kraken',
+			'morgawr','blanched kraken','sea bonze','flying manta','kulshedra',
+			'bathybic kulushedra','devil manta','lahama','nostokulshedra',
+			'charybdis','lord of onzozo','peg powler','proteus','sea horror',
+			'beach monk','glyryvilu','tros','vu-murt','dalham','honor','valor',
+			'fe\'e','nightmare kraken','scolooendra','sjokrakjen','tieholtsodi'
+		},
+		['toads'] = {
+			'toad','flume toad'
+		},
+		['uragnites'] = {
+			'uragnite','coraline uragnite','young uragnite','nightmare uragnite',
+			'harajnite','shankha','shen','zoredonite','amphitrite','blademall',
+			'nepionic blademall','parata','cyclopean conch'	
+		}
+	},
+	['amorphs'] = {
+		['flans'] = {
+			'black pudding','ebony pudding','pitchy pudding',
+			'dextrose','flammeri','immortal flan','two-faced flan','anise custard',
+			'caraway custard','cinnamon custard','cumin custard','ginger custard',
+			'nutmeg custard','mint custard','vanilla custard','black pudding',
+			'empathic flan','flux flan','princess pudding','fighting flan','mokkuralfi',
+			'liquified einherjar'
+		},
+		['hecteyes'] = {
+			'hecteyes','taisai','gazer','blubber eyes','desert gazer',
+			'thousand eyes','dodomeki','mindgazer','million eyes',
+			'argus','hakutaku','hyakume','shoggoth','taisaijin','galgalim',
+			'mokumomuren','compound eyes','sobbing eyes','vanguard hecteyes',
+			'waldgeist'
+		},
+		['leeches'] = {
+			'stickpin','wadi leech','swamp leech','thread leech','forrest leech',
+			'poison leech','gigas\'s leech','huge leech','horrid fluke','acrophies',
+			'big leech','royal leech','goblin\'s leech','goobbue parasite','canal leech',
+			'labyrinth leech','yagudo parasite','uggalepih leech','sahagin parasite',
+			'bloodsucker','caedarva leech','bouncing ball','leech','anautogenous slug',
+			'red smoocher','red osculator','red kisser','phlebotomic slug',
+			'kissing leech','mamool ja bloodsucker','ashakku','volcanic leech',
+			'arrapago leech','blood ball','nirgali','nightmare leech','aroma leech',
+			'bloodpool vorax','bloodsucker','canal moocher','chocoboleech','jammer leech',
+			'leech king','masan','slippery sucker','cetic parasite','korroloka leech',
+			'undead leech','pepper','phoedme','prune','hazhalm leech','utgarth leech'
+		},
+		['sandworms'] = {
+			'sandworm','glavoid'
+		},
+		['slimes'] = {
+			'giant amoeba','oil slick','rotten jam','blob','goblin gruel',
+			'black slime','jelly','sponge','water pumpkin','ooze','protozoan',
+			'freshwater trepang','clot','rancid ooze','stroper chyme','davoi mush',
+			'amoebic nodule','mush','ogreish rissoto','gloop','viscous clot',
+			'bavarois','oil spill','acid grease','dark aspic','mousse','caedarva pondscum',
+			'caedarva marshscum','cave mold','slime mold','zazalda clot','mountain clot',
+			'vozold clot','chimera clot','brei','talacca clot','blubbery bulge',
+			'ichorous ire','maltha','sewer syrup','hermatic cyst','pudding','gigaplasm',
+			'macroplasm','microplasm','nanoplasm','hinge oil','princess jelly',
+			'queen jelly','vanguard\'s slime','woodnix\'s slime','enhanced jelly',
+			'enhanced slime','ghost clot','metalloid amoeba','agar agar','claret',
+			'fistule','konjac','mucoid mass','glibber','metallic slime','swamp muck',
+			'einherjar brei','winebibber'
+		},
+		['slugs'] = {
+			'scabrous slug','lou carcolh','edible slug','dyinyinga','nommo'
+		},
+		['worms'] = {
+			'tunnel worm','carrion worm','stone eater','dirt eater','giant grub',
+			'rock eater','earth eater','mineral eater','maze maker','eikon eater',
+			'land worm','ore eater','abyss worm','amphisbaena','cliff worm','flesh eater',
+			'boreal worm','desert worm','sand eater','glacier eater','cave worm',
+			'sand digger','kuftal digger','mountain worm','mold eater','bedrock barry',
+			'bigmouth billy','morion worm','olgoi-khorkhoi','phantom worm','trembler tabitha',
+			'nightmare worm','mineral eater','flayer franz','flesh eater','ziryu',
+			'einherjar eater','wayward event'
+		}
+	}
+};
 
 -- Structure for tracking elemental gear. The details that use to be in this table
 -- are now found in gcinclude.GearDetails with a reference to the appropriate record
@@ -499,9 +621,11 @@ gcinclude.tSpell = {
 				     },
 	['spikes']	   = { 'blaze','ice','shock','dread' },
 	['spirits']    = { 
-					 'fire','firespirit','ice','icespirit','air','airspirit',
-					 'earth','earthspirit','thunder','thunderspirit','water',
-					 'waterspirit','light','lightspirit','dark','darkspirit' 
+					 'fire','firespirit','fire spirit','ice','icespirit','ice spirit',
+					 'air','airspirit','air spirit','earth','earthspirit','earth spirit',
+					 'thunder','thunderspirit','thunder spirit','water','waterspirit',
+					 'water spirit','light','lightspirit','light spirit','dark',
+					 'darkspirit','dark spirit'
 				     },
 	['absorb']     = {
 					 'absorb-agi','absorb-chr','absorb-dex','absorb-int',
@@ -931,6 +1055,8 @@ gcinclude.multiSlot = {
 	{ ['item'] = 'Taru. Shorts +1',  ['slot'] = 'Legs', ['affected'] = 'Feet' },
 	{ ['item'] = 'Tarutaru Top',	 ['slot'] = 'Body', ['affected'] = 'Hands' },
 	{ ['item'] = 'Tarutaru Top +1',  ['slot'] = 'Body', ['affected'] = 'Hands' },
+	{ ['item'] = 'Wonder Top',		 ['slot'] = 'Body', ['affected'] = 'Hands' },
+	{ ['item'] = 'Wonder Top +1',  	 ['slot'] = 'Body', ['affected'] = 'Hands' },
 	{ ['item'] = 'Goblin Suit',      ['slot'] = 'Body', ['affected'] = 'Hands,Feet' },
 };
 
@@ -1556,6 +1682,24 @@ function gcinclude.StartReminder()
 end			-- gcinclude.StartReminder
 
 --[[
+	SlotCase formats the passed string into the slot name's appropriate
+	case: Upper Case first letter, lower case the rest and returns the
+	results.
+--]]
+
+function SlotCase(s)
+	if s == nil then
+		return nil;
+	end
+	
+	if string.len(s) > 1 then
+		local c = string.sub(s,1,1);
+		return string.upper(c) .. string.lower(string.sub(s,2,-1));
+	else
+		return string.upper(s);
+	end
+end		-- SlotCase
+--[[
 	fReferenceCheck determines if any of the passed gear is actually
 	a reference to another set's slot.
 --]]
@@ -1842,18 +1986,36 @@ end		-- gcinclude.fIsLocked
 --]]
 
 function fLockSlotsBySet(gs)
+	local slotList = ',';
+	
 	if gs == nil then
 		return;
 	end
 	
+	-- Walk the list looking for items and note the slots they're found in
 	for i,j in pairs(gs) do
-		for ii,jj in ipairs(gcinclude.tLocks) do	
-			if j ~= nil and j ~= '' and jj['slot'] == string.lower(i) then	
-				gcinclude.tLocks[ii]['lock'] = true;			
-				break;
+		if j ~= nil and j ~= '' then	
+			slotList = slotList .. string.lower(i) .. ',';
+			-- Now see if the item at that spot is a multislot item
+			for a,b in pairs (gcinclude.multiSlot) do
+				if string.lower(b['item']) == string.lower(j) then
+					slotList = slotList .. string.lower(b['affected']) .. ',';
+					break;
+				end
 			end
 		end
 	end
+	
+	-- We should have a list of slots to lock now. Walk the list
+	if slotList ~= ',' then
+		for i,j in pairs(gcinclude.tLocks) do
+			local tmp = ',' .. j['slot'] ..',';
+			if string.find(slotList,tmp) ~= nil then
+				j['lock'] = true;
+			end
+		end
+	end
+	
 	local sList = fGetLockedList('locks');
 	gcdisplay.SetSlots('locks',gcinclude.LocksNumeric);	
 end		-- fLockSlotsBySet
@@ -3299,13 +3461,13 @@ function fValidInlineDynamicCode(suCode)
 	local tComparators = { 'EQ', 'LT', 'LE', 'GT', 'GE', 'NE'};
 	
 	if string.find('TP.,TPP,MP.,MPP,HP.,HPP,LVL',string.sub(suCode,1,3)) ~= nil then
-		if string.sub(suCode,3,1) ~= '.' then
+		if string.sub(suCode,3,3) ~= '.' then
 			iOff = 1;
 		end
 		
 		sRoot = string.sub(suCode,1,2+iOff);		
 		sOperator = string.sub(suCode,4+iOff,5+iOff);
-		
+
 		if table.find(tComparators,sOperator) ~= nil then
 			ival = tonumber(string.sub(suCode,7+iOff,-1));
 			return true,sRoot,sOperator,ival;
@@ -3655,6 +3817,7 @@ function fCheckInline(gear,sSlot,ts)
 	local player = gData.GetPlayer();
 	local party = gData.GetParty();
 	local pet = gData.GetPet();
+	local petAction = gData.GetPetAction();
 	local spell = gData.GetAction();
 	local environ = gData.GetEnvironment();
 	local timestamp = gData.GetTimestamp();
@@ -3668,7 +3831,6 @@ function fCheckInline(gear,sSlot,ts)
 		return false,gear;
 	end
 	if ts == nil then
-
 		ts = gProfile.Sets.CurrentGear;
 	end
 	
@@ -3678,63 +3840,132 @@ function fCheckInline(gear,sSlot,ts)
 		return true,gear;
 	end
 	
+	sSlot = string.lower(sSlot);
+	
 	sGear = string.sub(gear,1,iPos-1);
 	suCodeTbl = fMakeCodeTable(string.upper(string.sub(gear,iPos,-1)));
 
 	for ii,suCode in pairs(suCodeTbl) do
 		if table.find(gcinclude.DaysOfTheWeek,suCode) ~= nil then
-			bGood = (suCode == string.upper(environ.Day));					-- Is it the specified day
+			-- Equip if the specified day matches the current day
+			bGood = (suCode == string.upper(environ.Day));
 		elseif table.find(gcinclude.NotDaysOfTheWeek,suCode) ~= nil then
-			bGood = (string.sub(suCode,5,-1) ~= string.upper(environ.Day));	-- Is it not the specified day
-		elseif table.find(gcinclude.tSpell['enspell'],string.lower(suCode)) ~= nil then		-- en spells
+			-- Equip if the specified day does not match the current day
+			bGood = (string.sub(suCode,5,-1) ~= string.upper(environ.Day));
+		elseif table.find(gcinclude.tSpell['enspell'],string.lower(suCode)) ~= nil then
+			-- Equip if the player has an "en"-type buff
 			bGood = (gData.GetBuffCount(suCode) >= 1);
-		elseif table.find(gcinclude.tWeapontypeMelee,suCode) ~= nil then						-- Is main weapon specified type
-			bGood = (gSet['Main'] ~= nil and table.find(gProfile.WeaponType[suCode],gSet['Main']) ~= nil);
-		elseif table.find(gcinclude.tWeapontypeRange,suCode) ~= nil then						-- Is ranged weapon specified type
-			bGood = (gSet['Range'] ~= nil and table.find(gProfile.WeaponType[suCode],gSet['Range']) ~= nil);
-		elseif suCode == 'ABSORB' then										-- Spell is an Absorb- type
-			bGood = (table.find(gcinclude.tSpell['absorb'],string.lower(spell.Name)));
-		elseif suCode == 'BARSPELL' then					--  Player has a "bar" buff
+		elseif table.find(gcinclude.tWeapontypeMelee,suCode) ~= nil then
+			-- Equip if the main weapon is a melee type of weapon
+			bGood = (gProfile.WeaponType[suCode] ~= nil and
+					 ((gSet['Main'] ~= nil and 
+					  table.find(gProfile.WeaponType[suCode],gSet['Main']) ~= nil) or
+					 (gSet['Sub'] ~= nil and 
+					  table.find(gProfile.WeaponType[suCode],gSet['Sub']) ~= nil)));
+		elseif table.find(gcinclude.tWeapontypeRange,suCode) ~= nil then
+			-- Equip if the main weapon is a ranged type of weapon
+			bGood = (gProfile.WeaponType[suCode] ~= nil and 
+					 ((gSet['Range'] ~= nil and 
+					  table.find(gProfile.WeaponType[suCode],gSet['Range']) ~= nil) or
+					 (gSet['Ammo'] ~= nil and 
+					  table.find(gProfile.WeaponType[suCode],gSet['Ammo']) ~= nil)));
+		elseif suCode == 'AMORPH' then
+			-- Equip if target creature is from the Amorph family
+			bGood = false;
+			local tg = gData.GetTarget();
+			if tg ~= nil and tg.Name ~= nil then
+				local ln = string.lower(tg.Name);
+				for aa,bb in pairs(gcinclude.tTargetFamily['amorphs']) do
+					if table.find(bb,ln) ~= nil then
+						bGood = true;
+						break;
+					end
+				end
+			end
+		elseif suCode == 'AQUAN' then
+			-- Equip if target creature is from the Aquan family
+			bGood = false;
+			local tg = gData.GetTarget();
+			if tg ~= nil and tg.Name ~= nil then
+				local ln = string.lower(tg.Name);
+				for aa,bb in pairs(gcinclude.tTargetFamily['aquans']) do
+					if table.find(bb,ln) ~= nil then
+						bGood = true;
+						break;
+					end
+				end
+			end
+		elseif suCode == 'ARC_CIRCLE' then
+			-- Equip if player has the arcane circle buff
+			bGood = (gcinclude.fBuffed('Arc',true));
+		elseif suCode == 'BARSPELL' then
+			-- Equip if the player has a "bar"-type buff
 			bGood = (gcinclude.fBuffed('Bar',true));
-		elseif suCode == 'BOUND' then						-- Player is bound
+		elseif suCode == 'BOUND' then
+			-- Equip if the player is "bound"
 			bGood = gcinclude.fBuffed('Bind');
-		elseif suCode == 'BLINDED' then						-- Player is blind
+		elseif suCode == 'BLINDED' then
+			-- Equip if the player is "blind"
 			bGood = gcinclude.fBuffed('Blind');
-		elseif suCode == 'CARBY' then						-- Pet is carbuncle
+		elseif string.find(suCode,'BP:') then
+			-- Equip if blood pact contains passed string
+			if petAction.Name == nil then
+				bGood = false;
+			else
+				bGood = string.find(string.lower(petAction.Name),string.lower(string.sub(suCode,4,-1)));
+			end
+		elseif suCode == 'CARBY' then
+			-- Equip if player has an avatar and it is Carbuncle
 			bGood = (fIsPetNamed('Carbuncle'));
-		elseif suCode == 'COVER' then						-- Player has cast cover
+		elseif suCode == 'COVER' then
+			-- Equip if player has invoked "Cover" and it is active
 			bGood = gcinclude.fBuffed('Cover');
-		elseif string.sub(suCode,1,3) == 'CR:' then			-- Crafting
+		elseif string.sub(suCode,1,3) == 'CR:' then
+			-- Equip attached gear if crafting type matches
 			bGood = (gcinclude.Craft == string.sub(suCode,4,-1));
-		elseif suCode == 'CURSED' then						-- Player is cursed
+		elseif suCode == 'CURSED' then
+			-- Equip if the player is "cursed"
 			bGood = gcinclude.fBuffed('Curse');
-		elseif suCode == 'DARK' then						-- See if spell is dark
-			bGood = (spell.Skill == 'Dark Magic');
-		elseif suCode == 'DAYTIME' then						-- Time is daytime
+		elseif suCode == 'DAYTIME' then
+			-- Equip if the time of day is considered daytime
 			bGood = gcinclude.CheckTime(timestamp.hour,'Daytime',false);
 		elseif string.sub(suCode,1,3) == 'DB:' then
+			-- Equip if the BST's debuff type matches what's specified
 			bGood = (player.MainJob == 'BST' and string.upper(string.sub(suCode,4,-1)) == string.upper(gcdisplay.GetCycle('DB')));	
-		elseif suCode == 'DIVINE' then						-- See if spell is a divine spell
-			bGood = (spell.Skill == 'Divine Magic');
-		elseif suCode == 'DOOMED' then						-- Player is doomed or baned
+		elseif suCode == 'DOOMED' then
+			-- Equip if the player has either "doom" or "bane" debuff
 			bGood = (gcinclude.fBuffed('Doom') or gcinclude.fBuffed('Bane'));
 		elseif suCode == 'DT_BREATH' then
-			bGood = (gcdisplay.GetCycle('DT') == 'B');
+			-- Equip if the Damage Taken setting matches Breath Attack
+			bGood = (gcdisplay.GetCycle('DT') == 'Breath');
 		elseif suCode == 'DT_MAGICAL' then
-			bGood = (gcdisplay.GetCycle('DT') == 'M');
+			-- Equip if the Damage Taken setting matches Magical Attack
+			bGood = (gcdisplay.GetCycle('DT') == 'Magical');
 		elseif suCode == 'DT_PHYSICAL' then
-			bGood = (gcdisplay.GetCycle('DT') == 'P');			
-		elseif suCode == 'DUSK2DAWN' then					-- Time between dusk and dawn
+			-- Equip if the Damage Taken setting matches Physical Attack
+			bGood = (gcdisplay.GetCycle('DT') == 'Physical');			
+		elseif suCode == 'DUSK2DAWN' then
+			-- Equip if the time of day is between 'dusk' and 'dawn'
 			bGood = gcinclude.CheckTime(timestamp.hour,DUSK2DAWN,false);
-		elseif table.find(gcinclude.tSpell['enspell'],string.lower(suCode)) ~= nil then		-- En*
-			bGood = gcinclude.fBuffed(suCode);
-		elseif suCode == 'ELEMENTAL' then					-- See if spell is elemental
-			bGood = (spell.Skill == 'Elemental Magic');
 		elseif suCode == 'EMPTY' then
-			bGood = (ts[sSlot] == nil or ts[sSlot] == '');
-		elseif suCode == 'ENFEEBLING' then						-- See if spell is dark
-			bGood = (spell.Skill == 'Enfeebling Magic');
-		elseif suCode == 'ENANY' then						-- check for any en- spell
+			-- Equip if the slot in the temporary gear set is empty
+			-- Note: that Rings and Ears check both slots
+			if sSlot == 'rings' then
+				bGood = ((ts['ring1'] == nil or ts['ring1'] == '') and
+						(ts['ring2'] == nil or ts['ring2'] == ''));
+			elseif sSlot == 'ears' then
+				bGood = ((ts['ear1'] == nil or ts['ear1'] == '') and
+						(ts['ear2'] == nil or ts['ear2'] == ''));
+			else
+				bGood = (ts[sSlot] == nil or ts[sSlot] == '');
+			end
+		elseif  string.find(suCode,'EMPTY:') and
+				string.find('rings,ring1,ring2,ears,ear1,ear2',sSlot) ~= nil then
+			-- Equip if the specific ring/ear slot is empty
+			local sLot = string.sub(sSlot,1,-2) .. string.sub(suCode,-1,-1);
+			bGood = (ts[sLot] == nil or ts[sLot] == '');
+		elseif suCode == 'ENANY' then
+			-- Equip if player has any type of "en" spell buff
 			bGood = false;
 			for i,j in pairs(gcinclude.tSpell['enspell']) do
 				if gcinclude.fBuffed(j) == true then
@@ -3742,84 +3973,135 @@ function fCheckInline(gear,sSlot,ts)
 					break;
 				end
 			end
-		elseif suCode == 'ENHANCING' then					-- See if spell is an enhancement
-			bGood = (spell.Skill == 'Enhancing Magic');
 		elseif suCode == 'EVASION' then
+			-- Equip if evasion has been toggled on
 			bGood = (gcdisplay.GetToggle('Eva') == true);	
-		elseif suCode == 'FULLMOON' then					-- Moon phase: Full Moon
+		elseif suCode == 'FULLMOON' then
+			-- Equip if the moon phase is full
 			bGood = (environ.MoonPhase == 'Full Moon');
 		elseif string.sub(suCode,1,3) == 'GA:' then			-- Gathering
+			-- Equip attached gear if the specified gathering type matches
 			bGood = (gcinclude.Gather == string.sub(suCode,4,-1));
-		elseif suCode == 'HEALING' then						-- See if spell is healing
-			bGood = (spell.Skill == 'Healing Magic');
-		elseif suCode == 'HORN' then						-- Is the bard's instrument a horn
+		elseif suCode == 'HOLY_CIRCLE' then
+			-- Equip if player has the holy circle buff
+			bGood = (gcinclude.fBuffed('Holy',true));
+		elseif suCode == 'HORN' then
+			-- Equip if the type of instrument indicated is Horn
 			bGood = (gcdisplay.GetCycle('Instrument') == 'Horn');
-			elseif suCode == 'IDLE' then
+		elseif suCode == 'IDLE' then
+			-- Equip if the IDLE toggle is enabled
 			bGood = gcdisplay.GetToggle('Idle');
-		elseif string.find(suCode,'IF:') then				-- Equip if current item is the named item
+		elseif string.find(suCode,'IF:') then
+			-- Simple comparison: equip gear piece if currently wearing
+			-- identified gear piece. Checks dynamic composite gear set.
+			-- If slot empty, then checks currently worn gear.
 			bGood = false;		
 			if sSlot ~= 'subset' then
-				local tCur = gData.GetEquipment();				
-				if tCur[sSlot] == nil then					-- Data download issue
-					bGood = false;
+				local sItem = string.sub(suCode,4,-1);
+				if not (ts[sSlot] == nil or ts[sSlot] == '') then
+					-- Since slot not empty, check item name
+					if sSlot == 'Ears' then
+						bGood = (string.lower(sItem) == string.lower(ts['Ear1']) or
+								 string.lower(sItem) == string.lower(ts['Ear2']));
+					elseif sLot == 'Rings' then
+						bGood = (string.lower(sItem) == string.lower(ts['Ring1']) or
+						 		 string.lower(sItem) == string.lower(ts['Ring2']));										
+					else
+						bGood = (string.lower(sItem) == string.lower(ts[sSlot]));
+					end
 				else
-					local sCur = tCur[sSlot].Name;
-					local sItem = string.sub(suCode,4,-1);	
-					bGood = (string.lower(sItem) == string.lower(sCur));
+					-- Since slot empty, check currently equipped gear			
+					if gSet[sSlot] == nil or gSet[sSlot] == '' then
+						bGood = false;
+					elseif sLot == 'Ears' then
+						bGood = (string.lower(sItem) == string.lower(gSet['Ear1']) or
+								 string.lower(sItem) == string.lower(gSet['Ear2']));
+					elseif ssLot == 'Rings' then
+						bGood = (string.lower(sItem) == string.lower(gSet['Ring1']) or
+						 		 string.lower(sItem) == string.lower(gSet['Ring2']));										
+					else
+						bGood = (string.lower(sItem) == string.lower(gSet[sSlot]));
+					end
 				end
 			end	
-		elseif string.find(suCode,'IFNOE:') then			-- Equip if current item is not the named item or the slot is empty
-			bGood = false;		
-			if sSlot ~= 'subset' then
-				local tCur = gData.GetEquipment();
-				local sCur = tCur[sSlot].Name;
-				local sItem = string.sub(suCode,7,-1);
-				if tCur[sSlot] ~= nil and 
-					 string.lower(sCur) == string.lower(sItem) then					-- Data download issue
-					bGood = false;
-				else
-					bGood = true;
+		elseif string.find(suCode, 'IF-',1,true) then	-- The hyphen requires me to turn pattern matching off
+			-- Indirect comparison. Equip gear piece if other identified
+			-- slot has the specified piece of gear in it. Checks dynamic 
+			-- composite gear set. If slot empty, then checks currently 
+			-- worn gear		
+			bGood = false;
+			local iPos = string.find(suCode,':');
+			if iPos ~= nil then
+				local ssLot = SlotCase(string.sub(suCode,4,iPos-1));
+				if table.find(gcinclude.SlotNames,string.lower(ssLot)) then
+					-- Referring to a subset has no meaning although the
+					-- entry to be equipped can be a subset
+					if sslot ~= 'Subset' then
+						local sItem = string.sub(suCode,iPos+1,-1);
+						if not (ts[sSlot] == nil or ts[sSlot] == '') then	
+							-- Since slot not empty, check item name
+							if ssLot == 'Ears' then
+								bGood = (string.lower(sItem) == string.lower(ts['Ear1']) or
+										 string.lower(sItem) == string.lower(ts['Ear2']));
+							elseif ssLot == 'Rings' then
+								bGood = (string.lower(sItem) == string.lower(ts['Ring1']) or
+										 string.lower(sItem) == string.lower(ts['Ring2']));
+							else
+								bGood = (string.lower(sItem) == string.lower(ts[ssLot]));
+							end
+						else
+							-- Since slot empty, check currently equipped gear
+							if ssLot == 'Ears' then
+								bGood = (string.lower(sItem) == string.lower(gSet['Ear1']) or
+										 string.lower(sItem) == string.lower(gSet['Ear2']));
+							elseif ssLot == 'Rings' then
+								bGood = (string.lower(sItem) == string.lower(gSet['Ring1']) or
+										 string.lower(sItem) == string.lower(gSet['Ring2']));
+							else
+								if gSet[ssLot] ~= nil and gSet[ssLot].Name ~= nil then								
+									bGood = (string.lower(sItem) == string.lower(gSet[ssLot]));
+								end
+							end
+						end
+					end
 				end
-			end				
-		elseif string.find(suCode,'IFOE:') then				-- Equip if current item is the named item or it's empty
-			bGood = false;		
-			if sSlot ~= 'subset' then
-				local tCur = gData.GetEquipment();
-				local sCur = tCur[sSlot].Name;
-				if sCur == nil then
-					bGood = true;
-				else					
-					local sItem = string.sub(suCode,6,-1);
-					bGood = (string.lower(sItem) == string.lower(sCur));
-				end
-			end	
-		elseif string.find(suCode,'LVLDIV') then			-- Player's level divisable by #
-			local iDiv = tonumber(string.sub(suCode,7,-1));
+			end			
+		elseif string.find(suCode,'LVLDIV:') then
+			-- Equip if the player's main job level is evenly divisible by the attached number
+			local iDiv = tonumber(string.sub(suCode,8,-1));
 			if iDiv > 0 then
 				bGood = (math.floor(player.MainJobSync/iDiv) == player.MainJobSync/iDiv);
 			else
 				bGood = false;
 			end	
-		elseif suCode == 'MSJ' then							-- Magical subjob
+		elseif suCode == 'MSJ' then
+			-- Equip if the player's sub job is a magic using job
 			bGood = (string.find(gcinclude._sMagicJobs,sj) ~= nil);
-		elseif suCode == 'NEWMOON' then						-- Moon phase: New Moon
+		elseif suCode == 'NEWMOON' then
+			-- Equip if the moon phase is new
 			bGood = (environ.MoonPhase == 'New Moon');
-		elseif suCode == 'NIGHTTIME' then					-- Time is nighttime
+		elseif suCode == 'NIGHTTIME' then
+			-- Equip if the time is considered night time
 			bGood = gcinclude.CheckTime(timestamp.hour,'Nighttime',false);
-		elseif suCode == 'NINJUTSU' then					-- See if spell is a ninjutsu
-			bGood = (spell.Skill == 'Ninjutsu');
-		elseif suCode == 'NO_PET' then						-- Player has no avatar out
+		elseif suCode == 'NO_PET' then
+			-- Equip if the player has no pet nor spirit/avatar
 			bGood = (pet == nil);
-		elseif suCode == 'NO_SMNPET' then					-- Player has no or non-smn pet
+		elseif suCode == 'NO_SMNPET' then
+			-- Equip if the player's pet is not a summoner's spirit/avatar or they have no pet
 			bgood = not gcinclude.fSummonerPet();
 		elseif suCode == 'NOT_ME' then
-			-- Equip if target is not me
+			-- Equip if target is not the player
 			local me = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0); --t:GetMemberIndex(0);
 			local tg = gData.GetTargetIndex();
 			bGood = (tg ~= me);
-		elseif suCode == 'NOT_OWN' then						-- Player in area not controlled by their nation
+		elseif suCode == 'NOT_OWN' then
+			-- Equip if the player is in a zone that is not controlled by their nation
 			bGood = (gcdisplay.GetCycle('Region') == 'Not Owned');
-		elseif suCode == 'NOT_TANK' then					-- TANK is disabled
+		elseif string.sub(suCode,1,12) == 'NOT_PETNAME:' then
+			-- Equip if the player's pet is not named ...or if they have no pet
+			bGood = (pet == nil) or (not fIsPetNamed(string.sub(suCode,13,-1)));
+		elseif suCode == 'NOT_TANK' then
+			-- Equip if the tank toggle is off
 			local x = gcdisplay.GetToggle('Tank');
 			if x == nil or x == false then
 				bGood = true;
@@ -3827,26 +4109,34 @@ function fCheckInline(gear,sSlot,ts)
 				bGood = false;
 			end		
 		elseif suCode == 'NOT_TH' then
+			-- Equip if the treasure hunter toggle is off
 			local x = gcdisplay.GetToggle('TH');
 			if x == nil or x == false then
 				bGood = true;
 			else
 				bGood = false;
 			end
-		elseif suCode == 'NOT_UTSUSEMI' then				-- Utsusemi buff is absent
+		elseif suCode == 'NOT_UTSUSEMI' then
+			-- Equip if the utsusemi buff is absent
 			bGood = (gcinclude.fBuffed('Copy') == false);
-		elseif suCode == 'NOT_WSWAP' then					-- WSWAP is disabled
+		elseif suCode == 'NOT_WSWAP' then
+			-- Equip if weapon swapping is off
 			bGood = (gcinclude.settings.bWSOverride == false and gcdisplay.GetToggle('WSwap') == false);
-		elseif string.sub(suCode,1,8) == 'NOT_WTH:' then	-- Does the weather not match
+		elseif string.sub(suCode,1,8) == 'NOT_WTH:' then
+			-- Equip if the weather does not matched the attached weather type
 			bGood = (string.find(string.upper(environ.Weather),string.sub(suCode,9,-1)) == nil);
-		elseif suCode == 'NOT_WTH-DAY' then					-- Weather does not match day's element
+		elseif suCode == 'NOT_WTH-DAY' then
+			-- Equip if the weather's element does not match the day's element
 			local sEle = string.upper(environ.DayElement) .. ',NONE';
 			bGood = (string.find(sEle,string.upper(environ.WeatherElement)) == nil);
-		elseif suCode == 'OWN' then							-- Player in area controlled by their nation
+		elseif suCode == 'OWN' then
+			-- Equip if the player is in a zone that is controlled by their nation
 			bGood = (gcdisplay.GetCycle('Region') == 'Owned');
-		elseif suCode == 'PARALYZED' then					-- Player is paralyzed
+		elseif suCode == 'PARALYZED' then
+			-- Equip if the player is paralyzed
 			bGood = gcinclude.fBuffed('Paralysis');
-		elseif string.sub(suCode,1,5) == 'PARTY' then		-- is player in a party/alliance
+		elseif string.sub(suCode,1,5) == 'PARTY' then
+			-- Equip if the player is in a party or alliance
 			if suCode == 'PARTY' then
 				bGood = (party.InParty == true);
 			else
@@ -3857,55 +4147,81 @@ function fCheckInline(gear,sSlot,ts)
 				end
 				bGood = (party.Count <= ival);
 			end
-		elseif suCode == 'PET' then							-- Does player have a pet
+		elseif suCode == 'PET' then
+			-- Equip if player has a pet
 			bGood = (pet ~= nil);
-		elseif suCode == 'PETF' then						-- Is player's pet fighting
+		elseif suCode == 'PETF' then
+			-- Equip if player has a pet and it is fighting
 			bGood = (pet ~= nil and pet.Status == 'Engaged');
-		elseif suCode == 'PETNF' then						-- Is player's pet not fighting or they have no pet
+		elseif suCode == 'PETNF' then
+			-- Equip if player has a pet and it's not fighting or does not have a pet
 			bGood = ((pet ~= nil and pet.Status ~= 'Engaged') or pet == nil);
-		elseif suCode == 'PETFNPF' then						-- Is player's pet fighting, but not the player
+		elseif suCode == 'PETFNPF' then
+			-- Equip if the player has a pet and it's fighting, but the player is not fighting
 			bGood = (pet ~= nil and pet.Status == 'Engaged' and player.Status ~= 'Engaged');
-		elseif suCode == 'PETRIFIED' then					-- Player is petrified
+		elseif string.sub(suCode,1,8) == 'PETNAME:' then
+			-- Equip if the player's pet is named ...
+			bGood = (fIsPetNamed(string.sub(suCode,9,-1)));
+		elseif suCode == 'PETRIFIED' then
+			-- Equip if the player is petrified
 			bGood = gcinclude.fBuffed('Petrify');
 		elseif string.sub(suCode,1,3) == 'PJP' and string.len(suCode) == 6 then	
+			-- Equip if the player's in a party and someone has the specified job type
 			local s = string.sub(suCode,4,-1);
-			bGood=(fCheckPartyJob(s,false));		-- party has job: //PJP"job"
+			bGood=(fCheckPartyJob(s,false));
 		elseif string.sub(suCode,1,3) == 'PJPNM' and string.len(suCode) == 8 then	
+			-- Equip if the player's in a party and someone besides the player has the specified job type
 			local s = string.sub(suCode,6,-1);
-			bGood=(fCheckPartyJob(s,true));		-- party has job: //PJPNM"job", not including player
-		elseif suCode == 'POISONED' then					-- Player is poisoned
+			bGood=(fCheckPartyJob(s,true));
+		elseif suCode == 'POISONED' then
+			-- Equip if the player is poisoned
 			bGood = gcinclude.fBuffed('Poison');
-		elseif suCode == 'SHINING_RUBY' then				-- Player has shining ruby
-			bGood = gcinclude.fBuffed('Shining');	
-		elseif suCode == 'SINGING' then						-- See if spell is singing
-			bGood = (spell.Skill == 'Singing');
-		elseif suCode == 'SILENCED' then					-- Player is silenced
+		elseif suCode == 'SILENCED' then
+			-- Equip if the player is silenced
 			bGood = gcinclude.fBuffed('Silence');
 		elseif string.sub(suCode,1,2) == 'SJ' and string.len(suCode) == 5 then	
-			bGood = (string.sub(suCode,3,-1) == sj);		-- subjob is: //SJ"job"
-		elseif suCode == 'SLEPT' then						-- Player is slept
+			-- Equip if the player's sub job is the one specified
+			bGood = (string.sub(suCode,3,-1) == sj);
+		elseif suCode == 'SLEPT' then
+			-- Equip if the player is slept
 			bGood = gcinclude.fBuffed('Sleep');
 		elseif string.sub(suCode,1,4) == 'SMN:' then
-			bGood = (string.lower(spell.Name) == string.lower(string.sub(suCode,5,-1)));
-		elseif suCode == 'SMNPET' then						-- Is player's pet a summoned avatar
+			-- Equip if the pet being summoned is named ...
+			if spell == nil then
+				bGood = false;
+			else
+				bGood = (string.lower(spell.Name) == string.lower(string.sub(suCode,5,-1)));
+			end
+		elseif suCode == 'SMNPET' then
+			-- Equip if the pet being summoned is a summoner's avatar/spirit
 			bGood = gcinclude.fSummonerPet();
-		elseif suCode == 'SMNPETMD' then					-- Does the summoner pet's element match the day?
+		elseif suCode == 'SMNPETMD' then
+			-- Equip if the summoner's pet's element matches the day's element
 			if gcinclude.fSummonerPet() == true then
 				bGood = (fElementByPetName(pet.Name) == string.lower(environ.DayElement));
 			else
 				bGood = false;
 			end
-		elseif suCode == 'SMNPETMW' then					-- Does the player's pet's element match the weather
+		elseif suCode == 'SMNPETMW' then
+			-- Equip if the summoner's pet's element matches the weather's element
 			if pet ~= nil then
 				local sElement = fElementByPetName(pet.Name);
 				bGood = (sElement ~= nil and string.find(string.lower(environ.RawWeather),string.lower(sElement)) ~= nil);
 			else
 				bGood = false;
 			end			
-		elseif string.sub(suCode,1,3) == 'SP:' then			-- Is song/spell being cast of type
+		elseif string.sub(suCode,1,3) == 'SP:' then
+			-- Equip if the spell/song being cast contains the specified "string"
 			local s = string.lower(string.sub(suCode,4,-1));
-			bGood = (string.find(string.lower(spell.Name),s) ~= nil);			
+			if spell == nil then
+				bGood = false;
+			else
+				bGood = (string.find(string.lower(spell.Name),s) ~= nil);
+			end
 		elseif suCode == 'SPECIAL' then
+			-- Equip if the special conditions are met. This applies to
+			-- specific pieces of gear where special calculations are needed
+			
 			-- Skip SPECIAL if /gc not run. (Sometimes errors.)
 			if gcdisplay.GetGC() == false then
 				bGood = false;
@@ -3916,33 +4232,35 @@ function fCheckInline(gear,sSlot,ts)
 					bGood = false;
 				end
 			end
-		elseif string.sub(suCode,1,6) == 'SPELL:' then
-			-- Make sure a spell is being cast
-			if spell.Name == nil then
-				return false;
-			end
-			bGood = (string.find(fGetRoot(spell.Name),string.lower(string.sub(suCode,7,-1))) ~= nil);
-		elseif suCode == 'SPIKE' then						-- does player have a spike buff
+		elseif suCode == 'SPIKE' then
+			-- Equip if player has a "spike" buff
 			bGood = (gcinclude.fBuffed('Spike'));
-		elseif suCode == 'SPIRIT:ES' then					-- Pet being summoned is a spirit
-			bGood = (table.find(gcinclude.tSpell['spirits'],string.lower(spell.Name)) ~= nil);
-		elseif suCode == 'SPIRIT:EP' then					-- Current pet is a spirit
+		elseif suCode == 'SPIRIT:ES' then
+			-- Equip if the pet being summoned is an elemental spirit
+			if spell == nil then
+				bGood = false;
+			else
+				bGood = (table.find(gcinclude.tSpell['spirits'],string.lower(spell.Name)) ~= nil);
+			end
+		elseif suCode == 'SPIRIT:EP' then
+			-- Equip if the player's pet is an elemental spirit
 			bGood = (pet ~= nil and table.find(gcinclude.tSpell['spirits'],string.lower(pet.Name)) ~= nil);
 		elseif suCode == 'STRING' then						-- Is the bard's instrument a string instrument
+			-- Equip if the type of instrument indicated is String
 			if player.MainJob == 'BRD' then
 				bGood = (gcdisplay.GetCycle('Instrument') == 'String');
 			else
 				bGood = false;
 			end
-		elseif suCode == 'Summoning' then					-- See if spell is a summoning
-			bGood = (spell.Skill == 'Summoning');
 		elseif suCode == 'TANK' then
+			-- Equip if the tank toggle has been enabled
 			if string.find(gcinclude._TankJobList,player.MainJob) ~= nil then
 				bGood = (gcdisplay.GetToggle('Tank') == true);
 			else
 				bGood = false;
 			end
 		elseif suCode == 'TH' then
+			-- Equip if the treasure hunter toggle is enabled
 			if player.MainJob == 'THF' then
 				bGood = (gcdisplay.GetToggle('TH') == true);
 			else
@@ -3951,7 +4269,8 @@ function fCheckInline(gear,sSlot,ts)
 		elseif suCode == 'TOWN' then
 			-- Equip if in town	
 			bGood = (environ.Area ~= nil and table.find(gcinclude.Towns,environ.Area) ~= nil);
-		elseif suCode == 'TOWN-AK' then						-- Equip national aketon if in the right town
+		elseif suCode == 'TOWN-AK' then
+			-- Equip the appropriate national/ducal aketon if in the appropriate town
 			local pNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation();
 			local slcGear = string.lower(sGear);
 
@@ -3962,38 +4281,140 @@ function fCheckInline(gear,sSlot,ts)
 						 table.find(gcinclude.Bastok,environ.Area) ~= nil or 
 						 table.find(gcinclude.Jeuno,environ.Area) ~= nil));
 			elseif slcGear == 'federation aketon' then
+				-- Equip the Windurstian national aketon if in Windy
 				bGood = (environ.Area ~= nil and table.find(gcinclude.Windy,environ.Area) and pNation == 2);
 			elseif slcGear == 'republic aketon' then
+				-- Equip the Bastokian national aketon if in Bastok
 				bGood = (environ.Area ~= nil and table.find(gcinclude.Bastok,environ.Area) and pNation == 1);
 			elseif slcGear == 'kingdom aketon' then
+				-- Equip the Sandorian national aketon if in San d'Oria
 				bGood = (environ.Area ~= nil and table.find(gcinclude.Sandy,environ.Area) and pNation == 0);
 			else
 				bGood = false;
 			end						 
 		elseif string.find('TP.,TPP,MP.,MPP,HP.,HPP,LVL',string.sub(suCode,1,3)) ~= nil then
+			-- Equip the gear if the stated comparison is true
+			
 			-- Note: LVLDIV will not proc since processed prior to hitting here
 			local sRoot,sOperator,ival;
 			bGood,sRoot,sOperator,ival = fValidInlineDynamicCode(suCode);		
+
 			if bGood == true then
 				bGood = fEvalCodedComparison(sRoot,sOperator,ival);
 			else
 				bGood = false;
 			end
+		elseif string.find(suCode,'UNLESS') then
+			-- Simple comparison: equip gear piece if not wearing
+			-- currently identified gear piece. Checks dynamic 
+			-- composite gear set first. If slot is empty, then 
+			-- checks currently worn gear. Replaces //IFNOE and
+			-- "empty" check no longer done.		
+			bGood = false;		
+			if sSlot ~= 'subset' then
+				local sItem = string.sub(suCode,8,-1);
+				local ssLot = SlotCase(sSlot);
+			
+				if not (ts[ssLot] == nil and ts[ssLot] == '') then
+					-- Since slot not empty, check item name
+					
+					-- Note that due to the dynamic placement of gear
+					-- in ears and rings, specifying a specific slot
+					-- will compare to both slots
+					if string.find('Ears,Ear1,Ear2',ssLot) ~= nil then
+						bGood = not (string.lower(sItem) == string.lower(ts['Ear1']) or
+									 string.lower(sItem) == string.lower(ts['Ear2']));
+					elseif string.find('Rings,Ring1,Ring2',sSlot) ~= nil then
+						bGood = not (string.lower(sItem) == string.lower(ts['Ring1']) or
+									 string.lower(sItem) == string.lower(ts['Ring2']));										
+					else
+						bGood = (string.lower(sItem) ~= string.lower(ts[ssLot]));
+					end
+				else				
+					-- Since slot empty, check currently equipped gear			
+					if string.find('Ears,Ear1,Ear2',ssLot) ~= nil then
+						bGood = not (string.lower(sItem) == string.lower(gSet['Ear1']) or
+									 string.lower(sItem) == string.lower(gSet['Ear2']));
+					elseif string.find('Rings,Ring1,Ring2',sSlot) ~= nil then
+						bGood = not (string.lower(sItem) == string.lower(gSet['Ring1']) or
+									 string.lower(sItem) == string.lower(gSet['Ring2']));										
+					else					
+						if gSet[ssLot] == nil then
+							bGood = true;
+						else	
+							bGood = (string.lower(sItem) ~= string.lower(gSet[ssLot]));
+						end
+					end
+				end
+			end
+		elseif string.find(suCode,'UNLESS-',1,true) then
+			-- Indirect comparison. Equip gear piece if other identified
+			-- slot does not have the specified piece of gear in it. 
+			-- Checks dynamic composite gear set. If slot empty, then 
+			-- checks currently worn gear
+			bGood = false;
+			local iPos = string.find(suCode,':');
+			if iPos ~= nil then
+				local ssLot = SlotCase(string.sub(suCode,8,iPos-1));
+				if table.find(gcinclude.SlotNames,string.lower(sslot)) then
+					-- Referring to a subset has no meaning although the
+					-- entry to be equipped can be a subset
+					if ssLot ~= 'Subset' then
+						local sItem = string.sub(suCode,iPos+1,-1);
+						if not (ts[ssLot] == nil and ts[ssLot] == '') then	
+							-- Since slot not empty, check item name
+							if string.find('Ears,Ear1,Ear2',ssLot) ~= nil then
+								bGood = not (string.lower(sItem) == string.lower(ts['Ear1']) or
+											 string.lower(sItem) == string.lower(ts['Ear2']));
+							elseif string.find('Rings,Ring1,Ring2',sSlot) ~= nil then
+								bGood = not (string.lower(sItem) == string.lower(ts['Ring1']) or
+											 string.lower(sItem) == string.lower(ts['Ring2']));
+							else
+								bGood = (string.lower(sItem) ~= string.lower(ts[ssLot]));
+							end
+						else
+							-- Since slot empty, check currently equipped gear
+							if string.find('Ears,Ear1,Ear2',ssLot) ~= nil then
+								bGood = not (string.lower(sItem) == string.lower(gSet['Ear1']) or
+											 string.lower(sItem) == string.lower(gSet['Ear2']));
+							elseif string.find('Rings,Ring1,Ring2',sSlot) ~= nil then
+								bGood = not (string.lower(sItem) == string.lower(gSet['Ring1']) or
+											 string.lower(sItem) == string.lower(gSet['Ring2']));
+							else
+								if gSet[ssLot] == nil or gSet[ssLot].Name == nil then
+									bGood = true;
+								else					
+									bGood = (string.lower(sItem) ~= string.lower(gSet[ssLot]));
+								end
+							end
+						end
+					end
+				end
+			end
 		elseif suCode == 'UTSUSEMI' then
-			bGood = gcinclude.fBuffed('Copy');						-- copy image (#)
-		elseif suCode == 'WEAKENED' then					-- Player is weakend
+			-- Equip if the player has the utsusemi buff
+			bGood = gcinclude.fBuffed('Copy');
+		elseif suCode == 'WARD_CIRCLE' then
+			-- Equip if player has the ward circle buff
+			bGood = (gcinclude.fBuffed('Ward',true));
+		elseif suCode == 'WEAKENED' then
+			-- Equip if the player is weakened
 			bGood = (gcinclude.fBuffed('Weakness') or gcinclude.fBuffed('Weakened'));
-		elseif suCode == 'WSWAP' then						-- Weapon swapping enabledB
+		elseif suCode == 'WSWAP' then
+			-- Equip if the weapon swap toggle is turned on
 			bGood = (gcinclude.settings.bWSOverride == true or gcdisplay.GetToggle('WSwap') == true);
-		elseif string.sub(suCode,1,4) == 'WTH:' then		-- Does the weather match
+		elseif string.sub(suCode,1,4) == 'WTH:' then
+			-- Equip if the weather matches the specified "string"
 			bGood = (string.find(string.upper(environ.Weather),string.sub(suCode,5,-1)) ~= nil);
 		elseif suCode == 'WTH-DAY' then						-- Weather matches day's element
+			-- Equip if the weather matches the day's element
 			local sEle = string.upper(environ.DayElement) .. ',NONE';
 			bGood = (string.find(sEle,string.upper(environ.WeatherElement)) ~= nil);
 --		elseif string.find(suCode,'XYZ_CHECK') then
---			Needs to be implemented		
+--			Needs to be implemented	re: x's knife, y's scythe, and z's trident	
 		else
-			print(chat.header('fCheckInline'):append(chat.message('Warning: Unknown code = ' .. suCode .. '. Ignoring piece of gear.')));
+			local smsg = 'Warning: Unknown code = ' .. suCode .. ' or applied to wrong slot. Ignoring piece of gear.';
+			fDisplayOnce(smsg);
 			bGood = false;
 		end
 		
@@ -4107,6 +4528,7 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride,bIgnoreWSWAP)
 	local ref = {};
 	local ts = {};
 	local ts1 = {};
+	local ts2 = {};
 	local root,sK,vRoot,stK,sRoot;
 	local bContinue,iNum,bGood,bSkip,bG;
 
@@ -4144,16 +4566,23 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride,bIgnoreWSWAP)
 		sK = string.lower(k);
 		
 		if sK == 'subset' then
-			for ki,vi in ipairs(v) do
-				if type(vi) == 'table' then
-					ts = vi;
-				else
-					ts[k] = vi;
-				end
+			if type(v) == 'table' then
+				ts = v;
+			else
+				ts[k] = v;
+			end
 			
-				-- Then determine the appropriate set to load
-				for kk,vv in pairs(ts) do		
-					bGood,vRoot = fCheckInline(vv,'subset',tMaster);			
+			-- Then determine the appropriate set to load
+			for kk,vv in pairs(ts) do
+				-- In case it's a table of subsets...
+				if type(vv) == 'table' then
+					ts2 = vv;
+				else
+					ts2[k] = vv;
+				end
+				
+				for kkk,vvv in pairs(ts2) do
+					bGood,vRoot = fCheckInline(vvv,'subset',tMaster);			
 					if bGood == true then
 						gcinclude.MoveToCurrent(vRoot,tMaster,bOverride);
 						break;
@@ -4360,7 +4789,7 @@ function fMultiSlotLockCheck(sName)
 			bMulti = true;
 			sMain = k['slot'];
 			sAllSlots = k['slot'];
-			
+		
 			-- Determine if any of the affected slots are locked
 			sAffected = k['affected'];			
 			while sAffected ~= nil and bGood do
@@ -4417,6 +4846,7 @@ function gcinclude.EquipTheGear(tSet,bOverride)
 		if tSet[k['slot']] ~= nil and 
 				string.lower(tSet[k['slot']]) == string.lower(k['item']) then
 			bGood,bMulti,sSlots = fMultiSlotLockCheck(k['item']);	
+
 			if not bGood then
 				tSet[k['slot']] = '';
 			elseif bMulti then
@@ -4431,8 +4861,9 @@ function gcinclude.EquipTheGear(tSet,bOverride)
 						sWhich = sSlots;
 						sSlots = nil;
 					end				
+
 					-- Empty the affected slots
-					if sWhich ~= k['slot'] then
+					if sWhich ~= k['slot'] then			
 						tSet[sWhich] = '';
 					end
 				end			
@@ -4475,8 +4906,7 @@ function gcinclude.EquipTheGear(tSet,bOverride)
 		end
 	end
 	
-	CheckForExceptions(tSet);
-	
+	CheckForExceptions(tSet);	
 	gFunc.ForceEquipSet(tSet);
 end			-- gcinclude.EquipTheGear
 
@@ -5105,7 +5535,7 @@ function EquipItem(args)
 		iSlot = string.upper(string.sub(iSlot,1,1)) .. string.lower(string.sub(iSlot,2));
 				
 		-- Now try and load the item	
-		gFunc.ForceEquip(iSlot,iName);	
+		gFunc.ForceEquip(iSlot,iName);
 		LockUnlock('locks','lock',sSlots);
 		local sList = fGetLockedList('locks');
 		gcdisplay.SetSlots('locks',gcinclude.LocksNumeric);	
@@ -5187,34 +5617,73 @@ end		-- fGetTableByName
 --]]
 --[[
 function SMGControl(args)
+	local player = gData.GetPlayer();
 	local bFile = false;
 	local bNoac = false;
-	local slots = {};
-	local gs{};
-
--- The following is copied from the HandleCommands. It needs to be
--- reworked.	
-	if #args == 1 then				-- Show a list of all gear
-		DisplayGD_AW(nil,nil);
-	else
-		for i=2,#args,1 do
-			args[i] = string.lower(args[1]));
-			if args[i] == 'noac' then
-				bNoac = true;
-			elseif string.find(args[i],'gs=') ~= nil then
-				args[i] = string.sub(args[i],4,-1);
-				if string.find(args[i],',') then
-				end
+	local sGS,sSL,sFile;
+	local pFile = nil;
+	
+	for i=1,#args,1 do
+		args[i] = string.lower(args[i]));
+		if args[i] == 'noac' then
+			bNoac = true;
+		elseif string.find(args[i],'gs=') ~= nil then
+			sGs = string.sub(args[i],4,-1);
+		elseif string.find(args[i],'slot=') ~= nil then
+			sSL = string.sub(args[i],6,-1);
+		elseif args[i][1] == '>' then
+			bFile = true;
+			if string.len(args[i]) > 1 then
+				sFile = string.sub(args[i],2,-1);
+			else
+				-- system defined file name
+				sFile = AshitaCore:GetMemoryManager():GetEntity():GetName(0);
+				sFile = sFile .. '_' .. player.MainJob .. '_';
+				-- Add something date based here
 			end
-			if args[2] ~= nil then
-		local ls = string.lower(args[2]);
-		if ls == 'noac' then		-- Show a list of gear where accessible is false
-			DisplayGD_AW('noac');
-		elseif string.len(ls) > 5 and string.sub(ls,1,5) == 'slot=' then
-			DisplayGD_S(string.sub(ls,6,-1));
-		elseif string.len(ls) > 3 and string.sub(ls,1,3) == 'gs=' then 
-			DisplayGD_Gs(string.sub(ls,4,-1));
-		end 
+		end
+	end
+
+	if bFile == true then
+		pFile = io.open(sFile,"w");
+	end
+	
+-- Here. Print out what the report will contain if file indicated
+
+-- Now, do the report
+	if bNoac == false and sGL == nil and sSL == nil then
+		if bFile == true then
+			FileGD_AW(pFile);
+		else
+			DisplayGD_AW();
+	else
+		if bNoac == true then
+			if bFile == true then
+				FileGD_AW('noac',pFile);
+			else
+				DisplayGD_AW('noac');
+			end
+		end
+		
+		if sGL ~= nil then
+			if bFile == true then
+				FileGD_Gs(sGL,pFile);
+			else
+				DisplayGD_Gs(sGL);
+			end
+		end
+		
+		if sSL ~= nil then
+			if bFile == true then
+				FileGD_S(sGS,pFile);
+			else
+				DisplayGD_S(sGS);
+			end
+		end
+		
+		if bFile == true then
+			io.close(pFile);
+		end
 	end
 end		-- SMGControl
 --]]
@@ -5452,7 +5921,7 @@ function gcinclude.HandleCommands(args)
 		if #args > 1 then
 			local sArg = string.upper(args[2]);
 			local sTmp = ',' .. gcinclude.Crafting_Types .. ',';
-			local sTmp2 = ',' ..gcinclude.Gathering_Types .. ',';
+			local sTmp2 = ',' .. gcinclude.Gathering_Types .. ',';
 			if string.find(sTmp,sArg) ~= nil or string.find(sTmp2,sArg) ~= nil then
 				-- gather or crafting set
 				if string.find(sTmp,sArg) then

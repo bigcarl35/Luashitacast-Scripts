@@ -49,6 +49,19 @@ local fontSettings = T{
 	}
 };
 
+local pttSettings = T{
+	visible = true,
+	font_family = 'Arial',
+	font_height = 14,
+	color = 0xFFFFFFFF,			-- White
+	position_x = 500,
+	position_y = 400,
+	background = T{
+		visible = true,
+		color = 0xFF71797E,		-- Steel Gray
+	}
+};
+
 --[[
 	ShowHelp Displays help for all the commands across jobs
 --]]
