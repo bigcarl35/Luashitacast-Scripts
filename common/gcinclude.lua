@@ -4,7 +4,7 @@ require 'common'
 
 version = { ['author']	= 'Paiine',
  		    ['name']	= 'Luashitacast (Karma)',
-			['version']	= '1.5.6' };
+			['version']	= '1.5.7' };
 	
 --[[
 	This file contains routines that are used with Luashitacast across any supported job.
@@ -102,7 +102,7 @@ gcinclude.settings = {
 
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
-gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','macc','maxsong','maxspell','petfood','ptt','racc','rc','rv','sbp','showit','smg','string','tank','th','unlock','ver','wsdistance','wswap','t1'};
+gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','macc','maxsong','maxspell','petfood','ptt','pull','racc','rc','rv','sbp','showit','smg','spf','ss','string','tank','th','unlock','ver','wsdistance','wswap','t1'};
 gcinclude.Towns = T{'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]','Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets','Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower','Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden','Celennia Memorial Library','Western Adoulin','Eastern Adoulin'};
 gcinclude.Windy = T{'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower'};
 gcinclude.Sandy = T{'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille'};
@@ -543,7 +543,7 @@ gcinclude.tElemental_gear = T{
 				['Name'] = 'Snow gorget', 
 				['Ref'] = {},
 				['skillProp'] = { 'induration','distortion' },
-				['eleWS'] = { 'blade: to','blast arrow','cross reaper','death blossom','expiacion','freezebite','frostbite','full break','gate of tartarus','geirskogul','ground strike','guillotine','quietus','impulse drive','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','ruinator','raging rush','shadow of death','shattersoul','skullbreaker','smash axe','spiral hell','steel cyclone','tachi: gekko','tachi: hobaku','tachi: rana','tachi: yukikaze','tornado kick','vidohunir' },
+				['eleWS'] = { 'blade: to','blast arrow','cross reaper','death blossom','expiacion','freezebite','frostbite','full break','geirskogul','ground strike','guillotine','quietus','impulse drive','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','ruinator','raging rush','shadow of death','shattersoul','skullbreaker','smash axe','spiral hell','steel cyclone','tachi: gekko','tachi: hobaku','tachi: rana','tachi: yukikaze','tornado kick','vidohunir' },
 			},
 			['wind'] = {
 				['Weak'] = 'ice',
@@ -585,7 +585,7 @@ gcinclude.tElemental_gear = T{
 				['Name'] = 'Shadow gorget', 
 				['Ref'] = {},
 				['skillProp'] = { 'compression','gravitation','darkness' },
-				['eleWS'] = { 'asuran fists','black halo','blade: ei','blade: hi','blade: kamu','blade: ku','blade: ten','catastrophe','quietus','entropy','eviseration','impulse drive','insurgency','keen edge','leaden salute','mandalic stab','mercy stroke','requiscat','rundra\'s storm','nightmare scythe','omniscience','one inch punch','penta thrust','primal rend','retribution','shattersoul','starburst','stardiver','stringing pummel','sunburst','swift blade','tachi: kasha','tachi: rana','tachi: shoha','upheaval' },
+				['eleWS'] = { 'asuran fists','black halo','blade: ei','blade: hi','blade: kamu','blade: ku','blade: ten','catastrophe','quietus','entropy','eviseration','impulse drive','insurgency','keen edge','leaden salute','mandalic stab','mercy stroke','requiscat','rundra\'s storm','nightmare scythe','omniscience','one inch punch','penta thrust','primal rend','retribution','shattersoul','starburst','stardiver','stringing pummel','sunburst','swift blade','tachi: kasha','tachi: rana','tachi: shoha','upheaval','gate of tartarus' },
 			},
 			['searched'] = false,	
 		},
@@ -1050,7 +1050,7 @@ gcinclude.tEquipIt = {
 gcinclude.multiSlot = {
 	{ ['item'] = 'Vermillion Cloak', ['slot'] = 'Body', ['affected'] = 'Head' },
 	{ ['item'] = 'Royal Cloak', 	 ['slot'] = 'Body', ['affected'] = 'Head' },
-	{ ['item'] = 'Mandra. Suit',	 ['slot'] = 'Body', ['affected'] = 'Legs' },
+	{ ['item'] = 'Mandra. Suit',	 ['slot'] = 'Body', ['affected'] = 'Hands,Legs,Feet' },
 	{ ['item'] = 'Taru. Shorts',	 ['slot'] = 'Legs', ['affected'] = 'Feet' },
 	{ ['item'] = 'Taru. Shorts +1',  ['slot'] = 'Legs', ['affected'] = 'Feet' },
 	{ ['item'] = 'Tarutaru Top',	 ['slot'] = 'Body', ['affected'] = 'Hands' },
@@ -1682,6 +1682,21 @@ function gcinclude.StartReminder()
 end			-- gcinclude.StartReminder
 
 --[[
+	fTargetId extracts the target's reference ID and returns it to the invoker'
+--]]
+
+function gcinclude.fTargetId(targetIndex)
+	if targetIndex == nil then
+		return ' ';
+	else
+		local targetServerId = AshitaCore:GetMemoryManager():GetEntity():GetServerId(targetIndex);
+		local targetServerIdHex = string.format('0x%X', targetServerId);
+
+		return string.sub(targetServerIdHex, -3);
+	end
+end		-- gcinclude.fTargetId
+
+--[[
 	SlotCase formats the passed string into the slot name's appropriate
 	case: Upper Case first letter, lower case the rest and returns the
 	results.
@@ -1699,6 +1714,7 @@ function SlotCase(s)
 		return string.upper(s);
 	end
 end		-- SlotCase
+
 --[[
 	fReferenceCheck determines if any of the passed gear is actually
 	a reference to another set's slot.
@@ -1780,7 +1796,7 @@ end		-- gcinclude.TallyProgressiveCaps
 	from the calling routine.
 --]]
 
-function fExpandGearLine(sSlot,ts,sc)
+function fExpandGearLine(sSlot,ts,sc,tHold)
 	local iPos,sval,sCode;
 	local t = {};
 
@@ -1788,6 +1804,10 @@ function fExpandGearLine(sSlot,ts,sc)
 		return false;
 	end
 	
+	if tHold == nil then
+		tHold = gcinclude.tGearLine;
+	end
+
 	if type(ts) == 'string' then
 		t[1] = ts;
 	else
@@ -1840,12 +1860,22 @@ function fExpandGearLine(sSlot,ts,sc)
 			end				
 		else
 			-- Treat the item as-is
+--
+			local iCtr = #tHold + 1;
+			tHold[iCtr] = j
+			if sc ~= nil then
+				tHold[iCtr] = tHold[iCtr] .. sc;
+			end
+			iCtr = iCtr + 1;
+--
+--[[
 			local iCtr = #gcinclude.tGearLine + 1;
-			gcinclude.tGearLine[iCtr] = j		
+			gcinclude.tGearLine[iCtr] = j
 			if sc ~= nil then
 				 gcinclude.tGearLine[iCtr] = gcinclude.tGearLine[iCtr] .. sc;
-			end			
+			end
 			iCtr = iCtr + 1;
+--]]
 		end
 	end
 	return true;
@@ -2191,28 +2221,32 @@ function RefreshVariables()
 	-- can be ignored. The problem ones are the ones specific to a player's job.
 	-- They are the ones that sometimes don't get created.
 	
-	-- WSwap
-	gcdisplay.CreateToggle('WSwap',(string.find('WHM,BRD,RDM',player.MainJob) ~= nil));
+	-- WSwap	-- Weapon Swap
+	gcdisplay.CreateToggle('WSwap', (string.find('WHM,BRD,RDM',player.MainJob) ~= nil));
+
+	-- SPF		-- Show Pull Feedback
+	gcdisplay.CreateToggle('SPF', true);
 
 	-- Macc
 	if string.find(gcinclude._sMagicJobs,player.MainJob) ~= nil or
 	   string.find(gcinclude._sMagicJobs,player.SubJob) ~= nil then
-		gcdisplay.CreateToggle('Macc',false);
+		gcdisplay.CreateToggle('Macc', false);
 	end
 	
 	-- Tank
 	if string.find('PLD,NIN,RUN',player.MainJob) ~= nil then
-		gcdisplay.CreateToggle('Tank',true);
+		gcdisplay.CreateToggle('Tank', true);
 	elseif string.find('DRK,WAR,THF,RDM,BLU',player.MainJob) ~= nil then
-		gcdisplay.CreateToggle('Tank',false);
+		gcdisplay.CreateToggle('Tank', false);
 	end
 
 	-- THF: TH
 	if player.MainJob ==  'THF' then
-		gcdisplay.CreateToggle('TH',false);
+		gcdisplay.CreateToggle('TH', false);
+		gcdisplay.CreateToggle('SS', false);
 	end
 
-	-- BST: AJug and DB
+	-- BST: AJug and DB		-- Automatic Jugs, Damage type (used in pet debuff mitigation)
 	if player.MainJob == 'BST' then
 		gcdisplay.CreateToggle('AJug',true);
 		if gcdisplay.GetCycle('DB') == 'Unknown' then
@@ -2225,9 +2259,9 @@ function RefreshVariables()
 		gcdisplay.CreateCycle('Instrument', {[1] = 'Horn', [2] = 'String'});
 	end	
 	
-	-- SMN: sBP
+	-- SMN: sBP		-- Show Blood Pact
 	if player.MainJob == 'SMN' then
-		gcdisplay.CreateToggle('sBP',true);
+		gcdisplay.CreateToggle('sBP', true);
 	end	
 end		-- RefreshVariables
 
@@ -2242,7 +2276,9 @@ function SetVariables()
 	gcdisplay.CreateToggle('GSwap', true);
 	gcdisplay.CreateToggle('Kite', false);
 	gcdisplay.CreateToggle('Eva', false);
-	gcdisplay.CreateToggle('Idle',true);
+	gcdisplay.CreateToggle('Idle', true);
+	gcdisplay.CreateToggle('SS', false);
+	gcdisplay.CreateToggle('SPF', true);
 		
 	if string.find('SMN,BLM',player.MainJob) == nil then
 		gcdisplay.CreateToggle('WSwap',(string.find('WHM,RDM',player.MainJob) ~= nil));
@@ -2250,22 +2286,23 @@ function SetVariables()
 
 	-- Job specific toggles	
 	if string.find('PLD,NIN,RUN',player.MainJob) ~= nil then
-		gcdisplay.CreateToggle('Tank',true);
+		gcdisplay.CreateToggle('Tank', true);
 	elseif string.find('DRK,WAR,THF,RDM,BLU',player.MainJob) ~= nil then
-		gcdisplay.CreateToggle('Tank',false);
+		gcdisplay.CreateToggle('Tank', false);
 	end
 
 	if string.find(gcinclude._sMagicJobs,player.MainJob) ~= nil or
 	   string.find(gcinclude._sMagicJobs,player.SubJob) ~= nil then
-		gcdisplay.CreateToggle('Macc',false);
+		gcdisplay.CreateToggle('Macc', false);
 	end
 	
 	if player.MainJob == 'THF' then
-		gcdisplay.CreateToggle('TH',false);
+		gcdisplay.CreateToggle('TH', false);
+
 	end	
 	
 	if player.MainJob == 'BST' then
-		gcdisplay.CreateToggle('AJug',true);
+		gcdisplay.CreateToggle('AJug', true);
 		gcdisplay.CreateCycle('DB', {[1] = 'Norm', [2] = 'BPP', [3] = 'WSS'});
 	end
 	
@@ -2274,7 +2311,7 @@ function SetVariables()
 	end
 	
 	if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
-		gcdisplay.CreateToggle('sBP',true);
+		gcdisplay.CreateToggle('sBP', true);
 	end
 	
 	-- General cycles
@@ -2401,7 +2438,12 @@ function DisplayGD_Gs(p1)
 	if p1 == nil then
 		return;
 	end
-		
+
+	if string.lower(p1) == 'progressive' then
+		print(chat.message('Warning: Currently SMG does not support displaying the Progressive gear set'));
+		return;
+	end
+
 	-- first check gProfile.Sets. If not found, look in gcinclude.Sets.
 	tGs = fGetTableByName(p1);
 	if tGs == nil then
@@ -2424,12 +2466,24 @@ function DisplayGD_Gs(p1)
 					gg = j
 				end			
 				tmp = nil;
-				
+
 				for _,g in ipairs(gg) do
-					if tmp == nil then
-						tmp = fRemoveConditional(g);
+					-- It's possible that a subset's entry will itself be a table. Problem is, this can
+					-- be an infinite "rabbit hole". Only one depth will be displayed
+					if type(g) == 'table' then
+						for _,tg in pairs(g) do
+							if tmp == nil then
+								tmp = fRemoveConditional(tg);
+							else
+								tmp = tmp .. ',' .. fRemoveConditional(tg);
+							end
+						end
 					else
-						tmp = tmp .. ',' .. fRemoveConditional(g);
+						if tmp == nil then
+							tmp = fRemoveConditional(g);
+						else
+							tmp = tmp .. ',' .. fRemoveConditional(g);
+						end
 					end
 				end
 				print(' ');
@@ -2488,13 +2542,13 @@ function DisplayItemStats(sName,sSlot)
 	
 	sSlot = string.lower(sSlot);
 	sName = string.lower(sName);
-	
-	if gcinclude.GearDetails[sSlot][sName] == nil then
+
+	if gcinclude.GearDetails[sSlot] == nil or gcinclude.GearDetails[sSlot][sName] == nil then
 		-- You get here if the item isn't a valid item
 		print(sName .. ' - ' .. chat.color1(8,'Invalid item'));
 		return;
 	end
-	
+
 	tWhat = gcinclude.GearDetails[sSlot][sName];
 	-- You get here if the item is valid or it's invalid because the slot
 	-- is incorrect	
@@ -2644,6 +2698,67 @@ function fSlotMatch(sSlot,iSlot)
 end		-- fSlotMatch
 
 --[[
+	CheckInlineCodes determines if the passed string of codes are valid (not if
+	the condition is met, but rather is the code itself valid along with the
+	associated formatting.) Returned is true or false. Passed in are:
+
+			sSlot 			Slot name
+			sLine			List of gear possibilities
+			sGs				Name of the gear set
+--]]
+function CheckInlineCodes(sSlot,sLine,sGS)
+	local bOk = true;
+	local asis_codes = {
+		'ARC_CIRCLE','BARSPELL','COVER','HOLY_CIRCLE','NOT_UTSUSEMI','SPIKE','UTSUSEMI','WARD_CIRCLE','ENANY','ENAERO','ENBLIZZARD','ENDARK','ENFIRE','ENLIGHT',
+		'ENSTONE','ENTHUNDER','ENWATER','CR:ALC','CR:BONE','CR:BSM','CR:CLOTH','CR:COOK','CR:GSM','CR:LTH','CR:WW','GA:HELM','GA:DIG','GA:CLAM','GA:FISH',
+		'DT_BREATH','DT_MAGICAL','DT_PHYSICAL','DARKSDAY','EARTHSDAY','FIRESDAY','ICEDAY','LIGHTNINGDAY','LIGHTSDAY','WATERSDAY','WINDSDAY','NOT_DARKSDAY',
+		'NOT_EARTHSDAY','NOT_FIRESDAY','NOT_ICEDAY','NORT_LIGHTNINGDAY','NOT_LIGHTSDAY','NOT_WATERSDAY','NOT_WINDSDAY','BOUND','BLINDED','CURSED','DOOMED',
+		'PARALYZED','PETRIFIED','POISONED','SILENCED','SLEPT','WEAKENED','SPECIAL','FULLMOON','NEWMOON','EMPTY','EMPTY:2','EMPTY','CARBY','NO_PET','NO_SMNPET',
+		'PET','PETF','PETFPF','PETNF','SMNPET','SMNPETMD','SMNPETMW','SPIRIT:ES','SPIRIT:EP','MSJ','OWN','NOT_OWN','TOWN','TOWN-AK','PARTY1','PARTY2','PARTY3',
+		'PARTY4','PARTY5','PARTY6','SJBLM','SJBRD','SJBST','SJDRG','SJDRK','SJMNK','SJNIN','SJPLD','SJRDM','SJRNG','SJSAM','SJSMN','SJTHF','SJWAR','SJWHM',
+		'SJBLU','SJCOR','SJPUP','SJDNC','SJSCH','PJPBLM','PJPBRD','PJPBST','PJPDRG','PJPDRK','PJPMNK','PJPNIN','PJPPLD','PJPRDM','PJPRNG','PJPSAM','PJPSMN',
+		'PJPTHF','PJPWAR','PJPWHM','PJPBLU','PJPCOR','PJPPUP','PJPNMBLM','PJPNMBRD','PJPNMBST','PJPNMDRG','PJPNMDRK','PJPNMMNK','PJPNMNIN','PJPNMPLD','PJPNMRDM',
+		'PJPNMRNG','PJPNMSAM','PJPNMSMN','PJPNMTHF','PJPNMWAR','PJPNMWHM','PJPNMBLU','PJPNMCOR','PJPNMCOR','PJPNMDNC','PJPNMSCH','AMORPH','AQUAN','NOT_ME',
+		'DAYTIME','DUSK2DAWN','NIGHTTIME','DB:BPP','DB:WSS','EVASION','HORN','IDLE','NOT_TANK','NOT_TH','NOT_WSWAP','STRING','TANK','TH','WSWAP','ARCHERY',
+		'AXE','CLUB','DAGGER','GAXE','GKATANA','GSWORD','H2H','KATANA','MARKSMANSHIP','POLEARM','SCYTHE','STAVE','SWORD','THROWING','WTH:CLEAR','WTH:CLOUDS',
+		'WTH:DARK','WTH:EARTH','WTH:FIRE','WTH:FOG','WTH:ICE','WTH:LIGHT','WTH:SUNSHINE','WTH:THUNDER','WTH:WATER','WTH:WIND','WTH-DAY','NOT_WTH:CLEAR',
+		'NOT_WTH:CLOUDS','NOT_WTH:DARK','NOT_WTH:EARTH','NOT_WTH:FIRE','NOT_WTH:FOG','NOT_WTH:ICE','NOT_WTH:LIGHT','NOT_WTH:SUNSHINE','NOT_WTH:THUNDER',
+		'NOT_WTH:WATER','NOT_WTH:WIND',' NOT_WTH-DAY'
+		};
+	local gear_codes = { 'IF','IF-','UNLESS','UNLESS-'};
+	local tList = T {};
+	local tCList = T {};
+	local sDef = T {};
+
+	if sCode == nil or sDef == nil then
+		return;
+	else
+		sDef[1] = sLine;
+		tList = fExpandGearLine(sSlot,sDef,nil,tList);
+		for i,j in pairs(tList) do
+			tCList = fMakeCodeTable(j);
+			for ii,jj in pairs(tCList) do
+				if table.find(asis_codes,string.upper(jj)) == nil then
+					-- Not found in the one-word codes
+					local dot = string.find(jj,'.');
+					if dot ~= nil and fValidInlineDynamicCode(jj) == false then
+						-- Ill formed conditional code
+						print(chat.message('Unrecognized conditional code: '.. jj .. ' for ' .. sGS .. '[' .. sSlot ..']'));
+					end
+					--
+					local colon = string.find(jj,':');
+					if colon ~= nil then
+					end
+				end
+			end
+		end
+	end
+
+-- WIP. Need to split the codes out
+	return bOk;
+end		-- CheckInlineCodes
+
+--[[
 	fGearCheckItem process the specific item sent to it and where appropriate, populates
 	gcinclude.GearDetails. The details tracked are: item name, item level, can equip?, 
 	and accessibility. Returned is a true/false which indicates that the item's level,
@@ -2664,6 +2779,7 @@ function fGearCheckItem(sSlot,sName,bAccess,bCreate)
 	local iPos;
 	local item = {};
 	local tOwned = {};
+	local sCodes = nil;
 	
 	-- Required fields
 	if sSlot == nil or sName == nil then
@@ -2703,6 +2819,7 @@ function fGearCheckItem(sSlot,sName,bAccess,bCreate)
 	-- Then remove any inline conditionals
 	iPos = string.find(sName,'//');
 	if iPos ~= nil then
+		sCodes = string.sub(sName,iPos,-1);
 		sName = string.sub(sName,1,iPos-1);
 	end	
 	
@@ -2781,10 +2898,6 @@ function GearCheck(sList,bForce)
 	local ctr = 0;
 	local bGood;
 
-	if bUpdate == nil then
-		bUpdate = false;
-	end
-
 	if sList == nil then
 		-- Tallying counts from the Progressive structure
 		local macc,mtacc,mracc,mtracc = gcinclude.TallyProgressiveCaps();
@@ -2798,7 +2911,7 @@ function GearCheck(sList,bForce)
 		-- then claim slips
 		print(chat.header('GearCheck'):append(chat.message('Starting to scan for claim slips')));
 		for i,j in pairs(gcinclude.ClaimSlips) do
-			if 	player:HasKeyItem(j['kid']) then
+			if player:HasKeyItem(j['kid']) then
 				j['own'] = true;
 				ctr = ctr + 1;
 			end
@@ -2815,7 +2928,7 @@ function GearCheck(sList,bForce)
 			bGood,ref = fGearCheckItem(sSlot,t['Name'],false,true);
 			if ref ~= nil and ref['valid'] == false then
 				print(chat.header('GearCheck'):append(chat.message('Warning: Invalid EquipIt gear piece - ' .. t['Name'] .. ': ' .. s)));
-			end			
+			end
 		end
 
 		-- next is pet food since any job can equip it
@@ -2824,8 +2937,8 @@ function GearCheck(sList,bForce)
 			bGood,ref = fGearCheckItem('ammo',t['name'],false,true);
 			if ref ~= nil and ref['valid'] == false then
 				print(chat.header('GearCheck'):append(chat.message('Warning: Invalid Pet Food - ' .. t['Name'] .. ': ' .. s)));
-			end			
-		end		
+			end
+		end
 
 		-- next is jug pets, but only BST can equip them
 		if gData.GetPlayer().MainJob == 'BST' then
@@ -2834,7 +2947,7 @@ function GearCheck(sList,bForce)
 				bGood,ref = fGearCheckItem('ammo',s,false,true);
 				if ref ~= nil and ref['valid'] == false then
 					print(chat.header('GearCheck'):append(chat.message('Warning: Invalid Jug Pet - ' .. s .. ': ' .. s)));
-				end				
+				end
 			end
 		end
 		
@@ -2851,7 +2964,7 @@ function GearCheck(sList,bForce)
 				-- Process if not either 'CurrentGear' or 'Progressive'. CurrentGear 
 				-- is a composite from other gear sets and Progressive has a 
 				-- complelely different structure, it will be processed elsewhere
-				if table.find({'CurrentGear','Progressive'},j) == nil then				
+				if table.find({'CurrentGear','Progressive'},j) == nil then
 					-- Loop the gear set slots
 					for jj,kk in pairs(k) do
 						ts = {};
@@ -2866,12 +2979,15 @@ function GearCheck(sList,bForce)
 							print(chat.header('GearCheck'):append(chat.message('Warning: Invalid slot name - ' .. jj .. ' in ' .. j)));
 						else
 							-- Now walk the list of gear
-							for ss,tt in pairs(ts) do						
-								-- Save the details if appropriate. Returned results are
-								-- ignored, but captured in case I change my mind. Please
-								-- note that subsets are ignored in fGearCheckItem.
+							for ss,tt in pairs(ts) do
+
+-- First, check validity of the gear's inline codes
+
+								-- Then, process the gear. Returned results are ignored, but
+								-- captured in case I change my mind. Pleasenote that subsets
+								-- are ignored in fGearCheckItem.
 								bGood,ref = fGearCheckItem(jj,tt,false,true);
-								if ref ~= nil then						
+								if ref ~= nil then
 									if ref['valid'] == false and ref['slot'] == nil then
 										print(chat.header('GearCheck'):append(chat.message('Warning: Invalid piece of gear - ' .. tt .. ' in ' .. j)));
 									elseif ref['slot'] == false then
@@ -2886,26 +3002,28 @@ function GearCheck(sList,bForce)
 						end
 					end
 				elseif j == 'Progressive' then
-					-- Loop on type of progressive set			
+					-- Loop on type of progressive set
 					for ij,ik in pairs(k) do
 						-- Loop on the progressive stages
 						for jj,jk in ipairs(ik) do
 							-- Loop on the line elements
-							for kj,kk in pairs(jk) do							
+							for kj,kk in pairs(jk) do
 								ts = {};
 								-- Entries can be a table or a string. Make either case a table
 								if type(kk) == 'table' then
 									ts = kk;
 								else
 									ts[1] = kk;
-								end							
+								end
 								
 								if table.find(gcinclude.SlotNames,string.lower(kj)) == nil then
 									print(chat.header('GearCheck'):append(chat.message('Warning: Invalid slot name - ' .. kj .. ' in Progressive ' .. ij)));
-								else								
+								else
 									-- Process the list of gear
-									for ss,tt in pairs(ts) do							
-										-- Subsets and inline references are ignored									
+									for ss,tt in pairs(ts) do
+-- First, check validity of the gear's inline codes
+
+										-- Then, process the gear. Subsets and inline references are ignored
 										bGood,ref = fGearCheckItem(kj,tt,false,true);
 										if ref ~= nil then						
 											if ref['valid'] == false and ref['slot'] == nil then
@@ -2918,13 +3036,13 @@ function GearCheck(sList,bForce)
 										if math.floor(iCnt/50) == iCnt/50 then
 											print(chat.message(tostring(iCnt) .. ' sets processed...'));
 										end
-									end										
-								end								
+									end
+								end
 							end
 							iCnt = iCnt +1;
 							if math.floor(iCnt/50) == iCnt/50 then
 								print(chat.message(tostring(iCnt) .. ' sets processed...'));
-							end							
+							end
 						end
 					end
 				end
@@ -3178,7 +3296,7 @@ function fTallyGear(sGear,sSlot)
 		end
 	end
 	return rec;
-end
+end		-- fTallyGear
 
 --[[
 	fParseDescriptionExceptions processes the descriptions for gear 
@@ -3292,7 +3410,7 @@ function fParseDescriptionExceptions(rec,sGear,sDesc)
 	end
 		
 	return bFound,rec;
-end
+end		-- fParseDescriptionExceptions
 
 --[[
 	fParseDescription parses the passed description for the stated item
@@ -3422,7 +3540,7 @@ function fParseDescription(item,sDesc)
 		end
 	end	
 	return rec;
-end
+end		-- fParseDescription
 
 --[[
 	fMakeCodeTable takes the passed, // delimited list and returns the
@@ -4760,7 +4878,7 @@ function CheckForExceptions(tSet)
 			fDisplayOnce(msg);
 		end
 	end	
-end
+end		-- CheckForExceptions
 
 --[[
 	fMultiSlotLockCheck determines if the passed item is a multislotted item and
@@ -5796,7 +5914,15 @@ function gcinclude.HandleCommands(args)
 			gcdisplay.AdvanceToggle('TH');
 		else
 			print(chat.header('HandleCommands'):append(chat.message('Error: /TH is only available to thieves. Ignoring command')));
-		end			
+		end
+	elseif (args[1] == 'ss') then			-- Turns on/off whether Show Action feedback should be displayed
+		if player.MainJob == 'THF' then
+			gcdisplay.AdvanceToggle('SS');
+		else
+			print(chat.header('HandleCommands'):append(chat.message('Error: /SS is only available to thieves. Ignoring command')));
+		end
+	elseif (args[1] == 'spf') then			-- Turns on/off whether Show Pull feedback should be displayed
+		gcdisplay.AdvanceToggle('SPF');
 	elseif (args[1] == 'db') then
 		if player.MainJob == 'BST' then
 			if args[2] ~= nil then
@@ -5902,6 +6028,29 @@ function gcinclude.HandleCommands(args)
 		RegionControlDisplay();
 	elseif (args[1] == 'rv') then
 		RefreshVariables();
+	elseif (args[1] == 'pull') then
+		local targetIndex = gData.GetTargetIndex();
+		local targetEntity = gData.GetEntity(targetIndex);
+		local sTxt = nil;
+		local bSkip = false;
+		if targetIndex ~= 0 then
+			if string.find('BST,SMN,PUP',player.MainJob) ~= nil then
+				if gData.GetPet() ~= nil then
+					sTxt = '/pet assault <t>';
+				else
+					bSkip = true;
+				end
+			else
+				sTxt = '/ra <t>';
+			end
+			if bSkip == false and sTxt ~= nil then
+				if gcdisplay.GetToggle('SPF') == true then
+					local sMsg = '/p Pulling ' .. targetEntity.Name .. ' [' .. gcinclude.fTargetId(targetIndex) .. ']';
+					AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
+				end
+				AshitaCore:GetChatManager():QueueCommand(-1, sTxt);
+			end
+		end
 	elseif (args[1] == 'showit') then						-- Shows debug info for specified type
 		DB_ShowIt();
 	elseif (args[1] == 'smg') then							-- Show My Gear			
@@ -6276,7 +6425,7 @@ function MidcastSinging()
 			gcinclude.MoveToCurrent(gProfile.Sets.EnfeeblingSinging,gProfile.Sets.CurrentGear);
 		end		
 	end
-end
+end		-- MidcastSinging
 
 --[[
 	MidcastHealingMagic handles all of the equipment management when a healing spell

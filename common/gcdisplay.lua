@@ -21,20 +21,22 @@ local Progressive = T {
 		['Tank_Ranged_Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = 'TRAcc' }
 	};
 local bGC = false;
-local JobBar = T{['GSwap'] = {'ALL','MS'},
-				 ['DT'] = {'ALL','MS'},
-				 ['Kite'] = {'ALL','MS'},
-				 ['Eva'] = {'ALL','MS'},
-				 ['Idle'] = {'ALL','MS'},
-				 ['Tank'] = {'PLD,NIN,RUN,WAR,DRK,THF,RDM,BLU','M'},
-				 ['Macc'] = {'BLM,WHM,RDM,SMN,PLD,DRK,BLU,SCH,GEO,RUN','MS'},
-				 ['WSwap'] = {'-SMN,BLM','M'},		-- Some jobs swap weapons all the time
-				 ['TH'] = {'THF','M'},
-				 ['AJug'] = {'BST','M'},
-				 ['DB'] = {'BST','M'},
+local JobBar = T{['GSwap']  = {'ALL','MS'},
+				 ['DT']     = {'ALL','MS'},
+				 ['Kite']   = {'ALL','MS'},
+				 ['Eva']    = {'ALL','MS'},
+				 ['Idle']   = {'ALL','MS'},
+				 ['Tank']   = {'PLD,NIN,RUN,WAR,DRK,THF,RDM,BLU','M'},
+				 ['Macc']   = {'BLM,WHM,RDM,SMN,PLD,DRK,BLU,SCH,GEO,RUN','MS'},
+				 ['WSwap']  = {'-SMN,BLM','M'},		-- Some jobs swap weapons all the time
+				 ['SS']     = {'THF','M'},
+				 ['SPF']	= {'ALL','MS'},
+				 ['TH']     = {'THF','M'},
+				 ['AJug']   = {'BST','M'},
+				 ['DB']     = {'BST','M'},
 				 ['Region'] = {'ALL','MS'},
 				 ['Instrument'] = {'BRD','M'},
-				 ['sBP'] = {'SMN','MS'}};
+				 ['sBP']    = {'SMN','MS'}};
 
 local fontSettings = T{
 	visible = true,
@@ -403,6 +405,7 @@ function gcdisplay.GetGC()
 	
 	return bGC;
 end
+
 --[[
 	SetSlots stores the list of lock slots, for displaying
 --]]
