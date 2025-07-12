@@ -96,7 +96,7 @@ Debuff:
 Gear:
     //IF:gear		Equip if currently wearing specified gear in current slot
     //IF-slot:gear	Equip if currently wearing specified item in the specified slot
-    //UNLESS		Equip if not wearing the specified item in the slot
+    //UNLESS:gear	Equip if not wearing the specified item in the slot
     //UNLESS-slot:gear	Equip if not wearing specified item in the specified slot
 
     //SPECIAL		Equip if the special comparisons match
@@ -160,16 +160,23 @@ Player or Party:
 
     Player's Subjob -
     //SJBLM    Equip if the player's subjob is a Black Mage
-    //SJBRD    Equip if the player's subjob is a  Bard
+    //SJBLU    Equip if the player's subjob is a Blue Mage
+    //SJBRD    Equip if the player's subjob is a Bard
     //SJBST    Equip if the player's subjob is a Beastmaster
+    //SJCOR    Equip if the player's subjob is a Corsair
+    //SJDNC    Equip if the player's subjob is a Dancer
     //SJDRG    Equip if the player's subjob is a Dragoon
     //SJDRK    Equip if the player's subjob is a Dark Knight
+    //SJGEO    Equip if the player's subjob is a Geomancer
     //SJMNK    Equip if the player's subjob is a Monk
     //SJNIN    Equip if the player's subjob is a Ninja
     //SJPLD    Equip if the player's subjob is a Paladin
-    //JSRDM    Equip if the player's subjob is a Red Mage
+    //SJPUP    Equip if the player's subjob is a Puppeteer
+    //SJRDM    Equip if the player's subjob is a Red Mage
     //SJRNG    Equip if the player's subjob is a Ranger
+    //SJRUN    Equip if the player's subjob is a Rune Fencer
     //SJSAM    Equip if the player's subjob is a Samurai
+    //SJSCH    Equip if the player's subjob is a Scholar
     //SJSMN    Equip if the player's subjob is a Summoner
     //SJTHF    Equip if the player's subjob is a Thief
     //SJWAR    Equip if the player's subjob is a Warrior
@@ -177,16 +184,23 @@ Player or Party:
 
     Job in Party -
     //PJPBLM    Equip if there's a Black Mage in your party
+    //PJPBLU    Equip if there's a Blue Mage in your party
     //PJPBRD    Equip if there's a Bard in your party
     //PJPBST    Equip if there's a Beastmaster in your party
+    //PJPCOR    Equip if there's a Corsair in your party
+    //PJPDNC    Equip if there's a Dancer in your party
     //PJPDRG    Equip if there's a Dragoon in your party
     //PJPDRK    Equip if there's a Dark Knight in your party
+    //PJPGEO    Equip if there's a Geomancer in your party
     //PJPMNK    Equip if there's a Monk in your party
     //PJPNIN    Equip if there's a Ninja in your party
     //PJPPLD    Equip if there's a Paladin in your party
+    //PJPPUP    Equip if there's a Puppeteer in your party
     //PJPRDM    Equip if there's a Red Mage in your party
     //PJPRNG    Equip if there's a Ranger in your party
+    //PJPRUN    Equip if there's a Rune Fencer in your party
     //PJPSAM    Equip if there's a Samurai in your party
+    //PJPSCH    Equip if there's a Scholar in your party
     //PJPSMN    Equip if there's a Summoner in your party
     //PJPTHF    Equip if there's a Thief in your party
     //PJPWAR    Equip if there's a Warrior in your party
@@ -194,16 +208,23 @@ Player or Party:
 
     Job Not in Party -
     //PJPNMBLM  Equip if there's a Black Mage in your party and it's not you
+    //PJPNMBLU  Equip if there's a Blue Mage in your party and it's not you
     //PJPNMBRD  Equip if there's a Bard in your party and it's not you
     //PJPNMBST  Equip if there's a Beastmaster in your party and it's not you
+    //PJPNMCOR  Equip if there's a Corsair in your party and it's not you
+    //PJPNMDNC  Equip if there's a Dancer in your party and it's not you
     //PJPNMDRG  Equip if there's a Dragoon in your party and it's not you
     //PJPNMDRK  Equip if there's a Dark Knight in your party and it's not you
+    //PJPNMGEO  Equip if there's a Geomancer in your party and it's not you
     //PJPNMMNK  Equip if there's a Monk in your party and it's not you
     //PJPNMNIN  Equip if there's a Ninja in your party and it's not you
     //PJPNMPLD  Equip if there's a Paladin in your party and it's not you
+    //PJPNMPUP  Equip if there's a Puppeteer in your party and it's not you
     //PJPNMRDM  Equip if there's a Red Mage in your party and it's not you
     //PJPNMRNG  Equip if there's a Ranger in your party and it's not you
+    //PJPNMRUN  Equip if there's a Rune Fencer in your party and it's not you
     //PJPNMSAM  Equip if there's a Samurai in your party and it's not you
+    //PJPNMSCH  Equip if there's a Scholar in your party and it's not you
     //PJPNMSMN  Equip if there's a Summoner in your party and it's not you
     //PJPNMTHF  Equip if there's a Thief in your party and it's not you
     //PJPNMWAR  Equip if there's a Warrior in your party and it's not you
