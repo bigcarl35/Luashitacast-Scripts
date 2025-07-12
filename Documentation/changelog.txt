@@ -1,33 +1,43 @@
-- Added slot name verification to all gear sets processed in /GC  
+- Added /SS (exclusive to THF.) When enabled, if the THF steals, a message will indicate they
+  did so, identifying the target and it's associated ID. If off, the steal happens without
+  a message.
 
-- Changed a lot of inline conditionals:
-	New - //EMPTY:1, //EMPTY:2, //IF-slot:, //UNLESS, //UNLESS-slot:
-		  //ARC_CIRCLE, //HOLY_CIRCLE, //WARD_CIRCLE
-	Modified - //EMPTY, //IF
-	Removed - //IFNOE, //IFOE, //ABSORBCAST, //BARCAST, //SPIKECAST,
-			  //ENCAST, //DARK, //DIVINE, //ENHANCING, //ENFEEBLING,
-			  //HEALING, //NINJUTSU, //SINGING, //SUMMONING
+- Added /PULL. This will "pull" the target with a ranged attack or with a pet if you're a SMN,
+  BST, or PUP. A message identifying the name of the target and it's identifying ID is relayed
+  to the party. Added /SPF so that the message display can be turned on or off.
 
-- Added Damage_Taken_x sets to job files. These should be used as
-  either subsets or via inline references.
-  
-- Fixed a locking issue when multi-slotted items were equipped in
-  a /ei command
-  
-- Fixed error caused when a subset has multiple conditional subsets
-  defined. Erroneously complained about a table...
-  
-- Fixed syntax in all HandleDefault routines in job files. Minor change
-  to syntax for recognizing if no weapon is equipped.
-  
-- Added //AQUAN and //AMORPH conditions. Have included all appropriate
-  monster names up through Wings of the Goddess.
+- Fixed problem with /SMG displaying a set which contained a subset of multiple sets. It can
+  now handle one depth down. The following example now displays correctly:
 
-- Added //PETNAME and //NOT_PETNAME conditions. These are tests for
-  specific pet names although //NOT_PETNAME will also be true if
-  the player has no pet. Added //BP:name to recognize when the
-  named blood pact is invoked.
+    ['Resting_Regen'] = {
+		Subset = {
+			[1] = {
+				'Damage_Taken_Breath//DT_BREATH',
+				'Damage_Taken_Magical//DT_MAGICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL',
+			}
+		},
+        Waist = 'Hierarch Belt',		-- +2 HP/tick while resting
+    },
 
-- Created document "Conditional gear by type.txt" which is a reorganization
-  of the "Conditional gear master.txt" file. Should be easier to use than
-  the "master" version.
+  Alternatively you might be inclined to change that set to:
+
+		Subset = {
+			[1] = 'Damage_Taken_Breath//DT_BREATH',
+			[2] = 'Damage_Taken_Magical//DT_MAGICAL',
+			[3] = 'Damage_Taken_Physical//DT_PHYSICAL',
+			}
+		},
+        Waist = 'Hierarch Belt',		-- +2 HP/tick while resting
+    },
+
+  Because the three damage taken sets are mutually exclusive, this would have the same result,
+  although the processing is less efficient.
+
+- Changed Gate of Tartarus from an Ice to Dark.
+
+- Changed slots affected on Mandragora Suit to Body, Hands, Legs, and Feet. Change needed due
+  to recent patch.
+
+- Changed Midcast on THF to see if target is a monster and TH enabled, it will now equip
+  TH gear.
