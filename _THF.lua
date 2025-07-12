@@ -88,7 +88,7 @@ local sets = {
 		Back  = { 'Forager\'s Mantle', 'Amemet Mantle', 'Raptor Mantle' },
 		Waist = { 'Warwolf Belt', 'Swift Belt', 'Mrc.Cpt. Belt' },
 		Legs  = { 'Homam Cosciales', 'Rogue\'s Culottes', 'Wonder Braccae' },
-		Feet  = { 'Assassin\'s Pouln.', 'Creek F Clomps', 'Wonder Clomps', 'Bounding Boots' },
+		Feet  = { 'Homam Gambieras', 'Assassin\'s Pouln.', 'Creek F Clomps', 'Wonder Clomps', 'Bounding Boots' },
 	},
 	
 	['Tank_Default'] = {
@@ -152,7 +152,7 @@ local sets = {
 	['Accuracy'] = {
 		Head  = { 'Optical Hat', 'Homam Zucchetto', 'Empress Hairpin' },		-- +10/4 Acc, +3 DEX
 		Neck  = { 'Peacock Amulet//NOT_TH', 'Spike Necklace//NOT_TH' },			-- +10 Acc, +3 DEX
-		Body  = { 'Scorpion Harness', 'Narasimha\'s Vest', 'Brigandine' },		-- +10/4 Acc, +2 DEX
+		Body  = { 'Homam Corazza', 'Scorpion Harness', 'Narasimha\'s Vest', 'Brigandine' },											-- +15/10/4 Acc, +2 DEX
 		Rings = { 'Toreador\'s Ring', 'Toreador\'s Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2' },	-- +7/+7/+5/+5/4/2 Acc
 		Hands = { 'Homam Manopolas', 'Battle Gloves' },							-- +4/3 Acc
 		Waist = { 'Life Belt', 'Tilt Belt', 'Swift Belt', 'Mrc.Cpt. Belt' },	-- +10/5/3 Acc, +1 DEX
@@ -1679,7 +1679,7 @@ local sets = {
 		Body  = { 'Dragon Harness', 'Brigandine' },								-- +6/2 DEX
 		Hands = 'Rogue\'s Armlets',												-- +3 DEX
 		Rings = 'Kshama Ring No.2',												-- +3 DEX
-		Back  = 'Assassin\'s Cape',												-- +4 DEX
+		Back  = { 'Forager\'s Mantle', 'Assassin\'s Cape' },					-- +3 STR/+15 Att, +4 DEX (The forager's mantle seems to do more damage. Need to test this)
 		Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },							-- +5/1 DEX
 		--Legs  = 'Dragon Subligar',
 		Feet  = { 'Rogue\'s Poulaines', 'Bounding Boots' },						-- +3/3 DEX
@@ -1694,7 +1694,7 @@ local sets = {
 		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },					-- +4 AGI if sj is NIN, +3 AGI
 		Body  = { 'Dragon Harness', 'Assassin\'s Vest' },						-- +6/4 AGI
 		Rings = 'Kshama Ring No.3',												-- +3 AGI
-		Back  = { 'Forager\'s Mantle', 'Assassin\'s Cape' },
+		Back  = { 'Assassin\'s Cape', 'Forager\'s Mantle' },					-- +4 AGI, +3 STR/+15 Att (While the forager's cape probably would do more damage, the enmity of the assassin's cape is too useful)
 		Waist = 'Mrc.Cpt. Belt',												-- +1 AGI
 		Feet  = 'Bounding Boots',												-- +3 AGI
 	},
@@ -1706,7 +1706,7 @@ local sets = {
 		Body  = { 'Dragon Harness', 'Assassin\'s Vest', 'Brigandine' },			-- +6 DEX/+6 AGI, +4 AGI, +2 DEX
 		Hands = 'Rogue\'s Armlets',												-- +3 DEX
 		Rings = { 'Kshama Ring No.3', 'Kshama Ring No.2' },						-- +3 AGI/+3 DEX
-		Back  = { 'Forager\'s Mantle', 'Assassin\'s Cape' },
+		Back  = { 'Assassin\'s Cape', 'Forager\'s Mantle' },					-- +4 AGI/+4 DEX, +3 STR/+15 Att (While the forager's cape probably would do more damage, the enmity of the assassin's cape is too useful)
 		Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },							-- +5 DEX. +1 DEX/+1 AGI
 		Feet  = 'Bounding Boots',												-- +3 DEX/+3 AGI
 	},
@@ -2213,6 +2213,14 @@ function profile.HandleAbility()
 		gcinclude.MoveToCurrent(sets.PerfectDodge,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Steal') then
 		gcinclude.MoveToCurrent(sets.Steal,sets.CurrentGear);
+		if gcdisplay.GetToggle('SS') == true then			-- flag to show the steal
+			local targetIndex = gData.GetTargetIndex();
+			if targetIndex ~= nil then
+				local targetEntity = gData.GetEntity(targetIndex);
+				local sMsg = '/s Stealing > ' .. targetEntity.Name .. ' [' .. gcinclude.fTargetId(targetIndex) .. ']';
+				AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
+			end
+		end
 	elseif string.match(ability.Name,'Sneak Attack') then
 		gcinclude.MoveToCurrent(sets.SneakAttack,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Flee') then
@@ -2228,7 +2236,7 @@ function profile.HandleAbility()
 	elseif string.match(ability.Name,'Accomplice') then
 		gcinclude.MoveToCurrent(sets.Accomplice,sets.CurrentGear);
 	elseif string.match(ability.Name,'Collaborator') then
-		gcinclude.MoveToCurrent(sets.Collaborator,sets.CurrentGear);		
+		gcinclude.MoveToCurrent(sets.Collaborator,sets.CurrentGear);
 		
 	-- And now the subjob abilities
 	-- /BST
@@ -2377,6 +2385,8 @@ end		-- HandlePrecast
 --]]
 
 function profile.HandleMidcast()
+	local ti = gData.GetTargetIndex();
+	local target = gData.GetEntity(ti);
 
 	if gcdisplay.GetToggle('GSwap') == false then		-- Only gear swap if this flag is true	
 		return;
@@ -2387,6 +2397,12 @@ function profile.HandleMidcast()
 	
 	-- Call the common HandleMidcast now
 	gcinclude.HandleMidcast();
+
+	-- Add TH gear if the target is a monster and TH enabled
+	if target ~= nil and target.Type == 'Monster' and gcdisplay.GetToggle('TH') == true then
+		gcinclude.MoveToCurrent(sets.TH,sets.CurrentGear);
+	end
+
 	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandleMidcast
 

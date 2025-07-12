@@ -4,7 +4,7 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the BLM job.
 	
-	Gear Sets last updated: March 26, 2025
+	Gear Sets last updated: June 29, 2025
 	Code update: April 23, 2025
 --]]
 
@@ -59,8 +59,8 @@ local sets = {
         Ears  = { 'Energy Earring +1', 'Energy Earring +1' },	
         Body  = { 'Ducal Aketon//TOWN-AK', 'Seer\'s Tunic', 'Angler\'s Tunica' },		
         Hands = 'Baron\'s Cuffs',
-        Rings = { 'Tamas Ring', 'Astral Ring', 'Astral Ring' },
-        Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },
+        Rings = { 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
+        Waist = 'Friar\'s Rope'
 	},
 	
 --[[
@@ -86,8 +86,9 @@ local sets = {
 --]]
 	
 	['Accuracy'] = {
-        Waist = 'Tilt Belt',
-		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring' },
+		Neck  = 'Peacock Charm',										-- +10 Acc
+        Waist = 'Tilt Belt',											--  +5 Acc
+		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring' }		--  +5/5/4 Acc
     },
 
 --[[
@@ -95,6 +96,8 @@ local sets = {
 --]]
 
 	['Ranged_Accuracy'] = {
+		Neck  = 'Peacock Charm',										-- +10 RAcc
+		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring' }		-- +5/5/4 RAcc
 	},
 
 --[[
@@ -127,8 +130,11 @@ local sets = {
 --]]
 	
 	['Evasion'] = {
-        Head = 'Empress Hairpin',
-		Waist = 'Mrc.Cpt. Belt',
+		Ammo  = 'Orphic Egg//PJPBRD',							--  +1 Eva
+        Head  = 'Empress Hairpin',								-- +10 Eva
+		Neck  = 'Spirit Torque',								--  +5 Eva
+		Ears  = { 'Bat Earring//BLINDED', 'Genin Earring//SJNIN', 'Drone Earring' },	-- +15 Eva while blinded, +4/3 AGI
+		Waist = 'Mrc.Cpt. Belt'									-- +1 AGI
     },
 
 --[[
@@ -144,7 +150,7 @@ local sets = {
 	},
 	
 	['Damage_Taken_Magical'] = {
-		Ears = 'Coral Earring',		-- -1% damage reduction from magic
+		Ears = 'Coral Earring'		-- -1% damage reduction from magic
 	},
 	
 --[[
@@ -164,9 +170,9 @@ local sets = {
 			[1] = { 
 				'Damage_Taken_Breath//DT_BREATH',
 				'Damage_Taken_Magical//DT_MAGICAL',
-				'Damage_Taken_Physical//DT_PHYSICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL'
 			}
-		}	
+		}
 	},
 	
 	['Resting_Refresh'] = {
@@ -174,11 +180,12 @@ local sets = {
 			[1] = { 
 				'Damage_Taken_Breath//DT_BREATH',
 				'Damage_Taken_Magical//DT_MAGICAL',
-				'Damage_Taken_Physical//DT_PHYSICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL'
 			}
 		},	
-		Main  = { 'Dark Staff', 'Pilgrim\'s Wand' },
-        Body = 'Seer\'s Tunic',
+		Main  = 'Pilgrim\'s Wand',			-- +2 MP/Tick while resting
+        Body  = 'Seer\'s Tunic',				-- +1 MP/Tick while resting
+        Legs  = 'Baron\'s Slops'			-- +1 MP/Tick while resting
     },
 	
 --[[
@@ -188,7 +195,7 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-		Main = 'Solid Wand',
+		Main = { 'Solid Wand', 'Pilgrim\'s Wand' },
 		Ammo = 'Fortune Egg',
     },
 		
@@ -207,8 +214,6 @@ local sets = {
 --]]
 
 	['Midshot'] = {
-		Neck  = 'Peacock Amulet',
-		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring' },	
     },
 
 --[[
@@ -222,15 +227,29 @@ local sets = {
 --]]
 
 	['INT'] = {
+		Body  = 'Black Cotehardie',										-- +1 INT
+		Rings = 'Tamas Ring',											-- +5 INT
+		Waist = 'Mrc.Cpt. Belt',										-- +1 INT
+		Feet  = 'Mannequin Pumps'										-- +1 INT
 	},
 	
 	['MND'] = {
+		Neck  = 'Justice Badge',											-- +3 MND
+		Ears  = 'Geist Earring',											-- +1 MND
+		Body  = { 'Wonder Kaftan', 'Baron\'s Saio' },						-- +1/1 MND
+		Hands = 'Baron\'s Cuffs',											-- +1 MND
+		Rings = 'Tamas Ring', 												-- +5 MND
+		Back  = 'White Cape',												-- +2 MND
+		Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },						-- +1/1 MND
+		Legs  = 'Wonder Braccae',											-- +2 MND
+		Feet  = 'Duelist\'s Boots'						 					-- +2 MND
 	},
 
 	['Enmity_Plus'] = {
 	},
 	
 	['Enmity_Minus'] = {
+		Rings = 'Tamas Ring'		-- -5 Enmity
 	},
 	
 --[[
@@ -266,8 +285,7 @@ local sets = {
 				   'CHR//SINGING',		-- Charisma provides accuracy w/singing
 				   },
 			},
-		Rings  = 'Tamas Ring',			-- +5 MAcc
-		Feet   = 'Nashira Crackows',	-- +2 MAcc		
+		Rings  = 'Tamas Ring'			-- +5 MAcc
 	},
 	
 --[[
@@ -343,6 +361,11 @@ local sets = {
 --]]	
 	
 	['CuringMagic'] = {
+		Subset = {
+			[1] = 'Healing_Magic_Skill',
+			[2] = 'Enmity_Minus',
+			[3] = 'MND'
+		}
 	},	
 	
 --[[
@@ -358,6 +381,9 @@ local sets = {
 --]]
 
 	['OffensiveCuring'] = {
+		Subset = {
+			[1] = 'CuringMagic'
+		}
 	},
 
 --[[
@@ -367,6 +393,9 @@ local sets = {
 --]]
 
 	['HealingMagic'] = {
+		Subset = {
+			[1] = 'Healing_Magic_Skill'
+		}
 	},
 
 --[[
@@ -415,6 +444,9 @@ local sets = {
 --]]
 
 	['Barspell'] = {
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill'
+		}
 	},
 
 --[[
@@ -435,6 +467,9 @@ local sets = {
 --]]
 
 	['Enspell'] = {
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill'
+		}
 	},
 	
 --[[
@@ -453,6 +488,10 @@ local sets = {
 --]]
 	
 	['Spike'] = {
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill',
+			[2] = 'INT'
+		}
 	},
 	
 --[[
@@ -478,6 +517,10 @@ local sets = {
 --]]
 
 	['Stoneskin'] = {
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill',
+			[2] = 'MND'
+		}
 	},	
 
 --[[
@@ -486,6 +529,9 @@ local sets = {
 --]]
 
 	['Sneak'] = {
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill'
+		},
 		Feet = 'Dream Boots +1',
 	},
 
@@ -495,6 +541,9 @@ local sets = {
 --]]	
 
 	['Invisible'] = {
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill'
+		},
 		Hands = 'Dream Mittens +1',
 	},
 
@@ -512,6 +561,9 @@ local sets = {
 --]]
 	
 	['Phalanx'] = {
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill'
+		}
 	},	
 
 --[[
@@ -524,6 +576,9 @@ local sets = {
 --]]
 
 	['EnhancingMagic'] = {
+		Subset = {
+			[1] = 'Enhancing_Magic_Skill'
+		}
 	},
 
 --[[
@@ -561,8 +616,10 @@ local sets = {
 	reduce your elemental damage by 20% ("nuke wall"), excluding skillchains.	
 --]]
 	['ElementalNuke'] = {
-		Rings = 'Tamas Ring',
-		Feet  = 'Mannequin Pumps',
+		Subset = {
+			[1] = 'Elemental_Magic_Skill',
+			[2] = 'INT'
+		}
 	},	
 
 --[[
@@ -590,6 +647,10 @@ local sets = {
 --]]
 
 	['ElementalDebuff'] = {
+		Subset = {
+			[1] = 'Elemental_Magic_Skill',
+			[2] = 'INT'
+		}
 	},
 
 --[[
@@ -613,6 +674,9 @@ local sets = {
 --]]
 
 	['Summoning'] = {
+		Subset = {
+			[1] = 'Summoning_Skill'
+		}
 	},
 
 --[[
@@ -651,6 +715,10 @@ local sets = {
 --]]
 	
 	['Absorb'] = {
+		Subset = {
+			[1] = 'Enmity_Minus',
+			[2] = 'Dark_Magic_Skill'
+		}
 	},
 
 --[[
@@ -668,6 +736,10 @@ local sets = {
 --]]
 
 	['Drain'] = {
+		Subset = {
+			[1] = 'Enmity_Minus',
+			[2] = 'Dark_Magic_Skill'
+		}
 	},
 
 --[[
@@ -686,6 +758,10 @@ local sets = {
 --]]
 
 	['Aspir'] = {
+		Subset = {
+			[1] = 'Enmity_Minus',
+			[2] = 'Dark_Magic_Skill'
+		}
 	},
 
 --[[
@@ -694,6 +770,10 @@ local sets = {
 --]]
 	
 	['DarkMagic'] = {
+		Subset = {
+			[1] = 'Enmity_Minus',
+			[2] = 'Dark_Magic_Skill'
+		}
 	},
 	
 --[[
@@ -737,6 +817,10 @@ local sets = {
 --]]
 
 	['OffensiveDivine'] = {
+		Subset = {
+			[1] = 'Enmity_Minus',
+			[2] = 'Divine_Magic_Skill'
+		}
 	},
 
 --[[
@@ -748,6 +832,10 @@ local sets = {
 --]]	
 	
 	['EnfeebleDivine'] = {
+		Subset = {
+			[1] = 'Enmity_Minus',
+			[2] = 'Divine_Magic_Skill'
+		}
 	},
 
 --[[
@@ -762,6 +850,10 @@ local sets = {
 --]]
 		
 	['EnhanceDivine'] = {
+		Subset = {
+			[1] = 'Enmity_Minus',
+			[2] = 'Divine_Magic_Skill'
+		}
 	},
 
 --[[
@@ -793,15 +885,23 @@ local sets = {
 --]]
 	
 	['EnfeeblingINT'] = {
+		Subset = {
+			[1] = 'Enfeebling_Magic_Skill',
+			[2] = 'INT'
+		}
 	},
 
 	['EnfeeblingMND'] = {
-	    Neck  = { 'Promise Badge', 'Justice Badge' },
-        Rings = 'Tamas Ring',
-        Waist = 'Friar\'s Rope',
+		Subset = {
+			[1] = 'Enfeebling_Magic_Skill',
+			[2] = 'MND'
+		}
 	},
 
 	['EnfeeblingMagic'] = {
+		Subset = {
+			[1] = 'Enfeebling_Magic_Skill',
+		}
 	},
 	
 --[[
@@ -809,6 +909,9 @@ local sets = {
 	* Midcast: Singing *
 	********************
 --]]
+
+	['Singing_Skill'] = {	-- Covers both Singing Skill and Intrument Skill
+	},
 
 --[[
 	Singing: is a general category only available to BRD (/BRD can do songs,
@@ -825,6 +928,9 @@ local sets = {
 --]]
 
 	['CHR'] = {		-- Charisma provides accuracy w/singing
+		Head  = 'Entrancing Ribbon',		-- +2 CHR
+		Neck  = 'Flower Necklace',			-- +3 CHR
+		Waist = 'Mrc.Cpt. Belt',			-- +1 CHR
 	},
 	
 --[[
@@ -835,6 +941,10 @@ local sets = {
 --]]
 
 	['EnhancementSinging'] = {
+		Subset = {
+			[1] = 'Singing_Skill',
+			[2] = 'CHR'
+		}
 	},
 
 --[[
@@ -843,6 +953,10 @@ local sets = {
 --]]
 	
 	['EnfeeblingSinging'] = {
+		Subset = {
+			[1] = 'Singing_Skill',
+			[2] = 'CHR'
+		}
 	},
 
 --[[
@@ -866,11 +980,17 @@ local sets = {
 --]]
 
 	['NinjutsuBuff'] = {
+		Subset = {
+			[1] = 'Ninjutsu_Skill'
+		}
 	},
 
 -- An elemental stave will be checked for after the debuff set is loaded.
 		
 	['NinjutsuDebuff'] = {
+		Subset = {
+			[1] = 'Ninjutsu_Skill'
+		}
 	},
 
 --[[
@@ -883,6 +1003,9 @@ local sets = {
 --]]
 	
 	['NinjutsuElemental'] = {
+		Subset = {
+			[1] = 'Ninjutsu_Skill'
+		}
 	},
 
 --[[

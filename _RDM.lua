@@ -4,7 +4,7 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the RDM job.
 	
-	Gear Sets last updated: June 29, 2025
+	Gear Sets last updated: July 8, 2025
 	Code update: April 23, 2025
 	
 	Role: End game
@@ -83,7 +83,7 @@ local sets = {
 		Back   = { 'Forager\'s Mantle', 'Psilos Mantle', 'Amemet Mantle', 'White Cape' },
 		Waist  = { 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
 		Legs   = { 'Duelist\'s Tights', 'Warlock\'s Tights', 'Wonder Braccae' },
-		Feet   = { 'Duelist\'s Boots', 'Warlock\'s Boots', 'Mannequin Pumps', 'Bounding boots' }
+		Feet   = { 'Duelist\'s Boots', 'Wlk. Boots +1', 'Mannequin Pumps', 'Bounding boots' }
 	},
 	
 	['Tank_Default'] = {
@@ -96,7 +96,7 @@ local sets = {
 		Hands = 'Wlk. Gloves +1',
 		Rings = { 'Bomb Queen Ring', 'Toreador\'s Ring' },
 		Waist = { 'Warwolf Belt', 'Life Belt', 'Hierarch Belt' },
-		Feet  = { 'Creek F Clomps','Warlock\'s Boots' }
+		Feet  = { 'Creek F Clomps','Wlk. Boots +1' }
 	},
 	
 --[[
@@ -284,7 +284,7 @@ local sets = {
 		},
 		Main = { 'Pluto\'s Staff//WSWAP', 'Pilgrim\'s wand//WSWAP' },	-- +10/2 MP/tick while resting
 		Head = 'Duelist\'s Chapeau',									-- Refresh
-		Body = { 'Wlk. Tabard +1', 'Errant Hpl.', 'Vermillion Cloak//MPP.LT.100' },	-- +5/5 MP/tick while resting, Refresh
+		Body = { 'Wlk. Tabard +1', 'Errant Hpl.', 'Vermillion Cloak' },	-- +5/5 MP/tick while resting, Refresh
 		Waist = 'Hierarch Belt',										-- +2 MP/tick while resting
 		Legs = 'Baron\'s Slops'											-- +1 MP/Tick while resting
     },
@@ -355,7 +355,7 @@ local sets = {
 		Rings = { 'Tamas Ring', 'Kshama Ring No.5', 'Flame Ring' },		-- +5/3/2 INT
 		Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },				-- +5/1 INT
 		Legs  = 'Errant Slops',											-- +7 INT
-		Feet  = { 'Warlock\'s Boots', 'Mannequin Pumps' }				-- +1/1 INT
+		Feet  = { 'Wlk. Boots +1', 'Mannequin Pumps' }					-- +3/1 INT
 	},
 	
 	['Tank_INT'] = {
@@ -374,7 +374,7 @@ local sets = {
 		Back  = 'White Cape',												-- +2 MND
 		Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt', 'Friar\'s Rope' },	-- +5/1/1 MND
 		Legs  = { 'Errant Slops', 'Warlock\'s Tights', 'Wonder Braccae' },	-- +7/3/2 MND
-		Feet  = { 'Duelist\'s Boots', 'Mannequin Pumps' } 					-- +4/2 MND
+		Feet  = { 'Duelist\'s Boots', 'Wlk. Boots +1', 'Mannequin Pumps' } 	-- +4/3/2 MND
 	},
 	
 	['Tank_MND'] = {
@@ -1509,7 +1509,7 @@ local sets = {
 		Back   = { 'Forager\'s Mantle', 'Amemet Mantle//EMPTY' },			-- +3/1 STR
 		Waist  = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },						-- +5 STR, +1 STR/+1 AGI
 		Legs   = 'Wonder Braccae',											-- +1 STR
-		Feet   = { 'Creek F Clomps', 'Bounding Boots', 'Wonder Clomps' }	-- +4 STR, +3 AGI, +2 STR
+		Feet   = { 'Creek F Clomps', 'Wlk. Boots +1', 'Bounding Boots' }	-- +4 STR, +3/3 AGI
     },
 
 --[[
@@ -1551,7 +1551,7 @@ local sets = {
 		Back   = { 'Forager\'s Mantle', 'Amemet Mantle' },					-- +3/1 STR
 		Waist  = { 'Warwolf Belt', 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },	-- +5 STR, +5 INT, +1 STR/+1 INT
 		Legs   = { 'Errant Slops', 'Wonder Braccae' },						-- +7 INT, +1 STR
-		Feet   = { 'Creek F Clomps', 'Wonder Clomps', 'Warlock\'s Boots', 'Mannequin Pumps' },	-- +4/2 STR, +1/1 INT
+		Feet   = { 'Creek F Clomps', 'Wlk. Boots +1', 'Wonder Clomps', 'Mannequin Pumps' },	-- +4 STR, +3 INT, +2 STR, +1 INT
 	},
 
 --[[
@@ -1574,7 +1574,7 @@ local sets = {
 		Back   = { 'Forager\'s Mantle', 'White Cape', 'Amemet Mantle//EMPTY' },	-- +3 STR, +2 MND, +1 STR
 		Waist  = { 'Warwolf Belt', 'Penitent\'s Rope', 'Mrc.Cpt. Belt', 'Friar\'s Rope' },	-- +5 STR, +5 MND, +1 STR/+1 MND, +1 MND
 		Legs   = { 'Errant Slops', 'Warlock\'s Tights', 'Wonder Braccae' },		-- +7/3 MND, +2 MND/+1 STR
-		Feet   = { 'Duelist\'s Boots', 'Creek F Clomps', 'Wonder Clomps' }		-- +4 MND, +4/2 STR
+		Feet   = { 'Duelist\'s Boots', 'Creek F Clomps', 'Wlk. Boots +1', 'Wonder Clomps' }		-- +4 MND, +4 STR, +3 MND, +2 STR
     },
 	
 --[[
@@ -1648,7 +1648,7 @@ local sets = {
 		Rings  = { 'Tamas Ring', 'Kshama Ring No.5', 'Kshama Ring No.2' },	-- +5/3 INT, +3 DEX
 		Waist  = { 'Warwolf Belt', 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },	-- +5 DEXm +5 INT, +1 DEX/+1 INT
 		Legs   = 'Errant Slops',	-- +7 INT
-		Feet   = 'Bounding Boots'	-- +3 DEX
+		Feet   = { 'WLK. Boots +1', 'Bounding Boots' }	-- +3 INT, +3 DEX
     },
 	
 --[[

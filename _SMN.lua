@@ -410,6 +410,7 @@ local sets = {
 		Rings = 'Tamas Ring',					-- -5 Enmity
 		Waist = 'Penitent\'s Rope',				-- -3 Enmity
 		Legs  = { 'Evk. Spats +1', 'Errant Slops' },	-- -3/-3 Enmity
+		Feet  = 'Evoker\'s Boots'					-- -2 Enmity
 		-- Feet  = 'Evk. Pigaches +1',			-- -4 Pet Enmity, not sure I want this
 	},
 	
@@ -849,6 +850,7 @@ local sets = {
 			[1] = 'Summoning_Skill'
 		},
 		Hands = 'Carbuncle\'s Cuffs',				-- Summoning magic casting time -1
+		Feet  = 'Evoker\'s Boots'					-- Summoning magic casting time -1
 	},
 
 --[[

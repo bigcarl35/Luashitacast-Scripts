@@ -54,12 +54,15 @@ local sets = {
 --]]
 
 	['Default'] = {
-		Head  = { 'Lilac Corsage//TOWN', 'Mandra. Masque' },
-		Neck  = 'Justice Badge',
-		Ears  = {'Physical Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
-		Body  = { 'Ducal Aketon//TOWN-AK', 'Angler\'s Tunica' },
+		Head  = { 'Lilac Corsage//TOWN', 'Goblin Masque', 'Mandra. Masque' },
+		Neck  = { 'Spike Necklace', 'Justice Badge' },
+		Ears  = { 'Physical Earring', 'Physical Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
+		Body  = { 'Ducal Aketon//TOWN-AK', 'Baron\'s Saio', 'Angler\'s Tunica' },
+		Hands = 'Baron\'s Cuffs',
+		Rings = {'Courage Ring', 'Courage Ring'},
+		Back  = 'Dhalmel Mantle',
 		Waist = 'Friar\'s Rope',
-		Legs  = 'Field Hose',
+		Legs  = { 'Baron\'s Slops', 'Field Hose' },
 		Feet  = 'Bounding Boots',
 	},
 	
@@ -186,7 +189,7 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-		Ammo = 'Acid Bolt',		
+		Range = 'Power Bow +1'
     },
 	
 --[[

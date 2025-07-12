@@ -59,16 +59,16 @@ local sets = {
 --]]
 
 	['Default'] = {
-		Head  = { 'Lilac Corsage//TOWN', 'Empress Hairpin', 'Entrancing Ribbon' },
+		Head  = { 'Lilac Corsage//TOWN', 'Mrc.Cpt. Headgear', 'Empress Hairpin', 'Entrancing Ribbon' },
 		Neck  = { 'Spike Necklace', 'Justice Badge' },
 		Ears  = { 'Physical Earring', 'Physical Earring' },
-		Body  = { 'Ducal Aketon//TOWN-AK', 'Beetle Harness', 'Angler\'s Tunica' },
-		Hands = 'Battle Gloves',
-		Rings = { 'Sardonyx Ring','Sardonyx Ring' },
+		Body  = { 'Ducal Aketon//TOWN-AK', 'Wonder Kaftan', 'Mrc.Cpt. Doublet', 'Beetle Harness', 'Angler\'s Tunica' },
+		Hands = { 'Wonder Mitts', 'Battle Gloves' },
+		Rings = { 'Courage Ring','Courage Ring' },
 		Waist = { 'Purple Belt', 'Friar\'s Rope' },
-		Back  = 'Dhalmel Mantle',
-		Legs  = { 'Beetle Subligar', 'Field Hose' },
-		Feet  = { 'Cotton Kyahan', 'Waders' }
+		Back  = { 'Wolf Mantle', 'Dhalmel Mantle' },
+		Legs  = { 'Wonder Braccae', 'Mrc.Cpt. Hose', 'Beetle Subligar', 'Field Hose' },
+		Feet  = { 'Wonder Clomps', 'Cotton Kyahan', 'Waders' }
 	},
 	
 --[[
@@ -95,7 +95,9 @@ local sets = {
 	
 	['Accuracy'] = {
 		Head = 'Empress Hairpin',
-		Neck = 'Spike Necklace',
+		Neck = { 'Peacock Amulet', 'Spike Necklace' },
+		Hands = 'Battle Gloves',
+		Rings = 'Jaeger Ring'
     },
 
 --[[
@@ -138,6 +140,7 @@ local sets = {
 	
 	['Evasion'] = {
 		Head = 'Empress Hairpin',
+		Legs = 'Mrc.Cpt. Hose'
     },
 
 --[[
@@ -1237,6 +1240,7 @@ local sets = {
 -- the weapons if you want to conditionally equip an item with a weapon skill
 -- attribute.
 profile.WeaponType = {
+	['CLAWS'] = {'Claws +1', 'Bas. Knuckles'},
 };
 
 profile.Sets = sets;

@@ -71,7 +71,7 @@ local sets = {
 		Ears = { 'Physical Earring', 'Genin Earring//SJNIN', 'Physical Earring' },		
 		Body = { 'Ducal Aketon//TOWN-AK', 'Ctr. Scale Mail', 'Beetle Harness', 'Angler\'s Tunica' },
 		Hands = 'Ctr. F. Gauntlets',
-		Rings = { 'Sardonyx Ring', 'Sardonyx Ring' },
+		Rings = { 'Courage Ring', 'Courage Ring' },
 		Back = 'Wolf Mantle',
 		Legs = 'Ctr. Cuisses',
 		Feet = 'Bounding Boots',
@@ -118,7 +118,7 @@ local sets = {
 	['Accuracy'] = {
 		Head  = 'Empress Hairpin',
 		Neck  = { 'Peacock Amulet', 'Spike Necklace' },
-		Rings = 'Kshama Ring No.2',
+		Rings = { 'Kshama Ring No.2', 'Jaeger Ring' },
 		Feet  = 'Bounding Boots',
     },
 
