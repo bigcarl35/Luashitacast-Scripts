@@ -306,3 +306,10 @@ Weather:
     //NOT_WTH:WATER     Equip if the weather is not water
     //NOT_WTH:WIND      Equip if the weather is not wind
     //NOT_WTH-DAY	    Equip if the weather does not match the day's element
+
+Keywords:
+    conditionals - .EQ.,.GT.,.GE.,.LT.,.LE.,.NE.
+    jobs - WAR,MNK,WHM,BLM,RDM,THF,PLD,DRK,BST,BRD,RNG,SAM,NIN,DRG,SMN,
+        Currently out of era: BLU,COR,PUP,DNC,SCH,GEO,RUN
+    weapon types - ARCHERY,AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,MARKSMANSHIP,
+	POLEARM,SCYTHE,STAVE,SWORD,THROWING
