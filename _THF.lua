@@ -313,8 +313,7 @@ local sets = {
 	['Start_Weapons'] = {
 		Main  = 'Heart Snatcher',
 		Sub   = { 'X\'s Knife//SJNIN', 'Tatami Shield' },
-		Range = 'Thug\'s Zamburak',
-		Ammo  = 'Acid Bolt',
+		Range = 'Cmb.Cast. B\'merang',
     },
 	
 --[[
@@ -1913,6 +1912,7 @@ profile.WeaponType = {
 				  'Thunder Staff', 'Jupiter\'s Staff', 'Water Staff', 'Neptune\'s Staff',
 				  'Light Staff', 'Apollo\'s Staff', 'Dark Staff', 'Pluto\'s Staff' },
 	['MARKSMANSHIP'] = { 'Thug\'s Zamburak' },
+	['THROWING'] = 'Cmb.Cst. B\'merang',
 };
 
 profile.Sets = sets;
