@@ -32,7 +32,7 @@ gcinclude.sets = {
 
 	['Gathering'] = {
 		Range = 'Lu Shang\'s F. Rod//GA:FISH',
-		Ammo  = 'Fly Lure//GA:FISH',
+		Ammo  = 'Sinking Minnow//GA:FISH',
 		Body  = { 'Field Tunica//GA:HELM', 'Choc. Jack Coat//GA:DIG', 'Tarutaru Top +1//GA:CLAM', 'Angler\'s Tunica//GA:FISH' },
 		Hands = { 'Field Gloves//GA:HELM', 'Fsh. Gloves//GA:FISH' },
 		Legs  = { 'Field Hose//GA:HELM', 'Taru. Shorts +1//GA:CLAM', 'Fisherman\'s Hose//GA:FISH' },
@@ -2718,7 +2718,7 @@ function CheckInlineCodes(sSlot,sLine,sGS)
 		'PARTY4','PARTY5','PARTY6','SJBLM','SJBRD','SJBST','SJDRG','SJDRK','SJMNK','SJNIN','SJPLD','SJRDM','SJRNG','SJSAM','SJSMN','SJTHF','SJWAR','SJWHM',
 		'SJBLU','SJCOR','SJPUP','SJDNC','SJSCH','PJPBLM','PJPBRD','PJPBST','PJPDRG','PJPDRK','PJPMNK','PJPNIN','PJPPLD','PJPRDM','PJPRNG','PJPSAM','PJPSMN',
 		'PJPTHF','PJPWAR','PJPWHM','PJPBLU','PJPCOR','PJPPUP','PJPNMBLM','PJPNMBRD','PJPNMBST','PJPNMDRG','PJPNMDRK','PJPNMMNK','PJPNMNIN','PJPNMPLD','PJPNMRDM',
-		'PJPNMRNG','PJPNMSAM','PJPNMSMN','PJPNMTHF','PJPNMWAR','PJPNMWHM','PJPNMBLU','PJPNMCOR','PJPNMCOR','PJPNMDNC','PJPNMSCH','AMORPH','AQUAN','NOT_ME',
+		'PJPNMRNG','PJPNMSAM','PJPNMSMN','PJPNMTHF','PJPNMWAR','PJPNMWHM','PJPNMBLU','PJPNMCOR','PJPNMCOR','PJPNMDNC','PJPNMSCH','AMORPH','AQUAN','ME','NOT_ME',
 		'DAYTIME','DUSK2DAWN','NIGHTTIME','DB:BPP','DB:WSS','EVASION','HORN','IDLE','NOT_TANK','NOT_TH','NOT_WSWAP','STRING','TANK','TH','WSWAP','ARCHERY',
 		'AXE','CLUB','DAGGER','GAXE','GKATANA','GSWORD','H2H','KATANA','MARKSMANSHIP','POLEARM','SCYTHE','STAVE','SWORD','THROWING','WTH:CLEAR','WTH:CLOUDS',
 		'WTH:DARK','WTH:EARTH','WTH:FIRE','WTH:FOG','WTH:ICE','WTH:LIGHT','WTH:SUNSHINE','WTH:THUNDER','WTH:WATER','WTH:WIND','WTH-DAY','NOT_WTH:CLEAR',
@@ -2906,7 +2906,11 @@ function GearCheck(sList,bForce)
 		-- Now start with storage slips
 		print(chat.header('GearCheck'):append(chat.message('Starting to scan for storage slips')));
 		FindSlips();
-		print(chat.message('Found slips: ' .. fDisplaySlips(false)));
+		local s = fDisplaySlips(false);
+		if s == nil then
+			s = 'None';
+		end
+		print(chat.message('Found slips: ' .. s));
 
 		-- then claim slips
 		print(chat.header('GearCheck'):append(chat.message('Starting to scan for claim slips')));
@@ -4192,6 +4196,11 @@ function fCheckInline(gear,sSlot,ts)
 			else
 				bGood = false;
 			end	
+		elseif suCode == 'ME' then
+			-- Equip if target is the player
+			local me = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0);
+			local tg = gData.GetTargetIndex();
+			bGood = (tg == me);
 		elseif suCode == 'MSJ' then
 			-- Equip if the player's sub job is a magic using job
 			bGood = (string.find(gcinclude._sMagicJobs,sj) ~= nil);
@@ -4209,7 +4218,7 @@ function fCheckInline(gear,sSlot,ts)
 			bgood = not gcinclude.fSummonerPet();
 		elseif suCode == 'NOT_ME' then
 			-- Equip if target is not the player
-			local me = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0); --t:GetMemberIndex(0);
+			local me = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0);
 			local tg = gData.GetTargetIndex();
 			bGood = (tg ~= me);
 		elseif suCode == 'NOT_OWN' then
@@ -4399,14 +4408,32 @@ function fCheckInline(gear,sSlot,ts)
 						 table.find(gcinclude.Bastok,environ.Area) ~= nil or 
 						 table.find(gcinclude.Jeuno,environ.Area) ~= nil));
 			elseif slcGear == 'federation aketon' then
-				-- Equip the Windurstian national aketon if in Windy
-				bGood = (environ.Area ~= nil and table.find(gcinclude.Windy,environ.Area) and pNation == 2);
+				if environ.Area ~= nil then
+					-- Equip the Bastokian national aketon if in Windy
+					if table.find(gcinclude.Windy,environ.Area) == nil then
+						bGood = false;
+					else
+						bGood = (pNation == 2);
+					end
+				end
 			elseif slcGear == 'republic aketon' then
-				-- Equip the Bastokian national aketon if in Bastok
-				bGood = (environ.Area ~= nil and table.find(gcinclude.Bastok,environ.Area) and pNation == 1);
+				if environ.Area ~= nil then
+					-- Equip the Bastokian national aketon if in Bastok
+					if table.find(gcinclude.Bastok,environ.Area) == nil then
+						bGood = false;
+					else
+						bGood = (pNation == 1);
+					end
+				end
 			elseif slcGear == 'kingdom aketon' then
 				-- Equip the Sandorian national aketon if in San d'Oria
-				bGood = (environ.Area ~= nil and table.find(gcinclude.Sandy,environ.Area) and pNation == 0);
+				if environ.Area ~= nil then
+					if table.find(gcinclude.Sandy,environ.Area) == nil then
+						bGood = false;
+					else
+						bGood = (pNation == 0);
+					end
+				end
 			else
 				bGood = false;
 			end						 
@@ -4825,7 +4852,7 @@ function CheckForExceptions(tSet)
 		
 	if gcinclude.fBuffed('Enchantment') == true then	
 	-- If 'High Brth. Mantle' enchantment going, keep equipped
-		if gear.Back ~= nil then
+		if gear.Back ~= nil and tSet['Back'] ~= nil then
 			if gear.Back.Name == 'High Brth. Mantle' and tSet['Back'] ~= 'High Brth. Mantle' then
 				tSet['Back'] = 'High Brth. Mantle';
 				sList = 'High Breath Mantle';
@@ -4837,14 +4864,14 @@ function CheckForExceptions(tSet)
 		
 		if gear.Ring1 ~= nil then
 			-- Albatross Ring can be on either finger. If enchant going, keep equipped
-			if gear.Ring1.Name == 'Albatross Ring' and tSet['Ring1'] ~= 'Albatross Ring' then
+			if gear.Ring1.Name == 'Albatross Ring' and tSet['Ring1'] ~= nil and tSet['Ring1'] ~= 'Albatross Ring' then
 				tSet['Ring1'] = 'Albatross Ring';
 				if sList == nil then
 					sList = 'Albatross Ring';
 				else
 					sList = sList .. ',' .. 'Albatross Ring';
 				end
-			elseif gear.Ring2.Name == 'Albatross Ring' and tSet['Ring2'] ~= 'Albatross Ring' then
+			elseif gear.Ring2.Name == 'Albatross Ring' and tSet['Ring2'] ~= nil and tSet['Ring2'] ~= 'Albatross Ring' then
 				tSet['Ring2'] = 'Albatross Ring';
 				if sList == nil then
 					sList = 'Albatross Ring';
@@ -4854,7 +4881,7 @@ function CheckForExceptions(tSet)
 			end	
 		end
 		
-		if gear.Main ~= nil then
+		if gear.Main ~= nil  and tSet['Main'] ~= nil then
 			-- 'High Mana Wand' and 'Mana Wand' have to be equipped if enchantment going
 			if gear.Main.Name == 'High Mana Wand' and tSet['Main'] ~= 'High Mana Wand' then
 				tSet['Main'] = 'High Mana Wand';
@@ -5614,7 +5641,7 @@ function EquipItem(args)
 			if ref ~= nil then
 				if ref['valid'] == false then
 					print(chat.header('EquipItem'):append(chat.message('Error: Invalid piece of gear specified - ' .. iName)));
-				elseif ref['accessible'] == false then	
+				elseif ref['accessible'] == false and ref['locations'] ~= nil then
 					print(chat.header('EquipItem'):append(chat.message('Error: Specified gear inaccessible - ' .. iName .. ': ' .. ref['locations'])));
 				elseif ref['job'] == false then
 					print(chat.header('EquipItem'):append(chat.message('Error: Specified gear not usable by your job - ' .. iName)));
