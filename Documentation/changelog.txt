@@ -34,10 +34,18 @@
   Because the three damage taken sets are mutually exclusive, this would have the same result,
   although the processing is less efficient.
 
-- Changed Gate of Tartarus from an Ice to Dark.
+- Changed Gate of Tartarus from an Ice to Dark elemental skill.
 
 - Changed slots affected on Mandragora Suit to Body, Hands, Legs, and Feet. Change needed due
   to recent patch.
 
 - Changed Midcast on THF to see if target is a monster and TH enabled, it will now equip
   TH gear.
+
+- Fixed an error in /gc if the character has no storage slips. It now prints "none".
+
+- Fixed small logic confusion when checking for national aketons, Ducal Aketon was uneffected.
+
+- Fixed error in routine that checked for an enchantment buff.
+
+= Added //ME inline. It checks to see if the target is the player.

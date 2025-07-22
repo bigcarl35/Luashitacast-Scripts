@@ -233,6 +233,7 @@ Player or Party:
 Target:
     //AMORPH		Equip if target is from the amorph family
     //AQUAN			Equip if target is from the aquan family
+    //ME            Equip if the target is me
     //NOT_ME		Equip if the target is not me
 
 Time:
