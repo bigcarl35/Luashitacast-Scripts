@@ -4,7 +4,7 @@ gcinclude = gFunc.LoadFile('common\\gcinclude.lua');
 --[[
 	This file contains all the gear sets associated with the RDM job.
 	
-	Gear Sets last updated: July 8, 2025
+	Gear Sets last updated: July 24, 2025
 	Code update: April 23, 2025
 	
 	Role: End game
