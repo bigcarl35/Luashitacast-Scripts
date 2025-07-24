@@ -526,7 +526,7 @@ local sets = {
 	['CuringMagic'] = {
 		Subset = {
 			[1] = 'Healing_Magic_Skill',
-			[2] = 'Enmity_Minus,'
+			[2] = 'Enmity_Minus',
 			[3] = 'MND'
 		},
 		Main   = 'Light Staff//WSWAP',
