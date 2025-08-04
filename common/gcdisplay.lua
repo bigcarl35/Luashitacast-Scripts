@@ -30,7 +30,7 @@ local JobBar = T{['GSwap']  = {'ALL','MS'},
 				 ['Macc']   = {'BLM,WHM,RDM,SMN,PLD,DRK,BLU,SCH,GEO,RUN','MS'},
 				 ['WSwap']  = {'-SMN,BLM','M'},		-- Some jobs swap weapons all the time
 				 ['SS']     = {'THF','M'},
-				 ['SPF']	= {'ALL','MS'},
+				 ['sPF']	= {'ALL','MS'},
 				 ['TH']     = {'THF','M'},
 				 ['AJug']   = {'BST','M'},
 				 ['DB']     = {'BST','M'},

@@ -1,0 +1,11 @@
+Need to change
+	x MoveToCurrent - 4117,4126
+	x FractionalSet - 4589
+	x DisplayGD_Gs  - 2250
+
+	Any subsets in the job files including in the progressive structure
+	
+Leave alone
+	fCheckInline - 3744,3756,3884
+	MoveToCurrent - 4141
+	fGearCheckItem - 2503

@@ -1,4 +1,4 @@
-local gcinclude = T{};
+local gcinclude = {};
 
 require 'common'
 
@@ -1987,7 +1987,7 @@ function gcinclude.fIsLocked(val)
 	local index = nil;
 	
 	if val == nil then
-		print(chat.header('fIsLocked'):append(chat.message('Error: "val" undefined')));
+		print(chat.header('fIsLocked'):append(chat.message('Error: slot undefined')));
 		return true;	-- This error should never occur. Assume it's locked.
 	else
 		if type(val) == "number" then
@@ -2225,7 +2225,7 @@ function RefreshVariables()
 	gcdisplay.CreateToggle('WSwap', (string.find('WHM,BRD,RDM',player.MainJob) ~= nil));
 
 	-- SPF		-- Show Pull Feedback
-	gcdisplay.CreateToggle('SPF', true);
+	gcdisplay.CreateToggle('sPF', true);
 
 	-- Macc
 	if string.find(gcinclude._sMagicJobs,player.MainJob) ~= nil or
@@ -2278,7 +2278,7 @@ function SetVariables()
 	gcdisplay.CreateToggle('Eva', false);
 	gcdisplay.CreateToggle('Idle', true);
 	gcdisplay.CreateToggle('SS', false);
-	gcdisplay.CreateToggle('SPF', true);
+	gcdisplay.CreateToggle('sPF', true);
 		
 	if string.find('SMN,BLM',player.MainJob) == nil then
 		gcdisplay.CreateToggle('WSwap',(string.find('WHM,RDM',player.MainJob) ~= nil));
@@ -4681,12 +4681,12 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride,bIgnoreWSWAP)
 		return;
 	end
 
+	-- bIgnoreWSWAP let's the invoker ignore the check on swapping in weapons if true
 	if bIgnoreWSWAP == nil then
 		bIgnoreWSWAP = false;
 	end
 	
-	-- bOverride indicates that weapons, if specified, will be
-	-- equipped regardless of the /WSWAP setting
+	-- bOverride let's the invoker ignore any locks currently enabled wherever a slot collides
 	if bOverride == nil then
 		bOverride = false;
 	end
@@ -4880,7 +4880,26 @@ function CheckForExceptions(tSet)
 				end
 			end	
 		end
-		
+
+		if gear.Ring1 ~= nil then
+			-- Pelican Ring can be on either finger. If enchant going, keep equipped
+			if gear.Ring1.Name == 'Pelican Ring' and tSet['Ring1'] ~= nil and tSet['Ring1'] ~= 'Pelican Ring' then
+				tSet['Ring1'] = 'Albatross Ring';
+			if sList == nil then
+				sList = 'Pelican Ring';
+			else
+				sList = sList .. ',' .. 'Pelican Ring';
+			end
+			elseif gear.Ring2.Name == 'Pelican Ring' and tSet['Ring2'] ~= nil and tSet['Ring2'] ~= 'Pelican Ring' then
+				tSet['Ring2'] = 'Pelican Ring';
+				if sList == nil then
+					sList = 'Pelican Ring';
+				else
+					sList = sList .. ',' .. 'Pelican Ring';
+				end
+			end
+		end
+
 		if gear.Main ~= nil  and tSet['Main'] ~= nil then
 			-- 'High Mana Wand' and 'Mana Wand' have to be equipped if enchantment going
 			if gear.Main.Name == 'High Mana Wand' and tSet['Main'] ~= 'High Mana Wand' then
@@ -5949,7 +5968,7 @@ function gcinclude.HandleCommands(args)
 			print(chat.header('HandleCommands'):append(chat.message('Error: /SS is only available to thieves. Ignoring command')));
 		end
 	elseif (args[1] == 'spf') then			-- Turns on/off whether Show Pull feedback should be displayed
-		gcdisplay.AdvanceToggle('SPF');
+		gcdisplay.AdvanceToggle('sPF');
 	elseif (args[1] == 'db') then
 		if player.MainJob == 'BST' then
 			if args[2] ~= nil then
@@ -6071,7 +6090,7 @@ function gcinclude.HandleCommands(args)
 				sTxt = '/ra <t>';
 			end
 			if bSkip == false and sTxt ~= nil then
-				if gcdisplay.GetToggle('SPF') == true then
+				if gcdisplay.GetToggle('sPF') == true then
 					local sMsg = '/p Pulling ' .. targetEntity.Name .. ' [' .. gcinclude.fTargetId(targetIndex) .. ']';
 					AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
 				end
@@ -6612,16 +6631,6 @@ function MidcastDarkMagic()
 			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Aspir,gProfile.Sets.CurrentGear);
 		else
 			gcinclude.MoveToCurrent(gProfile.Sets.Aspir,gProfile.Sets.CurrentGear);
-		end	
-		
-		-- Check for an elemental obi. First determine if a bonus is possible 
-		-- based on day's element and/or weather
-		sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
-		if sGear ~= nil then
-			pDay,pWeather = fCheckObiDW(sEle);
-			if pDay + pWeather > 0 then
-				gProfile.Sets.CurrentGear['Waist'] = sGear;
-			end
 		end	
 		
 		-- Check for an elemental obi. First determine if a bonus is possible 
