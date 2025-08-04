@@ -14,6 +14,9 @@ This repository contains my Luashitacast scripts that I have tailored to work on
 **Please Note: Main** is now back to the current branch. The Karma branch has an older version. Please pull only  
 from the main.  
 
+**Boxcar** is a new experimental branch that will hold the reorganized version of luashitacast V2.0. Refer  
+to "Planned for 2.0" in the Documentation subdirectory for more details.  
+
 ## Supported commands
 
 The following commands are supported by this implementation of luashitacast.
