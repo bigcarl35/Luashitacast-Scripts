@@ -1,38 +1,57 @@
 The following lists all of the conditional inline checks, grouped by type (based on the master list: Caonditional gear master list.txt)
 
 Buff:
-    //ARC_CIRCLE	Equip if player has Arcane Circle buff
-    //BARSPELL		Equip if player has "bar" type buff
-    //COVER			Equip if Cover is active
-    //HOLY_CIRCLE	Equip if player has Holy Circle buff
-    //NOT_UTSUSEMI	Equip if Utsusemi buff is not up
-    //SPIKE			Equip if player has a spike spell buff: blaze,ice,shock,dread
-    //UTSUSEMI		Equip if player has Utsusemi buff
-    //WARD_CIRCLE	Equip if player has Warding Circle buff
+    //ARC_CIRCLE        Equip if player has Arcane Circle buff
+    //BARSPELL          Equip if player has "bar" type buff
+    //COVER             Equip if player has Cover active
+    //HOLY_CIRCLE       Equip if player has Holy Circle buff
+    //SPIKE             Equip if player has a spike spell buff: blaze,ice,shock,dread
+    //UTSUSEMI          Equip if player has Utsusemi buff
+    //WARD_CIRCLE       Equip if player has Warding Circle buff
+
+    Inverse -
+*    //NOT_ARC_CIRCLE    Equip if player does not have Arcane Circle buff
+*    //NOT_BARSPELL      Equip if player does not have "bar" type buff
+*    //NOT_COVER         Equip if player does not have Cover active
+*    //NOT_HOLY_CIRCLE   Equip if player has Holy Circle buff
+*    //NOT_SPIKE         Equip if player has a spike spell buff: blaze,ice,shock,dread
+     //NOT_UTSUSEMI      Equip if Utsusemi buff is not up
+*    //NOT_WARD_CIRCLE   Equip if player does not have Warding Circle buff
 
     Enspells -
-    //ENANY			Equip if player has any en- spell buff
-    //ENAERO        Equip if player has enaero buff
-    //ENBLIZZARD    Equip if player has enblizzard buff
-    //ENDARK        Equip if player has endark buff
-    //ENFIRE        Equip if player has enfire buff
-    //ENLIGHT       Equip if player has enlight buff
-    //ENSTONE       Equip if player has enstone buff
-    //ENTHUNDER		Equip if player has enthunder buff
-    //ENWATER       Equip if player has enwater buff
+    //ENANY             Equip if player has any en- spell buff
+    //ENAERO            Equip if player has enaero buff
+    //ENBLIZZARD        Equip if player has enblizzard buff
+    //ENDARK            Equip if player has endark buff
+    //ENFIRE            Equip if player has enfire buff
+    //ENLIGHT           Equip if player has enlight buff
+    //ENSTONE           Equip if player has enstone buff
+    //ENTHUNDER         Equip if player has enthunder buff
+    //ENWATER           Equip if player has enwater buff
+
+    Inverse -
+*    //NOT_ENANY        Equip if player does not have any en- spell buff
+*    //NOT_ENAERO       Equip if player does not have enaero buff
+*    //NOT_ENBLIZZARD   Equip if player does not have enblizzard buff
+*    //NOT_ENDARK       Equip if player does not have endark buff
+*    //NOT_ENFIRE       Equip if player does not have enfire buff
+*    //NOT_ENLIGHT      Equip if player does not have enlight buff
+*    //NOT_ENSTONE      Equip if player does not have enstone buff
+*    //NOT_ENTHUNDER    Equip if player does not have enthunder buff
+*    //NOT_ENWATER      Equip if player does not have enwater buff
 
     Out of era -
-    //SAMBA			Equip if player has Samba buff they applied
+    //SAMBA             Equip if player has Samba buff they applied
 
 Conditional:
-    //HP.conditional.#    Equip if conditional is found true for HP
-    //HPP.conditional.#   Equip if conditional is found true for HP%
-    //MP.conditional.#    Equip if conditional is found true for MP
-    //MPP.conditional.#   Equip if conditional is found true for MP%
-    //TP.conditional.#    Equip if conditional is found true for TP
-    //TPP.conditional.#   Equip if conditional is found true for TP%
-    //LVL.conditional.#   Equip if conditional is found true for the primary job's level
-    //LVLDIV:#            Equip if the primary job's level is evenly divisible by #
+    //HP.conditional.#  Equip if conditional is found true for HP
+    //HPP.conditional.# Equip if conditional is found true for HP%
+    //MP.conditional.#  Equip if conditional is found true for MP
+    //MPP.conditional.# Equip if conditional is found true for MP%
+    //TP.conditional.#  Equip if conditional is found true for TP
+    //TPP.conditional.# Equip if conditional is found true for TP%
+    //LVL.conditional.# Equip if conditional is found true for the primary job's level
+    //LVLDIV:#          Equip if the primary job's level is evenly divisible by #
 
     Valid conditionals are -
         .EQ.            Equal to
@@ -43,35 +62,36 @@ Conditional:
         .NE.            Not equal to
 
 Crafting and Gathering:
-    //CR:ALC		Equip if Alchemy gearset indicated
-    //CR:BONE		Equip if Bonecraft gearset indicated
-    //CR:BSM		Equip if Blacksmithing gearset indicated
-    //CR:CLOTH		Equip if Clothcraft gearset indicated
-    //CR:COOK		Equip if Cooking gearset indicated
-    //CR:GSM		Equip if Gold Smithing gearset indicated
-    //CR:LTH		Equip if Leathercraft gearset indicated
-    //CR:WW 		Equip if Wood Working gearset indicated
+    //CR:ALC            Equip if Alchemy gearset indicated
+    //CR:BONE           Equip if Bonecraft gearset indicated
+    //CR:BSM            Equip if Blacksmithing gearset indicated
+    //CR:CLOTH          Equip if Clothcraft gearset indicated
+    //CR:COOK           Equip if Cooking gearset indicated
+    //CR:GSM            Equip if Gold Smithing gearset indicated
+    //CR:LTH            Equip if Leathercraft gearset indicated
+    //CR:WW             Equip if Wood Working gearset indicated
 
-    //GA:HELM		Equip if H.E.L.M. gearset indicated (Harvesting, Excavation, Logging, Mining)
-    //GA:DIG		Equip if Digging gearset indicated
-    //GA:CLAM		Equip if Clamming gearset indicated
-    //GA:FISH		Equip if Fishing gearset indicated
+    //GA:HELM           Equip if H.E.L.M. gearset indicated (Harvesting, Excavation, Logging, Mining)
+    //GA:DIG            Equip if Digging gearset indicated
+    //GA:CLAM           Equip if Clamming gearset indicated
+    //GA:FISH           Equip if Fishing gearset indicated
 
 Damage Taken:
-    //DT_BREATH		Equip item if damage taken is set to breath
-    //DT_MAGICAL	Equip item if damage taken is set to magical
-    //DT_PHYSICAL	Equip item if damage taken is set to physical
+    //DT_BREATH         Equip item if damage taken is set to breath
+    //DT_MAGICAL        Equip item if damage taken is set to magical
+    //DT_PHYSICAL       Equip item if damage taken is set to physical
 
 Day:
-    //DARKDAY       Equip if the day's element is dark
-    //EARTHSDAY     Equip if the day's element is earth
-    //FIRESDAY      Equip if the day's element is fire
-    //ICEDAY        Equip if the day's element is ice
-    //LIGHTNINGDAY  Equip if the day's element is thunder
-    //LIGHTSDAY     Equip if the day's element is light
-    //WATERSDAY     Equip if the day's element is water
-    //WINDSDAY      Equip if the day's element is wind
+    //DARKDAY           Equip if the day's element is dark
+    //EARTHSDAY         Equip if the day's element is earth
+    //FIRESDAY          Equip if the day's element is fire
+    //ICEDAY            Equip if the day's element is ice
+    //LIGHTNINGDAY      Equip if the day's element is thunder
+    //LIGHTSDAY         Equip if the day's element is light
+    //WATERSDAY         Equip if the day's element is water
+    //WINDSDAY          Equip if the day's element is wind
 
+    Inverse -
     //NOT_DARKDAY       Equip if the day's element is not dark
     //NOT_EARTHSDAY     Equip if the day's element is not earth
     //NOT_FIRESDAY      Equip if the day's element is not fire
@@ -82,22 +102,34 @@ Day:
     //NOT_WINDSDAY      Equip if the day's element is not wind
 
 Debuff:
-    //BOUND			Equip if player is bound
-    //BLINDED		Equip if player blinded
-    //CURSED		Equip if player is cursed
-    //DOOMED		Equip if player is doomed or baned
-    //PARALYZED		Equip if player is paralyzed
-    //PETRIFIED		Equip if player is petrified
-    //POISONED 		Equip if player is poisoned
-    //SILENCED		Equip if player is silenced
-    //SLEPT			Equip if player is slept
-    //WEAKENED		Equip if player is weakened
+    //BOUND             Equip if player is bound
+    //BLINDED           Equip if player is blinded
+    //CURSED            Equip if player is cursed
+    //DOOMED            Equip if player is doomed nor baned
+    //PARALYZED         Equip if player is paralyzed
+    //PETRIFIED         Equip if player is petrified
+    //POISONED          Equip if player is poisoned
+    //SILENCED          Equip if player is silenced
+    //SLEPT             Equip if player is slept
+    //WEAKENED          Equip if player is weakened
+
+    Inverse -
+*    //NOT_BOUND        Equip if player is not bound
+*    //NOT_BLINDED      Equip if player is not blinded
+*    //NOT_CURSED       Equip if player is not cursed
+*    //NOT_DOOMED       Equip if player is not doomed nor baned
+*    //NOT_PARALYZED    Equip if player is not paralyzed
+*    //NOT_PETRIFIED    Equip if player is not petrified
+*    //NOT_POISONED     Equip if player is not poisoned
+*    //NOT_SILENCED     Equip if player is not silenced
+*    //NOT_SLEPT        Equip if player is not slept
+*    //NOT_WEAKENED     Equip if player is not weakened
 
 Gear:
-    //IF:gear		Equip if currently wearing specified gear in current slot
-    //IF-slot:gear	Equip if currently wearing specified item in the specified slot
-    //UNLESS:gear	Equip if not wearing the specified item in the slot
-    //UNLESS-slot:gear	Equip if not wearing specified item in the specified slot
+    //IF:gear           Equip if currently wearing specified gear in current slot
+    //IF-slot:gear      Equip if currently wearing specified item in the specified slot
+    //UNLESS:gear       Equip if not wearing the specified item in the slot
+    //UNLESS-slot:gear  Equip if not wearing specified item in the specified slot
 
     //SPECIAL		Equip if the special comparisons match
         Gear supported -
@@ -108,12 +140,12 @@ Gear:
             shinobi ring        HP% < 75% and TP% < 100%, +4% Haste
             minstrel's ring     HP% < 75% and TP% < 100%, -25% spell casting time
 
-    Not Implemented yet:
-        //XYZ_CHECK		Weird conditional. Equip if a party member has X's Knife equipped, another has Y's Scythe equipped and Z's polearm
+*   //XYZ_CHECK         Weird conditional. Equip if a party member has X's Knife equipped, another has Y's Scythe equipped and Z's polearm
+*   //TRACK:#           Tracks the piece of gear it's attached to holding onto the piece seconds after it should be removed where # is in seconds
 
 Moon Phase:
-    //FULLMOON		Equip if moon phase is full moon
-    //NEWMOON		Equip if moon phase is new moon
+    //FULLMOON          Equip if moon phase is full moon
+    //NEWMOON           Equip if moon phase is new moon
 
         Other phases but not coded -
             Waning Gibbous
@@ -123,123 +155,207 @@ Moon Phase:
             First Quarter
             Waxing Gibbous
 
+    Inverse -
+*       //NOT_FULLMOON      Equip if moon phase is not a full moon
+*       //NOT_NEWMOON       Equip if moon phase is not a new moon
+
 Other:
-    //EMPTY			Equip if slot in temporary set is empty
-    //EMPTY:1		Equip if ears/rings slot #1 is empty. Note: command will not force loading into slot 1, it just checks for absence
-    //EMPTY:2		Equip if ears/rings slot #2 is empty. Note: command will not force loading into slot 2, it just checks for absence
-    //SP:xxx		Equip if the song/spell being cast's name contains the "xxx" substring
+    //EMPTY             Equip if slot in temporary set is empty
+    //EMPTY:1           Equip if ears/rings slot #1 is empty. Note: command will not force loading into slot 1, it just checks for absence
+    //EMPTY:2           Equip if ears/rings slot #2 is empty. Note: command will not force loading into slot 2, it just checks for absence
+    //SP:xxx            Equip if the song/spell being cast's name contains the "xxx" substring
+*   //SLOTS:list        Subset only conditional, will load only the specified slots from the attached subset
+
+    Inverse -
+*    //NOT_EMPTY        Equip if slot in temporary set is not empty
+*    //NOT_EMPTY:1      Equip if ears/rings slot #1 is not empty. Note: command will not force loading into slot 1, it just checks for the presence of an item
+*    //NOT_EMPTY:2      Equip if ears/rings slot #2 is not empty. Note: command will not force loading into slot 2, it just checks for the presence of an item
+*    //NOT_SP:xxx       Equip if the song/spell being cast's name does not contain the "xxx" substring
+*    //NOT_SLOTS:list   Subset only conditional, will load all slots from the attached subset except for those listed
 
 Pet:
-    //BP:xxx        Equip if blood pact name contains xxx. (SMN only)
-    //CARBY			Equip if player has a pet and it is Carbuncle
-    //NO_PET		Equip if the player has no pet
-    //NO_SMNPET		Equip if player has no pet or pet is not a smn avatar/elemental spirit
-    //NOT_PETNAME:xxx	Equip if player has no pet or pet is not named "xxx". Note: while intended for SMN, works for any pets. Also, "xxx" can be a substring
-    //PET			Equip if player has a pet
-    //PETF			Equip if player has pet and it is fighting
-    //PETFNPF		Equip if player has pet and it is fighting but the player is not fighting
-    //PETNAME:xxx	Equip if pet named xxx. Note: "xxx" can be a substring
-    //PETNF			Equip if player has a pet and it is not fighting
-    //SMN:xxx		Equip if the named avatar/elemental spirit "xxx" is being summoned
-    //SMNPET		Equip if player has a summoner's avatar/elemenal spirit is out
-    //SMNPETMD		Equip if pet's element matches the day's element
-    //SMNPETMW		Equip if player's pet's element matches current weather
-    //SPIRIT:ES		Equip if avatar being summoned is an elemental spirit
-    //SPIRIT:EP		Equip if current pet is an elemental spirit
+    //BP:xxx            Equip if blood pact name contains xxx. (SMN only)
+R    //CARBY            Replace with //PETNAME:Carbuncle
+    //PET               Equip if player has a pet
+*    //PET.HP.conditional.#     Equip if pet's HP meets the comparison
+*    //PET.HPP.conditional.#    Equip if pet's HP% meets the comparison
+    //PETF              Equip if player has pet and it is fighting
+    //PETNAME:xxx       Equip if pet named xxx. Note: "xxx" can be a substring
+    //SMN:xxx           Equip if the named avatar/elemental spirit "xxx" is being summoned
+    //SMNPET            Equip if player has a summoner's avatar/elemenal spirit is out
+    //SMNPETMD          Equip if pet's element matches the day's element
+    //SMNPETMW          Equip if player's pet's element matches current weather
+    //SPIRIT:ES         Equip if avatar being summoned is an elemental spirit
+    //SPIRIT:EP         Equip if current pet is an elemental spirit
+
+    Inverse -
+    //NOT_BP:xxx        Equip if blood pact name does not contains xxx. (SMN only)
+~    //NOT_PET          Equip if the player has no pet    (use to be called NO_PET)
+    //NOT_PETNAME:xxx   Equip if player has no pet or pet is not named "xxx"
+*    //NOT_PETF         Equip if player has pet and it is not fighting (Use to be //PETNF)
+~    //NOT_SMNPET       Equip if player has no pet or pet is not a smn avatar/elemental spirit (use to be called //NO_SMNPET)
+R    //PETNF            Equip if player has a pet and it is not fighting
+*    //NOT_SMN:xxx      Equip if the named avatar/elemental spirit "xxx" is not being summoned
+*    //NOT_SMNPET       Equip if player's pet is not a summoner's avatar/elemenal spirit
+*    //NOT_SMNPETMD     Equip if pet's element does not match the day's element
+*    //NOT_SMNPETMW     Equip if player's pet's element does not match the current weather
+*    //NOT_SPIRIT:ES    Equip if avatar being summoned is not an elemental spirit
+*    //NOT_SPIRIT:EP    Equip if current pet is not an elemental spirit
 
     Out of era -
-    //AUTOMATON		Equip if player's automaton is active
+*    //AUTOMATON        Equip if player's automaton is active
 
 Player or Party:
-    //MSJ			Equip if player's subjob is magical
-    //OWN			Equip if area's region controlled by player's nation. (Ignore cities)
-    //NOT_OWN		Equip if the area's region not controlled by player's nation
-    //PARTY#		Equip based on how large party is. # is number in your party
-    //TOWN			Equip if player's in town
-    //TOWN-AK		Equip ducal aketon or national aketon if the player is in the appropriate town
+    //MSJ               Equip if player's subjob is magical
+    //OWN               Equip if area's region controlled by player's nation. (Ignore cities)
+    //NOT_OWN           Equip if the area's region not controlled by player's nation
+~    //PARTY:#          Equip based on how large party is. # is number in your party    (use to be called //PARTY#)
+    //TOWN              Equip if player's in town
+    //TOWN-AK           Equip ducal aketon or national aketon if the player is in the appropriate town
+
+    Inverse -
+*    //NOT_MSJ          Equip if player's subjob is not magical
+    //NOT_OWN           Equip if the area's region not controlled by player's nation
+*    //NOT_PARTY:#      Equip based on how large party is. # is not the number of players in your party
+*    //NOT_TOWN         Equip if player's not in town
 
     Player's Subjob -
-    //SJBLM    Equip if the player's subjob is a Black Mage
-    //SJBLU    Equip if the player's subjob is a Blue Mage
-    //SJBRD    Equip if the player's subjob is a Bard
-    //SJBST    Equip if the player's subjob is a Beastmaster
-    //SJCOR    Equip if the player's subjob is a Corsair
-    //SJDNC    Equip if the player's subjob is a Dancer
-    //SJDRG    Equip if the player's subjob is a Dragoon
-    //SJDRK    Equip if the player's subjob is a Dark Knight
-    //SJGEO    Equip if the player's subjob is a Geomancer
-    //SJMNK    Equip if the player's subjob is a Monk
-    //SJNIN    Equip if the player's subjob is a Ninja
-    //SJPLD    Equip if the player's subjob is a Paladin
-    //SJPUP    Equip if the player's subjob is a Puppeteer
-    //SJRDM    Equip if the player's subjob is a Red Mage
-    //SJRNG    Equip if the player's subjob is a Ranger
-    //SJRUN    Equip if the player's subjob is a Rune Fencer
-    //SJSAM    Equip if the player's subjob is a Samurai
-    //SJSCH    Equip if the player's subjob is a Scholar
-    //SJSMN    Equip if the player's subjob is a Summoner
-    //SJTHF    Equip if the player's subjob is a Thief
-    //SJWAR    Equip if the player's subjob is a Warrior
-    //SJWHM    Equip if the player's subjob is a White Mage
+    //SJBLM             Equip if the player's subjob is a Black Mage
+    //SJBLU             Equip if the player's subjob is a Blue Mage
+    //SJBRD             Equip if the player's subjob is a Bard
+    //SJBST             Equip if the player's subjob is a Beastmaster
+    //SJCOR             Equip if the player's subjob is a Corsair
+    //SJDNC             Equip if the player's subjob is a Dancer
+    //SJDRG             Equip if the player's subjob is a Dragoon
+    //SJDRK             Equip if the player's subjob is a Dark Knight
+    //SJGEO             Equip if the player's subjob is a Geomancer
+    //SJMNK             Equip if the player's subjob is a Monk
+    //SJNIN             Equip if the player's subjob is a Ninja
+    //SJPLD             Equip if the player's subjob is a Paladin
+    //SJPUP             Equip if the player's subjob is a Puppeteer
+    //SJRDM             Equip if the player's subjob is a Red Mage
+    //SJRNG             Equip if the player's subjob is a Ranger
+    //SJRUN             Equip if the player's subjob is a Rune Fencer
+    //SJSAM             Equip if the player's subjob is a Samurai
+    //SJSCH             Equip if the player's subjob is a Scholar
+    //SJSMN             Equip if the player's subjob is a Summoner
+    //SJTHF             Equip if the player's subjob is a Thief
+    //SJWAR             Equip if the player's subjob is a Warrior
+    //SJWHM             Equip if the player's subjob is a White Mage
+
+    Inverse -
+*    //NOT_SJBLM        Equip if the player's subjob is not a Black Mage
+*    //NOT_SJBLU        Equip if the player's subjob is not a Blue Mage
+*    //NOT_SJBRD        Equip if the player's subjob is not a Bard
+*    //NOT_SJBST        Equip if the player's subjob is not a Beastmaster
+*    //NOT_SJCOR        Equip if the player's subjob is not a Corsair
+*    //NOT_SJDNC        Equip if the player's subjob is not a Dancer
+*    //NOT_SJDRG        Equip if the player's subjob is not a Dragoon
+*    //NOT_SJDRK        Equip if the player's subjob is not a Dark Knight
+*    //NOT_SJGEO        Equip if the player's subjob is not a Geomancer
+*    //NOT_SJMNK        Equip if the player's subjob is not a Monk
+*    //NOT_SJNIN        Equip if the player's subjob is not a Ninja
+*    //NOT_SJPLD        Equip if the player's subjob is not a Paladin
+*    //NOT_SJPUP        Equip if the player's subjob is not a Puppeteer
+*    //NOT_SJRDM        Equip if the player's subjob is not a Red Mage
+*    //NOT_SJRNG        Equip if the player's subjob is not a Ranger
+*    //NOT_SJRUN        Equip if the player's subjob is not a Rune Fencer
+*    //NOT_SJSAM        Equip if the player's subjob is not a Samurai
+*    //NOT_SJSCH        Equip if the player's subjob is not a Scholar
+*    //NOT_SJSMN        Equip if the player's subjob is not a Summoner
+*    //NOT_SJTHF        Equip if the player's subjob is not a Thief
+*    //NOT_SJWAR        Equip if the player's subjob is not a Warrior
+*    //NOT_SJWHM        Equip if the player's subjob is not a White Mage
 
     Job in Party -
-    //PJPBLM    Equip if there's a Black Mage in your party
-    //PJPBLU    Equip if there's a Blue Mage in your party
-    //PJPBRD    Equip if there's a Bard in your party
-    //PJPBST    Equip if there's a Beastmaster in your party
-    //PJPCOR    Equip if there's a Corsair in your party
-    //PJPDNC    Equip if there's a Dancer in your party
-    //PJPDRG    Equip if there's a Dragoon in your party
-    //PJPDRK    Equip if there's a Dark Knight in your party
-    //PJPGEO    Equip if there's a Geomancer in your party
-    //PJPMNK    Equip if there's a Monk in your party
-    //PJPNIN    Equip if there's a Ninja in your party
-    //PJPPLD    Equip if there's a Paladin in your party
-    //PJPPUP    Equip if there's a Puppeteer in your party
-    //PJPRDM    Equip if there's a Red Mage in your party
-    //PJPRNG    Equip if there's a Ranger in your party
-    //PJPRUN    Equip if there's a Rune Fencer in your party
-    //PJPSAM    Equip if there's a Samurai in your party
-    //PJPSCH    Equip if there's a Scholar in your party
-    //PJPSMN    Equip if there's a Summoner in your party
-    //PJPTHF    Equip if there's a Thief in your party
-    //PJPWAR    Equip if there's a Warrior in your party
-    //PJPWHM    Equip if there's a White Mage in your party
+    //PJPBLM            Equip if there's a Black Mage in your party
+    //PJPBLU            Equip if there's a Blue Mage in your party
+    //PJPBRD            Equip if there's a Bard in your party
+    //PJPBST            Equip if there's a Beastmaster in your party
+    //PJPCOR            Equip if there's a Corsair in your party
+    //PJPDNC            Equip if there's a Dancer in your party
+    //PJPDRG            Equip if there's a Dragoon in your party
+    //PJPDRK            Equip if there's a Dark Knight in your party
+    //PJPGEO            Equip if there's a Geomancer in your party
+    //PJPMNK            Equip if there's a Monk in your party
+    //PJPNIN            Equip if there's a Ninja in your party
+    //PJPPLD            Equip if there's a Paladin in your party
+    //PJPPUP            Equip if there's a Puppeteer in your party
+    //PJPRDM            Equip if there's a Red Mage in your party
+    //PJPRNG            Equip if there's a Ranger in your party
+    //PJPRUN            Equip if there's a Rune Fencer in your party
+    //PJPSAM            Equip if there's a Samurai in your party
+    //PJPSCH            Equip if there's a Scholar in your party
+    //PJPSMN            Equip if there's a Summoner in your party
+    //PJPTHF            Equip if there's a Thief in your party
+    //PJPWAR            Equip if there's a Warrior in your party
+    //PJPWHM            Equip if there's a White Mage in your party
 
-    Job Not in Party -
-    //PJPNMBLM  Equip if there's a Black Mage in your party and it's not you
-    //PJPNMBLU  Equip if there's a Blue Mage in your party and it's not you
-    //PJPNMBRD  Equip if there's a Bard in your party and it's not you
-    //PJPNMBST  Equip if there's a Beastmaster in your party and it's not you
-    //PJPNMCOR  Equip if there's a Corsair in your party and it's not you
-    //PJPNMDNC  Equip if there's a Dancer in your party and it's not you
-    //PJPNMDRG  Equip if there's a Dragoon in your party and it's not you
-    //PJPNMDRK  Equip if there's a Dark Knight in your party and it's not you
-    //PJPNMGEO  Equip if there's a Geomancer in your party and it's not you
-    //PJPNMMNK  Equip if there's a Monk in your party and it's not you
-    //PJPNMNIN  Equip if there's a Ninja in your party and it's not you
-    //PJPNMPLD  Equip if there's a Paladin in your party and it's not you
-    //PJPNMPUP  Equip if there's a Puppeteer in your party and it's not you
-    //PJPNMRDM  Equip if there's a Red Mage in your party and it's not you
-    //PJPNMRNG  Equip if there's a Ranger in your party and it's not you
-    //PJPNMRUN  Equip if there's a Rune Fencer in your party and it's not you
-    //PJPNMSAM  Equip if there's a Samurai in your party and it's not you
-    //PJPNMSCH  Equip if there's a Scholar in your party and it's not you
-    //PJPNMSMN  Equip if there's a Summoner in your party and it's not you
-    //PJPNMTHF  Equip if there's a Thief in your party and it's not you
-    //PJPNMWAR  Equip if there's a Warrior in your party and it's not you
-    //PJPNMWHM  Equip if there's a White Mage in your party and it's not you
+    Inverse -
+*    //PJP_NOT_BLM      Equip if there's no Black Mages in your party
+*    //PJP_NOT_BLU      Equip if there's no Blue Mages in your party
+*    //PJP_NOT_BRD      Equip if there's no Bards in your party
+*    //PJP_NOT_BST      Equip if there's no Beastmasters in your party
+*    //PJP_NOT_COR      Equip if there's no Corsairs in your party
+*    //PJP_NOT_DNC      Equip if there's no Dancers in your party
+*    //PJP_NOT_DRG      Equip if there's no Dragoons in your party
+*    //PJP_NOT_DRK      Equip if there's no Dark Knights in your party
+*    //PJP_NOT_GEO      Equip if there's no Geomancers in your party
+*    //PJP_NOT_MNK      Equip if there's no Monks in your party
+*    //PJP_NOT_NIN      Equip if there's no Ninjas in your party
+*    //PJP_NOT_PLD      Equip if there's no Paladins in your party
+*    //PJP_NOT_PUP      Equip if there's no Puppeteers in your party
+*    //PJP_NOT_RDM      Equip if there's no Red Mages in your party
+*    //PJP_NOT_RNG      Equip if there's no Rangers in your party
+*    //PJP_NOT_RUN      Equip if there's no Rune Fencers in your party
+*    //PJP_NOT_SAM      Equip if there's no Samurai in your party
+*    //PJP_NOT_SCH      Equip if there's no Scholars in your party
+*    //PJP_NOT_SMN      Equip if there's no Summoners in your party
+*    //PJP_NOT_THF      Equip if there's no Thieves in your party
+*    //PJP_NOT_WAR      Equip if there's no Warriors in your party
+*    //PJP_NOT_WHM      Equip if there's no White Mages in your party
+
+    Job in Party, but not me -
+~    //PJPBLM_NOT_ME    Equip if there's a Black Mage in your party and it's not you    (use to be //PJPNMBLM)
+~    //PJPBLU_NOT_ME    Equip if there's a Blue Mage in your party and it's not you     (use to be //PJPNMBLU)
+~    //PJPBRD_NOT_ME    Equip if there's a Bard in your party and it's not you          (use to be //PJPNMBRD)
+~    //PJPBST_NOT_ME    Equip if there's a Beastmaster in your party and it's not you   (use to be //PJPNMBST)
+~    //PJPCOR_NOT_ME    Equip if there's a Corsair in your party and it's not you       (use to be //PJPNMCOR)
+~    //PJPDNC_NOT_ME    Equip if there's a Dancer in your party and it's not you        (use to be //PJPNMDNC)
+~    //PJPDRG_NOT_ME    Equip if there's a Dragoon in your party and it's not you       (use to be //PJPNMDRG)
+~    //PJPDRK_NOT_ME    Equip if there's a Dark Knight in your party and it's not you   (use to be //PJPNMDRK)
+~    //PJPGEO_NOT_ME    Equip if there's a Geomancer in your party and it's not you     (use to be //PJPNMGEO)
+~    //PJPMNK_NOT_ME    Equip if there's a Monk in your party and it's not you          (use to be //PJPNMMNK)
+~    //PJPNIN_NOT_ME    Equip if there's a Ninja in your party and it's not you         (use to be //PJPNMNIN)
+~    //PJPPLD_NOT_ME    Equip if there's a Paladin in your party and it's not you       (use to be //PJPNMPLD)
+~    //PJPPUP_NOT_ME    Equip if there's a Puppeteer in your party and it's not you     (use to be //PJPNMPUP)
+~    //PJPRDM_NOT_ME    Equip if there's a Red Mage in your party and it's not you      (use to be //PJPNMRDM)
+~    //PJPRNG_NOT_ME    Equip if there's a Ranger in your party and it's not you        (use to be //PJPNMRNG)
+~    //PJPRUN_NOT_ME    Equip if there's a Rune Fencer in your party and it's not you   (use to be //PJPNMRUN)
+~    //PJPSAM_NOT_ME    Equip if there's a Samurai in your party and it's not you       (use to be //PJPNMSAM)
+~    //PJPSCH_NOT_ME    Equip if there's a Scholar in your party and it's not you       (use to be //PJPNMSCH)
+~    //PJPSMN_NOT_ME    Equip if there's a Summoner in your party and it's not you      (use to be //PJPNMSMN)
+~    //PJPTHF_NOT_ME    Equip if there's a Thief in your party and it's not you         (use to be //PJPNMTHF)
+~    //PJPWAR_NOT_ME    Equip if there's a Warrior in your party and it's not you       (use to be //PJPNMWAR)
+~    //PJPWHM_NOT_ME    Equip if there's a White Mage in your party and it's not you    (use to be //PJPNMWHM)
+
+    I'm not sure that the inversion (job in party and is me) makes sense since it would be a test if you are
+    the job and that's a given since each of your jobs have specific luashitacast job files. Skipping.
 
 Target:
-    //AMORPH		Equip if target is from the amorph family
-    //AQUAN			Equip if target is from the aquan family
-    //ME            Equip if the target is me
-    //NOT_ME		Equip if the target is not me
+    //AMORPH            Equip if target is from the amorph family
+    //AQUAN             Equip if target is from the aquan family
+    //ME                Equip if the target is me
+
+    Inverse -
+*    //NOT_AMORPH       Equip if target is not from the amorph family
+*    //NOT_AQUAN        Equip if target is not from the aquan family
+    //NOT_ME            Equip if the target is not me
 
 Time:
-    //DAYTIME		Equip if it's daytime (6:00 to 18:00)
-    //DUSK2DAWN		Equip if it's between dusk and dawn (17:00 to 7:00)
-    //NIGHTTIME		Equip if it's nighttime (17:00 to 6:00)
+    //DAYTIME           Equip if it's daytime (6:00 to 18:00)
+    //DUSK2DAWN         Equip if it's between dusk and dawn (17:00 to 7:00)
+    //NIGHTTIME         Equip if it's nighttime (17:00 to 6:00)
 
         Other times coded, but no conditional defined yet -
             Dawn            6:00 to 7:00
@@ -248,52 +364,83 @@ Time:
             Evening         18:00 to 20:00
             Dead of Night   20:00 to 4:00
 
+    Inverse -
+*        //NOT_DAYTIME      Equip if it's not daytime (18:01 to 5:59)
+*        //NOT_DUSK2DAWN    Equip if it's not between dusk and dawn (7:01 to 16:59)
+*        //NOT_NIGHTTIME    Equip if it's not nighttime (6:01 to 16:59)
+
 Toggled Condition:
-    //DB:BPP		Equip if debuff cycle set to BPP (blind,poison,paralyze)
-    //DB:WSS		Equip if debuff cycle set to WSS (weight,slow,silence)
-    //EVASION		Equip if 'Eva' enabled
-    //HORN			Equip if instrument setting is horn. (BRD only.)
-    //IDLE			Equip if Idle is true (part of tanking configuration)
-    //NOT_TANK		Equip if tank disabled
-    //NOT_TH		Equip if TH disabled
-    //NOT_WSWAP     Equip if WSWAP is turned off
-    //STRING		Equip if instrument setting is string. (BRD only.)
-    //TANK			Equip if Tank is toggled on
-    //TH			Equip if TH is enable
-    //WSWAP			Equip if /WSWAP is on
+    //DB:BPP            Equip if debuff cycle set to BPP (blind,poison,paralyze)
+    //DB:WSS            Equip if debuff cycle set to WSS (weight,slow,silence)
+    //EVASION           Equip if 'Eva' is enabled
+    //HORN              Equip if instrument setting is horn. (BRD only.)
+    //IDLE              Equip if 'Idle' is enabled (part of tanking configuration)
+    //STRING            Equip if instrument setting is string. (BRD only.)
+    //TANK              Equip if 'Tank' is enabled
+    //TH                Equip if 'TH' is enabled
+    //WSWAP             Equip if 'WSWAP' is enabled
+
+    Inverse -
+*    //DB:NOT_BPP       Equip if debuff cycle is not set to BPP (blind,poison,paralyze)
+*    //DB:NOT_WSS       Equip if debuff cycle is not set to WSS (weight,slow,silence)
+*    //NOT_EVASION      Equip if 'Eva' is disabled
+*    //NOT_HORN         Equip if instrument setting is not horn. (BRD only.)
+*    //NOT_IDLE         Equip if 'Idle' is disabled (part of tanking configuration)
+    //NOT_TANK          Equip if 'Tank' is disabled
+    //NOT_TH            Equip if 'TH' is disabled
+    //NOT_WSWAP         Equip if 'WSWAP' is disabled
+*    //NOT_STRING       Equip if instrument setting is not string. (BRD only.)
 
 Weapon type:
-    //ARCHERY		Equip if weapon in Range is known in profile.WeaponType[Bow]
-    //AXE			Equip if weapon in Main/Sub is known in profile.WeaponType[Axe]
-    //CLUB			Equip if weapon in Main/Sub is known in profile.WeaponType[Club]
-    //DAGGER		Equip if weapon in Main/Sub is known in profile.WeaponType[Dagger]
-    //GAXE			Equip if weapon in Main is known in profile.WeaponType[Great Axe]
-    //GKATANA		Equip if weapon in Main is known in profile.WeaponType[Great Katana]
-    //GSWORD		Equip if weapon in Main is known in profile.WeaponType[Great Sword]
-    //H2H			Equip if weapon in Main is known in profile.WeaponType[Hand to Hand]
-    //KATANA		Equip if weapon in Main/Sub is known in profile.WeaponType[Katana]
-    //MARKSMANSHIP	Equip if weapon in Range is known in profile.WeaponType[Gun,Crossbow]
-    //POLEARM		Equip if weapon in Main is known in profile.WeaponType[Polearm]
-    //SCYTHE		Equip if weapon in Main is known in profile.WeaponType[Scythe]
-    //STAVE			Equip if weapon in Main is known in profile.WeaponType[Staff]
-    //SWORD			Equip if weapon in Main/Sub is known in profile.WeaponType[Sword]
-    //THROWING		Equip if weapon in Range/Amdmo is known in profile.WeaponType[Throwing]
+    //ARCHERY           Equip if weapon in Range is known in profile.WeaponType[Bow]
+    //AXE               Equip if weapon in Main/Sub is known in profile.WeaponType[Axe]
+    //CLUB              Equip if weapon in Main/Sub is known in profile.WeaponType[Club]
+    //DAGGER            Equip if weapon in Main/Sub is known in profile.WeaponType[Dagger]
+    //GAXE              Equip if weapon in Main is known in profile.WeaponType[Great Axe]
+    //GKATANA           Equip if weapon in Main is known in profile.WeaponType[Great Katana]
+    //GSWORD            Equip if weapon in Main is known in profile.WeaponType[Great Sword]
+    //H2H               Equip if weapon in Main is known in profile.WeaponType[Hand to Hand]
+    //KATANA            Equip if weapon in Main/Sub is known in profile.WeaponType[Katana]
+    //MARKSMANSHIP      Equip if weapon in Range is known in profile.WeaponType[Gun,Crossbow]
+    //POLEARM           Equip if weapon in Main is known in profile.WeaponType[Polearm]
+    //SCYTHE            Equip if weapon in Main is known in profile.WeaponType[Scythe]
+    //STAVE             Equip if weapon in Main is known in profile.WeaponType[Staff]
+    //SWORD             Equip if weapon in Main/Sub is known in profile.WeaponType[Sword]
+    //THROWING          Equip if weapon in Range/Amdmo is known in profile.WeaponType[Throwing]
+
+    Inverse -
+*    //NOT_ARCHERY      Equip if weapon in Range is not known in profile.WeaponType[Bow]
+*    //NOT_AXE          Equip if weapon in Main/Sub is not known in profile.WeaponType[Axe]
+*    //NOT_CLUB         Equip if weapon in Main/Sub is not known in profile.WeaponType[Club]
+*    //NOT_DAGGER       Equip if weapon in Main/Sub is not known in profile.WeaponType[Dagger]
+*    //NOT_GAXE         Equip if weapon in Main is not known in profile.WeaponType[Great Axe]
+*    //NOT_GKATANA      Equip if weapon in Main is not known in profile.WeaponType[Great Katana]
+*    //NOT_GSWORD       Equip if weapon in Main is not known in profile.WeaponType[Great Sword]
+*    //NOT_H2H          Equip if weapon in Main is not known in profile.WeaponType[Hand to Hand]
+*    //NOT_KATANA       Equip if weapon in Main/Sub is not known in profile.WeaponType[Katana]
+*    //NOT_MARKSMANSHIP Equip if weapon in Range is not known in profile.WeaponType[Gun,Crossbow]
+*    //NOT_POLEARM      Equip if weapon in Main is not known in profile.WeaponType[Polearm]
+*    //NOT_SCYTHE       Equip if weapon in Main is not known in profile.WeaponType[Scythe]
+*    //NOT_STAVE        Equip if weapon in Main is not known in profile.WeaponType[Staff]
+*    //NOT_SWORD        Equip if weapon in Main/Sub is not known in profile.WeaponType[Sword]
+*    //NOT_THROWING     Equip if weapon in Range/Amdmo is not known in profile.WeaponType[Throwing]
 
 Weather:
-    //WTH:CLEAR     Equip if sky is clear
-    //WTH:CLOUDS    Equip if sky is cloudy
-    //WTH:DARK      Equip if weather is dark
-    //WTH:EARTH     Equip if weather is earth
-    //WTH:FIRE      Equip if weather is fire
-    //WTH:FOG       Equip if sky is foggy
-    //WTH:ICE       Equip if weather is ice
-    //WTH:LIGHT     Equip if weather is light
-    //WTH:SUNSHINE  Equip if sky is sunny
-    //WTH:THUNDER   Equip if weather is thunder
-    //WTH:WATER     Equip if weather is water
-    //WTH:WIND      Equip if weather is wind
-    //WTH-DAY		Equip if the weather's element matches the day's element
+    //WTH:CLEAR         Equip if sky is clear
+    //WTH:CLOUDS        Equip if sky is cloudy
+    //WTH:DARK          Equip if weather is dark
+    //WTH:EARTH         Equip if weather is earth
+    //WTH:FIRE          Equip if weather is fire
+    //WTH:FOG           Equip if sky is foggy
+    //WTH:ICE           Equip if weather is ice
+    //WTH:LIGHT         Equip if weather is light
+    //WTH:SUNSHINE      Equip if sky is sunny
+    //WTH:THUNDER       Equip if weather is thunder
+    //WTH:WATER         Equip if weather is water
+    //WTH:WIND          Equip if weather is wind
+    //WTH-DAY           Equip if the weather's element matches the day's element
 
+    Inverse -
     //NOT_WTH:CLEAR     Equip if the sky is not clear
     //NOT_WTH:CLOUDS    Equip if the sky is not cloudy
     //NOT_WTH:DARK      Equip if the weather is not dark
@@ -314,3 +461,8 @@ Keywords:
         Currently out of era: BLU,COR,PUP,DNC,SCH,GEO,RUN
     weapon types - ARCHERY,AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,MARKSMANSHIP,
 	POLEARM,SCYTHE,STAVE,SWORD,THROWING
+
+Note:
+    * designates entries that are not implemented yet
+    R designates entries that are currently implemented but are being removed
+    ~ designates entries that have had their code modified for consistency

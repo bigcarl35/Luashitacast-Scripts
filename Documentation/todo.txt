@@ -1,3 +1,5 @@
+Note: * by entry means doing in V2.0.alpha, + means maybe
+
 To do list:
 ----------       
 - TH really should be 1 hit then normal gear. Track with table [ID] = { 
@@ -6,22 +8,22 @@ To do list:
   routines in gcinclude since some gear in the future will be available
   to all classes. (Note: emnity will apply TH as well as a hit.)
 
-- Need to add to /GC validating codes, subsets, and references
+* - Need to add to /GC validating codes, subsets, and references
 	"No match for reference: name::slot"
 	"No such gearset referenced in subset: subset name"
 
 - Track equipable consumables
 
-- Need pop-up to show /ptt (color coded, remembers where it was moved to.)
++ - Need pop-up to show /ptt (color coded, remembers where it was moved to.)
 
-- Add ability for /smg to output to a file. (Maybe GC to a file?)
+* - Add ability for /smg to output to a file. (Maybe GC to a file?)
   |{filename} - The | indicates writing to a file. Player can designate
   a file name. If absent, assume "character name_job_date.txt".
 
-- Change /smg to be parameter position independent. Also, make sure gs=
+* - Change /smg to be parameter position independent. Also, make sure gs=
   and slot= can accept a comma delimited list.
 
-- Wiggle room is too complicated. Change it over to "timed blocking".
+* - Wiggle room is too complicated. Change it over to "timed blocking".
   By that I mean when a MPP/MP/HPP/HP comparison is found to be
   happening, trigger a timer for that dynamic entry when the condition
   is no longer true. This will effectively block that comparison until
@@ -30,46 +32,19 @@ To do list:
   seconds.)
   
   Example:
-	Body = { 'Vermillion Cloak//MPP.LT.95:30', 'Summoner\'s Doublet' },
+	Body = { 'Vermillion Cloak//MPP.LT.95//TRACK:30', 'Summoner\'s Doublet' },
 
   What that says is that while the MP% < 95% equip the V.Cloak. Once
   this is no longer true, trigger a blocking mechanism for 30 seconds
-  so that the conditional V.Cloak is not considered valid and just
-  skipped. Once the timer runs out, it is a valid conditional again.
-  The player will need to determine how long the "blocking" should
-  occur. 30 seconds was just an example.
+  so that the V.Cloak will contin to be equipped until the timer runs
+  out.
 
-  Dynamic table:
-	Entry = 'vermillion cloak//mpp.lt.95:30', -- lowercase for easy matching
-	Duration = 30,		-- how long to block (in seconds)
-	End_time = nil;		-- fill with time stamp for when countdown ends
-	
-  Logic:
-     Body = { 'Vermillion Cloak//MPP.LT.95:30', 'Summoner\'s Doublet' },
+  Include feedback when blocking starts and ends
 
-	 This assumes that the conditional for the v.cloak is true. If false,
-	 the entry is just skipped.
-	 
-	 Clean out old entries (blocking has expired)
-	 if no entry in dynamic table for conditional exists then
-		make an entry for the conditional, end_time will be nil
-	 else	-- existing entry
-		if end_time set then	-- You know it hasn't expired
-			skip the conditional
-		else
-			if conditional no longer valid then
-				set end_time	-- start the block mechanism
-			else
-				use the conditional
-			end
-		end
-	 end		
+  //TRACK:# If the piece is to be loaded, track it and calculate
+    end time from the passed # (eg., 'V.Cloak//TRACK:20' will
+    track the V.Cloak once equipped for 20 seconds)
 
-   Consider a caveat. If comparison is > 10% into condition, kill the
-   block.
-
-  Include feedback when locking starts and ends
-  
 - Skill chain detection for magic burst gearing (2nd midcast)
 
 - Detect player is closing an elemental skillchain (re: elemental obi)
@@ -88,23 +63,71 @@ To do list:
   accuracy to all hits of the weapon skill.) So, you just need to
   equip one of the elemental gorgets associated with the weapon skill.
   
-- Make a grid to show locks. Maybe a template to place over HXUI's grid?
++ - Make a grid to show locks. Maybe a template to place over HXUI's grid?
 
-- Day cycle pattern highlighting current.
++ - Day cycle pattern highlighting current.
 
-- New command for SMN, /EP. It will summon an elemental spirit that
-  matches either the weather or the day's element if the player has
-  that elemental spirit. If they don't it assumes a default spirit.
+* - New command for SMN, /EP. It will summon an elemental spirit that
+  matches in order, 1) the weather's element, 2) the day's element,
+  3) a default designated spirit.
 
-- Support an exception on a subset so you can exclude certain slots.
-  This would be similar to the opposite of an inline reference.
-
-  Ex: MND||Main,Sub,range,ammo
-
-  This would load the subset MND, but exclude slots= MAIN, SUB, RANGE, and
-  AMMO.
+* - New command, /DG [filename] (for display gear to screen or a file.)
+  It will list the equipped gear and the slots they're in.
 
 - Add resistant check based on target family type (ex. Fire for Orcs)
+
++ - For some reason on smn, if you do /smg gs=currentgear, the ears and
+  rings slots are undefined. Now, I'm unsure why you would want to
+  see that set considering it's nature, but need to check more to
+  see if that's causing an issue on assignments.
+
+* - Support individual weapon skill gearsets in case the player wants to
+  customize a weapon skill set. Alternatively, create inline codes for
+  all the weapon skills.
+
+* - Add special subset inline: //NOT_SLOTS:slot,slot,etc and
+  //SLOTS:slot,slot,etc. What these two conditionals do is limit which
+  slots from the subset will be included. //NOT_SLOTS lets you explicitly
+  exlude slots from a subset and //SLOTS lets you explicitly load the
+  specified restricted list of slots. This only will work with subsets.
+
+  Ex:
+    ['WS_STRMND'] = {
+      Subset = {
+        [1] = 'AttackPower',
+        [2] = 'STR//SLOTS:Hands,Feet',
+        [3] = 'MND//NOT_SLOTS:Main,Sub,Range'
+      }
+    }
+
+* - Add an inline conditional to a slot name. It implies that all gear in that slot's
+  definition has that conditional applied to it. Example:
+
+	Main//WSWAP = { list of weapons }
+
+	or
+
+	Neck//NIGHTTIME = { ...}
+	Neck//DAYTIME = { ... }
+
+	or
+
+	Head = { ... }
+	Head//TANK = { ... }
+
+  The second example introduces the idea off having multiple lines addressing the
+  same slot. Which is process depends on the inline conditional. The third example
+  might be a way to combine TP and TP_Ta['ID'] = nk.
+
+* - Change all MPP/HPP/TPP calculations to using a direct call to ashitacore calculation.
+  ex:
+        local party = AshitaCore:GetMemoryManager():GetParty();
+		local SelfMPPercent = math.clamp(party:GetMemberMPPercent(0), 0, 100);
+		if SelfMPPercent < 100 then
+
++ - Consider changing all luashitacast calls to ashitacore calls.
+
+* - Support custom switches. Start with 3
 
 Ongoing questions
 -----------------
@@ -189,7 +212,7 @@ Done
   Consider searching not only the ccurrent equipment but also the pending equipment.
 - Added unregister for packet interception event.
 - Midcast, do F after H
-- Add INT gear when damage dealing ninjutsu is performed. 
+- Add INT gear when damage dealing ninjutsu is performed. root = fGetRoot(sSpell);
  - Add fractionating a set. This way, instead of using a defaultWeapon, you could say
   you just want the weapons from the ['Start_Weapons']. Look into fractionatedAccuracy
 - Add table to check for multi-slot items. If lock one, lock both
@@ -220,7 +243,7 @@ Done
 - For /maxspell or /maxsong, check to see if there's a target specified and use that.
   If none specified, then use <t>. Check spell cd? Might have to back up one
 - Need to create a [bar] set for bar- spells. -- Maybe //BARSPELL instead, where that
-  recognizes a list of bar-ga spells. --
+  recognizes a list of bar-ga spells. --root = fGetRoot(sSpell);
   //SPELL='list' or variable for spells affected -- use subset
 - Can I determine if a spell is on cd? or item on cd? (RecastDelay * 15(?)) If so, use
   in Maxspell.
@@ -256,7 +279,7 @@ Done
   So, Magic Attack Bonus would be applied with all magic attack spells including hybrid
   weapon skills. I.e., apply MAB to elemental offence spells, dots like dia and bio
   that have an initial attack damage, etc.
-
+root = fGetRoot(sSpell);
   Individual spells of the "type" would be included in each section
   Common routines included with each type: obi and elemental stave  
  - add AttackPower subset, remove Tank_WS_*, fix comments
@@ -289,7 +312,8 @@ Done
   can equip it.
 - Basic structure for TH hit tracking in place.
 - /gc doesn't seem to force an overwrite on specifics if the piece of gear has
-  already been scanned.
+  already been scanned. Still not convinced implementing this
+  feature would be worth the effort.
 - Fixed //NOT_WSWAP and //IF:
 - Regarding gcinclude.GearDetails, revisit "num" for correctness. Also, change
   "accessible" to a number (how many are accessible)
@@ -339,35 +363,18 @@ Done
   works correctly.
 - Fixed a logic error in HandleDefault in the job files regarding a lack
   of a weapon. It now processes correctly.
-  
+- Added /ss to THF to show when stealing. If true, will print message
+  in "say" as to what target was steal attempted on including it's
+  id.
+- Added /pull command which prints message to the party as to what target
+  is being pulled (including ID).
+
 Possibly in the future
 ---------------------- 
  - Add Event to display bar. Values: none, assault, besieged, campaign, garrison, salvage,
   Fellow
   
-- Add an inline conditional to a slot name. It implies that all gear in that slot's
-  definition has that conditional applied to it. Example:
-  
-	Main//WSWAP = { list of weapons }
-	
-	or
-	
-	Neck//NIGHTTIME = { ...}
-	Neck//DAYTIME = { ... }
-	
-	or
-	
-	Head = { ... }
-	Head//TANK = { ... }
-	
-  The second example introduces the idea off having multiple lines addressing the
-  same slot. Which is process depends on the inline conditional. The third example
-  might be a way to combine TP and TP_Tank. Still not convinced implementing this
-  feature would be worth the effort.
-  
-	I think this one is doable!
-
-- modify equipit to checo see if the item is on cool down and to keep searching
+- modify equipit to check see if the item is on cool down and to keep searching
   for another one to equip. I know how to get the general information about an item 
   (name, description, etc), but not how many charges are left or what is the cool 
   down on the item. I'm guessing this is sent in a packet, maybe upon zoning. A 
@@ -377,8 +384,15 @@ Possibly in the future
 	generalized. This would be specific for a spell. You need to know a priori
 	the fast cast value, the casting gear reduction, the packet delay, the cast
 	delay to determine if there's enough time for an addition midcast call.
-  
-- Support custom switches
+
+- Split out the gearsets from the job files. Make a common file for all
+  the code to be shared by all the job files like gcinclude.lua. Consider
+  splitting up gcinclude into multiple files based on functionality. All
+  these changes would make it easier to maintain the gear sets and the
+  code.
+
+  My current knowledge of lua will not let me do this... unless I do it with a .bat
+  file to combine the two parts. Something to consider.
 
   Not Doing
 ---------

@@ -1,0 +1,203 @@
+Current implementation:
+
+function gcinclude.MoveToCurrent(tSet,tMaster,bOverride,bIgnoreWSWAP)
+    tSet is the set to move
+    tMaster is the destination set
+    bOverride indicates if current locks should be ignored
+    bIgnoreWSWAP indicates if WSWAP setting should be ignored
+
+    if tSet is a string, convert it to a set
+
+    for each row in the tSet table
+        look for "subset"
+        if found make sure it's a table
+        for each row in the subset
+            for each element in that subset's row
+                Check that the inline conditional (if present) is true
+                if so
+                    invoke gcinclude.MoveToCurrent to load that subset (Note: missing bIgnoreWSWAP on invocation)
+                else
+                    skip that row
+                end
+            end
+        end
+    end
+
+    for each row in the tSet
+        make sure not a "subset"
+        if slot changing will cause TP to reset to 0, check for WSWAP or job default override or passed in override or ignore WSWAP
+            if false, skip the definition that will cause the TP to go to 0
+            if true, process the line any way
+        end
+        If the line should be processed
+            Make sure the definition for that slot is a table
+            if the definition contains an inline reference, expand it out
+            For each piece of gear in the slot's definition ("expanded") walk the list till a piece of gear's conditions are true
+                Check the validity of the piece of gear for the player
+                    if an attached inline conditional, is it true
+                        if the slot are "rings" or "ears", switch to appending a number onto the root (eg, ear1,ear2,ring1,ring2)
+                        if there isn't an inhibiting lock (or bOverride is true)
+                            Move that piece of gear into the destination set
+                            if rings or ears
+                                bump the number portion
+                                go to the next gear piece in the "for loop"
+                            else
+                                break out of the "for loop"
+                            end
+                        end
+                    end
+                end
+                if the number portion > 2
+                    break out of "for loop"
+                end
+            end
+        end
+    end
+
+function EquipTheGear(tSet,bOverride)
+    tSet is the current dynamic set (populated by one or more MoveToCurrent calls)
+    bOverride indicates that locks can be overriden
+
+    Looks for multislot items and ensures that affected slots are blanked out
+
+    if determines if changing retaining TP is the priority
+        if true, Main, Sub, and Ammo slots in tSet will be emptied
+    end
+
+    it checks to see if the any of the rings/ears slots are already equipped
+        if so, flip flop the order as needed to keep the equipped piece(s)
+    end
+
+    check for exceptions on the slots
+        if true, ensure the slot isn't overriden
+    end
+
+    equip the gear
+end
+
+New implementation:
+
+function gcinclude.MoveToCurrent(tSet,tMaster,tLimit,bOverrideLocks,bIgnoreWSWAP,sSetName)
+    tSet is the set to move
+    tMaster is the destination set
+    tLimit defines what slots should be moved/excluded, if any
+    bOverrideLocks indicates if current locks should be ignored
+    bIgnoreWSWAP indicates if WSWAP setting should be ignored
+    sSetName is the identifying name of the set to move or nil
+
+    remove dead tracked entries (tracked list is a global variable table)
+    if tSet is a string, convert it to a set
+
+    for each row in the tSet table
+        look for "subset"
+        if found
+            Is there an inline conditional on the "Subset", evaluate it
+                if true
+                    is there a slot limiting qualifier
+                        if true make a new list (sExclusions and any new ones)
+                    end
+                else if false
+                    skip this subset
+                end
+
+                make sure subset definition is a table
+                for each row in the subset definition
+                    for each element in that subset's row
+                        Check that the inline conditional (if present) is true
+                            if so, recurse back into gcinclude.MoveToCurrent to load that subset
+                            then break out of the element loop, we got a hit
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    for each row in the tSet (each slot)
+        make sure not a "subset"
+        if the slot might be limited (tLimit), check if slot should be processed
+            if true, continue processing
+            if false, skip to next slot
+        end
+        does the slot name have a conditional, evaluate it
+            if true, continue processing
+            if false, skip to next slot
+        end
+        See if there's a piece of gear for that slot being tracked
+            if so (piece name and set name), is the timer active
+                if so, skip to next slot
+            end
+        end
+        if changing the slot will cause TP to reset to 0 and WSWAP enabled or job defaults to weapon swap or told to ignore WSWAP
+            if true, process the line anyway
+            if false, skip to next slot
+        end
+
+        Make sure the definition for that slot is a table
+        if the definition contains an inline reference, expand it out
+        for each piece of gear in the slot's definition ("expanded") walk the list
+            check the validity of the piece of gear for the player
+            if an attached inline conditional is true or no conditional
+                if the slot are "rings" or "ears", switch to appending a number onto the root (eg, ear1,ear2,ring1,ring2)
+                if there isn't an inhibiting lock (or bOverride is true)
+                    if the slot is being tracked and the piece to move is not what is currently equipped
+                        update the tracked entry giving it an end time. It's now active
+                        skip to next slot
+                    end
+                    if there's an exception for that slot (an enchantment such that the current piece needs to be kept)
+                        (Note: The buff is generically named "Enchantment". If you have multiple items equipped that
+                        can create an enchantment, I don't know any way to distinguish which piece actually created it.
+                        I'm assuming that all pieces that can create the buff did create the buff. This is presumptuous,
+                        but a safer answer than guessing.)
+                        skip the slot (Note: if ears or rings, need to check both 1 and 2)
+                    end
+                    Move that piece of gear into the destination set
+                    if rings or ears
+                        bump the number portion
+                        go to the next gear piece in slot list
+                    else
+                        break out of the "for loop"
+                    end
+                end
+                if the number portion > 2
+                    break out of "for loop"
+                end
+            end
+        end
+    end
+
+    Now that the transfer is complete, look for multi-slotted gear in the master list
+        if found
+            blank out affected slots
+            and remove tracked slots for the affected slots
+        end
+    end
+
+function EquipTheGear(tSet,bOverrideLocks,bWSWAP)
+    tSet is the current dynamic set (populated by one or more MoveToCurrent calls)
+    bOverrideLocks indicates that locks can be overriden
+    bWSWAP indicates if WSWAP can be ignored
+
+    Looks for multislot items
+        ensure that affected slots are blanked out (this should have happened already)
+        remove any tracked entries for the affected slots
+    end
+
+    if bOverrideLocks is false check for locks
+        empty any slot found in tSet
+    end
+
+    determines if retaining TP is the priority. check WSWAP, job override, bOverrideLocks and bWSWAP
+        if true, Main, Sub, and Ammo slots in tSet will be emptied
+    end
+
+    it checks to see if the any of the rings/ears slots are already equipped
+        if so, flip flop the order as needed to keep the equipped piece(s)
+    end
+
+    check for exceptions on the slots
+        if true, ensure the slot isn't overriden
+    end
+
+    equip the gear
+end

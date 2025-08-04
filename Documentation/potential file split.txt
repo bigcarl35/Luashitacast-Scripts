@@ -1,0 +1,30 @@
+Some notes on reorganizing my luashitacast
+
+The Job files will be split into two files:
+    1) User_JOB.lua (or) Job.lua
+    2) Support.lua
+
+    The first file (whether specific to a job or user/job combo) will consist of the "profile" gear sets, job definitions, and the init configuration function. The macro bar/menu selection will
+    be changed to be assigned via variables. Further, references to all the included files will go here. (To lua all the separate files will look like a single big file.)
+
+    The second file will contain all of the rest of the code for a job. Unlike the first file, this one should not be modified. (I might have to change how variables are referenced in the code though, I need to test this out to see if needed.)
+
+gcinclude will be split into n files:
+    1) gcinclude.lua
+    2) utilities.lua
+    2) midcast.lua
+    3) inline.lua
+    4) gear.lua
+    5) elemental.lua
+
+    The first file will contain the cross job gear sets, any definitions, and any system level functions
+
+    The second file contains the common support routines like locking, target id, etc
+
+    The third file contains all of the midcast functions
+
+    The fourth file contains all the functions for validating inline functions
+
+    The fifth file contains all functions dealing with gear including the /SMG functions
+
+    The sixth file contains all functions dealing with elemental gear like staves, obis, and gorgets
