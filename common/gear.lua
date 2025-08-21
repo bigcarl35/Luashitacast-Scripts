@@ -3,7 +3,7 @@ local gear = {};
 -- List of items that inhibit more than the obvious gear slot. Add entries as you
 -- need to account for the gear you use. Please note that ears and rings are
 -- not supported. Instead, you have to be explicit (eg. ring1, ring2, ear1, ear2)
-gear.multiSlot = {
+gear.tMultiSlot = {
     { ['item'] = 'Vermillion Cloak', ['slot'] = 'Body', ['affected'] = 'Head' },
     { ['item'] = 'Royal Cloak', 	 ['slot'] = 'Body', ['affected'] = 'Head' },
     { ['item'] = 'Mandra. Suit',	 ['slot'] = 'Body', ['affected'] = 'Hands,Legs,Feet' },
@@ -16,8 +16,7 @@ gear.multiSlot = {
     { ['item'] = 'Goblin Suit',      ['slot'] = 'Body', ['affected'] = 'Hands,Feet' },
 };
 
--- List of items that are used in the /equipit or /ei command. These are commonly
--- used for teleporting, exp boosts, reraise, etc
+-- List of shortcut items that can be equipped with the /equipit or /ei command
 gear.tEquipIt = {
     ['emp']    = { ['Name'] = 'Empress Band', ['Slot'] = 'Ring' },
     ['cha']    = { ['Name'] = 'Chariot Band', ['Slot'] = 'Ring' },
@@ -44,11 +43,37 @@ gear.tEquipIt = {
     ['gob']    = { ['Name'] = 'Goblin Suit', ['Slot'] = 'Body' },
 };
 
+-- This structure will be dynamically populated by the fGearCheck function.
+-- The slots will have a set structure providing details about every gear
+-- piece in the job file/crossjobs so that when checking for the piece of
+-- gear, the details that would require looking up item details will already
+-- be known, thus avoiding excessive server requests.
+gear.tGearDetails = {
+    ['main']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+    ['sub']   = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+    ['range'] = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+    ['ammo']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+    ['head']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+    ['neck']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = false, {} },
+    ['ears']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = false, {} },
+    ['body']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+    ['hands'] = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+    ['rings'] = { ['num'] = 0, ['acc'] = 0, ['vis'] = false, {} },
+    ['back']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = false, {} },
+    ['waist'] = { ['num'] = 0, ['acc'] = 0, ['vis'] = false, {} },
+    ['legs']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
+    ['feet']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} }
+};
+
+
 -- TrackingTable tracks all targetted gear across all gearsets to manipulate
 -- loading of said gear to avoid "flickering"
 --
 -- Table: ['gProfile'],['gs'],['slot'],['piece'],['duration'],['expiry']['primed']
 gear.TrackingTable = {};
+
+-- Temporary gear definition
+gear.tGearLine = {};
 
 --[[
     BuildTrackingTable is used to generate all of the entries for the
@@ -220,3 +245,47 @@ function gear.MoveToCurrent(tSet,tMaster,sLimit,bOverrideLocks,bIgnoreWSWAP,sSet
             -- ...
 end     -- gear.MoveToCurrent
 
+--[[
+    fValidateSpecial determines if the passed gear's special settings are true
+
+    Parameters
+        sSlot       The slot the piece of gear will be placed into
+        sGear       The name of the piece of gear being tested
+
+    Returned
+        Are the special conditions met
+--]]
+
+function gear.fValidateSpecial(sSlot,sGear)
+
+end     -- gear.fValidateSpecial
+
+--[[
+    fTrackingDefine makes sure that the passed definition exists in the tracking table
+
+    Parameters
+        bProfile    Profile or cross-job set
+        sSet        Name of set the piece is from
+        sGear       Name of gear piece to track
+        iSec        How many seconds should the hold be for
+--]]
+
+-- Syntax is wrong here
+
+function gear.fTrackingDefine(bProfile,sSet,sSlot,sGear,iSec)
+    if bProfile == nil then
+        bProfile = true;
+    end
+    if sSet == nil or sGear == nil then
+        return;
+    else
+        if iSec == nil then
+            iSec = 20;
+        end
+        if gear.TrackingTable[bProfile][sSet][sSlot][sGear]['duration'] == nil then
+            gear.TrackingTable[bProfile][sSet][sSlot][sGear]['duration'] = iSec;
+            gear.TrackingTable[bProfile][sSet][sSlot][sGear]['expiry'] = nil;
+            gear.TrackingTable[bProfile][sSet][sSlot][sGear]['primed'] = false;
+        end
+    end
+end     -- gear.fTrackingDefine

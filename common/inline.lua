@@ -1307,10 +1307,10 @@ function fCheckInlineToggle(sCode)
         bGood = gcdisplay.GetToggle('Idle');
     elseif sCode == 'TANK' then
         -- Is 'Tank' enabled
-        if string.find(crossjobs._TankJobList,player.MainJob) ~= nil then
+        if string.find(crossjobs._TankJobs,player.MainJob) ~= nil then
             bGood = (gcdisplay.GetToggle('Tank') == true);
         else
-            smsg = 'Warning: //[NOT_]TANK only applicable for jobs that can tank: ' .. crossjobs._TankJobList;
+            smsg = 'Warning: //[NOT_]TANK only applicable for jobs that can tank: ' .. crossjobs._TankJobs;
             bGood = false;
         end
     elseif sCode == 'MACC' then
@@ -1570,6 +1570,7 @@ end     -- fMakeCodeTable
         sSlot       name of slot associated with gear. (Subset and Group are also valid.)
         ts          target table if comparison needs to compare contents
         bLeft       is the passed piece a slot or a definition
+        bValidate   is this a code validation pass
 
     Returned
         bGood       was the coded condition met? T/F
@@ -1583,7 +1584,7 @@ end     -- fMakeCodeTable
         the passed in fragment (ergo, it needs to be fixed.)
 --]]
 
-function inline.fCheckInline(gear,sSlot,ts,bLeft)
+function inline.fCheckInline(gear,sSlot,ts,bLeft,bValidate)
     local iPos,i,suCode,sGear;
     local suCodeTbl = { };
     local bSubset;
@@ -1599,6 +1600,9 @@ function inline.fCheckInline(gear,sSlot,ts,bLeft)
     end
     if bLeft == nil then
         bLeft = false;                      -- Assume this is a gear definition
+    end
+    if bValidate == nil then
+        bValidate = false;                  -- Don't assume a validation pass
     end
 
     -- Find the conditional(s) if any
@@ -1703,20 +1707,31 @@ function inline.fCheckInline(gear,sSlot,ts,bLeft)
         end
 
         -- If an error occurred or the conditional wasn't recognized, then the results
-        -- of this check function are false. Display an appropriate error message
-        -- (depending on bValidate) and exit the function.
+        -- of this check function are false. If this is a validation run though, you
+        -- want to keep processing. The success/failure of the inline conditional's
+        -- result isn't the point, you just want to know if the conditionals are valid.
         if bGood ~= nil and bGood == false then
             if smsg ~= nil then
                 fDisplayOnce(smsg);
             end
-            return false,sGear,nil;
-        elseif bGood == nil then
+        end
+
+        -- The inline wasn't found
+        if bGood == nil then
             smsg = 'Warning: Unrecognized conditional: ' .. suCode;
             fDisplayOnce(smsg);
-            return false,sGear,nil;
+            bGood = false;
+        end
+
+        -- Now, if the code was in error and this was not a validation pass,
+        -- processing is done and a false result must be returned. However,
+        -- if this is a validation pass, you've already displayed the problem
+        -- and need to continue processing the conditionals.
+        if bValidate == false and bGood == false then
+            return bGood,sGear,sValidSlots
         end
     end
 
-    -- By getting to this point, the conditional(s) have to be true
+    -- By getting to this point, the conditional(s) have to be true or the validation pass is complete
     return bGood,sGear,sValidSlots;
 end     -- fCheckInline

@@ -67,7 +67,9 @@ utilities.tSpellGroupings = {
     ['nin-buff']   = { 'tonko','utsusemi','monomi' },
     ['nin-debuff'] = { 'kurayami','hojo','dokumori','jubaku' },
     ['nin-ele']    = { 'katon','suiton','raiton','doton','huton','hyoton' },
-    ['brd-enh']	   = { 'minne','minuet','paeon','pastoral','madrigal','mambo','operetta','etude','ballad','march','prelude','aubade','carol','mazurka','gavotte','capriccio','fantasia','hymnus','round' },
+    ['brd-enh']	   = { 'minne','minuet','paeon','pastoral','madrigal','mambo','operetta','etude','ballad','march','prelude','aubade','carol','mazurka','gavotte','capriccio',
+        'fantasia','hymnus','round'
+    },
     ['brd-enf']	   = { 'requiem','threnody','lullaby','finale','elegy','virelai' }
 };
 
@@ -75,7 +77,8 @@ utilities.tSpellGroupings = {
 -- included in a reference to where the item that matches that type/element
 -- can be found in the GearDetails table.
 utilities.tElemental_gear = {
-    ['relic'] = {
+    ['relic'] = {gcinclude.OwnNation = -1;
+        gcinclude.basetime = os.time();
         ['level'] = 75,
         ['type'] = 'STAVE',
         { ['Name'] = 'Claustrum', ['Ref'] = {} }
@@ -97,7 +100,8 @@ utilities.tElemental_gear = {
             ['Affinity'] = { 'blizzaga','blizzard','freeze','frost','ice','enblizzard','jubaku','hyoton','bind','distract','paralyze' },
             ['SongAffinity'] = { 'wind threnody' },
             ['Summons'] = { 'shiva','ice spirit','icespirit','ice' },
-        },
+        },gcinclude.OwnNation = -1;
+        gcinclude.basetime = os.time();
         ['wind'] = {
             ['Weak'] = 'ice',
             ['NQ'] = { ['Name'] = 'Wind staff', ['Ref'] = {} },
@@ -135,7 +139,8 @@ utilities.tElemental_gear = {
             ['NQ'] = { ['Name'] = 'Light staff', ['Ref'] = {} },
             ['HQ'] = { ['Name'] = 'Apollo\'s staff', ['Ref'] = {} },
             ['Affinity'] = { 'banish','banishga','curaga','cure','dia','diaga','flash','holy','enlight','repose','inundation' },
-            ['SongAffinity'] = { 'dark threnody', 'foe requiem', 'foe requiem ii', 'foe requiem iii', 'foe requiem iv', 'foe requiem v', 'foe requiem vi', 'foe lullaby', 'horde lullaby', 'magic finale', 'maiden\'s virelai' },
+            ['SongAffinity'] = { 'dark threnody','foe requiem','foe requiem ii','foe requiem iii','foe requiem iv','foe requiem v','foe requiem vi','foe lullaby','horde lullaby',
+                'magic finale','maiden\'s virelai' },
             ['Summons'] = {'carbuncle','light spirit','lightspirit','light','cait sith','caitsith','alexander'},
         },
         ['dark'] = {
@@ -206,7 +211,8 @@ utilities.tElemental_gear = {
             ['Name'] = 'Anrin obi',
             ['Ref'] = {},
             ['MEacc'] = { 'blind','bio','sleep','dispel','frazzle','drain','warp','tractor','aspir','escape','sleep','sleepga','retrace','endark' },
-            ['eleWS'] = { 'energy steal','energy drain','sanguine blade','dark harvest','shadow of death','infernal scythe','blade: ei','starburst','sunburst','cataclysm','vidohunir','omniscience','leaden suite' },
+            ['eleWS'] = { 'energy steal','energy drain','sanguine blade','dark harvest','shadow of death','infernal scythe','blade: ei','starburst','sunburst','cataclysm','vidohunir',
+                'omniscience','leaden suite' },
         },
     },
     ['gorget'] = {
@@ -216,78 +222,82 @@ utilities.tElemental_gear = {
             ['Name'] = 'Flame gorget',
             ['Ref'] = {},
             ['skillProp'] = { 'liquefaction','fusion' },
-            ['eleWS'] = { 'arching arrow','ascetic\'s fury','asuran fists','atonement','blade: shun','decimation','detonator','drakesbane','dulling arrow','empyreal arrow','final heaven','flaming arrow','full swing',
-                'garland of bliss','heavy shot','hexa strike','hot shot','insurgency','knights of round','last stand','mandalic stab','mistral axe','metatron torment','realmrazer','red lotus blade','scourge',
-                'shijin spiral','sniper shot','spinning attack','spinning axe','stringing pummel','tachi: kagero','tachi: kasha','upheaval','wheeling thrust' },
+            ['eleWS'] = { 'arching arrow','ascetic\'s fury','asuran fists','atonement','blade: shun','decimation','detonator','drakesbane','dulling arrow','empyreal arrow','final heaven',
+                'flaming arrow','full swing','garland of bliss','heavy shot','hexa strike','hot shot','insurgency','knights of round','last stand','mandalic stab','mistral axe',
+                'metatron torment','realmrazer','red lotus blade','scourge','shijin spiral','sniper shot','spinning attack','spinning axe','stringing pummel','tachi: kagero','tachi: kasha',
+                'upheaval','wheeling thrust' },
         },
         ['ice'] = {
             ['Weak'] = 'fire',
             ['Name'] = 'Snow gorget',
             ['Ref'] = {},
             ['skillProp'] = { 'induration','distortion' },
-            ['eleWS'] = { 'blade: to','blast arrow','cross reaper','death blossom','expiacion','freezebite','frostbite','full break','geirskogul','ground strike','guillotine','quietus','impulse drive','mordant rime',
-                'namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','ruinator','raging rush','shadow of death','shattersoul','skullbreaker','smash axe','spiral hell','steel cyclone','tachi: gekko',
-                'tachi: hobaku','tachi: rana','tachi: yukikaze','tornado kick','vidohunir' },
+            ['eleWS'] = { 'blade: to','blast arrow','cross reaper','death blossom','expiacion','freezebite','frostbite','full break','geirskogul','ground strike','guillotine','quietus',
+                'impulse drive','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','ruinator','raging rush','shadow of death','shattersoul','skullbreaker',
+                'smash axe','spiral hell','steel cyclone','tachi: gekko','tachi: hobaku','tachi: rana','tachi: yukikaze','tornado kick','vidohunir' },
         },
         ['wind'] = {
             ['Weak'] = 'ice',
             ['Name'] = 'Breeze gorget',
             ['Ref'] = {},
             ['skillProp'] = { 'detonation','fragmentation' },
-            ['eleWS'] = { 'aeolian edge','backhand blow','black halo','blade: jin','blade: kamu','blade: to','camlann\'s torment','coronach','cyclone','dancing edge','death blossom','dragon kick',
-                'earth crusher','exenterator','freezebite','gale axe','ground strike','gust slash','king\'s justice','mordant rime','raging axe','randgrith','red lotus blade','resolution','ruinator','savage blade',
-                'shark bite','shell crusher','sidewinder','slug shot','spinning slash','steel cyclone','tachi: jinpu','tachi: kaiten','taichi: shoha','taichi: yukikaze','tornado kick','trueflight','true strike',
-                'victory smite','vidohunir' },
+            ['eleWS'] = { 'aeolian edge','backhand blow','black halo','blade: jin','blade: kamu','blade: to','camlann\'s torment','coronach','cyclone','dancing edge','death blossom',
+                'dragon kick','earth crusher','exenterator','freezebite','gale axe','ground strike','gust slash','king\'s justice','mordant rime','raging axe','randgrith',
+                'red lotus blade','resolution','ruinator','savage blade','shark bite','shell crusher','sidewinder','slug shot','spinning slash','steel cyclone','tachi: jinpu',
+                'tachi: kaiten','taichi: shoha','taichi: yukikaze','tornado kick','trueflight','true strike','victory smite','vidohunir' },
         },
         ['earth'] = {
             ['Weak'] = 'wind',
             ['Name'] = 'Soil gorget',
             ['Ref'] = {},
             ['skillProp'] = { 'scission','gravitation' },
-            ['eleWS'] = { 'aeolian edge','asuran fists','avalanche axe','blade: ei','blade: ku','blade: ten','calamity','catastrophe','crescent moon','dancing edge','entropy','eviseration','exenterator','expiacion',
-                'fast blade','hard slash','impulse drive','iron tempest','king\'s justice','leaden salute','mercy stroke','nightmare scythe','omniscience','primal rend','pyrrhic kleos','rampage','requiscat',
-                'resolution','retibution','savage blade','seraph blade','shattersoul','shining blade','sickle moon','slice','spinning axe','spinning scythe','spiral hell','stardiver','stringing pummel','sturmwind',
-                'swift blade','tachi: enpi','tachi: jinpu','tachi: rana','trueflight','viper bite','vorpal blade','wasp sting' },
+            ['eleWS'] = { 'aeolian edge','asuran fists','avalanche axe','blade: ei','blade: ku','blade: ten','calamity','catastrophe','crescent moon','dancing edge','entropy','eviseration',
+                'exenterator','expiacion','fast blade','hard slash','impulse drive','iron tempest','king\'s justice','leaden salute','mercy stroke','nightmare scythe','omniscience',
+                'primal rend','pyrrhic kleos','rampage','requiscat','resolution','retibution','savage blade','seraph blade','shattersoul','shining blade','sickle moon','slice','spinning axe',
+                'spinning scythe','spiral hell','stardiver','stringing pummel','sturmwind','swift blade','tachi: enpi','tachi: jinpu','tachi: rana','trueflight','viper bite','vorpal blade',
+                'wasp sting' },
         },
         ['thunder'] = {
             ['Weak'] = 'earth',
             ['Name'] = 'Thunder gorget',
             ['Ref'] = {},
             ['skillProp'] = { 'impaction','fragmentation' },
-            ['eleWS'] = { 'aeolian edge','apex arrow','armor break','avalanche axe','black halo','blade: chi','blade: jin','blade: kamu','blade: shun','calamity','camlann\'s torment','circle blade','combo','cyclone',
-                'death blossom','dragon kick','earth crusher','exenterator','flat blade','full swing','ground strike','heavy swing','howling fist','judgement','king\'s justice','leg sweep','mordant rime','raging axe',
-                'raging fist','raiden thrust','realmrazer','resolution','rock crusher','savage blade','seraph strike','shark bite','shield break','shining strike','shoulder tackle','sickle moon','skewer',
-                'spinning attack','spinning axe','tachi: goten','tachi: koki','tachi: shoha','thunder thrust','true strike','victory smite','vidohunir','vorpal blade','weapon break' },
+            ['eleWS'] = { 'aeolian edge','apex arrow','armor break','avalanche axe','black halo','blade: chi','blade: jin','blade: kamu','blade: shun','calamity','camlann\'s torment',
+                'circle blade','combo','cyclone','death blossom','dragon kick','earth crusher','exenterator','flat blade','full swing','ground strike','heavy swing','howling fist',
+                'judgement','king\'s justice','leg sweep','mordant rime','raging axe','raging fist','raiden thrust','realmrazer','resolution','rock crusher','savage blade','seraph strike',
+                'shark bite','shield break','shining strike','shoulder tackle','sickle moon','skewer','spinning attack','spinning axe','tachi: goten','tachi: koki','tachi: shoha',
+                'thunder thrust','true strike','victory smite','vidohunir','vorpal blade','weapon break' },
         },
         ['water'] = {
             ['Weak'] = 'thunder',
             ['Name'] = 'Aqua gorget',
             ['Ref'] = {},
             ['skillProp'] = { 'reverberation','distortion' },
-            ['eleWS'] = { 'atonement','blade: teki','brainshaker','circle blade','cross reaper','dark harvest','entropy','quietus','death blossom','decimation','expiacion','full break','garland of bliss',
-                'gate of tartarus','geirskogul','ground strike','last stand','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','primal rend','raging rush','retribution','ruinator',
-                'shadow of death','shockwave','shoulder tackle','sidewinder','skullbreaker','slug shot','smash axe','spinning scythe','spiral hell','split shot','steel cyclone','sturmwind','sunburst','tachi: gekko',
-                'tachi: koki','vidohunir','vorpal thrust' },
+            ['eleWS'] = { 'atonement','blade: teki','brainshaker','circle blade','cross reaper','dark harvest','entropy','quietus','death blossom','decimation','expiacion','full break',
+                'garland of bliss','gate of tartarus','geirskogul','ground strike','last stand','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','primal rend',
+                'raging rush','retribution','ruinator','shadow of death','shockwave','shoulder tackle','sidewinder','skullbreaker','slug shot','smash axe','spinning scythe','spiral hell',
+                'split shot','steel cyclone','sturmwind','sunburst','tachi: gekko','tachi: koki','vidohunir','vorpal thrust' },
         },
         ['light'] = {
             ['Weak'] = 'dark',
             ['Name'] = 'Light gorget',
             ['Ref'] = {},
             ['skillProp'] = { 'transfixion','fusion','light' },
-            ['eleWS'] = { 'apex arrow','arching arrow','ascetic\'s fury','atonement','blade: chi','blade: ku','blade: rin','blade: shun','blast arrow','blast shot','camlann\'s torment','decimation','detonator',
-                'double thrust','drakesbane','dulling arrow','empyreal arrow','eviseration','final heaven','flaming arrow','garland of bliss','heavy shot','hexa strike','hot shot','howling fist','insurgency',
-                'knight\'s of round','leaden salute','last stand','mandalic stab','metatron torment','mistral axe','omniscience','piercing arrow','power slash','realmrazer','raiden thrust','scourge',
-                'shijin spiral','sidewinder','skewer','slug shot','sniper shot','split shot','stardiver','tachi: enpi','tachi: goten','tachi: kasha','thunder thrust','torcleaver','victory smite','upheaval',
-                'vorpal scythe','vorpal thrust','wheeling thrust' },
+            ['eleWS'] = { 'apex arrow','arching arrow','ascetic\'s fury','atonement','blade: chi','blade: ku','blade: rin','blade: shun','blast arrow','blast shot','camlann\'s torment',
+                'decimation','detonator','double thrust','drakesbane','dulling arrow','empyreal arrow','eviseration','final heaven','flaming arrow','garland of bliss','heavy shot',
+                'hexa strike','hot shot','howling fist','insurgency','knight\'s of round','leaden salute','last stand','mandalic stab','metatron torment','mistral axe','omniscience',
+                'piercing arrow','power slash','realmrazer','raiden thrust','scourge','shijin spiral','sidewinder','skewer','slug shot','sniper shot','split shot','stardiver','tachi: enpi',
+                'tachi: goten','tachi: kasha','thunder thrust','torcleaver','victory smite','upheaval','vorpal scythe','vorpal thrust','wheeling thrust' },
         },
         ['dark'] = {
             ['Weak'] = 'light',
             ['Name'] = 'Shadow gorget',
             ['Ref'] = {},
             ['skillProp'] = { 'compression','gravitation','darkness' },
-            ['eleWS'] = { 'asuran fists','black halo','blade: ei','blade: hi','blade: kamu','blade: ku','blade: ten','catastrophe','quietus','entropy','eviseration','impulse drive','insurgency','keen edge',
-                'leaden salute','mandalic stab','mercy stroke','requiscat','rundra\'s storm','nightmare scythe','omniscience','one inch punch','penta thrust','primal rend','retribution','shattersoul','starburst',
-                'stardiver','stringing pummel','sunburst','swift blade','tachi: kasha','tachi: rana','tachi: shoha','upheaval','gate of tartarus' },
+            ['eleWS'] = { 'asuran fists','black halo','blade: ei','blade: hi','blade: kamu','blade: ku','blade: ten','catastrophe','quietus','entropy','eviseration','impulse drive',
+                'insurgency','keen edge','leaden salute','mandalic stab','mercy stroke','requiscat','rundra\'s storm','nightmare scythe','omniscience','one inch punch','penta thrust',
+                'primal rend','retribution','shattersoul','starburst','stardiver','stringing pummel','sunburst','swift blade','tachi: kasha','tachi: rana','tachi: shoha','upheaval',
+                'gate of tartarus' },
         },
         ['searched'] = false,
     },
@@ -327,6 +337,11 @@ utilities._SLOT_FA = 'FA';     -- formatted output: first letter uppercase, rest
 -- Holding variable for all of the messages that should only be displayed once
 utilities.GearWarnings = nil;
 
+-- The following is used in the /GC nag reminder
+utilities.basetime = os.time();
+
+crossjobs = required('crossjobs');
+
 --[[
     fDisplayOnce will display the passed message if it hasn't been displayed
     before. If it has been displayed, the message isn't repeated.
@@ -357,7 +372,7 @@ function utilities.fDisplayOnce(msg,bOverride)
 
     if utilities.GearWarnings == nil or
         (utilities.GearWarnings ~= nil and string.find(utilities.GearWarnings,tmp) == nil) or
-        bOverride == true then
+            bOverride == true then
         print(chat.message(msg));
 
         if utilities.GearWarnings == nil then
@@ -367,6 +382,64 @@ function utilities.fDisplayOnce(msg,bOverride)
         end
     end
 end     -- utilities.fDisplayOnce
+
+--[[
+    fDisplayVerion displays version details including the changelog since the last release.
+--]]
+
+    function utilities.fDisplayVersion()
+    local bSkip = false;
+    local rfn = gProfile.FilePath:reverse();
+
+    -- remove the job file from path, add changelog
+    rfn = string.sub(rfn,string.find(rfn,'\\'),-1);
+    rfn = rfn:reverse() .. 'Documentation\\changelog.txt';
+
+    print(chat.message(' '));
+    print(chat.message(version.name .. ' Version: ' .. tostring(version.version)));
+    for line in io.lines (rfn) do
+        if bSkip == false then
+            print(chat.message(' '));
+            bSkip = true;
+        end
+    print(chat.message(line));
+    end
+end     -- utilities.fDisplayVersion
+
+--[[
+    fStartReminder is a simple routine used for displaying a nag message for the player
+    to run /GC. Initially it displayes 15 seconds after logging in, but from then on
+    it will display every 5 minutes until /GC is run. (Gear swapping does not occur
+    until this command is run.)
+--]]
+
+function utilities.StartReminder()
+    local iTestVal = crossjobs.settings.bMinBasetime;
+    local iNow = os.time();
+
+    if gcdisplay.GetGC() == true then
+        return;
+    end
+
+    if crossjobs.settings.bGCReminder == true then
+        -- Since reminder already shown once, change the wait
+        -- interval from 15 seconds to 5 minutes
+        iTestVal = crossjobs.settings.bMaxBasetime;
+    end
+
+    if os.difftime(iNow,utilities.basetime) >= iTestVal then
+        print(chat.message('************'));
+        if iTestVal == crossjobs.settings.bMinBasetime then
+            print(chat.message('FYI: Remember to do a /gc once \'data download\' finishes'));
+        else
+            print(chat.message('FYI: Remember to do a /gc'));
+        end
+        print(chat.message('************'));
+        crossjobs.settings.bGCReminder = true;
+        -- Change the base to current so that comparison is from now forward
+        utilities.basetime = iNow;
+    end
+end     -- utilities.StartReminder
 
 --[[
     fFormattedWord takes the passed in word and formats it in the indicated
@@ -683,7 +756,7 @@ function utilities.fGetTableByName(sName)
         s2 = sName2;
     end
 
-    for k,l in pairs(gcinclude.Sets) do
+    for k,l in pairs(crossjobs.Sets) do
         if string.lower(k) == s2 then
             return l;
         end
