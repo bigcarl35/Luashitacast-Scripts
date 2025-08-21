@@ -62,3 +62,42 @@ crossjobs.sets = {
 
 	['CurrentGear'] = { },
 };
+
+crossjobs.settings = {
+	-- You can also set any of these on a per job basis in the job file in the OnLoad function. See my BST job file
+	--to see how this is done.
+	Messages = false; 	 -- set to true if you want chat log messages to appear on any /gs command used such as DT, or KITE gear toggles, certain messages will always appear
+	WScheck = true; 	 -- set to false if you don't want to use the WSdistance safety check
+	WSdistance = 4.7; 	 -- default max distance (yalms) to allow non-ranged WS to go off at if the above WScheck is true
+	bWSOverride = false; -- is the player playing a job where weapon swapping always happens, it is not optional?
+	Tolerance = 97;		 -- Comparison value %, cut-off for certain comparisons
+	DefaultSpellTarget = 't'; -- What to use in MaxSpell if no target specified
+	DefaultSongTarget = 't';  -- What to use in MaxSong if no target specified
+	--
+	priorityEngaged = 'CEF'; 		-- indicates order of steps for engagement
+	priorityWeaponSkill = 'ADBE';	-- indicates order of steps for a weapon skill
+	--
+	bAutoStaveSwapping = true;		-- indicates if elemental stave swapping should occur automatically
+	--
+	bMinBasetime = 15;		-- minimum wait before reminding player to run /gc
+	bMaxBasetime = 300;		-- once reminder shown, switch to every 5 minutes
+	bGCReminder = false;	-- Has GC reminder been displayed yet
+};
+
+-- These two variables are used to store the invoked type of craft/gather type
+crossjobs.Craft=nil;
+crossjobs.Gather=nil;
+
+-- Define list of all valid jobs
+crossjobs._validJobs = 'BLM,BLU,BRD,BST,COR,DNC,DRG,DRK,GEO,MNK,PLD,PUP,RDM,RNG,RUN,SAM,SCH,SMN,THF,WAR,WHM';
+
+-- Define list of all magic using jobs
+crossjobs._sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,BLU,SCH,GEO,RUN';
+
+-- Define list of all jobs that can tank
+crossjobs._TankJobList = 'PLD,NIN,RUN,DRK,WAR,THF,RDM,BLU';
+
+-- Define lists of valid Weapon Types
+crossjobs._WeaponTypes = 'ARCHERY,AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,MARKSMANSHIP,POLEARM,SCYTHE,STAVE,SWORD,THROWING';
+crossjobs._WeaponMelee = 'AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,POLEARM,SCYTHE,STAVE,SWORD';
+crossjobs._WeaponRange = 'ARCHERY,MARKSMANSHIP,THROWING';
