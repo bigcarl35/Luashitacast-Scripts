@@ -1,7 +1,11 @@
-local inline = {};
+local inline = T{};
+
+local utilities = require('utilities');
+local crossjobs = require('crossjobs');
+local gear      = require('gear');
 
 -- Define a list of all towns and the areas that are specific to each nation and Jeuno
-tAreas = {
+inline.tAreas = {
     ['Towns'] = { 'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]',
         'Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship',
         'Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets',
@@ -15,7 +19,7 @@ tAreas = {
 };
 
 -- Define target familes for Aquans and Amorphs
-tTargetFamily = {
+inline.tTargetFamily = {
     ['aquans'] = {
         ['crabs'] = {
             'river crab','limicoline crab','palm crab','savanna crab','stone crab','tree crab','sand crab','mine crab','land crab',
@@ -102,10 +106,6 @@ tTargetFamily = {
     }
 };
 
-utilities = required('utilities');
-crossjobs = required('crossjobs');
-gear      = required('gear');
-
 --[[
     fCheckInlineBuff checks the validity of the passed inline code and then determines if the
     coded condition is true.
@@ -129,7 +129,7 @@ function fCheckInlineBuff(sCode)
         'ARC_CIRCLE','COVER','HOLY_CIRCLE','SPIKE','UTSUSEMI','WARD_CIRCLE','SAMBA','ENAERO','ENBLIZZARD',
         'ENDARK','ENFIRE','ENLIGHT','ENSTONE','ENTHUNDER','ENWATER','BARAERO','BARBLIZZARD','BARFIRE',
         'BARSTONE','BARTHUNDER','BARWATER','BARSLEEP','BARPOISON','BARPARALYZE','BARBLIND','BARVIRUS',
-        'BARPETRIFY'
+        'BARPETRIFY','ANCIENT_CIRCLE','AFTERMATH','REPRISAL','YONIN','FLEE'
         };
     local tBarelemental  = { 'BARAERO','BARBLIZZARD','BARFIRE','BARSTONE','BARTHUNDER','BARWATER' };
     local tBarstatus     = { 'BARSLEEP','BARPOISON','BARPARALYZE','BARBLIND','BARVIRUS','BARPETRIFY' };
@@ -202,11 +202,17 @@ function fCheckInlineDebuff(sCode)
     local bFound = false;
     local iPos;
     local tDebuffs = {
-        ['CODE']    = { 'BOUND','BLINDED','CURSED','DOOMED','PARALYZED','PETRIFIED','POISONED',
-                        'SILENCED','SLEPT','WEAKENED' };
-        ['BUFF']    = { 'Bind','Blind','Curse','Doom','Paralysis','Petrify','Poison','Silence',
-                        'Sleep','Weak' }
-        };
+        ['CODE']    = {
+                'ADDLED', 'AMNESIA', 'BANED','BLINDED','BOUND','BUSTED','CHARMED','CURSED','DISEASED',
+                'DOOMED','ENCUMBERED','IMPAIRED','KO','MEDICATED','MUTED','PARALYZED','PETRIFIED','PLAGUED',
+                'POISONED','SILENCED','SLEPT','STUNNED','TERRIFIED','WEAKENED','WEIGHTED'
+                },
+        ['BUFF']    = {
+                'Addle','Amnesia','Bane','Blind','Bind','Bust','Charm','Curse','Disease',
+                'Doom','Encumbrance','Impairment','KO','Medicine','Mute','Paralysis','Petrify','Plague',
+                'Poison','Silence','Sleep','Stun','Terror','Weak','Weight'
+                }
+    };
 
     sCode = string.upper(sCode);
     local i = string.find(sCode,'NOT_');
@@ -217,9 +223,7 @@ function fCheckInlineDebuff(sCode)
 
     iPos = table.find(tDebuffs['CODE'],sCode);
     if iPos ~= nil then
-        if sCode == 'DOOMED' then
-            bGood = (utilities.fBuffed('Doom',true) or utilities.fBuffed('Bane',true));
-        elseif sCode == 'WEAKENED' then
+        if sCode == 'WEAKENED' then
             bGood = (utilities.fBuffed('Weakness',true) or utilities.fBuffed('Weakened',true));
         else
             bGood = (utilities.fBuffed(tDebuffs['BUFF'][iPos]));
@@ -537,6 +541,12 @@ function fCheckInlineMoon(sCode)
         bGood = (environ.MoonPhase == 'Full Moon');
     elseif sCode == 'newmoon' then
         bGood = (environ.MoonPhase == 'New Moon');
+    elseif sCode == 'gibbous' then
+        bGood = (string.find(environ.MoonPhase,'Gibbous') ~= nil);
+    elseif sCode == 'quartermoon' then
+        bGood = (string.find(environ.MoonPhase,'Quarter') ~= nil);
+    elseif bGood == 'crescent' then
+        bGood = (string.find(environ.MoonPhase,'Crescent') ~= nil);
     end
 
     if bGood ~= nil and bNot == true then
@@ -563,9 +573,10 @@ end     -- fCheckInlineMoon
         There is no check for validation since at this point in processing, probably
         not all inlines will have been checked yet. A validation message will occur in
         the calling routine: inline.fCheckInline.
---]]
 
--- also, checking that GC is set probably needs to be done for the whole procedure and not just //SPECIAL
+    Note2: //[NOT_]SLOTS: has been removed from this code. It's more complicated than
+        originally thought. The goal has been moved to a future, post-2.0 implementation.
+--]]
 
 function fCheckInlineGear(sCode,sSlot,ts)
     local gSet = gData.GetCurrentSet();
@@ -601,7 +612,7 @@ function fCheckInlineGear(sCode,sSlot,ts)
             sItem = string.sub(sCode,4,-1);
         elseif string.sub(sCode,3,1) == '-' then
             local j = string.find(sCode,':');
-            ssLot = utilities.fTranslateWhichSlot(string.sub(sCode,4,j-1),utilities._SLOT_FA);
+            ssLot = utilities.fValidSlots(string.sub(sCode,4,j-1),utilities._SLOT_FA);
             if ssLot == nil then
                 -- Slot was Unrecognized
                 smsg = 'Warning: Invalid slot in inline conditional: ' .. sCodeHold;
@@ -711,7 +722,7 @@ function fCheckInlineTarget(sCode)
     if sCode == 'amorph' then
         -- Equip if the target is of type Amorph
         if tg ~= nil and tg.Name ~= nil then
-            for ii,jj in pairs(tTargetFamily['amorphs']) do
+            for ii,jj in pairs(inline.tTargetFamily['amorphs']) do
                 if table.find(jj,ln) ~= nil then
                     bFound = true;
                     break;
@@ -722,7 +733,7 @@ function fCheckInlineTarget(sCode)
     elseif sCode == 'aquan' then
         -- Equip if the target is of type Aquan
         if tg ~= nil and tg.Name ~= nil then
-            for ii,jj in pairs(tTargetFamily['aquans']) do
+            for ii,jj in pairs(inline.tTargetFamily['aquans']) do
                 if table.find(jj,ln) ~= nil then
                     bFound = true;
                     break;
@@ -912,21 +923,7 @@ function fCheckInlineSlot(sCode,sSlot,ts)
         if bNot == true then
             bGood = not bGood;
         end
-    elseif string.find(sCode,'SLOTS:') ~= nil then      -- !!! flesh out
-        -- Technically this is not an inline conditional. Rather, it designates a slot restriction.
-        -- This just checks that it's a subset and returns the list of valid slots.
-        if suSlot == 'SUBSET' then
-            bGood,sValidSlots = utilities.fListValidSlots(sCode,bNot);
-        else
-            smsg = 'Warning: //[NOT_]SLOTS is only valid on subset definitions: ' .. sSlot ..'//'.. sCode;
-            return false,smsg,nil;
-        end
     end
-
-    if bNot == true and sCode ~= 'SLOTS:' then      -- Inverted SLOTS already handled
-        bGood = not bGood;
-    end
-
     return bGood,smsg,sValidSlots;
 end     -- fCheckInlineSlot
 
@@ -1086,56 +1083,58 @@ function fCheckInlineOther(sCode)
         end
     end
 
-    if bGood == nil and sCode == 'true' then
-        -- Used for testing. Has no purpose otherwise
-        bGood = true;
-        bFlip = false;
-    elseif sCode == 'false' then
-        -- Used for testing. Has no purpose otherwise
-        bGood = false;
-        bFlip = false;
-    elseif sCode == 'inparty' then
-        -- Is the player in a party?
-        bGood = (party ~= nil and party.Count ~= nil and party.Count > 1);
-    elseif sCode == 'own' then
-        -- Is region controlled by player's nation?
-        bGood = (gcdisplay.GetCycle('Region') == 'Owned');
-    elseif string.find(sCode,'party:') ~= nil then
-        local iNum = tonumber(string.sub(sCode,7,-1));
-        bGood = (party ~= nil and party.Count ~= nil and party.Count == iNum);
-    elseif sCode == 'town' then
-        bGood = (environ.Area ~= nil and table.find(tAreas['Towns'],environ.Area) ~= nil);
-    elseif sCode == 'town-ak' then
-        bFlip = false;
-        -- Equip the appropriate national/ducal aketon if in the appropriate town
-        local pNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation();
-        local slcGear = string.lower(sGear);
+    if bGood == nil then
+        if sCode == 'true' then
+            -- Used for testing. Has no purpose otherwise
+            bGood = true;
+            bFlip = false;
+        elseif sCode == 'false' then
+            -- Used for testing. Has no purpose otherwise
+            bGood = false;
+            bFlip = false;
+        elseif sCode == 'inparty' then
+            -- Is the player in a party?
+            bGood = (party ~= nil and party.Count ~= nil and party.Count > 1);
+        elseif sCode == 'own' then
+            -- Is region controlled by player's nation?
+            bGood = (gcdisplay.GetCycle('Region') == 'Owned');
+        elseif string.find(sCode,'party:') ~= nil then
+            local iNum = tonumber(string.sub(sCode,7,-1));
+            bGood = (party ~= nil and party.Count ~= nil and party.Count == iNum);
+        elseif sCode == 'town' then
+            bGood = (environ.Area ~= nil and table.find(inline.tAreas['Towns'],environ.Area) ~= nil);
+        elseif sCode == 'town-ak' then
+            bFlip = false;
+            -- Equip the appropriate national/ducal aketon if in the appropriate town
+            local pNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation();
+            local slcGear = string.lower(sGear);
 
-        if slcGear == 'ducal aketon' then
-            bGood = (environ.Area ~= nil and
-                (table.find(tAreas['Windy'],environ.Area) ~= nil or
-                 table.find(tAreas['Sandy'],environ.Area) ~= nil or
-                 table.find(tAreas['Bastok'],environ.Area) ~= nil or
-                 table.find(tAreas['Jeuno'],environ.Area) ~= nil)
-                );
-        elseif slcGear == 'federation aketon' then
-            if environ.Area ~= nil and table.find(tAreas['Windy'],environ.Area) ~= nil then
-                -- Equip the Windurstian national aketon if in Windurst
-                bGood = (pNation == 2);
+            if slcGear == 'ducal aketon' then
+                bGood = (environ.Area ~= nil and
+                    (table.find(inline.tAreas['Windy'],environ.Area) ~= nil or
+                    table.find(inline.tAreas['Sandy'],environ.Area) ~= nil or
+                    table.find(inline.tAreas['Bastok'],environ.Area) ~= nil or
+                    table.find(inline.tAreas['Jeuno'],environ.Area) ~= nil)
+                    );
+            elseif slcGear == 'federation aketon' then
+                if environ.Area ~= nil and table.find(inline.tAreas['Windy'],environ.Area) ~= nil then
+                    -- Equip the Windurstian national aketon if in Windurst
+                    bGood = (pNation == 2);
+                end
+            elseif slcGear == 'republic aketon' then
+                if environ.Area ~= nil and table.find(inline.tAreas['Bastok'],environ.Area) == nil then
+                    -- Equip the Bastokian national aketon if in Bastok
+                    bGood = (pNation == 1);
+                end
+            elseif slcGear == 'kingdom aketon' then
+                if environ.Area ~= nil and table.find(inline.tAreas['Sandy'],environ.Area) == nil then
+                    -- Equip the Sandorian national aketon if in San d'Oria
+                    bGood = (pNation == 0);
+                end
+            else
+                smsg = 'Warning: Invalid body piece for national aketon check: ' .. sGear;
+                return false,smsg;
             end
-        elseif slcGear == 'republic aketon' then
-            if environ.Area ~= nil and table.find(tAreas['Bastok'],environ.Area) == nil then
-                -- Equip the Bastokian national aketon if in Bastok
-                bGood = (pNation == 1);
-            end
-        elseif slcGear == 'kingdom aketon' then
-            if environ.Area ~= nil and table.find(tAreas['Sandy'],environ.Area) == nil then
-                -- Equip the Sandorian national aketon if in San d'Oria
-                bGood = (pNation == 0);
-            end
-        else
-            smsg = 'Warning: Invalid body piece for national aketon check: ' .. sGear;
-            return false,smsg;
         end
     end
 
@@ -1606,6 +1605,9 @@ function inline.fCheckInline(gear,sSlot,ts,bLeft,bValidate)
     end
 
     -- Find the conditional(s) if any
+
+    -- Here goes check on bLeft and conditionals
+
     iPos = string.find(gear,'//');
 
     if iPos == nil then
@@ -1712,14 +1714,14 @@ function inline.fCheckInline(gear,sSlot,ts,bLeft,bValidate)
         -- result isn't the point, you just want to know if the conditionals are valid.
         if bGood ~= nil and bGood == false then
             if smsg ~= nil then
-                fDisplayOnce(smsg);
+                utilities.fDisplayOnce(smsg);
             end
         end
 
         -- The inline wasn't found
         if bGood == nil then
             smsg = 'Warning: Unrecognized conditional: ' .. suCode;
-            fDisplayOnce(smsg);
+            utilities.fDisplayOnce(smsg);
             bGood = false;
         end
 

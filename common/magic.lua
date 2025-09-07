@@ -1,4 +1,8 @@
-local magic = {};
+local magic = T{};
+
+local gcdisplay = require('gcdisplay');
+local utilities = require('utilities');
+local gear      = require('gear');
 
 --[[
     This table contains a list of all of the spells and songs that have multiple tiers, listed in descending order.
@@ -8,7 +12,7 @@ local magic = {};
     Please note that entries that will be included when Treasures of Aht Urgan is released are currently commented out.
 --]]
 
-Tiered = {
+magic.Tiered = {
     ['spells'] = {
         ['aero'] = {
             [1] = { ['Name'] = 'Aero IV', ['SID'] = 157, ['MP'] = 115, ['BLM'] = 72, ['SCH'] = 72 },
@@ -148,7 +152,7 @@ Tiered = {
         ['water'] = {
             [1] = { ['Name'] = 'Water IV', ['SID'] = 172, ['MP'] = 99, ['BLM'] = 70, ['SCH'] = 71 },
             [2] = { ['Name'] = 'Water III', ['SID'] = 171, ['MP'] = 46, ['RDM'] = 67, ['BLM'] = 55, ['SCH'] = 57, ['GEO'] = 61 },
-            [3] = { ['Name'] = 'Water IIif AshitaCore:GetMemoryManager():GetPlayer():HasSpell(j['SID']) then', ['SID'] = 170, ['MP'] = 19, ['RDM'] = 40, ['DRK'] = 48, ['BLM'] = 30, ['SCH'] = 34, ['GEO'] = 38 },
+            [3] = { ['Name'] = 'Water II', ['SID'] = 170, ['MP'] = 19, ['RDM'] = 40, ['DRK'] = 48, ['BLM'] = 30, ['SCH'] = 34, ['GEO'] = 38 },
             [4] = { ['Name'] = 'Water', ['SID'] = 169, ['MP'] = 5, ['RDM'] = 9, ['DRK'] = 11, ['BLM'] = 5, ['SCH'] = 8, ['GEO'] = 9 }
         },
         ['watera'] = {
@@ -328,25 +332,52 @@ Tiered = {
 };
 
 --[[
+    fBardSongType determines if bard song being cast is of the type being passed.
+
+    Parameter
+        sType   Enfeebling (Enf) or Enhancement (Enh)
+
+    Returned
+        T/F, Was the song the type inquired about
+--]]
+
+function magic.fBardSongType(sType)
+    local spell = gData.GetAction();
+    local bGood = false;
+
+    if sType == nil or spell.Name == nil then
+        return false;
+    end
+
+    if string.lower(sType) == 'enh' then
+        for i,j in pairs(utilities.tSpellGroupings['brd-enh']) do
+            if string.find(string.lower(spell.Name),j) ~= nil then
+                bGood = true;
+                break;
+            end
+        end
+    else
+        for i,j in pairs(utilities.tSpellGroupings['brd-enf']) do
+            if string.find(string.lower(spell.Name),j) ~= nil then
+                bGood = true;
+                break;
+            end
+        end
+    end
+    return bGood;
+end		-- magic.fBardSongType
+
+--[[
     HandlePrecast equips the appropriate precast gear
 --]]
 
 function magic.HandlePrecast()
     local spell = gData.GetAction();
-    local bTank = gcdisplay.GetToggle('Tank');
-
-    if bTank == nil then
-        bTank = false;
-    end
 
     if spell.Skill == 'Singing' then
-        gcinclude.MoveToCurrent(gProfile.Sets.SingingPrecast,gProfile.Sets.CurrentGear);
+        gcinclude.MoveToDynamicGS(gProfile.Sets.SingingPrecast,gProfile.Sets.CurrentGear);
     else
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_Precast,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.Precast,gProfile.Sets.CurrentGear);
-        end
+       gear.MoveToDynamicGS(gProfile.Sets.Precast,gProfile.Sets.CurrentGear);
     end
 end		-- magic.HandlePrecast
 
@@ -384,31 +415,18 @@ function magic.HandleMidcast()
 end		-- magic.MidcastNinjutsu
 
 --[[
-    MidcastSinging handles all of the equipment management when a song is cast.
+    MidcastSinging handles all of the equipment management when a song is cast
 --]]
 
 function MidcastSinging()
     local spell = gData.GetAction();
-    local bTank = gcdisplay.GetToggle('Tank');
 
-    if bTank == nil then
-        bTank = false;
-    end
-
-    if fBardSongType('enh') == true then
+    if magic.fBardSongType('enh') == true then
         -- Enhancement song
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnhancementSinging,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.EnhancementSinging,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToCurrent(gProfile.Sets.EnhancementSinging,gProfile.Sets.CurrentGear);
     elseif fBardSongType('enf') == true then
         -- Enfeebling song
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnfeeblingSinging,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.EnfeeblingSinging,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToCurrent(gProfile.Sets.EnfeeblingSinging,gProfile.Sets.CurrentGear);
     end
 end		-- MidcastSinging
 
@@ -423,32 +441,22 @@ function MidcastHealingMagic()
     local target = gData.GetEntity(ti);
     local spell = gData.GetAction();
     local root,sGear,pDay,pWeather;
-    local bTank,sEle;
+    local sEle;
 
-    bTank = gcdisplay.GetToggle('Tank');
     root = utilities.fGetRoot(spell.Name,false);
 
     if string.find('curaga,cure',root) == nil then
         -- Start with the non-cure based spells. Even if magic accuracy indicated, these
         -- spells always hit and thus do not need magic accuracy. Further, an elemental
         -- stave will have no effect either.
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_HealingMagic,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.HealingMagic,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.HealingMagic,gProfile.Sets.CurrentGear);
     else
         if target ~= nil then
             -- Some type of cure
             if target.Type == 'Monster' then
                 -- Until I figure out how to determine that a monster is undead, just assume
                 -- that if targetting a monster, it is undead.
-                if bTank == true then
-                    gcinclude.MoveToCurrent(gProfile.Sets.Tank_OffensiveCuring,gProfile.Sets.CurrentGear);
-                else
-                    gcinclude.MoveToCurrent(gProfile.Sets.OffensiveCuring,gProfile.Sets.CurrentGear);
-                end
-
+                gear.MoveToDynamicGS(gProfile.Sets.OffensiveCuring,gProfile.Sets.CurrentGear);
                 -- Check for an elemental obi since this is an offensive spell. First
                 -- determine if a bonus is possible based on day's element and/or weather
                 sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
@@ -1083,9 +1091,9 @@ function magic.MaxCast(sName,bSpell,sTarget,bCast)
 
     -- Now, determine where in the Tiered structure to point to based on whether a spell or a song
     if bSpell == true then
-        tInd = Tiered.spells;
+        tInd = magic.Tiered.spells;
     else
-        tInd - Tiered.songs;
+        tInd = magic.Tiered.songs;
     end
 
     root = fGetRoot(sName);

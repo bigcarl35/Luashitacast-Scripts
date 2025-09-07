@@ -1,26 +1,30 @@
 local locks = T{};
 
+local utilities = require('utilities');
+local gear      = require('gear');
+
 -- The following structure is used for locks
 locks.tLocks = {
-		['main']  = { ['slot'] =  1, ['mask'] = {1,3}, ['lock'] = false },
-		['sub']   = { ['slot'] =  2, ['mask'] = {2,3}, ['lock'] = false },
-		['range'] = { ['slot'] =  3, ['mask'] = {4}, ['lock'] = false },
-		['ammo']  = { ['slot'] =  4, ['mask'] = {8}, ['lock'] = false },
-		['head']  = { ['slot'] =  5, ['mask'] = {16}, ['lock'] = false },
-		['neck']  = { ['slot'] =  6, ['mask'] = {512}, ['lock'] = false },
-		['ear1']  = { ['slot'] =  7, ['mask'] = {2048,4096,6144}, ['lock'] = false },
-		['ear2']  = { ['slot'] =  8, ['mask'] = {2048,4096,6144}, ['lock'] = false },
-		['body']  = { ['slot'] =  9, ['mask'] = {32}, ['lock'] = false },
-		['hands'] = { ['slot'] = 10, ['mask'] = {64}, ['lock'] = false },
-		['ring1'] = { ['slot'] = 11, ['mask'] = {8192,16384,24576}, ['lock'] = false },
-		['ring2'] = { ['slot'] = 12, ['mask'] = {8192,16384,24576}, ['lock'] = false },
-		['back']  = { ['slot'] = 13, ['mask'] = {32768}, ['lock'] = false },
-		['waist'] = { ['slot'] = 14, ['mask'] = {1024}, ['lock'] = false },
-		['legs']  = { ['slot'] = 15, ['mask'] = {128}, ['lock'] = false },
-		['feet']  = { ['slot'] = 16, ['mask'] = {256}, ['lock'] = false }
+    [1] =  { ['slot'] = 'main',  ['mask'] = {1,3},              ['lock'] = false },
+    [2] =  { ['slot'] = 'sub',   ['mask'] = {2,3},              ['lock'] = false },
+    [3] =  { ['slot'] = 'range', ['mask'] = {4},                ['lock'] = false },
+    [4] =  { ['slot'] = 'ammo',  ['mask'] = {8},                ['lock'] = false },
+    [5] =  { ['slot'] = 'head',  ['mask'] = {16},               ['lock'] = false },
+    [6] =  { ['slot'] = 'neck',  ['mask'] = {512},              ['lock'] = false },
+    [7] =  { ['slot'] = 'ear1',  ['mask'] = {2048,4096,6144},   ['lock'] = false },
+    [8] =  { ['slot'] = 'ear2',  ['mask'] = {2048,4096,6144},   ['lock'] = false },
+    [9] =  { ['slot'] = 'body',  ['mask'] = {32},               ['lock'] = false },
+    [10] = { ['slot'] = 'hands', ['mask'] = {64},               ['lock'] = false },
+    [11] = { ['slot'] = 'ring1', ['mask'] = {8192,16384,24576}, ['lock'] = false },
+    [12] = { ['slot'] = 'ring2', ['mask'] = {8192,16384,24576}, ['lock'] = false },
+    [13] = { ['slot'] = 'back',  ['mask'] = {32768},            ['lock'] = false },
+    [14] = { ['slot'] = 'waist', ['mask'] = {1024},             ['lock'] = false },
+    [15] = { ['slot'] = 'legs',  ['mask'] = {128},              ['lock'] = false },
+    [16] = { ['slot'] = 'feet',  ['mask'] = {256},              ['lock'] = false }
 };
 
--- CAN OF WORMS!!!
+-- Define list of locks
+locks.LocksNumeric = 'None';
 
 --[[
 	fIsSlotLocked determines if the passed slot is locked. Please note that only slot
@@ -32,15 +36,15 @@ locks.tLocks = {
 function locks.fIsSlotLocked(val)
 
 	if val == nil then
-		print(chat.header('fIsSlotLocked'):append(chat.message('Error: slot undefined')));
+		print(chat.message('Warning: slot undefined'));
 		return true;	-- This error should never occur. Assume it's locked.
 	elseif string.find(val,',') ~= nil then    -- Checking for a list of slots
-        print(chat.header('fIsSlotLocked'):append(chat.message('Error: only one slot can be identified. ' .. val .. ' was sent to be processed')));
+        print(chat.message('Warning: only one slot can be identified. ' .. val .. ' was sent to be processed'));
         return true;    -- This error should never occur. Assume it's locked.
     else
-        local slot = utilities.fTranslateWhichSlot(val,utilities._SLOT_LA);
+        local slot = utilities.fValidSlots(val,utilities._SLOT_LA);
         if slot == nil then
-            print(chat.header('fIsSlotLocked'):append(chat.message('Error: unrecognized slot: ' .. val)));
+            print(chat.message('Warning: unrecognized slot: ' .. val));
             return true;    -- This error should never occur. Assume it's locked.
         end
         return locks.tLocks[slot]['lock'];
@@ -159,8 +163,8 @@ end     -- locks.fAreSlotsLocked
 function locks.LockByGearSet(gs,sExceptions,bIgnoreLocks,bIgnoreWSWAP,bDisplay)
     local tDGS = {};    -- temporary dynamic gearset
 
-    if gs is nil then
-        print(chat.header('fLockByGearSet'):append(chat.message('Error: No gearset or an undefined gearset was passed in. No slots will be locked.')));
+    if gs == nil then
+        print(chat.message('Warning: No gearset or an undefined gearset was passed in. No slots will be locked.')));
         return;
     end
 
@@ -171,7 +175,7 @@ function locks.LockByGearSet(gs,sExceptions,bIgnoreLocks,bIgnoreWSWAP,bDisplay)
     end
 
     if bIgnoreWSWAP == nil then
-        bIgnoreWSWAP = false;       -- Assume weapon swapping is turned off
+        bIgnoreWSWAP = false;       -- Assume ignoring weapon swapping is turned off
     end
 
     if bDisplay == nil then
@@ -179,7 +183,7 @@ function locks.LockByGearSet(gs,sExceptions,bIgnoreLocks,bIgnoreWSWAP,bDisplay)
     end
 
     -- Now, load up the local dynamic gearset with the evaluated gearset
-    gccommon.MoveToDynamicGS(gs,tDGS,bIgnoreLocks,bIgnoreWSWAP);
+    gear.MoveToDynamicGS(gs,tDGS,'ALL',bIgnoreLocks,bIgnoreWSWAP);
 
     -- Then, walk the temporary dynamic set and lock any slot entries with a value unless
     -- the slot is in the passed in exceptions list.
@@ -194,7 +198,7 @@ function locks.LockByGearSet(gs,sExceptions,bIgnoreLocks,bIgnoreWSWAP,bDisplay)
 
     if bDisplay == true then
         local sList = fGetLockedList('locks');
-        gcdisplay.SetSlots('locks',gcinclude.LocksNumeric);
+        gcdisplay.SetSlots('locks',locks.LocksNumeric);
     end
 end     -- locks.LockByGearSet
 
@@ -279,5 +283,63 @@ function locks.fMultiSlotLockCheck(sName)
     if bGood and bFound then
         bGood = not locks.fIsSlotLocked(sMain);
     end
-return bGood,bMulti,sAllSlots;
+    return bGood,bMulti,sAllSlots;
 end		-- locks.fMultiSlotLockCheck
+
+--[[
+***
+    LockUnlock locks or unlocks the specified slots.
+
+    Parameters
+        sType           'lock' or 'unlock'
+        sWhich          Which slots are affected
+--]]
+
+function locks.LockUnlock(sType,sWhich)
+    local ss = utilities._LOCK .. ',' .. utilities._UNLOCK;
+    local sList;
+
+    if sWhich == nil or (string.find(ss,string.lower(sType) == nil)) then
+        return;
+    elseif string.lower(sWhich) ~= 'all' then
+        sList = utilities.fValidSlots(sWhich,utilities._SLOT_LA);        -- fValidSlots will expand out EARS and RINGS
+    else
+        sList = 'all';
+    end
+
+    sList = ',' .. sList .. ',';
+    for k,l in ipairs(locks.tLocks) do
+        if (sWhich == ',all,') or (string.find(sWhich,l['slot']) ~= nil) then
+            locks.tLocks[k][s] = (string.lower(sType) == utilities._LOCK);
+        end
+    end
+end		-- locks.LockUnlock
+
+--[[
+***
+    fGetLockedList returns a comma delimited list of locks or nil if all unlocked
+
+    Returned
+        List of locked slots
+--]]
+
+function locks.fGetLockedList()
+    local sList = ', ';
+    local snList = ', ';
+
+    for i,j in ipairs(locks.tLocks) do
+        if j[sWhich] == true then
+            sList = sList .. gData.Constants.EquipSlotNames[gData.Constants.EquipSlotsLC[j['slot']]] .. ', ';
+            snList = snList .. tostring(i);
+        end
+    end
+
+    if sList == ', ' then
+        locks.LocksNumeric = 'None';
+        sList = nil;
+    else
+        locks.LocksNumeric = string.sub(snList,3,-3);
+        sList = string.sub(sList,3,-3);
+    end
+    return sList;
+end		-- locks.fGetLockedList

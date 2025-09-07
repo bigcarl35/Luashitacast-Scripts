@@ -16,9 +16,9 @@ local Sub = 'BAR';
 local Locks = 'None';
 local Progressive = T {
 		['Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = 'Acc' },
-		['Tank_Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = 'TAcc' },
+		['Tank_Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = 'Acc' },
 		['Ranged_Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = 'RAcc' },
-		['Tank_Ranged_Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = 'TRAcc' }
+		['Tank_Ranged_Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = 'RAcc' }
 	};
 local bGC = false;
 local JobBar = T{['GSwap']  = {'ALL','MS'},
@@ -29,9 +29,9 @@ local JobBar = T{['GSwap']  = {'ALL','MS'},
 				 ['Tank']   = {'PLD,NIN,RUN,WAR,DRK,THF,RDM,BLU','M'},
 				 ['Macc']   = {'BLM,WHM,RDM,SMN,PLD,DRK,BLU,SCH,GEO,RUN','MS'},
 				 ['WSwap']  = {'-SMN,BLM','M'},		-- Some jobs swap weapons all the time
-				 ['SS']     = {'THF','M'},
+				 ['SS']     = {'THF','MS'},
 				 ['sPF']	= {'ALL','MS'},
-				 ['TH']     = {'THF','M'},
+				 ['TH']     = {'ALL','MS'},
 				 ['AJug']   = {'BST','M'},
 				 ['DB']     = {'BST','M'},
 				 ['Region'] = {'ALL','MS'},

@@ -1,10 +1,8 @@
-local utilities = {};
+local utilities = T{};
 
-version = {
-    ['author']	= 'Paiine',
-    ['name']	= 'Luashitacast (Karma)',
-    ['version']	= '2.0.alpha'
-};
+local crossjobs = require('crossjobs');
+local gcdisplay = require('gcdisplay');
+local locks     = require('locks');
 
 -- List of all days including the strong and weak elements
 utilities.tWeekDayElement = {
@@ -54,7 +52,7 @@ utilities.tSpellGroupings = {
     },
     ['eDebuff']	   = { 'drown','burn','frost','choke','rasp','shock' },
     ['barspell']   = {
-        ['ele'] = { 'baraero','baraera','barblizzard','barblizzara','barfire','barfira','barstone','barstonera','barthunder','barthundra','barwater','barwatera' },
+        ['ele'] = { 'baraero','baraera','barblizzard','barblizzara','barfire','barfira','barstone','barstonra','barthunder','barthundra','barwater','barwatera' },
         ['status'] = { 'barsleep','barsleepra','barpoison','barpoisonra','barparalyze','barparalyzra','barblind','barblindra','barvirus','barvira','barpetrify','barpetra' }
     },
     ['enspell']    = { 'enthunder','enstone','enaero','enblizzard','enfire','enwater','enlight','endark' },
@@ -77,8 +75,7 @@ utilities.tSpellGroupings = {
 -- included in a reference to where the item that matches that type/element
 -- can be found in the GearDetails table.
 utilities.tElemental_gear = {
-    ['relic'] = {gcinclude.OwnNation = -1;
-        gcinclude.basetime = os.time();
+    ['relic'] = {
         ['level'] = 75,
         ['type'] = 'STAVE',
         { ['Name'] = 'Claustrum', ['Ref'] = {} }
@@ -100,8 +97,7 @@ utilities.tElemental_gear = {
             ['Affinity'] = { 'blizzaga','blizzard','freeze','frost','ice','enblizzard','jubaku','hyoton','bind','distract','paralyze' },
             ['SongAffinity'] = { 'wind threnody' },
             ['Summons'] = { 'shiva','ice spirit','icespirit','ice' },
-        },gcinclude.OwnNation = -1;
-        gcinclude.basetime = os.time();
+        },
         ['wind'] = {
             ['Weak'] = 'ice',
             ['NQ'] = { ['Name'] = 'Wind staff', ['Ref'] = {} },
@@ -211,8 +207,8 @@ utilities.tElemental_gear = {
             ['Name'] = 'Anrin obi',
             ['Ref'] = {},
             ['MEacc'] = { 'blind','bio','sleep','dispel','frazzle','drain','warp','tractor','aspir','escape','sleep','sleepga','retrace','endark' },
-            ['eleWS'] = { 'energy steal','energy drain','sanguine blade','dark harvest','shadow of death','infernal scythe','blade: ei','starburst','sunburst','cataclysm','vidohunir',
-                'omniscience','leaden suite' },
+            ['eleWS'] = { 'energy steal','energy drain','sanguine blade','dark harvest','shadow death','infernal scythe','blade: ei','starburst',
+                          'sunburst','cataclysm','vidohunir','omniscience','leaden suite' },
         },
     },
     ['gorget'] = {
@@ -334,15 +330,69 @@ utilities._SLOT_UA = 'UA';     -- uppercase slot name
 utilities._SLOT_N  = 'N';      -- numeric
 utilities._SLOT_FA = 'FA';     -- formatted output: first letter uppercase, rest lowercase
 
--- Holding variable for all of the messages that should only be displayed once
-utilities.GearWarnings = nil;
+-- Define constants for LOCK and UNLOCK
+utilities._LOCK   = 'lock';
+utilities._UNLOCK = 'unlock';
 
--- The following is used in the /GC nag reminder
-utilities.basetime = os.time();
+-- JobMask holds a list of all the jobs recogized by FFXI. Each job is referenced via a mask
+-- that is used to determine if the piece of gear can be equipped by the said job.
+utilities.JobMask = { ['None'] = 0x0,
+    ['WAR'] = 0x2, ['MNK'] = 0x4, ['WHM'] = 0x8, ['BLM'] = 0x10, ['RDM'] = 0x20, ['THF'] = 0x40, ['PLD'] = 0x80, ['DRK'] = 0x100,
+    ['BST'] = 0x200, ['BRD'] = 0x400, ['RNG'] = 0x800, ['SAM'] = 0x1000, ['NIN'] = 0x2000, ['DRG'] = 0x4000, ['SMN'] = 0x8000,
+    ['BLU'] = 0x10000, ['COR'] = 0x20000, ['PUP'] = 0x40000, ['DNC'] = 0x80000, ['SCH'] = 0x100000, ['GEO'] = 0x200000,
+    ['RUN'] = 0x400000, ['MON'] = 0x800000, ['JOB24'] = 0x1000000, ['JOB25'] = 0x2000000, ['JOB26'] = 0x4000000,
+    ['JOB27'] = 0x8000000, ['JOB28'] = 0x10000000, ['JOB29'] = 0x20000000,['JOB30'] = 0x30000000, ['JOB31'] = 0x80000000,
+    ['Alljobs'] = 0x007FFFFE };
 
-crossjobs = required('crossjobs');
+-- List of all valid slot names and two special types
+utilities.SlotNames = { 'subset','group','main','sub','range','ammo','head','neck','ear1','ear2','ears','body','hands','ring1',
+    'rings2','rings','back','waist','legs','feet' };
+
+-- List of numeric representations for who controls a region
+utilities.RegionAreas = {
+    [-1] = 'Unassigned', [0]  = 'N/A', [1]  = 'San d\'Orian', [2]  = 'Bastokian', [3]  = 'Windurstian', [4]  = 'Beastmen'
+};
+
+-- List of all supported commands
+utilities.AliasList = {
+    'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite',
+    'lock','macc','maxsong','maxspell','petfood','ptt','pull','racc','rc','rv','sbp','showit','smg','spf','ss','string',
+    'tank','th','unlock','ver','wsdistance','wswap','t1'
+};
+
+-- Define constants for DT so typos aren't made
+utilities.OFF = 'Off';
+utilities.PHY = 'Physical';
+utilities.MAG = 'Magical';
+utilities.BRE = 'Breath';
+
+-- define constants for Instrument so typos aren't made
+utilities.HORN = 'Horn';
+utilities.STRING = 'String';
+
+-- define the code lists for the crafting and gathering types
+utilities.Crafting_Types = 'ALC,BONE,CLOTH,COOK,GSM,LTH,BSM,WW';
+utilities.Gathering_Types = 'HELM,DIG,CLAM,FISH';
+
+-- Define list of all valid jobs
+utilities._validJobs = 'BLM,BLU,BRD,BST,COR,DNC,DRG,DRK,GEO,MNK,PLD,PUP,RDM,RNG,RUN,SAM,SCH,SMN,THF,WAR,WHM';
+
+-- Define list of all magic using jobs
+utilities._sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,BLU,SCH,GEO,RUN';
+
+-- Define list of all jobs that can tank
+utilities._TankJobs = 'PLD,NIN,RUN,DRK,WAR,THF,RDM,BLU';
+
+-- Define list of all elements
+utilities._AllElements = 'fire,ice,wind,earth,thunder,water,light,dark';
+
+-- Define lists of valid Weapon Types
+utilities._WeaponTypes = 'ARCHERY,AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,MARKSMANSHIP,POLEARM,SCYTHE,STAVE,SWORD,THROWING';
+utilities._WeaponMelee = 'AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,POLEARM,SCYTHE,STAVE,SWORD';
+utilities._WeaponRange = 'ARCHERY,MARKSMANSHIP,THROWING';
 
 --[[
+***
     fDisplayOnce will display the passed message if it hasn't been displayed
     before. If it has been displayed, the message isn't repeated.
 
@@ -370,43 +420,20 @@ function utilities.fDisplayOnce(msg,bOverride)
         tmp = msg;
     end
 
-    if utilities.GearWarnings == nil or
-        (utilities.GearWarnings ~= nil and string.find(utilities.GearWarnings,tmp) == nil) or
+    if crossjobs.GearWarnings == nil or (crossjobs.GearWarnings ~= nil and string.find(crossjobs.GearWarnings,tmp) == nil) or
             bOverride == true then
         print(chat.message(msg));
 
-        if utilities.GearWarnings == nil then
-            utilities.GearWarnings = msg;
+        if crossjobs.GearWarnings == nil then
+            crossjobs.GearWarnings = msg;
         else
-            utilities.GearWarnings = utilities.GearWarnings .. ',' .. msg;
+            crossjobs.GearWarnings = crossjobs.GearWarnings .. ',' .. msg;
         end
     end
 end     -- utilities.fDisplayOnce
 
 --[[
-    fDisplayVerion displays version details including the changelog since the last release.
---]]
-
-    function utilities.fDisplayVersion()
-    local bSkip = false;
-    local rfn = gProfile.FilePath:reverse();
-
-    -- remove the job file from path, add changelog
-    rfn = string.sub(rfn,string.find(rfn,'\\'),-1);
-    rfn = rfn:reverse() .. 'Documentation\\changelog.txt';
-
-    print(chat.message(' '));
-    print(chat.message(version.name .. ' Version: ' .. tostring(version.version)));
-    for line in io.lines (rfn) do
-        if bSkip == false then
-            print(chat.message(' '));
-            bSkip = true;
-        end
-    print(chat.message(line));
-    end
-end     -- utilities.fDisplayVersion
-
---[[
+***
     fStartReminder is a simple routine used for displaying a nag message for the player
     to run /GC. Initially it displayes 15 seconds after logging in, but from then on
     it will display every 5 minutes until /GC is run. (Gear swapping does not occur
@@ -427,7 +454,7 @@ function utilities.StartReminder()
         iTestVal = crossjobs.settings.bMaxBasetime;
     end
 
-    if os.difftime(iNow,utilities.basetime) >= iTestVal then
+    if os.difftime(iNow,crossjobs.basetime) >= iTestVal then
         print(chat.message('************'));
         if iTestVal == crossjobs.settings.bMinBasetime then
             print(chat.message('FYI: Remember to do a /gc once \'data download\' finishes'));
@@ -437,11 +464,28 @@ function utilities.StartReminder()
         print(chat.message('************'));
         crossjobs.settings.bGCReminder = true;
         -- Change the base to current so that comparison is from now forward
-        utilities.basetime = iNow;
+        crossjobs.basetime = iNow;
     end
 end     -- utilities.StartReminder
 
 --[[
+***
+    ProcessedTally determines if the passed in counter meets the reporting
+    requirements and displays a message if appropriate
+--]]
+
+function utilities.ProcessedTally(sWhat,iCnt,iDiv)
+    if iCnt == 0 or iDiv == 0 then
+        return;
+    end
+
+    if math.floor(iCnt/50) == iCnt/50 then
+        print(chat.message(tostring(iCnt) .. sWhat .. ' processed...'));
+    end
+end     -- utilities.ProcessedTally
+
+--[[
+***
     fFormattedWord takes the passed in word and formats it in the indicated
     style.
 
@@ -470,6 +514,18 @@ local sTmp = nil;
 end     -- utilities.fFormattedWord
 
 --[[
+***
+    Message toggles on/off a feedback mechanism for all luashitacast commands
+--]]
+
+function utilities.Message(toggle, status)
+    if toggle ~= nil and status ~= nil then
+        print(chat.message('Info: ' .. toggle .. ' is now ' .. tostring(status))))
+    end
+end		-- utilities.Message
+
+--[[
+***
     fCheckTime determines if the current server time is found in the passed name time range.
 
     Parameters:
@@ -510,6 +566,7 @@ function utilities.fCheckTime(hr,sTime)
 end     -- utilities.fCheckTime
 
 --[[
+***
     fIsPetSummonersPet determines if the player has a pet out and that it's a summoner's pet
 
     Parameters:
@@ -532,27 +589,24 @@ function utilities.fSummonersPetElement(pet)
                 end
             end
         end
-        -- No found summoner's pet
-        return nil;
-    else
-        -- No pet
-        return nil;
     end
+    return nil;     -- either no pet or no smn pet found
 end     -- utilities.fSummonersPetElement
 
 --[[
-    fTranslateWhichSlot determines if the passed in value is a valid slot designation and then translates it to the
-    indicated format.
+***
+    fValidSlots determines if the passed in list of slots is valid. It then translates the valids slots
+    it to the indicated format.
 
     Valid values are:  1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,
     main,sub,range,ammo,head,neck,ear1,ear2,body,hands,ring1,ring2,back,waist,legs,feet
 
-    Note: rings and ears are not valid since they represent two slots. The invoking routine must decode these
-    before invoking this function.
+    Note: rings and ears are not inherently valid since they represent two slots. These will be expanded out
+        to explicitly the '1' and '2' versions of the slot.
 
     Parameters:
-        sSlots      Comma delimited list of slots
-        bInverse    Process sSlots as is or invert the list
+        sList       Comma delimited list of slots
+        sFmt        What format should be used in the list
 
     Returned:
         bGood       Was the slot list valid?
@@ -561,52 +615,60 @@ end     -- utilities.fSummonersPetElement
 
 -- Need more work. The inverted portion will not work if the passed in numbers are not in order!!!
 
-function utilities.fListValidSlots(sCode,bInverse)
-    local bGood = true;     -- Assume valid
-    local sList = ',';
+function utilities.fValidSlots(sList,sFmt)
+    local soList = ',';
     local slots = {
-         [1] =  {['Name'] = 'MAIN', ['Have'] = false},   [2] = {['Name'] = 'SUB', ['Have'] = false},
-         [3] =  {['Name'] = 'RANGE', ['Have'] = false},  [4] = {['Name'] = 'AMMO', ['Have'] = false},
-         [5] =  {['Name'] = 'HEAD', ['Have'] = false},   [6] = {['Name'] = 'NECK', ['Have'] = false},
-         [7] =  {['Name'] = 'EAR1', ['Have'] = false},   [8] = {['Name'] = 'EAR2', ['Have'] = false},
-         [9] =  {['Name'] = 'BODY', ['Have'] = false},  [10] = {['Name'] = 'HANDS', ['Have'] = false},
-         [11] = {['Name'] = 'RING1', ['Have'] = false}, [12] = {['Name'] = 'RING2', ['Have'] = false},
-         [13] = {['Name'] = 'BACK', ['Have'] = false},  [14] = {['Name'] = 'WAIST', ['Have'] = false},
-         [15] = {['Name'] = 'LEGS', ['Have'] = false},  [16] = {['Name'] = 'FEET', ['Have'] = false}
-    };
+         [1] =  {['Name'] = 'MAIN',  ['Have'] = false},   [2] = {['Name'] = 'SUB',   ['Have'] = false},
+         [3] =  {['Name'] = 'RANGE', ['Have'] = false},   [4] = {['Name'] = 'AMMO',  ['Have'] = false},
+         [5] =  {['Name'] = 'HEAD',  ['Have'] = false},   [6] = {['Name'] = 'NECK',  ['Have'] = false},
+         [7] =  {['Name'] = 'EAR1',  ['Have'] = false},   [8] = {['Name'] = 'EAR2',  ['Have'] = false},
+         [9] =  {['Name'] = 'BODY',  ['Have'] = false},  [10] = {['Name'] = 'HANDS', ['Have'] = false},
+         [11] = {['Name'] = 'RING1', ['Have'] = false},  [12] = {['Name'] = 'RING2', ['Have'] = false},
+         [13] = {['Name'] = 'BACK',  ['Have'] = false},  [14] = {['Name'] = 'WAIST', ['Have'] = false},
+         [15] = {['Name'] = 'LEGS',  ['Have'] = false},  [16] = {['Name'] = 'FEET',  ['Have'] = false}
+        };
 
-    sCode = ',' .. string.upper(sCode) .. ',';
-
-    if bInverse == true then
-        -- Flip the default settings since it's an inverse
-        for i,j in ipairs(slots) do
-            j['Have'] = true;
-        end
+    local s = utilities._SLOT_LA .. utilities._SLOT_UA .. utilities._SLOT_FA .. utilities._SLOT_N;
+    if sFmt == nil or string.find(s,sFmt) == nil then
+        sFmt = utilities._SLOT_FA;      -- Unknown or missing code, assume Upper first letter and lower rest
     end
 
-    -- Now process the list
-    for i,j in ipairs(slots) do
-        if string.find(sCode,j['Name']) ~= nil or string.find(sCode,','..tostring(i)..',') ~= nil then
-            slots[i]['Have'] == not slots[i]['Have'];
+    sList = ',' .. string.upper(sList) .. ',';
+
+    -- Now process the list. Note: this process will not complain about a mistaken slot name/number
+    if string.find(sList,'EARS') ~= nil then
+        slots[7]['Have'] = true;    -- Assume both ears if EARS encountered
+        slots[8]['Have'] = true;
+    elseif string.find(sList,'RINGS') ~= nil then
+        slots[11]['Have'] = true;   -- Assume both rings if RINGS encountered
+        slots[12]['Have'] = true;
+    else
+        for i,j in ipairs(slots) do
+            if string.find(sList,j['Name']) ~= nil or string.find(sList,','..tostring(i)..',') ~= nil then
+                slots[i]['Have'] == true;
+            end
         end
     end
 
     -- And now create the returned list
     for i,j in ipairs(slots) do
         if j['Have'] == true then
-            sList = sList .. utilities.fTranslateWhichSlot(i,utilities._SLOT_FA) .. ',';
+            soList = soList .. utilities.fFormattedWord(j['Name'],sFmt) .. ',';
         end
+    end
 
     -- Then format the list accordingly
-    if sList ~= ',' then
-        sList = string.sub(sList,2,-2);     -- Remove the extra commas
-        return true,sList;
+    if soList ~= ',' then
+        soList = string.sub(soList,2,-2);     -- Remove the extra commas
+        return true,soList;
     else
         return false,nil
     end
-end     -- utilities.fListValidSlots
+end     -- utilities.fValidSlots
 
 --[[
+
+
     fTranslateWhichSlot determines if the passed in value is a valid slot designation and then translates it to the
     indicated format.  Only a single value should be passed in.
 
@@ -690,6 +752,7 @@ function utilities.fTranslateWhichSlot(val,sType)
 end     -- utilities.fTranslateWhichSlot
 
 --[[
+***
     fGetRoot determines the "base" of a spell/song name passed in. (The base is the first word in the spell/song name.)
 
     Parameters:
@@ -868,3 +931,256 @@ function utilities.fCheckPartyJob(job,bNotMe)
     end
     return bFound;
 end     -- utilities.fCheckPartyJob
+
+--[[
+    ClearSet blanks out the passed gear set
+
+    Parameter
+        gSet    Gear set to blank out
+--]]
+
+function utilities.ClearSet(gSet)
+
+    for k,v in pairs(gData.Constants.EquipSlots) do
+        gSet[k] = '';
+    end
+end		-- utilities.ClearSet
+
+--[[
+    PullTarget determines how the player wants to pull the target (gear/pet) and then pulls it.
+--]]
+
+function utilities.PullTarget()
+    local targetIndex = gData.GetTargetIndex();
+    local targetEntity = gData.GetEntity(targetIndex);
+    local sTxt = nil;
+
+    if targetIndex ~= 0 then
+        if string.find('BST,SMN,PUP',player.MainJob) ~= nil then
+            if gData.GetPet() ~= nil then
+                sTxt = '/pet assault <t>';
+            else
+                print(chat.message('Info: No pet found, assuming a normal pull'));
+            end
+
+            if sTxt == nil then
+                sTxt = '/ra <t>';
+            end
+
+            if gcdisplay.GetToggle('sPF') == true then
+                local sMsg = '/p Pulling ' .. targetEntity.Name .. ' [' .. gcinclude.fTargetId(targetIndex) .. ']';
+                AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
+            end
+            AshitaCore:GetChatManager():QueueCommand(-1, sTxt);
+        end
+    else
+        print(chat.message('Info: Unable to pull anything, no target selected'));
+    end
+end		-- utilities.PullTarget
+
+
+--[[
+    fSetColorText returns the color code needed to change text to the associated color
+
+    Parameters
+        bVal        True/False, Green for valid, Red for invalid
+        bInvert     True/False, True for the colors to be inverted, False to leave as is
+
+    Note:
+        value: 2 - green, 8 - red, 107 - other (probably yellow).
+--]]
+
+function utilities.fSetColorText(bVal,bInvert)
+    local _GREEN = 2;
+    local _RED = 8;
+    local _OTHER = 107;
+    local ic;
+
+    if bInvert == nil then
+        bInvert = false;
+    end
+
+    if bVal == nil then
+        ic = _OTHER;    -- Default, other color
+    elseif (bVal == false and bInvert == false) or
+            (bVal == true and bInvert == true) then
+        ic = _RED;
+    else
+        ic = _GREEN;
+    end
+
+    return ic;
+end		-- utilities.fSetColorText
+
+--[[
+    fRemoveConditional takes the passed in string and removes any inline
+    conditional qualifier from it
+
+    Parameter
+        g       Gear name with potential inline conditionals
+--]]
+
+function utilities.fRemoveConditional(g)
+
+    if g == nil then
+        return nil;
+    end
+
+    local iPos = string.find(g,'//');
+
+    if iPos ~= nil then
+        return string.sub(g,1,iPos-1);
+    else
+        return g;
+    end
+end		-- utilities.fRemoveConditional
+
+--[[
+    fBit and fHasBit are bit manipulation functions used inf fCheckItemOwned.
+    Removing these functions and expanding out the formula makes things look
+    messy
+]]
+
+function fBit(p)
+    return 2 ^ (p - 1);
+end		-- fBit
+
+function fHasBit(x, p)
+    return x % (p + p) >= p;
+end		-- fHasBit
+
+--[[
+    fCheckItemOwned determines if the specified piece of gear is owned by
+    the playera and some details on accessiblility and storage.
+
+    Parameter
+        gear        Name of gear to check
+
+    Returned
+        tOwned      Reference to the tracked item details
+--]]
+
+function utilities.fCheckItemOwned(gear)
+    local inventory = AshitaCore:GetMemoryManager():GetInventory();
+    local resources = AshitaCore:GetResourceManager();
+    local containerID,itemEntry,item;
+    local tOwned = {
+        ['own'] = false, ['accessible'] = false, ['porter'] = false, ['claim'] = false,
+        ['locations'] = nil, ['error'] = nil
+    };
+
+    -- Make sure a piece of gear specified
+    if gear == nil then
+        tOwned['error'] = 'Invalid gear item';
+        return tOwned;
+    end
+
+    -- Loop through all searching for the passed gear piece
+    for i,desc in pairs(utilities.STORAGES) do
+        containerID = desc['id'];
+        -- then loop through the container
+        for j = 1,inventory:GetContainerCountMax(containerID),1 do
+            itemEntry = inventory:GetContainerItem(containerID, j);
+            if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
+                item = resources:GetItemById(itemEntry.Id);
+                if item.Name[1] == gear.Name[1] then
+                    tOwned['own'] = true;
+                    if tOwned['locations'] == nil then
+                        tOwned['locations'] = ',' .. desc['name'] .. ',';
+                    elseif string.find(tOwned['locations'],','..desc['name']..',') == nil then
+                        tOwned['locations'] = tOwned['locations'] .. desc['name'] .. ',';
+                    end
+                    if table.find(utilities.EQUIPABLE_LIST,desc['id']) then
+                        tOwned['accessible'] = true;
+                    end
+                end
+            end
+        end
+    end
+
+    -- if locations defined, remove the encasing commas
+    if tOwned['locations'] ~= nil then
+        tOwned['locations'] = string.sub(tOwned['locations'],2,-2);
+    end
+
+    -- Then loop through storage slips to see if item stored
+    for i,desc in pairs(slips.tSlips) do
+        -- If item slip owned by player...
+        if desc['own'] == true then
+            local iPos = table.find(desc['items'],gear.Id);
+            -- See if the passed gear associated with that slip
+            if iPos ~= nil then
+                -- Now figure out if the item is stored on that slip
+                local byte = struct.unpack('B',desc['extra'],math.floor((iPos - 1) / 8) + 1);
+                if byte < 0 then
+                    byte = byte + 256;
+                end
+                if (fHasBit(byte, fBit((iPos - 1) % 8 + 1))) then
+                    -- Yup, add the slip name to the location
+                    tOwned['own'] = true;
+                    tOwned['porter'] = true;
+                    if tOwned['locations'] == nil then
+                        tOwned['locations'] = desc['name'];
+                    else
+                        tOwned['locations'] = tOwned['locations'] .. ', ' .. desc['name'];
+                    end
+                    break;
+                end
+            end
+        end
+    end
+
+    -- Lastly, see if stored on a claim slip
+    for i,desc in pairs(gcinclude.ClaimSlips) do
+        if desc['own'] == true and table.find(desc['ids'],gear.Id) ~= nil then
+            tOwned['own'] = true;
+            tOwned['claim'] = true;
+            if tOwned['locations'] == nil then
+                tOwned['locations'] = desc['name'];
+            else
+                tOwned['locations'] = tOwned['locations'] .. ', ' .. desc['name'];
+            end
+            break;
+        end
+    end
+
+    return tOwned;
+end		-- utilities.fCheckItemOwned
+
+--[[
+    fSlotMatch determines if the passed slot the gear piece is being loaded into
+    matches the item's slot designation
+
+    Parameter
+        sSlot       Slot name being processed
+        iSlot       Item slot name
+
+    Returned
+        T/F, was a match found
+--]]
+
+function utilities.fSlotMatch(sSlot,iSlot)
+    local bGood = false;
+
+    sSlot = string.lower(sSlot);
+
+    -- Make sure the composite slots are represented by an actual slot
+    if sSlot == 'rings' then
+        sSlot = 'ring1';
+    elseif sSlot == 'ears' then
+        sSlot = 'ear1';
+    end
+
+    -- The lock list has all slots identified. The slot masks have been added
+    -- to the tLocks structure. Even though the mask is a bit pattern, the
+    -- composited value is included too. That's why I only need to look for
+    -- a match.
+    for i,j in ipairs(locks.tLocks) do
+        if j['slot'] == sSlot then
+            bGood = (table.find(j['mask'],iSlot) ~= nil);
+        break;
+        end
+    end
+
+    return bGood;
+end		-- fSlotMatch

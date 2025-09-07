@@ -627,7 +627,7 @@ gcinclude.tSpell = {
 	['barspell']   = { 
 				['ele'] = {
 						   'baraero','baraera','barblizzard','barblizzara',
-						   'barfire','barfira','barstone','barstonera',
+						   'barfire','barfira','barstone','barstonra',
 						   'barthunder','barthundra','barwater','barwatera' 
 						  },
 				['status'] = {
@@ -1053,6 +1053,7 @@ gcinclude.tEquipIt = {
 	['home']   = { ['Name'] = 'Homing Ring', ['Slot'] = 'Ring' },
 	['ret']    = { ['Name'] = 'Return Ring', ['Slot'] = 'Ring' },
 	['tav']    = { ['Name'] = 'Tavnazian Ring', ['Slot'] = 'Ring' },
+	['tin']	   = { ['Name'] = 'Tinfoil Hat', ['Slot'] = 'Head' },
 	['dcl']    = { ['Name'] = 'Dcl.Grd. Ring', ['Slot'] = 'Ring' },
 	['warp']   = { ['Name'] = 'Warp Cudgel', ['Slot'] = 'Main' },
 	['trick2'] = { ['Name'] = 'Trick Staff II', ['Slot'] = 'Main' },
@@ -1613,25 +1614,25 @@ gcinclude.Sets = gcinclude.sets;
 ashita.events.register('packet_in', 'packet_in_callback1', function (e)
 
 	if (e.id == 0x05E) then
-		gcinclude.RegionControl['Ronfaure']['own'] = struct.unpack('B', e.data, 0X1E)
-		gcinclude.RegionControl['Zulkheim']['own'] = struct.unpack('B', e.data, 0x22)
-		gcinclude.RegionControl['Norvallen']['own'] = struct.unpack('B', e.data, 0x26)
-		gcinclude.RegionControl['Gustaberg']['own'] = struct.unpack('B', e.data, 0x2A)
-		gcinclude.RegionControl['Derfland']['own'] = struct.unpack('B', e.data, 0x2E)
-		gcinclude.RegionControl['Sarutabaruta']['own'] = struct.unpack('B', e.data, 0x32)
-		gcinclude.RegionControl['Kolshushu']['own'] = struct.unpack('B', e.data, 0x36)
-		gcinclude.RegionControl['Argoneau']['own'] = struct.unpack('B', e.data, 0x3A)
-		gcinclude.RegionControl['Fauregandi']['own'] = struct.unpack('B', e.data, 0x3E)
-		gcinclude.RegionControl['Valdeaunia']['own'] = struct.unpack('B', e.data, 0x42)
-		gcinclude.RegionControl['QuifimIsland']['own'] = struct.unpack('B', e.data, 0x46)
-		gcinclude.RegionControl['LiTelor']['own'] = struct.unpack('B', e.data, 0x4A)
-		gcinclude.RegionControl['Kuzotz']['own'] = struct.unpack('B', e.data, 0x4E)
-		gcinclude.RegionControl['Vollbow']['own'] = struct.unpack('B', e.data, 0x52)
+		gcinclude.RegionControl['Ronfaure']['own'] =        struct.unpack('B', e.data, 0x1E)
+		gcinclude.RegionControl['Zulkheim']['own'] =        struct.unpack('B', e.data, 0x22)
+		gcinclude.RegionControl['Norvallen']['own'] =       struct.unpack('B', e.data, 0x26)
+		gcinclude.RegionControl['Gustaberg']['own'] =       struct.unpack('B', e.data, 0x2A)
+		gcinclude.RegionControl['Derfland']['own'] =        struct.unpack('B', e.data, 0x2E)
+		gcinclude.RegionControl['Sarutabaruta']['own'] =    struct.unpack('B', e.data, 0x32)
+		gcinclude.RegionControl['Kolshushu']['own']    =    struct.unpack('B', e.data, 0x36)
+		gcinclude.RegionControl['Argoneau']['own'] =        struct.unpack('B', e.data, 0x3A)
+		gcinclude.RegionControl['Fauregandi']['own'] =      struct.unpack('B', e.data, 0x3E)
+		gcinclude.RegionControl['Valdeaunia']['own'] =      struct.unpack('B', e.data, 0x42)
+		gcinclude.RegionControl['QuifimIsland']['own'] =    struct.unpack('B', e.data, 0x46)
+		gcinclude.RegionControl['LiTelor']['own'] =         struct.unpack('B', e.data, 0x4A)
+		gcinclude.RegionControl['Kuzotz']['own'] =          struct.unpack('B', e.data, 0x4E)
+		gcinclude.RegionControl['Vollbow']['own'] =         struct.unpack('B', e.data, 0x52)
 		gcinclude.RegionControl['ElshimoLowlands']['own'] = struct.unpack('B', e.data, 0x56)
-		gcinclude.RegionControl['ElshimoUplands']['own'] = struct.unpack('B', e.data, 0x5A)
-		gcinclude.RegionControl['Tulia']['own'] = struct.unpack('B', e.data, 0x5E)
-		gcinclude.RegionControl['Movapolos']['own'] = struct.unpack('B', e.data, 0x62)
-		gcinclude.RegionControl['Tavnazia']['own'] = struct.unpack('B', e.data, 0x66)
+		gcinclude.RegionControl['ElshimoUplands']['own'] =  struct.unpack('B', e.data, 0x5A)
+		gcinclude.RegionControl['Tulia']['own'] =           struct.unpack('B', e.data, 0x5E)
+		gcinclude.RegionControl['Movapolos']['own'] =       struct.unpack('B', e.data, 0x62)
+		gcinclude.RegionControl['Tavnazia']['own'] =        struct.unpack('B', e.data, 0x66)
 		if gcdisplay ~= nil then
 			RegionDisplay();
 		end	
@@ -4633,6 +4634,11 @@ function RegionControlDisplay()
 end		-- RegionControlDisplay
 
 function gcinclude.t1(args)
+	local pEntity = AshitaCore:GetMemoryManager():GetEntity();
+	local targetIndex = gData.GetTargetIndex();
+	local x = pEntity:GetRace(targetIndex);
+
+	print(chat.message('ID: ' .. tostring(pEntity.Id)));
 end
 
 --[[
