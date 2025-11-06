@@ -1,7 +1,23 @@
 local locks = T{};
 
-local utilities = require('utilities');
-local gear      = require('gear');
+local utilities = require('common.utilities');
+local gear = require('common.gear');
+
+--[[
+    This component contains all routines that deal with locks
+
+    List of routines-
+        Subroutines:
+            LockByGearSet           Locks all slots that have gear in them from passed gear set
+            LockUnlock              Locks or unlocks specified slots
+            ProcessLocks            Processes the invocation of the lock/unlock command
+
+        Functions:
+            fAreSlotsLocked         Determines if one or more passed slots are locked
+            fGetLockedList          Returns comma delimited list of locked slots
+            fIsSlotLocked           Determines if passed slot is locked
+            fMultiSlotLockCheck     Determines if multislotted item blocked by locks
+--]]
 
 -- The following structure is used for locks
 locks.tLocks = {
@@ -29,6 +45,9 @@ locks.LocksNumeric = 'None';
 --[[
 	fIsSlotLocked determines if the passed slot is locked. Please note that only slot
 	names are supported. Slot numbers will cause an error
+
+    Parameter
+        val     slot name
 
 	Returned: T/F
 --]]
@@ -111,7 +130,7 @@ function locks.fAreSlotsLocked(vals,bAll)
                     if bAll == false then
                         -- We found one which is enough
                         return true;
-                    endlocks.fIsSlotLocked
+                    end
                 else
                     -- Can only get here if the lock is false
                     if bAll == true then
@@ -121,7 +140,7 @@ function locks.fAreSlotsLocked(vals,bAll)
                 end
             else
                 -- Can only get here if the slot is unrecognized
-                print(chat.header('fAreSlotsLocked'):append(chat.message('Unrecognized slot in ' .. vals .. ': ' .. sSlot)));
+                print(chat.message('Warning: Unrecognized slot in ' .. vals .. ': ' .. sSlot)));
                 return false;
             end
         until vals == nil;
@@ -164,7 +183,7 @@ function locks.LockByGearSet(gs,sExceptions,bIgnoreLocks,bIgnoreWSWAP,bDisplay)
     local tDGS = {};    -- temporary dynamic gearset
 
     if gs == nil then
-        print(chat.message('Warning: No gearset or an undefined gearset was passed in. No slots will be locked.')));
+        print(chat.message('Warning: No gearset or an undefined gearset was passed in. No slots will be locked.'));
         return;
     end
 
@@ -173,17 +192,15 @@ function locks.LockByGearSet(gs,sExceptions,bIgnoreLocks,bIgnoreWSWAP,bDisplay)
     if bIgnoreLocks == nil then
         bIgnoreLocks = false;       -- Assume current locks will block a slot from being overriden
     end
-
     if bIgnoreWSWAP == nil then
         bIgnoreWSWAP = false;       -- Assume ignoring weapon swapping is turned off
     end
-
     if bDisplay == nil then
         bDisplay = true;            -- Assume that the display bar will need to be refreshed
     end
 
     -- Now, load up the local dynamic gearset with the evaluated gearset
-    gear.MoveToDynamicGS(gs,tDGS,'ALL',bIgnoreLocks,bIgnoreWSWAP);
+    gear.MoveToDynamicGS(gs,tDGS,false,nil);
 
     -- Then, walk the temporary dynamic set and lock any slot entries with a value unless
     -- the slot is in the passed in exceptions list.
@@ -197,8 +214,7 @@ function locks.LockByGearSet(gs,sExceptions,bIgnoreLocks,bIgnoreWSWAP,bDisplay)
     end
 
     if bDisplay == true then
-        local sList = fGetLockedList('locks');
-        gcdisplay.SetSlots('locks',locks.LocksNumeric);
+            (true);
     end
 end     -- locks.LockByGearSet
 
@@ -209,16 +225,46 @@ end     -- locks.LockByGearSet
         bNumeric    Indicates if slot numbers or names should be returned, comma delimited
 
     Returned:
-        list        List of slots locked or
-                    nil if no slots are locked
+        list        List of slots locked or nil
 --]]
 
 function locks.fGetLockedList(bNumeric)
+    local sList = nil;
+    local snList = nil;
+
+    if bNumeric == nil then
+        bNumeric = true;
+    end
+
+    for i,j in ipairs(locks.tLocks) do
+        if j[sWhich] == true then
+            if sList == nil then
+                sList = utilities.fFormattedWord(j['slot'],utilities._SLOT_FA);
+                snList = tostring(i);
+                locks.LocksNumeric = tostring(i);
+            else
+                sList = sList .. ', ' .. utilities.fFormattedWord(j['slot'],utilities._SLOT_FA);
+                snList = snList .. ',' .. tostring(i);
+                locks.LocksNumeric = locks.LocksNumeric .. ',' .. tostring(i);
+            end
+        end
+    end
+
+    if sList == nil then
+        locks.LocksNumeric = 'None';
+    end
+
+    if bNumeric == true then
+        return snList;
+    else
+        return sList;
+    end
 end     -- locks.fgetLockedList
 
 --[[
    LockControl will either set or remove the locks on the specified slots passed in. Slots can be either the
    numbered positions (1-16) or names. Multiples must be comma delimited.
+   !!!
 --]]
 
 function locks.LockControl(bSet,list)
@@ -229,8 +275,18 @@ end     -- locks.LockControl
     whether there's a lock in place that would inhibit the equipping of the
     item
 
+    Parameter
+        sName       Name of item
+
+    Returned
+        bGood       Are there no locks for affected slots
+        bMulti      Is the item a multi-slot item
+        sAllSlots   List of affected slots
+
     Returned: good?,multi-slot?,list of slots
     note: ears and rings are valid here
+
+    !!!
 --]]
 
 function locks.fMultiSlotLockCheck(sName)
@@ -245,7 +301,7 @@ function locks.fMultiSlotLockCheck(sName)
     end
 
     -- Walk the list of multi-slotted items
-    for j,k in pairs(gear.multiSlot) do
+    for j,k in pairs(gear.tMultiSlot) do
         -- if there's a match
         if string.lower(sName) == string.lower(k['item']) then
             bFound = true;
@@ -287,7 +343,6 @@ function locks.fMultiSlotLockCheck(sName)
 end		-- locks.fMultiSlotLockCheck
 
 --[[
-***
     LockUnlock locks or unlocks the specified slots.
 
     Parameters
@@ -316,30 +371,34 @@ function locks.LockUnlock(sType,sWhich)
 end		-- locks.LockUnlock
 
 --[[
-***
-    fGetLockedList returns a comma delimited list of locks or nil if all unlocked
+    ProcessLocks processes the invocation of lock/unlock command
 
-    Returned
-        List of locked slots
+    Pararameter
+        args		Passed argument list
 --]]
 
-function locks.fGetLockedList()
-    local sList = ', ';
-    local snList = ', ';
+function locks.ProcessLocks(args)
 
-    for i,j in ipairs(locks.tLocks) do
-        if j[sWhich] == true then
-            sList = sList .. gData.Constants.EquipSlotNames[gData.Constants.EquipSlotsLC[j['slot']]] .. ', ';
-            snList = snList .. tostring(i);
+    if args[1] == utilities._LOCK then
+        if args[2] ~= nil then
+            locks.LockUnlock(utilities._LOCK,args[2]);
+            sList = locks.fGetLockedList(false);
+            if sList ~= nil then
+                print(chat.message('Info: The following slot(s) are locked: ' .. sList));
+            else
+                print(chat.message('Info: All slots are unlocked'));
+            end
         end
+    else		-- unlock
+        if args[2] == nil then
+            args[2] = 'all';
+        end
+        locks.LockUnlock(utilities._UNLOCK,args[2]);
+        if string.lower(args[2]) == 'all' then
+            print(chat.message('Info: All slots are unlocked'));
+        else
+            print(chat.message('Info: \'' .. args[2] .. '\' have been unlocked'));
+        end
+        locks.fGetLockedList(true);
     end
-
-    if sList == ', ' then
-        locks.LocksNumeric = 'None';
-        sList = nil;
-    else
-        locks.LocksNumeric = string.sub(snList,3,-3);
-        sList = string.sub(sList,3,-3);
-    end
-    return sList;
-end		-- locks.fGetLockedList
+end		-- locks.ProcessLocks

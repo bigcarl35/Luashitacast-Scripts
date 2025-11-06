@@ -1,8 +1,58 @@
 local utilities = T{};
 
-local crossjobs = require('crossjobs');
-local gcdisplay = require('gcdisplay');
-local locks     = require('locks');
+local crossjobs = require('common.crossjobs');
+local locks = require('common.locks');
+
+--[[
+    This component contains functions that are of general use to any of the othe luashitacast compenents.
+
+    List of routines-
+        Subroutines:
+            local ClearAlias        Unregisters all luashitacast commands
+            ClearSet                Empties the passed gear set
+            Initialize              Defines initial settings for luashitacast
+            Message                 Toggles on/off feedback mechanism
+            OpenByFilename          Opens passed file for append (or generates new name and opens)
+            ProcessedTally          Notification system for every 'n' entries
+            PullTarget              Pulls character's target and announces to party
+            Reminder                Reminder function to nag player to /gc
+            SetAlias                Registers all luashitacast commands
+            Unload                  Clean up routine when jobs are changed/logout
+
+            AdvanceCycle            Advance the setting of a specific cycle
+            AdvanceToggle           Advance the setting of a specific toggle
+            CreateCycle             Create a dynamic cycle
+            CreateToggle            Create a dynamic toggle (on/off)
+            SetToggle               Set a specific value to a toggle
+
+        Functions:
+            local fBit              2^(n-1) resultant
+            local fHasBit           Determines if bit set in value
+            fBuffed                 Determines if passed buff is on character
+            fCheckItemOwned         Determines if character owns piece of gear
+            fCheckObiDW             Determines if Day/weather element advantageous for obi
+            fCheckPartyJob          Is a member of your party a certain job?
+            fCheckTime              Determines if passed time matches keyword
+            fCheckWSBailout         Determines range to target would fail Weapon Skill
+            fFormattedWord          Capitalization routine for passed in word
+            fGetLevel               Determines gear level cap for player
+            fGetRoot                Retrieves the "base" of the passed in spell/song
+            fGetTableByName         Returns the gear set associated with name
+            fMagicalSubjob          Determines if the player's subjob can do magic
+            fMakeConditionalTable   Splits apart conditionals into a table
+            local fNewFileName      Generates a new report file name
+            fReferenceCheck         Determines if any gear is reference to another set's slot
+            fRemoveConditional      Removes inline conditionals from string
+            fSetColorText           Colors text for displaying on screen
+            fSlotMatch              Determines if item can be loaded into slot
+            fTargetId               Returns the target ID (hex) of player's target
+            fTranslateWhichSlot     Determines if passed in slot valid
+            fValidSlots             Determines if passed in slot list is valid
+
+            fGetCycle                Get a specific cycle's value
+            fGetToggle               Get a specific toggle's value
+            fSetCycle                Set a specific cycle's value
+--]]
 
 -- List of all days including the strong and weak elements
 utilities.tWeekDayElement = {
@@ -86,6 +136,7 @@ utilities.tElemental_gear = {
             ['Weak'] = 'water',
             ['NQ'] = { ['Name'] = 'Fire staff', ['Ref'] = {} },
             ['HQ'] = { ['Name'] = 'Vulcan\'s staff', ['Ref'] = {} },
+            ['Grip'] = { ['Name'] = 'Fire Grip', ['Ref'] = {} },
             ['Affinity'] = { 'blaze','burn','firaga','fire','flare','enfire','katon' },
             ['SongAffinity'] = { 'ice threnody' },
             ['Summons'] = { 'ifrit','fire spirit','firespirit','fire' }
@@ -94,6 +145,7 @@ utilities.tElemental_gear = {
             ['Weak'] = 'fire',
             ['NQ'] = { ['Name'] = 'Ice staff', ['Ref'] = {} },
             ['HQ'] = {['Name'] = 'Aquilo\'s staff', ['Ref'] = {} },
+            ['Grip'] = { ['Name'] = 'Ice Grip', ['Ref'] = {} },
             ['Affinity'] = { 'blizzaga','blizzard','freeze','frost','ice','enblizzard','jubaku','hyoton','bind','distract','paralyze' },
             ['SongAffinity'] = { 'wind threnody' },
             ['Summons'] = { 'shiva','ice spirit','icespirit','ice' },
@@ -102,6 +154,7 @@ utilities.tElemental_gear = {
             ['Weak'] = 'ice',
             ['NQ'] = { ['Name'] = 'Wind staff', ['Ref'] = {} },
             ['HQ'] = { ['Name'] = 'Auster\'s staff', ['Ref'] = {} },
+            ['Grip'] = { ['Name'] = 'Wind Grip', ['Ref'] = {} },
             ['Affinity'] = { 'aero','aeroga','choke','tornado','enaero','huton','gravity','silence' },
             ['SongAffinity'] = { 'earth threnody' },
             ['Summons'] = { 'garuda','air spirit','fCheckInlineWeatherairspirit','air','siren' },
@@ -110,6 +163,7 @@ utilities.tElemental_gear = {
             ['Weak'] = 'wind',
             ['NQ'] = { ['Name'] = 'Earth staff', ['Ref'] = {} },
             ['HQ'] = { ['Name'] = 'Terra\'s staff', ['Ref'] = {} },
+            ['Grip'] = { ['Name'] = 'Earth Grip', ['Ref'] = {} },
             ['Affinity'] = { 'quake','rasp','stone','stonega','enstone','hojo','doton','slow' },
             ['SongAffinity'] = { 'lightning threnody', 'battlefield elegy', 'carnage elegy' },
             ['Summons'] = {'titan','earth spirit','earthspirit','earth' },
@@ -118,6 +172,7 @@ utilities.tElemental_gear = {
             ['Weak'] = 'earth',
             ['NQ'] = { ['Name'] = 'Thunder staff', ['Ref'] = {} },
             ['HQ'] = { ['Name'] = 'Jupiter\'s staff', ['Ref'] = {} },
+            ['Grip'] = { ['Name'] = 'Thunder Grip', ['Ref'] = {} },
             ['Affinity'] = { 'burst','shock','thundaga','thunder','enthunder','raiton' },
             ['SongAffinity'] = { 'water threnody' },
             ['Summons'] = { 'ramuh','thunder spirit','thunderspirit','thunder' },
@@ -126,6 +181,7 @@ utilities.tElemental_gear = {
             ['Weak'] = 'thunder',
             ['NQ'] = { ['Name'] = 'Water staff', ['Ref'] = {} },
             ['HQ'] = { ['Name'] = 'Neptune\'s staff', ['Ref'] = {} },
+            ['Grip'] = { ['Name'] = 'Water Grip', ['Ref'] = {} },
             ['Affinity'] = { 'drown','flood','poison','poisonga','water','waterga','enwater','dokumori','suiton' },
             ['SongAffinity'] = { 'fire threnody' },
             ['Summons'] = { 'leviathan','water spirit','waterspirit','water' },
@@ -134,6 +190,7 @@ utilities.tElemental_gear = {
             ['Weak'] = 'dark',
             ['NQ'] = { ['Name'] = 'Light staff', ['Ref'] = {} },
             ['HQ'] = { ['Name'] = 'Apollo\'s staff', ['Ref'] = {} },
+            ['Grip'] = { ['Name'] = 'Light Grip', ['Ref'] = {} },
             ['Affinity'] = { 'banish','banishga','curaga','cure','dia','diaga','flash','holy','enlight','repose','inundation' },
             ['SongAffinity'] = { 'dark threnody','foe requiem','foe requiem ii','foe requiem iii','foe requiem iv','foe requiem v','foe requiem vi','foe lullaby','horde lullaby',
                 'magic finale','maiden\'s virelai' },
@@ -143,6 +200,7 @@ utilities.tElemental_gear = {
             ['Weak'] = 'light',
             ['NQ'] = { ['Name'] = 'Dark staff', ['Ref'] = {} },
             ['HQ'] = { ['Name'] = 'Pluto\'s staff', ['Ref'] = {} },
+            ['Grip'] = { ['Name'] = 'Dark Grip', ['Ref'] = {} },
             ['Affinity'] = { 'absorb','aspir','blind','bio','dispel','drain','dread','frazzle','sleep','sleepga','endark','kurayami' },
             ['SongAffinity'] = { 'light threnody' },
             ['Summons'] = { 'fenrir','diabolos','dark spirit','darkspirit','dark','atomos','odin' },
@@ -184,7 +242,7 @@ utilities.tElemental_gear = {
             ['Name'] = 'Rairin obi',
             ['Ref'] = {},
             ['MEacc'] = { 'shock','burst','thundaga','thunder','stun','enthunder','raiton' },
-            ['eleWS'] = { 'cloudsplitter','thunder tutilities.fSummonersPetElementhrust','raiden thrust','tachi: goten' },
+            ['eleWS'] = { 'cloudsplitter','thunder thrust','raiden thrust','tachi: goten' },
         },
         ['water'] = {
             ['Weak'] = 'thunder',
@@ -299,6 +357,36 @@ utilities.tElemental_gear = {
     },
 };
 
+-- The following define all the weaponskills according to the desired stats
+utilities.tWeaponSkills = {
+    ['CHR']    = { 'shadowstitch' },
+    ['DEX']    = { 'wasp sting','viper bite','blade: metsu','dancing edge' },
+    ['DEXAGI'] = { 'shark bite','coronach' },
+    ['DEXCHR'] = { 'eviseration' },
+    ['DEXINT'] = { 'gust slash','cyclone' },
+    ['INT']    = { 'gate of tartarus' },
+    ['INTMND'] = { 'spirit taker' },
+    ['MND']    = { 'energy steal','energy drain' },
+    ['RANGED_AGI']  = { 'hot shot','split shot','sniper shot','slugshot','blast shot','heavy shot','detonator' }, -- MARKSMANSHIP
+    ['RANGED_STRAGI'] = { 'flaming arrow','piercing arrow','dulling arrow','sidewinder','blast arrow','arching arrow','empyreal arrow','namas arrow' }, -- ARCHERY
+    ['STR']    = { 'raging axe','smash axe','gale axe','avalanche axe','spinning axe','rampage','mistral axe','decimation','spinning attack','flat blade',
+                   'circle blade','vorpal blade','hard slash','crescent moon','mercy stroke','iron tempest','sturmwind','keen edge','raging rush',
+                   'metatron torment','leg sweep','skewer','wheeling thrust','impulse drive','tachi: enpi','tachi: hobaku','tachi: goten','tachi: kagero',
+                   'tachi: jinpu','tachi: yukikaze','tachi: gekko','tachi: kasha','tachi: kaiten','brainshaker','skullbreaker','true strike','heavy swing',
+                   'shell crusher','full swing','onslaught','double thrust','spinning scythe','Vorpal Scythe' },
+    ['STRAGI'] = { 'sickle moon','vorpal thrust' },
+    ['STRDEX'] = { 'combo','backhand blow','raging fists','fast blade','penta thrust','blade: rin','blade: retsu','blade: jin','blade: ten','blade: ku','Geirskogul' },
+    ['STRINT'] = { 'dark harvest','shadow of death','nightmare scythe','spiral hell','burning blade','frostbite','freezebite','spinning slash','ground strike',
+                   'thunder thrust','raiden thrust','blade: teki','blade: to','blade: chi','blade: ei','rock crusher','earth crusher','catastrophe' },
+    ['STRINT_30_20'] = { 'red lotus blade' },
+    ['STRMND'] = { 'guillotine','cross reaper','shining blade','seraph blade','swift blade','savage blade','shockwave','tachi: koki','shining strike','seraph strike',
+                   'judgment','hexa strike','randgrith','retribution', 'knights of round' },
+    ['STRMND_30_50'] = { 'black halo' },
+    ['STRVIT'] = { 'shoulder tackle','one inch punch','final heaven' },
+    ['Skill']  = { 'starlight','moonlight' },
+    ['HP']     = { 'spirits within' }
+};
+
 -- Lists storage containers that can be equipped from outside of a moghouse
 utilities.EQUIPABLE = {
     utilities.STORAGES[1],		-- Inventory
@@ -386,65 +474,180 @@ utilities._TankJobs = 'PLD,NIN,RUN,DRK,WAR,THF,RDM,BLU';
 -- Define list of all elements
 utilities._AllElements = 'fire,ice,wind,earth,thunder,water,light,dark';
 
--- Define lists of valid Weapon Types
-utilities._WeaponTypes = 'ARCHERY,AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,MARKSMANSHIP,POLEARM,SCYTHE,STAVE,SWORD,THROWING';
-utilities._WeaponMelee = 'AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,POLEARM,SCYTHE,STAVE,SWORD';
+-- Define lists of valid Weapon Types.
+-- Note: while SHIELD isn't a weapon, it conforms to the weapon type mechanism in this program
+utilities._WeaponTypes = 'ARCHERY,AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,MARKSMANSHIP,POLEARM,SCYTHE,STAVE,SWORD,THROWING,SHIELD';
+utilities._WeaponMelee = 'AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,POLEARM,SCYTHE,STAVE,SWORD,SHIELD';
 utilities._WeaponRange = 'ARCHERY,MARKSMANSHIP,THROWING';
 
---[[
-***
-    fDisplayOnce will display the passed message if it hasn't been displayed
-    before. If it has been displayed, the message isn't repeated.
+-- Define list of all pet commands
+utilities._PetCommands = 'FIGHT,HEEL,STAY,LEAVE,SIC,READY,STEADY WING,DISMISS,ASSAULT,RELEASE,RETREAT';
 
-    Parameters:
-        msg         What should be displayed
-        bOverride   Should the "only display once" rule be ignored
+-- Define arrays for toggles and cycles
+utilities.Toggles = {};
+utilities.Cycles = {};
+
+--[[
+    CreateCycle creates a table variable with multiple defined values. The index identifies which value
+    is currently selected
+
+    Parameters
+        Name        Name of the cycle
+        Values      Array of indexed values
 --]]
 
-function utilities.fDisplayOnce(msg,bOverride)
-    local tmp;
+function utilities.CreateCycle(name, values)
+    local newCycle = {
+        Index = 1,
+        Array = values
+    };
 
-    if msg == nil then
-        return false;
-    end
-
-    if bOverride == nil then
-        bOverride = false;
-    end
-
-    -- Let's deal with a limitation of LUA. (Wanna guess how long
-    -- it took me to realize this was the problem? Yeah...)
-    if string.length(msg) > 40 then
-        tmp = string.sub(msg,1,40);
-    else
-        tmp = msg;
-    end
-
-    if crossjobs.GearWarnings == nil or (crossjobs.GearWarnings ~= nil and string.find(crossjobs.GearWarnings,tmp) == nil) or
-            bOverride == true then
-        print(chat.message(msg));
-
-        if crossjobs.GearWarnings == nil then
-            crossjobs.GearWarnings = msg;
-        else
-            crossjobs.GearWarnings = crossjobs.GearWarnings .. ',' .. msg;
-        end
-    end
-end     -- utilities.fDisplayOnce
+    utilities.Cycles[name] = newCycle;
+end		-- utilities.CreateCycle
 
 --[[
-***
-    fStartReminder is a simple routine used for displaying a nag message for the player
+    fGetCycle returns the currently selected value of the cycle
+
+    Parameter
+        Name        Name of the cycle
+
+    Returned
+        Current value of the cycle
+--]]
+
+function utilities.fGetCycle(name)
+    local ctable = utilities.Cycles[name];
+
+    if (type(ctable) == 'table') then
+        return ctable.Array[ctable.Index];
+    else
+        return 'Unknown';
+    end
+end		-- utilities.GetCycle
+
+--[[
+    AdvanceCycle moves the pointer in the Cycle to the next available value. If at the last value,
+    it cycles back to the beginning of the list
+
+    Parameter
+        name        Name of the cycle
+--]]
+
+function utilities.AdvanceCycle(name)
+    local ctable = utilities.Cycles[name];
+
+    if (type(ctable) ~= 'table') then
+        return;
+    end
+
+    ctable.Index = ctable.Index + 1;
+    if (ctable.Index > #ctable.Array) then
+        ctable.Index = 1;
+    end
+end		-- utilities.AdvanceCycle
+
+--[[
+    SetCycle explicitly sets which value should be current in the cycle variable
+
+    Parameters
+        name        Name of the Cycle
+        val         Value to set the cycle to
+--]]
+
+function utilities.fSetCycle(name,val)
+    local ctable = utilities.Cycles[name];
+
+    if (type(ctable) ~= 'table') then
+        return;
+    end
+
+    for k,v in pairs(ctable.Array) do
+        if val == v then
+            ctable.Index = k
+            return true
+        end
+    end
+    return false
+end		-- utilities.SetCycle
+
+--[[
+    CreateToggle creates a binary variable that can be turrned on or off
+
+    Parameters
+        name        Name of the toggle
+        default     Value of the toggle
+--]]
+
+function displaybar.CreateToggle(name, default)
+    utilities.Toggles[name] = default;
+end		-- utilities.CreateToggle
+
+--[[
+    fGetToggle returns the name of the current setting of the passed toggle variable
+
+    Parameter
+        Name        Name of the toggle
+
+    Returned
+        Value of the toggle
+--]]
+
+function utilities.fGetToggle(name)
+
+    if utilities.Toggles[name] ~= nil then
+        return utilities.Toggles[name];
+    else
+        return false;
+    end
+end		-- utilities.fGetToggle
+
+--[[
+    AdvanceToggle just flips the binary setting of the passed toggle variable
+
+    Parameter
+        Name        Name of toggle
+--]]
+
+function utilities.AdvanceToggle(name)
+
+    if (type(utilities.Toggles[name]) ~= 'boolean') then
+        return;
+    elseif utilities.Toggles[name] then
+        utilities.Toggles[name] = false;
+    else
+        utilities.Toggles[name] = true;
+    end
+end		-- utilities.AdvanceToggle
+
+--[[
+    SetToggle explicitly sets the value of the passed binary variable
+
+    Parameters
+        Name        Name of toggle
+        Val         Value to set toggle to
+--]]
+
+function utilities.SetToggle(name,val)
+
+    if (type(utilities.Toggles[name]) ~= 'boolean' or type(val) ~= 'boolean') then
+        return;
+    else
+        utilities.Toggles[name] = val;
+    end
+end		-- utilities.SetToggle
+
+--[[
+    Reminder is a simple routine used for displaying a nag message for the player
     to run /GC. Initially it displayes 15 seconds after logging in, but from then on
     it will display every 5 minutes until /GC is run. (Gear swapping does not occur
     until this command is run.)
 --]]
 
-function utilities.StartReminder()
+function utilities.Reminder()
     local iTestVal = crossjobs.settings.bMinBasetime;
     local iNow = os.time();
 
-    if gcdisplay.GetGC() == true then
+    if gear.bGC == true then
         return;
     end
 
@@ -466,12 +669,16 @@ function utilities.StartReminder()
         -- Change the base to current so that comparison is from now forward
         crossjobs.basetime = iNow;
     end
-end     -- utilities.StartReminder
+end     -- utilities.Reminder
 
 --[[
-***
     ProcessedTally determines if the passed in counter meets the reporting
     requirements and displays a message if appropriate
+
+    Parameters
+        sWhat   Name of what is being processed
+        iCnt    How many the total count is
+        iDiv    Size of count to report on
 --]]
 
 function utilities.ProcessedTally(sWhat,iCnt,iDiv)
@@ -479,13 +686,12 @@ function utilities.ProcessedTally(sWhat,iCnt,iDiv)
         return;
     end
 
-    if math.floor(iCnt/50) == iCnt/50 then
+    if math.floor(iCnt/iDiv) == iCnt/iDiv then
         print(chat.message(tostring(iCnt) .. sWhat .. ' processed...'));
     end
 end     -- utilities.ProcessedTally
 
 --[[
-***
     fFormattedWord takes the passed in word and formats it in the indicated
     style.
 
@@ -514,7 +720,6 @@ local sTmp = nil;
 end     -- utilities.fFormattedWord
 
 --[[
-***
     Message toggles on/off a feedback mechanism for all luashitacast commands
 --]]
 
@@ -525,7 +730,6 @@ function utilities.Message(toggle, status)
 end		-- utilities.Message
 
 --[[
-***
     fCheckTime determines if the current server time is found in the passed name time range.
 
     Parameters:
@@ -565,36 +769,8 @@ function utilities.fCheckTime(hr,sTime)
     return bGood,nil;
 end     -- utilities.fCheckTime
 
---[[
-***
-    fIsPetSummonersPet determines if the player has a pet out and that it's a summoner's pet
-
-    Parameters:
-        pet     pet structure
-
-    returned:
-        True/False
---]]
-
-function utilities.fSummonersPetElement(pet)
-
-    if pet ~= nil and pet.Name ~= nil then
-        -- we know there's a pet
-        for i,j in utilities.tElemental_gear['staff'] do
-            -- Walk the staves, ignoring "level" and process the summons table for each element
-            if i ~= 'level' then
-                if table.find(j['Summons'],string.lower(pet.Name)) ~= nil then
-                    -- Summoner's pet found
-                    return i;
-                end
-            end
-        end
-    end
-    return nil;     -- either no pet or no smn pet found
-end     -- utilities.fSummonersPetElement
 
 --[[
-***
     fValidSlots determines if the passed in list of slots is valid. It then translates the valids slots
     it to the indicated format.
 
@@ -611,6 +787,8 @@ end     -- utilities.fSummonersPetElement
     Returned:
         bGood       Was the slot list valid?
         sList       Comma delimited correctly formatted list
+
+        !!!
 --]]
 
 -- Need more work. The inverted portion will not work if the passed in numbers are not in order!!!
@@ -667,8 +845,6 @@ function utilities.fValidSlots(sList,sFmt)
 end     -- utilities.fValidSlots
 
 --[[
-
-
     fTranslateWhichSlot determines if the passed in value is a valid slot designation and then translates it to the
     indicated format.  Only a single value should be passed in.
 
@@ -747,12 +923,11 @@ function utilities.fTranslateWhichSlot(val,sType)
     end
 
     -- If you got here it wasn't found
-    print(chat.header('fTranslateWhichSlot'):append(chat.message('Unrecognized slot: ' .. val .. 'Skipping...')));
+    print(chat.message('Warning: Unrecognized slot: ' .. val .. 'Skipping...'));
     return nil;
 end     -- utilities.fTranslateWhichSlot
 
 --[[
-***
     fGetRoot determines the "base" of a spell/song name passed in. (The base is the first word in the spell/song name.)
 
     Parameters:
@@ -793,35 +968,46 @@ function utilities.fGetRoot(sSpell,bVersion)
 end     -- utilities.fGetRoot
 
 --[[
-    fGetTableByName returns the gear set that is associated with the set name passed to it.
-    It does this by walking the Sets (either gProfile.Sets or gcinclude.Sets)
+    returns the gear set that is associated with the set name passed to it.
+    It does this by walking the Sets (either gProfile.Sets or crossjobs.Sets)
 
-    Returned: gearset/nil
+    Parameter
+        sName           Name of gearset. Might include where the gearset is
+
+    Returned
+        gearset/nil     If found, returns the gearset
 --]]
 
 function utilities.fGetTableByName(sName)
-    local s,s2;
+    local bProfile = false;
+    local bCrossjobs = false;
     local sName2;
 
     sName2 = string.lower(sName);
-    s = string.find(sName2,'gcinclude');
-    if s == nil then
+    if string.find(sName2,'gprofile.sets.') ~= nil then
+        sName2 = string.sub(sName2,14,-1);
+        bProfile = true;
+    elseif string.find(sName2,'crossjobs.sets.') ~= nil then
+        sName2 = string.sub(sName2,16,-1);
+        bCrossjobs = true;
+    end
+
+    if bProfile == true or (bProfile == false and bCrossjobs == false) then
         for k,l in pairs(gProfile.Sets) do
             if string.lower(k) == sName2 then
                 return l;
             end
         end
-    else
-        s2 = string.sub(sName2,s+2,-1);
+        if bProfile == true then
+            return nil;
+        end
     end
 
-    if s2 == nil then
-        s2 = sName2;
-    end
-
-    for k,l in pairs(crossjobs.Sets) do
-        if string.lower(k) == s2 then
-            return l;
+    if bCrossjobs == true or (bProfile == false and bCrossjobs == false) then
+        for k,l in pairs(crossjobs.Sets) do
+            if string.lower(k) == s2 then
+                return l;
+            end
         end
     end
 
@@ -830,23 +1016,33 @@ end     -- utilities.fGetTableByName
 
 --[[
     fMakeConditionalTable takes the passed, // delimited list and
-    returns the individual codes in a table
+    returns the individual codes in a table.
 
     Parameters:
-        sList       // delimited list of inline conditionals
+        sList       delimited list of inline conditionals
+        del         what delimiter to split on
 
     Returned:
         Table of the split apart inline conditionals, all uppercase
 --]]
 
-function utilities.fMakeConditionalTable(sList)
+function utilities.fMakeConditionalTable(sList,del)
     local tTbl = {};
     local iPos;
 
+    if del == nil then
+        del == '//';
+    end
+
+    if string.find(sList,del) == nil then
+        return;
+    end
+
+    sList = string.upper(sList);
     iPos = 1;		-- Assume start at first position
     while iPos ~= nil do
         -- Look for the next //
-        iPos = string.find(string.sub(sList,3,-1),'//');
+        iPos = string.find(string.sub(sList,3,-1),del);
         if iPos ~= nil then
             -- since found, add the current entry
             table.insert(tTbl,string.sub(sList,3,iPos+2-1));    -- skip the //, include up to next //
@@ -881,7 +1077,7 @@ function utilities.fBuffed(sCode,bStart)
         bStart = false;
     end
 
-    sCode = string.lower(sCode);
+    sCode = string.lower(string.gsub(sCode,'_',' '));
     for _, buff in pairs(buffs) do
         local buffString = AshitaCore:GetResourceManager():GetString("buffs.names", buff);
 
@@ -947,6 +1143,28 @@ function utilities.ClearSet(gSet)
 end		-- utilities.ClearSet
 
 --[[
+    fTargetId extracts the target's reference ID and returns it to the invoker
+
+    Parameter
+        TargetIndex     Target Index structure
+
+    Returned
+        TargetID
+--]]
+
+function utilities.fTargetId(TargetIndex)
+
+    if targetIndex == nil then
+        return ' ';
+    else
+        local TargetServerId = AshitaCore:GetMemoryManager():GetEntity():GetServerId(TargetIndex);
+        local TargetServerIdHex = string.format('0x%X', TargetServerId);
+
+        return string.sub(TargetServerIdHex, -3);
+    end
+end		-- utilities.fTargetId
+
+--[[
     PullTarget determines how the player wants to pull the target (gear/pet) and then pulls it.
 --]]
 
@@ -967,8 +1185,8 @@ function utilities.PullTarget()
                 sTxt = '/ra <t>';
             end
 
-            if gcdisplay.GetToggle('sPF') == true then
-                local sMsg = '/p Pulling ' .. targetEntity.Name .. ' [' .. gcinclude.fTargetId(targetIndex) .. ']';
+            if utilities.fGetToggle('sPF') == true then
+                local sMsg = '/p Pulling ' .. targetEntity.Name .. ' [' .. utilities.fTargetId(targetIndex) .. ']';
                 AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
             end
             AshitaCore:GetChatManager():QueueCommand(-1, sTxt);
@@ -1018,6 +1236,9 @@ end		-- utilities.fSetColorText
 
     Parameter
         g       Gear name with potential inline conditionals
+
+    Returned
+        g       Gear named stripped of conditionals
 --]]
 
 function utilities.fRemoveConditional(g)
@@ -1036,7 +1257,7 @@ function utilities.fRemoveConditional(g)
 end		-- utilities.fRemoveConditional
 
 --[[
-    fBit and fHasBit are bit manipulation functions used inf fCheckItemOwned.
+    fBit and fHasBit are bit manipulation functions used in fCheckItemOwned.
     Removing these functions and expanding out the formula makes things look
     messy
 ]]
@@ -1051,7 +1272,7 @@ end		-- fHasBit
 
 --[[
     fCheckItemOwned determines if the specified piece of gear is owned by
-    the playera and some details on accessiblility and storage.
+    the playera and some details on accessibility and storage.
 
     Parameter
         gear        Name of gear to check
@@ -1131,7 +1352,7 @@ function utilities.fCheckItemOwned(gear)
     end
 
     -- Lastly, see if stored on a claim slip
-    for i,desc in pairs(gcinclude.ClaimSlips) do
+    for i,desc in pairs(slips.ClaimSlips) do
         if desc['own'] == true and table.find(desc['ids'],gear.Id) ~= nil then
             tOwned['own'] = true;
             tOwned['claim'] = true;
@@ -1183,4 +1404,273 @@ function utilities.fSlotMatch(sSlot,iSlot)
     end
 
     return bGood;
-end		-- fSlotMatch
+end		-- utilities.fSlotMatch
+
+--[[
+    fReferenceCheck determines if any of the passed gear is actually
+    a reference to another set's slot.
+
+    Parameter
+        ts      item or array of gear to check for a reference
+
+    Returned
+        T/F     Does ts contain an inline reference
+--]]
+
+function utilities.fReferenceCheck(ts)
+    local t = {};
+    local bFound = false;
+
+    if ts == nil then
+        return false;
+    end
+
+    if type(ts) == 'string' then
+        t[1] = ts;
+    else
+        t = ts;
+    end
+
+    for i,j in pairs(t) do
+        if string.find(j,'::') then
+            bFound = true;
+            break;
+        end
+    end
+    return bFound;
+end		-- utilities.fReferenceCheck
+
+--[[
+    fGetLevel determines what main job level should gear be compared to. It
+    uses either the actual level or the player capped level.
+
+    Parameter
+        bActual     T/F, should the actual level be returned (not capped)?
+
+    Returned
+        level       Either capped or actual level
+--]]
+
+function utilities.fGetLevel(bActual)
+    local player = gData.GetPlayer();
+
+    if bActual == nil then
+        bActual = false;
+    end
+
+    if bActual == true or gProfile.settings.PlayerCappedLevel == 0 then
+        -- Actual max level wanted
+        return player.MainJobSync;
+    else
+        -- Player capped level wanted
+        return gProfile.settings.PlayerCappedLevel;
+    end
+end     -- utilities.fGetLevel
+
+--[[
+    fCheckObiDW determines if the weather/day element makes equiping an elemental
+    obi advantageous.
+
+    Parameter
+        ele         Element to check for
+
+    Returned
+        PctDay      % calculation based on day's element
+        PctWeather  % calculation based on weather's element
+
+    Note: Elemental obis can be useful when closing a skillchain with certain weaponskills.
+    This code does NOT track that opportunity, so it is not even considered.
+--]]
+
+function utilities.fCheckObiDW(ele)
+    local sEnvironment = gData.GetEnvironment();
+    local sWeak =
+    local sDay = sEnvironment.DayElement;
+    local PctDay = 0;
+    local PctWeather = 0;
+
+    -- Make sure a valid element specified
+    if ele == nil or string.find(utilities._AllElements,ele) == nil then
+        return nil;
+    end
+
+    ele = string.lower(ele);
+    sWeak = utilities.tElemental_gear['staff'][ele]['Weak'];    -- Elemental weakness tracked here
+
+    -- First, the day
+    if string.lower(sDay) == ele then
+        PctDay = 10;
+    elseif sWeak == ele then
+        PctDay = -10;
+    end
+
+    -- Next the weather
+    if string.lower(sEnvironment.WeatherElement) == ele then
+        if string.find(sEnvironment.Weather,'x2') ~= nil then 		-- There's a storm of the element
+            PctWeather = 25
+        else
+            PctWeather = 10;
+        end
+    else
+        -- Weather doesn't match. Check to see if the weather weakens the element
+        if string.lower(sEnvironment.WeatherElement) == sWeak then
+            if string.find(sEnvironment.Weather,'x2') ~= nil then 	-- There's a storm of the element
+                PctWeather = -25
+            else
+                PctWeather = -10;
+            end
+        end
+    end
+
+    -- Lastly, check for iridescence/prismatic
+    local g = gEquip.GetCurrentEquip(1);
+    if AshitaCore:GetResourceManager():GetItemById(g.Item.Id).Name[1] == 'Claustrum' then	-- Only case I know of with prismatic
+        if PctWeather < 0 then  -- indicates element weak to weather
+            PctWeather = PctWeather - (0.1 * math.abs(PctWeather));     -- -10% penalty from iridescence
+        else
+            PctWeather = PctWeather + (0.1 * math.abs(PctWeather));     -- +10% bonus from iridescence
+        end
+    end
+
+    return PctDay,PctWeather;
+end		-- utilities.fCheckObiDW
+
+--[[
+    SetAlias registers all of the luashitacast commands that are defined in this file
+--]]
+
+function SetAlias()
+
+    for _, v in ipairs(utilities.AliasList) do
+        AshitaCore:GetChatManager():QueueCommand(-1, '/alias /' .. v .. ' /lac fwd ' .. v);
+    end
+end		-- SetAlias
+
+--[[
+    ClearAlias removes the luashitacast commands that were registered here
+--]]
+
+function ClearAlias()
+    for _, v in ipairs(utilities.AliasList) do
+        AshitaCore:GetChatManager():QueueCommand(-1, '/alias del /' .. v);
+    end
+end		-- ClearAlias
+
+--[[
+    Initialize gives luashitacast it's initial settings
+--]]
+
+function utilities.Initialize()
+    displaybar.InitializeDisplayBar:once(2);
+    crossjobs.SetVariables:once(2);
+    SetAlias:once(2);
+end		-- crossjobs.Initialize
+
+
+--[[
+    Unload ensures that the display settings are saved, the aliases are removed,
+    and the display objects are removed
+--]]
+
+function utilities.Unload()
+    --SaveSettingFile();
+    ClearAlias();
+    ashita.events.unregister('packet_in', 'packet_in_callback1');
+    displaybar.Unload();
+end		-- utilities.Unload
+
+--[[
+    fCheckWsBailout determines if there's a debuff, distance to target, or insufficient TP
+    that will cause a weapon skill to fail thus losing all player's TP.
+
+    Returned
+        T/F
+--]]
+
+function utilities.fCheckWsBailout()
+    local player = gData.GetPlayer();
+    local ws = gData.GetAction();
+    local target = gData.GetActionTarget();
+    local bGood = true;
+
+    if crossjobs.settings.WScheck == true and
+       tonumber(target.Distance) > crossjobs.settings.WSdistance then
+        print(chat.message('Warning: Distance to mob is too far! Move closer to target'));
+        bGood = false;
+    elseif player.TP <= 999 then
+        print(chat.message('Warning: insufficient TP to weapon skill'));
+        bGood = false;
+    elseif utilities.fBuffed('Sleep',true) == true or
+           utilities.fBuffed('Petrification',true) == true or
+           utilities.fBuffed('Stun',true) == true or
+           utilities.fBuffed('Amnesia',true) == true or
+           utilities.fBuffed('Charm', true) == true then
+        print(chat.message('Warning: detrimental debuff inhibiting any action'));
+        bGood - false;
+    end
+
+    return bGood;
+end		-- utilities.fCheckWsBailout
+
+--[[
+    fMagicSubJob determines if the sub job can do magic
+
+    Returned
+        T/F
+--]]
+
+function utilities.fMagicalSubJob()
+    local player = gData.GetPlayer();
+    local sj = player.SubJob;
+
+    return (string.find(utilities._sMagicJobs,sj) ~= nil);
+end		-- utilities.fMagicalSubJob
+
+--[[
+    NewFileName generates a new file name based on the player's character name and
+    the date.
+
+    Returned
+        Generated name
+--]]
+
+function fNewFileName()
+    local player = gData.GetPlayer();
+    local sName = string.upper(player.Name) .. '-';
+
+    sName = sName .. string.gsub(string.format("%x",os.clock),'/','_') .. '.txt';
+    return sName;
+end     -- fNewFileName
+
+--[[
+    OpenByFilename determines if the passed file name is a wild card. If so, it
+    creates a file named after the player's name and date. The file is opened and
+    the file pointer and name is returned.
+
+    Parameter
+        sname       Name of the report or * if program should create a name
+
+    Returned
+        fptr        Pointer to opened file
+        fname       Name of file opened
+--]]
+
+function utilities.OpenByFilename(sname)
+    local fname;
+    local fptr;
+
+    if sname == nil then
+        sname = '*';
+    end
+
+    if sname == '*' then
+        fname = fNewFileName();
+    else
+        fname = sname;
+    end
+
+    fname = 'Reports.' .. fname;
+    fptr = io.open(fname,"+");
+    return fptr,fname;
+end     -- utilities.OpenByFilename
+

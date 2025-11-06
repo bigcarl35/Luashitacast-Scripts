@@ -1,8 +1,28 @@
 local reporting = T{};
 
-local gcdisplay = require('gcdisplay');
-local crossjobs = require('crossjobs');
-local gear      = require('gear');
+local crossjobs = require('common.crossjobs');
+local utilities = require('common.utilities');
+local gear = require('common.gear');
+local slips = require('common.slips');
+
+--[[
+    This component contains all functions associated with reporting
+
+    List of routines-
+        Subroutines:
+            DB_ShowIt               Displays some internal settings
+            DisplayGD_AW            Displays list of all gear
+            DisplayGD_Gs            Displays all gear for a gear set
+            DisplayGD_S             Displays all gear for a slot
+            DisplayMessage          Writes message to screen or file
+            DisplayOnce             Displays a message once
+            local DisplayItemStats  Displays the details for an item
+            GearCheckList           Displays tallied results from /gc
+            DisplayOut              Displays message to screen or to a file
+            DisplayVersion          Displays the version and patch notes
+            ProcessSMG              Processes the invocation of /smg
+            RegionControlDisplay    Displays all regions and who controls them
+--]]
 
 --[[
     DB_ShowIt will display debug details
@@ -18,10 +38,10 @@ function reporting.DB_ShowIt()
     print(chat.message('Job: ' .. player.MainJob .. '/' .. player.SubJob));
     print(chat.message('Level: ' .. tostring(player.MainJobSync) .. '(' .. tostring(player.MainJobLevel) .. ')'));
     print(chat.message(' '));
-    print(chat.message('WScheck: ' .. tostring(gcinclude.settings.WScheck)));
-    print(chat.message('WSdistance: ' .. tostring(gcinclude.settings.WSdistance)));
-    print(chat.message('bWSOverride: ' .. tostring(gcinclude.settings.bWSOverride)));
-    print(chat.message('GC run? ' .. tostring(gcdisplay.GetGC())));
+    print(chat.message('WScheck: ' .. tostring(crossjobs.settings.WScheck)));
+    print(chat.message('WSdistance: ' .. tostring(crossjobs.settings.WSdistance)));
+    print(chat.message('bWSOverride: ' .. tostring(crossjobs.settings.bWSOverride)));
+    print(chat.message('GC run? ' .. tostring(gear,bGC)));
     if sSlip == nil then
         print(chat.message('Slips: None'));
     else
@@ -42,7 +62,7 @@ function reporting.DisplayVersion()
     rfn = rfn:reverse() .. 'Documentation\\changelog.txt';
 
     print(chat.message(' '));
-    print(chat.message(version.name .. ' Version: ' .. tostring(version.version)));
+    print(chat.message(version.name .. ' Version: ' .. tostring(crossjobs.version)));
     for line in io.lines (rfn) do
         if bSkip == false then
             print(chat.message(' '));
@@ -143,6 +163,30 @@ function DisplayItemStats(sName,sSlot)
 end	-- DisplayItemStats
 
 --[[
+***
+    ProcessSMGs processes the invocation of Show My Gear reporting command
+
+    Pararameter
+        args		Passed argument list
+--]]
+
+function reporting.ProcessSMG(args)
+
+    if #args == 1 then				-- Show a list of all gear
+        reporting.DisplayGD_AW(nil);
+    elseif args[2] ~= nil then
+        local ls = string.lower(args[2]);
+        if ls == 'noac' then		-- Show a list of gear where accessible is false
+            reporting.DisplayGD_AW('noac');
+        elseif string.len(ls) > 5 and string.sub(ls,1,5) == 'slot=' then
+            reporting.DisplayGD_S(string.sub(ls,6,-1));
+        elseif string.len(ls) > 3 and string.sub(ls,1,3) == 'gs=' then
+            reporting.DisplayGD_Gs(string.sub(ls,4,-1));
+        end
+    end
+end		-- reporting.ProcessSMG
+
+--[[
     DisplayGD_AW lists either all the dynamic gear definitions or just the
     ones that are invalid or inaccessible.
 
@@ -231,7 +275,7 @@ function reporting.DisplayGD_Gs(p1)
         return;
     end
 
-    -- first check gProfile.Sets. If not found, look in gcinclude.Sets.
+    -- first check gProfile.Sets. If not found, look in crossjobs.Sets.
     tGs = utilities.fGetTableByName(p1);
     if tGs == nil then
         print(chat.message('Warning, ' .. p1 .. ': no such set exists!'));
@@ -243,7 +287,7 @@ function reporting.DisplayGD_Gs(p1)
 
     -- Loop the entries first looking for subsets
     for slot,j in pairs(tGs) do
-        if string.lower(slot) == 'subset' then
+        if string.find(string.lower(slot),'subset') ~= nil then
             if j ~= nil then
                 -- then make sure that j is a table
                 gg = {};
@@ -282,9 +326,9 @@ function reporting.DisplayGD_Gs(p1)
     -- loop on the entries of the gear set
     lPc = ',';
     for slot,j in pairs(tGs) do
-        if string.lower(slot) ~= 'subset' then
+        if string.find(string.lower(slot),'subset') == nil and string.find(string.lower(slot),'group') == nil  then
             print(' ');
-            print(chat.message('Slot: ' .. slot));
+            print(chat.message('Slot: ' .. utilities.fRemoveConditional(slot)));
             -- make sure entry is not [slot] =
             if j ~= nil then
                 gg = {};
@@ -312,3 +356,81 @@ function reporting.DisplayGD_Gs(p1)
         end
     end
 end		-- reporting.DisplayGD_Gs
+
+--[[
+    DisplayMessage is a print function that displays the passed in message to
+    either a file or the screen
+
+    Parameters
+        smsg        Message to be displayed
+        pFile       File pointer to append message to or nil
+--]]
+
+function reporting.DisplayMessage(pFile,smsg,sfmsg)
+
+    if pfile ~= nil then
+        if sfmsg == nil then
+            sfmsg = smsg;
+        end
+        -- Write to the file
+        pFile.write(sfmsg);
+    else
+        print(chat.message(smsg));
+    end
+end     -- reporting.DisplayMessage
+
+--[[
+    GearCheckList displays the results of a /GC command.
+--]]
+
+function reporting.GearCheckList()
+
+    if gear.bGC == true then
+        for i,j in pairs(gear.tGearDetails) do
+            print(chat.message('   [' .. i .. '] - ' .. tostring(j['num'])));
+        end
+    else
+        print(chat.message('Warning: /GC must be run before you can get a gear check listing'))
+    end
+end     -- reporting.GearCheckList
+
+--[[
+    DisplayOnce displays the passed message on the screen unless it has already
+    been displayed once berfore. In that case, it will not be displayed. The "once"
+    behavior can be bOverriden.
+
+    Parameters:
+        msg         What should be displayed
+        bOverride   Should the "only display once" rule be ignored
+--]]
+
+function reporting.DisplayOnce(msg,bOverride)
+    local tmp;
+
+    if msg == nil then
+        return;
+    end
+
+    if bOverride == nil then
+        bOverride = false;
+    end
+
+    -- Let's deal with a limitation of LUA. (Wanna guess how long
+    -- it took me to realize this was the problem? Yeah...)
+    if string.length(msg) > 40 then
+        tmp = string.sub(msg,1,40);
+    else
+        tmp = msg;
+    end
+
+    if crossjobs.GearWarnings == nil or (crossjobs.GearWarnings ~= nil and string.find(crossjobs.GearWarnings,tmp) == nil) or
+        bOverride == true then
+        print(chat.message(msg));
+
+        if crossjobs.GearWarnings == nil then
+            crossjobs.GearWarnings = msg;
+        else
+            crossjobs.GearWarnings = crossjobs.GearWarnings .. ',' .. msg;
+        end
+    end
+end     -- reporting.fDisplayOnce

@@ -1,8 +1,35 @@
 local inline = T{};
 
-local utilities = require('utilities');
-local crossjobs = require('crossjobs');
-local gear      = require('gear');
+local utilities = require('common.utilities');
+local crossjobs = require('common.crossjobs');
+local gear = require('common.gear');
+
+--[[
+    This component contains all routines that deal with inline conditionals
+
+    List of routines-
+        Functions:
+            fCheckInline                    Coordinates all the checkinline functions
+            local fCheckInlineActivity      Checks the validity of the passed gather/craft inline code
+            local fCheckInlineBuff          Checks the validity of the inline buff code
+            local fCheckInlineConditional   Checks the validity of the conditional inline code
+            local fCheckInlineDay           Checks the validity of the conditional day code
+            local fCheckInlineDebuff        Checks the validity of the inline debuff code
+            local fCheckInlineGear          Checks the validity of the inline gear check code
+            local fCheckInlineJob           Checks the validity of the inline job code
+            local fCheckInlineMagicType     Checks the validity of the inline magic type code
+            local fCheckInlineMoon          Checks the validity of the inline moon phase code
+            local fCheckInlineOther         Checks the validity of the inline other code
+            local fCheckInlinePet           Checks the validity of the inline pet code
+            local fCheckInlineSlot          Checks the validity of the inline slot code
+            local fCheckInlineSongs         Checks the validity of the inline song code
+            local fCheckInlineTarget        Checks the validity of the inline target code
+            local fCheckInlineTime          Checks the validity of the inline time code
+            local fCheckInlineToggle        Checks the validity of the inline toggle code
+            local fCheckInlineWeaponType    Checks the validity of the inline weapon type code
+            local fCheckInlineWeather       Checks the validity of the inline weather code
+            local fEvaluateCondition        Determines if the passed condition is true
+--]]
 
 -- Define a list of all towns and the areas that are specific to each nation and Jeuno
 inline.tAreas = {
@@ -88,7 +115,9 @@ inline.tTargetFamily = {
             'protozoan','freshwater trepang','clot','rancid ooze','stroper chyme','davoi mush','amoebic nodule','mush',
             'ogreish rissoto','gloop','viscous clot','bavarois','oil spill','acid grease','dark aspic','mousse','caedarva pondscum',
             'caedarva marshscum','cave mold','slime mold','zazalda clot','mountain clot','vozold clot','chimera clot','brei',
-            'talacca clot','blubbery bulge','ichorous ire','maltha','sewer syrup','hermatic cyst','pudding','gigaplasm','macroplasm',
+            'talacca clot','blubbery bulge','ichorous ire','maltha','sewer sylocal utilities = require('common.utilities');
+            local crossjobs = require('common.crossjobs');
+            local gear      = require('common.gear');rup','hermatic cyst','pudding','gigaplasm','macroplasm',
             'microplasm','nanoplasm','hinge oil','princess jelly','queen jelly','vanguard\'s slime','woodnix\'s slime','enhanced jelly',
             'enhanced slime','ghost clot','metalloid amoeba','agar agar','claret','fistule','konjac','mucoid mass','glibber',
             'metallic slime','swamp muck','einherjar brei','winebibber'
@@ -115,21 +144,18 @@ inline.tTargetFamily = {
 
     Returned
         bGood       was the coded condition met? T/F/nil where nil means code Unknown
-
-    Note:
-        There is no check for validation since at this point in processing, probably
-        not all inlines will have been checked yet. A validation message will occur in
-        the calling routine: inline.fCheckInline.
+        smsg        likely nil, but if validation fails, returns error message
 --]]
 
 function fCheckInlineBuff(sCode)
     local bGood = nil;
     local bNot = false;
+    local smsg = nil;
     local tBuffs = {
         'ARC_CIRCLE','COVER','HOLY_CIRCLE','SPIKE','UTSUSEMI','WARD_CIRCLE','SAMBA','ENAERO','ENBLIZZARD',
         'ENDARK','ENFIRE','ENLIGHT','ENSTONE','ENTHUNDER','ENWATER','BARAERO','BARBLIZZARD','BARFIRE',
         'BARSTONE','BARTHUNDER','BARWATER','BARSLEEP','BARPOISON','BARPARALYZE','BARBLIND','BARVIRUS',
-        'BARPETRIFY','ANCIENT_CIRCLE','AFTERMATH','REPRISAL','YONIN','FLEE'
+        'BARPETRIFY','ANCIENT_CIRCLE','AFTERMATH','REPRISAL','YONIN','FLEE','SHINING_RUBY'
         };
     local tBarelemental  = { 'BARAERO','BARBLIZZARD','BARFIRE','BARSTONE','BARTHUNDER','BARWATER' };
     local tBarstatus     = { 'BARSLEEP','BARPOISON','BARPARALYZE','BARBLIND','BARVIRUS','BARPETRIFY' };
@@ -177,7 +203,7 @@ function fCheckInlineBuff(sCode)
         bGood = not bGood;
     end
 
-    return bGood;
+    return bGood,smsg;
 end     -- fCheckInlineBuff
 
 --[[
@@ -189,21 +215,18 @@ end     -- fCheckInlineBuff
 
     Returned
         bGood       was the coded condition met? T/F/nil where nil means code Unknown
-
-    Note:
-        There is no check for validation since at this point in processing, probably
-        not all inlines will have been checked yet. A validation message will occur in
-        the calling routine: inline.fCheckInline.
+        smsg        likely nil, but if validation fails, returns error message
 --]]
 
 function fCheckInlineDebuff(sCode)
     local bGood = nil;
     local bNot = false;
     local bFound = false;
+    local smsg = nil;
     local iPos;
     local tDebuffs = {
         ['CODE']    = {
-                'ADDLED', 'AMNESIA', 'BANED','BLINDED','BOUND','BUSTED','CHARMED','CURSED','DISEASED',
+                'ADDLED','AMNESIA','BANED','BLINDED','BOUND','BUSTED','CHARMED','CURSED','DISEASED',
                 'DOOMED','ENCUMBERED','IMPAIRED','KO','MEDICATED','MUTED','PARALYZED','PETRIFIED','PLAGUED',
                 'POISONED','SILENCED','SLEPT','STUNNED','TERRIFIED','WEAKENED','WEIGHTED'
                 },
@@ -246,7 +269,7 @@ function fCheckInlineDebuff(sCode)
         bGood = not bGood;
     end
 
-    return bGood;
+    return bGood,smsg;
 end     -- fCheckInlineDebuff
 
 --[[
@@ -254,9 +277,9 @@ end     -- fCheckInlineDebuff
     is checked.
 
     Parameters
-        sType   coded field to check
-        sOp     coded comparator
-        iNum    value to compare to
+        sType      coded field to check
+        sOp        coded comparator
+        iNum       value to compare to
 
     Returned
         bGood   was the coded condition met? T/F
@@ -390,7 +413,7 @@ function fCheckInlineConditional(sCode)
                     return false,smsg;
                 end
                 bGood = fEvaluateCondition(sCond,sOp,iNum);
-                return bGood,nil;
+                return bGood,smsg;
             else
                 smsg = 'Warning: Invalid operator encountered or unknown code: ' .. sCode;
                 return false,smsg;
@@ -416,7 +439,7 @@ function fCheckInlineConditional(sCode)
         end
     end
 
-    return bGood,nil;
+    return bGood,smsg;
 end     -- fCheckInlineConditional
 
 --[[
@@ -428,16 +451,13 @@ end     -- fCheckInlineConditional
 
     Returned
         bGood       was the coded condition met? T/F/nil where nil means code Unknown
-
-    Note:
-        There is no check for validation since at this point in processing, probably
-        not all inlines will have been checked yet. A validation message will occur in
-        the calling routine: inline.fCheckInline.
+        smsg        if an error message occurs, will contain the error message
 --]]
 
 function fCheckInlineActivity(sCode)
     local bGood = nil;
     local bNot = false;
+    local smsg = nil;
     local tActs = {
         ['CRAFTS']       = { 'CR:ALC','CR:BONE','CR:BSM','CR:CLOTH','CR:COOK','CR:GSM','CR:LTH','CR:WW' },
         ['GATHERS']      = { 'GA:HELM','GA:DIG','GA:CLAM','GA:FISH' },
@@ -450,9 +470,9 @@ function fCheckInlineActivity(sCode)
         sCode = string.sub(sCode,5,-1);
     end
 
-    if sCode == 'CR' then
+    if sCode == 'CR:ANY' then
         bGood = (crossjobs.Craft ~= nil);
-    elseif sCode == 'GA' then
+    elseif sCode == 'GA:ANY' then
         bGood = (crossjobs.Gather ~= nil);
     else
         local iPos = string.find(sCode,':');
@@ -467,7 +487,7 @@ function fCheckInlineActivity(sCode)
         bGood = not bGood;
     end
 
-    return bGood;
+    return bGood,smsg;
 end     -- fCheckInlineActivity
 
 --[[
@@ -479,17 +499,14 @@ end     -- fCheckInlineActivity
 
     Returned
         bGood       was the coded condition met? T/F/nil where nil means code Unknown
-
-    Note:
-        There is no check for validation since at this point in processing, probably
-        not all inlines will have been checked yet. A validation message will occur in
-        the calling routine: inline.fCheckInline.
+        smsg        if an error message occurs, will contain the error message
 --]]
 
 function fCheckInlineDay(sCode)
     local environ = gData.GetEnvironment();
     local bGood = nil;
     local bNot = false;
+    local smsg = nil;
     local tDay = { 'DARKSDAY','EARTHSDAY','FIRESDAY','ICEDAY','LIGHTNINGDAY','LIGHTSDAY','WATERSDAY','WINDSDAY' };
 
     sCode = string.upper(sCode);
@@ -506,7 +523,7 @@ function fCheckInlineDay(sCode)
         end
     end
 
-    return bGood;
+    return bGood,smsg;
 end     -- fCheckInlineDay
 
 --[[
@@ -518,17 +535,14 @@ end     -- fCheckInlineDay
 
     Returned
         bGood       was the coded condition met? T/F/nil where nil means code Unknown
-
-    Note:
-        There is no check for validation since at this point in processing, probably not
-        all inlines will have been checked yet. A validation message will occur in the
-        calling routine: inline.fCheckInline.
+        smsg        if an error message occurs, will contain the error message
 --]]
 
 function fCheckInlineMoon(sCode)
     local environ = gData.GetEnvironment();
     local bGood = nil;
     local bNot = false;
+    local smsg = nil;
 
     sCode = string.lower(sCode);
     local i = string.find(sCode,'not_');
@@ -553,7 +567,7 @@ function fCheckInlineMoon(sCode)
         bGood = not bGood;
     end
 
-    return bGood;
+    return bGood,smsg;
 end     -- fCheckInlineMoon
 
 --[[
@@ -567,14 +581,10 @@ end     -- fCheckInlineMoon
 
     Returned
         bGood       was the coded condition met? T/F/nil where nil means code Unknown
-        smsg        if an error message occurs, will contain the error messgae
+        smsg        if an error message occurs, will contain the error message
 
     Note:
-        There is no check for validation since at this point in processing, probably
-        not all inlines will have been checked yet. A validation message will occur in
-        the calling routine: inline.fCheckInline.
-
-    Note2: //[NOT_]SLOTS: has been removed from this code. It's more complicated than
+        //[NOT_]SLOTS: has been removed from this code. It's more complicated than
         originally thought. The goal has been moved to a future, post-2.0 implementation.
 --]]
 
@@ -604,86 +614,89 @@ function fCheckInlineGear(sCode,sSlot,ts)
         if string.sub(sCode,3,1) == ':' then
             -- Make sure the slot is not a subset or group
             if string.find('SUBSET,GROUP',sCode) ~= nil then
-                smsg = 'Warning: //IF: cannot be used with either a Subset nor Group: '.. sSlot;
-                return false,smsg;
+                smsg = 'Warning: //IF: and //NOT_IF: cannot be used with either a Subset or Group: '.. sSlot;
+                bGood = false;
             end
             -- Now proceed
-            ssLot = sSlot;
-            sItem = string.sub(sCode,4,-1);
+            if bGood == nil then
+                ssLot = sSlot;
+                sItem = string.sub(sCode,4,-1);
+            end
         elseif string.sub(sCode,3,1) == '-' then
             local j = string.find(sCode,':');
             ssLot = utilities.fValidSlots(string.sub(sCode,4,j-1),utilities._SLOT_FA);
             if ssLot == nil then
                 -- Slot was Unrecognized
                 smsg = 'Warning: Invalid slot in inline conditional: ' .. sCodeHold;
-                return false,smsg;
+                bGood = false;
             end
             -- Grab the item
-            sItem = string.sub(sCode,j+1,-1);
+            if bGood == nil then
+                sItem = string.sub(sCode,j+1,-1);
+            end
         end
 
         -- Simple comparison: equip gear piece if currently wearing identified
         -- gear piece. Checks dynamic composite gear set first. If empty, then
         -- checks currently worn gear.
 
-        -- Check the temporary set
-        if not (ts[ssSlot] == nil or ts[ssSlot] == '') then
-            -- Since slot not empty, check item name
-            if string.lower(ssSlot) == 'ears' then
-                bGood = (string.lower(sItem) == string.lower(ts['Ear1']) or
-                         string.lower(sItem) == string.lower(ts['Ear2']));
-            elseif string.lower(ssLot) == 'rings' then
-                bGood = (string.lower(sItem) == string.lower(ts['Ring1']) or
-                         string.lower(sItem) == string.lower(ts['Ring2']));
+        if bGood == nil then
+            -- Check the temporary set
+            if not (ts[ssSlot] == nil or ts[ssSlot] == '') then
+                -- Since slot not empty, check item name
+                if string.lower(ssSlot) == 'ears' then
+                    bGood = (string.lower(sItem) == string.lower(ts['Ear1']) or
+                            string.lower(sItem) == string.lower(ts['Ear2']));
+                elseif string.lower(ssLot) == 'rings' then
+                    bGood = (string.lower(sItem) == string.lower(ts['Ring1']) or
+                            string.lower(sItem) == string.lower(ts['Ring2']));
+                else
+                    bGood = (string.lower(sItem) == string.lower(ts[sSlot]));
+                end
             else
-                bGood = (string.lower(sItem) == string.lower(ts[sSlot]));
-            end
-        else
-            -- Since temporary set slot was empty, check currently equipped gear
-            if gSet[ssSlot] == nil or gSet[ssSlot] == '' then
-                bGood = false;
-            elseif string.lower(ssLot) == 'ears' then
-                bGood = (string.lower(sItem) == string.lower(gSet['Ear1']) or
-                         string.lower(sItem) == string.lower(gSet['Ear2']));
-            elseif string.lower(ssSLot) == 'rings' then
-                bGood = (string.lower(sItem) == string.lower(gSet['Ring1']) or
-                         string.lower(sItem) == string.lower(gSet['Ring2']));
-            else
-                bGood = (string.lower(sItem) == string.lower(gSet[ssSlot]));
+                -- Since temporary set slot was empty, check currently equipped gear
+                if gSet[ssSlot] == nil or gSet[ssSlot] == '' then
+                    bGood = false;
+                elseif string.lower(ssLot) == 'ears' then
+                    bGood = (string.lower(sItem) == string.lower(gSet['Ear1']) or
+                            string.lower(sItem) == string.lower(gSet['Ear2']));
+                elseif string.lower(ssSLot) == 'rings' then
+                    bGood = (string.lower(sItem) == string.lower(gSet['Ring1']) or
+                            string.lower(sItem) == string.lower(gSet['Ring2']));
+                else
+                    bGood = (string.lower(sItem) == string.lower(gSet[ssSlot]));
+                end
             end
 
             -- if this is a //NOT_ code, just invert the result
-            if bNot == true then
-                bGood = not bGood;
+            if smsg == nil and bNot == true then
+               bGood = not bGood;
             end
-        else
-            smsg = 'Warning: //IF: and //NOT_IF: are invalid on subsets: ' .. sCodeHold;
-            return false,smsg;
         end
     elseif sCode == 'SPECIAL' then
         -- Equip if the special conditions are met. This applies to specific pieces of gear where special calculations are needed
-        if gcdisplay.GetGC() == false then  -- GC must be run for the special calculations to work
+        if gear.bGC == false then  -- GC must be run for the special calculations to work
             bGood = false;
         else
             if sSlot ~= 'subset' then
                 bGood = gear.fValidateSpecial(sSlot,sGear);
             else    -- Invalid inline for a subset
                 smsg = 'Warning: //SPECIAL cannot be used on a subset or a group';
-                return false,smsg;
+                bGood = false;
             end
         end
     elseif string.find(sCode,'TRACK:') ~= nil then
         -- Technically not an inline conditional, instead it denotes a piece that will stay equipped longer than normal.
         -- All you can do here is make sure it's not applied to a subset or group.
-        if sSlot == 'subset' or sSlot == 'group' then
+        if string.find('subset,group',sSlot) ~= nil then
             smsg = 'Warning: //TRACK cannot be used on a subset or a group: ' .. sCodeHold;
-            return false,smsg;
+            bGood = false;
         else
             bGood = true;
         end
     end
 
-    return bGood,nil;
+    return bGood,smsg;
 end     -- fCheckInlineGear
 
 --[[
@@ -695,21 +708,15 @@ end     -- fCheckInlineGear
 
     Returned
         bGood       was the coded condition met? T/F/nil where nil means code Unknown
-
-
-    Note:
-        There is no check for validation since at this point in processing, probably
-        not all inlines will have been checked yet. A validation message will occur in
-        the calling routine: inline.fCheckInline.
+        smsg         if an error message occurs, will contain the error message
 --]]
-
--- also, checking that GC is set probably needs to be done for the whole procedure and not just //SPECIAL
 
 function fCheckInlineTarget(sCode)
     local tg = gData.GetTarget();
     local bGood = nil;
     local bNot = false;
     local bFound = false;
+    local smsg = nil;
 
     sCode = string.lower(sCode);
     local i = string.find(sCode,'not_');
@@ -739,7 +746,8 @@ function fCheckInlineTarget(sCode)
                     break;
                 end
             end
-        end
+            end
+            return false,smsg;
         bGood = bFound;
     elseif sCode == 'ME' then
         -- Equip if target is the player
@@ -752,7 +760,7 @@ function fCheckInlineTarget(sCode)
         bGood = not bGood;
     end
 
-    return bGood;
+    return bGood,smsg;
 end     -- fCheckInlineTarget
 
 --[[
@@ -764,15 +772,8 @@ end     -- fCheckInlineTarget
 
     Returned
         bGood       was the coded condition met? T/F/nil where nil means code Unknown
-
-
-    Note:
-        There is no check for validation since at this point in processing, probably
-        not all inlines will have been checked yet. A validation message will occur in
-        the calling routine: inline.fCheckInline.
+        smsg         if an error message occurs, will contain the error message
 --]]
-
--- also, checking that GC is set probably needs to be done for the whole procedure and not just //SPECIAL
 
 function fCheckInlinePet(sCode)
     local environ   = gData.GetEnvironment();
@@ -780,10 +781,16 @@ function fCheckInlinePet(sCode)
     local player    = gData.GetPlayer();
     local spell     = gData.GetAction();
     local pet       = gData.GetPet();
+    local tSMNList  = { 'SMN:BP:SKILL','SMN:BP:MAG','SMN:BP:PHYS','SMN:BP:ACC','SMN:BP:HYBRID' };
+    local tBSTList  = { 'BST:PET_ATTACK','BST:PET_MATT','BST:PET_MACC'};
+    local sFull     = nil;
+    local bErr      = false;
     local bGood     = nil;
     local bNot      = false;
+    local smsg      = nil;
 
     sCode = string.upper(sCode);
+    sFull = sCode;
 
     local i = string.find(sCode,'NOT_');
     if i ~= nil and i == 1 then
@@ -804,56 +811,131 @@ function fCheckInlinePet(sCode)
         -- Is there a pet named ...
         local n = string.sub(sCode,9,-1);
         bGood = (pet ~= nil and pet.Name ~= nil and string.find(string.upper(pet.Name),n) ~= nil);
-    elseif sCode == 'SMN_PET' then
-        --Is there a summoner's pet out (an returned element implies true)
-        bGood = (utilities.fSummonersPetElement(pet) ~= nil);
-    elseif string.find(sCode,'SMN_SUMMONS:') ~= nil then
+    elseif table.find(tBSTList,sCode) ~= nil then
+        -- Is the BST pet doing an offensive skill
+        if player.MainJob == 'BST' or player.SubJob == 'BST' then
+            -- Has to be a BST? or /BST (the latter is limited to a charmed pet)
+            if pet ~= nil and pet.Name ~= nil and pets.fSummonerPet() == false then
+                -- There's a pet and it's not a SMN pet
+                if petaction ~= nil and petaction.Name ~= nil then
+                    bGood = ((table.find(pets.BstPetAttack,petaction.Name) ~= nil and sCode == 'BST:PET_ATTACK') or
+                             (table.find(pets.BstPetMagicalAttack,petaction.Name) ~= nil and sCode == 'BST:PET_MATT') or
+                             (table.find(pets.BstPetMagicalAccuracy,petaction.Name) ~= nil and sCode == 'BST:PET_MACC'));
+                else
+                    -- No pet action, inline used in wrong context
+                    smsg = 'Warning: //' .. sFull .. ' used where no pet action is present';
+                    bGood = false;
+                    bErr = true;
+                end
+
+            else
+                -- Not a BST pet
+                smsg = 'Warning: //' .. sFull .. ' used where pet is not a bst pet';
+                bGood = false;
+                bErr = true;
+            end
+        else
+            -- Not a BST or /BST
+            smsg = 'Warning: //' .. sFull .. ' only valid if you\'re a BST/ or /BST';
+            bGood = false;
+            bErr = true;
+        end
+
+        if bGood ~= nil and bNot == true and bErr == false then
+            -- if //NOT_ and match found w/o error, then flip result
+            bGood = not bGood;
+        end
+    elseif table.find(tSMNList,sCode) ~= nil then
+        -- Is the SMN avatar/spirit doing an offensive blood pact
+        if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
+            -- Is there a SMN avatar
+            if pets.fSummonerPet() == true then
+                -- Is the SMN avatar doing a blood pact
+                if petaction ~= nil and petaction.Name ~= nil then
+                    bGood = ((table.find(pets.SmnBPSkill,petaction.Name) ~= nil and sCode == 'SMN:BP:SKILL') or
+                             (table.find(pets.SmnBPMagical,petaction.Name) ~= nil and sCode == 'SMN:BP:MAG') or
+                             (table.find(pets.SmnBPAccuracy,petaction.Name) ~= nil and sCode == 'SMN:BP:ACC') or
+                             (table.find(pets.SmnBPHybrid,petaction.Name) ~= nil and sCode == 'SMN:BP:HYBRID') or
+                             (table.find(pets.SmnBPPhysical,petaction.Name) ~= nil and sCode == 'SMN:BP:PHYS'));
+                else
+                    -- No pet action, inline used in wrong context
+                    smsg = 'Warning: //' .. sFull .. ' used where no pet action is present';
+                    bGood = false;
+                    bErr = true;
+                end
+            else
+                -- Not a SMN pet
+                smsg = 'Warning: //' .. sFull .. ' used where pet is not a smn avatar/spirit';
+                bGood = false;
+                bErr = true;
+            end
+        else
+            -- Not a SMN or /SMN
+            smsg = 'Warning: //' .. sFull .. ' only valid if you\'re a SMN/ or /SMN';
+            bGood = false;
+            bErr = true;
+        end
+
+        if bGood ~= nil and bNot == true and bErr == false then
+            -- if //NOT_ and match found w/o error, then flip result
+            bGood = not bGood;
+        end
+    elseif sCode == 'SMN:PET' then
+        --Is there a summoner's pet out
+        bGood = (pets.fSummonerPet(pet) ~= nil);
+    elseif string.find(sCode,'SMN:SUMMONS:') ~= nil then
         -- Is the named summoner's pet being summoned. Equip if the pet being summoned is named ...
         if spell == nil then
             bGood = false;
         else
             bGood = (string.find(string.lower(spell.Name),string.lower(string.sub(sCode,12,-1)) ~= nil);
         end
-    elseif sCode == 'SMN_PETMD' then
+    elseif sCode == 'SMN:PETMD' then
         -- Does the summoner's pet's element matches the day's element
-        local ele = utilities.fSummonersPetElement(pet);
+        local ele = pets.fElementByPetName(pet.Name);
         if ele ~= nil then
             bGood = (ele == string.lower(environ.DayElement));
         else
             bGood = false;
         end
-    elseif sCode == 'SMN_PETMW' then
+    elseif sCode == 'SMN:PETMW' then
         -- Does the summoner's pet's element matches the weather's element
-        local ele = utilities.fSummonersPetElement(pet);
+        local ele = pets.fElementByPetName(pet.Name);
         if ele ~= nil then
             bGood = (string.find(ele,string.lower(environ.RawWeather)) ~= nil);
         else
             bGood = false;
         end
-    elseif string.find(sCode,'SMN_BP:') ~= nil then
+    elseif string.find(sCode,'SMN:BP:') ~= nil then
         -- Does the summoner's blood pact match the passed blood pact name
         if (petAction ~= nil and petAction.Name ~= nil) then
             bGood = (string.find(string.lower(petAction.Name),string.lower(string.sub(sCode,8,-1))));
         else
             bGood = false;
         end
-    elseif sCode == 'SMN_SPIRIT:ES' then
+    elseif sCode == 'SMN:SPIRIT:ES' then
         -- Equip if the pet being summoned is an elemental spirit
         if spell ~= nil and spell.Name ~= nil then
             bGood = (table.find(utilities.tSpellGroupings['spirits'],string.lower(spell.Name)) ~= nil);
         else
             bGood = false;
         end
-    elseif sCode == 'SMN_SPIRIT:EP' then
+    elseif sCode == 'SMN:SPIRIT:EP' then
         -- Is the player's pet an elemental spirit
         bGood = (pet ~= nil and pet.Name ~= nil and table.find(utilities.tSpellGrouping['spirits'],string.lower(pet.Name)) ~= nil);
     end
 
-    if bGood ~= nil and bNot == true then
-        bGood = not bGood;
+    if bGood ~= nil and bNot == true and bErr == false then
+        -- Special case: //NOT_SMN_PET returns false if no pet exists. Otherwise, just
+        -- flip the results. This also catches all other inversions
+        if sCode == 'SMN:PET' and pet == nil then
+            bGood = false;
+        else
+            bGood = not bGood;
+        end
     end
 
-    return bGood;
+    return bGood,smsg;
 end     -- fCheckInlinePet
 
 --[[
@@ -868,17 +950,13 @@ end     -- fCheckInlinePet
     Returned
         bGood        was the coded condition met? T/F/nil where nil means code Unknown
         smsg         if an error message occurs, will contain the error message
-        sValidSlots  list of valid slots from //SLOTS:
-
-    Note: There is no check for validation since at this point in processing, probably
-    not all inlines will have been checked yet. A validation message will occur in the
-    calling routine: inline.fCheckInline.
 --]]
 
 function fCheckInlineSlot(sCode,sSlot,ts)
     local bGood = nil;
     local smsg = nil;
     local bNot = false;
+    local bErr = false;
     local suSlot;
     local sValidSlots = nil;
 
@@ -898,16 +976,13 @@ function fCheckInlineSlot(sCode,sSlot,ts)
     if string.find(sCode,'EMPTY:1') ~= nil or string.find(sCode,'EMPTY:2') then
         local sNum = string.sub(sCode,-1,-1);
         if string.find('EARS,EAR1,EAR2,RINGS,RING1,RING2',suSlot) == nil then
-            smsg = 'Warning: Invalid slot designated in ' .. sCode;
-            return false,smsg,nil;
+            smsg = 'Warning: Invalid slot designated: ' .. sCode;
+            bGood = false;
+            bErr = true;
         elseif string.find(suSlot,'EAR') ~= nil then
             bGood = (ts['Ear'..sNum] == nil or ts['Ear'..sNum] == '');
         elseif string.find(suSlot,'RING') ~= nil then
             bGood = (ts['Ring'..sNum] == nil or ts['Ring'..sNum] == '');
-        end
-
-        if bNot == true then
-            bGood = not bGood;
         end
     elseif string.find(sCode,'EMPTY') ~= nil then
         -- This is like EMPTY:1 and EMPTY:2 except you have to check both slots
@@ -919,12 +994,13 @@ function fCheckInlineSlot(sCode,sSlot,ts)
         else
             bGood = (ts[sSlot] == nil or ts[sSlot] == '');
         end
-
-        if bNot == true then
-            bGood = not bGood;
-        end
     end
-    return bGood,smsg,sValidSlots;
+
+    if smsg == nil and bNot == true and bErr == false then
+        bGood = not bGood;
+    end
+
+    return bGood,smsg;
 end     -- fCheckInlineSlot
 
 --[[
@@ -936,17 +1012,16 @@ end     -- fCheckInlineSlot
 
     Returned
         bGood       was the coded condition met? T/F/nil
-
-    Note:
-        There is no check for validation since at this point in processing, probably
-        not all inlines will have been checked yet. A validation message will occur in
-        the calling routine: inline.fCheckInline.
+        smsg        if an error message occurs, will contain the error message
 --]]
 
 function fCheckInlineSongs(sCode)
     local song = gData.GetAction();
+    local pet = gData.GetPet();
     local bGood = nil;
     local bNot = false;
+    local smsg = nil;
+    local bErr = false;
     local tSongTypes = {    -- List of songs by type
         ['carol'] =     { 'light carol','earth carol','water carol','wind carol','fire carol',
                           'ice carol','lightning carol','dark carol' },
@@ -976,15 +1051,11 @@ function fCheckInlineSongs(sCode)
     };
 
     if sCode == nil
-        return false;
-    end			-- Equip if the summoner's pet's element matches the day's element
-    if gcinclude.fSummonerPet() == true then
-        bGood = (fElementByPetName(pet.Name) == string.lower(environ.DayElement));
-    else
-        bGood = false;
+        return false,nil;
     end
 
     sCode = string.lower(sCode);
+
     local i = string.find(sCode,'not_');
     if i ~= nil and i == 1 then
         bNot == true;
@@ -1004,7 +1075,8 @@ function fCheckInlineSongs(sCode)
             end
         else
             smsg = 'Warning: No song identified: ' .. sCode;
-            return false,smsg;      -- Regardless if song: or not_song:, the absense of a song makes this false
+            bGood = false;
+            bErr = true;
         end
     else
         -- The rest are song type switches or not song related
@@ -1019,11 +1091,11 @@ function fCheckInlineSongs(sCode)
         end
     end
 
-    if bNot == true then
+    if smsg == nil and bNot == true and bErr == false then
         bGood = not bGood;
     end
 
-    return bGood;
+    return bGood,smsg;
 end     -- fCheckInlineSongs
 
 --[[
@@ -1035,21 +1107,19 @@ end     -- fCheckInlineSongs
 
     Returned
         bGood       was the coded condition met? T/F/nil
-
-    Note:
-        There is no check for validation since at this point in processing, probably
-        not all inlines will have been checked yet. A validation message will occur in
-        the calling routine: inline.fCheckInline.
+        smsg        if an error message occurs, will contain the error message
 --]]
 
 function fCheckInlineOther(sCode)
     local spell = gData.GetAction();
     local party = gData.GetParty();
+    local player = gData.GetPlayer();
     local environ = gData.GetEnvironment();
     local bGood = nil;
     local bNot = false;
+    local bErr = false;
     local bFlip = true;     -- indicates if NOT_xxx valid
-    local smsg;
+    local smsg = nil;
 
     if sCode == nil
         return false;
@@ -1070,15 +1140,13 @@ function fCheckInlineOther(sCode)
             -- Check to see if spell being cast is of a specific category
             local sCat = string.sub(sCode,10,-1);
             if sCat == 'barelemental' then
-                bGood = table.find(utilities.tSpellGroupings['barspell']['ele']);
+                bGood = table.find(utilities.tSpellGroupings['barspell']['ele'],spell.Name);
             elseif sCat == 'barstatus' then
-                bGood = table.find(utilities.tSpellGroupings['barspell']['status']);
+                bGood = table.find(utilities.tSpellGroupings['barspell']['status'],spell.Name);
             else
-                smsg = 'Warning: Unknown spell category found in: ' .. sCode
-                return false,smsg;
-            end
-            if bGood ~= nil and bNot == true then
-                bGood = not bGood;
+                smsg = 'Warning: Unknown spell category found in: ' .. sCode;
+                bGood = false;
+                bErr = true;
             end
         end
     end
@@ -1097,10 +1165,20 @@ function fCheckInlineOther(sCode)
             bGood = (party ~= nil and party.Count ~= nil and party.Count > 1);
         elseif sCode == 'own' then
             -- Is region controlled by player's nation?
-            bGood = (gcdisplay.GetCycle('Region') == 'Owned');
+            bGood = (utilities.fGetCycle('Region') == 'Owned');
         elseif string.find(sCode,'party:') ~= nil then
             local iNum = tonumber(string.sub(sCode,7,-1));
             bGood = (party ~= nil and party.Count ~= nil and party.Count == iNum);
+        elseif string.find('mode=perp,mode=attk',sCode) ~= nil then
+            -- Check on smn gear's mode
+            if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
+                -- Has to be a smn
+                local x = string.sub(sCode,6,-1);
+                local sMode = string.lower(utilities.fGetCycle('Mode'));
+                bGood = (sMode == x);
+            else
+                bGood = false;
+            end
         elseif sCode == 'town' then
             bGood = (environ.Area ~= nil and table.find(inline.tAreas['Towns'],environ.Area) ~= nil);
         elseif sCode == 'town-ak' then
@@ -1133,15 +1211,23 @@ function fCheckInlineOther(sCode)
                 end
             else
                 smsg = 'Warning: Invalid body piece for national aketon check: ' .. sGear;
-                return false,smsg;
+                bGood = false;
+                bErr = true;
+            end
+        elseif string.find(sCode,'status:') ~= nil then
+            bGood = ((player.Status == 'Engaged' and sCode == 'status:engaged') or
+                     (player.Status == 'Resting' and sCode == 'status:resting') or
+                     (player.Status == 'Idle'    and sCode == 'status:idling'));
+            if bNot == true then
+                bGood = not bGood;
             end
         end
     end
 
-    if bGood ~= nil and bFlip == true and bNot == true then
+    if smsg == nil and bGood ~= nil and bFlip == true and bNot == true and bErr == false then
         bGood = not bGood;
     end
-    return bGood;
+    return bGood,smsg;
 end     -- fCheckInlineOther
 
 --[[
@@ -1153,11 +1239,7 @@ end     -- fCheckInlineOther
 
     Returned
         bGood       was the coded condition met? T/F/nil
-
-    Note:
-        There is no check for validation since at this point in processing, probably
-        not all inlines will have been checked yet. A validation message will occur in
-        the calling routine: inline.fCheckInline.
+        smsg        if an error message occurs, will contain the error message
 --]]
 
 function fCheckInlineJob(sCode)
@@ -1176,8 +1258,8 @@ function fCheckInlineJob(sCode)
     job = string.sub(sCode,-3,-1);      -- Last 3 characters is the job abbreviation
 
     if string.find(crossjobs._validJobs,job) == nil then
-       smsg = 'Warning: Invalid job specified in inline conditional: ' .. sCode
-       return false,smsg;
+        smsg = 'Warning: Invalid job specified in inline conditional: ' .. sCode;
+        return false,smsg;
     end
 
     local i = string.find(sCode,'not_');
@@ -1207,7 +1289,7 @@ function fCheckInlineJob(sCode)
         end
     end
 
-    return bGood,nil;
+    return bGood,smsg;
 end     -- fCheckInlineJob
 
 --[[
@@ -1219,11 +1301,7 @@ end     -- fCheckInlineJob
 
     Returned
         bGood       was the coded condition met? T/F/nil
-
-    Note:
-        There is no check for validation since at this point in processing, probably
-        not all inlines will have been checked yet. A validation message will occur in
-        the calling routine: inline.fCheckInline.
+        smsg        if an error message occurs, will contain the error message
 --]]
 
 function fCheckInlineTime(sCode)
@@ -1261,21 +1339,18 @@ end     -- fCheckInlineTime
     if the coded condition is true.
 
     Parameters
-    sCode       coded condition to be checked
+        sCode       coded condition to be checked
 
     Returned
-    bGood       was the coded condition met? T/F/nil
-
-    Note:
-    There is no check for validation since at this point in processing, probably
-    not all inlines will have been checked yet. A validation message will occur in
-    the calling routine: inline.fCheckInline.
+        bGood       was the coded condition met? T/F/nil
+        smsg        if an error message occurs, will contain the error message
 --]]
 
 function fCheckInlineToggle(sCode)
     local player = gData.GetPlayer();
     local bGood = nil;
     local smsg = nil;
+    local bErr = false;
 
     if sCode == nil
         return false;
@@ -1289,119 +1364,131 @@ function fCheckInlineToggle(sCode)
         sCode = string.sub(sCode,5,-1); -- remove the "not_"
     end
 
-    local dt = string.find(sCode,'dt_');
+    local dt = string.find(sCode,'dt:');
     if dt ~= nil and dt == 1 then
-        if sCode == 'dt_breath' then
-            bGood = (gcdisplay.GetCycle('DT') == 'Breath');
-        elseif sCode == 'dt_magical' then
-            bGood = (gcdisplay.GetCycle('DT') == 'Magical');
-        elseif sCode == 'dt_physical' then
-            bGood = (gcdisplay.GetCycle('DT') == 'Physical');
+        if sCode == 'dt:breath' then
+            bGood = (utilities.fGetCycle('DT') == 'Breath');
+        elseif sCode == 'dt:magical' then
+            bGood = (utilities.fGetCycle('DT') == 'Magical');
+        elseif sCode == 'dt:physical' then
+            bGood = (utilities.fGetCycle('DT') == 'Physical');
         end
     elseif sCode == 'EVASION' then
         -- Is 'Evasion' enabled
-        bGood = (gcdisplay.GetToggle('Eva') == true);
+        bGood = (utilities.fGetToggle('Eva') == true);
     elseif sCode == 'IDLE' then
         -- Is 'Idle' enabled
-        bGood = gcdisplay.GetToggle('Idle');
+        bGood = (utilities.GetToggle('Idle') == true);
     elseif sCode == 'TANK' then
         -- Is 'Tank' enabled
-        if string.find(crossjobs._TankJobs,player.MainJob) ~= nil then
-            bGood = (gcdisplay.GetToggle('Tank') == true);
+        if string.find(utilities._TankJobs,player.MainJob) ~= nil then
+            bGood = (utilities.fGetToggle('Tank') == true);
         else
             smsg = 'Warning: //[NOT_]TANK only applicable for jobs that can tank: ' .. crossjobs._TankJobs;
             bGood = false;
+            bErr = true;
         end
     elseif sCode == 'MACC' then
         -- Is 'Macc' (Magic Accuracy) enabled
-        if string.find(crossjobs._sMagicJobs,player.MainJob) ~= nil or
-                string.find(crossjobs._sMagicJobs,player.SubJob) ~= nil then
-            bGood = gcdisplay.GetToggle('Macc');
+        if string.find(utilities._sMagicJobs,player.MainJob) ~= nil or
+                string.find(utilities._sMagicJobs,player.SubJob) ~= nil then
+            bGood = utilities.fGetToggle('Macc');
         else
             smsg = 'Warning: //[NOT_]MACC only applicable for magical jobs/subjobs: ' .. crossjobs._sMagicJobs;
             bGood = false;
+            bErr = true;
         end
     elseif sCode == 'WSWAP' then
         -- Is 'WSWAP' (Weapon Swap) enabled
         if crossjobs.settings.bWSOverride == false then
-            bGood = gcdisplay.GetToggle('WSWAP');
+            bGood = utilities.fGetToggle('WSWAP');
         else
             smsg = 'Warning: Your job (' .. player.MainJob .. ') does not support //WSWAP';
-            bGood == false;
+            bGood = false;
+            bErr = true;
         end
     elseif sCode == 'KITE' then
         -- Is 'Kite' (Kiting) enabled
-        bCode = gcdisplay.GetToggle('Kite');
+        bCode = utilities.fGetToggle('Kite');
     elseif sCode == 'SPF' then
         -- Should 'Show Pull Feedback' be displayed
-        bGood = gcdisplay.GetToggle('sPF');
-    elseif sCode == 'BRD_HORN' then
+        bGood = utilities.fGetToggle('sPF');
+    elseif sCode == 'BRD:HORN' then
         -- Is Bard's instrument set to a horn
         if player.MainJob == 'BRD' then
-            bGood = (gcdisplay.GetToggle('Instrument') == 'Horn');
+            bGood = (utilities.fGetToggle('Instrument') == 'Horn');
         else
             smsg = 'Warning: //[NOT_]BRD_HORN is only valid if you\'re a bard';
             bGood = false;
+            bErr = true;
         end
-    elseif sCode == 'BRD_STRING' then
+    elseif sCode == 'BRD:STRING' then
         -- Is Bard's  instrument set to a string
         if player.MainJob == 'BRD' then
-            bGood = (gcdisplay.GetToggle('Instrument') == 'String');
+            bGood = (utilities.fGetToggle('Instrument') == 'String');
         else
             smsg = 'Warning: //[NOT_]BRD_STRING is only valid if you\'re a bard';
             bGood = false;
+            bErr = true;
         end
-    elseif sCode == 'BST_AJUG' then
+    elseif sCode == 'BST:AJUG' then
         -- Is Beastmaster's 'AJUG' (automatic pet jug selection) enabled
         if player.MainJob == 'BST' then
-            bGood = gcdisplay.GetToggle('AJug');
+            bGood = utilities.fGetToggle('AJug');
         else
             smsg = 'Warning: //[NOT_]BST_AJUG is only valid if you\'re a beastmaster';
             bGood = false;
+            bErr = true;
         end
-    elseif sCode == 'BST_DB_BPP' then
+    elseif sCode == 'BST:DB:BPP' then
         -- Is Beastmaster's 'DB:BPP' (debuff:blind,poison,paralyze) enabled
         if player.MainJob == 'BST' then
-            bGood = (gcdisplay.GetToggle('DB') == 'BPP');
+            bGood = (utilities.fGetToggle('DB') == 'BPP');
         else
             smsg = 'Warning: //[NOT_]BST_DB_BPP is only valid if you\'re a beastmaster';
             bGood = false;
+            bErr = true;
         end
-    elseif sCode == 'BST_DB_WSS' then
+    elseif sCode == 'BST:DB:WSS' then
         -- Is Beastmaster's 'DB:WSS' (debuff:weight,slow,silence) enabled
         if player.MainJob == 'BST' then
-            bGood = (gcdisplay.GetToggle('DB') == 'WSS');
+            bGood = (utilities.fGetToggle('DB') == 'WSS');
         else
             smsg = 'Warning: //[NOT_]BST_DB_WSS is only valid if you\'re a beastmaster';
             bGood = false;
+            bErr = true;
         end
-    elseif sCode == 'SMN_SBP' then
+    elseif sCode == 'SMN:SBP' then
         -- Is Summoner's 'sBP' (Show Blood Pact)
         if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
-            bGood = gcdisplay.GetToggle('sBP');
+            bGood = utilities.fGetToggle('sBP');
         else
             smsg = 'Warning: //[NOT_]SBP is only valid if you\'re a summoner (main or sj)';
             bGood = false;
+            bErr = true;
         end
-    elseif sCode == 'THF_TH' then
+    elseif sCode == 'THF:TH' then
         -- Is Thief's 'TH' (Treasure Hunter) enabled
         if player.MainJob == 'THF' then
-            bGood = gcdisplay.GetToggle('TH');
+            bGood = utilities.fGetToggle('TH');
         else
             smsg = 'Warning: //[NOT_]THF_TH is only valid if your main job is a thief';
             bGood = false;
+            bErr = true;
         end
-    elseif sCode == 'THF_SS' then
+    elseif sCode == 'THF:SS' then
         -- Is Thief's 'SS' (Show Steal) enabled
         if player.MainJob == 'THF' or player.SubJob == 'THF' then
-            bGood = gcdisplay.GetToggle('SS');
+            bGood = utilities.fGetToggle('SS');
         else
             smsg = 'Warning: //[NOT_]SBP is only valid if you\'re a thief';
             bGood = false;
+            bErr = true;
         end
     end
 
-    if bGood ~= nil and bNot == true then
+    -- Assuming there's no error and the results need flipping, do so
+    if smsg == nil and bGood ~= nil and bNot == true and bErr == false then
         bGood = not bGood;
     end
 
@@ -1414,21 +1501,18 @@ end     -- fCheckInlineToggle
 
     Parameters
         sCode       coded condition to be checked
+        sGear       name of gear code attached to
 
     Returned
         bGood       was the coded condition met? T/F/nil
-        smsg        error message if one occurred
-
-    Note:
-        There is no check for validation since at this point in processing, probably
-        not all inlines will have been checked yet. A validation message will occur in
-        the calling routine: inline.fCheckInline.
-    --]]
+        smsg        if an error message occurs, will contain the error message
+--]]
 
 function fCheckInlineWeaponType(sCode,sGear)
     local bGood = nil;
     local bNot = false;
     local smsg = nil;
+    local bErr = false;
 
     if sCode == nil or sGear == nil then
         return false,nil;
@@ -1443,10 +1527,10 @@ function fCheckInlineWeaponType(sCode,sGear)
         sCode = string.sub(sCode,5,-1); -- remove the "not_"
     end
 
-    if string.find(crossjobs._WeaponTypes,sCode) ~= nil then
+    if string.find(utilities._WeaponTypes,sCode) ~= nil then
         -- It's a valid weapon type
-        if profile.WeaponType[sCode] ~= nil then
-            for i,j in pairs(profile.WeaponType) do
+        if gProfile.WeaponType[sCode] ~= nil then
+            for i,j in pairs(gProfile.WeaponType) do
                 if string.upper(i) == sCode then
                     for ii,jj in pairs(j) do
                         if string.upper(jj) == suGear then
@@ -1458,15 +1542,17 @@ function fCheckInlineWeaponType(sCode,sGear)
         else
             smsg = 'Warning: Weapon type not defined: ' .. sCode
             bGood = false;
+            bErr = true;
         end
     else
         smsg = 'Warning: Weapon not found in type: ' .. sCode .. ' - ' .. sGear;
         bGood = false;
+        bErr = true;
     end
 
-    if bGood ~= nil and bNot == true then
+    -- Assuming there's no error and the results need flipping, do so
+    if smsg == nil and bGood ~= nil and bNot == true and bErr == false then
         bGood = not bGood;
-        smsg = nil;
     end
 
     return bGood,smsg;
@@ -1481,13 +1567,8 @@ end     -- fCheckInlineWeaponType
 
     Returned
         bGood       was the coded condition met? T/F/nil
-        smsg        error message if one occurred
-
-    Note:
-        There is no check for validation since at this point in processing, probably
-        not all inlines will have been checked yet. A validation message will occur in
-        the calling routine: inline.fCheckInline.
-    --]]
+        smsg        if an error message occurs, will contain the error message
+--]]
 
 function fCheckInlineWeather(sCode)
     local environ = gData.GetEnvironment();
@@ -1505,10 +1586,17 @@ function fCheckInlineWeather(sCode)
         sCode = string.sub(sCode,5,-1); -- remove the "not_"
     end
 
+    -- Now remove the 'WTH:'
+    sCode = string.sub(sCode,5,-1);
+
     -- Make sure passed in code is a valid weather
     local sfCode = utilities.fFormattedWord(sCode,utilities._SLOT_FA);
     if table.find(gData.Constants.Weather,sfCode) == nil then
-        smsg = 'Warning: Unknown weather specified: ' .. sfCode;
+        if sSetName ~= nil then
+            smsg = 'Warning: Unknown weather specified: ' .. sfCode .. ' in ' .. sSetName;
+        else
+            smsg = 'Warning: Unknown weather specified: ' .. sfCode;
+        end
         return false,smsg;
     else
         sCode = string.upper(sCode);
@@ -1521,40 +1609,100 @@ function fCheckInlineWeather(sCode)
         bGood = not bGood;
     end
 
-   return bGood,nil;
+   return bGood,smsg;
 end     -- fCheckInlineWeather
 
 --[[
-    fMakeCodeTable takes the passed, // delimited list and returns the
-    individual codes in a table
+    fCheckInlineMagicType checks the validity of the passed inline code and then determines
+    if the coded magic type is what the current spell is part of.
 
     Parameters
-        sList       one or more conditionals that were passed in
+        sCode       coded condition to be checked
 
     Returned
-        sTbl        a table of the conditionals that were split apart
+        bGood       was the coded condition met? T/F/nil
+        smsg        if an error message occurs, will contain the error message
 --]]
 
-function fMakeCodeTable(sList)
-    local sTbl = { };
-    local iPos;
+function fCheckInlineMagicType(sCode)
+    local spell = gData.GetAction();
+    local ti = gData.GetTargetIndex();
+    local target = gData.GetEntity(ti);
+    local bGood = nil;
+    local bNot = false;
+    local smsg = nil;
+    local tTypes = {
+        'MT:BLUE','MT:DARK','MT:DIVINE','MT:ELEMENTAL','MT:ENFEEBLING','MT:ENHANCING','MT:HEALING',
+        'MT:NINJUTSU','MT:OFFENSIVE_HEALING','MT:SINGING','MT:SUMMONING', 'NOT_MT:BLUE','NOT_MT:DARK',
+        'NOT_MT:DIVINE','NOT_MT:ELEMENTAL','NOT_MT:ENFEEBLING','NOT_MT:ENHANCING','NOT_MT:HEALING',
+        'NOT_MT:NINJUTSU','NOT_MT:OFFENSIVE_HEALING','NOT_MT:SINGING','NOT_MT:SUMMONING'
+    };
+    local tMagic = {
+        'Blue Magic','Dark Magic','Divine Magic','Elemental Magic','Enfeebling Magic','Enhancing Magic',
+        'Healing Magic','Ninjutsu','Singing','Summoning'
+    };
 
-    iPos = 3;       -- Skip //
-    while iPos ~= nil do
-        -- Now, look for next //
-        iPos = string.find(string.sub(sList,iPos,-fCheckInlineWeaponType1),'//');
-        if iPos ~= nil then
-            -- Since found, we need to skip the intial // and insert what's left
-            -- up to the next // and then shorten the list to // onwards
-            table.insert(sTbl,string.sub(sList,3,iPos-1));
-            sList = string.sub(sList,iPos,-1);
-            iPos = 3;
-        else
-            table.insert(sTbl,string.sub(sList,3,-1));
+    if sCode == nil or sGear == nil then
+        return false,nil;
+    end
+
+    sCode = string.upper(sCode);
+    -- Make sure passed in code wants to check for a magic type
+    if table.find(tTypes,sCode) == nil then
+        if string.find(sCode,'MT:') == nil and string.find(sCode,'NOT_MT:') == nil then
+            -- Not a magic type check
+            return nil,nil;
         end
     end
-    return sTbl;
-end     -- fMakeCodeTable
+
+    -- Make sure there's a spell
+    if spell == nil or spell.Name == nil then
+        -- This is an error since we already know the player has requested a magic type check
+        smsg = 'Warning: magic type check of //' .. sCode .. ' encountered where no spell/song was cast';
+        return false,smsg;
+    end
+
+    if table.find(tMagic,spell.Name) == nil then
+        -- Unrecognized type of magic
+        smsg = 'Warning: unrecognized type of magic - ' .. spell.Name .. ' when testing for //' .. sCode;
+        return false,smsg;
+    end
+
+    -- See if NOT_ present and note it
+    local i = string.find(sCode,'NOT_');
+    if i ~= nil and i == 1 then
+        bNot == true;
+        sCode = string.sub(sCode,5,-1); -- remove the "not_"
+    end
+
+    -- See if pairing found
+    if ((sCode == 'MT:BLUE' and spell.Name == 'Blue Magic') or
+        (sCode == 'MT:DARK' and spell.Name == 'Dark Magic') or
+        (sCode == 'MT:DIVINE' and spell.Name == 'Divine Magic') or
+        (sCode == 'MT:ELEMENTAL' and spell.Name == 'Elemental Magic') or
+        (sCode == 'MT:ENFEEBLING' and spell.Name == 'Enfeebling Magic') or
+        (sCode == 'MT:ENHANCING' and spell.Name == 'Enhancing Magic') or
+        (sCode == 'MT:HEALING' and spell.Name == 'Healing Magic' and target ~= nil and target.Type ~= 'Monster') or
+        (sCode == 'MT:NINJUTSU' and spell.Name == 'Ninjutsu') or
+        (sCode == 'MT:OFFENSIVE_HEALING' and spell.Name == 'Healing Magic' and target ~= nil and target.Type == 'Monster') or
+        (sCode == 'MT:SINGING' and spell.Name == 'Singing') or
+        (sCode == 'MT:SUMMONING' and spell.Name == 'Summoning')) then
+        bGood = true;
+    else
+        bGood = false;
+    end
+
+    if bGood ~= nil and bNot == true then
+        if sCode ~= 'MT:OFFENSIVE_HEALING' then
+            bGood = not bGood;
+        else
+            smsg = 'Warning: //MT:NOT_OFFENSIVE_HEALING isn\'s valid. Use //MT:HEALING instead';
+            bGood = false;
+        end
+    end
+
+    return bGood,smsg;
+end     -- fCheckInlineMagicType
 
 --[[
     fCheckInline checks for inline conditionals on the passed piece and determines
@@ -1570,6 +1718,7 @@ end     -- fMakeCodeTable
         ts          target table if comparison needs to compare contents
         bLeft       is the passed piece a slot or a definition
         bValidate   is this a code validation pass
+        sSetName    is the name of the gear set where the gear is being processed
 
     Returned
         bGood       was the coded condition met? T/F
@@ -1583,11 +1732,10 @@ end     -- fMakeCodeTable
         the passed in fragment (ergo, it needs to be fixed.)
 --]]
 
-function inline.fCheckInline(gear,sSlot,ts,bLeft,bValidate)
+function inline.fCheckInline(gear,sSlot,ts,bLeft,bValidate,sSetName)
     local iPos,i,suCode,sGear;
     local suCodeTbl = { };
     local bSubset;
-    local sValidSlots = nil;
     local smsg = nil;
     local bGood = nil;
 
@@ -1595,7 +1743,7 @@ function inline.fCheckInline(gear,sSlot,ts,bLeft,bValidate)
         return false,nil,nil;
     end
     if ts == nil then
-        ts = gProfile.Sets.CurrentGear;     -- Assume currently being built gear set
+        ts = crossjobs.Sets.CurrentGear;     -- Assume currently being built gear set
     end
     if bLeft == nil then
         bLeft = false;                      -- Assume this is a gear definition
@@ -1619,18 +1767,18 @@ function inline.fCheckInline(gear,sSlot,ts,bLeft,bValidate)
     bSubset = (string.lower(sGear) == 'subset');
 
     -- Make a table of the inline conditionals, for processing
-    suCodeTbl = fMakeCodeTable(string.upper(string.sub(gear,iPos,-1)));
+    suCodeTbl = utilities.fMakeConditionalTable(string.sub(gear,iPos,-1));
 
     -- Now walk that table, processing the conditionals. At any time if a conditional
     -- comes back false, we're done. Conditionals are strung together and all have to
     -- be true for the results to be true.
     for i,suCode in pairs(suCodeTbl) do
         -- Start with Buffs
-        bGood = fCheckInlineBuff(suCode);
+        bGood,smsg = fCheckInlineBuff(suCode);
 
         if bGood == nil then
             -- Next, Debuffs.
-            bGood = fCheckInlineDebuff(suCode);
+            bGood,smsg = fCheckInlineDebuff(suCode);
         end
 
         if bGood == nil then
@@ -1640,37 +1788,37 @@ function inline.fCheckInline(gear,sSlot,ts,bLeft,bValidate)
 
         if bGood == nil then
             -- Then Activity
-            bGood = fCheckInlineActivity(suCode);
+            bGood,smsg = fCheckInlineActivity(suCode);
         end
 
         if bGood == nil then
             -- Then Day
-            bGood = fCheckInlineDay(suCode);
+            bGood,smsg = fCheckInlineDay(suCode);
         end
 
         if bGood == nil then
             -- Then Moon
-            bGood = fCheckInlineMoon(suCode);
+            bGood,smsg = fCheckInlineMoon(suCode);
         end
 
         if bGood == nil then
             -- Then conditional Gear
-            bGood = fCheckInlineGear(suCode),sSlot,ts);
+            bGood,smsg = fCheckInlineGear(suCode,sSlot,ts);
         end
 
         if bGood == nil then
             -- Then Slots
-            bGood,smsg,sValidSlots = fCheckInlineSlot(suCode,sSlot,ts,bSubset);
+            bGood,smsg = fCheckInlineSlot(suCode,sSlot,ts,bSubset);
         end
 
         if bGood == nil then
             -- Then Songs
-            bGood = fCheckInlineSongs(suCode);
+            bGood,smsg = fCheckInlineSongs(suCode);
         end
 
         if bGood == nil then
             -- Then Other
-            bGood = fCheckInlineOther(suCode);
+            bGood,smsg = fCheckInlineOther(suCode);
         end
 
         if bGood == nil then
@@ -1680,17 +1828,17 @@ function inline.fCheckInline(gear,sSlot,ts,bLeft,bValidate)
 
         if bGood == nil then
             -- Then Target
-            bGood = fCheckInlineTarget(suCode);
+            bGood,smsg = fCheckInlineTarget(suCode);
         end
 
         if bGood == nil then
             -- Then Pet
-            bGood = fCheckInlinePet(suCode);
+            bGood,smsg = fCheckInlinePet(suCode);
         end
 
         if bGood == nil then
             -- Then Time
-            bGood = fCheckInlineTime(suCode);
+            bGood,smsg = fCheckInlineTime(suCode);
         end
 
         if bGood == nil then
@@ -1708,32 +1856,37 @@ function inline.fCheckInline(gear,sSlot,ts,bLeft,bValidate)
             bGood,smsg = fCheckInlineWeather(suCode);
         end
 
+        if bGood == nil then
+            -- Then Magic Type
+            bGood,smsg = fCheckInlineMagicType(suCode);
+        end
+
         -- If an error occurred or the conditional wasn't recognized, then the results
         -- of this check function are false. If this is a validation run though, you
         -- want to keep processing. The success/failure of the inline conditional's
         -- result isn't the point, you just want to know if the conditionals are valid.
-        if bGood ~= nil and bGood == false then
-            if smsg ~= nil then
-                utilities.fDisplayOnce(smsg);
-            end
+
+        if bGood == nil then
+            smsg = 'Warning: Unrecognized Conditional: ' .. suCode;
+            bGood = false;
         end
 
-        -- The inline wasn't found
-        if bGood == nil then
-            smsg = 'Warning: Unrecognized conditional: ' .. suCode;
-            utilities.fDisplayOnce(smsg);
-            bGood = false;
+        if bGood == false and smsg ~= nil and bValidate == true then
+            if sSetName ~= nil then
+                smsg = smsg .. ' in ' .. sSetName;
+            end
+            reporting.DisplayMessage(nil,smsg);         -- !!! Need to change in future for output to file: DisplayMessage(pFile,msg,fmsg)
         end
 
         -- Now, if the code was in error and this was not a validation pass,
         -- processing is done and a false result must be returned. However,
         -- if this is a validation pass, you've already displayed the problem
         -- and need to continue processing the conditionals.
-        if bValidate == false and bGood == false then
-            return bGood,sGear,sValidSlots
+        if bValidate == false then
+            return bGood,sGear;
         end
     end
 
     -- By getting to this point, the conditional(s) have to be true or the validation pass is complete
-    return bGood,sGear,sValidSlots;
+    return bGood,sGear;
 end     -- fCheckInline

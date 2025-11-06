@@ -34,3 +34,23 @@ function ppt()
 		print(chat.message(math.sqrt(AshitaCore:GetMemoryManager():GetEntity():GetDistance(targetIndex))));
 	end	
 end		-- ppt
+
+
+-- https://github.com/ThornyFFXI/Shorthand/blob/main/helpers.cpp
+-- I think the second piece (re: renderFlags0) tests to see if downloading data complete
+-- (Nope! Looks like what it tracks is if the character is drawn in game. Bummer.)
+uint16_t myIndex = m_AshitaCore->GetMemoryManager()->GetParty()->GetMemberTargetIndex(0);
+if (myIndex == 0)
+	return;
+if (((m_AshitaCore->GetMemoryManager()->GetEntity()->GetRenderFlags0(myIndex) & 0x200) == 0) || ((m_AshitaCore->GetMemoryManager()->GetEntity()->GetRenderFlags0(myIndex) & 0x4000)))
+	return;
+
+
+['rSinging_Skill'] = {	-- Covers both Singing Skill and Intrument Skill
+	GROUP//WIND = {},
+	GROUP//STRING = {},
+	GROUP//NOT_WIND//NOT_STRING = {}
+},
+
+Carbuncle Mitts are being used wrong. While wearing the mitts if you have "Shining Ruby" buff, you will gain regen. Take gloves off
+or "shining ruby" buff wears, regen goes away. It only affects the wearer.

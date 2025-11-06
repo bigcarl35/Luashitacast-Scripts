@@ -1,6 +1,19 @@
 local slips = T{};
 
-local utilities = require(utilities);
+local utilities = require('common.utilities');
+
+--[[
+    This component contains all routines that deal with storage and claim slips
+
+    List of routines-
+        Subroutines:
+            FindSlips               Determines what storage slips the player owns
+
+        Functions:
+            fDisplaySlips           Displays which storage slips the player owns
+            fFindClaimSlip          Determines which claim slip the player has
+            local fWhichSlip        Determines which storage slip wanted by name
+--]]
 
 -- This structure tracks which storage slip(s) you own and where they can be found.
 -- The storage slip IDs and item IDs were gotten from Windower4 libs/slips.lua and
@@ -359,7 +372,6 @@ slips.tClaimSlips = {
 };
 
 --[[
-***
     fWhichSlip determines which storage slip is being asked for by checking the
     known list of storage slip names
 
@@ -385,7 +397,6 @@ function fWhichSlip(sId)
 end		-- fWhichSlip
 
 --[[
-***
     FindSlips determines what storage slips the player owns and where they are
     located.
 --]]
@@ -426,7 +437,6 @@ function slips.FindSlips()
 end		-- slips.FindSlips
 
 --[[
-***
     fDisplaySlips shows which storage slips the player owns
 
     Parameter:
@@ -459,3 +469,30 @@ function slips.fDisplaySlips(bList)
         return string.sub(sOut,3,-1);       -- remove the extra ' ,' at the beginning
     end
 end     -- gear.fDisplaySlips
+
+--[[
+    fFindClaimSlips determines which claim slips the player has via key items
+
+    Returned
+        List of slips found
+--]]
+
+function slips.fFindClaimSlips()
+    local player = gData.GetPlayer();
+    local s = ',';
+
+    for i,j in pairs(slips.tClaimSlips) do
+        if player:HasKeyItem(j['kid']) then
+            j['own'] = true;
+            s = s .. j['name'] .. ', ';
+        end
+    end
+
+    if s == ',' then
+        s = 'None';
+    else
+        s = string.sub(s,2,-3);
+    end
+
+    return s;
+end     -- slips.fFindClaimSlips

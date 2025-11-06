@@ -1,8 +1,31 @@
 local magic = T{};
 
-local gcdisplay = require('gcdisplay');
-local utilities = require('utilities');
-local gear      = require('gear');
+local crossjobs = require('common.crossjobs');
+local utilities = require('common.utilities');
+local gear = require('common.gear');
+
+--[[
+    This component contains all routines that deal with magic
+
+    List of routines-
+        Subroutines:
+            HandleMidcast                   Coordinating routine that invokes appropriate midcast based on type
+            HandlePrecast                   Equips the appropriate precast gear
+            MaxCast                         Casts the highest version of the passed spell/song
+            Local MidcastDarkMagic          Handles all gear appropriate for dark magic
+            local MidcastDivineMagic        Handles all gear appropriate for divine magic
+            local MidcastElementalMagic     Handles all gear appropriate for elemental magic
+            local MidcastEnfeeblingMagic    Handles all gear appropriate for enfeebling magic
+            local MidcastEnhancingMagic     Handles all gear appropriate for enhancing magic
+            local MidcastHealingMagic       Handles all gear appropriate for healing magic
+            local MidcastNinjutsu           Handles all gear appropriate for ninjutsu
+            local MidcastSinging            Handles all gear appropriate for singing/instrument playing
+            local MidcastSummoning          Handles all gear appropriate for summoning magic
+
+        Functions:
+            fBardSongType                   Determines if the bard song being sung is of type passed
+
+--]]
 
 --[[
     This table contains a list of all of the spells and songs that have multiple tiers, listed in descending order.
@@ -374,11 +397,16 @@ end		-- magic.fBardSongType
 function magic.HandlePrecast()
     local spell = gData.GetAction();
 
+    -- Clear out the CurrentGear in case of leftovers
+    crossjobs.ClearSet(crossjobs.Sets.CurrentGear);
+
     if spell.Skill == 'Singing' then
-        gcinclude.MoveToDynamicGS(gProfile.Sets.SingingPrecast,gProfile.Sets.CurrentGear);
+        gear.MoveToDynamicGS(gProfile.Sets.SingingPrecast,crossjobs.Sets.CurrentGear,false,'SingingPrecast');
     else
-       gear.MoveToDynamicGS(gProfile.Sets.Precast,gProfile.Sets.CurrentGear);
+       gear.MoveToDynamicGS(gProfile.Sets.Precast,crossjobs.Sets.CurrentGear,false,'Precast');
     end
+
+    gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- magic.HandlePrecast
 
 --[[
@@ -388,6 +416,9 @@ end		-- magic.HandlePrecast
 
 function magic.HandleMidcast()
     local spell = gData.GetAction();
+
+    -- Clear out the CurrentGear in case of leftovers
+    crossjobs.ClearSet(crossjobs.Sets.CurrentGear);
 
     if spell.Skill == 'Singing' then
         MidcastSinging();
@@ -405,13 +436,15 @@ function magic.HandleMidcast()
         MidcastElementalMagic();
     elseif spell.Skill == 'Summoning' then
         MidcastSummoning();
-    --elseif spell.Skill == 'Blue Magic' then
-    --	MidcastBlueMagic();
+    elseif spell.Skill == 'Blue Magic' then
+    	MidcastBlueMagic();
     --elseif spell.Skill == 'Geomancy' then
     --	MidcastGeomancy();
     elseif spell.Skill == 'Ninjutsu' then
         MidcastNinjutsu();
     end
+
+    gear.EquipTheGear(sets.CurrentGear);
 end		-- magic.MidcastNinjutsu
 
 --[[
@@ -423,10 +456,10 @@ function MidcastSinging()
 
     if magic.fBardSongType('enh') == true then
         -- Enhancement song
-        gear.MoveToCurrent(gProfile.Sets.EnhancementSinging,gProfile.Sets.CurrentGear);
+        gear.MoveToDynamicGS(gProfile.Sets.EnhancementSinging,crossjobs.Sets.CurrentGear,false,'EnhancementSinging');
     elseif fBardSongType('enf') == true then
         -- Enfeebling song
-        gear.MoveToCurrent(gProfile.Sets.EnfeeblingSinging,gProfile.Sets.CurrentGear);
+        gear.MoveToDynamicGS(gProfile.Sets.EnfeeblingSinging,crossjobs.Sets.CurrentGear,false,'EnfeeblingSinging');
     end
 end		-- MidcastSinging
 
@@ -449,48 +482,40 @@ function MidcastHealingMagic()
         -- Start with the non-cure based spells. Even if magic accuracy indicated, these
         -- spells always hit and thus do not need magic accuracy. Further, an elemental
         -- stave will have no effect either.
-        gear.MoveToDynamicGS(gProfile.Sets.HealingMagic,gProfile.Sets.CurrentGear);
+        gear.MoveToDynamicGS(gProfile.Sets.HealingMagic,crossjobs.Sets.CurrentGear,false,'HealingMagic');
     else
         if target ~= nil then
             -- Some type of cure
             if target.Type == 'Monster' then
                 -- Until I figure out how to determine that a monster is undead, just assume
                 -- that if targetting a monster, it is undead.
-                gear.MoveToDynamicGS(gProfile.Sets.OffensiveCuring,gProfile.Sets.CurrentGear);
+                gear.MoveToDynamicGS(gProfile.Sets.OffensiveCuring,crossjobs.Sets.CurrentGear,false,'OffensiveCuring');
                 -- Check for an elemental obi since this is an offensive spell. First
                 -- determine if a bonus is possible based on day's element and/or weather
-                sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+                sGear,sEle = gear.fCheckForElementalGearByValue('obi','MEacc',root);
                 if sGear ~= nil then
-                    pDay,pWeather = fCheckObiDW(sEle);
+                    pDay,pWeather = utilities.fCheckObiDW(sEle);
                     if pDay + pWeather > 0 then
-                        gProfile.Sets.CurrentGear['Waist'] = sGear;
+                        crossjobs.Sets.CurrentGear['Waist'] = sGear;
                     end
                 end
 
                 -- See if Macc should be added
-                if gcdisplay.GetToggle('Macc') then
-                    if bTank == true then
-                        gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
-                    else
-                        gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
-                    end
+                if utilities.fGetToggle('Macc') then
+                    gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
                 end
             else
                 -- This is the the type of curing magic most folks assume happens
-                if bTank == true then
-                    gcinclude.MoveToCurrent(gProfile.Sets.Tank_CuringMagic,gProfile.Sets.CurrentGear);
-                else
-                    gcinclude.MoveToCurrent(gProfile.Sets.CuringMagic,gProfile.Sets.CurrentGear);
-                end
+                gear.MoveToDynamicGS(gProfile.Sets.CuringMagic,crossjobs.Sets.CurrentGear,false,'CuringMagic');
             end
         end
 
         -- While the reasoning is different, both types of "cures" can use an elemental
         -- stave. (Offensive cures take advantage of affinity while regular cures
         -- appreciate the cure potency on a light-based staff.)
-        sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
+        sGear,sEle = gear.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
         if sGear ~= nil then
-            gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
+            gear.fSwapToStave(sGear,false,crossjobs.Sets.CurrentGear);
         end
     end
 end		-- MidcastHealingMagic
@@ -508,128 +533,90 @@ function MidcastDarkMagic()
     local spell = gData.GetAction();
     local ew = gData.GetEquipment();
     local root,pDay,pWeather,sGear;
-    local bTank,sEle;
+    local sEle;
 
-    bTank = gcdisplay.GetToggle('Tank');
     root = utilities.fGetRoot(spell.Name,false);
 
-    if table.find(gcinclude.tSpell['absorb'],root) ~= nil then
+    if table.find(utilities.tSpellGroupings['absorb'],root) ~= nil then
         -- It's an absorb spell
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_Absorb,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.Absorb,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.Absorb,crossjobs.Sets.CurrentGear,false,'Absorb');
 
         -- See if Macc should be added
-        if gcdisplay.GetToggle('Macc') then
-            if bTank == true then
-                gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
-            else
-                gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
-            end
+        if utilities.fGetToggle('Macc') then
+            gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
     elseif root == 'drain' then
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_Drain,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.Drain,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.Drain,crossjobs.Sets.CurrentGear,false,'Drain');
 
         -- Check for an elemental obi. First determine if a bonus is possible
         -- based on day's element and/or weather
-        sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+        sGear,sEle = gear.fCheckForElementalGearByValue('obi','MEacc',root);
         if sGear ~= nil then
-            pDay,pWeather = fCheckObiDW(sEle);
+            pDay,pWeather = utilities.fCheckObiDW(sEle);
             if pDay + pWeather > 0 then
-                gProfile.Sets.CurrentGear['Waist'] = sGear;
+                crossjobs.Sets.CurrentGear['Waist'] = sGear;
             end
         end
 
         -- See if Macc should be added
-        if gcdisplay.GetToggle('Macc') then
-            if bTank == true then
-                gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
-            else
-                gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
-            end
+        if utilities.fGetToggle('Macc') then
+            gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
 
         -- And an elemental staff, for the affinity
-        sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
+        sGear,sEle = gear.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
         if sGear ~= nil then
             -- There's a wild exception that needs to be checked here. If /WSWAP is
             -- enabled and the player is wielding Y's Scythe (only equipable by DRK)
             -- and sGear = 'Dark Staff', then don't equip it. Y's scythe grants +1
             -- dark magic affinity which is what a dark staff does. There's no
             -- advantage to equipping the staff.
-            if not (gcdisplay.GetToggle('WSwap') == true and
+            if not (utilities.fGetToggle('WSwap') == true and
                     ew['Main'] == 'Y\'s Scythe' and sGear == 'Dark Staff') then
-                gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
+                gear.fSwapToStave(sGear,false,crossjobs.Sets.CurrentGear);
             end
         end
-
     elseif root == 'aspir' then
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_Aspir,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.Aspir,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.Aspir,crossjobs.Sets.CurrentGear,false,'Aspir');
 
         -- Check for an elemental obi. First determine if a bonus is possible
         -- based on day's element and/or weather
-        sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+        sGear,sEle = gear.fCheckForElementalGearByValue('obi','MEacc',root);
         if sGear ~= nil then
-            pDay,pWeather = fCheckObiDW(sEle);
+            pDay,pWeather = utilities.fCheckObiDW(sEle);
             if pDay + pWeather > 0 then
-                gProfile.Sets.CurrentGear['Waist'] = sGear;
+                crossjobs.Sets.CurrentGear['Waist'] = sGear;
             end
         end
 
         -- See if Macc should be added
-        if gcdisplay.GetToggle('Macc') then
-            if bTank == true then
-                gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
-            else
-                gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
-            end
+        if utilities.fGetToggle('Macc') then
+            gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
 
         -- And an elemental staff, for the affinity
-        sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
+        sGear,sEle = gear.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
         if sGear ~= nil then
             -- There's a wild exception that needs to be checked here. If /WSWAP is
             -- enabled and the player is wielding Y's Scythe (only equipable by DRK)
             -- and sGear = 'Dark Staff', then don't equip it. Y's scythe grants +1
             -- dark magic affinity which is what a dark staff does. There's no
             -- advantage to equipping the staff.
-            if not (gcdisplay.GetToggle('WSwap') == true and
+            if not (utilities.fGetToggle('WSwap') == true and
                 ew['Main'] == 'Y\'s Scythe' and sGear == 'Dark Staff') then
-                gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
+                gear.fSwapToStave(sGear,false,crossjobs.Sets.CurrentGear);
             end
         end
     elseif root == 'dread' then
         -- Dread Spikes, out of era, but coming soonish
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_Dreadspikes,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.Dreadspikes,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.Dreadspikes,crossjobs.Sets.CurrentGear,false,'Dreadspikes');
     else
         -- All other dark magic spells
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_DarkMagic,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.DarkMagic,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.DarkMagic,crossjobs.Sets.CurrentGear,false,'DarkMagic');
 
         -- See if Macc should be added
-        if gcdisplay.GetToggle('Macc') then
-            if bTank == true then
-                gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
-            else
-                gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
-            end
+        if utilities.fGetToggle('Macc') then
+            gear.MoveToCurrent(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
     end
 end		-- MidcastDarkMagic
@@ -643,70 +630,45 @@ end		-- MidcastDarkMagic
 function MidcastDivineMagic()
     local spell = gData.GetAction();
     local root,pDay,pWeather,sGear;
-    local bTank,sEle;
-
-    bTank = gcdisplay.GetToggle('Tank');
-    if bTank == nil then
-        bTank = false;
-    end
+    local sEle;
 
     root = utilities.fGetRoot(spell.Name,false);
 
     if table.find({'banish','banishga','holy','enlight'},root) ~= nil then
         -- Offensive Divine spell
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_OffensiveDivine,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.OffensiveDivine,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.OffensiveDivine,crossjobs.Sets.CurrentGear,false,'OffensiveDivine');
 
         -- Check for an elemental obi. First determine if a bonus is possible
         -- based on day's element and/or weather
-        sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+        sGear,sEle = gear.fCheckForElementalGearByValue('obi','MEacc',root);
         if sGear ~= nil then
-            pDay,pWeather = fCheckObiDW(sEle);
+            pDay,pWeather = utilities.fCheckObiDW(sEle);
             if pDay + pWeather > 0 then
-                gProfile.Sets.CurrentGear['Waist'] = sGear;
+                crossjobs.Sets.CurrentGear['Waist'] = sGear;
             end
         end
 
         -- See if Macc should be added
-        if gcdisplay.GetToggle('Macc') then
-            if bTank == true then
-                gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
-            else
-                gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
-            end
+        if utilities.fGetToggle('Macc') then
+            gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
     elseif table.find({'flash','repose'},root) ~= nil then
         -- Enfeebling Divine spell
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnfeebleDivine,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.EnfeebleDivine,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.EnfeebleDivine,crossjobs.Sets.CurrentGear,false,'EnfeebleDivine');
 
         -- See if Macc should be added
-        if gcdisplay.GetToggle('Macc') then
-            if bTank == true then
-                gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
-            else
-                gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
-            end
+        if utilities.fGetToggle('Macc') then
+            gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
     else
         -- Enhancing Divine spell
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnhanceDivine,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.EnhanceDivine,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.EnhanceDivine,crossjobs.Sets.CurrentGear,false,'EnhanceDivine');
     end
 
     -- And see if an elemental staff would be useful, for the affinity
-    sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
+    sGear,sEle = gear.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
     if sGear ~= nil then
-        gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
+        gear.fSwapToStave(sGear,false,crossjobs.Sets.CurrentGear);
     end
 end		-- MidcastDivineMagic
 
@@ -719,61 +681,39 @@ end		-- MidcastDivineMagic
 
 function MidcastEnfeeblingMagic()
     local spell = gData.GetAction();
-    local root,bTank,sGear,sEle;
+    local root,sGear,sEle;
     local pDay,pWeather;
 
-    bTank = gcdisplay.GetToggle('Tank');
-    if bTank == nil then
-        bTank = false;
-    end
+    root = utilities.fGetRoot(spell.Name);
 
-    root = fGetRoot(spell.Name);
-
-    if table.find(gcinclude.tSpell['int'],root) ~= nil then
+    if table.find(utilities.tSpellGroupings['int'],root) ~= nil then
         -- INT: gravity,bind,blind,dispel,sleep,sleepga,poison,poisonga
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnfeeblingINT,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.EnfeeblingINT,gProfile.Sets.CurrentGear);
-        end
-    elseif table.find(gcinclude.tSpell['mnd'],root) ~= nil then
+        gear.MoveToDynamicGS(gProfile.Sets.EnfeeblingINT,crossjobs.Sets.CurrentGear,false,'EnfeeblingINT');
+    elseif table.find(utilities.tSpellGroupings['mnd'],root) ~= nil then
         -- MND: paralyze,silence,slow,slowga,frazzle,distract
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnfeeblingMND,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.EnfeeblingMND,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.EnfeeblingMND,crossjobs.Sets.CurrentGear,false,'EnfeeblingMND');
     else
-        -- dia and diaga
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnfeeblingMagic,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.EnfeeblingMagic,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.EnfeeblingMagic,crossjobs.Sets.CurrentGear,false,'EnfeeblingMagic');
     end
 
     -- See if an elemental obi would make sense for the Magical Elemental accuracy
-    sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+    sGear,sEle = gear.fCheckForElementalGearByValue('obi','MEacc',root);
     if sGear ~= nil then
-        pDay,pWeather = fCheckObiDW(sEle);
-    if pDay + pWeather > 0 then
-        gProfile.Sets.CurrentGear['Waist'] = sGear;
+        pDay,pWeather = utilities.fCheckObiDW(sEle);
+        if pDay + pWeather > 0 then
+            crossjobs.Sets.CurrentGear['Waist'] = sGear;
         end
     end
 
     -- See if Macc should be added
-    if gcdisplay.GetToggle('Macc') then
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
-        end
+    if utilities.fGetToggle('Macc') then
+        gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
     end
 
     -- And then if an elemental staff would be useful, for the affinity
-    sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
+    sGear,sEle = gear.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
     if sGear ~= nil then
-        gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
+        gear.fSwapToStave(sGear,false,crossjobs.Sets.CurrentGear);
     end
 end		-- MidcastEnfeeblingMagic
 
@@ -785,89 +725,54 @@ end		-- MidcastEnfeeblingMagic
 
 function MidcastEnhancingMagic()
     local spell = gData.GetAction();
-    local root,bTank,sGear,sEle;
+    local root,sGear,sEle;
     local pDay,pWeather;
 
-    bTank = gcdisplay.GetToggle('Tank');
-    if bTank == nil then
-        bTank = false;
-    end
+    root = utilities.fGetRoot(spell.Name,false);
 
-    root = utilities.(spell.Name,false);
-
-    if table.find(gcinclude.tSpell['barspell']['ele'],root) ~= nil or
-        table.find(gcinclude.tSpell['barspell']['status'],root) ~= nil then
+    if table.find(utilities.tSpellGroupings['barspell']['ele'],root) ~= nil or
+        table.find(utilities.tSpellGroupings['barspell']['status'],root) ~= nil then
         -- A bar spell
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_Barspell,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.Barspell,gProfile.Sets.CurrentGear);
-        end
-    elseif table.find(gcinclude.tSpell['enspell'],root) ~= nil then
+        gear.MoveToDynamicGS(gProfile.Sets.Barspell,crossjobs.Sets.CurrentGear,false,'Barspell');
+    elseif table.find(utilities.tSpellGroupings['enspell'],root) ~= nil then
         -- En-spell: en"element". Sword enhancing gear applies to all melee
         -- weapons and is applied when the spell is cast. Damage is calculated
         -- after the weapon hits.
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_Enspell,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.Enspell,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.Enspell,crossjobs.Sets.CurrentGear,false,'Enspell');
+
         -- See if an elemental obi would make sense for the Magical Elemental accuracy
-        sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+        sGear,sEle = gear.fCheckForElementalGearByValue('obi','MEacc',root);
         if sGear ~= nil then
-            pDay,pWeather = fCheckObiDW(sEle);
+            pDay,pWeather = utilities.fCheckObiDW(sEle);
             if pDay + pWeather > 0 then
-                gProfile.Sets.CurrentGear['Waist'] = sGear;
+                crossjobs.Sets.CurrentGear['Waist'] = sGear;
             end
         end
-    elseif table.find(gcinclude.tSpell['spikes'],root) ~= nil then
+    elseif table.find(utilities.tSpellGroupings['spikes'],root) ~= nil then
         -- Spike spell: Blaze, Ice, and Shock. Damage based on INT (capped), MAB,
         -- day/weather bonuses, Magic Affinity at time of hit. Enhancing spike gear
         -- is equipped when cast
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_Spike,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.Spike,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.Spike,gProfile.crossjobs.CurrentGear,false,'Spike');
+
         -- See if an elemental obi would make sense for the Magical Elemental accuracy
-        sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+        sGear,sEle = gear.fCheckForElementalGearByValue('obi','MEacc',root);
         if sGear ~= nil then
-            pDay,pWeather = fCheckObiDW(sEle);
+            pDay,pWeather = utilities.fCheckObiDW(sEle);
             if pDay + pWeather > 0 then
-                gProfile.Sets.CurrentGear['Waist'] = sGear;
+                crossjobs.Sets.CurrentGear['Waist'] = sGear;
             end
         end
     elseif root == 'stoneskin' then
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_Stoneskin,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.Stoneskin,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.Stoneskin,crossjobs.Sets.CurrentGear,false,'Stoneskin');
     elseif root == 'sneak' then
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_Sneak,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.Sneak,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.Sneak,crossjobs.Sets.CurrentGear,false,'Sneak');
     elseif root == 'invisible' then
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_Invisible,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.Invisible,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.Invisible,crossjobs.Sets.CurrentGear,false,'Invisible');
     elseif root == 'phalanx' then
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_Phalanx,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.Phalanx,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.Phalanx,crossjobs.Sets.CurrentGear,false,'Phalanx');
     else
         -- Catch all for the rest of the enhancing spells
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_EnhancingMagic,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.EnhancingMagic,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.EnhancingMagic,crossjobs.Sets.CurrentGear,false,'EnhancingMagic');
     end
 end		-- MidcastEnhancingMagic
 
@@ -884,54 +789,37 @@ end		-- MidcastEnhancingMagic
 
 function MidcastElementalMagic()
     local spell = gData.GetAction();
-    local root,bTank,sGear,sEle;
+    local root,sGear,sEle;
     local pDay,pWeather;
 
-    bTank = gcdisplay.GetToggle('Tank');
-    if bTank == nil then
-        bTank = false;
-    end
+    root = utilities.fGetRoot(spell.Name,false);
 
-    root = utilities.(spell.Name,false);
-
-    if table.find(gcinclude.tSpell['eDebuff'],root) ~= nil then
+    if table.find(utilities.tSpellGroupings['eDebuff'],root) ~= nil then
         -- Elemental debuff spell
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_ElementalDebuff,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.ElementalDebuff,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.ElementalDebuff,crossjobs.Sets.CurrentGear,false,'ElementalDebuff');
     else
         -- Nuke spell
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_ElementalNuke,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.ElementalNuke,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.ElementalNuke,crossjobs.Sets.CurrentGear,false,'ElementalNuke');
     end
 
     -- See if an elemental obi would make sense for the Magical Elemental accuracy
-    sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+    sGear,sEle = gear.fCheckForElementalGearByValue('obi','MEacc',root);
     if sGear ~= nil then
-        pDay,pWeather = fCheckObiDW(sEle);
+        pDay,pWeather = utilities.fCheckObiDW(sEle);
         if pDay + pWeather > 0 then
-            gProfile.Sets.CurrentGear['Waist'] = sGear;
+            crossjobs.Sets.CurrentGear['Waist'] = sGear;
         end
     end
 
     -- See if Macc should be added
-    if gcdisplay.GetToggle('Macc') then
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_Macc,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.Macc,gProfile.Sets.CurrentGear);
-        end
+    if utilities.fGetToggle('Macc') then
+        gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
     end
 
     -- And then if an elemental staff would be useful, for the affinity
-    sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
+    sGear,sEle = gear.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
     if sGear ~= nil then
-        gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
+        gear.fSwapToStave(sGear,false,crossjobs.Sets.CurrentGear);
     end
 end		-- MidcastElementalMagic
 
@@ -942,19 +830,7 @@ end		-- MidcastElementalMagic
 --]]
 
 function MidcastSummoning()
-    local bTank;
-
-    bTank = gcdisplay.GetToggle('Tank');
-
-    if bTank == nil then
-        bTank = false;
-    end
-
-    if bTank == true then
-        gcinclude.MoveToCurrent(gProfile.Sets.Tank_Summoning,gProfile.Sets.CurrentGear);
-    else
-        gcinclude.MoveToCurrent(gProfile.Sets.Summoning,gProfile.Sets.CurrentGear);
-    end
+    gear.MoveToDynamicGS(gProfile.Sets.Summoning,crossjobs.Sets.CurrentGear,false,'Summoning');
 end		-- MidcastSummoning
 
 --[[
@@ -986,47 +862,30 @@ end		-- MidcastGeomancy
 
 function MidcastNinjutsu()
     local spell = gData.GetAction();
-    local root,bTank,sGear,sEle;
+    local root,sGear,sEle;
     local pDay,pWeather;
 
-    bTank = gcdisplay.GetToggle('Tank');
-    if bTank == nil then
-        bTank = false;
-    end
-
-    root = fGetRoot(spell.Name);
+    root = utilities.fGetRoot(spell.Name);
 
     -- There's three types of ninjutsu: buff, debuff and elemental. Anything
     -- else is a mystery and will be processed with the current gear.
-    if table.find(gcinclude.tSpell['nin-buff'],root) ~= nil then
+    if table.find(utilities.tSpellGroupings['nin-buff'],root) ~= nil then
         -- Buff
-        if bTank == true then
-            gcinclude.MoveToCurrent(gProfile.Sets.Tank_NinjutsuBuff,gProfile.Sets.CurrentGear);
-        else
-            gcinclude.MoveToCurrent(gProfile.Sets.NinjutsuBuff,gProfile.Sets.CurrentGear);
-        end
+        gear.MoveToDynamicGS(gProfile.Sets.NinjutsuBuff,crossjobs.Sets.CurrentGear,false,'NinjutsuBuff');
     else
-        if table.find(gcinclude.tSpell['nin-debuff'],root) ~= nil then
+        if table.find(utilities.tSpellGroupings['nin-debuff'],root) ~= nil then
             -- Debuff
-            if bTank == true then
-                gcinclude.MoveToCurrent(gProfile.Sets.Tank_NinjutsuDebuff,gProfile.Sets.CurrentGear);
-            else
-                gcinclude.MoveToCurrent(gProfile.Sets.NinjutsuDebuff,gProfile.Sets.CurrentGear);
-            end
-        elseif table.find(gcinclude.tSpell['nin-ele'],root) ~= nil then
+            gear.MoveToDynamicGS(gProfile.Sets.NinjutsuDebuff,crossjobs.Sets.CurrentGear,false,'NinjutsuDebuff');
+        elseif table.find(utilities.tSpellGroupings['nin-ele'],root) ~= nil then
             -- Elemental
-            if bTank == true then
-                gcinclude.MoveToCurrent(gProfile.Sets.Tank_NinjutsuElemental,gProfile.Sets.CurrentGear);
-            else
-                gcinclude.MoveToCurrent(gProfile.Sets.NinjutsuElemental,gProfile.Sets.CurrentGear);
-            end
+            gear.MoveToDynamicGS(gProfile.Sets.NinjutsuElemental,crossjobs.Sets.CurrentGear,false,'NinjutsuElemental');
 
             -- See if an elemental obi would make sense for the Magical Elemental accuracy
-            sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+            sGear,sEle = gear.fCheckForElementalGearByValue('obi','MEacc',root);
             if sGear ~= nil then
-                pDay,pWeather = fCheckObiDW(sEle);
+                pDay,pWeather = utilities.fCheckObiDW(sEle);
                 if pDay + pWeather > 0 then
-                    gProfile.Sets.CurrentGear['Waist'] = sGear;
+                    crossjobs.Sets.CurrentGear['Waist'] = sGear;
                 end
             end
         else
@@ -1034,9 +893,9 @@ function MidcastNinjutsu()
         end
 
         -- And then if an elemental staff would be useful, for the affinity
-        sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
+        sGear,sEle = gear.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
         if sGear ~= nil then
-            gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
+            gear.fSwapToStave(sGear,false,crossjobs.Sets.CurrentGear);
         end
     end
 end		-- MidcastNinjutsu
@@ -1065,7 +924,7 @@ function magic.MaxCast(sName,bSpell,sTarget,bCast)
     local tInd = {};
 
     if sSpell == nil then
-        print(chat.header('MaxCast'):append(chat.message('No spell/song specified. Aborting...')));
+        print(chat.message('Warning: No spell/song specified. Aborting...'));
         return;
     end
 
@@ -1076,9 +935,9 @@ function magic.MaxCast(sName,bSpell,sTarget,bCast)
     if sTarget == nil then
         -- Since target is missing, use the appropriate default setting
         if bSpell == true then
-            sTarget = '<' .. gcinclude.settings.DefaultSpellTarget .. '>';
+            sTarget = '<' .. crossjobs.settings.DefaultSpellTarget .. '>';
         else
-            sTarget = '<' .. gcinclude.settings.DefaultSongTarget .. '>';
+            sTarget = '<' .. crossjobs.settings.DefaultSongTarget .. '>';
         end
     elseif string.find(sTarget,'<') == nil then
         sTarget = '<' .. sTarget .. '>';
@@ -1096,7 +955,7 @@ function magic.MaxCast(sName,bSpell,sTarget,bCast)
         tInd = magic.Tiered.songs;
     end
 
-    root = fGetRoot(sName);
+    root = utilities.fGetRoot(sName);
     sCmd = nil;
 
     -- Now, walk the list looking for a matched entry for the "root"
@@ -1123,10 +982,10 @@ function magic.MaxCast(sName,bSpell,sTarget,bCast)
                                     break;
                                 end
                             else
-                                print(chat.header('MaxCast'):append(chat.message('FYI: ' .. jj['Name'] .. ' is on cool down. Skipping')));
+                                print(chat.message('Info: ' .. jj['Name'] .. ' is on cool down. Skipping'));
                             end
                         else
-                            print(chat.header('MaxCast'):append(chat.message('FYI: You should be able to cast '.. jj['Name'] .. ', but don\'t know it. Skipping')));
+                            print(chat.message('Info: You should be able to cast '.. jj['Name'] .. ', but don\'t know it. Skipping'));
                         end
                     end
                 else
@@ -1145,14 +1004,14 @@ function magic.MaxCast(sName,bSpell,sTarget,bCast)
                                     end
                                     break;
                                 else
-                                    print(chat.header('MaxCast'):append(chat.message('FYI: ' .. jj['Name'] .. ' is on cool down. Skipping')));
+                                    print(chat.message('Info: ' .. jj['Name'] .. ' is on cool down. Skipping'));
                                 end
                             else
-                                print(chat.header('MaxCast'):append(chat.message('FYI: You should be able to cast '.. jj['Name'] .. ', but don\'t know it. Skipping')));
+                                print(chat.message('Info: You should be able to cast '.. jj['Name'] .. ', but don\'t know it. Skipping'));
                             end
                         end
                     else
-                        print(chat.header('MaxCast'):append(chat.message('Error: Only bards can sing songs. Skipping')));
+                        print(chat.message('Warning: Only bards can sing songs. Skipping')));
                         break;
                     end
                 end
@@ -1167,13 +1026,13 @@ function magic.MaxCast(sName,bSpell,sTarget,bCast)
         if bCast == true then
             AshitaCore:GetChatManager():QueueCommand(1, sCmd);
         else
-            print(chat.header('MaxCast'):append(chat.message(sCmd .. ' is the maximum version you can cast/sing now.')));
+            print(chat.message('Info: ' .. sCmd .. ' is the maximum version you can cast/sing now.'));
         end
     else
-        print(chat.header('MaxCast'):append(chat.message('FYI: '.. sName ..' not found, probably not a tiered spell/song.')));
+        print(chat.message('Info: '.. sName ..' not found, probably not a tiered spell/song.'));
         if bCast == true then
             -- Let's try to cast it even so. Assuming everything, just try
-            print(chat.header('MaxSpell'):append(chat.message('FYI: Trying to cast/sing '.. sName.. ' as is')));
+            print(chat.message('Info: Trying to cast/sing '.. sName.. ' as is'));
             sCmd = '/ma "' .. sName .. '" ' .. sTarget;
             AshitaCore:GetChatManager():QueueCommand(1, sCmd);
             end

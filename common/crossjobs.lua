@@ -1,17 +1,40 @@
-local crossjobs = T{};
+local crossjobs = {};
 
-local version = {
+local utilities = require('common.utilities');
+local reporting = require('common.reporting');
+local displaybar = require('common.displaybar');
+local locks = require('common.locks');
+local gear = require('common.gear');
+local pets = require('common.pets');
+local magic = require('common.magic');
+
+--[[
+	This component contains all functions that are used across all jobs. Further, it contains
+	gear sets that are job independent.
+
+	List of routines-
+		Subroutines:
+			HandlleAbility				Coordinate all abilities gear sets equipping
+			HandleCommands				Process all luashitacast commands that are not job specific
+			HandleItem					Coordinate all item gear equipping
+			HandleMidshot				Coordinate all Mids-hot gear equipping
+			HandlePreshot				Coordinate all Pre-Shot gear equipping
+			HandleWeaponskill			Coordinate all Weapon Skill gear equipping
+			packet_in_callback1			Dissects packed for region control info
+			ProcessAccuracy				Process the /acc or /racc commands
+			local RefreshVariables		Recreates variable definitions
+			local SetVariables			Sets runtime displaybar variables
+			t1							Test procedure for trying out new ideas
+
+		Functions:
+			fHandleWeaponskil			Determines what gear set to equip and does so
+--]]
+
+local crossjobs.version = {
 	['author']	= 'Paiine',
-	['name']	= 'Luashitacast (Karma)',
-	['version']	= '2.0.alpha'
+	['name']	= 'Luashitacast (Boxcar)',
+	['version']	= '3.0.alpha'
 };
-
-local gcdisplay  = require('gcdisplay');
-local utilities  = require('utilities');
-local reporting  = require('reporting');
-local displaybar = require('displaybar');
-local locks      = require('locks');
-local gear 	     = require('gear');
 
 crossjobs.sets = {
 
@@ -93,29 +116,22 @@ crossjobs.sets = {
 crossjobs.settings = {
 	-- You can also set any of these on a per job basis in the job file in the OnLoad function. See my BST job file
 	--to see how this is done.
-	Messages = false; 	 -- set to true if you want chat log messages to appear on any /gs command used such as DT, or KITE gear toggles, certain messages will always appear
-	WScheck = true; 	 -- set to false if you don't want to use the WSdistance safety check
-	WSdistance = 4.7; 	 -- default max distance (yalms) to allow non-ranged WS to go off at if the above WScheck is true
-	bWSOverride = false; -- is the player playing a job where weapon swapping always happens, it is not optional?
-	Tolerance = 97;		 -- Comparison value %, cut-off for certain comparisons
-	DefaultSpellTarget = 't'; -- What to use in MaxSpell if no target specified
-	DefaultSongTarget = 't';  -- What to use in MaxSong if no target specified
+	Messages = false; 	 			-- set to true if you want chat log messages to appear on any /gs command used such as DT, or KITE gear toggles, certain messages will always appear
+	WScheck = true; 	 			-- set to false if you don't want to use the WSdistance safety check
+	WSdistance = 4.7; 	 			-- default max distance (yalms) to allow non-ranged WS to go off at if the above WScheck is true
+	bWSOverride = false; 			-- is the player playing a job where weapon swapping always happens, it is not optional?
+	Tolerance = 97;					-- Comparison value %, cut-off for certain comparisons
+	DefaultSpellTarget = 't'; 		-- What to use in MaxSpell if no target specified
+	DefaultSongTarget = 't';  		-- What to use in MaxSong if no target specified
 	--
-	priorityEngaged = 'CEF'; 		-- indicates order of steps for engagement
-	priorityWeaponSkill = 'ADBE';	-- indicates order of steps for a weapon skill
+	RegenGearHPP = 97;				-- default HP% limit
+	RefreshGearMPP = 97;			-- default MP% limit
 	--
 	bAutoStaveSwapping = true;		-- indicates if elemental stave swapping should occur automatically
 	--
-	bMinBasetime = 15;		-- minimum wait before reminding player to run /gc
-	bMaxBasetime = 300;		-- once reminder shown, switch to every 5 minutes
-	bGCReminder = false;	-- Has GC reminder been displayed yet
-};
-
--- List of all supported commands
-crossjobs.AliasList = {
-	'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite',
-	'lock','macc','maxsong','maxspell','petfood','ptt','pull','racc','rc','rv','sbp','showit','smg','spf','ss','string',
-	'tank','th','unlock','ver','wsdistance','wswap','t1'
+	bMinBasetime = 15;				-- minimum wait before reminding player to run /gc
+	bMaxBasetime = 300;				-- once reminder shown, switch to every 5 minutes
+	bGCReminder = false;			-- Has GC reminder been displayed yet
 };
 
 -- Holding variable for all of the messages that should only be displayed once
@@ -161,11 +177,11 @@ crossjobs.RegionControl = {
 	['Promyvion']		= { ['own'] =  0, ['zones'] = {16,17,18,19,20,21,22,23,39,40,41,42}}
 };
 
+-- Indiactes what nation your character is from, -1 is unassigned
 crossjobs.OwnNation = -1;
 crossjobs.Sets = crossjobs.sets;
 
 --[[
-***
 	The following event is used to capture the ownership of the regions.
 	Conquest updates are sent whenever the player zones and periodically.
 	The display bar's region is updated accordingly
@@ -193,15 +209,12 @@ ashita.events.register('packet_in', 'packet_in_callback1', function (e)
 		crossjobs.RegionControl['Tulia']['own'] = struct.unpack('B', e.data, 0x5E)
 		crossjobs.RegionControl['Movapolos']['own'] = struct.unpack('B', e.data, 0x62)
 		crossjobs.RegionControl['Tavnazia']['own'] = struct.unpack('B', e.data, 0x66)
-		if gcdisplay ~= nil then
-			displaybar.RegionDisplay();
-		end
+		displaybar.RegionDisplay();
 		e.blocked = false;
 	end
 end);
 
 --[[
-***
 	t1 is a test procedure, used in trying out new things. It is not intended for players to use
 
 	Pararameter
@@ -217,7 +230,6 @@ function crossjobs.t1(args)
 end		-- crossjobs.t1
 
 --[[
-***
 	RefreshVariables is a routine that let's the player manually make sure
 	the job-dependent variables are set. Sometimes when logging in, the
 	SetVariables routine is run before the client is done downloading. In
@@ -234,55 +246,59 @@ function RefreshVariables()
 	-- They are the ones that sometimes don't get created.
 
 	-- WSwap	-- Weapon Swap
-	gcdisplay.CreateToggle('WSwap', (string.find('WHM,BRD,RDM',player.MainJob) ~= nil));
+	if string.find('SMN,BLM',player.MainJob) == nil then
+		utilities.CreateToggle('WSwap', (string.find('WHM,BRD,RDM',player.MainJob) ~= nil));
+	end
 
 	-- SPF		-- Show Pull Feedback
-	gcdisplay.CreateToggle('sPF', true);
+	utilities.CreateToggle('sPF', true);
 
 	-- TH - only assuming that a main THF wants this enabled by default
-	gcdisplay.CreateToggle('TH',(player.MainJob=='THF' or player.SubJob == 'THF'));
+	if player.MainJob == 'THF' then
+		utilities.CreateToggle('TH',(player.MainJob=='THF'));
+	end
 
 	-- Macc
 	if string.find(utilities._sMagicJobs,player.MainJob) ~= nil or
-			string.find(utilities._sMagicJobs,player.SubJob) ~= nil then
-		gcdisplay.CreateToggle('Macc', false);
+		 string.find(utilities._sMagicJobs,player.SubJob) ~= nil then
+		utilities.CreateToggle('Macc', false);
 	end
 
 	-- Tank
 	if string.find(utilities._TankJobs,player.MainJob) ~= nil then
-		gcdisplay.CreateToggle('Tank', (string.find('PLD,NIN,RUN',player.MainJob) ~= nil));
+		utilities.CreateToggle('Tank', (string.find('PLD,NIN,RUN',player.MainJob) ~= nil));
 	end
 
 	-- THF: SS
 	if player.MainJob ==  'THF' or player.SubJob == 'THF' then
-		gcdisplay.CreateToggle('SS', false);
+		utilities.CreateToggle('SS', false);
 	end
 
 	-- BST: AJug and DB		-- Automatic Jugs, Damage type (used in pet debuff mitigation)
 	if player.MainJob == 'BST' then
-		gcdisplay.CreateToggle('AJug',true);
-		if gcdisplay.GetCycle('DB') == 'Unknown' then
-			gcdisplay.CreateCycle('DB', {[1] = 'Norm', [2] = 'BPP', [3] = 'WSS'});
+		utilities.CreateToggle('AJug',true);
+		if utilities.fGetCycle('DB') == 'Unknown' then
+			utilities.CreateCycle('DB', {[1] = 'Norm', [2] = 'BPP', [3] = 'WSS'});
 		end
 	end
 
 	-- BRD main only: Instrument
-	if gcdisplay.GetCycle('Instrument') == 'Unknown' and player.MainJob == 'BRD' then
-		gcdisplay.CreateCycle('Instrument', {[1] = 'Horn', [2] = 'String'});
+	if utilities.fGetCycle('Instrument') == 'Unknown' and player.MainJob == 'BRD' then
+		utilities.CreateCycle('Instrument', {[1] = 'Horn', [2] = 'String'});
 	end
 
 	-- SMN: sBP		-- Show Blood Pact
 	if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
-		gcdisplay.CreateToggle('sBP', true);
+		utilities.CreateToggle('sBP', true);
+		utilities.CreateCycle('Mode', {[1] = 'PERP', [2] = 'ATTK'});
 	end
 
 	-- General cycles: Damage Taken and Region
-	gcdisplay.CreateCycle('DT', {[1] = utilities.OFF, [2] = utilities.PHY, [3] = utilities.MAG, [4] = utilities.BRE});
-	gcdisplay.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned', [3] = 'N/A'});
+	utilities.CreateCycle('DT', {[1] = utilities.OFF, [2] = utilities.PHY, [3] = utilities.MAG, [4] = utilities.BRE});
+	utilities.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned', [3] = 'N/A'});
 end		-- RefreshVariables
 
 --[[
-***
 	SetVariables defines run settings for luashitacast
 --]]
 
@@ -290,34 +306,30 @@ function SetVariables()
 	local player = gData.GetPlayer();
 
 	-- General toggles
-	gcdisplay.CreateToggle('GSwap', true);		-- Gear Swap
-	gcdisplay.CreateToggle('Kite', false);		-- Kiting
-	gcdisplay.CreateToggle('Eva', false);		-- Evasion
-	gcdisplay.CreateToggle('Idle', true);		-- Should Default set equip when idling
-	gcdisplay.CreateToggle('sPF', true);		-- Show Pull Feedback
-
-	-- With the addition of the Tin Foil Hat, everyone can get TH now. Not sure the
-	-- TH from this item is really wanted though...
-	gcdisplay.CreateToggle('TH',(player.MainJob == 'THF' or player.SubJob == 'THF'));
+	utilities.CreateToggle('GSwap', true);		-- Gear Swap
+	utilities.CreateToggle('Kite', false);		-- Kiting
+	utilities.CreateToggle('Eva', false);		-- Evasion
+	utilities.CreateToggle('Idle', true);		-- Should Default set equip when idling
+	utilities.CreateToggle('sPF', true);		-- Show Pull Feedback
 
 	-- Job specific toggles
 
 	-- Weapon swapping WSWAP. SMN and BLM always can weaponswap. WHM, RDM, and BRD you
 	-- want to assume WSWAP is enabled. Every other job defaults to false
 	if string.find('SMN,BLM',player.MainJob) == nil then
-		gcdisplay.CreateToggle('WSwap',(string.find('WHM,RDM,BRD',player.MainJob) ~= nil));
+		utilities.CreateToggle('WSwap',(string.find('WHM,RDM,BRD',player.MainJob) ~= nil));
 	end
 
 	-- Tanking: PLD, NIN, and RUN default to TANK enabled. DRK, WAR, RDM, and BLU
 	-- default to TANK being disabled.
 	if string.find(utilities._TankJobs,player.MainJob) ~= nil then
-		gcdisplay.CreateToggle('Tank', (string.find('PLD,NIN,RUN',player.MainJob) ~= nil));
+		utilities.CreateToggle('Tank', (string.find('PLD,NIN,RUN',player.MainJob) ~= nil));
 	end
 
 	-- Magic Accuracy (Macc)
 	if string.find(utilities._sMagicJobs,player.MainJob) ~= nil or
-			string.find(utilities._sMagicJobs,player.SubJob) ~= nil then
-		gcdisplay.CreateToggle('Macc', false);
+		 string.find(utilities._sMagicJobs,player.SubJob) ~= nil then
+		utilities.CreateToggle('Macc', false);
 	end
 
 	-- BST only, AJug is an automated system to equip jug pets. DB is a setting to determine the
@@ -326,37 +338,41 @@ function SetVariables()
 	-- six debuffs from the pet whereas Beast Jackcoat does BPP and Monster Jackcoat/Monster
 	-- Jackcoat+1 only dispels WSS.
 	if player.MainJob == 'BST' then
-		gcdisplay.CreateToggle('AJug', true);
-		if gcdisplay.GetCycle('DB') == 'Unknown' then
-			gcdisplay.CreateCycle('DB', {[1] = 'Norm', [2] = 'BPP', [3] = 'WSS'});
+		utilities.CreateToggle('AJug', true);
+		if utilities.fGetCycle('DB') == 'Unknown' then
+			utilities.CreateCycle('DB', {[1] = 'Norm', [2] = 'BPP', [3] = 'WSS'});
 		end
 	end
 
 	-- BRD main only, Instrument indicates what default type of instrument should be equipped,
 	-- Horn or String
 	if player.MainJob == 'BRD' then
-		gcdisplay.CreateCycle('Instrument', {[1] = 'Horn', [2] = 'String'});
+		utilities.CreateCycle('Instrument', {[1] = 'Horn', [2] = 'String'});
 	end
 
 	-- SMN only, sBP indicates if the a message should be printed in the party chat when
 	-- the pet does an offensive blood pact.
 	if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
-		gcdisplay.CreateToggle('sBP', true);
+		utilities.CreateToggle('sBP', true);
+		utilities.CreateCycle('Mode', {[1] = 'PERP', [2] = 'ATTK'});
 	end
 
 	-- THF only, SS indicates that when the player steals, a message should be displayed.
 	-- This is used to coordinate thieve's stealing in activities like Dynamis.
 	if player.MainJob == 'THF' or player.SubJob == 'THF' then
-		gcdisplay.CreateToggle('SS', false);
+		-- While it's true that all jobs can now equip TH gear through a 'Tinfoil Hat',
+		-- only THF/ or /THF will have the TH command available. Others will have to
+		-- use /gs TH to load TH gear.
+		utilities.CreateToggle('TH',(player.MainJob == 'THF' or player.SubJob == 'THF'));
+		utilities.CreateToggle('SS', false);
 	end
 
 	-- General cycles: Damage Taken and Region
-	gcdisplay.CreateCycle('DT', {[1] = utilities.OFF, [2] = utilities.PHY, [3] = utilities.MAG, [4] = utilities.BRE});
-	gcdisplay.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned', [3] = 'N/A'});
+	utilities.CreateCycle('DT', {[1] = utilities.OFF, [2] = utilities.PHY, [3] = utilities.MAG, [4] = utilities.BRE});
+	utilities.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned', [3] = 'N/A'});
 end		-- SetVariables
 
 --[[
-***
 	ProcessAccuracy performs the task requested dealing with Accuracy or Ranged Accuracy.
 	It's a function called by crossjobs.HandleCommands.
 
@@ -366,7 +382,7 @@ end		-- SetVariables
 --]]
 
 function ProcessAccuracy(args)
-	local bTank = gcdisplay.GetToggle('Tank');
+	local bTank = utilities.fGetToggle('Tank');
 	local tmp,narg;
 	local num = 0;		-- 0 means turn off that type of accuracy
 
@@ -387,21 +403,21 @@ function ProcessAccuracy(args)
 	if args[2] ~= nil and args[2] == '?' then
 		print(' ');
 		if string.find('Acc,TAcc',tmp) ~= nil then
-			print(chat.message(string.format('Info: Accuracy at stage: %d',gcdisplay.GetAccCur('Acc'))));
+			print(chat.message(string.format('Info: Accuracy at stage: %d',gear.fGetAccStage('Acc','CUR'))));
 			if bTank == true then
-				print(chat.message(string.format('Info: Tank Accuracy at stage: %d',gcdisplay.GetAccCur('TAcc'))));
+				print(chat.message(string.format('Info: Tank Accuracy at stage: %d',gear.fGetAccStage('TAcc','CUR'))));
 			end
 		else
-			print(chat.message(string.format('Info: Ranged Accuracy at stage: %d',gcdisplay.GetAccCur('RAcc'))));
+			print(chat.message(string.format('Info: Ranged Accuracy at stage: %d',gear.fGetAccStage('RAcc','CUR'))));
 			if bTank == true then
-				print(chat.message(string.format('Info: Tank Ranged Accuracy at stage: %d',gcdisplay.GetAccCur('TRAcc'))));
+				print(chat.message(string.format('Info: Tank Ranged Accuracy at stage: %d',gear.fGetAccStage('TRAcc','CUR'))));
 			end
 			return;
 		end
 	else
 		narg = tonumber(args[2]);
-		if narg < 0 or narg > gcdisplay.GetAccMax(tmp) then
-			print(chat.message('Warning: Invalid stage. Number must be between 0 and ' .. tostring(gcdisplay.GetAccMax(tmp))));
+		if narg < 0 or narg > gear.fGetAccStage(tmp,'MAX') then
+			print(chat.message('Warning: Invalid stage. Number must be between 0 and ' .. tostring(gear.fGetAccStage(tmp,'MAX'))));
 			return;
 		else
 			num = narg;
@@ -409,125 +425,24 @@ function ProcessAccuracy(args)
 	end
 
 	if num == 0 then
-		gcdisplay.SetAccCur(tmp,0);
+		displaybar.SetAccCur(tmp,0);
 		-- Make sure that both tank and non-tank versions are turned off
 		if string.find('Acc,Racc',tmp) ~= nil then
 			tmp = 'T' .. tmp;				-- Add a 'T' to the beginning of tmp
 		else
 			tmp - string.sub(tmp,2,-1);		-- Remove the 'T' from the beginning of tmp
 		end
-		gcdisplay.SetAccCur(tmp,0);
+		displaybar.SetAccCur(tmp,0);
 		if tmp == 'Acc' or tmp == 'TAcc' then
 			print(chat.message('Info: Accuracy has been turned off'));
 		else
 			print(chat.message('Info: Ranged Accuracy has been turned off'));
 		end
 	else
-		gcdisplay.SetAccCur(tmp,num);
+		displaybar.SetAccCur(tmp,num);
 		print(chat.message(string.format('Info: %s stage set to %d',tmp,num)));
 	end
 end		-- ProcessAccuracy
-
---[[
-***
-	ProcessLocks processes the invocation of lock/unlock command
-
-	Pararameter
-		args		Passed argument list
---]]
-
-function ProcessLocks(args)
-
-	if args[1] == utilities._LOCK then
-		if args[2] ~= nil then
-			locks.LockUnlock(utilities._LOCK,args[2]);
-			sList = locks.fGetLockedList();
-			if sList ~= nil then
-				print(chat.message('The following slot(s) are locked: ' .. sList));
-			else
-				print(chat.message('All slots are unlocked'));
-			end
-			gcdisplay.SetSlots('locks',locks.LocksNumeric);
-		end
-	else		-- unlock
-		if args[2] == nil then
-			args[2] = 'all';
-		end
-		locks.LockUnlock(utilities._UNLOCK,args[2]);
-		if string.lower(args[2]) == 'all' then
-			print(chat.message('All slots are unlocked'));
-		else
-			print(chat.message('\'' .. args[2] .. '\' have been unlocked'));
-		end
-	sList = locks.fGetLockedList();
-	gcdisplay.SetSlots('locks',locks.LocksNumeric);
-	end
-end		-- ProcessLocks
-
---[[
-***
-	ProcessSMGs processes the invocation of Show My Gear reporting command
-
-	Pararameter
-		args		Passed argument list
---]]
-
-function ProcessSMG(args)
-
-	if #args == 1 then				-- Show a list of all gear
-		reporting.DisplayGD_AW(nil);
-	elseif args[2] ~= nil then
-		local ls = string.lower(args[2]);
-		if ls == 'noac' then		-- Show a list of gear where accessible is false
-			reporting.DisplayGD_AW('noac');
-		elseif string.len(ls) > 5 and string.sub(ls,1,5) == 'slot=' then
-			reporting.DisplayGD_S(string.sub(ls,6,-1));
-		elseif string.len(ls) > 3 and string.sub(ls,1,3) == 'gs=' then
-			reporting.DisplayGD_Gs(string.sub(ls,4,-1));
-		end
-	end
-end		-- ProcessSMG
-
---[[
-	ProcessGS processes the specified Gear Set
-
-	Pararameter
-		args		Passed arguement list
---]]
-
-function ProcessGS(args)
-
-	if #args > 1 then
-		local sArg = string.upper(args[2]);
-		local sTmp = ',' .. crossjobs.Crafting_Types .. ',';
-		local sTmp2 = ',' .. crossjobs.Gathering_Types .. ',';
-		if string.find(sTmp,sArg) ~= nil or string.find(sTmp2,sArg) ~= nil then
-			-- gather or crafting set
-			if string.find(sTmp,sArg) then
-				-- Crafting set
-				crossjobs.Craft = sArg;
-				gear.MoveToDynamicGS(crossjobs.sets.Crafting,crossjobs.sets.CurrentGear,false,true);		-- revisit
-			else
-				-- Gather set
-				crossjobs.Gather = sArg;
-				gear.MoveToDynamicGS(gcinclude.sets.Gathering,gcinclude.sets.CurrentGear,false,true);		-- revisit
-			end
-		else
-			local tTable = utilities.fGetTableByName(sArg);	-- Change string to table
-			if tTable ~= nil then
-				gear.MoveToDynamicGS(tTable,crossjobs.sets.CurrentGear,true);	-- revisit
-			else
-				print(chat.message('Warning: Gear set not found: ' .. sArg));
-				return;
-			end
-		end
-
-		gear.EquipTheGear(crossjobs.sets.CurrentGear,true);							-- revisit
-		locks.LockByGearSet(crossjobs.sets.CurrentGear,nil,false,bIgnoreWSWAP,bDisplay)
-	else
-		print(chat.message('Error: No set specified for /gearset. Command ignored.'));
-	end
-end		-- ProcessGS
 
 --[[
 	HandleCommands processes any commands typed into luashitacast as defined in this file
@@ -536,11 +451,14 @@ end		-- ProcessGS
 		args		List of arguments passed with the command
 --]]
 
-function gcinclude.HandleCommands(args)
-	if not crossjobs.AliasList:contains(args[1]) then return end
+function crossjobs.HandleCommands(args)
+
+	if not crossjobs.AliasList:contains(args[1]) then
+		return;
+	end
 
 	local player = gData.GetPlayer();
-	local bTank = gcdisplay.GetToggle('Tank');
+	local bTank = utilities.fGetToggle('Tank');
 	local sList, sKey, sSet;
 
 	-- Clear out the local copy of current gear
@@ -548,17 +466,21 @@ function gcinclude.HandleCommands(args)
 	args[1] = string.lower(args[1]);
 
 	if (args[1] == 'gswap') then			-- turns gear swapping on or off
-		gcdisplay.AdvanceToggle('GSwap');
+		-- /GSWAP
+		utilities.AdvanceToggle('GSwap');
 	elseif args[1] == 't1' then				-- This is a test invoker
-		gcinclude.t1(args);
+		-- /T1
+		crossjobs.t1(args);
 	elseif args[1] == 'gc' then				-- Invoke the Gear Check command
+		-- /GC [list]
 		if args[2] ~= nil and string.lower(args[2]) == 'list' then
 			gear.GearCheckList();
 		else
 			gear.GearCheck();
-			gcdisplay.SetGC(true);
+			gear.bGC = true;
 		end
 	elseif args[1] == 'gcmessages' then		-- turns feedback on/off for all commands
+		-- /GCMESSAGES
 		crossjobs.settings.Messages = not crossjobs.settings.Messages;
 		if crossjobs.settings.Messages == true then
 			print(chat.message('Info: Chat messages are enabled'));
@@ -566,6 +488,7 @@ function gcinclude.HandleCommands(args)
 			print(chat.message('Info: Chat messages are disabled'));
 		end
 	elseif (args[1] == 'wsdistance') then	-- Turns on/off the check for weapons skill distance or sets the distance
+		-- /WSDISTANCE [#]
 		local i = tonumber(args[2]);
 		if i ~= nil then
 			crossjobs.settings.WScheck = true;
@@ -575,123 +498,392 @@ function gcinclude.HandleCommands(args)
 			crossjobs.settings.WScheck = not crossjobs.settings.WScheck;
 			print(chat.message('Info: WS distance check is now set to ' .. tostring(crossjobs.settings.WScheck)));
 		end
+	elseif (args[1] == 'cap') then		-- sets an artificial level cap to gearing
+		-- /CAP [#]
+		if args[2] ~= nil then
+			local inum = tonumber(args[2]);
+			if inum < player.MainJobSync and inum >= 0 then
+				gProfile.settings.PlayerCappedLevel = inum;
+			else
+				print(chat.message('Info: Invalid level cap specified: ' .. tostring(inum)));
+			end
+		else
+			gProfile.settings.PlayerCappedLevel = 0;
+		end
 	elseif (args[1] == 'dt') then		-- Indicates the type of damage taken gear that will be equipped if desired
+		-- /DT [M|P|P]
 		if #args == 1 then				-- No qualifier, assume next in set
-			gcdisplay.AdvanceCycle('DT');
+			utilities.AdvanceCycle('DT');
 		else
 			local cType = string.upper(string.sub(args[2],1,1));
 			if  cType == 'M' then
-				gcdisplay.SetCycle('DT',crossjobs.MAG);
+				utilities.fSetCycle('DT',utilities.MAG);
 			elseif cType == 'B' then
-				gcdisplay.SetCycle('DT',crossjobs.BRE);
+				utilities.fSetCycle('DT',utilities.BRE);
 			elseif cType == 'P' then
-				gcdisplay.SetCycle('DT',crossjobs.PHY);
+				utilities.fSetCycle('DT',utilities.PHY);
 			else
-				gcdisplay.SetCycle('DT',crossjobs.OFF);
+				utilities.fSetCycle('DT',utilities.OFF);
 			end
 		end
 	elseif (args[1] == 'kite') then			-- Turns on/off whether movement gear is equipped
-		gcdisplay.AdvanceToggle('Kite');
+		-- /KITE
+		utilities.AdvanceToggle('Kite');
 	elseif (args[1] == 'idle') then			-- Turns on/off whether movement gear is equipped
-		gcdisplay.AdvanceToggle('Idle');
+		-- /IDLE
+		utilities.AdvanceToggle('Idle');
 	elseif (args[1] == 'macc') then			-- Turns on/off whether tanking gear is equipped
-		if string.find(crossjobs._sMagicJobs,player.MainJob) ~= nil or
-			string.find(crossjobs._sMagicJobs,player.SubJob) ~= nil then
-			gcdisplay.AdvanceToggle('Macc');
+		-- /MACC
+		if string.find(utilities._sMagicJobs,player.MainJob) ~= nil or
+			string.find(utilities._sMagicJobs,player.SubJob) ~= nil then
+			utilities.AdvanceToggle('Macc');
 		else
 			print(chat.message('Warning: Your job does not need magic accuracy'));
 		end
+	elseif (args[1] == 'mode') then			-- Turns on/off smn emphasis for gear when pet out
+		-- /MODE
+		if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
+			utilities.AdvanceCycle('Mode');
+		else
+			print(chat.message('Warning: /Mode is only available to summoners'));
+		end
 	elseif (args[1] == 'ptt') then			-- Displays distance from Pet To Target
-			ptt();
+		-- /PTT
+			pets.ptt();
 	elseif (args[1] == 'tank') then			-- Turns on/off whether tanking gear is equipped
-		if string.find(crossjobs._TankJobList,player.MainJob) ~= nil then
-			gcdisplay.AdvanceToggle('Tank');
+		-- /TANK
+		if string.find(utilities._TankJobList,player.MainJob) ~= nil then
+			utilities.AdvanceToggle('Tank');
 		else
 			print(chat.message('Warning: Your job does not support the tanking option'));
 		end
 	elseif (args[1] == 'eva') then			-- Turns on/off whether evasion gear should be equipped
-		gcdisplay.AdvanceToggle('Eva');
+		-- /EVA
+		utilities.AdvanceToggle('Eva');
 	elseif (args[1] == 'wswap') then		-- Turns on/off whether weapon swapping is permitted
-		if gcinclude.settings.bWSOverride == false then
-			gcdisplay.AdvanceToggle('WSwap');
+		-- /WSWAP
+		if crossjobs.settings.bWSOverride == false then
+			utilities.AdvanceToggle('WSwap');
 		else
 			print(chat.message('Warning: Weapon swapping always enabled on ' .. player.MainJob));
 		end
 	elseif (args[1] == 'sbp') then			-- Turns on/off whether the blood pact message is shown
+		-- /SBP
 		if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
-			gcdisplay.AdvanceToggle('sBP');
+			utilities.AdvanceToggle('sBP');
 		else
 			print(chat.message('Warning: /sBP is only available to summoners'));
 		end
 	elseif (args[1] == 'ajug') then			-- Turns on/off whether Automatic Jug assignment enabled
+		-- /AJUG
 		if player.MainJob == 'BST' then
-			gcdisplay.AdvanceToggle('AJug');
+			utilities.AdvanceToggle('AJug');
 		else
 			print(chat.message('Warning: /AJug is only available to beastmasters'));
 		end
 	elseif (args[1] == 'th') then			-- Turns on/off whether TH gear should be equipped
+		-- /TH
 		if player.MainJob == 'THF' and player.SubJob == 'THF' then
-			gcdisplay.AdvanceToggle('TH');
+			utilities.AdvanceToggle('TH');
 		else
 			print(chat.message('Warning: /TH is only available to thieves'));
 		end
 	elseif (args[1] == 'ss') then			-- Turns on/off whether Show Action feedback should be displayed
+		-- /SS
 		if player.MainJob == 'THF' or player.SubJob == 'THF' then
-			gcdisplay.AdvanceToggle('SS');
+			utilities.AdvanceToggle('SS');
 		else
 			print(chat.message('Warning: /SS is only available to thieves'));
 		end
 	elseif (args[1] == 'spf') then			-- Turns on/off whether Show Pull feedback should be displayed
-		gcdisplay.AdvanceToggle('sPF');
+		-- /SPF
+		utilities.AdvanceToggle('sPF');
 	elseif (args[1] == 'db') then			-- Sets DeBuff (for BST) to the appropriate setting
+		-- /DB [BPP|WSS]
 		if player.MainJob == 'BST' then
 			if args[2] ~= nil  and string.find('BPP,WSS',args[2]) ~= nil then
-				gcdisplay.SetCycle('DB',string.upper(args[2]));
+				utilities.fSetCycle('DB',string.upper(args[2]));
 			else
-				gcdisplay.AdvanceCycle('DB');
+				utilities.AdvanceCycle('DB');
 			end
 		else
 			print(chat.message('Warning: Your job cannot use /DB command'));
 		end
 	elseif (args[1] == 'acc' or args[1] == 'racc') then
+		-- /ACC [#]
 		-- Sets the level for the accuracy/ranged accuracy
 		ProcessAccuracy(args);
 	elseif (args[1] == 'lock' or args[1] == 'unlock') then		-- Lock/unlock gear slots
-		ProcessLocks(args);
+		-- /LOCK [#|slot name,...] or /UNLOCK [#,slot name, ...]
+		locks.ProcessLocks(args);
 	elseif (args[1] == 'rc') then		-- Display region controls
+		-- /RC
 		reporting.RegionControlDisplay();
 	elseif (args[1] == 'rv') then		-- Refresh variables
+		-- /RV
 		RefreshVariables();
 	elseif (args[1] == 'pull') then		-- Pull the target
+		-- /PULL
 		utilities.PullTarget();
 	elseif (args[1] == 'showit') then	-- Shows debug info for specified type
+		-- /SHOWIT
 		reporting.DB_ShowIt();
 	elseif (args[1] == 'smg') then		-- Show My Gear
-		ProcessSMG(args);
+		-- /SMG [gs=|slot=]
+		reporting.ProcessSMG(args);
 	elseif (args[1] == 'gearset' or args[1] == 'gs') then	-- Forces a gear set to be loaded and turns GSWAP off
-		ProcessGS(args);
+		-- /GS name
+		gear.ProcessGS(args);
 	elseif (args[1] == 'horn' or args[1] == 'string') then		-- String or Horn instrument
+		-- /STRING or /HORN
 		if player.MainJob == 'BRD' then
 			if args[1] == 'horn' then
-				gcdisplay.SetCycle('Instrument',crossjobs.HORN);
+				utilities.fSetCycle('Instrument',utilities.HORN);
 			else
-				gcdisplay.SetCycle('Instrument',crossjobs.STRING);
+				utilities.fSetCycle('Instrument',utilities.STRING);
 			end
 		else
 			print(chat.message('Warning: Your job does not support that command. Ignoring.'));
 		end
 
 	elseif (args[1] == 'maxspell') then			-- Determines highest level spell to cast
-		MaxSpell(args[2],args[3],true);
+		-- MAXSPELL root
+		magic.MaxCast(args[2],true,args[3],true);
 	elseif (args[1] == 'maxsong') then			-- Determines highest level song to cast
-		MaxSong(args[2],args[3],true);
+		-- MAXSONG root
+		magic.MaxCast(args[2],false,args[3],true);
 	elseif args[1] == 'equipit' or args[1] == 'ei' then			-- Equip specified item
-		EquipItem(args);
+		-- /EQUIPIT keyword or /EI keyword
+		gear.EquipItem(args);
 	elseif args[1] == 'ver' then				-- Display version/change log
+		-- /VER
 		reporting.DisplayVersion();
 	end
 
 	if crossjobs.settings.Messages then
 		utilities.Message(toggle, status)
 	end
-end		-- gcinclude.HandleCommands
+end		-- crossjobs.HandleCommands
+
+--[[
+	HandleAbility is the general use version of said routine that coordinates all ability gear equipping.
+	It was originally part of each job file.
+--]]
+
+function crossjobs.HandleAbility()
+	local player = gData.GetPlayer();
+	local ability = gData.GetAction();
+	local eq = gData.GetEquipment();
+	local n,ts;
+	local bFound = false;
+
+	-- Store the name of the ammo. This is used when the ammo slot is automatically
+	-- populated so that the original ammo can be re-equipped.
+	if eq.Ammo ~= nil then
+		gProfile.settings.sAmmo = eq.Ammo.Name;
+	else
+		gProfile.settings.sAmmo = nil;
+	end
+
+	-- Clear out the CurrentGear in case of leftovers
+	crossjobs.ClearSet(crossjobs.Sets.CurrentGear);
+
+	if player.MainJob == 'BST' or player.SubJob == 'BST' then
+		n = nil;
+		if string.match(ability.Name, 'Reward') then
+			-- Pet reward. Make sure that pet food already equipped
+			if gProfile.settings.sAmmo == nil or string.find(string.lower(gProfile.settings.sAmmo),'pet f') == nil then		-- something else equipped
+				gProfile.settings.bAmmo = pets.PetReward(gProfile.settings.DefaultPetFood,'max');
+			end
+			n = 'PC:Reward';
+		elseif string.find('Sic,Ready',ability.Name) ~= nil then
+			-- Sic and Ready load the same set
+			n = 'PC:Sic_Ready';
+		end
+
+		if n ~= nil then
+			ts = utilities.fGetTableByName(n);
+			gear.MoveToDynamicGS(ts,crossjobs.Sets.CurrentGear,false,n);
+			bFound = true;
+		end
+	-- Check for summoner's blood pact, to load the PreBP
+	elseif string.find(pets.SmnBPRageList,ability.Name) ~= nil or
+		   string.find(pets.SmnBPWardList,ability.Name) ~= nil then
+		gear.MoveToDynamicGS(gProfile.Sets.PreBP,crossjobs.Sets.CurrentGear,false,'PreBP');
+		bFound = true;
+	end
+
+	if bFound == false then
+		if string.find(utilities._PetCommands,string.upper(ability.Name)) ~= nil then
+			-- Pet command
+			n = 'PC:' .. string.upper(string.gsub(ability.Name,' ','_'));
+		else
+			-- Assume it's an ability
+			n = 'A:' .. string.upper(string.gsub(ability.Name,' ','_'));
+		end
+
+		ts = utilities.fGetTableByName(n);
+
+		if ts ~= nil then
+			gear.MoveToDynamicGS(ts,crossjobs.Sets.CurrentGear,false,n);
+			bFound = true;
+		end
+	end
+
+	if bFound == true then
+		gear.EquipTheGear(crossjobs.Sets.CurrentGear);		-- Equip the composited HandleAbility set
+	end
+end		-- crossjobs.HandleAbility
+
+--[[
+	HandleItem is the general use version of said routine that coordinates all item gear equipping.
+	It was originally part of each job file.
+--]]
+
+function crossjobs.HandleItem()
+	local item = gData.GetAction();
+	local bShow = false;
+
+	-- Clear out the CurrentGear in case of leftovers
+	crossjobs.ClearSet(sets.CurrentGear);
+
+	if string.match(item.Name, 'Silent Oil') then
+		gear.MoveToDynamicGS(gProfile.Sets.Sneak,crossjobs.Sets.CurrentGear,false,'Sneak');
+		bShow = true;
+	elseif string.match(item.Name, 'Prism Powder') then
+		gear.MoveToDynamicGS(gProfile.Sets.Invisible,crossjobs.Sets.CurrentGear,false,'Invisible');
+		bShow = true;
+	end
+
+	if bShow == true then
+		gear.EquipTheGear(crossjobs.Sets.CurrentGear);
+	end
+end		-- crossjobs.HandleItem
+
+--[[
+	HandlePreshot is the general use version of said routine that coordinates all preshot item gear
+	equipping.	It was originally part of each job file.
+--]]
+
+function crossjobs.HandlePreshot()
+
+	-- Clear out the CurrentGear in case of leftovers
+	crossjobs.ClearSet(crossjobs.Sets.CurrentGear);
+
+	gear.MoveToDynamicGS(gProfile.Sets.Preshot,crossjobs.Sets.CurrentGear,false,'PreShot');
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
+end		-- crossjobs.HandlePreshot
+
+--[[
+	HandleMidshot is the general use version of said routine that coordinates all midshot item gear
+	equipping.	It was originally part of each job file.
+--]]
+
+function crossjobs.HandleMidshot()
+
+	-- Clear out the CurrentGear in case of leftovers
+	gcinclude.ClearSet(sets.CurrentGear);
+
+	gear.MoveToCurrent(gProfile.Sets.Midshot,crossjobs.Sets.CurrentGear,false,'Midshot');
+	crossjobs.ProgressiveAccuracy('RAcc');
+
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
+end		-- HandleMidshot
+
+--[[
+	HandleWeaponskill is the general use version of said routine that coordinates all weapon skill
+	item gear equipping. It was originally part of each job file.
+--]]
+
+function crossjobs.HandleWeaponskill()
+	local canWS = utilities.fCheckWsBailout();
+
+	-- If conditions would cause the weaponskill to fail, the action will be
+	-- cancelled so you do not lose your TP.
+	if canWS == false then
+		gFunc.CancelAction();
+		return;
+	end
+
+	-- Clear out the CurrentGear in case of leftovers
+	gear.ClearSet(crossjobs.Sets.CurrentGear);
+
+	-- Call the common weaponskill handler
+	crossjobs.fHandleWeaponskill();
+
+	-- Equip the composited weaponskill set
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
+end		-- crossjobs.HandleWeaponskill
+
+--[[
+	fHandleWeaponskill loads the appropriate gear for the weapon skill you're doing
+--]]
+
+function crossjobs.fHandleWeaponskill()
+	local ws = gData.GetAction();
+	local lName = string.lower(ws.Name);
+	local sName,sEle,n;
+	local t = {};
+
+	gProfile.settings.priorityWeaponSkill = string.upper(gProfile.settings.priorityWeaponSkill);
+	for i = 1,string.len(gProfile.settings.priorityWeaponSkill),1 do
+		cKey = string.sub(gProfile.settings.priorityWeaponSkill,i,i);
+		if cKey == 'A' then			-- weaponskill set
+			-- See if there's a custom gear set defined for this weapon skill
+			n = 'WS:' .. string.gsub(lName,' ','_');
+			t = utilities.fGetTableByName(n);
+			if t ~= nil then
+				gear.MoveToDynamicGS(t,gProfile.Sets.CurrentGear,false,lName);
+			else
+				-- No custom set, look for the stat set
+				for i,j in pairs(utilities.tWeaponSkills) do
+					if table.find(j,lName) ~= nil then
+						sName = 'WS:' .. i;
+						t = utilities.fGetTableByName(sName);
+						if t ~= nil then
+							gear.MoveToDynamicGS(t,gProfile.Sets.CurrentGear,false,sName);
+						end
+						break;
+					end
+				end
+			end
+		end
+	elseif cKey == 'B' then		-- elemental gorget
+		-- An elemental gorget will add the fTP (at least 10% more damage) to the first hit
+		-- of an elemental weapon skill (and many multi-hit weapon skills replicate the fTP
+		-- for all the hits.) Also, they give +10 Accuracy to all of the weapon skill's hits
+		-- and a 1% chance of not depleting the player's TP after the weapon skill.
+
+		local sGorget,sEle = gear.fCheckForElementalGearByValue('gorget','eleWS',ws.Name);
+		if sGorget ~= nil then
+			crossjobs.Sets.CurrentGear['Neck'] = sGorget;
+		end
+	elseif cKey == 'D' then		-- accuracy
+		-- Next check on accuracy. Use Tank_accuracy if /tank = true
+		if table.find(utilities.tWeaponSkills['RANGED_AGI'],lname) ~= nil or
+			table.find(utilities.tWeaponSkills['RANGED_STRAGI'],lname) ~= nil then
+			gear.ProgressiveAccuracy('RAcc');
+		else
+			gear.ProgressiveAccuracy('Acc');
+		end
+	elseif cKey == 'E' then		-- elemental obi
+--[[
+	If the weaponskill is elemental and is closing a skillchain, then if
+	the conditions for equipping an elemental obi are advantageous, it
+	should be equipped now. Unfortunately I have no idea how to detect
+	the closing of a skillchain and the automatic equipping of an elemental
+	obi could adversely affect the damage, so this section is not
+	implemented. If I can ever figure out how to detect closing a
+	skillchain, I will readdress this.
+
+	- CCF, 1/12/2024
+--]]
+	end
+
+	-- Certain weapon skills can take advantage of magic attack bonus. Check here and equip gear
+	-- appropriately. (Note: even though rMAB is a reference gear set, it this particular instance
+	-- it is treated like it is a normal gear set.)
+	if string.find('red lotus blade,sanguine blade',lName) ~= nil then
+		gear.MoveToDynamicGS(gProfile.Sets.rMAB,gProfile.Sets.CurrentGear,false,'rMAB');
+	end
+end		-- crossjobs.fHandleWeaponskill
