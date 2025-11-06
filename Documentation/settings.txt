@@ -1,0 +1,5 @@
+-- name=visible,position_x,position_y,font_family,font_height
+displaybar=true,325,0,Arial,14
+ptt=false,500,400,Arial,14
+lockgrid=false,0,0,Arial,14
+days=false,0,0,Arial,14

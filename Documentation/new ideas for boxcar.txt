@@ -1,0 +1,61 @@
+Interesting idea, but a lot of work needed to support the following:
+
+    ['TP']
+        Group//TANK = {
+            Subset = {
+                [1] = 'Tank_Default'
+            },
+            Head  = { 'Asn. Bonnet +1', 'Assassin\'s Bonnet', 'Homam Zucchetto' },
+            Neck  = 'Peacock Amulet',
+            Ears  = { 'Ethereal Earring', 'Stealth Earring//SJNIN', 'Brutal Earring' },
+            Body  = { 'Dragon Harness//DT_BREATH', 'Narasimha\'s Vest', 'Assassin\'s Vest', 'Scorpion Harness', 'Brigandine', 'Wonder Kaftan' },
+            Hands = { 'Homam Manopolas', 'Assassin\'s Armlets' },
+            Rings = { 'Kshama Ring No.4', 'Bomb Queen Ring', 'Kshama Ring No.3' }
+        },
+        Group//NOT_TANK = {
+            Subset = {
+                [1] = 'Default'
+            },
+            Head  = { 'Homam Zucchetto', 'Rogue\'s Bonnet', 'Empress Hairpin' },
+            Hands = { 'Homam Manopolas', 'Dusk Gloves' },
+            Waist = { 'Swift Belt', 'Mrc.Cpt. Belt' },
+        }
+    },
+
+//TANK and //NOT_TANK would be sections, implying that the inline conditional applies to all entries within it's grouping.
+
+
+    ['TP'] {
+        Subset = 'Default',
+        Group//TANK = {
+            Head  = { 'Asn. Bonnet +1', 'Assassin\'s Bonnet', 'Homam Zucchetto' },
+            Neck  = 'Peacock Amulet',
+            Ears  = { 'Ethereal Earring', 'Stealth Earring//SJNIN', 'Brutal Earring' },
+            Body  = { 'Dragon Harness//DT_BREATH', 'Narasimha\'s Vest', 'Assassin\'s Vest', 'Scorpion Harness', 'Brigandine', 'Wonder Kaftan' },
+            Hands = { 'Homam Manopolas', 'Assassin\'s Armlets' },
+            Rings = { 'Kshama Ring No.4', 'Bomb Queen Ring', 'Kshama Ring No.3' }
+        },
+        Group//NOT_TANK = {
+            Head  = { 'Homam Zucchetto', 'Rogue\'s Bonnet', 'Empress Hairpin' },
+            Hands = Hands = { 'Homam Manopolas', 'Dusk Gloves' },
+            Waist = { 'Swift Belt', 'Mrc.Cpt. Belt' },
+        }
+    },
+---
+Maybe a change in subsets? If there's only one entry, no need to make it a group. This would change:
+
+    Subset = {
+        [1] = 'Default'
+    }
+
+to:
+    Subset = 'Default',
+
+and a multi entry to:
+
+    Subset = {
+        [1] = 'Healing_Magic_Skill',
+        [2] = 'Enmity_Minus',
+        [3] = 'MND'
+    },
+

@@ -1,0 +1,57 @@
+- Added a lot of new inline conditionals including inverted conditionals. (See "Conditional gear by
+  type.txt" for a complete list). (3)
+
+- Added support for inline conditionals on slot names. (4)
+
+- Added grouping and changed subset priority to be dependent on depth. (Subsets in groups will be
+  processed when the group is processed and not when the gear set is being processed.) (20)
+
+- All tank sets have been removed. Instead, any gearset can have groups defined for TANK and NON_TANK
+  in them. (2)
+
+- Removed code that dynamically generates gear listings as sets are being loaded. This feature is
+  no longer being supported since /gc is now required and it creates all of the entries then. (A1)
+
+- Changed how BST's AJug's favorability works. tJugPets moved from Job file to gear.lua. Introduced
+  FavoredJugs into BST job file, a simple list ordering what is favored. This is read in and updated
+  via GearCheck.
+
+- Changed how MPP and HPP are gotten from the GetPlayer() function. Percentages are now more accurate.
+  (17)
+
+- Changed the display bar labels for Accuracy. Acc used for Acc and TAcc, RAcc for RAcc and TRAcc. (B22)
+
+- Added support for groups to inline reference translation. Subsets are still ignored.
+
+- Fixed issue where code for a buff has a "_" in them thus not matching buff name.
+
+- Changed priority for Kite. It now ignores locks and any items that have to be kept on. Kiting
+  takes priority. (Aside, you could argue that a high breath mantle or breath mantle buff should
+  remain intact. Need to consider this.)
+
+- You can now indicate whether Refresh or Regen has priority when you rest.
+
+- HandleAbility, HandlePetAction, HandleItem, HandlePrecast, HandleMidcast, Handle Preshot, HandleMidshot,
+  and HandleWeaponskill are now stub functions in the job files (unless there's job specific functionality
+  needed) and now the in common aspects are in crossjobs by similarly named functions. (A4,A5,A6)
+
+- Added support to all pet actions regardless if the pet is from a main or sub job. (A13)
+
+- Custom weaponskill gear sets are now supported. (15)
+
+- Subsets don't require order numbers now if only one subset is specified. Further, subsets can be a
+  single string, an unindexed table, and an indexed table. All three types are supported. (19)
+
+- Added command /val for validating gear sets. This command checks item validity, inline conditionals
+  validity, code usage validity, subsets to ensure they include existing sets, and inline references are
+  checked for valid gear set references. (21)
+
+- All toggle/cycle manipulation is now done in the utilities module (A7)
+
+- All action routines in the job files now call shared action routines in the crossjobs module. (A9)
+
+- The display bar has been modified to show the actions in the same order regardless of job. (Job
+  specific actions can be interspersed in the bar.)
+
+- Added configurable option to job files so that player can indicate if they want LUASHITACAST to
+  equip the job appropriate macro book and macro page.

@@ -1,0 +1,496 @@
+Planned for 3.0                                                                               Alpha Release
+
+1) GSWAP will be turned off if GC hasn't been run yet.                                        Targetting around early October
+   If player tries to change it before GC, appropriate                                        - Basic rewrite will be completed, inluding all modifications to gear sets
+   error message will be displayed and GSWAP will remain                                      - Includes: 1,2,3,4,5,14,15,17,20,A1,A3,A4,A5,A8
+   off.
+
+Done - 2) Remove TANK sets. Instead, use //TANK and //NOT_TANK on
+   the affected slots. As long as the definitions do not
+   overlap the appropriate gear will be equipped. This
+   effectively will look like there's two definitions in
+   one gear set.
+
+   Example
+     'Head//TANK' = {}
+     'Head//NO_TANK = {}
+
+Done - 3) Flesh out inline conditionals to ensure (where appropriate)
+   theres a negative version of a current conditional.
+
+   Example
+    //ARC_CIRCLE should have a complimentary //NOT_ARC_CIRCLE
+    inline conditional (or //EXPIRED_ARC_CIRCLE)
+
+Done - 4) Add inline conditionals support to slot definitions and
+   subset definitions. If the conditionals are not true, the
+   slot/subset will not be loaded.
+
+   Example
+
+     'Hands//DAYTIME' = {}
+
+     The hands slot will be loaded only during daytime which
+     6:00 to 18:00.
+
+IP - 5) Break up gcinclude.lua. Instead, have a bunch of .lua files
+   based on groupings of functionality
+
+IP - 6) Modify /GC to validate codes, ensure referencing is to a
+   valid subset and to valid slots from the designated sets.
+
+   Example
+        Head  = { 'Smn. Horn +1//SMNPETMW', 'Shep. Bonnet//PETF' },
+
+        Validation will check that //SMNPETMW and //PETF are valid
+        codes (which they are) and that they are applied to gear
+        (as opposed to a subset which would be an incorrect use
+        for these two codes.)
+
+        ['Head'] = 'Accuracy::Head',
+
+        Validation here will check that there's an Accuracy set and
+        that "Head" is valid slot that has been defined in Accuracy.
+
+        Subset//SLOTS:Hands,Feet = {
+
+        Validation ensures that "Hands and Feet" are valid slots. No
+        check is done to ensure that the targetted subsets actually
+        have Hands or Feet defined. The lack of definition is not
+        erroneous, just unfortunate.
+
+7) Add file option to the /GC command. /GC > filename
+
+8) Please note: in all options that can write a file, if the filename
+   is explicitly designated, a file named that will be created in the
+   /reports subdirectory. If no filename is designated, one will be
+   created based on player's character name, job, and the date.
+
+   Example
+    /gc > smngc   this will create smngc.txt in the /reports directory
+    /gc > this will create action_name_job_date.txt in the /reports directory
+
+    If a file by that name already exists, it will be opened in append mode.
+
+9) If ../reports does not exist, create that directory
+
+10) Also note, any action with a pop-up window stores it's position in
+    the ../Documentation/karma.txt file. The name is a reminant from the
+    last major release.
+
+11) Timed hold over on targetted equipment. The player can designate in
+    specific gear set definitions that certain gear should be tracked.
+    What this means is that when that piece of gear in that set is to
+    be swapped out, the program will continue to equip it for a
+    specified amount of time before releasing the "hold" mechanism
+    and the normal swapping resuming. The intent here is to overcome
+    a condition that causes rapid swapping between the tracked piece
+    and the next one in the list, an effect we've named flickering.
+
+    Example
+
+        ['TP'] = {
+            Body  = { 'Ducal Aketon//TOWN-AK',
+                      'Yinyang Robe'//MPP.LT.94//TRACK:10', 'Summoner\'s Dblt.',
+
+        If the currently piece of gear from the TP set equipped is a Yinyang Robe
+        and the "MPP.LT.94" conditional is no longer true, the piece will remain
+        equipped from the TP set for 10 more seconds before tracking is stopped
+        and equipment swapping continues as normal.
+
+    //TRACK cannot be applied to a slot name. It's too much of a
+    headache and I can't think of a time you would want to track
+    every item in the attached priority list. (If you can, just
+    append //TRACK on all gear pieces for that slot.)
+
+    /GC will generate all the entries for the timed delay table, only
+    the enabled field will be set to false. That way when the field is
+    being processed, all that is needed is to enable the line and
+    update the expiry time field. When the entry expires, the enabled
+    field will be set to false and the expiry field will be set to null.
+
+11a) Alternate, easier implementation of //TRACK. Instead, have a table in
+    the job file where the player can list all gear they want a delayed
+    release on and for how long. Have a function in crossjobs that reads
+    the job file table in and creates a new table that includes: enabled
+    and start time. Just put the pause on the piece of gear rather than
+    tracking it per gear set. Include a means to override.
+
+12) Change /SMG to be position independent. This means that parameters
+    can be ordered any way you want.
+
+    Syntax:
+        /smg gs="x" slots="hands,feet" > filename
+
+        "gs" stands for gear set. You only need quotes if the set name
+        is more than one word.
+
+        "slots" stands for the slot names (comma delimited). You can
+        specify the slots by either the name or the equipment grid
+        position.
+
+        Example: /smg slots="hands,feet" or /smg slots="10,16"
+
+13)  /SMG optionally outputted to a file.
+
+     Example
+
+        /smg gs=tp > tp_gear.txt
+
+        This would generated the /SMG listing for the TP gear set
+        and output it to the tp-gear.txt file.
+
+14) New command for SMN planned: /911 for emergency pet. Evoking this command
+    will summon one of the following, in order: the elemental spirit that
+    matches the weather, the elemental spirit that matches the element of
+    the day, or a default elemental spirit. Obviously the player must know
+    the elemntal spirit to be summoned and the summons not be on cool down
+    or else the next one in the chain will be summoned. If no elemental
+    spirits in the chain are known or all on cool down, an error message
+    will be displayed.
+
+Done - 15) Support for individual weaponskill gear sets. All weaponskills sets are
+    based upon the primary stats that are used to increase damage, but this
+    new feature will let the player define an explicit weaponskill gearset
+    which overrides the use of the generic stats gearset.
+
+    The new weaponskill set must be named WS_skill_name (or WS_skillname if
+    the weapnskill is only one word.) The weaponskill name will be gotten
+    from the player's action.
+
+    Example:
+
+      On a DRK, guillotine's damage is increased by increasing strength and
+      mind (WS:STRMND), but by defining a set called: WS:GUILLOTINE, that
+      set would be used instead and WS:STRMND.
+
+NOT DOING - 17) Change MPP and HPP calculations to using information from the party
+    rather than from the player. (For reasons which I do not understand,
+    player.MaxHP and player.MaxMP returns the highest value because of
+    gear the player has experienced in a zone, not the current highest
+    value.) The following code using party referencing seems to be
+    accurate. There's also a GetMemberHPPercent function.
+
+    local party = AshitaCore:GetMemoryManager():GetParty();
+    local SelfMPPercent = math.clamp(party:GetMemberMPPercent(0), 0, 100);
+    if SelfMPPercent < 100 then
+
+    -- Turned out there's better fields to use for MPP and HPP in the
+       gData.GetPlayer() function. Have switched to using these.
+
+18) New command, /DG for display gear. Displays the currently equipped
+    gear to the screen or to a file.
+
+    /DG > filename
+
+    Condsider an optional gear set definition. This would evaluate the
+    set with the current conditions as opposed to what is currently
+    equipped. /DG gs=xx > filename
+
+Done - 19) Change subsets so that you don't have to include the order number if
+    there is only one line. (The order number is used to tell luashitacast
+    the order the subsets should be processed.)
+
+    Example:
+
+      Subset = 'Default',
+
+      or
+
+      Subset = {
+        [1] = 'Emnity_Minus',
+        [2] = 'Default'
+      },
+
+Done - 20) Support "grouping". This will let you group lines in your gear set
+    without having to repeat the inline conditional on each line.
+
+    Example:
+      ['TP'] = {
+        Subset = 'Default',
+        Group//TANK = {
+          -- Tanking gear definition goes here.
+        },
+        Group//NOT_TANK = {
+          -- Normal TP gear goes here
+        }
+      },
+
+IP - 21) Add toggle for summoner: Mode. It flips between Perpetuation and Accuracy/
+    Attack. Command will be: /MODE=PERP|ATK. Add inline conditionals: //MODE=xxx
+    whene xxx is PERP or ATK. Display in the bar as M:Perp and M:Atk.
+
+Done - 22) Change the display bar labels for TAcc and TRAcc to Acc and RAcc. There's
+    still four groups: Acc, TAcc, RAcc, and TRAcc, but the labels don't change.
+
+    RAcc and TRAcc labels no longer exist. /racc is a toggle command.
+
+Done - 23) Add further validation of gear sets. Originally I was thinking about modifying
+    /gc, but really there's enough complication in that command. The only checking
+    it will do is all gear sets and whether the item names are valid. (It also
+    populates the dynamic gear list which is it's primary task.)
+
+    A new command: /val, will be added to do validations. It too checks item
+    validity, but also checks code validity, code usage on correct side (left or
+    right, which indicates slot name versus item name), subsets actually existing,
+    and inline references pointing to existing gear sets. Both regular (normal or
+    reference) and progressive gear sets will be examined.
+
+    Syntax
+        /val [gs=[*|name,name,...]] [file=[name]]
+
+        gs= lets you specify a gear set or multiple gear sets, comma delimited
+        file [=name] will write the output of the validity check to a file.
+        (Either name the output file or just say "file" and a file name based
+        on the date will be created.) If the file already exists, the results
+        will be appended to it. The file will be written into the /Reporting
+        subdirectory.
+
+24) Add /ignore option to /GS so that current locks can be ignored.
+
+There's some general cleanup and rewrite anticipated too
+
+Done - A1) Remove the code that adds reference entries to the dynamic gear listing
+    when a set is to be equipped. This feature is no longer necessary as
+    /gc creates all the entries in one pass and is required to be run.
+
+A2) Turn gswap off when /gc has yet to be run. It cannot be enabled until
+    /gc is run. At that point it will assume the default setting for the
+    job. A warning message will be displayed if gswap is attempted to be
+    turned on before /gc run.
+
+IP - A3) Rewrite some of the code so that additional functionality isn't hanging
+    onto the existing code, but instead well integrated. Rewriting though
+    should be done juditiously since it's mostly just a repeat of what is
+    already working.
+
+Done - A4) Rewrite HandleAbility so that all of the abilities do not have to be
+    explicitly written out.
+
+Done - A5) Move HandleItem to the gcinclude side of the files. Change the job
+    version to just a stub function.
+
+Done - A6) Move generic PetAction to gcinclude and pass in specific message,
+    accordingly.
+
+Done - A7) Consider moving all the toggle/"one of" functionality to its own lua
+    file and removing it from gcdisplay.lua.
+
+A8) Create variables for toolbar selection, and various feedback mechanisms
+    so that the player can easily change them without surveying the code to
+    find them.
+
+Done - A9) Consider breaking out routines from the job files into their own lua
+    files.
+
+A10) New feature, custom conditionals. At some point some function will be
+     needed but not available. As long as the function provides a simple
+     yes/no answer, you can use a custom conditional. /C1 with enable/
+     disable custom #1. By placing a //C1 on a piece of gear in a gear set,
+     C1 will be checked for it being on or off. (The state will be reflected
+     in the displaybar.) Initially three custom conditionals will be supported.
+
+     Example:
+
+        Body = 'Yinyang Robe//C1',
+
+        if C1 is on, the conditional is true and the Yinyang Robe will be
+        equipped. If C1 is off, the conditional will be false and the robe
+        will not be equipped. What does C1 represent? That's up to the
+        player. Maybe that the pet has less than 75% health. We currently
+        do not have a conditional dealing with pet health. This would be
+        a way for the player to flag the gear change.
+
+A11) Create a I_AM_CHARMED set. In the HandleDefault['engaged'], equip the
+    charm set such that the slots will be locked until the player
+    /UNLOCK ALL. It also prints a message to the party.
+
+    or
+
+    Implement a /DISROBE command to do above.
+
+IP - A12) New command: /CAP. CAP designates a maximum level for your gear to
+    be equipped. It's hoped that doing this prior to a level limited area
+    or sync will lessen the impact on HP and MP when you get level capped.
+
+Done - A13) Add blood pact support for subjob smn.
+
+A14) Consider removing FractionalSet. Instead, create routine to simulate
+    an inline reference and use that instead. Less code and easier to
+    maintain. (Ex: pull Main and Sub from start_weapons.)
+
+A15) Create command that targets specific MP amount. It automatically
+   equips gear that will give you at least that target. (Ex: need enough
+   mp for a Raise when you're weaken.) /MP#
+
+   There will be a table of gear and the affects of each piece. It will
+   autoequip what's needed and lock down all pieces of gear that affects
+   the MP. If the target can't be met, feedback will be given. This command
+   is available at any time. If used under hazardous circumstances, that's
+   the player's fault.
+
+Depending on time and my sanity, the following might also be included:
+
+B1) There's a strong desire to split the gear sets out of the files that
+    have code in them. Currently I can find no way to do that programmatically,
+    but a valid approach might be to split the top half of the program that
+    have the gear sets from the bottom half that have the code and create
+    a .bat file that will recombine the two halves into the single file
+    that's needed for luashitacast to run. Further exploration is needed
+    with the understanding that I run FFXI from linux while most others
+    that use my code do so from Windows.
+
+B2) Elemental obis boost elemental damage by equipping the correct obi that
+    matches either the appropriate day's element or the appropriate
+    weather. It applies to spells and songs that are elemental in nature.
+    Note: the element of the spell/song does not have to match the element
+    of the obi. Further, an elemental obi can also be used to boost damage in
+    an elemental weaponskill if closing a skill chain.
+
+    Currently elemental obi's are checked for when you do any elemental spell.
+    Instead, now, the player should be able to designate to check for an elemental
+    obi whenever they're doing any elemental spell/song in the appropriate
+    midcast. By using the keyword: #OBI#, luashitacast will determine if an
+    elemental obi is advantageous and determine if the player owns the
+    appropriate one and equip it. Note that elemental obi's will be looked
+    for only where elemental spells/songs can be cast. The use of the keyword
+    #OBI# will not be recognized anywhere else and /GC will display a warning
+    if found in an unexpected gear set.
+
+B3) Elemental gorgets are checked for when doing a weaponskill. The element
+    of the gorget must match one of the elements associated with the weaponskill.
+    It follows the same formula for elemental obis regarding the day's element
+    and the weather. Like the elemental #OBI#, the player will add the keyword:
+    #GORGET# into the appropriate weaponskill set. (If found elsewhere it will
+    be ignored and /GC will display an warning.)
+
+    Example
+      ['WS_DEXAGI'] = {
+        Neck = {'#GORGET#', 'Warwolf Belt' }
+      }
+
+B4) Add pop-up for displaying player to target (ptt) information. Make it
+    color coded, green if close enough, red if too far. Limited to pet
+    classes, mostly used by SMN. Player Should be able to drag box to
+    where they want it and the position and whether it's displayed will be
+    remembered.
+
+B5) Add pop-up grid for displaying locks that can be dragged on top of HXUI's
+    equipment grid. Position and whether it's displayed will be remembered.
+
+B6) Add pop-up for displaying day cycle noting current day. Player should be
+    able to drag box to where they want it and the position and whether it's
+    displayed will be remembered.
+
+B7) Fix bug when /smg gs=currentgear is run. For some reason ears and rings
+    are empty although these slots are populated on equipped gear.
+
+B8) Make a section in displaybar for the "show" switches: sPF, sBP, and sS.
+    Adapt displaybar table to support different sections.
+
+B9) Add a toggle to equip an HP down set (used by BLM for sorcerous ring
+    check or other similar ring checks.) Alternatively, have a named
+    gearset do the HP down such that an explicit invocation of /gearset
+    does the lowering. (Could be invoked via macro.) That way, no switch
+    is needed.
+
+B10) When a gearset is equipped via /gs or /gearset, display the name in the
+     display bar. When locks are cleared, remove that name.
+
+The following are really questionable and further thought is needed to consider them
+
+B11) Add support for changing the macro bar when any of the
+     crafts or gathering sets are equipped. Set the macro
+     bar back to what it was when the locks are cleared.
+
+B12) New command: /SHOW. Mostly intended as a debugging option, this
+    command will display how a decision is made to equip a piece of
+    gear. Like /SMG, options are "gs=" and "slot=". Also "state="
+    will be supported where values are: idle,tp,rest. The output will
+    be very wordy, so User beware. What's displayed is why a piece
+    of gear was rejected and what piece was ultimately picked.
+
+    Syntax:
+
+        /show [gs=] [slots=] [state=] [repeat]
+
+    - gs is a "one and done" pass
+    - slots is from Now to when you say /show again. Note: /show without
+      parameters turns the command off.
+    - state is one of: idle,tp,rest
+    - by default, (unless just slots), command is one and done. "Repeat"
+      indicates to display til turned off.
+
+Post 3.0
+
+
+16) Add subset specific inline conditionals: //SLOTS: and //NOT_SLOTS:
+    //SLOTS: lets the player limit which slots from the subset will be
+    equipped and //NOT_SLOTS: lets players explicitly exclude certain
+    slots from being equipped. Slot designation can either be the slot's
+    name or equipment grid position. Example: //SLOTS:hands,feet or
+    //SLOTS:10,16 refer to the same slots.
+
+    More complicated than originally thought. Pushing to a future
+    implementation
+
+=====================================================================
+
+Example:
+
+	['TP'] = {
+		GROUP//NOT_TANK = {
+			Head  = { 'Homam Zucchetto', 'Rogue\'s Bonnet', 'Empress Hairpin' },
+			Hands = { 'Homam Manopolas', 'Dusk Gloves' },
+			Waist = { 'Swift Belt', 'Mrc.Cpt. Belt' },
+		},
+		GROUP//TANK = {
+			Subset = 'enmity_plus',
+			GROUP//SJNIN = {
+				Neck  = 'Peacock Amulet',
+				Ears  = { 'Ethereal Earring', 'Stealth Earring//SJNIN', 'Brutal Earring' },
+				Body  = { 'Dragon Harness//DT_BREATH', 'Narasimha\'s Vest', 'Assassin\'s Vest', 'Scorpion Harness', 'Brigandine', 'Wonder Kaftan' },
+				Hands = { 'Homam Manopolas', 'Assassin\'s Armlets' },
+				Rings = { 'Kshama Ring No.4', 'Bomb Queen Ring', 'Kshama Ring No.3' },
+			},
+			GROUP//SJPLD = {
+				--Head = 'Optical Hat';
+				},
+			GROUP//NOT_SJNIN//NOT_SJPLD = {
+				--Head  = { 'Asn. Bonnet +1', 'Assassin\'s Bonnet', 'Homam Zucchetto' },
+				}
+			}
+		}
+    },
+
+Please note that groups within subsets are not supported, i.e. this will not work
+
+    ['TP'] = {
+        Subset = {
+            Group//TANK = { x },
+            Group//NOT_TANK = { y },
+            },
+    }
+
+Instead, do:
+
+    ['TP'] = {
+        Group//TANK = {
+            Subset = x,
+        },
+        Group//NOT_TANK = {
+            Subset = y,
+        }
+    }
+
+So, the order is
+
+['Set'] = {
+    Subset = 'val' OR { 'x','y','z'} OR { [1] = 'x', [2] = 'y', [3] = 'z' },
+    Group ={
+        Subset =
+        Group =
+        [slot] = ...
+    },
+    [slot] = 'val' OR { 'val1','val2',val3' },
+}
