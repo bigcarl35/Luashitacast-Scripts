@@ -53,9 +53,9 @@ local sets = {
         Neck   = { 'Opo-opo necklace//SLEPT', 'Peacock Amulet', 'Spike Necklace' },
         Ears   = { 'Bat Earring//BLINDED', 'Pilferer\'s Earring//SJTHF', 'Genin Earring//SJNIN', 'Drone Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ', 'Physical Earring' },
 		Body   = { 'Ducal Aketon//TOWN-AK', 'Drachen Mail', 'Wyvern Mail', 'Brigandine', 'Wonder Kaftan', 'Angler\'s Tunica' },
-        Hands  = { 'Carbuncle\'s Cuffs//SJSMN//SMNPET', 'Drachen Fng. Gnt.', 'Wonder Mitts', 'Battle Gloves' },
+        Hands  = { 'Carbuncle\'s Cuffs//SJSMN//SMNPET', 'Drachen Fng. Gnt.', 'Shep. Bracers', 'Wonder Mitts', 'Battle Gloves' },
         Rings  = { 'Kshama Ring No.8', 'Kshama Ring No.2' },
-		Back   = 'Raptor Mantle',
+		Back   = { 'Amemet Mantle', 'Fed. Army Mantle' },
         Waist  = { 'Swift Belt', 'Life Belt', 'Tilt Belt', 'Powerful Rope//MSJ' },
         Legs   = { 'Drachen Brais', 'Wonder Braccae', 'Shep. Hose' },
         Feet   = { 'Drachen Greaves', 'Mannequin Pumps//MSJ', 'Bounding Boots' },
@@ -84,7 +84,7 @@ local sets = {
 --]]
 	
 	['Accuracy'] = {
-		Head  = { 'Optical Hat', 'Empress Hairpin', 'Shep. Bonnet' },	-- +10 Acc, +3 DEX, +5 Pet Acc
+		--Head  = { 'Optical Hat', 'Empress Hairpin', 'Shep. Bonnet' },	-- +10 Acc, +3 DEX, +5 Pet Acc
 		Neck  = 'Peacock Amulet',										-- +10 Acc
 		Body  = 'Scorpion Harness',										-- +10 Acc
         Hands = 'Battle Gloves',										--  +3 Acc
@@ -124,7 +124,8 @@ local sets = {
 			},
 			[2] = {
 				['Rings'] = 'Accuracy::Rings',
-				['Waist'] = 'Accuracy::Waist'
+				['Waist'] = 'Accuracy::Waist',
+				['Body']  = 'Accuracy::Body',
 			},
 			[3] = {
 				['Subset'] = {
@@ -269,7 +270,7 @@ local sets = {
 	},
 	
 	['Enmity_Minus'] = {
-		Neck  = 'Fenrir Torque//NIGHTTIME',		-- -3 Emnity at night
+		Neck  = 'Fenrir\'s Torque//NIGHTTIME',		-- -3 Emnity at night
 		Rings = 'Tamas Ring',					-- -5 Emnity
 	},
 	
@@ -896,7 +897,7 @@ local sets = {
 --]]
 
 	['CHR'] = {		-- Charisma provides accuracy w/singing
-		Main = { 'Pluto Staff//WSWAP', 'Light Staff//WSWAP' },		-- +2/1 CHR
+		Main = { 'Pluto\'s Staff//WSWAP', 'Light Staff//WSWAP' },		-- +2/1 CHR
 		Head = 'Entrancing Ribbon',									-- +2 CHR
 		Neck = { 'Star Necklace', 'Flower Necklace' },				-- +3/3 CHR
 		Ears = 'Beastly Earring',									-- +2 CHR
@@ -1078,7 +1079,7 @@ local sets = {
 			[1] = 'AttackPower',
 		},
         Head  = { 'Empress Hairpin', 'Drachen Armet' },		-- +3/2 DEX
-        Neck  = { 'Spike Necklace', 'Opo=opo Necklace' },	-- +3 STR/+3 DEX, +1 DEX
+        Neck  = { 'Spike Necklace', 'Opo-opo Necklace' },	-- +3 STR/+3 DEX, +1 DEX
         Ears  = 'Pilferer\'s Earring//SJTHF',				-- No STR, but 3% Crit if sj THF better than nothing
 		Body  = { 'Drachen Mail', 'Wonder Kaftan' },		-- +3 STR, +1 STR
 		Hands = { 'Drachen Fng. Gnt.', 'Wonder Mitts' },	-- +3 DEX, +3 STR
@@ -1153,7 +1154,7 @@ local sets = {
         Head   = 'Empress Hairpin',		-- +3 DEX
         Neck   = 'Spike Necklace',		-- +3 DEX
 		Body   = 'Brigandine',			-- +2 DEX
-		Hands  = 'Drachen Fng. Gnt',	-- +3 DEX
+		Hands  = 'Drachen Fng. Gnt.',	-- +3 DEX
 		Waist  = 'Warwolf Belt',		-- +5 DEX
         Rings  = 'Kshama Ring No.2',	-- +3 DEX
         Feet   = 'Bounding Boots',		-- +3 DEX
@@ -1445,7 +1446,30 @@ local sets = {
 --[[
 								*** Custom Sets Go below this comment ***
 --]]
-	
+	-- MP150 equips gear to add at least 150 to max MP (for doing a raise)
+	-- Current list adds +134 MP. Maybe at a higher level I'll have the gear.
+	-- (Note: the MP from the Energy Earring is ignored since that's a standard
+	-- gear piece when I am subbing a magic using subjob.)
+
+	['MP150'] = {
+		Head = 'Reraise Hairpin',							-- +21 MP
+		Neck = 'Star Necklace',								-- Converts 15 HP to MP
+		Ears = { 'Geist Earring', 'Energy Earring +1' },	-- +5 MP, +4 MP
+		Rings = { 'Ether Ring', 'Tamas Ring' },				-- Convert 40 HP to MP, +25 MP at level 65
+		Back = 'Fed. Army Mantle',							-- +6 MP
+		Waist = 'Powerful Rope',							-- +20 MP
+		Feet = 'Mannequin Pumps'							-- +12 MP
+	},
+
+	-- Pet_BreathAttack is a set used to boost both the healing breath
+	-- and elemental breath attacks of the wyvern
+
+	['Pet_BreathAttack'] = {
+		Head = 'Wyrm Armet',		-- Pet: Enhances breath attack
+		Body = 'Wyvern Mail',		-- Pet: +65HP
+		Legs = 'Drachen Brais',		-- Pet: +10% HP
+		Feet = 'Homam Gambieras',	-- Pet: +50HP
+	},
 };
 
 -- There's no way to consistently identify the type of weapon you're currently
@@ -1476,9 +1500,9 @@ profile.sAmmo = nil;
 --]]
 
 function HandlePetAction(PetAction)
+	local player = gData.GetPlayer();
 	local pet = gData.GetPet();
 	
-	-- Only gear swap if this flag is true and the pet is a BST pet
 	if gcdisplay.GetToggle('GSwap') == false or gcinclude.fSummonerPet() == true then
 		return;
 	end
@@ -1489,6 +1513,8 @@ function HandlePetAction(PetAction)
 		gcinclude.MoveToCurrent(sets.Pet_Matt,sets.CurrentGear);
 	elseif (gcinclude.BstPetMagicAccuracy:contains(PetAction.Name)) then	-- Pet Magical Accuracy Attack
 		gcinclude.MoveToCurrent(sets.Pet_Macc,sets.CurrentGear);
+	elseif player.MainJob == 'DRG' then
+		gcinclude.MoveToCurrent(sets.Pet_BreathAttack,sets.CurrentGear);	-- Assume if a DRG this is a breath attack
     end
 	gcinclude.EquipTheGear(sets.CurrentGear);
 end		-- HandlePetAction
@@ -1599,7 +1625,7 @@ function profile.HandleDefault()
 	gcinclude.StartReminder();		-- See if reminder should be printed
 	
 	-- Only pet actions from BST are supported.
-	if (petAction ~= nil and player.SubJob == 'BST') then
+	if pen ~= nil and PetAction ~= nil then
 		HandlePetAction(petAction);
 		return;
 	end
@@ -1751,12 +1777,12 @@ function profile.HandleAbility()
 	-- Now process the appropriate job ability. Start with abilities associated with DRG
 	if string.match(ability.Name, 'Ancient Circle') then
 		gcinclude.MoveToCurrent(sets.AncientCircle,sets.CurrentGear);
-	elseif string.match(ability.Name,'Jump') then
-		gcinclude.MoveToCurrent(sets.Jump,sets.CurrentGear);
 	elseif string.match(ability.Name, 'High Jump') then
 		gcinclude.MoveToCurrent(sets.HighJump,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Super Jump') then
-		gcinclude.MoveToCurrent(sets.SuperJump,sets.CurrentGear);		
+		gcinclude.MoveToCurrent(sets.SuperJump,sets.CurrentGear);
+	elseif string.match(ability.Name,'Jump') then
+		gcinclude.MoveToCurrent(sets.Jump,sets.CurrentGear);
 	elseif string.match(ability.Name, 'Spirit Link') then
 		gcinclude.MoveToCurrent(sets.SpiritLink,sets.CurrentGear);	
 	elseif string.match(ability.Name, 'Call Wyvern') then
