@@ -59,8 +59,8 @@ local sets = {
 		Head  = { 'Lilac Corsage//TOWN', 'Smn. Horn +1', 'Austere Hat', 'Silver Hairpin +1' },
 		Neck  = { 'Rep.Gold Medal//NOT_OWN','Uggalepih Pendant//NIGHTTIME', 'Fenrir\'s Torque//DAYTIME', 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
 		Ears  = { 'Bat Earring//BLINDED', 'Loquac. Earring', 'Coral Earring//DT_MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
-		Body  = { 'Ducal Aketon//TOWN-AK', 'Yinyang Robe//MPP.LT.94','Vermillion Cloak//MPP.LT.94', 'Summoner\'s Dblt.', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
-		Hands = { 'Smn. Bracers +1', 'Errant Cuffs', 'Carbuncle Mitts' },
+		Body  = { 'Ducal Aketon//TOWN-AK', 'Yinyang Robe', 'Vermillion Cloak//MPP.LT.94', 'Summoner\'s Dblt.', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
+		Hands = { 'Carbuncle\'s Cuffs//SHINING_RUBY//HPP.LT.90', 'Smn. Bracers +1', 'Errant Cuffs', 'Carbuncle Mitts' },
 		Rings = { 'Evoker\'s Ring', 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
 		Back  = { 'Blue Cape', 'White Cape' },
         Waist = { 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
@@ -74,8 +74,8 @@ local sets = {
 			[1] = 'Default' 
 		},
 		Head   = { 'Smn. Horn +1//SMNPETMW' },		-- Avatar perpetuation cost -3 if pet's element matches weather, works w/storm spells
-		Hands  = 'Carbuncle Mitts//CARBY' ,			-- Halves perpetuation cost rounded down if pet is Carbuncle, applies before all other traits or gear
-		Body   = { 'Yinyang Robe//MPP.LT.94', 'Summoner\'s Dblt.//SMNPETMD', 'Vermillion Cloak//CARBY' },	-- Smn Dbl: Avatar perpetuation cost -3 if pet's element matches day's element
+		Hands  = { 'Carbuncle Mitts//CARBY', 'Carbuncle\'s Cuffs//SHINING_RUBY//HPP.LT.90', 'Nashira Gages', 'Shep. Bracers' },			-- Halves perpetuation cost rounded down if pet is,  Carbuncle, applies before all other traits or gear; regen
+		Body   = { 'Yinyang Robe//MPP.LT.94', 'Summoner\'s Dblt.//SMNPETMD', 'Yinyang Robe', 'Vermillion Cloak//CARBY' },	-- Smn Dbl: Avatar perpetuation cost -3 if pet's element matches day's element
 		Legs   = { 'Summoner\'s Spats//SPIRIT:EP', 'Shep. Hose' },		-- Smn Spats: Shortens elemental spirit's casting delay
 		Feet   = 'Evk. Pigaches +1',				-- Avatar's perpetuation cost -1, enhanced evasion
 	},
@@ -92,8 +92,8 @@ local sets = {
 		},
         Head  = { 'Smn. Horn +1//SMNPETMW', 'Shep. Bonnet//PETF' },		-- Smn horn: Avatar perpetuation cost -3 if pet's element matches weather, works w/storm spells
 		Ears  = { 'Bat Earring//BLINDED//PETNF', 'Loquac. Earring', 'Beastly Earring//PETF', 'Coral Earring//DT_MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
-        Body  = { 'Vermillion Cloak//CARBY','Summoner\'s Dblt.//SMNPETMD' },	-- Smn Dbl: Avatar perpetuation cost -3 if pet's element matches day's element
-        Hands = { 'Carbuncle Mitts//CARBY' },		-- Halves perpetuation cost rounded down if pet is Carbuncle, applies before all other traits or gear effects
+        Body  = { 'Summoner\'s Dblt.//SMNPETMD', 'Yinyang Robe', 'Vermillion Cloak' },		-- Smn Dbl: Avatar perpetuation cost -3 if pet's element matches day's element
+        Hands = { 'Carbuncle Mitts//CARBY', 'Nashira Gages//SMNPET' },		-- Halves perpetuation cost rounded down if pet is Carbuncle, applies before all other traits or gear effects
         Legs  = 'Evk. Spats +1',					-- Avatar: Enh Acc
         Feet  = { 'Summoner\'s Pgch.', 'Evk. Pigaches +1', 'Mannequin Pumps', 'Waders' },
 	},
@@ -223,6 +223,8 @@ local sets = {
 				'Damage_Taken_Physical//DT_PHYSICAL',
 			}
 		},	
+		-- Hands = 'Shep. Bracers',
+		Hands = { 'Carbuncle\'s Cuffs//SHINING_RUBY', 'Shep. Bracers' },	-- uncomment once //SHINING_RUBY defined
         Waist = 'Hierarch Belt',		-- +2 HP/tick while resting
     },
 	
@@ -236,8 +238,9 @@ local sets = {
 		},	
 		Main  = { 'Pluto\'s Staff', 'Kukulcan\'s Staff', 'Pilgrim\'s Wand' },
         Body  = { 'Errant Hpl.', 'Yinyang Robe', 'Vermillion Cloak', 'Seer\'s Tunic' },
+		Ears  = 'Relaxing Earring',		-- +2 MP/tick while resting
 		Waist = 'Hierarch Belt',		-- +2 MP/tick while resting
-		Legs = 'Baron\'s Slops',		-- +1 MP/tick while resting
+		Legs  = 'Baron\'s Slops',		-- +1 MP/tick while resting
 	},
 
 	
@@ -252,13 +255,20 @@ local sets = {
 		Ammo = { 'Hedgehog Bomb', 'Fortune Egg' },
  	},
 	
-	-- Blood pacts go through a simulated process that mimics spell casting. The precast
-	-- happens when the blood pact is invoked (either rage or ward), loading the 'BP'
-	-- gear set. You want gear that has Blood Pact Ability Delay, Blood Pact Recast
-	-- abilities, or summoning skill defined here. The midcast happens when the actual 
-	-- blood pact goes off.	
-	
-	-- Note: This is a simulated 'Precast' for Blood Pacts
+--[[
+	Blood pacts go through a simulated process that mimics spell casting in this code.
+
+	The simulated 'Precast' happens when the blood pact is invoked (either rage or
+	ward) by the player, loading the 'BP' gear set before your avatar starts to "cast"
+	the ability.
+
+	The simulated 'Midcast' is for swapping in before your Avatar performs the pact
+	ability (like Spring Water, Diamond Dust, Healing Ruby, etc) and actually goes
+	off. These pacts are divided into different catagories based on what they do.
+
+	For the first 'BP' gearset here, this is the simulated 'Precast'. You will want
+	gear that reduces Blood Pact Ability Delay, Blood Pact Recast and Summoning Skill.
+--]]
 
 	['BP'] = {
 		Subset = { 
@@ -316,7 +326,6 @@ local sets = {
 		Subset = { 
 			[1] = 'Summoning_Skill' 
 		},
-		Hands  = 'Carbuncle\'s Cuffs//BP:Shining Ruby',		-- If BP is Shining Ruby, adds regen to buff (+5 HP/tic)
     },
 	
 	-- Pet Accuracy based blood pact: pet accuracy, pet magic accuracy
@@ -365,13 +374,16 @@ local sets = {
     },
 
 --[[
-	*************************
-	* Spell Casting Subsets *
-	*************************
+	********************************
+	* Spell Casting Reference Sets *
+	********************************
 	
-	The following sets are to be used as subsets. Once you get to individual 
-	sets, include one of these or ignore them and be explicit on the gear in 
-	that set.
+	There are two types of gear sets: a Gear Set and a Reference Set. Gear sets are what
+	you're use to: a set of gear that will be equipped under specific circumstances by
+	Luashitacast. A refernce set also contains a listing of gear, but the set itself
+	will not be directly equipped. Instead, it must be included in a Gear Set (via the
+	Subset command), providing a foundation that the rest of the Gear Set definition
+	will work with.
 --]]
 
 	['INT'] = {
@@ -399,6 +411,7 @@ local sets = {
 	},
 
 	['Enmity_Plus'] = {
+		Body = 'Yinyang Robe',			-- +5 avatar enmity
 	},
 	
 	['Enmity_Minus'] = {
@@ -406,7 +419,7 @@ local sets = {
 		-- Head  = 'Evoker\'s Horn//PET',		-- -3 Pet Enmity, not sure I want this
 		Neck  = 'Fenrir\'s Torque//NIGHTTIME',		-- -3 Emnity at night
 		-- Body = 'Evoker\'s Doublet//PET,		-- -2 Pet Enmity, not sure I want this
-		Hands = 'Errant Cuffs',					-- -2 Enmity, 'Evoker\'s Bracers//PET',	-- -2 Pet Enmity, not sure I want this
+		Hands = { 'Nashira Gages', 'Errant Cuffs' },					-- -4/-2 Enmity, 'Evoker\'s Bracers//PET',	-- -2 Pet Enmity, not sure I want this
 		Rings = 'Tamas Ring',					-- -5 Enmity
 		Waist = 'Penitent\'s Rope',				-- -3 Enmity
 		Legs  = { 'Evk. Spats +1', 'Errant Slops' },	-- -3/-3 Enmity
@@ -424,9 +437,10 @@ local sets = {
 	and quick cast gear 
 --]]
 
-	['Precast'] = {	
-		Ears = 'Loquac. Earring',	-- Enhances Fastcast
-		Feet = 'Rostrum Pumps',		-- Enhances Fastcast
+	['Precast'] = {
+		Ears =  'Loquac. Earring',																		-- Enhances Fastcast
+		Hands = { 'Carbuncle\'s Cuffs//SMN:AVATAR', 'Carbuncle\'s Cuffs//SPIRIT:ES' },					-- Summoning magic casting time -1x2
+		Feet =  { 'Evoker\'s Boots//SMN:AVATAR', 'Evoker\'s Boots//SPIRIT:ES', 'Rostrum Pumps' },		-- Summoning magic casting time -1x2, Enhances Fastcast
 	},
 
 --[[
@@ -451,6 +465,7 @@ local sets = {
 				   'CHR//SINGING',		-- Charisma provides accuracy w/singing
 					}
 				},
+		Hands  = 'Nashira Gages',
 		Rings  = 'Tamas Ring',			-- +5 MAcc
 		Feet   = 'Nashira Crackows',	-- +2 MAcc	
 	},
@@ -849,8 +864,6 @@ local sets = {
 		Subset = { 
 			[1] = 'Summoning_Skill'
 		},
-		Hands = 'Carbuncle\'s Cuffs',				-- Summoning magic casting time -1
-		Feet  = 'Evoker\'s Boots'					-- Summoning magic casting time -1
 	},
 
 --[[
@@ -1092,7 +1105,7 @@ local sets = {
 		Main  = 'Pluto\'s Staff',			-- +2 CHR
 		Head  = 'Entrancing Ribbon',		-- +2 CHR
 		Ears  = 'Beastly Earring',			-- +2 CHR
-		Body  = { 'Errant Hpl.', 'Brigandine//IF:Black Cotehardie' },	-- +10 CHR, filler to avoid -3 CHR
+		Body  = { 'Errant Hpl.', 'Wonder Kaftan//IF:Black Cotehardie' },	-- +10 CHR, filler to avoid -3 CHR
 		Neck  = { 'Star Necklace', 'Flower Necklace' },	-- +3/3 CHR
 		Rings = 'Kshama Ring No.6',			-- +3 CHR
 		Waist = { 'Corsette', 'Mrc.Cpt. Belt' },	-- +5/1 CHR
@@ -1310,8 +1323,8 @@ local sets = {
 		},
         Head   = 'Empress Hairpin',		-- +3 DEX
         Neck   = 'Spike Necklace',		-- +3 DEX
-        Body   = { 'Black Cotehardie', 'Brigandine' },	-- +2/2 DEX
-        Rings  = 'Kshama Ring No.2',		-- +3 DEX
+        Body   = 'Black Cotehardie',	-- +2 DEX
+        Rings  = 'Kshama Ring No.2',	-- +3 DEX
         Waist  = 'Mrc.Cpt. Belt',		-- +1 DEX
     },
 
@@ -2153,7 +2166,7 @@ function profile.HandlePrecast()
 
 	-- Clear out the CurrentGear in case of leftovers
 	gcinclude.ClearSet(sets.CurrentGear);
-	
+
 	-- Equip the precast gear set
 	gcinclude.HandlePrecast();	
 	gcinclude.EquipTheGear(sets.CurrentGear);
