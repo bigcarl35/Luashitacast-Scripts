@@ -620,6 +620,8 @@ gcinclude.tSpell = {
 					 'enwater','enlight','endark'
 				     },
 	['spikes']	   = { 'blaze','ice','shock','dread' },
+	['avatars']	   = { 'garuda','shiva','titan','ifrit','ramuh','leviathan',
+					   'carbuncle', 'fenrir', 'diabolos' },
 	['spirits']    = { 
 					 'fire','firespirit','fire spirit','ice','icespirit','ice spirit',
 					 'air','airspirit','air spirit','earth','earthspirit','earth spirit',
@@ -1034,6 +1036,7 @@ gcinclude.tEquipIt = {
 	['tav']    = { ['Name'] = 'Tavnazian Ring', ['Slot'] = 'Ring' },
 	['dcl']    = { ['Name'] = 'Dcl.Grd. Ring', ['Slot'] = 'Ring' },
 	['warp']   = { ['Name'] = 'Warp Cudgel', ['Slot'] = 'Main' },
+	['tin']	   = { ['Name'] = 'Tinfoil Hat', ['Slot'] = 'Head' },
 	['trick2'] = { ['Name'] = 'Trick Staff II', ['Slot'] = 'Main' },
 	['treat2'] = { ['Name'] = 'Treat Staff II', ['Slot'] = 'Main' },
 	['purgo']  = { ['Name'] = 'Wonder Top +1', ['Slot'] = 'Body' },
@@ -2262,6 +2265,7 @@ function RefreshVariables()
 	-- SMN: sBP		-- Show Blood Pact
 	if player.MainJob == 'SMN' then
 		gcdisplay.CreateToggle('sBP', true);
+		gcdisplay.CreateCycle('Mode', {[1] = 'PERP', [2] = 'ATTK'});
 	end	
 end		-- RefreshVariables
 
@@ -2312,6 +2316,7 @@ function SetVariables()
 	
 	if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
 		gcdisplay.CreateToggle('sBP', true);
+		gcdisplay.CreateCycle('Mode', {[1] = 'PERP', [2] = 'ATTK'});
 	end
 	
 	-- General cycles
@@ -3767,7 +3772,7 @@ function gcinclude.fBuffed(test,bStart)
 		bStart = false;
 	end
 	
-	test = string.lower(test);
+	test = string.lower(string.gsub(test,'_',' '));
 	for _, buff in pairs(buffs) do
 		local buffString = AshitaCore:GetResourceManager():GetString("buffs.names", buff);
 			
@@ -4303,6 +4308,9 @@ function fCheckInline(gear,sSlot,ts)
 		elseif suCode == 'POISONED' then
 			-- Equip if the player is poisoned
 			bGood = gcinclude.fBuffed('Poison');
+		elseif suCode == 'SHINING_RUBY' then
+			-- Equip if player has the shining ruby buff
+			bGood = (gcinclude.fBuffed('Shining Ruby',true));
 		elseif suCode == 'SILENCED' then
 			-- Equip if the player is silenced
 			bGood = gcinclude.fBuffed('Silence');
@@ -4312,7 +4320,7 @@ function fCheckInline(gear,sSlot,ts)
 		elseif suCode == 'SLEPT' then
 			-- Equip if the player is slept
 			bGood = gcinclude.fBuffed('Sleep');
-		elseif string.sub(suCode,1,4) == 'SMN:' then
+		elseif string.sub(suCode,1,4) == 'SMN:' and suCode ~= 'SMN:AVATAR' then
 			-- Equip if the pet being summoned is named ...
 			if spell == nil then
 				bGood = false;
@@ -4362,6 +4370,13 @@ function fCheckInline(gear,sSlot,ts)
 		elseif suCode == 'SPIKE' then
 			-- Equip if player has a "spike" buff
 			bGood = (gcinclude.fBuffed('Spike'));
+		elseif suCode == 'SMN:AVATAR' then
+			-- Equip if the pet being summoned is an avatar (not elemental spirit)
+			if spell == nil then
+				bGood = false;
+			else
+				bGood = (table.find(gcinclude.tSpell['avatars'],string.lower(spell.Name)) ~= nil);
+			end
 		elseif suCode == 'SPIRIT:ES' then
 			-- Equip if the pet being summoned is an elemental spirit
 			if spell == nil then
@@ -4616,6 +4631,13 @@ function RegionControlDisplay()
 end		-- RegionControlDisplay
 
 function gcinclude.t1(args)
+	local myIndex = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0);
+	local dl = AshitaCore:GetMemoryManager():GetEntity():GetRenderFlags0(myIndex);
+
+	print(myIndex);
+	print(bit.band(dl,0x200));
+	print(bit.band(dl,0x4000));
+	return;
 end
 
 --[[
@@ -5930,6 +5952,12 @@ function gcinclude.HandleCommands(args)
 		else
 			print(chat.header('HandleCommands'):append(chat.message('Error: /sBP is only available to summoners. Ignoring command')));
 		end
+	elseif (args[1] == 'mode') then			-- Turns on/off smn emphasis on gear type when pet out
+		if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
+			gcdisplay.AdvanceCycle('Mode');
+		else
+			print(chat.header('HandleCommands'):append(chat.message('Error: /Mode is only available to summoners. Ignoring command')));
+		end
 	elseif (args[1] == 'ajug') then			-- Turns on/off whether Automatic Jug assignment enabled
 		if player.MainJob == 'BST' then
 			gcdisplay.AdvanceToggle('AJug');
@@ -5937,10 +5965,10 @@ function gcinclude.HandleCommands(args)
 			print(chat.header('HandleCommands'):append(chat.message('Error: /AJug is only available to beastmasters. Ignoring command')));
 		end	
 	elseif (args[1] == 'th') then			-- Turns on/off whether TH gear should be equipped
-		if player.MainJob == 'THF' then
+		if player.MainJob == 'THF' or player.SubJob == 'THF' then
 			gcdisplay.AdvanceToggle('TH');
 		else
-			print(chat.header('HandleCommands'):append(chat.message('Error: /TH is only available to thieves. Ignoring command')));
+			print(chat.header('HandleCommands'):append(chat.message('Error: /TH is only available to thieves (THF/ or /THF). Ignoring command')));
 		end
 	elseif (args[1] == 'ss') then			-- Turns on/off whether Show Action feedback should be displayed
 		if player.MainJob == 'THF' then
@@ -6299,6 +6327,10 @@ end		-- gcinclude.CheckWsBailout
 	PetReward scans all equipable storage containers for all of the pet foods and
 	tallies which ones the player has. Then, it picks the one likely to have the
 	most benefit for the "reward" based on the level and what was passed in.
+
+	Parameters
+		sFood
+		bMax
 --]]
 
 function gcinclude.fPetReward(sFood,bMax)
@@ -6309,7 +6341,7 @@ function gcinclude.fPetReward(sFood,bMax)
 	local containerID;
 	local i1,i2,step;
 	local _ammo = 4;	-- Lock # for ammo slot
-	
+
 	if bMax == nil then
 		bMax = true;
 	end
@@ -6319,12 +6351,12 @@ function gcinclude.fPetReward(sFood,bMax)
 		print(chat.header('PetReward'):append(chat.message('Ammo slot locked. Unable to equip any pet food')));
 		return false;
 	end
-		
+
 	-- Reset the pet food indicators
 	for i,j in ipairs(gcinclude.tPetFood) do
 		j['have'] = false;;
 	end
-	
+
 	-- Now, note which pet foods the player has
 	for i,j in ipairs(tStorage) do
 		containerID = j['id'];
@@ -6344,7 +6376,7 @@ function gcinclude.fPetReward(sFood,bMax)
 			end
 		end
 	end
-	
+
 	-- Determine order to process
 	if bMax == true then
 		i1 = 1; i2 = gcinclude._PetFoodCount; step = 1;
@@ -6355,16 +6387,16 @@ function gcinclude.fPetReward(sFood,bMax)
 	-- Then process what was found
 	local iFound = -1;
 	for i = i1,i2,step do
-		if sFood ~= nil and string.lower(sFood) == gcinclude.tPetFood[i]['name'] and 
-			gcinclude.tPetFood[i]['have'] == true and 
+		if sFood ~= nil and string.lower(sFood) == gcinclude.tPetFood[i]['name'] and
+			gcinclude.tPetFood[i]['have'] == true and
 			gcinclude.tPetFood[i]['lvl'] <= player.MainJobSync then
 			iFound = i;
-		elseif gcinclude.tPetFood[i]['have'] == true and 
+		elseif gcinclude.tPetFood[i]['have'] == true and
 			gcinclude.tPetFood[i]['lvl'] <= player.MainJobSync then
 			iFound = i;
 		end
 	end
-	
+
 	if iFound > 0 then
 		local sName = gcinclude.tPetFood[iFound]['name'];
 		gFunc.ForceEquip('Ammo', sName);
@@ -6409,11 +6441,11 @@ end		-- gcinclude.Initialize
 function gcinclude.HandlePrecast()
 	local spell = gData.GetAction();
 	local bTank = gcdisplay.GetToggle('Tank');
-	
+
 	if bTank == nil then
 		bTank = false;
 	end
-	
+
 	if spell.Skill == 'Singing' then
 		gcinclude.MoveToCurrent(gProfile.Sets.SingingPrecast,gProfile.Sets.CurrentGear);
 	else
