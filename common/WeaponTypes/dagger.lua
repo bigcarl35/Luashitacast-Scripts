@@ -1,0 +1,28 @@
+return {
+    wt = {
+        ['DAGGER'] = {
+            'aern dagger','aern dagger ii','bronze dagger','bronze dagger +1','bronze knife','bronze knife +1','ceremonial dagger','chicken knife ii','esikuva','infiltrator',
+            'norgish dagger','onion dagger','onion knife','qutrub knife','rusty dagger','tranee knife','trainee\'s needle','wind knife','wind knife +1','beestinger',
+            'blind dagger','blind dagger +1','blind knife','blind knife +1','brass dagger','brass dagger +1','piercing dagger','aspir knife','dagger','dagger +1','hushed dagger',
+            'silence dagger','silence dagger +1','spark dagger','spark dagger +1','knife','knife +1','baselard','baselard +1','burnite shell','decurion\'s dagger','kukri',
+            'kukri +1','mercenary\'s knife','platoon dagger','poison baselard','poison dagger','poison dagger +1','python baselard','poison knife','poison knife +1','acid dagger',
+            'corrosive dagger','melt dagger','mythril dagger','mythril dagger +1','poison kukri','poison kukri +1','ranging knife','ranging knife +1','bastokan dagger',
+            'federation knife','parrying knife','republic dagger','windurstian knife','kris','kris +1','archer\'s knife','hawker\'s knife','hawker\'s knife +1','mrc.cpt. kukri',
+            'ryl.sqr. dagger','sleep dagger','thug\'s jambiya','thug\'s jambiya +1','acid knife','corrosive knife','melt knife','mythril knife','mythril knife +1','acid kukri',
+            'corrosive kukri','federation kukri','kingdom dagger','melt kukri','mythril kukri','mythril kukri +1','san. dagger','windurstian kukri','fine baselard',
+            'mythril baselard','spark baselard','spark baselard +1','chiroptera dagger','minstrel\'s dagger','acid baselard','combat caster\'s dagger','corrosive baselard',
+            'marauder\'s knife','melt baselard','paper knife','calveley\'s dagger','jongleur\'s dagger','combat caster\'s dagger +1','combat caster\'s dagger +2','burglar\'s dagger',
+            'bone knife','bone knife +1','deathbone knife','hornetneedle','galkan dagger','cordair\'s knife','mercurial kris','lust dagger','triple dagger','darksteel knife',
+            'darksteel knife +1','venom knife','venom knife +1','darksteel jambiya','darksteel jambiya +1','darksteel baselard','darksteel baselard +1','beetle knife','beetle knife +1',
+            'kidney dagger','avis','darksteel kris','darksteel kris +1','spark kris','spark kris +1','venom kris','venom kris +1','chicken knife','darksteel kukri','darksteel kukri +1',
+            'cermet knife','cermet knife +1','bano del sol','trailer\'s kukri','cermet kukri','cermet kukri +1','demon\'s knife','demon\'s knife +1','venom baselard','venom baselard +1',
+            'anubis\'s knife','garuda\'s knife','stun knife','stun knife +1','odorous knife','odorous knife +1','courser\'s pugio','harpe','hoplites harpe','kard','venom kukri',
+            'venom kukri +1','farseer','silktone','sirocco kukri','stun kukri','stun kukri +1','valiant knife','adaman kris','adaman kris +1','assassin\'s jambiya','behemoth knife +1',
+            'behemoth knife','daylight dagger','magnet knife','orichalcum dagger','palladium dagger','rune kris','taillefer\'s dagger','thief\'s knife','triton\'s dagger',
+            'bartholomew\'s knife','buccaneer\'s knife','cobra knife','dagger of trials','khanjar','matron\'s knife','misericorde','misericorde +1','Master Caster knife',
+            'stylet','zareehkl jambiya','adder jambiya','adder jambiya +1','adder jambiya +1','amir jambiya','argent dagger','blau dolch','ermine\'s tail','gully','gully +1',
+            'khimaira jambiya','martial knife','ponderous gully','titan\'s baselard','x\'s knife','creve-coeur','heart snatcher','jambiya','jambiya +1','lyft jambiya','mighty knife',
+            'perseus\'s harpe','trilling dagger','azoth','thanatos baselard','athame','batardeau','carnwenhan','dakini','dancing dagger','dweomer knife','dynamis dagger',
+            'edgeless knife','fane baselard','kartika','machismo','malefic dagger','mandau','peeler','relic dagger','renegade','swordbreaker','vajra' },
+    },
+};

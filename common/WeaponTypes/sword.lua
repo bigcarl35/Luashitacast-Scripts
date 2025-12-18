@@ -1,0 +1,26 @@
+return {
+    wt = {
+        ['SWORD'] = {
+            'aern sword','aern sword ii','bronze sword','bronze sword +1','onion sword','wax sword','wax sword +1','sapara','sapara +1','xiphos','xiphos +1','spatha','spatha +1',
+            'royal archer\'s sword','bee spatha','bee spatha +1','bilbo','bilbo +1','brass xiphos','brass xiphos +1','scimitar','scimitar +1','spark bilbo','spark bilbo +1',
+            'kingdom sword','san d\'orian sword','fire sword','flame sword','iron sword','iron sword +1','longsword','longsword +1','vulcan sword','auriga xiphos','small sword',
+            'degen','degen +1','platoon spatha','kaiser sword','tuck','tuck +1','nadrs','san d\'orian sword','gladiator','gladius','mithran scimitar','broadsword','broadsword +1',
+            'centurion\'s sword','fleuret','fleuret +1','strider sword','bastokan sword','hunting sword','republic sword','war sword','holy sword','holy sword +1','mythril degen',
+            'mythril degen +1','mythril sword','mythril sword +1','sacred sword','spark degen','spark degen +1','spirit sword','tulwar','tulwar +1','divine sword','divine sword +1',
+            'hallowed sword','grudge sword','buzzard tuck','combat caster\'s scimitar','fencing degen','flame degen','flame degen +1','honor sword','junior musketeer\'s tuck',
+            'vulcan degen','shotel','shotel +1','combat caster\'s scimitar +1','combat caster\'s scimitar +2','duel rapier','junior musketeer\'s tuck +1','junior musketeer\'s tuck +2',
+            'falchion','falchion +1','ancient sword','holy degen','holy degen +1','sacred degen','flame blade','flame blade +1','knight\'s sword','knight\'s sword +1','vulcan blade',
+            'crimson blade','immortal\'s shotel','temple knight army sword','tactician magician\'s espadon','darksteel sword','darksteel sword +1','temple knight sword +1',
+            'temple knight sword +2','tactician magician\'s espadon +1','tactician magician\'s espadon +2','crescent sword','darksteel falchion','bloodsword','bloody rapier',
+            'carnage rapier','musketeer commander\'s falshion','royal guard\'s fleuret','schlaeger','schlaeger +1','wise wizard\'s anelace','wise wizard\'s bilbo','saber','saber +1',
+            'gluttony sword','hanger','hanger +1','bloody blade','carnage blade','aramis\'s rapier','cermet sword','cermet sword +1','dragvandil','bastard sword','bastard sword +1',
+            'greed scimitar','leech scimitar','mailbreaker','mailbreaker +1','swan bilbo','hornet fleuret','wasp fleuret','cutlass','cutlass +1','gold sword','gold sword +1',
+            'kazbalger','kazbalger +1','bloody sword','carnage sword','jagdplaute','jagdplaute +1','rapier','rapier +1','spark rapier','spark rapier +1','colichemarde','colichemarde +1',
+            'company fleuret','ifrit\'s blade','macuahuitl','macuahuitl +1','macuahuitl -1','phntom fleuret','save the queen','coral sword','espadon','espadon +1','merman\'s sword',
+            'schwert','schwert +1','dainslaif','platinum cuirass','platinum cuirass +1','enhancing sword','epee','epee +1','tutelary','corsair\'s scimitar','wing sword','wing sword +1',
+            'company sword','hrotti','joyeuse','nightmare sword','ridill','rune blade','storm scimitar','durandal','kaskara','kaskara +1','sapara of trials','senior gold musketeer\'s scimitar',
+            'anelace','anelace +1','dissector','martial anelace','pealing anelace','princely sword','shiva\'s shotel','sylphid epee','bayard\'s sword','guespiere','justice sword','verdun',
+            'verdun +1','sanguine sword','seiryu\'s sword','brave blade','burtgang','caliburn','curtana','dynamis sword','excalibur','glyptic sword','hofud','murgleis','organics',
+            'relic sword','vorpal sword' },
+    },
+};
