@@ -1,4 +1,4 @@
-local validate = T{};
+local validate = {};
 
 local displaybar = require('common.displaybar');
 local utilities = require('common.utilities');
@@ -12,25 +12,30 @@ local reporting = require('common.reporting');
 	name is correct). Lastly, like /gc, it checks for the validity of the item.
 
 	Syntax:
-            /val [gs=*|name,name,name] [file=*|name]
+		/val [gs=*|name,name,name] [file=*|name]
 
-        Just /val will validate all gear sets, both in the current job file and in the crossjobs common file.
-        "/val gs=*" is equivalent to just /val. If you wish to validate specific gear sets, use:
+	Just /val will validate all gear sets, both in the current job file and in the crossjobs common file.
+	"/val gs=*" is equivalent to just /val. If you wish to validate specific gear sets, use:
 
-            /val gs=name,[name,name,...]
+		/val gs=name,[name,name,...]
 
-        The "file" option redirects the output to a file. "file" alone or "file=*" will have luashitacast
-        name the file based on the date. If it already exists, the results of the validation run will be
-        appended. If the player gives the file a name, that will be used instead. This file will exist in
-        the /Reporting subdirectory.
+	The "file" option redirects the output to a file. "file" alone or "file=*" will have luashitacast
+	name the file based on the date. If it already exists, the results of the validation run will be
+	appended. If the player gives the file a name, that will be used instead. This file will exist in
+	the /Reporting subdirectory.
+--]]
+
+--[[
+	This component contains all routines that deal validating gear sets/gear
 
 	List of routines-
 		Subroutines:
-			FlowControl			Finds the specified gear set's conditionals and invokes the validation
-			ValidateGear		Determines if the inline conditionals are known and used correctly
+			HandleValidation			Validation routine that parses parameters and coordinates processing
+			lFlowControl				Finds the specified gear set's conditionals and invokes the validation process
+			lValidateConditionalList	Processes the passed conditional list ensuring they're valid and used correctly
 
 		Functions:
-			HandleValidation	Coordinates the validation process
+
 --]]
 
 -- List of all valid inline conditional codes with associated settings: bNot,bSubset,bLeft,bRight
@@ -80,7 +85,7 @@ function validate.HandleValidation (args)
 end		-- validate.HandleValidation
 
 --[[
-	FlowControl unravels a gear set so that ValidateGear will only be processing conditionals. It does this
+	lFlowControl unravels a gear set so that ValidateGear will only be processing conditionals. It does this
 	by walking the gear set, determining where conditionals are found and then relaying that information to
 	ValidateGear. If a group is found or a subset with an array (either indexed or not), FlowControl is
 	invoked again to unravel that table.
@@ -93,7 +98,7 @@ end		-- validate.HandleValidation
 
 --]]
 
-function FlowControl(gs,pFile)
+function lFlowControl(gs,pFile)
 	local bLeft,bRight,iPos,sTmp;
 	local tGs={};
 
@@ -124,18 +129,19 @@ function FlowControl(gs,pFile)
 					if iPos ~= nil then
 						sTmp = string.upper(string.sub(i,iPos,-1));
 						tGs = utilities.fMakeConditionalTable(sTmp);
-						ValidateGearSet(tGs,j,bLeft,bRight,pFile);
+						lValidateConditionalList(tGs,j,bLeft,bRight,pFile);
 					end
 				end
 			end
 		end
 	end
-end		-- FlowControl
+end		-- lFlowControl
 
 --[[
-	ValidateGear takes the passed conditional list and checks to see if it's a known code. Further, it
-	determines if it has been used correctly. It does not check to see if the logic is correct though.
-	The output is either written to the screen or the designated file, whichever has been requested.
+	lValidateConditionalList takes the passed conditional list and checks to see if it's a known code.
+	Further, it	determines if it has been used correctly. It does not check to see if the logic is
+	correct though. The output is either written to the screen or the designated file, whichever has
+	been requested.
 
 	Parameters
 		tGs			Table containing the inline conditionals
@@ -145,7 +151,7 @@ end		-- FlowControl
 		pfile		File pointer. If nil, write to screen. Otherwise write to file
 --]]
 
-function ValidateGear(tGs,line,bLeft,bRight,pFile)
+function lValidateConditionalList(tGs,line,bLeft,bRight,pFile)
 	local bNot,jj;
 	local bFound;
 	local iPos,iPos2,iPos3;
@@ -263,7 +269,7 @@ function ValidateGear(tGs,line,bLeft,bRight,pFile)
 			end
 		end
 	end
-end		-- ValidateGearSet
+end		-- lValidateConditionalList
 
 
 

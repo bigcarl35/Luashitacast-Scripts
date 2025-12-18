@@ -1,22 +1,25 @@
-local utilities = T{};
+local utilities = {};
 
-local crossjobs = require('common.crossjobs');
-local locks = require('common.locks');
+local crossjobs = require('common/crossjobs');
+local locks = require('common/locks');
 
 --[[
     This component contains functions that are of general use to any of the othe luashitacast compenents.
 
     List of routines-
         Subroutines:
-            local ClearAlias        Unregisters all luashitacast commands
+            local ClearAliasAll     Unregisters all luashitacast commands from alias list
+            local ClearAliasCC      Unregisters all custom conditional alias commands
             ClearSet                Empties the passed gear set
+            GetWeaponsList          Imports the list of all weapons of the type passed in
             Initialize              Defines initial settings for luashitacast
             Message                 Toggles on/off feedback mechanism
             OpenByFilename          Opens passed file for append (or generates new name and opens)
             ProcessedTally          Notification system for every 'n' entries
             PullTarget              Pulls character's target and announces to party
             Reminder                Reminder function to nag player to /gc
-            SetAlias                Registers all luashitacast commands
+            SetAliasCC              Registers all custom conditional commands
+            SetAliasAll             Registers all luashitacast commands
             Unload                  Clean up routine when jobs are changed/logout
 
             AdvanceCycle            Advance the setting of a specific cycle
@@ -28,6 +31,7 @@ local locks = require('common.locks');
         Functions:
             local fBit              2^(n-1) resultant
             local fHasBit           Determines if bit set in value
+            fAccEnabled             Determines if any accuracy stage has been set
             fBuffed                 Determines if passed buff is on character
             fCheckItemOwned         Determines if character owns piece of gear
             fCheckObiDW             Determines if Day/weather element advantageous for obi
@@ -35,9 +39,13 @@ local locks = require('common.locks');
             fCheckTime              Determines if passed time matches keyword
             fCheckWSBailout         Determines range to target would fail Weapon Skill
             fFormattedWord          Capitalization routine for passed in word
+            fGetAllGearSetNames     Creates and returns a list of all gear sets
+            fGetAllSlotNames        Creates and returns a lost of all slots
             fGetLevel               Determines gear level cap for player
+            fGetMobType             Determines if the target is of the passed type
             fGetRoot                Retrieves the "base" of the passed in spell/song
             fGetTableByName         Returns the gear set associated with name
+            fLtrim                  Trims leading spaces from the passed in string
             fMagicalSubjob          Determines if the player's subjob can do magic
             fMakeConditionalTable   Splits apart conditionals into a table
             local fNewFileName      Generates a new report file name
@@ -47,6 +55,7 @@ local locks = require('common.locks');
             fSlotMatch              Determines if item can be loaded into slot
             fTargetId               Returns the target ID (hex) of player's target
             fTranslateWhichSlot     Determines if passed in slot valid
+            fTrim                   Trims leading and trailing spaces from a string
             fValidSlots             Determines if passed in slot list is valid
 
             fGetCycle                Get a specific cycle's value
@@ -387,6 +396,32 @@ utilities.tWeaponSkills = {
     ['HP']     = { 'spirits within' }
 };
 
+-- List of all mob families indexed by ecosystem (or a representative name if no ecosystem)
+utilities.tFamilies = {
+    ['beasts']    = 'behemoths,buffalo,cerberuses,coeurls,dhahmels,gnoles,manticores,marids,opo-opo,rabbits,rams,sheep,tigers,yztargs',
+    ['lizards']   = 'adamantoises,bugards,efts,gabbraths,lizards,matamatas,peistes,raptors,wivres',
+    ['vermin']    = 'antlions,apian beasts,bees,beetles,bztavians,chapuli,chigoes,crawlers,diremites,flies,fluturinis,gnats,ladybugs,mantids,scorpions,spiders,twitherym,wamoura,wamouracampa',
+    ['plantoids'] = 'belladonnas,flytraps,funguars,goobbues,leafkin,mandragora,morbols,panopts,rafflesia,sabotenders,saplings,snapweeds,treants,yggdreants',
+    ['aquans']    = 'crabs,craklaws,oroban,pteraketos,pugils,rockfins,ruszors,sea monks,toads,urgannites',
+    ['amorphs']   = 'acuexes,boituli,flans,hecteyes,leeches,sandworms,slimes,slugs,worms',
+    ['birds']     = 'amphipteres,apkullu,bat trios,birds,cockatrices,colibris,bats,harpeia,hippogryphs,rocs,tulfaires,waktza',
+    ['undead']    = 'corpselights,corses,doomed,dullahans,fomors,ghosts,hounds,naraka,qutrub,shadows,skeletons,vampyrs',
+    ['arcana']    = 'acroliths,bombs,cardians,caturae,clusters,djinn,dolls,evil weapons,golems,iron giants,khimaira,magic pots,mammets,maroliths,mimics,snolls,spheroids',
+    ['dragons']   = 'dragons,hydra,pet wyverns,puks,wyrms,wyverns,zilant',
+    ['demons']    = 'ahriman,dark kindred,dvergr,gallu,gargouilles,imps,soulflayers,tauri',
+    ['luminians'] = 'aern,euvi,hpemde,phuabo,xzomit,yorva',
+    ['luminions'] = 'grah,zdei',
+    ['empty']     = 'cravers,gorgers,memory,receptacles,seethers,thinkers,wanderers,weepers',
+    ['achaia']    = 'chariots,gears,ramparts',
+    ['beastmen']  = 'antica,bugbears,gigas,goblins,lamiae,mamool ja,meebles,moblins,orcs,orcish,warmachines,poroggos,qiqirn,quadav,sahagin,siege turrets,shadow,lords,tonberries,trolls,velkk,yagudo',
+    ['elmentals'] = 'elementals,heatwings,monoceros,pixies,umbrils',
+    ['vorageans'] = 'amoebans,clionidae,limule,murex',
+    ['races']     = 'astoitian slimes,avatars,humanoids,moogles,spriggans,supreme beings',
+    ['natural formations'] = 'blossoms,fungi,geysers,lairs,obstacles',
+    ['animated objects']   = 'animated weapons,automatons,biotechnological weapons,grimoires,living crystals,simulacra',
+    ['tools']     = 'mines,structures,tubes',
+};
+
 -- Lists storage containers that can be equipped from outside of a moghouse
 utilities.EQUIPABLE = {
     utilities.STORAGES[1],		-- Inventory
@@ -441,11 +476,16 @@ utilities.RegionAreas = {
     [-1] = 'Unassigned', [0]  = 'N/A', [1]  = 'San d\'Orian', [2]  = 'Bastokian', [3]  = 'Windurstian', [4]  = 'Beastmen'
 };
 
+utilities.WeaponTypes = {
+    'ammo','archery','axe','club','dagger','gaxe','gkatana','gsword','hwh','katana','marksmanship',
+    'polearm','scythe','shield','sword','throwing'
+};
+
 -- List of all supported commands
 utilities.AliasList = {
-    'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite',
-    'lock','macc','maxsong','maxspell','petfood','ptt','pull','racc','rc','rv','sbp','showit','smg','spf','ss','string',
-    'tank','th','unlock','ver','wsdistance','wswap','t1'
+    '911','acc','ajug','cc','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','horn','idle','kite',
+    'lock','macc','man','maxsong','maxspell','petfood','ptt','pull','racc','rc','rv','sbp','showit','smg','spf','ss',
+    'string','sw','tank','th','unlock','val','ver','wsdistance','wswap','t1'
 };
 
 -- Define constants for DT so typos aren't made
@@ -476,9 +516,9 @@ utilities._AllElements = 'fire,ice,wind,earth,thunder,water,light,dark';
 
 -- Define lists of valid Weapon Types.
 -- Note: while SHIELD isn't a weapon, it conforms to the weapon type mechanism in this program
-utilities._WeaponTypes = 'ARCHERY,AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,MARKSMANSHIP,POLEARM,SCYTHE,STAVE,SWORD,THROWING,SHIELD';
+utilities._WeaponTypes = 'ARCHERY,AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,MARKSMANSHIP,POLEARM,SCYTHE,STAVE,SWORD,THROWING,SHIELD,AMMO';
 utilities._WeaponMelee = 'AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,POLEARM,SCYTHE,STAVE,SWORD,SHIELD';
-utilities._WeaponRange = 'ARCHERY,MARKSMANSHIP,THROWING';
+utilities._WeaponRange = 'ARCHERY,MARKSMANSHIP,THROWING,AMMO';
 
 -- Define list of all pet commands
 utilities._PetCommands = 'FIGHT,HEEL,STAY,LEAVE,SIC,READY,STEADY WING,DISMISS,ASSAULT,RELEASE,RETREAT';
@@ -647,7 +687,7 @@ function utilities.Reminder()
     local iTestVal = crossjobs.settings.bMinBasetime;
     local iNow = os.time();
 
-    if gear.bGC == true then
+    if gear.fHasGCBeenRun() == true then
         return;
     end
 
@@ -968,6 +1008,61 @@ function utilities.fGetRoot(sSpell,bVersion)
 end     -- utilities.fGetRoot
 
 --[[
+    fGetAllGearSetNames generates a table listing all the gear set names only omitting
+    'Progressive' and 'CurrentGear', the former being a weird reference set and the
+    latter being a dynamically populated set. All sets identified in both the job file
+    and crossjobs will be specified.
+
+    Returned:
+        Table containing all of the gear sets
+
+    Note: Some sets perceived by players aren't real sets (like HELM and FISH), these
+    are pseudo subsets that are generated from a master set (in this case, Gathering.)
+    Pseudo sets will not be listed, only the underlying real set.
+--]]
+
+function utilities.fGetAllGearSetNames()
+    local t = {};
+    local lv;
+
+    -- First, the job file
+    for k,l in pairs(gProfile.Sets) do
+        lv = string.lower(k);
+        if lv ~= 'progressive' then
+            table.insert(t,k);
+        end
+    end
+
+    -- Now the crossjobs file
+    for k,l in pairs(crossjobs.Sets) do
+        lv = string.lower(k);
+        if lv ~= 'currentgear' then
+            table.insert(t,k);
+        end
+    end
+
+    return t;
+end     -- utilities.fGetAllGearSetNames
+
+--[[
+    fGetAllSlotNames creates a table containing a list of all the valid slot names that
+    can be displayed.
+
+    Returned:
+        Table containing all of the slot names
+--]]
+
+function utilities.fGetAllSlotNames()
+    local t{};
+
+    for _,i in pairs(gear.tGearDetails) do
+        table.insert(t,i);
+    end
+
+    return t;
+end     -- utilities.fGetAllSlotNames
+
+--[[
     returns the gear set that is associated with the set name passed to it.
     It does this by walking the Sets (either gProfile.Sets or crossjobs.Sets)
 
@@ -1067,24 +1162,28 @@ end     -- utilities.fMakeConditionalTable
 
     Returned:
         True or false if buff/debuff found
+
+    Note: if "_" found in buff name, check for both with and without "_"
 --]]
 
 function utilities.fBuffed(sCode,bStart)
     local buffs = AshitaCore:GetMemoryManager():GetPlayer():GetBuffs();
-    local pos;
+    local pos,pos2,sCode2;
 
     if bStart == nil then
         bStart = false;
     end
 
-    sCode = string.lower(string.gsub(sCode,'_',' '));
+    sCode = string.lower(sCode);
+    sCode2 = string.gsub(sCode,'_',' ');
     for _, buff in pairs(buffs) do
         local buffString = AshitaCore:GetResourceManager():GetString("buffs.names", buff);
 
         if (buffString) then
             pos = string.find(string.lower(buffString),sCode);
-            if pos ~= nil then
-                if (bStart == true and pos == 1) or (bStart == false) then
+            pos2 = string.find(string.lower(buffString),sCode2);
+            if pos ~= nil or pos2 ~= nil then
+                if (bStart == true and (pos == 1 or pos2 == 1)) or (bStart == false) then
                     return true;
                 end
             end
@@ -1539,22 +1638,44 @@ end		-- utilities.fCheckObiDW
     SetAlias registers all of the luashitacast commands that are defined in this file
 --]]
 
-function SetAlias()
+function SetAliasAll()
 
     for _, v in ipairs(utilities.AliasList) do
         AshitaCore:GetChatManager():QueueCommand(-1, '/alias /' .. v .. ' /lac fwd ' .. v);
     end
-end		-- SetAlias
+end		-- SetAliasAll
 
 --[[
-    ClearAlias removes the luashitacast commands that were registered here
+    SetAliasCC registers all custom conditional commands
 --]]
 
-function ClearAlias()
+function SetAliasCC()
+
+    for _, v in ipairs(gProfile.CustomConditionals) do
+        AshitaCore:GetChatManager():QueueCommand(-1, '/alias /' .. string.lower(v['code']) .. ' /lac fwd ' .. v);
+    end
+end		-- SetAliasCC
+
+--[[
+    ClearAliasAll removes the luashitacast commands that were registered here
+--]]
+
+function ClearAliasAll()
     for _, v in ipairs(utilities.AliasList) do
         AshitaCore:GetChatManager():QueueCommand(-1, '/alias del /' .. v);
     end
-end		-- ClearAlias
+end		-- ClearAliasAll
+
+
+--[[
+    ClearAliasCC removes all custiom conditional commands that were registered here
+--]]
+
+function ClearAliasCC()
+    for _, v in ipairs(gProfile.CustomConditionals) do
+        AshitaCore:GetChatManager():QueueCommand(-1, '/alias del /' .. string.lower(v['code']));
+    end
+end		-- ClearAliasCC
 
 --[[
     Initialize gives luashitacast it's initial settings
@@ -1563,8 +1684,9 @@ end		-- ClearAlias
 function utilities.Initialize()
     displaybar.InitializeDisplayBar:once(2);
     crossjobs.SetVariables:once(2);
-    SetAlias:once(2);
-end		-- crossjobs.Initialize
+    SetAliasAll:once(2);
+    SetAliasCC:once(2);
+end		-- utilities.Initialize
 
 
 --[[
@@ -1574,7 +1696,8 @@ end		-- crossjobs.Initialize
 
 function utilities.Unload()
     --SaveSettingFile();
-    ClearAlias();
+    ClearAliasAll();
+    ClearAliasCC();
     ashita.events.unregister('packet_in', 'packet_in_callback1');
     displaybar.Unload();
 end		-- utilities.Unload
@@ -1627,20 +1750,20 @@ function utilities.fMagicalSubJob()
 end		-- utilities.fMagicalSubJob
 
 --[[
-    NewFileName generates a new file name based on the player's character name and
+    NewFileName generates a new file name based on the player's character name, job, and
     the date.
 
     Returned
         Generated name
 --]]
 
-function fNewFileName()
+function utilities.fNewFileName()
     local player = gData.GetPlayer();
-    local sName = string.upper(player.Name) .. '-';
+    local sName = string.upper(player.Name) .. '_' .. player.MainJob .. '_';
 
     sName = sName .. string.gsub(string.format("%x",os.clock),'/','_') .. '.txt';
     return sName;
-end     -- fNewFileName
+end     -- utilities.fNewFileName
 
 --[[
     OpenByFilename determines if the passed file name is a wild card. If so, it
@@ -1652,25 +1775,215 @@ end     -- fNewFileName
 
     Returned
         fptr        Pointer to opened file
-        fname       Name of file opened
 --]]
 
 function utilities.OpenByFilename(sname)
-    local fname;
+    local fname,tname;
     local fptr;
 
-    if sname == nil then
-        sname = '*';
-    end
-
-    if sname == '*' then
-        fname = fNewFileName();
+    if sname == nil or sname == '*' then
+        tname = utilities.fNewFileName();
     else
-        fname = sname;
+        tname = sname;
     end
 
-    fname = 'Reports.' .. fname;
-    fptr = io.open(fname,"+");
-    return fptr,fname;
+    fname = 'Reports\\' .. tname;
+    fptr = io.open(fname,"a");
+    return fptr,tname;
 end     -- utilities.OpenByFilename
 
+-- The following functions were copied or modified from code found in:
+-- https://snippets.bentasker.co.uk/posts/lua. I didn't see the need to
+-- create my own versions.
+
+--[[
+    fLtrim will remove leading spaces from the passed string.
+
+    Parameter
+        s       String to have leading spaces removed
+
+    Returned
+        Trimmed string
+--]]
+
+function utilities.fLtrim(s)
+    return s:match'^%s*(.*)';
+end     -- utilities.fLtrim
+
+--[[
+    fRtrim will remove trailing spaces from the passed string.
+
+    Parameter
+        s       String to have trailing spaces trimmed
+
+    Returned
+        Trimmed string
+--]]
+
+function utilities.fRtrim(s)
+    return s:match'^(.*%S)%s*$';
+end     -- utilities.fRtrim
+
+--[[
+    fTrim will remove leading and trailing spaces from the passed string.
+
+    Parameter
+        s       String to have leading and trailing spaces trimmed
+
+    Returned
+        Trimmed string
+--]]
+
+function utilities.fTrim(s)
+    return s:match'^()%s*$' and '' or s:match'^%s*(.*%S)';
+end     -- utilities.fTrim
+
+--[[
+    fSplitStringByDelimiter takes the passed in string and creates a table split by the
+    specified delimiter. Returned is the table of split values.
+
+    Parameter
+        s       String to be split
+        delim   Delimiter to split on
+
+    Returned
+        Table of split values
+--]]
+
+function utilities.fSplitStringByDelimiter(s,delim)
+    local t = {}
+
+    if delim == nil then
+        delim = '//';
+    end
+
+    for substr in string.gmatch(str, "[^".. delim.. "]*") do
+        if substr ~= nil and string.len(substr) > 0 then
+            table.insert(t,substr)
+        end
+    end
+
+    return t;
+end     -- utilities.fSplitStringByDelimiter
+
+--[[
+    fAccEnabled determines if any stage of the specified accuracy type has
+    been enabled.
+
+    Returned:
+        True/False
+--]]
+function utilities.fAccEnabled(sType)
+    local bTank = utilities.fGetToggle('Tank');
+
+    if sType == nil then
+        sType = 'Accuracy';
+    end
+
+    if bTank == true then
+        sType = 'Tank_' .. sType;
+    end
+
+    return(gear.Progressive[sType]['CurStage'] > 0);
+end     -- utilities.fAccEnabled
+
+--[[
+    GetWeaponsList determines if the specified weapon type has been loaded or not. If it hasn't,
+    then it gets the list of all valid weapons from the appropriately names weapontype file.
+
+    Parameter
+        sType       valid type of weapons
+--]]
+
+function utilities.GetWeaponsList(sType)
+
+    if sType == nil then
+        return;
+    end
+
+    if crossjobs.WeaponTypes[string.upper(sType)] ~= nil then
+        -- definition already loaded
+        return;
+    end
+
+    sType = string.lower(sType);
+    if table.find(utilities.WeaponTypes,sType) == nil then
+        -- invalid weapons type specified
+        msg = 'Warning: invalid weapon type specified: ' .. sType;
+        reporting.DisplayOnce(msg);
+        return;
+    end
+
+    local path = string.format('%sconfig/addons/LuAshitacast/common/WeaponTypes/%s.lua', string.lower(sType));
+    if (ashita.fs.exists(path)) then
+        -- Unable to load the weapons type definition
+        local success, loadError = loadfile(path);
+        if not success then
+            reporting.DisplayOnce(string.format('Warning: Failed to load resource file: %s', path));
+            reporting.DisplayOnce('Warning: ' .. loadError);
+            return;
+        end
+        local result, output = pcall(success);
+        if not result then
+            -- unable to process the weapons type file
+            reporting,DisplayOnce(string.format('Warning: Failed to call resource file: %s', path));
+            reporting.DisplayOnce('Warning: ' .. loadError);
+            return;
+        end
+
+        sType = string.upper(sType);
+        crossjobs.WeaponTypes[sType] = output.wt[sType];
+    end
+end     -- utilities.GetWeaponsList
+
+--[[
+    fGetMobType determines if the player's target is of the passed type. If that type is not definied,
+    it will update the master list accordingly. Note: the master list is based on zone id's. Only one
+    zone will be defined at a time.
+
+    Parameter
+        sType   Type of monster being checked
+
+    Returned
+        T/F, was the target of the specified type or no target selected?
+--]]
+function utilities.fGetMobType(sType)
+    local curr = AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0);
+    local targetIndex = gData.GetTargetIndex();
+    local tEntity = gData.GetEntity(targetIndex);
+
+    if tEntity.Name == nil or tEntity.Type ~= 'Monster' then
+        -- no target or target is an NPC/PC
+        return false;
+    end
+
+    if curr ~= crossjobs.CurrentZone
+        crossjobs.ZoneList = {};
+        local path = string.format('%sconfig/addons/luAshitacast/common/Mobs/%u.lua', AshitaCore:GetInstallPath(), curr);
+        if (ashita.fs.exists(path)) then
+            local success, loadError = loadfile(path);
+            if not success then
+                reporting.DisplayOnce(string.format('Warning: Failed to load resource file: %s', path));
+                reporting.DisplayOnce('Warning: ' .. loadError);
+                return false;
+            end
+        local result, output = pcall(success);
+        if not result then
+            -- unable to process the weapons type file
+            reporting,DisplayOnce(string.format('Warning: Failed to call resource file: %s', path));
+            reporting.DisplayOnce('Warning: ' .. loadError);
+            return false;
+        end
+        crossjobs.CurrentZone = curr;
+        crossjobs.ZoneList = output.Names;
+    end
+
+    sType == string.upper(sType);
+    for i,j in pairs(crossjobs.ZoneList) do
+        if string.upper(j['Family']) == sType then
+            return true;
+        end
+    end
+
+    return false;
+end     -- utilities.fGetMobType

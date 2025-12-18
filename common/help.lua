@@ -1,4 +1,4 @@
-local help = T{};
+local help = {};
 
 local crossjobs = require('common.crossjobs');
 
@@ -28,10 +28,10 @@ function help.ShowHelp()
     print(chat.message('          [ALC|BON|CTH|COOK|GSM|LTH|SMT|WW] -- Equips the specified crafting gear'));
     print(chat.message('          [HELM|DIG|CLAM|FISH] -- Equips the specified gathering gear'));
     print(chat.message('/gswap -- Toggles whether automatic gear swaps occur or not. Default is TRUE'));
-    print(chat.message('/help [command] -- Display this listing or specific details on the specified command'));
     print(chat.message('/idle -- Toggles whether \'Travel\' gear is equipped when idle. Default is TRUE'));
     print(chat.message('/kite -- Equips defined movement set.'));
     print(chat.message('/lock [all|#\'s|names] -- Locks specified equipment slots disabling luashitacast from changing gear in those slots'));
+    print(chat.message('/man [command] -- Display this listing or specific details on the specified command'));
     print(chat.message('/maxsong name [target] -- Determines the highest level song your current job can cast that contains the passed name'));
     print(chat.message('/maxspell name [target] -- Determines the highest level spell your current job can cast that contains the passed name'));
     print(chat.message('/petfood name --Equips the specified pet food'));

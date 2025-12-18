@@ -1,4 +1,4 @@
-local reporting = T{};
+local reporting = {};
 
 local crossjobs = require('common.crossjobs');
 local utilities = require('common.utilities');
@@ -11,18 +11,26 @@ local slips = require('common.slips');
     List of routines-
         Subroutines:
             DB_ShowIt               Displays some internal settings
+            DisplayCC               Displays a list of custom controls
             DisplayGD_AW            Displays list of all gear
             DisplayGD_Gs            Displays all gear for a gear set
             DisplayGD_S             Displays all gear for a slot
             DisplayMessage          Writes message to screen or file
             DisplayOnce             Displays a message once
-            local DisplayItemStats  Displays the details for an item
+            lDisplayItemStats       Displays the details for an item
             GearCheckList           Displays tallied results from /gc
             DisplayOut              Displays message to screen or to a file
             DisplayVersion          Displays the version and patch notes
+            lGearSetListingReport   Display gear list in gearset format
             ProcessSMG              Processes the invocation of /smg
             RegionControlDisplay    Displays all regions and who controls them
 --]]
+
+-- List of all valid slots for /smg reports
+local _refSlotNames = {
+    [1] = 'main', [2] = 'sub', [3] = 'range', [4] = 'ammo', [5] = 'head', [6] = 'neck',[7] = 'ears',
+    [8] = 'body', [9] = 'hands', [10] = 'rings', [11] = 'back', [12] = 'waist', [13] = 'legs', [14] = 'feet'
+};
 
 --[[
     DB_ShowIt will display debug details
@@ -62,7 +70,7 @@ function reporting.DisplayVersion()
     rfn = rfn:reverse() .. 'Documentation\\changelog.txt';
 
     print(chat.message(' '));
-    print(chat.message(version.name .. ' Version: ' .. tostring(crossjobs.version)));
+    print(chat.message(version.name .. ' Version: ' .. crossjobs.version));
     for line in io.lines (rfn) do
         if bSkip == false then
             print(chat.message(' '));
@@ -111,7 +119,81 @@ function reporting.RegionControlDisplay()
 end		-- reporting.RegionControlDisplay
 
 --[[
-    DisplayItemStats displays the item definition for the passed piece of gear
+    DisplayCC lists the valid custom conditions, their meaning, and current value
+--]]
+
+function reporting.DisplayCC()
+
+    if gProfile.CustomConditionals ~= nil and #gProfile.CustomConditionals > 0 then
+        print(chat.message('Info: Custom conditionals list:'));
+        for _,j in ipairs(gProfile.CustomConditionals) do
+            j['code'] = string.upper(j['code']);
+            print(chat.message('   ' ... j['code'] .. ' - ' .. j['question'] .. ': ' .. utiliies.GetToggle(j[code])));
+        end
+    else
+       print(chat.message('Info: No custom conditionals are defined'));
+    end
+end     -- reporting.DisplayCC
+
+--[[
+    lFileItemStats displays the item definition for the passed piece of gear
+    from the dynamic GearDetails table to an output file.
+
+    Parameters
+        sName       Gear name
+        sSlot       Slot it equips in
+        fptr        Output file pointer
+--]]
+
+function lFileItemStats(sName,sSlot,fptr)
+    local msg;
+    local tWhat;
+    local tTrans = { [true] = 'Yes', [false] = 'No'};
+
+    if sSlot == nil or sName == nil then
+        return;
+    end
+
+    if fptr == nil then
+        return;
+    emd
+
+    sSlot = string.lower(sSlot);
+    sName = string.lower(sName);
+
+    if gear.tGearDetails[sSlot] == nil or gear.tGearDetails[sSlot][sName] == nil then
+        -- You get here if the item isn't a valid item
+        fptr.write('   ' .. sName .. ' - Invalid item');
+        return;
+    end
+
+    tWhat = gear.tGearDetails[sSlot][sName];
+    -- You get here if the item is valid or it's invalid because the slot
+    -- is incorrect
+    msg = '   ' .. string.upper(sName);
+    msg = msg .. ', Level: ' .. tostring(tWhat['level']);
+    fptr.write(msg);
+    msg = '      ' .. 'Own it? ' .. tTrans[tWhat['own']];
+    msg = msg .. ', Accessible? ' .. tTrans[tWhat['accessible']];
+    fptr.write(msg);
+    fptr.write('      Code Breakdown-');
+    msg = '         Valid? ' .. tTrans[tWhat['valid']];
+    msg = msg .. ' Slot? ' .. tTrans[tWhat['slot']];
+    msg = msg .. ' Job? ' .. tTrans[tWhat['job']];
+    msg = msg .. ' Porter? ' .. tTrans[tWhat['porter']];
+    msg = msg .. ' Claim? ' .. tTrans[tWhat['claim']];
+    fptr.write(msg);
+    if tWhat['locations'] ~= nil then
+        msg = '         Location(s): ' .. tWhat['locations'];
+    else
+        msg = '         Location(s): ';
+    end
+    fptr.write(fptr,msg);
+    fptr.write(' ');
+end	-- lFileItemStats
+
+--[[
+    lDisplayItemStats displays the item definition for the passed piece of gear
     from the dynamic GearDetails table.
 
     Parameters
@@ -119,7 +201,7 @@ end		-- reporting.RegionControlDisplay
         sSlot       Slot it equips in
 --]]
 
-function DisplayItemStats(sName,sSlot)
+function lDisplayItemStats(sName,sSlot)
     local msg;
     local tWhat;
     local tTrans = { [true] = 'Yes', [false] = 'No'};
@@ -133,7 +215,7 @@ function DisplayItemStats(sName,sSlot)
 
     if gear.GearDetails[sSlot] == nil or gear.GearDetails[sSlot][sName] == nil then
         -- You get here if the item isn't a valid item
-        print(sName .. ' - ' .. chat.color1(utilities.fSetColorText('Invalid item',false)));
+        print('   ' .. sName .. ' - ' .. chat.color1(utilities.fSetColorText('Invalid item',false)));
         return;
     end
 
@@ -141,7 +223,7 @@ function DisplayItemStats(sName,sSlot)
     -- You get here if the item is valid or it's invalid because the slot
     -- is incorrect
     msg = '   ' .. chat.color1(utilities.fSetColorText(nil), string.upper(sName));
-    msg = msg .. ', Level: ' .. tostring(tWhat['level'],tostring(tWhat['level']));
+    msg = msg .. ', Level: ' .. tostring(tWhat['level']);
     print(msg);
     msg = '      ' .. 'Own it? ' .. chat.color1(utilities.fSetColorText(tWhat['own']),tTrans[tWhat['own']]);
     msg = msg .. ', Accessible? ' .. chat.color1(utilities.fSetColorText(tWhat['accessible']),tTrans[tWhat['accessible']]);
@@ -160,202 +242,299 @@ function DisplayItemStats(sName,sSlot)
     end
     print(msg);
     print(' ');
-end	-- DisplayItemStats
+end	-- lDisplayItemStats
 
 --[[
-***
-    ProcessSMGs processes the invocation of Show My Gear reporting command
+    ProcessSMG processes the invocation of Show My Gear reporting command.
+
+    Syntax
+        /smg gs|sl [noac] [gs=set name,set name,...] [slot=slot name,slot name,...] [|]
+
+        The invocation parameters can be applied in any order. The more you
+        specify, the more restricted the report. Each invocation produces only
+        one report. Please note that all parameters beyond the function call
+        are optional.
+
+        "gs|sl" is required to indicate the type of report that is wanted:
+        gear set based or slot based. Lack of specifying either defaults to
+        a gearset report.
+
+        "/smg" with no parameters reports all gear associated with all
+        gear sets.
+
+        "noac" indicates that only items that are either invalid or unaccessible
+        will be displayed.
+
+        "gs=" is where you can restrict which gear sets are reported to a specific
+        list of gear sets.
+
+        "slot=" is where you can restrict which slots are reported to a specific
+        list of slots.
+
+        "|" indicates that the report's output should be redirected
+        to a file. This will specifically be in the Reports directory found
+        under ...HorizonXI\Game\config\addons\luashitacast. The file name
+        will be formatted as follows: name_job_date.txt.
+
+    Note: This implementation is different than what was done in version 2.0. It
+    was changed because it makes more sense. If you want multiple reports,
+    you need to run /smg multiple times. If the output is being redirected to a
+    file, multiple reports will be appended to the same file as long as they
+    are done on the same, real world, day.
 
     Pararameter
         args		Passed argument list
 --]]
 
 function reporting.ProcessSMG(args)
+    local lv,iPos,fptr;
+    local rec = {
+        ['type'] = 'gs', ['bNoac'] = false, ['gs'] = nil, ['tgs'] = {},
+        ['slot'] = nil, ['tslot'] = {}, ['filename'] = nil
+    };
 
-    if #args == 1 then				-- Show a list of all gear
-        reporting.DisplayGD_AW(nil);
-    elseif args[2] ~= nil then
-        local ls = string.lower(args[2]);
-        if ls == 'noac' then		-- Show a list of gear where accessible is false
-            reporting.DisplayGD_AW('noac');
-        elseif string.len(ls) > 5 and string.sub(ls,1,5) == 'slot=' then
-            reporting.DisplayGD_S(string.sub(ls,6,-1));
-        elseif string.len(ls) > 3 and string.sub(ls,1,3) == 'gs=' then
-            reporting.DisplayGD_Gs(string.sub(ls,4,-1));
+    -- Parse the arguments and record the appropriate aspects into the
+    -- SMG definition record.
+
+    if #args > 1 then
+        for i = 1,#args,1 do
+            lv = string.lower(args[i]);
+
+            if lv == 'noac' then
+                rec['bNoac'] = true;
+            if string.find('gs,sl',lv) ~= nil then
+                rec['type'] = lv;
+            elseif string.find(lv,'gs=') ~= nil and string.len(lv) > 3 then
+                rec['gs'] = string.sub(args[i],4,-1));      -- skip the gs=
+                rec['tgs'] = utilities.fSplitStringByDelimiter(rec['gs'],',');
+            elseif string.find(lv,'slot=') ~= nil and string.len(lv) > 5 then
+                rec['slot'] = string.sub(args[i],6,-1));    -- skip the slot=
+                rec['tslot'] = utilities.fSplitStringByDelimiter(rec['slot'],',');
+            elseif string.sub(lv,1,1) == '|' then
+                rec['bFile'] = true
+                rec['filename'] = utilities.fNewFileName();
+            end
         end
+
+        -- Make sure that the gear sets and slots are defined
+        if rec['gs'] == nil then
+            rec['tgs'] = utilities.fGetAllGearSetNames();
+        end
+
+        if rec['slot'] == nil then
+            rec['tslot'] = utilities.fGetAllSlotNames();
+        end
+    end
+
+    if rec['filename'] ~= nil then
+        -- Since going to a file, make sure it's open
+        fptr = utilities.OpenByFilename(rec['filename']);
+    end
+
+
+    -- There are two types of reports: by gear sets and by slots
+    if rec['type'] == 'gs' then
+        -- Type is a gear set report
+        if rec['bNoac'] == true then
+            -- Report filtered to only show invalid or inaccessible definitions
+            print(chat.message('Creating gearset report of any inaccessible or erroneous gear'));
+        else
+            -- Report on all gear sets
+            print(chat.message('Creating gearset report of all gear'));
+        end
+        lGearSetListingReport(rec,fptr);
+    else
+        -- Type is a slots report
+        if rec['bNoac'] == true then
+            -- Report filtered to only show invalid or inaccessible definitions
+            print(chat.message('Creating slot report of any inaccessible or erroneous gear'));
+        else
+            -- Report on all gear sets
+            print(chat.message('Creating slot report of all gear'));
+        end
+        lSlotListingReport(rec,fptr);
+    end
+
+    if rec['bFile'] == true then
+        print(chat.message('Complete. Report(s) written to ' .. rec['filename'] .. 'in the Reports directory'));
+        io.close(fptr);
+    else
+        print(chat.message('Report(s) complete!'));
     end
 end		-- reporting.ProcessSMG
 
 --[[
-    DisplayGD_AW lists either all the dynamic gear definitions or just the
-    ones that are invalid or inaccessible.
+    lGearSetListingReport generates a gear set report based on the the settings found in
+    the driving record.
 
-    Parameter
-        p1      nil for all gear, 'noac' for invalid or inaccessible gear
+    Parameters
+        rec     Record containing details on how the gearset report will be generated
+        fptr    nil or file pointer. Indicates if the report should be displayed or saved
+                to a file
 --]]
 
-function reporting.DisplayGD_AW(p1)
-    local bShow;
+function lGearSetListingReport(rec,fptr)
+    local t = {};
+    local ljj;
+    local tgs,msg;
+    local sOp,sOp2;
 
-    if p1 == nil then
-        print(chat.message('Complete list of all gear'));
-    elseif p1 == 'noac' then
-        print(chat.message('Invalid or inaccessible gear'));
+    if rec['gs'] == nil then
+        sOp = '*';
+    else
+        sOp = rec['gs'];
     end
 
-    for slot,name in pairs(gear.GearDetails) do
-        print(chat.message(' '));
-        if p1 ~= nil and string.lower(p1) == 'noac' then
-            print(chat.message('Slot: ' .. slot));
+    if rec['slot'] == nil then
+        sOp2 = '*';
+    else
+        sOp2 = rec['gs'];
+    end
+
+    msg ='Gearset Report, restrictions: gs= '..sOp .. ', slot= ' .. sOp2 .. ', Noac= '.. tostring(rec['bNoac']);
+    if fptr == nil then
+        print(msg);
+        print(' ');
+    else
+        fptr.write(msg .. '\n');
+        fptr.write('\n');
+    end
+
+    for i,j in pairs(rec.tgs) do
+        -- For each gear set
+        t = {};
+        if fptr == nil then
+            print('Gearset: ' .. utilities.fTranslateWhichSlot(j,utilities._SLOT_FA))
         else
-            print(chat.message('Slot: ' .. slot .. '[' .. tostring(name['acc']) .. '/' .. tostring(name['num']) .. ']'));
+            fptr.write('Gearset: ' .. utilities.fTranslateWhichSlot(j,utilities._SLOT_FA) .. '\n');
         end
 
-        for i,j in pairs(name) do
-            if string.find('num,acc,vis',i) == nil then
-                bShow = (p1 == nil or j['valid'] == false or j['accessible'] == false);
-                if bShow == true and type(i) == 'string' then
-                    DisplayItemStats(i,slot);
-                end
-            end
-        end
-    end
-end		-- reporting.DisplayGD_AW
-
---[[
-    DisplayGD_S lists all dynamic gear definitions associated with specific slot(s)
-
-    Parameter
-        p1      Slot name(s)
---]]
-
-function reporting.DisplayGD_S(p1)
-
-    if p1 == nil then
-        return;
-    end
-
-    print(chat.message('Gear associated with slot(s): ' .. p1));
-
-    for slot,name in pairs(gear.GearDetails) do
-        if string.find(string.lower(p1),string.lower(slot)) ~= nil then
-            print(chat.message(' '));
-            print(chat.message('Slot: ' .. slot));
-
-            for i,j in pairs(name) do
-                if string.find('num,acc,vis',i) == nil then
-                    if type(i) == 'string' then
-                        DisplayItemStats(i,slot);
-                    end
-                end
-            end
-        end
-    end
-end		-- reporting.DisplayGD_S
-
---[[
-    DisplayGD_Gs lists all dynamic gear definitions associated with a specific gear set
-
-    Parameter
-        p1      Gear set name
---]]
-
-function reporting.DisplayGD_Gs(p1)
-    local str,tmp;
-    local tGs = {};
-    local gg = {};
-    local lPc = nil;
-
-    if p1 == nil then
-        return;
-    end
-
-    if string.lower(p1) == 'progressive' then
-        print(chat.message('Warning: SMG does not support displaying the Progressive gear set'));
-        return;
-    end
-
-    -- first check gProfile.Sets. If not found, look in crossjobs.Sets.
-    tGs = utilities.fGetTableByName(p1);
-    if tGs == nil then
-        print(chat.message('Warning, ' .. p1 .. ': no such set exists!'));
-        return;
-    end
-
-    print(' ');
-    print(chat.message('Gear set: ' .. string.upper(p1)));
-
-    -- Loop the entries first looking for subsets
-    for slot,j in pairs(tGs) do
-        if string.find(string.lower(slot),'subset') ~= nil then
-            if j ~= nil then
-                -- then make sure that j is a table
-                gg = {};
-                if type(j) == 'string' then
-                    gg[1] = j;
+        for k,l in ipairs(_refSlotNames) do
+            -- For each slot
+            if sOp2 == '*' or string.find(rec['slot'],l) ~= nil then
+                -- Either any slot or slot found in the specified slot list
+                if fptr == nil then
+                    print('Slot: ' .. utilities.fTranslateWhichSlot(l,utilities._SLOT_FA));
                 else
-                    gg = j
+                    fptr.write('Slot: ' .. utilities.fTranslateWhichSlot(l,utilities._SLOT_FA) .. '\n');
                 end
-                tmp = nil;
 
-                for _,g in ipairs(gg) do
-                    -- It's possible that a subset's entry will itself be a table. Problem is, this can
-                    -- be an infinite "rabbit hole". Only one depth will be displayed
-                    if type(g) == 'table' then
-                        for _,tg in pairs(g) do
-                            if tmp == nil then
-                                tmp = utilities.fRemoveConditional(tg);
-                            else
-                                tmp = tmp .. ',' .. utilities.fRemoveConditional(tg);
+                if gear.tGearsetDetails[j][l] ~= nil then
+                    for m = 1,#gear.tGearsetDetails[j][l]['items'],1 do
+                        local item = gear.tGearsetDetails[j][l]['items'][m];
+                        if (rec['bNoac'] == true and
+                            (gear.tGearDetails[l][item.gear]['valid'] == false or
+                            gear.tGearDetails[l][item.gear]['accessible'] == false)) or
+                            rec['bNoac'] == false
+                        then
+                            -- Make sure the item id has not been displayed already for the gearset/slot
+                            local bFound = false;
+                            for aa=1,#t,1 do
+                                if t[aa] == item.id then
+                                    bFound = true;
+                                    break;
+                                end
+                            end
+                            if bFound == false then
+                                if fptr == nil then
+                                    lDisplayItemStats(item.gear,l);
+                                else
+                                    lFileItemStats(item.gear,l,fptr);
+                                end
+                                t[#t+1] = item.id;
                             end
                         end
-                    else
-                        if tmp == nil then
-                            tmp = utilities.fRemoveConditional(g);
-                        else
-                            tmp = tmp .. ',' .. utilities.fRemoveConditional(g);
-                        end
-                    end
-                end
-            print(' ');
-            print(chat.message('Subset: ' .. tmp));
-            end
-        end
-    end
-
-    -- loop on the entries of the gear set
-    lPc = ',';
-    for slot,j in pairs(tGs) do
-        if string.find(string.lower(slot),'subset') == nil and string.find(string.lower(slot),'group') == nil  then
-            print(' ');
-            print(chat.message('Slot: ' .. utilities.fRemoveConditional(slot)));
-            -- make sure entry is not [slot] =
-            if j ~= nil then
-                gg = {};
-                -- then make sure that j is a table
-                if type(j) == 'string' then
-                    gg[1] = j;
-                else
-                    gg = j
-                end
-
-                -- Now process the normal slot
-                local t;
-                for _,g in pairs(gg) do
-                    if string.find(g,'::') ~= nil then
-                        print(chat.message('   ' .. g));
-                    else
-                        t = string.upper(utilities.fRemoveConditional(g));
-                        if string.find(lPc,t) == nil then
-                            reporting.DisplayItemStats(t,slot);
-                            lPc = lPc .. ',' ..t;
-                        end
                     end
                 end
             end
         end
+        if fptr == nil then
+            print(' ');
+        else
+            fptr.write('\n');
+        end
     end
-end		-- reporting.DisplayGD_Gs
+end     -- lGearSetListingReport
+
+--[[
+    lSlotListingReport generates a gear set report based on the the settings found in
+    the driving record, driven by the slot
+
+    Parameters
+        rec     Record containing details on how the gearset report will be generated
+        fptr    nil or file pointer. Indicates if the report should be displayed or saved
+                to a file
+--]]
+
+function lSlotListingReport(rec,fptr)
+    local ljj;
+    local tgs,msg;
+    local sOp,sOp2;
+    local items = {};
+    local t = {};
+
+    if rec['gs'] == nil then
+        sOp = '*';
+    else
+        sOp = rec['gs'];
+    end
+
+    if rec['slot'] == nil then
+        sOp2 = '*';
+    else
+        sOp2 = rec['gs'];
+    end
+
+    msg ='Slot Report, restrictions: gs= '..sOp .. ', slot= ' .. sOp2 .. ', Noac= '.. tostring(rec['bNoac']);
+    if fptr == nil then
+        print(msg);
+        print(' ');
+    else
+        fptr.write(msg .. '\n');
+        fptr.write('\n');
+    end
+
+     for k,l in ipairs(_refSlotNames) do
+        -- For each slot
+        t = {};
+        if sOp2 == '*' or string.find(rec['slot'],l) ~= nil then
+            -- Either any slot or slot found in the specified slot list
+            if fptr == nil then
+                print('Slot: ' .. utilities.fTranslateWhichSlot(l,utilities._SLOT_FA));
+            else
+                fptr.write('Slot: ' .. utilities.fTranslateWhichSlot(l,utilities._SLOT_FA) .. '\n');
+            end
+            for i,j in pairs(rec.tgs) do
+                -- For each gear set
+
+
+
+
+                if gear.tGearsetDetails[j][l] ~= nil then
+                    for m = 1,#gear.tGearsetDetails[j][l]['items'],1 do
+                        local item = gear.tGearsetDetails[j][l]['items'][m];
+                        if (rec['bNoac'] == true and
+                            (gear.tGearDetails[l][item.gear]['valid'] == false or
+                            gear.tGearDetails[l][item.gear]['accessible'] == false)) or
+                            rec['bNoac'] == false
+                        then
+                            if fptr == nil then
+                                lDisplayItemStats(item.gear,l);
+                            else
+                                lFileItemStats(item.gear,l,fptr);
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        if fptr == nil then
+            print(' ');
+        else
+            fptr.write('\n');
+        end
+    end
+end     -- lSlotListingReport
 
 --[[
     DisplayMessage is a print function that displays the passed in message to
@@ -385,7 +564,7 @@ end     -- reporting.DisplayMessage
 
 function reporting.GearCheckList()
 
-    if gear.bGC == true then
+    if gear.fHasGCBeenRun() == true then
         for i,j in pairs(gear.tGearDetails) do
             print(chat.message('   [' .. i .. '] - ' .. tostring(j['num'])));
         end

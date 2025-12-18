@@ -1,4 +1,4 @@
-local magic = T{};
+local magic = {};
 
 local crossjobs = require('common.crossjobs');
 local utilities = require('common.utilities');
@@ -501,11 +501,12 @@ function MidcastHealingMagic()
                 end
 
                 -- See if Macc should be added
-                if utilities.fGetToggle('Macc') then
+                if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
                     gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
                 end
             else
-                -- This is the the type of curing magic most folks assume happens
+                -- This is the the type of curing magic most folks assume happens. Note that Macc
+                -- is not invoked. This is because this type of magic never misses.
                 gear.MoveToDynamicGS(gProfile.Sets.CuringMagic,crossjobs.Sets.CurrentGear,false,'CuringMagic');
             end
         end
@@ -542,7 +543,7 @@ function MidcastDarkMagic()
         gear.MoveToDynamicGS(gProfile.Sets.Absorb,crossjobs.Sets.CurrentGear,false,'Absorb');
 
         -- See if Macc should be added
-        if utilities.fGetToggle('Macc') then
+        if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
             gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
     elseif root == 'drain' then
@@ -559,7 +560,7 @@ function MidcastDarkMagic()
         end
 
         -- See if Macc should be added
-        if utilities.fGetToggle('Macc') then
+        if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
             gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
 
@@ -590,7 +591,7 @@ function MidcastDarkMagic()
         end
 
         -- See if Macc should be added
-        if utilities.fGetToggle('Macc') then
+        if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
             gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
 
@@ -615,7 +616,7 @@ function MidcastDarkMagic()
         gear.MoveToDynamicGS(gProfile.Sets.DarkMagic,crossjobs.Sets.CurrentGear,false,'DarkMagic');
 
         -- See if Macc should be added
-        if utilities.fGetToggle('Macc') then
+        if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
             gear.MoveToCurrent(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
     end
@@ -649,7 +650,7 @@ function MidcastDivineMagic()
         end
 
         -- See if Macc should be added
-        if utilities.fGetToggle('Macc') then
+        if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
             gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
     elseif table.find({'flash','repose'},root) ~= nil then
@@ -657,7 +658,7 @@ function MidcastDivineMagic()
         gear.MoveToDynamicGS(gProfile.Sets.EnfeebleDivine,crossjobs.Sets.CurrentGear,false,'EnfeebleDivine');
 
         -- See if Macc should be added
-        if utilities.fGetToggle('Macc') then
+        if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
             gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
     else
@@ -706,7 +707,7 @@ function MidcastEnfeeblingMagic()
     end
 
     -- See if Macc should be added
-    if utilities.fGetToggle('Macc') then
+    if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
         gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
     end
 
@@ -812,7 +813,7 @@ function MidcastElementalMagic()
     end
 
     -- See if Macc should be added
-    if utilities.fGetToggle('Macc') then
+    if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
         gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
     end
 

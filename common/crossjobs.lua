@@ -1,12 +1,12 @@
 local crossjobs = {};
 
-local utilities = require('common.utilities');
-local reporting = require('common.reporting');
-local displaybar = require('common.displaybar');
-local locks = require('common.locks');
-local gear = require('common.gear');
-local pets = require('common.pets');
-local magic = require('common.magic');
+local utilities = require('common/utilities');
+local reporting = require('common/reporting');
+local displaybar = require('common/displaybar');
+local locks = require('common/locks');
+local gear = require('common/gear');
+local pets = require('common/pets');
+local magic = require('commo/magic');
 
 --[[
 	This component contains all functions that are used across all jobs. Further, it contains
@@ -19,21 +19,22 @@ local magic = require('common.magic');
 			HandleItem					Coordinate all item gear equipping
 			HandleMidshot				Coordinate all Mids-hot gear equipping
 			HandlePreshot				Coordinate all Pre-Shot gear equipping
-			HandleWeaponskill			Coordinate all Weapon Skill gear equipping
+			Weaponskill			Coordinate all Weapon Skill gear equipping
 			packet_in_callback1			Dissects packed for region control info
-			ProcessAccuracy				Process the /acc or /racc commands
-			local RefreshVariables		Recreates variable definitions
+			lProcessAccuracy			Process the /acc or /racc commands
+			ProgressiveAccuracy			Equips the appropriate accuracy stage
 			local SetVariables			Sets runtime displaybar variables
 			t1							Test procedure for trying out new ideas
 
 		Functions:
 			fHandleWeaponskil			Determines what gear set to equip and does so
+			fValidCustomCommand			Determines if passed command is a custom conditional command
 --]]
 
 local crossjobs.version = {
 	['author']	= 'Paiine',
 	['name']	= 'Luashitacast (Boxcar)',
-	['version']	= '3.0.alpha'
+	['version']	= '3.alpha.1'
 };
 
 crossjobs.sets = {
@@ -62,6 +63,7 @@ crossjobs.sets = {
 			Range = 'Lu Shang\'s F. Rod',
 			Ammo  = 'Sinking Minnow',
 			Body  = 'Angler\'s Tunica',
+			Rings = 'Albatross Ring//CC2',
 			Legs  = 'Fisherman\'s Hose',
 			Feet  = 'Waders'
 		},
@@ -72,6 +74,7 @@ crossjobs.sets = {
 			Feet  = 'Field Boots'
 		},
 		Group//GA:DIG = {					-- Digging
+			Head = 'Egg Helm//CC2',
 			Body = 'Choc. Jack Coat'
 		},
 		Group//GA:CLAM = {					-- Clamming
@@ -180,6 +183,9 @@ crossjobs.RegionControl = {
 -- Indiactes what nation your character is from, -1 is unassigned
 crossjobs.OwnNation = -1;
 crossjobs.Sets = crossjobs.sets;
+crossjobs.WeaponTypes = {};
+crossjobs.ZoneList = {};
+crossjobs.CurrentZone = 0;
 
 --[[
 	The following event is used to capture the ownership of the regions.
@@ -222,81 +228,14 @@ end);
 --]]
 
 function crossjobs.t1(args)
-	local pEntity = AshitaCore:GetMemoryManager():GetEntity();
-	local targetIndex = gData.GetTargetIndex();
-	local x = pEntity:GetRace(targetIndex);
 
-	print(chat.message('Info: ID - ' .. tostring(pEntity.Id)));
-end		-- crossjobs.t1
-
---[[
-	RefreshVariables is a routine that let's the player manually make sure
-	the job-dependent variables are set. Sometimes when logging in, the
-	SetVariables routine is run before the client is done downloading. In
-	this case, sometimes some variables are accidentally omitted.
-
-	Note: if the variables already exist, this will not corrupt them.
---]]
-
-function RefreshVariables()
-	local player = gData.GetPlayer();
-
-	-- Now, simple toggles, those not dependent on the player's characteristics
-	-- can be ignored. The problem ones are the ones specific to a player's job.
-	-- They are the ones that sometimes don't get created.
-
-	-- WSwap	-- Weapon Swap
-	if string.find('SMN,BLM',player.MainJob) == nil then
-		utilities.CreateToggle('WSwap', (string.find('WHM,BRD,RDM',player.MainJob) ~= nil));
-	end
-
-	-- SPF		-- Show Pull Feedback
-	utilities.CreateToggle('sPF', true);
-
-	-- TH - only assuming that a main THF wants this enabled by default
-	if player.MainJob == 'THF' then
-		utilities.CreateToggle('TH',(player.MainJob=='THF'));
-	end
-
-	-- Macc
-	if string.find(utilities._sMagicJobs,player.MainJob) ~= nil or
-		 string.find(utilities._sMagicJobs,player.SubJob) ~= nil then
-		utilities.CreateToggle('Macc', false);
-	end
-
-	-- Tank
-	if string.find(utilities._TankJobs,player.MainJob) ~= nil then
-		utilities.CreateToggle('Tank', (string.find('PLD,NIN,RUN',player.MainJob) ~= nil));
-	end
-
-	-- THF: SS
-	if player.MainJob ==  'THF' or player.SubJob == 'THF' then
-		utilities.CreateToggle('SS', false);
-	end
-
-	-- BST: AJug and DB		-- Automatic Jugs, Damage type (used in pet debuff mitigation)
-	if player.MainJob == 'BST' then
-		utilities.CreateToggle('AJug',true);
-		if utilities.fGetCycle('DB') == 'Unknown' then
-			utilities.CreateCycle('DB', {[1] = 'Norm', [2] = 'BPP', [3] = 'WSS'});
+	for i,j in pairs(gear.tGearsetDetails['rAccuracy']['Head']) do
+		print(j['display'],j[2],#j['iref']);
+		for ii,jj in pairs(gear.tGearsetDetails['rAccuracy']['Head']['iref'] do
+			print(jj['id'],jj['item_ptr']['id'],jj['item_ptr']['name']);
 		end
 	end
-
-	-- BRD main only: Instrument
-	if utilities.fGetCycle('Instrument') == 'Unknown' and player.MainJob == 'BRD' then
-		utilities.CreateCycle('Instrument', {[1] = 'Horn', [2] = 'String'});
-	end
-
-	-- SMN: sBP		-- Show Blood Pact
-	if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
-		utilities.CreateToggle('sBP', true);
-		utilities.CreateCycle('Mode', {[1] = 'PERP', [2] = 'ATTK'});
-	end
-
-	-- General cycles: Damage Taken and Region
-	utilities.CreateCycle('DT', {[1] = utilities.OFF, [2] = utilities.PHY, [3] = utilities.MAG, [4] = utilities.BRE});
-	utilities.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned', [3] = 'N/A'});
-end		-- RefreshVariables
+end		-- crossjobs.t1
 
 --[[
 	SetVariables defines run settings for luashitacast
@@ -311,6 +250,7 @@ function SetVariables()
 	utilities.CreateToggle('Eva', false);		-- Evasion
 	utilities.CreateToggle('Idle', true);		-- Should Default set equip when idling
 	utilities.CreateToggle('sPF', true);		-- Show Pull Feedback
+	utilities.CreateToggle('RARE', true);		-- Include rare items in pool
 
 	-- Job specific toggles
 
@@ -370,18 +310,25 @@ function SetVariables()
 	-- General cycles: Damage Taken and Region
 	utilities.CreateCycle('DT', {[1] = utilities.OFF, [2] = utilities.PHY, [3] = utilities.MAG, [4] = utilities.BRE});
 	utilities.CreateCycle('Region', {[1] = 'Owned', [2] = 'Not Owned', [3] = 'N/A'});
+
+	-- Lastly, make sure all custom conditionals are defined
+	if gProfile.CustomConditionals ~= nil then
+		for _,j in ipairs(gProfile.CustomConditionals) do
+			j['code'] = string.upper(j['code']);
+			utilities.CreateToggle(j['code'],j['init']);
+		end
+	end
 end		-- SetVariables
 
 --[[
-	ProcessAccuracy performs the task requested dealing with Accuracy or Ranged Accuracy.
-	It's a function called by crossjobs.HandleCommands.
+	lProcessAccuracy performs the task requested dealing with Accuracy or Ranged Accuracy.
 
 	Pararameter
 		args		Passed in list of args from the command line
 					[1] -- Acc or RAcc
 --]]
 
-function ProcessAccuracy(args)
+function lProcessAccuracy(args)
 	local bTank = utilities.fGetToggle('Tank');
 	local tmp,narg;
 	local num = 0;		-- 0 means turn off that type of accuracy
@@ -442,7 +389,28 @@ function ProcessAccuracy(args)
 		displaybar.SetAccCur(tmp,num);
 		print(chat.message(string.format('Info: %s stage set to %d',tmp,num)));
 	end
-end		-- ProcessAccuracy
+end		-- lProcessAccuracy
+
+--[[
+	fValidCustomCommand determines if the passed command is a custom conditional code.
+--]]
+
+function utiliies.fValidCustomCommand(cmd)
+	local bValid = false;
+
+	if cmd == nil then
+		return false;
+	end
+
+	for _,j in ipairs(gProfile.CustomConditionals) do
+		if string.upper(j['code']) == string.upper(cmd) then
+			bValid = true;
+			break;
+		end
+	end
+
+	return bValid;
+end		-- utiliies.fValidCustomCommand
 
 --[[
 	HandleCommands processes any commands typed into luashitacast as defined in this file
@@ -453,7 +421,7 @@ end		-- ProcessAccuracy
 
 function crossjobs.HandleCommands(args)
 
-	if not crossjobs.AliasList:contains(args[1]) then
+	if not utilities.AliasList:contains(args[1]) or utiliies.fValidCustomCommand(args[1]) == true then
 		return;
 	end
 
@@ -471,6 +439,8 @@ function crossjobs.HandleCommands(args)
 	elseif args[1] == 't1' then				-- This is a test invoker
 		-- /T1
 		crossjobs.t1(args);
+	elseif args[1] == '911' then
+		pets.Call911();
 	elseif args[1] == 'gc' then				-- Invoke the Gear Check command
 		-- /GC [list]
 		if args[2] ~= nil and string.lower(args[2]) == 'list' then
@@ -509,6 +479,13 @@ function crossjobs.HandleCommands(args)
 			end
 		else
 			gProfile.settings.PlayerCappedLevel = 0;
+		end
+	elseif (string.sub(args[1],1,2) = 'cc') then
+		-- Custom conditional
+		if args[1] == 'cc' then
+			reporting.DisplayCC();
+		else
+			utilities.AdvanceToggle(string.upper(args[1]));
 		end
 	elseif (args[1] == 'dt') then		-- Indicates the type of damage taken gear that will be equipped if desired
 		-- /DT [M|P|P]
@@ -598,6 +575,11 @@ function crossjobs.HandleCommands(args)
 	elseif (args[1] == 'spf') then			-- Turns on/off whether Show Pull feedback should be displayed
 		-- /SPF
 		utilities.AdvanceToggle('sPF');
+	elseif (args[1] == 'sw') then
+		-- Loads the start weapons
+		utilities.ClearSet(crossjobs.Sets.CurrentGear);
+		gear.MoveToDynamicGS(profile.Sets.Start_Weapons,crossjobs.Sets.CurrentGear,false,'Start_Weapons');
+		gear.EquipTheGear(crossjobs.sets.CurrentGear,false);
 	elseif (args[1] == 'db') then			-- Sets DeBuff (for BST) to the appropriate setting
 		-- /DB [BPP|WSS]
 		if player.MainJob == 'BST' then
@@ -612,7 +594,7 @@ function crossjobs.HandleCommands(args)
 	elseif (args[1] == 'acc' or args[1] == 'racc') then
 		-- /ACC [#]
 		-- Sets the level for the accuracy/ranged accuracy
-		ProcessAccuracy(args);
+		lProcessAccuracy(args);
 	elseif (args[1] == 'lock' or args[1] == 'unlock') then		-- Lock/unlock gear slots
 		-- /LOCK [#|slot name,...] or /UNLOCK [#,slot name, ...]
 		locks.ProcessLocks(args);
@@ -621,7 +603,7 @@ function crossjobs.HandleCommands(args)
 		reporting.RegionControlDisplay();
 	elseif (args[1] == 'rv') then		-- Refresh variables
 		-- /RV
-		RefreshVariables();
+		SetVariables();					-- No need for a special routine, just set the variables again
 	elseif (args[1] == 'pull') then		-- Pull the target
 		-- /PULL
 		utilities.PullTarget();
@@ -693,18 +675,40 @@ function crossjobs.HandleAbility()
 		if string.match(ability.Name, 'Reward') then
 			-- Pet reward. Make sure that pet food already equipped
 			if gProfile.settings.sAmmo == nil or string.find(string.lower(gProfile.settings.sAmmo),'pet f') == nil then		-- something else equipped
-				gProfile.settings.bAmmo = pets.PetReward(gProfile.settings.DefaultPetFood,'max');
+				gProfile.settings.bAmmo = pets.PetReward(gProfile.settings.defaultPetFood,'max');
 			end
-			n = 'PC:Reward';
+			n = 'A_Reward';
 		elseif string.find('Sic,Ready',ability.Name) ~= nil then
 			-- Sic and Ready load the same set
-			n = 'PC:Sic_Ready';
+			n = 'A_Sic_Ready';
+		elseif string.match(ability.name, 'Call Beast') then
+			-- see if there's already a jug in the ammo slot
+			if utilities.fGetToggle('AJug') == true then
+				local current = gData.GetCurrentSet();
+				local bValid = false;
+
+				if current['Ammo'] ~= nil or current['Ammo'] ~= '' then
+					bValid = pets.fIsValidJugPet(current['Ammo']);
+				end
+
+				if bValid == false then
+					local x = pets.fWhichJugToEquip();
+					if x ~= nil then
+						crossjobs.Sets.CurrentGear['Ammo'] = x;
+					end
+				end
+			end
+			n = 'A_Call_Beast';
+		else
+			n = 'A_' .. string.gsub(ability.Name,' ','_');
 		end
 
 		if n ~= nil then
 			ts = utilities.fGetTableByName(n);
-			gear.MoveToDynamicGS(ts,crossjobs.Sets.CurrentGear,false,n);
-			bFound = true;
+			if ts ~= nil then
+				gear.MoveToDynamicGS(ts,crossjobs.Sets.CurrentGear,false,n);
+				bFound = true;
+			end
 		end
 	-- Check for summoner's blood pact, to load the PreBP
 	elseif string.find(pets.SmnBPRageList,ability.Name) ~= nil or
@@ -715,11 +719,11 @@ function crossjobs.HandleAbility()
 
 	if bFound == false then
 		if string.find(utilities._PetCommands,string.upper(ability.Name)) ~= nil then
-			-- Pet command
-			n = 'PC:' .. string.upper(string.gsub(ability.Name,' ','_'));
-		else
 			-- Assume it's an ability
-			n = 'A:' .. string.upper(string.gsub(ability.Name,' ','_'));
+			n = 'A_' .. string.gsub(ability.Name,' ','_');
+		else
+			-- Assume it's a pet command
+			n = 'PC_' .. string.gsub(ability.Name,' ','_');
 		end
 
 		ts = utilities.fGetTableByName(n);
@@ -825,65 +829,141 @@ function crossjobs.fHandleWeaponskill()
 	local sName,sEle,n;
 	local t = {};
 
-	gProfile.settings.priorityWeaponSkill = string.upper(gProfile.settings.priorityWeaponSkill);
-	for i = 1,string.len(gProfile.settings.priorityWeaponSkill),1 do
-		cKey = string.sub(gProfile.settings.priorityWeaponSkill,i,i);
-		if cKey == 'A' then			-- weaponskill set
-			-- See if there's a custom gear set defined for this weapon skill
-			n = 'WS:' .. string.gsub(lName,' ','_');
-			t = utilities.fGetTableByName(n);
-			if t ~= nil then
-				gear.MoveToDynamicGS(t,gProfile.Sets.CurrentGear,false,lName);
-			else
-				-- No custom set, look for the stat set
-				for i,j in pairs(utilities.tWeaponSkills) do
-					if table.find(j,lName) ~= nil then
-						sName = 'WS:' .. i;
-						t = utilities.fGetTableByName(sName);
-						if t ~= nil then
-							gear.MoveToDynamicGS(t,gProfile.Sets.CurrentGear,false,sName);
-						end
-						break;
-					end
+	-- See if there's a custom gear set defined for this weapon skill
+	n = 'WS:' .. string.gsub(lName,' ','_');
+	t = utilities.fGetTableByName(n);
+	if t ~= nil then
+		gear.MoveToDynamicGS(t,gProfile.Sets.CurrentGear,false,lName);
+	else
+		-- No custom set, look for the stat set
+		for i,j in pairs(utilities.tWeaponSkills) do
+			if table.find(j,lName) ~= nil then
+				sName = 'WS:' .. i;
+				t = utilities.fGetTableByName(sName);
+				if t ~= nil then
+					gear.MoveToDynamicGS(t,gProfile.Sets.CurrentGear,false,sName);
 				end
+				break;
 			end
 		end
-	elseif cKey == 'B' then		-- elemental gorget
-		-- An elemental gorget will add the fTP (at least 10% more damage) to the first hit
-		-- of an elemental weapon skill (and many multi-hit weapon skills replicate the fTP
-		-- for all the hits.) Also, they give +10 Accuracy to all of the weapon skill's hits
-		-- and a 1% chance of not depleting the player's TP after the weapon skill.
+	end
 
-		local sGorget,sEle = gear.fCheckForElementalGearByValue('gorget','eleWS',ws.Name);
-		if sGorget ~= nil then
-			crossjobs.Sets.CurrentGear['Neck'] = sGorget;
-		end
-	elseif cKey == 'D' then		-- accuracy
-		-- Next check on accuracy. Use Tank_accuracy if /tank = true
-		if table.find(utilities.tWeaponSkills['RANGED_AGI'],lname) ~= nil or
-			table.find(utilities.tWeaponSkills['RANGED_STRAGI'],lname) ~= nil then
-			gear.ProgressiveAccuracy('RAcc');
-		else
-			gear.ProgressiveAccuracy('Acc');
-		end
-	elseif cKey == 'E' then		-- elemental obi
+	-- Now, process the other gearsets that affects weapon skills based on the order
+	-- provided by the player
+	for _,j in ipairs(gProfile.settings.postGSWeaponSkill) do
+		j = string.lower(j);
+		if j == 'egorget' and gProfile.settings.EmbedOnlyeGorget == false then
+			-- An elemental gorget will add the fTP (at least 10% more damage) to the first hit
+			-- of an elemental weapon skill (and many multi-hit weapon skills replicate the fTP
+			-- for all the hits.) Also, they give +10 Accuracy to all of the weapon skill's hits
+			-- and a 1% chance of not depleting the player's TP after the weapon skill.
+			local sGorget,sEle = gear.fCheckForElementalGearByValue('gorget','eleWS',ws.Name);
+			if sGorget ~= nil then
+				crossjobs.Sets.CurrentGear['Neck'] = sGorget;
+			end
+		elseif j == 'eobi' and gProfile.settings.EmbedOnlyeObi == false then
 --[[
-	If the weaponskill is elemental and is closing a skillchain, then if
-	the conditions for equipping an elemental obi are advantageous, it
-	should be equipped now. Unfortunately I have no idea how to detect
-	the closing of a skillchain and the automatic equipping of an elemental
-	obi could adversely affect the damage, so this section is not
-	implemented. If I can ever figure out how to detect closing a
-	skillchain, I will readdress this.
+			If the weaponskill is elemental and is closing a skillchain, then if
+			the conditions for equipping an elemental obi are advantageous, it
+			should be equipped now. Unfortunately I have no idea how to detect
+			the closing of a skillchain and the automatic equipping of an elemental
+			obi could adversely affect the damage, so this section is not
+			implemented. If I can ever figure out how to detect closing a
+			skillchain, I will readdress this.
 
-	- CCF, 1/12/2024
+			- CCF, 1/12/2024
 --]]
+		elseif j == 'acc' and gProfile.settings.EmbedOnlyAccuracy == false then
+			if table.find(utilities.tWeaponSkills['RANGED_AGI'],lname) ~= nil or
+				table.find(utilities.tWeaponSkills['RANGED_STRAGI'],lname) ~= nil then
+				crossjobs.ProgressiveAccuracy('RAcc');
+			else
+				crossjobs.ProgressiveAccuracy('Acc');
+			end
+		end
 	end
 
 	-- Certain weapon skills can take advantage of magic attack bonus. Check here and equip gear
-	-- appropriately. (Note: even though rMAB is a reference gear set, it this particular instance
+	-- appropriately. (Note: even though rMAB is a reference gear set, in this particular instance
 	-- it is treated like it is a normal gear set.)
 	if string.find('red lotus blade,sanguine blade',lName) ~= nil then
 		gear.MoveToDynamicGS(gProfile.Sets.rMAB,gProfile.Sets.CurrentGear,false,'rMAB');
 	end
 end		-- crossjobs.fHandleWeaponskill
+
+--[[
+	ProgressiveAccuracy is a new form of applying accuracy gear which depends on a list of
+	successive stages. The Player predefines the stages and based on the stage specified, all
+	stages prior and up to that stage will be equipped.
+
+	Note: If TANK enabled, but the appropriate Tank_"set" is not defined in the Progressive
+	structure, the non-Tank version will be used. (In this case it is assumed that inline
+	conditionals will distinguish between Tank_ and non-Tank_ gear.)
+--]]
+
+function crossjobs.ProgressiveAccuracy(sType)
+	local bTank = utiliies.GetToggle('Tank');
+	local tmp,field;
+	local tField = {
+		['Acc']   = 'Accuracy',
+		['TAcc']  = 'Tank_Accuracy',
+		['RAcc']  = 'Ranged_Accuracy',
+		['TRAcc'] = 'Tank_Ranged_Accuracy'
+	};
+
+	if sType == nil then
+		sType = 'Acc';		-- The other valid type is RAcc
+	end
+
+	if bTank == nil then
+		bTank = false;
+	end
+
+	-- See if an accuracy stage has been set and determine the correct
+	-- reference code based on passed in type and whether Tank in on.
+	if sType == 'Acc' then
+		field = tField['Acc'];
+		if bTank == true and gear.fGetAccStage('TAcc','MAX') > 0 then
+			tmp = 'TAcc';
+			if gProfile.Sets.Progressive[field] == nil then
+				field = tField['Acc'];
+			end
+		else
+			tmp = 'Acc';
+		end
+
+		if gear.fGetAccStage(tmp,'CUR') == 0 then
+			return;
+		end
+	elseif sType == 'RAcc' then
+		field = tField['RAcc'];
+		if bTank == true and gear.fGetAccStage('TRAcc','MAX') > 0 then
+			tmp = 'TRAcc';
+			if gProfile.Sets.Progressive[field] == nil then
+				field = tField['RAcc'];
+			end
+		else
+			tmp = 'RAcc';
+		end
+
+		if gear.fGetAccStage(tmp,'CUR') == 0 then
+			return;
+		end
+	else
+		return;
+	end
+
+	if gProfile.Sets.Progressive[field] ~= nil then
+		local maxStage = gear.fGetAccStage(tmp,'CUR');
+		for i,j in ipairs(gProfile.Sets.Progressive[field]) do
+			if i <= maxStage then
+				gear.MoveToDynamicGS(j,crossjobs.Sets.CurrentGear,false,tmp);
+			else
+				break;
+			end
+		end
+	else
+		local msg = field .. ' undefined in the Progressive structure';
+		reporting.DisplayOnce(msg,false);
+	end
+end		-- crossjobs.ProgressiveAccuracy

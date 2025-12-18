@@ -1,8 +1,8 @@
-local displaybar = T{};
+local displaybar = {};
 
-local crossjobs = require('common.crossjobs');
-local utilities = require('common.utilities');
-local gear = require('common.gear');
+local crossjobs = require('common/crossjobs');
+local utilities = require('common/utilities');
+local gear = require('common/gear');
 local fonts = require('fonts');
 
 --[[
@@ -318,6 +318,7 @@ end		-- fAccuracyDisplay
 function displaybar.InitializeDisplayBar()
     local pEntity = AshitaCore:GetMemoryManager():GetEntity();
     local myIndex = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0);
+    local cc;
 
     displaybar.UpdateBarStatic();
     displaybar.FontObject = fonts.new(fontSettings);
@@ -331,7 +332,7 @@ function displaybar.InitializeDisplayBar()
         end
         display = display .. Main .. '/' .. SubLV .. Sub .. ' |';
 
-        if gear.bGC == true then
+        if gear.fHasGCBeenRun() == true then
             display = display .. ' ' .. fColor('green','GC') .. ' ';
         else
             display = display .. ' ' .. fColor('red','GC') .. ' ';
@@ -362,6 +363,20 @@ function displaybar.InitializeDisplayBar()
         else
             display = display .. ' | Acc: ' .. fAccuracyDisplay('Acc');
             display = display .. ' | Racc: ' .. fAccuracyDisplay('RAcc');
+        end
+
+        -- Custom Conditionals
+        display = display .. ' | CC: ';
+        for i,j in ipairs(gProfile.CustomConditionals) do
+            cc = utilities.GetToggle(j['code']);
+            if i > 1 then
+                display = display .. ',';
+            end
+            if cc == true then
+                display = display .. fColor('green',i);
+            else
+                display = display .. fColor('red',i);
+            end
         end
 
         -- Locks

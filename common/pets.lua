@@ -1,4 +1,4 @@
-local pets = T{};
+local pets = {};
 
 local crossjobs = require('common.crossjobs');
 local utilities = require('common.utilities');
@@ -9,12 +9,15 @@ local gear      = require('common.gear');
 
     List of routines-
         Subroutines:
+            Call911                 Determines spirit to summon and summons it
             FavoredJugPets          Updates jug pet list indicating favorites
             HandlePetAction         Handles all pet actions not specific to one job
             ptt                     Pet to Target information
 
         Functions:
             fElementByPetName       Determines element of smn pet
+            lfFindAllJugs           Determines which jugs the player has that are accessible
+            fIsValidJugPet          Determines if passed name is a valid jug pet
             fPetReward              Scans all containers for pet food returns best
             fSummonerPet            Determines if pet is a smn avatar/spirit
 --]]
@@ -31,33 +34,33 @@ pets.tPetFood = {
 pets._PetFoodCount = #pets.tPetFood;
 
 -- list of all jug pets available on HorizonXI.
-pets.tJugPets = T {
-    ['carrot broth']     = { ['name'] = 'Hare Familiar', ['min'] = 23, ['max'] = 35, ['have'] = false, ['fav'] = false },
-    ['herbal broth']     = { ['name'] = 'Sheep Familiar', ['min'] = 23, ['max'] = 35, ['have'] = false, ['fav'] = false },
-    ['humus']            = { ['name'] = 'Flowerpot Bill', ['min'] = 28, ['max'] = 40, ['have'] = false, ['fav'] = false },
-    ['meat broth']       = { ['name'] = 'Tiger Familiar', ['min'] = 28, ['max'] = 40, ['have'] = false, ['fav'] = false },
+pets.tJugPets = {
+    ['carrot broth']     = { ['name'] = 'Hare Familiar',    ['min'] = 23, ['max'] = 35, ['have'] = false, ['fav'] = false },
+    ['herbal broth']     = { ['name'] = 'Sheep Familiar',   ['min'] = 23, ['max'] = 35, ['have'] = false, ['fav'] = false },
+    ['humus']            = { ['name'] = 'Flowerpot Bill',   ['min'] = 28, ['max'] = 40, ['have'] = false, ['fav'] = false },
+    ['meat broth']       = { ['name'] = 'Tiger Familiar',   ['min'] = 28, ['max'] = 40, ['have'] = false, ['fav'] = false },
     ['grass. broth']     = { ['name'] = 'Flytrap Familiar', ['min'] = 28, ['max'] = 40, ['have'] = false, ['fav'] = false },
-    ['carrion broth']    = { ['name'] = 'Lizard Familiar', ['min'] = 33, ['max'] = 45, ['have'] = false, ['fav'] = false },
-    ['bug broth']        = { ['name'] = 'Mayfly Familiar', ['min'] = 33, ['max'] = 45, ['have'] = false, ['fav'] = false },
-    ['mole broth']       = { ['name'] = 'Eft Familiar', ['min'] = 33, ['max'] = 45, ['have'] = false, ['fav'] = false },
-    ['tree sap']         = { ['name'] = 'Beetle Familiar', ['min'] = 38, ['max'] = 45, ['have'] = false, ['fav'] = false },
+    ['carrion broth']    = { ['name'] = 'Lizard Familiar',  ['min'] = 33, ['max'] = 45, ['have'] = false, ['fav'] = false },
+    ['bug broth']        = { ['name'] = 'Mayfly Familiar',  ['min'] = 33, ['max'] = 45, ['have'] = false, ['fav'] = false },
+    ['mole broth']       = { ['name'] = 'Eft Familiar',     ['min'] = 33, ['max'] = 45, ['have'] = false, ['fav'] = false },
+    ['tree sap']         = { ['name'] = 'Beetle Familiar',  ['min'] = 38, ['max'] = 45, ['have'] = false, ['fav'] = false },
     ['antica broth']     = { ['name'] = 'Antlion Familiar', ['min'] = 38, ['max'] = 50, ['have'] = false, ['fav'] = false },
-    ['fish broth']       = { ['name'] = 'Crab Familiar', ['min'] = 23, ['max'] = 55, ['have'] = false, ['fav'] = false },
-    ['blood broth']      = { ['name'] = 'Mite Familiar', ['min'] = 43, ['max'] = 55, ['have'] = false, ['fav'] = false },
+    ['fish broth']       = { ['name'] = 'Crab Familiar',    ['min'] = 23, ['max'] = 55, ['have'] = false, ['fav'] = false },
+    ['blood broth']      = { ['name'] = 'Mite Familiar',    ['min'] = 43, ['max'] = 55, ['have'] = false, ['fav'] = false },
     ['f. carrot broth']  = { ['name'] = 'Keeneared Steffi', ['min'] = 43, ['max'] = 75, ['have'] = false, ['fav'] = false },
-    ['s. herbal broth']  = { ['name'] = 'Lullaby Melodia', ['min'] = 43, ['max'] = 75, ['have'] = false, ['fav'] = false },
-    ['rich humus']       = { ['name'] = 'Flowerpot Ben', ['min'] = 51, ['max'] = 75, ['have'] = false, ['fav'] = false },
-    ['w. meat broth']    = { ['name'] = 'Saber Siravarde', ['min'] = 51, ['max'] = 75, ['have'] = false, ['fav'] = false },
+    ['s. herbal broth']  = { ['name'] = 'Lullaby Melodia',  ['min'] = 43, ['max'] = 75, ['have'] = false, ['fav'] = false },
+    ['rich humus']       = { ['name'] = 'Flowerpot Ben',    ['min'] = 51, ['max'] = 75, ['have'] = false, ['fav'] = false },
+    ['w. meat broth']    = { ['name'] = 'Saber Siravarde',  ['min'] = 51, ['max'] = 75, ['have'] = false, ['fav'] = false },
     ['seedbed soil']     = { ['name'] = 'Funguar Familiar', ['min'] = 33, ['max'] = 65, ['have'] = false, ['fav'] = false },
     ['qdv. bug broth']   = { ['name'] = 'Shellbuster Orob', ['min'] = 53, ['max'] = 75, ['have'] = false, ['fav'] = false },
-    ['c. carrion broth'] = { ['name'] = 'Coldblood Como', ['min'] = 53, ['max'] = 75, ['have'] = false, ['fav'] = false },
-    ['fish oil broth']   = { ['name'] = 'Courier Carrie', ['min'] = 23, ['max'] = 75, ['have'] = false, ['fav'] = false },
-    ['alchemist water']  = { ['name'] = 'Homunculus', ['min'] = 23, ['max'] = 75, ['have'] = false, ['fav'] = false },
+    ['c. carrion broth'] = { ['name'] = 'Coldblood Como',   ['min'] = 53, ['max'] = 75, ['have'] = false, ['fav'] = false },
+    ['fish oil broth']   = { ['name'] = 'Courier Carrie',   ['min'] = 23, ['max'] = 75, ['have'] = false, ['fav'] = false },
+    ['alchemist water']  = { ['name'] = 'Homunculus',       ['min'] = 23, ['max'] = 75, ['have'] = false, ['fav'] = false },
     ['n. grass. broth']  = { ['name'] = 'Voracious Audrey', ['min'] = 53, ['max'] = 75, ['have'] = false, ['fav'] = false },
-    ['l. mole broth']    = { ['name'] = 'Ambusher Allie', ['min'] = 58, ['max'] = 75, ['have'] = false, ['fav'] = false },
-    ['scarlet sap']      = { ['name'] = 'Panzer Galahad', ['min'] = 63, ['max'] = 75, ['have'] = false, ['fav'] = false },
+    ['l. mole broth']    = { ['name'] = 'Ambusher Allie',   ['min'] = 58, ['max'] = 75, ['have'] = false, ['fav'] = false },
+    ['scarlet sap']      = { ['name'] = 'Panzer Galahad',   ['min'] = 63, ['max'] = 75, ['have'] = false, ['fav'] = false },
     ['c. blood broth']   = { ['name'] = 'Lifedrinker Lars', ['min'] = 63, ['max'] = 75, ['have'] = false, ['fav'] = false },
-    ['f. antica broth']  = { ['name'] = 'Chopsuey Chucky', ['min'] = 63, ['max'] = 75, ['have'] = false, ['fav'] = false },
+    ['f. antica broth']  = { ['name'] = 'Chopsuey Chucky',  ['min'] = 63, ['max'] = 75, ['have'] = false, ['fav'] = false },
     ['sun water']        = { ['name'] = 'Amigo Sabotender', ['min'] = 75, ['max'] = 75, ['have'] = false, ['fav'] = false }
 };
 
@@ -135,26 +138,26 @@ function pets.HandlePetAction(PetAction)
     if table.find(pets.BstPetAttack,PetAction.Name) ~= nil or
        table.find(pets.BstPetMagicAccuracy,PetAction.Name) ~= nil or
        table.find(pets.BstPetMagicAttack,PetAction.Name ~= nil then
-        sn = utilities.fGetTableByName('PC:Sic_Ready');
+        sn = utilities.fGetTableByName('PC_Sic_Ready');
         if sn ~= nil then
-            gear.MoveToDynamicGS(sn,crossjobs.Sets.CurrentGear,false,'PC:Sic_Ready');
+            gear.MoveToDynamicGS(sn,crossjobs.Sets.CurrentGear,false,'PC_Sic_Ready');
         end
     -- Next, SMN Blood pacts
     elseif table.find(pets.SmnBPSkill,PetAction.Name) ~= nil or
-        table.find(pets.SmnBPMagical,PetAction.Name) ~= nil or
-        table.find(pets.SmnBPPhysical,PetAction.Name) ~= nil or
-        table.find(pets.SmnBPAccuracy,PetAction.Name) ~= nil or
-        table.find(pets.SmnBPHybrid,PetAction.Name) ~= nil then
+       table.find(pets.SmnBPMagical,PetAction.Name) ~= nil or
+       table.find(pets.SmnBPPhysical,PetAction.Name) ~= nil or
+       table.find(pets.SmnBPAccuracy,PetAction.Name) ~= nil or
+       table.find(pets.SmnBPHybrid,PetAction.Name) ~= nil then
         gear.MoveToDynamicGS(gProfile.Sets.MidBP,crossjobs.Sets.CurrentGear,false,'MidBP');
     -- And DRG's Steady Wing'
     elseif PetAction.Name == 'Steady Wing' then
-        sn = utilities.fGetTableByName('PC:Steady_Wing');
+        sn = utilities.fGetTableByName('PC_Steady_Wing');
         if sn ~= nil then
-            gear.MoveToDynamicGS(sn,crossjobs.Sets.CurrentGear,false,'PC:Steady_Wing');
+            gear.MoveToDynamicGS(sn,crossjobs.Sets.CurrentGear,false,'PC_Steady_Wing');
         end
     -- Lastly, any other leftover commands
     else
-        local sName = 'PC:' .. PetAction.Name;
+        local sName = 'PC' .. string.gsub(PetAction.Name,' ','_');
         sn = utilities.fGetTableByName(sName);
         if sn ~= nil then
             gear.MoveToDynamicGS(sn,crossjobs.Sets.CurrentGear,false,sName);
@@ -164,21 +167,157 @@ function pets.HandlePetAction(PetAction)
 end		-- pets.HandlePetAction
 
 --[[
-    FavoredJugPets determines if there's any favored BST jug pets and updates
-    tJugPets accordingly.
+    fIsValidJugPet determines if the passed item name is a valid jug pet name
 
-    -- simplified
+    Returned
+        T/F, is the jug pet name valid
+--]]
+
+function pets.fIsValidJugPet(sName)
+
+    if sName == nil then
+        return false;
+    end
+
+    sName = string.lower(sName);
+    for i,j in pairs(pets.tJugPets) do
+        if string.match(i,sName) then
+            return(true);
+        end
+    end
+
+    return false;
+end     -- pets.fIsValidJugPet
+
+--[[
+    FavoredJugPets determines if there's any favored BST jug pets and updates
+    tJugPets accordingly. This function needs to be run only once.
 --]]
 
 function pets.FavoredJugPets()
     local player = gData.GetPlayer();
+    local t1,t2;
 
-    if player.MainJob == 'BST' and gProfile.FavoredJugs ~= nil then
-        for i,j in pairs(gProfile.FavoredJugs) do
-            pets.tJugPets[string.lower(j)] == true;
+    if player.MainJob == 'BST' and gProfile.FavoredJugPets ~= nil then
+        for i,j in pairs(gProfile.FavoredJugPets) do
+            t1 = string.lower(i);
+            for ii,jj in pairs(pets.tJugPets) do
+                t2 = string.lower(jj['name']);
+                if t1 == t2 then
+                    pets.tJugPets[ii]['fav'] = j['favored'];
+                    break;
+                end
+            end
         end
     end
 end     -- pets.FavoredJugPets
+
+--[[
+    FindAllJugs searches all the accessible storage areas for pet jugs and
+    updates tJugPets if any are found and level appropriate.
+--]]
+
+function lfFindAllJugs()
+    local resources = AshitaCore:GetResourceManager();
+    local player = gData.GetPlayer();
+    local tStorage = utilities.EQUIPABLE_NONHOLIDAY;
+    local iCount = 0;
+
+    -- Clear the table ownership settings
+    for i,j in pairs(pets.tJugPets) do
+        j['have'] = false;
+    end
+
+    -- Now walk the equipable (in the field) storage areas
+    for k,v in ipairs(tStorage) do
+        local containerID = v['id'];
+        -- then loop through the selected container looking for a jug pet's broth
+        for j = 1,inventory:GetContainerCountMax(containerID),1 do
+            local itemEntry = inventory:GetContainerItem(containerID, j);
+            if (itemEntry.Id ~= 0 and itemEntry.Id ~= 65535) then
+                local item = resources:GetItemById(itemEntry.Id);
+                if item ~= nil then
+                    -- then check the master list of jug pets
+                    for kk,tpf in pairs(pets.tJugPets) do
+                        if kk == string.lower(item.Name[1]) then
+                            if (tpf['min'] <= player.MainJobSync) and
+                                (tpf['max'] >= player.MainJobSync) then
+                                -- finally, this one is possible to be selected
+                                pets.tJugPets[kk]['have'] = true;
+                                iCount = iCount + 1;
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return (iCount > 0);
+end     -- lfFindAllJugs
+
+--[[
+    fWhichJugToEquip walks the master list and determines which jug should be
+    equipped. It tries to comply with a favored jug. It returns the highest
+    level jug to be equipped or nil if no jug found.
+
+    Returned:
+        Name of jug to equip or nil
+--]]
+
+function pets.fWhichJugToEquip()
+    local player = gData.GetPlayer();
+    local favored = nil;
+    local nonfavored = nil;
+
+    -- First see if a Jug is already equipped
+
+    if lfFindAllJugs() == true then
+        -- Nexc find the best favored and nonfavored
+        for i,j in pairs(pets.tJugPets) do
+            if j['have'] == true then
+                if j['fav'] == true then
+                    --  favored
+                    if favored == nil then
+                        favored = i;
+                    else
+                        if pets.tJugPets[favored]['max'] < j['max'] and pets.tJugPets[favored]['max'] < player.MainJobSync then
+                            favored  = i;
+                        end
+                    end
+                else
+                    -- non-favored
+                    if nonfavored == nil then
+                        nonfavored = i;
+                    else
+                        if pets.tJugPets[nonfavored]['max'] < j['max'] and pets.tJugPets[nonfavored]['max'] < player.MainJobSync then
+                            nonfavored  = i;
+                        end
+                    end
+                end
+            end
+        end
+
+        -- At this point we should have what we need
+        if favored == nil and nonfavored == nil then
+            print(chat.message('Info: No Jug Pets that can be used are available'));
+            return(nil);
+        elseif favored ~= nil and nonfavored == nil then
+            return(favored);
+        elseif nonfavored ~= nil and favored == nil then
+            return(nonfavored);
+        else
+            -- Determine if favored is a better match than nonfavored
+            if pets.tJugPets[favored]['max'] >= pets.tJugPets[nonfavored]['max'] then
+                return(favored);
+            else
+                return(nonfavored);
+            end
+        end
+    else
+        print(chat.message('Info: No Jug Pets that can be used are available'));
+        return(nil);
+    end
+end     -- pets.fWhichJugToEquip
 
 --[[
     fPetReward scans all equipable storage containers for all of the pet foods
@@ -363,3 +502,135 @@ function pets.fElementByPetName(pName)
     return ele;
 end		-- pets.fElementByPetName
 
+--[[
+    Call911 determines which elemental spirit should be summoned and summons it. Intended as an emergency
+    summons mechanism, what makes a spirit the best is how often it can cast spells. This depends on your
+    summoning skill (max and current values), day's element, and weather's element, plus some other specific
+    settings. Use the following formula:
+
+        Casting Time = 48s + (Max Summoning Skill - Current Summoning Skill)/3 + adjustments
+
+    where adjustments are:
+        Spirit's element matches/opposes the day's element: -3/+3 secs
+        Spirit's element matches/opposes the weather's element: -2/+2 secs
+        Summoner wearing "Summoner's Spats": -5 secs
+        Astral Flow enabled: -5 secs
+        Light spirit in healing mode or buffering mode: 1/2 casting time
+
+    Since this decision is about the initial cast, only matching the day's element and/or the weather's
+    element will be considered here. Summoner's spats should be done through inline conditionals and the
+    Light Spirit modes should be considered through the defaultSpirit setting in the summoner's job file.
+    The affect of astal flow will happen regardless of which spirit is summoned.
+--]]
+
+function pets.Call911()
+    local player = gData.GetPlayer();
+    local pet = gData.GetPet();
+    local environ = gData.GetEnvironment();
+    local dayEle = string.lower(environ.DayElement);
+    local weatherEle = string.lower(environ.WeatherElement);
+    local iWhich = 0;
+    local iCurrent = 0;
+    local iScore;
+    local rec = {
+        [1] = { ['spirit'] = 'fire spirit',    ['SID'] = 288, ['ele'] = 'fire',    ['weak'] = 'water',   ['have'] = false, ['cd'] = false },
+        [2] = { ['spirit'] = 'ice spirit',     ['SID'] = 289, ['ele'] = 'ice',     ['weak'] = 'fire',    ['have'] = false, ['cd'] = false },
+        [3] = { ['spirit'] = 'air spirit',     ['SID'] = 290, ['ele'] = 'wind',    ['weak'] = 'ice',     ['have'] = false, ['cd'] = false },
+        [4] = { ['spirit'] = 'earth spirit',   ['SID'] = 291, ['ele'] = 'earth',   ['weak'] = 'wind',    ['have'] = false, ['cd'] = false },
+        [5] = { ['spirit'] = 'thunder spirit', ['SID'] = 292, ['ele'] = 'thunder', ['weak'] = 'earth',   ['have'] = false, ['cd'] = false },
+        [6] = { ['spirit'] = 'water spirit',   ['SID'] = 293, ['ele'] = 'water',   ['weak'] = 'thunder', ['have'] = false, ['cd'] = false },
+        [6] = { ['spirit'] = 'light spirit',   ['SID'] = 294, ['ele'] = 'light',   ['weak'] = 'dark',    ['have'] = false, ['cd'] = false },
+        [7] = { ['spirit'] = 'dark spirit',    ['SID'] = 295, ['ele'] = 'dark',    ['weak'] = 'light',   ['have'] = false, ['cd'] = false }
+        };
+
+    -- Player must be either SMN/ or /SMN to use this function
+    if not (player.MainJob == 'SMN' or player.SubJob == 'SMN') then
+        print(chat.message('Warning: only a SMN/ or /SMN can invoke "911". Ignoring command'));
+        return;
+    end
+
+    if pet ~= nil then          -- Any existing pet will block an elemental spirit summons
+        print(chat.message('Warning: You already have a pet. Ignoring command'));
+        return;
+    end
+
+    if player.MP < 10 then        -- All spirit summons cost 10mp
+        print(chat.message('Warning: Insufficient mana to summon any element spirit. Ignoring command'))
+        return;
+    end
+
+    -- Walk through the list of spirits determining the relative elemental score and whether
+    -- the player has the spell and/or is it on cooldown.
+    for i,j in ipairs(rec) do
+        iScore = 0;
+        -- Make sure that the player knows the spell and that it's not on cool down
+        j['have'] = (AshitaCore:GetMemoryManager():GetPlayer():HasSpell(j['SID']) == true);
+        j['cd'] = (AshitaCore:GetMemoryManager():GetRecast():GetSpellTimer(j['SID']) ~= 0);
+        -- Now process the record
+        if j['have'] == true and j['cd'] == false then
+            -- First check the day's element
+            if j['ele'] == dayEle then
+                iScore = iScore - 3;
+            elseif j['weak'] == dayEle then
+                iScore = iScore + 3;
+            end
+            -- Next check the weather's element
+            if j['ele'] == weatherEle then
+                iScore = iScore - 2;
+            elseif j['weak'] == WeatherElement then
+                iScore = iScore + 2;
+            end
+
+            -- record it
+            j['score'] = iScore;
+
+            -- if appropriate, track the current "best" option
+            if iScore < iCurrent then
+                iWhich = i;
+                iCurrent = iScore;
+            end
+        end
+    end
+
+    -- Now the fun begins. If a spirit was selected, then we're good. Otherwise we need to see about what the
+    -- player has picked for a default spirit
+    if iWhich == 0 then
+        if gProfile.settings.defaultSpirit ~= nil then
+            -- Since there is a default setting, find it in the list
+            for i,j in ipairs(rec) do
+                if j['spirit'] == string.lower(gProfile.settings.defaultSpirit) then
+                    -- Since found, check to see if player has it and is it off cooldown
+                    if j['have'] == true and j['cd'] == false then
+                        iWhich = i;
+                        break;
+                    else
+                        print(chat.message('Info: Default spirit: ' .. gProfile.settings.defaultSpirit .. ' is either unknown or on cool down. Defaulting to a spirit can summon'))
+                        break;
+                    end
+                end
+            end
+        end
+
+        -- It's possible that the default spirit had an issue. Pick the first entry that the player has and is not on cool down
+        if iWhich == 0 then
+            for i,j in ipairs(rec) do
+                if rec['have'] == true and rec['cd'] == false then
+                    iWhich = i;
+                    break;
+                end
+            end
+
+            if iWhich == 0 then
+                -- If one isn't selected at this point, then no spirit is possible. Notify player
+                print(chat.message('Warning: No spirit can be summoned at this time'));
+                return;
+            end
+        end
+    end
+
+    -- Process the selected elemental spirit
+    print(chat.message('Info: Summoning ' .. j[iWhich]['spirit']))''
+    local sCmd = '/ma "' .. j[iWhich]['spirit'] .. '" <me>';
+    AshitaCore:GetChatManager():QueueCommand(1, sCmd);
+    return;
+end     -- pets.Call911

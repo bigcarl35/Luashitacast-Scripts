@@ -1,4 +1,4 @@
-local locks = T{};
+local locks = {};
 
 local utilities = require('common.utilities');
 local gear = require('common.gear');
@@ -21,22 +21,22 @@ local gear = require('common.gear');
 
 -- The following structure is used for locks
 locks.tLocks = {
-    [1] =  { ['slot'] = 'main',  ['mask'] = {1,3},              ['lock'] = false },
-    [2] =  { ['slot'] = 'sub',   ['mask'] = {2,3},              ['lock'] = false },
-    [3] =  { ['slot'] = 'range', ['mask'] = {4},                ['lock'] = false },
-    [4] =  { ['slot'] = 'ammo',  ['mask'] = {8},                ['lock'] = false },
-    [5] =  { ['slot'] = 'head',  ['mask'] = {16},               ['lock'] = false },
-    [6] =  { ['slot'] = 'neck',  ['mask'] = {512},              ['lock'] = false },
-    [7] =  { ['slot'] = 'ear1',  ['mask'] = {2048,4096,6144},   ['lock'] = false },
-    [8] =  { ['slot'] = 'ear2',  ['mask'] = {2048,4096,6144},   ['lock'] = false },
-    [9] =  { ['slot'] = 'body',  ['mask'] = {32},               ['lock'] = false },
-    [10] = { ['slot'] = 'hands', ['mask'] = {64},               ['lock'] = false },
-    [11] = { ['slot'] = 'ring1', ['mask'] = {8192,16384,24576}, ['lock'] = false },
-    [12] = { ['slot'] = 'ring2', ['mask'] = {8192,16384,24576}, ['lock'] = false },
-    [13] = { ['slot'] = 'back',  ['mask'] = {32768},            ['lock'] = false },
-    [14] = { ['slot'] = 'waist', ['mask'] = {1024},             ['lock'] = false },
-    [15] = { ['slot'] = 'legs',  ['mask'] = {128},              ['lock'] = false },
-    [16] = { ['slot'] = 'feet',  ['mask'] = {256},              ['lock'] = false }
+    [1] =  { ['slot'] = 'main',  ['mask'] = {1,3},              ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
+    [2] =  { ['slot'] = 'sub',   ['mask'] = {2,3},              ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
+    [3] =  { ['slot'] = 'range', ['mask'] = {4},                ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
+    [4] =  { ['slot'] = 'ammo',  ['mask'] = {8},                ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
+    [5] =  { ['slot'] = 'head',  ['mask'] = {16},               ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
+    [6] =  { ['slot'] = 'neck',  ['mask'] = {512},              ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
+    [7] =  { ['slot'] = 'ear1',  ['mask'] = {2048,4096,6144},   ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
+    [8] =  { ['slot'] = 'ear2',  ['mask'] = {2048,4096,6144},   ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
+    [9] =  { ['slot'] = 'body',  ['mask'] = {32},               ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
+    [10] = { ['slot'] = 'hands', ['mask'] = {64},               ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
+    [11] = { ['slot'] = 'ring1', ['mask'] = {8192,16384,24576}, ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
+    [12] = { ['slot'] = 'ring2', ['mask'] = {8192,16384,24576}, ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
+    [13] = { ['slot'] = 'back',  ['mask'] = {32768},            ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
+    [14] = { ['slot'] = 'waist', ['mask'] = {1024},             ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
+    [15] = { ['slot'] = 'legs',  ['mask'] = {128},              ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
+    [16] = { ['slot'] = 'feet',  ['mask'] = {256},              ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil }
 };
 
 -- Define list of locks
@@ -268,6 +268,7 @@ end     -- locks.fgetLockedList
 --]]
 
 function locks.LockControl(bSet,list)
+
 end     -- locks.LockControl
 
 --[[
