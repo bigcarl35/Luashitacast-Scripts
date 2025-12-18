@@ -301,6 +301,7 @@ Slot:
 +   //NOT_SSLOTS:list    Subset only conditional, will load all slots from the attached subset except for those listed (targetted for post 3.0 release)
 
 Other:
+*   //DUALWIELD          Equip if main or sub job can dual wield
 r   //INPARTY            Equip item if in a party (was //PARTY)
     //OWN                Equip if area's region controlled by player's nation
 r   //SPELL:xxx          Equip if the spell being cast's name contains the "xxx" substring (was //SP:)
@@ -313,7 +314,10 @@ r   //SPELL:xxx          Equip if the spell being cast's name contains the "xxx"
 *   //STATUS:RESTING     Equip if the player is resting
 *   //STATUS:IDLING      Equip if the player is idling
 
+~   //CC#                Equip if the custom conditional is enabled; returns true atm
+
     Inverse -
+*   //NOT_DUALWIELD      Equip if main or sub job cannot dual wield
 *   //NOT_INPARTY        Equip item if not in a party
     //NOT_OWN            Equip if the area's region not controlled by player's nation
 *   //NOT_TOWN           Equip if player's not in town
@@ -324,6 +328,8 @@ r   //SPELL:xxx          Equip if the spell being cast's name contains the "xxx"
 *   //NOT_STATUS:ENGAGED Equip if the player is not engaged (fighting or weapons drawn)
 *   //NOT_STATUS:RESTING Equip if the player is not resting
 *   //NOT_STATUS:IDLING  Equip if the player is not idling
+
+~   //NOT_CC#            Equip if the custom conditional is false; returns true atm
 
 Songs:
 r   //SONG:xxx           Equip if song being cast's name contains the "xxx" substring (was invoked via SP:xxx)
@@ -379,6 +385,7 @@ o   //CARBY              Equip if carbuncle out (obsolete, use PETNAME:xxx)
     //PETFNPF            Equip if pet is fighting but not player
     //PETNAME:xxx        Equip if pet named xxx. Note: "xxx" can be a substring
 
+*   //SMN:AVATAR         Equip if a SMN avatar (not spirit) is being summoned
 *   //SMN:BP:PHYS        Equip if SMN blood pact is physical based
 *   //SMN:BP:MAG         Equip if SMN blood pact is magical based
 *   //SMN:BP:SKILL       Equip if SMN blood pact is skill based
@@ -400,6 +407,7 @@ r   //NOT_PET             Equip if the player has no pet (was //NO_PET)
 r   //NOT_PETF            Equip if player has pet and it is not fighting (was //PETNF)
 *   //NOT_PETFNPF         Equip if pet not fighting but player is fighting
     //NOT_PETNAME:xxx     Equip if player has no pet or pet is not named "xxx"
+*   //NOT_SMN:AVATAR      Equip if a SMN avatar being summoned is a spirit
 *   //NOT_SMN:BP:PHYS     Equip if SMN blood pact is not physical based
 *   //NOT_SMN:BP:MAG      Equip if SMN blood pact is not magical based
 *   //NOT_SMN:BP:SKILL    Equip if SMN blood pact is not skill based
@@ -439,6 +447,8 @@ Job:
     //SJWAR              Equip if the player's subjob is a Warrior
     //SJWHM              Equip if the player's subjob is a White Mage
 
+*    //SJ[job,job...]    Equip if the player's subjob is one of the jobs listed
+
     Inverse -
 *    //NOT_MSJ           Equip if player's subjob is not magical
 *    //NOT_SJBLM         Equip if the player's subjob is not a Black Mage
@@ -463,6 +473,8 @@ Job:
 *    //NOT_SJTHF         Equip if the player's subjob is not a Thief
 *    //NOT_SJWAR         Equip if the player's subjob is not a Warrior
 *    //NOT_SJWHM         Equip if the player's subjob is not a White Mage
+
+*    //NOT_SJ[job,job...] Equip if the player's subjob is not one of the jobs listed
 
 Job in Party:
     //PJPBLM             Equip if there's a Black Mage in your party
@@ -540,13 +552,17 @@ r    //PJPWHM_NOT_ME     Equip if there's a White Mage in your party and it's no
     the job and that's a given since each of your jobs have specific luashitacast job files. Skipping.
 
 Target:
-    //AMORPH             Equip if target is from the amorph family
-    //AQUAN              Equip if target is from the aquan family
++    //FAM=xxx            Equip if target is part of the specified family
++    //ECO=xxx            Equip if target is part of the specified Eco-System
+r    //AMORPH             Equip if target is from the amorph family
+r    //AQUAN              Equip if target is from the aquan family
     //ME                 Equip if the target is me
 
     Inverse -
-*   //NOT_AMORPH         Equip if target is not from the amorph family
-*   //NOT_AQUAN          Equip if target is not from the aquan family
++    //NOT_FAM=xxx        Equip if target is part of the specified family
++    //NOT_ECO=xxx        Equip if target is part of the specified Eco-System
+r   //NOT_AMORPH         Equip if target is not from the amorph family
+r   //NOT_AQUAN          Equip if target is not from the aquan family
     //NOT_ME             Equip if the target is not me
 
 Time:
@@ -573,6 +589,8 @@ Toggled Condition:
     //DT:BREATH          Equip item if damage taken is set to breath
     //DT:MAGICAL         Equip item if damage taken is set to magical
     //DT:PHYSICAL        Equip item if damage taken is set to physical
+*   //ACCURACY           Equip item if some stage of appropriate accuracy is set
+*   //RACCURACY          Equip item if some stage of ranged accuracy is set
     //EVASION            Equip if 'Eva' is enabled
     //IDLE               Equip if 'Idle' is enabled
     //TANK               Equip if 'Tank' is enabled (limited to: PLD,NIN,RUN,WAR,DRK,THF,RDM,BLU)
@@ -580,6 +598,7 @@ Toggled Condition:
     //WSWAP              Equip if 'WSWAP' is enabled (all jobs except SMN and BLM)
     //KITE               Equip if 'kite' is enabled
 *   //SPF                Equip if 'sPF' is enabled (show pull feedback)
+*   //RIDING             Equip if you're riding a "chocobo"
 
 r   //BRD:HORN           Equip if instrument is set to HORN
 r   //BRD:STRING         Equip if instrument is set to STRING
@@ -593,7 +612,9 @@ r   //THF:TH             Equip if 'TH' is enabled (was TH)
     Inverse -
 *   //NOT_DT:BREATH      Equip item if damage taken is not set to breath
 *   //NOT_DT:MAGICAL     Equip item if damage taken is not set to magical
-*   //NOT_DT:PHYSICAL     Equip item if damage taken is not set to physical
+*   //NOT_DT:PHYSICAL    Equip item if damage taken is not set to physical
+*   //NOT_ACCURACY       Equip item if some stage of accuracy is not set
+*   //NOT_RACCURACY      Equip item if some stage of ranged accuracy is not set
 *   //NOT_EVASION        Equip if 'Eva' is disabled
 *   //NOT_IDLE           Equip if 'Idle' is disabled
 *   //NOT_TANK           Equip if 'Tank' is disabled
@@ -601,6 +622,7 @@ r   //THF:TH             Equip if 'TH' is enabled (was TH)
 *   //NOT_WSWAP          Equip if 'WSWAP' is disabled (all jobs except SMN and BLM)
 *   //NOT_KITE           Equip if 'kite' is disabled
 *   //NOT_SPF            Equip if 'sPF' is disabled (show pull feedback)
+*   //NOT_RIDING         Equip if you're riding a "chocobo"
 
 *   //NOT_BRD:HORN       Equip if instrument is not set to horn (brd only)
 *   //NOT_BRD:STRING     Equip if instrument is not set to string (brd only)
@@ -613,41 +635,43 @@ r   //THF:TH             Equip if 'TH' is enabled (was TH)
 
 Weapon type:
     //ARCHERY            Equip if weapon in Range is known in profile.WeaponType[Bow]
-    //AXE                Equip if weapon in Main/Sub is known in profile.WeaponType[Axe]
-    //CLUB               Equip if weapon in Main/Sub is known in profile.WeaponType[Club]
-    //DAGGER             Equip if weapon in Main/Sub is known in profile.WeaponType[Dagger]
-    //GAXE               Equip if weapon in Main is known in profile.WeaponType[Great Axe]
-    //GKATANA            Equip if weapon in Main is known in profile.WeaponType[Great Katana]
-    //GSWORD             Equip if weapon in Main is known in profile.WeaponType[Great Sword]
-    //H2H                Equip if weapon in Main is known in profile.WeaponType[Hand to Hand]
-    //KATANA             Equip if weapon in Main/Sub is known in profile.WeaponType[Katana]
-    //MARKSMANSHIP       Equip if weapon in Range is known in profile.WeaponType[Gun,Crossbow]
-    //POLEARM            Equip if weapon in Main is known in profile.WeaponType[Polearm]
-    //SCYTHE             Equip if weapon in Main is known in profile.WeaponType[Scythe]
-    //STAVE              Equip if weapon in Main is known in profile.WeaponType[Staff]
-    //SWORD              Equip if weapon in Main/Sub is known in profile.WeaponType[Sword]
-    //THROWING           Equip if weapon in Range/Amdmo is known in profile.WeaponType[Throwing]
+    //AXE                Equip if weapon in Main/Sub is known
+    //CLUB               Equip if weapon in Main/Sub is known
+    //DAGGER             Equip if weapon in Main/Sub is known
+    //GAXE               Equip if weapon in Main is known
+    //GKATANA            Equip if weapon in Main is known
+    //GSWORD             Equip if weapon in Main is known
+    //H2H                Equip if weapon in Main is known
+    //KATANA             Equip if weapon in Main/Sub is known
+    //MARKSMANSHIP       Equip if weapon in Range is known
+    //POLEARM            Equip if weapon in Main is known
+    //SCYTHE             Equip if weapon in Main is known
+    //STAVE              Equip if weapon in Main is known
+    //SWORD              Equip if weapon in Main/Sub is known
+    //THROWING           Equip if weapon in Range/Amdmo is known
 
-*   //SHIELD             Equip if there's a known in profile.WeaponType[Shield] shield in Sub
++   //AMMO               Equip if ammo in ammo slot is known
+*   //SHIELD             Equip if there's a known
 
     Inverse -
-*   //NOT_ARCHERY        Equip if weapon in Range is not known in profile.WeaponType[Bow]
-*   //NOT_AXE            Equip if weapon in Main/Sub is not known in profile.WeaponType[Axe]
-*   //NOT_CLUB           Equip if weapon in Main/Sub is not known in profile.WeaponType[Club]
-*   //NOT_DAGGER         Equip if weapon in Main/Sub is not known in profile.WeaponType[Dagger]
-*   //NOT_GAXE           Equip if weapon in Main is not known in profile.WeaponType[Great Axe]
-*   //NOT_GKATANA        Equip if weapon in Main is not known in profile.WeaponType[Great Katana]
-*   //NOT_GSWORD         Equip if weapon in Main is not known in profile.WeaponType[Great Sword]
-*   //NOT_H2H            Equip if weapon in Main is not known in profile.WeaponType[Hand to Hand]
-*   //NOT_KATANA         Equip if weapon in Main/Sub is not known in profile.WeaponType[Katana]
-*   //NOT_MARKSMANSHIP   Equip if weapon in Range is not kIDLINGnown in profile.WeaponType[Gun,Crossbow]
-*   //NOT_POLEARM        Equip if weapon in Main is not known in profile.WeaponType[Polearm]
-*   //NOT_SCYTHE         Equip if weapon in Main is not known in profile.WeaponType[Scythe]
-*   //NOT_STAVE          Equip if weapon in Main is not known in profile.WeaponType[Staff]
-*   //NOT_SWORD          Equip if weapon in Main/Sub is not known in profile.WeaponType[Sword]
-*   //NOT_THROWING       Equip if weapon in Range/Amdmo is not known in profile.WeaponType[Throwing]
+*   //NOT_ARCHERY        Equip if weapon in Range is not known
+*   //NOT_AXE            Equip if weapon in Main/Sub is not known
+*   //NOT_CLUB           Equip if weapon in Main/Sub is not known
+*   //NOT_DAGGER         Equip if weapon in Main/Sub is not known
+*   //NOT_GAXE           Equip if weapon in Main is not known
+*   //NOT_GKATANA        Equip if weapon in Main is not known
+*   //NOT_GSWORD         Equip if weapon in Main is not known
+*   //NOT_H2H            Equip if weapon in Main is not known
+*   //NOT_KATANA         Equip if weapon in Main/Sub is not known
+*   //NOT_MARKSMANSHIP   Equip if weapon in Range is not known
+*   //NOT_POLEARM        Equip if weapon in Main is not known
+*   //NOT_SCYTHE         Equip if weapon in Main is not known
+*   //NOT_STAVE          Equip if weapon in Main is not known
+*   //NOT_SWORD          Equip if weapon in Main/Sub is not known
+*   //NOT_THROWING       Equip if weapon in Range/Amdmo is not known
 
-*   //NOT_SHIELD         Equip if there isn't a known in profile.WeaponType[Shield] shield in Sub
++   //NOT_AMMO           equip if ammo in ammo slot is not known
+*   //NOT_SHIELD         Equip if sub known
 
 Weather:
     //WTH:CLEAR          Equip if sky is clear
@@ -689,5 +713,6 @@ Keywords:
 Note:
     + designates entries that are not implemented yet
     * designates entries that are only found in BOXCAR (pending next version)
+    ~ designates entries are temporary stub functions (it always returns true), only found in BOXCAR
     o designates entries currently found that are removed in BOXCAR (obsolete, being removed)
     r designates entries that exist, but are renamed

@@ -14,7 +14,7 @@
 
 - Changed how BST's AJug's favorability works. tJugPets moved from Job file to gear.lua. Introduced
   FavoredJugs into BST job file, a simple list ordering what is favored. This is read in and updated
-  via GearCheck.
+  via /GC.
 
 - Changed how MPP and HPP are gotten from the GetPlayer() function. Percentages are now more accurate.
   (17)
@@ -23,11 +23,8 @@
 
 - Added support for groups to inline reference translation. Subsets are still ignored.
 
-- Fixed issue where code for a buff has a "_" in them thus not matching buff name.
-
-- Changed priority for Kite. It now ignores locks and any items that have to be kept on. Kiting
-  takes priority. (Aside, you could argue that a high breath mantle or breath mantle buff should
-  remain intact. Need to consider this.)
+- Fixed issue where code for a buff has a "_" in them thus not matching buff name. It checks for both
+  with and without "_" (as in, if the buff name has a "_" or if the player designated the " " as a "_".)
 
 - You can now indicate whether Refresh or Regen has priority when you rest.
 
@@ -55,3 +52,40 @@
 
 - Added configurable option to job files so that player can indicate if they want LUASHITACAST to
   equip the job appropriate macro book and macro page.
+
+- Support for custom conditionals has been added. (A10)
+
+- Added code to remove "see-saw" effect when resting between refresh and regen gear because gear
+  change uncapped capped stat setting. (25)
+
+- Added inline condition to //SJ to accept a list of jobs as in //SJ[NIN,DNC] to mean subjob is
+  either Ninja or Dancer. If merit is found for other conditionals, they will be implemented
+  conditional by conditional. (A16)
+
+- Added command: sw to force the start weapons to be reloaded. (Often the weapons equipped when
+  you just log in are incorrect since /gc must be run first. This lets the player get the weapons
+  right.)
+
+- Updated the storage slips list to define all the slips, even the ones out of era.
+
+- Made order of processing engaged activity/weaponskill more obvious. Added ability to disable
+  automatic processing in favor of enbedded inline conditionals. This gives the player more agency.
+
+- Added inline conditionals: ACCURACY and NOT_ACCURACY. This changes accuracy from stages to "has
+  any stage been set" on the conditional. It's a mechanism that lets the player ignore progressive
+  accuracy although they still have to set a stage to make the inline conditional work. Added
+  inline conditionals: RARE and NOT_RARE. This is used to indicate whether rare items should be
+  added to the pool (ex: dig pool).
+
+- Added inline conditionals: DUALWIELD and NOT_DUALWIELD. These detect if your job/subjob permits
+  dual wielding. Added inline conditionals: RIDING and NOT_RIDING. These detect if you are riding
+  a mount.
+
+- Changed /help to /man (taken from Unix/Linux) to avoid a conflict with the "Call for help"
+  function.
+
+- Player can now designate that all slots are locked when crafting/gather. (This is to avoid
+  an error when an item changes based on time/day/weather.)
+
+- Changed monster family lookup to zone specific listing. Changed weapon type check to using
+  typed master weapons listing.

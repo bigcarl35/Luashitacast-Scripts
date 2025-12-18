@@ -116,7 +116,13 @@ IP - 6) Modify /GC to validate codes, ensure referencing is to a
     and start time. Just put the pause on the piece of gear rather than
     tracking it per gear set. Include a means to override.
 
-12) Change /SMG to be position independent. This means that parameters
+    -- Treat the item as "soft" locked. (Modifying locking to support
+       a type.) That way we just use the locking mechanism. (Lock color
+       something else in bar, maybe yellow. Timing mechanism will then
+       be part of locks.) Player can kill a soft lock via /unlock, that
+       gives agency.
+
+Done - 12) Change /SMG to be position independent. This means that parameters
     can be ordered any way you want.
 
     Syntax:
@@ -225,7 +231,7 @@ Done - 22) Change the display bar labels for TAcc and TRAcc to Acc and RAcc. The
 
     RAcc and TRAcc labels no longer exist. /racc is a toggle command.
 
-Done - 23) Add further validation of gear sets. Originally I was thinking about modifying
+IP - 23) Add further validation of gear sets. Originally I was thinking about modifying
     /gc, but really there's enough complication in that command. The only checking
     it will do is all gear sets and whether the item names are valid. (It also
     populates the dynamic gear list which is it's primary task.)
@@ -248,13 +254,26 @@ Done - 23) Add further validation of gear sets. Originally I was thinking about 
 
 24) Add /ignore option to /GS so that current locks can be ignored.
 
+Done - 25) There's an issue in the resting state where when when an emphasized setting c 75, ['have'] = false, ['fav'] = false },aps
+    and luashitacast switches to the opposite setting, switching the gear changes the
+    capped stat (MP or HP) to be uncapped, causing a "see saw" effect. What's preposed
+    here is that when the emphasized stat caps (in the current resting session), it
+    gets blocked so that the descrepancy doesn't "flip" back. Both refresh and regen
+    can potentially be blocked (both hit cap). When the player stands or fights these
+    temporary caps are removed.
+
+26) Add support for DRG breath attack whether Elemental or healing breath.
+
+27) Change how monster type is done. Have dynamically loaded files (like done in IXUI)
+   that load a list of all creatures by zone id. Track the name and the family type.
+
 There's some general cleanup and rewrite anticipated too
 
 Done - A1) Remove the code that adds reference entries to the dynamic gear listing
     when a set is to be equipped. This feature is no longer necessary as
     /gc creates all the entries in one pass and is required to be run.
 
-A2) Turn gswap off when /gc has yet to be run. It cannot be enabled until
+Duplicate - A2) Turn gswap off when /gc has yet to be run. It cannot be enabled until
     /gc is run. At that point it will assume the default setting for the
     job. A warning message will be displayed if gswap is attempted to be
     turned on before /gc run.
@@ -283,20 +302,20 @@ A8) Create variables for toolbar selection, and various feedback mechanisms
 Done - A9) Consider breaking out routines from the job files into their own lua
     files.
 
-A10) New feature, custom conditionals. At some point some function will be
+Done - A10) New feature, custom conditionals. At some point some function will be
      needed but not available. As long as the function provides a simple
-     yes/no answer, you can use a custom conditional. /C1 with enable/
-     disable custom #1. By placing a //C1 on a piece of gear in a gear set,
+     yes/no answer, you can use a custom conditional. /CC1 with enable/
+     disable custom #1. By placing a //CC1 on a piece of gear in a gear set,
      C1 will be checked for it being on or off. (The state will be reflected
      in the displaybar.) Initially three custom conditionals will be supported.
 
      Example:
 
-        Body = 'Yinyang Robe//C1',
+        Body = 'Yinyang Robe//CC1',
 
-        if C1 is on, the conditional is true and the Yinyang Robe will be
-        equipped. If C1 is off, the conditional will be false and the robe
-        will not be equipped. What does C1 represent? That's up to the
+        if CC1 is on, the conditional is true and the Yinyang Robe will be
+        equipped. If CC1 is off, the conditional will be false and the robe
+        will not be equipped. What does CC1 represent? That's up to the
         player. Maybe that the pet has less than 75% health. We currently
         do not have a conditional dealing with pet health. This would be
         a way for the player to flag the gear change.
@@ -319,7 +338,7 @@ A14) Consider removing FractionalSet. Instead, create routine to simulate
     an inline reference and use that instead. Less code and easier to
     maintain. (Ex: pull Main and Sub from start_weapons.)
 
-A15) Create command that targets specific MP amount. It automatically
+Not Doing - A15) Create command that targets specific MP amount. It automatically
    equips gear that will give you at least that target. (Ex: need enough
    mp for a Raise when you're weaken.) /MP#
 
@@ -328,6 +347,16 @@ A15) Create command that targets specific MP amount. It automatically
    the MP. If the target can't be met, feedback will be given. This command
    is available at any time. If used under hazardous circumstances, that's
    the player's fault.
+
+   -- Use custom gear set
+
+Not Doing - A15a) A variation on the /MP might be for getting to a % as in /MPP85
+   would change gear so that your MPP is at 85% or lower. Would be handy
+   for a number of SPECIAL gear.
+
+Done - A16) Support "One of" conditionals. Start with something like SJ(NIN,DNC).
+   What that does is check the player's subjob and it must match one of
+   the abbreviations found in the list (in this case NIN or DNC).
 
 Depending on time and my sanity, the following might also be included:
 
@@ -397,6 +426,11 @@ B9) Add a toggle to equip an HP down set (used by BLM for sorcerous ring
 B10) When a gearset is equipped via /gs or /gearset, display the name in the
      display bar. When locks are cleared, remove that name.
 
+B11) Add optional parameter on /ei to designate a specific ring/earring lot
+    "ring=1|2" or "ear=1|2". That way player can indicate which ring/earring to
+    replace rather than letting the program do that. If missing, luashitacast
+    will determine which slot to use.
+
 The following are really questionable and further thought is needed to consider them
 
 B11) Add support for changing the macro bar when any of the
@@ -420,6 +454,11 @@ B12) New command: /SHOW. Mostly intended as a debugging option, this
     - state is one of: idle,tp,rest
     - by default, (unless just slots), command is one and done. "Repeat"
       indicates to display til turned off.
+
+B13) Add feature that will track items with a cool down. If equipped it will
+   set up a timer to notify the player that the item is ready to be used. If
+   item taken away before use, timer will be removed. Note: no check for
+   item being on cooldown is possible yet.
 
 Post 3.0
 
