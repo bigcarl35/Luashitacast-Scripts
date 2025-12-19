@@ -1,0 +1,33 @@
+--Zone: Ro'Maeve
+--Zone ID: 122
+return {
+    Names = {
+        ['Apocalyptic Weapon']  = { Name='Apocalyptic Weapon', Ecosystem='arcana', Family='evil weapons' },
+        ['Cannonball']          = { Name='Cannonball', Ecosystem='arcana', Family='bombs' },
+        ['Cursed Puppet']       = { Name='Cursed Puppet', Ecosystem='arcana', Family='dolls' },
+        ['Darksteel Golem']     = { Name='Darksteel Golem', Ecosystem='arcana', Family='golems' },
+        ['Douma Weapon']        = { Name='Douma Weapon', Ecosystem='arcana', Family='evil weapons' },
+        ['Eldhrimnir']          = { Name='Eldhrimnir', Ecosystem='arcana', Family='magic pots' },
+        ['Fired Urn']           = { Name='Fired Urn', Ecosystem='arcana', Family='magic pots' },
+        ['Infernal Weapon']     = { Name='Infernal Weapon', Ecosystem='arcana', Family='evil weapons' },
+        ['Jackpot']             = { Name='Jackpot', Ecosystem='arcana', Family='magic pots' },
+        ['Katashiro Weapon']    = { Name='Katashiro Weapon', Ecosystem='arcana', Family='evil weapons' },
+        ['Killing Weapon']      = { Name='Killing Weapon', Ecosystem='arcana', Family='evil weapons' },
+        ['Lode Golem']          = { Name='Lode Golem', Ecosystem='arcana', Family='golems' },
+        ['Magic Flagon']        = { Name='Magic Flagon', Ecosystem='arcana', Family='magic pots' },
+        ['Martinet']            = { Name='Martinet', Ecosystem='arcana', Family='dolls' },
+        ['Mimic Jester']        = { Name='Mimic Jester', Ecosystem='arcana', Family='mimics' },
+        ['Mimic King']          = { Name='Mimic King', Ecosystem='arcana', Family='mimics' },
+        ['Mimic Mage']          = { Name='Mimic Mage', Ecosystem='arcana', Family='mimics' },
+        ['Mokkurkalfi']         = { Name='Mokkurkalfi', Ecosystem='arcana', Family='golems' },
+        ['Mythril Golem']       = { Name='Mythril Golem', Ecosystem='arcana', Family='golems' },
+        ['Nargun']              = { Name='Nargun', Ecosystem='arcana', Family='golems' },
+        ['Nightmare Vase']      = { Name='Nightmare Vase', Ecosystem='arcana', Family='magic pots' },
+        ['Ominous Weapon']      = { Name='Ominous Weapon', Ecosystem='arcana', Family='evil weapons' },
+        ['Rogue Receptacle']    = { Name='Rogue Receptacle', Ecosystem='arcana', Family='magic pots' },
+        ['Shikigami Weapon']    = { Name='Shikigami Weapon', Ecosystem='arcana', Family='evil weapons' },
+        ['Steely Weapon']       = { Name='Steely Weapon', Ecosystem='arcana', Family='evil weapons' },
+        ['Thunder Elemental']   = { Name='Thunder Elemental', Ecosystem='elementals', Family='elementals' },
+        ['Water Elemental']     = { Name='Water Elemental', Ecosystem='elementals', Family='elementals' },
+    },
+};
