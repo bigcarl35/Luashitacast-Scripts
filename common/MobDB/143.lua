@@ -1,0 +1,32 @@
+--Zone: Palborough Mines
+--Zone ID: 143
+return {
+    Names = {
+        ['Amber Quadav']            = { Name='Amber Quadav', Ecosystem='beastmen', Family='quadav'},
+        ['Amethyst Quadav']         = { Name='Amethyst Quadav', Ecosystem='beastmen', Family='quadav'},
+        ['Be\'Hya Hundredwall']     = { Name='Be\'Hya Hundredwall', Ecosystem='beastmen', Family='quadav'},
+        ['Brass Quadav']            = { Name='Brass Quadav', Ecosystem='beastmen', Family='quadav'},
+        ['Bu\'Ghi Howlblade']       = { Name='Bu\'Ghi Howlblade', Ecosystem='beastmen', Family='quadav'},
+        ['Cave Funguar']            = { Name='Cave Funguar', Ecosystem='plantoids', Family='funguars'},
+        ['Copper Beetle']           = { Name='Copper Beetle', Ecosystem='vermin', Family='beetles'},
+        ['Copper Quadav']           = { Name='Copper Quadav', Ecosystem='beastmen', Family='quadav'},
+        ['Coral Crab']              = { Name='Coral Crab', Ecosystem='aquans', Family='crabs'},
+        ['Greater Quadav']          = { Name='Greater Quadav', Ecosystem='beastmen', Family='quadav'},
+        ['Incensed Pineapple']      = { Name='Incensed Pineapple', Ecosystem='arcana', Family='bombs'},
+        ['Mine Crab']               = { Name='Mine Crab', Ecosystem='aquans', Family='crabs'},
+        ['Mine Scorpion']           = { Name='Mine Scorpion', Ecosystem='vermin', Family='scorpions'},
+        ['Ni\'Ghu Nestfender']      = { Name='Ni\'Ghu Nestfender', Ecosystem='beastmen', Family='quadav'},
+        ['No\'Mho Crimsonarmor']    = { Name='No\'Mho Crimsonarmor', Ecosystem='beastmen', Family='quadav'},
+        ['Old Quadav']              = { Name='Old Quadav', Ecosystem='beastmen', Family='quadav'},
+        ['Onyx Quadav']             = { Name='Onyx Quadav', Ecosystem='beastmen', Family='quadav'},
+        ['Pit Hare']                = { Name='Pit Hare', Ecosystem='vermin', Family='rabbits'},
+        ['Qu\'Vho Deathhurler']     = { Name='Qu\'Vho Deathhurler', Ecosystem='beastmen', Family='quadav'},
+        ['Rabid Rat']               = { Name='Rabid Rat', Ecosystem='vermin', Family='rabbits'},
+        ['Scimitar Scorpion']       = { Name='Scimitar Scorpion', Ecosystem='vermin', Family='scorpions'},
+        ['Snipper']                 = { Name='Snipper', Ecosystem='aquans', Family='crabs'},
+        ['Stag Crab']               = { Name='Stag Crab', Ecosystem='aquans', Family='crabs'},
+        ['Veteran Quadav']          = { Name='Veteran Quadav', Ecosystem='beastmen', Family='quadav'},
+        ['Young Quadav']            = { Name='Young Quadav', Ecosystem='beastmen', Family='quadav'},
+        ['Zi\'Ghi Boneeater']       = { Name='Zi\'Ghi Boneeater', Ecosystem='beastmen', Family='quadav'},
+    },
+};

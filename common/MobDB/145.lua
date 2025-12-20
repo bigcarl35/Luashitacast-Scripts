@@ -1,0 +1,33 @@
+--Zone: Giddeus
+--Zone ID: 145
+return {
+    Names = {
+        ['Digger Wasp']             = { Name='Digger Wasp', Ecosystem='vermin', Family='bees'},
+        ['Dirt Eater']              = { Name='Dirt Eater', Ecosystem='amorphs', Family='worms'},
+        ['Earth Eater']             = { Name='Earth Eater', Ecosystem='amorphs', Family='worms'},
+        ['Eyy Mon the Ironbreaker'] = { Name='Eyy Mon the Ironbreaker', Ecosystem='beastmen', Family='yagudo'},
+        ['Giant Pugil']             = { Name='Giant Pugil', Ecosystem='aquans', Family='pugils'},
+        ['Giddeus Bee']             = { Name='Giddeus Bee', Ecosystem='vermin', Family='bees'},
+        ['Giddeus Pugil']           = { Name='Giddeus Pugil', Ecosystem='aquans', Family='pugils'},
+        ['Hoo Mjuu the Torrent']    = { Name='Hoo Mjuu the Torrent', Ecosystem='beastmen', Family='yagudo'},
+        ['Juu Duzu the Whirlwind']  = { Name='Juu Duzu the Whirlwind', Ecosystem='beastmen', Family='yagudo'},
+        ['Land Pugil']              = { Name='Land Pugil', Ecosystem='aquans', Family='pugils'},
+        ['Puffer Pugil']            = { Name='Puffer Pugil', Ecosystem='aquans', Family='pugils'},
+        ['Pug Pugil']               = { Name='Pug Pugil', Ecosystem='aquans', Family='pugils'},
+        ['Pugil']                   = { Name='Pugil', Ecosystem='aquans', Family='pugils'},
+        ['Quu Xijo the Illusory']   = { Name='Quu Xijo the Illusory', Ecosystem='beastmen', Family='yagudo'},
+        ['Vaa Huja the Erudite']    = { Name='Vaa Huja the Erudite', Ecosystem='beastmen', Family='yagudo'},
+        ['Vuu Puqu the Beguiler']   = { Name='Vuu Puqu the Beguiler', Ecosystem='beastmen', Family='yagudo'},
+        ['Yagudo Acolyte']          = { Name='Yagudo Acolyte', Ecosystem='beastmen', Family='yagudo'},
+        ['Yagudo Initiate']         = { Name='Yagudo Initiate', Ecosystem='beastmen', Family='yagudo'},
+        ['Yagudo Mendicant']        = { Name='Yagudo Mendicant', Ecosystem='beastmen', Family='yagudo'},
+        ['Yagudo Persecutor']       = { Name='Yagudo Persecutor', Ecosystem='beastmen', Family='yagudo'},
+        ['Yagudo Piper']            = { Name='Yagudo Piper', Ecosystem='beastmen', Family='yagudo'},
+        ['Yagudo Priest']           = { Name='Yagudo Priest', Ecosystem='beastmen', Family='yagudo'},
+        ['Yagudo Scribe']           = { Name='Yagudo Scribe', Ecosystem='beastmen', Family='yagudo'},
+        ['Yagudo Theologist']       = { Name='Yagudo Theologist', Ecosystem='beastmen', Family='yagudo'},
+        ['Yagudo Votary']           = { Name='Yagudo Votary', Ecosystem='beastmen', Family='yagudo'},
+        ['Yagudo\'s Elemental']     = { Name='Yagudo\'s Elemental',
+        ['Zhuu Buxu the Silent']    = { Name='Zhuu Buxu the Silent', Ecosystem='beastmen', Family='yagudo'},
+    },
+};
