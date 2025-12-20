@@ -24,6 +24,9 @@ local slips = require('common.slips');
             lGearSetListingReport   Display gear list in gearset format
             ProcessSMG              Processes the invocation of /smg
             RegionControlDisplay    Displays all regions and who controls them
+
+        Functions:
+            fCompactLocks           Generates a compact list of the locks
 --]]
 
 -- List of all valid slots for /smg reports
@@ -613,3 +616,59 @@ function reporting.DisplayOnce(msg,bOverride)
         end
     end
 end     -- reporting.fDisplayOnce
+
+--[[
+    fCompactLocks walks the locks list and generates a compact display of the active locks.
+
+    Return:
+        List of active locks
+--]]
+
+function reporting.fCompactLocks()
+    local bFound = false;
+    local iStart = nil;
+    local sList = nil;
+
+    for i,j in ipairs(locks.tLocks) do
+        if j['lock'] == true then
+            -- locked slot. Tag if no range started yet
+            if iStart == nil then
+                iStart = i;
+            end
+        elseif iStart ~= nil then
+            -- no lock, but indicates range is done
+            if i == (iStart + 1) then
+                -- No range, just back to back locks
+                if sList == nil then
+                    sList = tostring(iStart) ;
+                else
+                    sList = sList .. ',' .. tostring(iStart);
+                end
+            else
+                -- it is a range
+                if sList == nil then
+                    sList = tostring(iStart) .. '-' .. tostring(i-1);
+                else
+                    sList = sList .. ',' .. tostring(iStart) .. '-' .. tostring(i-1);
+                end
+            end
+            iStart = nil;
+        end
+    end
+
+    if iStart ~= nil then
+        if iStart < 16 then
+            if sList == nil then
+                sList = tostring(iStart) .. '-16';
+            else
+                sList = sList .. ',' .. tostring(iStart) .. '-16';
+            end
+        else
+            if sList == nil then
+                sList = '16'
+            else
+                sList = sList .. ',16';
+            end
+        end
+    end
+end     -- reporting.fCompactLocks
