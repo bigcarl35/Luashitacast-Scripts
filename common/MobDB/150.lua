@@ -1,0 +1,31 @@
+--Zone: Monastic Cavern
+--Zone ID: 150
+return {
+    Names = {
+        ['Bugaboo']                 = { Name='Bugaboo', Ecosystem='undead', Family='ghosts' },
+        ['Chillgaze Foddrud']       = { Name='Chillgaze Foddrud', Ecosystem='beastmen', Family='orcs' },
+        ['Grimbolt Onkzok']         = { Name='Grimbolt Onkzok', Ecosystem='beastmen', Family='orcs' },
+        ['Mimic']                   = { Name='Mimic', Ecosystem='amorphs', Family='mimics' },
+        ['Orcish Bowshooter']       = { Name='Orcish Bowshooter', Ecosystem='beastmen', Family='orcs' },
+        ['Orcish Champion']         = { Name='Orcish Champion', Ecosystem='beastmen', Family='orcs' },
+        ['Orcish Dragoon']          = { Name='Orcish Dragoon', Ecosystem='beastmen', Family='orcs' },
+        ['Orcish Dreadnought']      = { Name='Orcish Dreadnought', Ecosystem='beastmen', Family='orcs' },
+        ['Orcish Farkiller']        = { Name='Orcish Farkiller', Ecosystem='beastmen', Family='orcs' },
+        ['Orcish Footsoldier']      = { Name='Orcish Footsoldier', Ecosystem='beastmen', Family='orcs' },
+        ['Orcish Gladiator']        = { Name='Orcish Gladiator', Ecosystem='beastmen', Family='orcs' },
+        ['Orcish Hexspinner']       = { Name='Orcish Hexspinner', Ecosystem='beastmen', Family='orcs' },
+        ['Orcish Overlord']         = { Name='Orcish Overlord', Ecosystem='beastmen', Family='orcs' },
+        ['Orcish Predator']         = { Name='Orcish Predator', Ecosystem='beastmen', Family='orcs' },
+        ['Orcish Protector']        = { Name='Orcish Protector', Ecosystem='beastmen', Family='orcs' },
+        ['Orcish Trooper']          = { Name='Orcish Trooper', Ecosystem='beastmen', Family='orcs' },
+        ['Orcish Veteran']          = { Name='Orcish Veteran', Ecosystem='beastmen', Family='orcs' },
+        ['Orcish Warchief']         = { Name='Orcish Warchief', Ecosystem='beastmen', Family='orcs' },
+        ['Orcish Warlord']          = { Name='Orcish Warlord', Ecosystem='beastmen', Family='orcs' },
+        ['Orcish Zerker']           = { Name='Orcish Zerker', Ecosystem='beastmen', Family='orcs' },
+        ['Overlord Bakgodek']       = { Name='Overlord Bakgodek', Ecosystem='beastmen', Family='orcs' },
+        ['Rictusgrin Prakpok']      = { Name='Rictusgrin Prakpok', Ecosystem='beastmen', Family='orcs' },
+        ['Sevenskewer Krugglug']    = { Name='Sevenskewer Krugglug', Ecosystem='beastmen', Family='orcs' },
+        ['Shatterskull Mippdapp']   = { Name='Shatterskull Mippdapp', Ecosystem='beastmen', Family='orcs' },
+        ['Siegebreaker Wujroj']     = { Name='Siegebreaker Wujroj', Ecosystem='beastmen', Family='orcs' },
+    },
+};
