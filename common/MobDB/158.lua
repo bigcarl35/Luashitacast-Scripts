@@ -1,0 +1,31 @@
+--Zone: Upper Delkfutt's Tower
+--Zone ID: 158
+return {
+    Names = {
+        ['Alkyoneus'] = { Name='Alkyoneus', Ecosystem='beastmen', Family='gigas' },
+        ['Autarch'] = { Name='Autarch', Ecosystem='arcana', Family='dolls' },
+        ['Demonic Doll'] = { Name='Demonic Doll', Ecosystem='arcana', Family='dolls' },
+        ['Dire Bat'] = { Name='Dire Bat', Ecosystem='birds', Family='bats' },
+        ['Enkelados'] = { Name='Enkelados', Ecosystem='beastmen', Family='gigas' },
+        ['Gigas Bonecutter'] = { Name='Gigas Bonecutter', Ecosystem='beastmen', Family='gigas' },
+        ['Gigas Spirekeeper'] = { Name='Gigas Spirekeeper', Ecosystem='beastmen', Family='gigas' },
+        ['Gigas Stonemason'] = { Name='Gigas Stonemason', Ecosystem='beastmen', Family='gigas' },
+        ['Gigas Torturer'] = { Name='Gigas Torturer', Ecosystem='beastmen', Family='gigas' },
+        ['Gigas\'s Bat'] = { Name='Gigas\'s Bat', Ecosystem='birds', Family='bat trios' },
+        ['Gigas\'s Bats'] = { Name='Gigas\'s Bats', Ecosystem='birds', Family='bat trios' },
+        ['Incubus Bats'] = { Name='Incubus Bats', Ecosystem='birds', Family='bat trios' },
+        ['Ixtab'] = { Name='Ixtab', Ecosystem='undead', Family='ghosts' },
+        ['Jotunn Gatekeeper'] = { Name='Jotunn Gatekeeper', Ecosystem='beastmen', Family='gigas' },
+        ['Jotunn Hallkeeper'] = { Name='Jotunn Hallkeeper', Ecosystem='beastmen', Family='gigas' },
+        ['Jotunn Wallkeeper'] = { Name='Jotunn Wallkeeper', Ecosystem='beastmen', Family='gigas' },
+        ['Jotunn Wildkeeper'] = { Name='Jotunn Wildkeeper', Ecosystem='beastmen', Family='gigas' },
+        ['Light Elemental'] = { Name='Light Elemental', Ecosystem='elementals', Family='elementals' },
+        ['Magic Pot'] = { Name='Magic Pot', Ecosystem='arcana', Family='magic pots' },
+        ['Magic Urn'] = { Name='Magic Urn', Ecosystem='arcana', Family='magic pots' },
+        ['Mimas'] = { Name='Mimas', Ecosystem='beastmen', Family='gigas' },
+        ['Pallas'] = { Name='Pallas', Ecosystem='beastmen', Family='gigas' },
+        ['Phasma'] = { Name='Phasma', Ecosystem='undead', Family='ghosts' },
+        ['Porphyrion'] = { Name='Porphyrion', Ecosystem='beastmen', Family='gigas' },
+        ['Thunder Elemental'] = { Name='Thunder Elemental', Ecosystem='elementals', Family='elementals' },
+    },
+};
