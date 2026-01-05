@@ -1,0 +1,32 @@
+--Zone: Inner Horutoto Ruins
+--Zone ID: 192
+return {
+    Names = {
+        ['Balloon'] = { Name='Balloon', Ecosystem='arcana', Family='bombs'},
+        ['Battle Bat'] = { Name='Battle Bat', Ecosystem='birds', Family='bats'},
+        ['Battue Bats'] = { Name='Battue Bats', Ecosystem='birds', Family='bat trios'},
+        ['Blade Bat'] = { Name='Blade Bat', Ecosystem='birds', Family='bats'},
+        ['Blob'] = { Name='Blob', Ecosystem='amorphs', Family='slimes'},
+        ['Boggart'] = { Name='Boggart', Ecosystem='undead', Family='ghosts'},
+        ['Covin Bat'] = { Name='Covin Bat', Ecosystem='birds', Family='bats'},
+        ['Deathwatch Beetle'] = { Name='Deathwatch Beetle', Ecosystem='vermin', Family='beetles'},
+        ['Goblin Flesher'] = { Name='Goblin Flesher', Ecosystem='beastmen', Family='goblins'},
+        ['Goblin Gambler'] = { Name='Goblin Gambler', Ecosystem='beastmen', Family='goblins'},
+        ['Goblin Leecher'] = { Name='Goblin Leecher', Ecosystem='beastmen', Family='goblins'},
+        ['Goblin Lurcher'] = { Name='Goblin Lurcher', Ecosystem='beastmen', Family='goblins'},
+        ['Goblin Metallurgist'] = { Name='Goblin Metallurgist', Ecosystem='beastmen', Family='goblins'},
+        ['Goblin Mugger'] = { Name='Goblin Mugger', Ecosystem='beastmen', Family='goblins'},
+        ['Goblin Thug'] = { Name='Goblin Thug', Ecosystem='beastmen', Family='goblins'},
+        ['Goblin Trailblazer'] = { Name='Goblin Trailblazer', Ecosystem='beastmen', Family='goblins'},
+        ['Goblin Weaver'] = { Name='Goblin Weaver', Ecosystem='beastmen', Family='goblins'},
+        ['Magicked Bones'] = { Name='Magicked Bones', Ecosystem='undead', Family='skeletons'},
+        ['Maltha'] = { Name='Maltha', Ecosystem='amorphs', Family='slimes'},
+        ['Nocuous Weapon'] = { Name='Nocuous Weapon', Ecosystem='arcana', Family='dancing weapons'},
+        ['Skinnymajinx'] = { Name='Skinnymajinx', Ecosystem='undead', Family='skeletons'},
+        ['Skinnymalinks'] = { Name='Skinnymalinks', Ecosystem='undead', Family='skeletons'},
+        ['Slendlix Spindlethumb'] = { Name='Slendlix Spindlethumb', Ecosystem='beastmen', Family='goblins'},
+        ['Troika Bats'] = { Name='Troika Bats', Ecosystem='birds', Family='bat trios'},
+        ['Wendigo'] = { Name='Wendigo', Ecosystem='undead', Family='skeletons'},
+        ['Will-o\'-the-Wisp'] = { Name='Will-o\'-the-Wisp', Ecosystem='arcana', Family='bombs'},
+    },
+};
