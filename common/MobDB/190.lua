@@ -4,7 +4,7 @@ return {
     Names = {
         ['Airi'] = { Name='Airi', Ecosystem='undead', Family='ghosts'},
         ['Ankou'] = { Name='Ankou', Ecosystem='undead', Family='skeletons'},
-        ['Arcus Blades'] = { Name='Arcus Blades', Ecosystem='arcana', Family='animated blades'},
+        ['Arcus Blades'] = { Name='Arcus Blades', Ecosystem='unclassified', Family='animated weapons'},
         ['Barbastelle'] = { Name='Barbastelle', Ecosystem='birds', Family='bats'},
         ['Carrion Worm'] = { Name='Carrion Worm', Ecosystem='amorphs', Family='worms'},
         ['Cemetery Cherry'] = { Name='Cemetery Cherry', Ecosystem='plantoids', Family='treants'},

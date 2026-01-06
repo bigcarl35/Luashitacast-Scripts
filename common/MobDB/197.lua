@@ -5,7 +5,7 @@ return {
         ['Aqrabuamelu'] = { Name='Aqrabuamelu', Ecosystem='vermin', Family='scorpions'},
         ['Awd Goggie'] = { Name='Awd Goggie', Ecosystem='vermin', Family='crawlers'},
         ['Blazer Beetle'] = { Name='Blazer Beetle', Ecosystem='vermin', Family='beetles'},
-        ['Caveberry'] = { Name='Caveberry', Ecosystem='plantoids', Family='saprolings'},
+        ['Caveberry'] = { Name='Caveberry', Ecosystem='plantoids', Family='saplings'},
         ['Crawler Hunter'] = { Name='Crawler Hunter', Ecosystem='vermin', Family='scorpions'}
         ['Dancing Jewel'] = { Name='Dancing Jewel', Ecosystem='vermin', Family='flies'}
         ['Death Jacket'] = { Name='Death Jacket', Ecosystem='vermin', Family='bees'}
@@ -39,7 +39,7 @@ return {
         ['Vespo'] = { Name='Vespo', Ecosystem='vermin', Family='bees'}
         ['Water Elemental'] = { Name='Water Elemental', Ecosystem='elementals', Family='elementals'}
         ['Wespe'] = { Name='Wespe', Ecosystem='vermin', Family='bees'}
-        ['Witch Hazel'] = { Name='Witch Hazel', Ecosystem='plantoids', Family='saprolings'}
+        ['Witch Hazel'] = { Name='Witch Hazel', Ecosystem='plantoids', Family='saplings'}
         ['Worker Crawler'] = { Name='Worker Crawler', Ecosystem='vermin', Family='crawlers'}
     },
 };
