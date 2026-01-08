@@ -48,7 +48,7 @@ return {
         ['Kumbaba']                 = { Name='Kumbaba', Ecosystem='beastmen', Family='gigas' },
         ['Land Pugil']              = { Name='Land Pugil', Ecosystem='aquans', Family='pugils' },
         ['Meteormauler Zhagtegg']   = { Name='Meteormauler Zhagtegg', Ecosystem='beastmen', Family='orcs' },
-        ['Orc\'s Wyvern']           = { Name='Orc\'s Wyvern', Ecosystem='dragons', Family='pet wyvern' },
+        ['Orc\'s Wyvern']           = { Name='Orc\'s Wyvern', Ecosystem='dragons', Family='wyvern' },
         ['Orcish Chasseur']         = { Name='Orcish Chasseur', Ecosystem='beastmen', Family='orcs' },
         ['Orcish Colonel']          = { Name='Orcish Colonel', Ecosystem='beastmen', Family='orcs' },
         ['Orcish Cursemaker']       = { Name='Orcish Cursemaker', Ecosystem='beastmen', Family='orcs' },

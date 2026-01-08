@@ -30,7 +30,7 @@ return {
         ['Vanguard Vindicator'] = { Name='Vanguard Vindicator', Ecosystem='beastmen', Family='quadavs' },
         ['Vanguard\'s Avatar'] = { Name='Vanguard\'s Avatar', Ecosystem='unclassified', Family='avatars' },
         ['Vanguard\'s Scorpion'] = { Name='Vanguard\'s Scorpion', Ecosystem='vermin', Family='scorpions' },
-        ['Vanguard\'s Wyvern'] = { Name='Vanguard\'s Wyvern', Ecosystem='dragons', Family='pet wyverns' },
+        ['Vanguard\'s Wyvern'] = { Name='Vanguard\'s Wyvern', Ecosystem='dragons', Family='wyverns' },
         ['Ze\'Vho Fallsplitter'] = { Name='Ze\'Vho Fallsplitter', Ecosystem='beastmen', Family='quadavs' },
         ['Zo\'Pha Forgesoul'] = { Name='Zo\'Pha Forgesoul', Ecosystem='beastmen', Family='quadavs' },
     },

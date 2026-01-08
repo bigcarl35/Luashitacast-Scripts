@@ -14,7 +14,7 @@ return {
         ['Hoplomachus XI-XXVI'] = { Name='Hoplomachus XI-XXVI', Ecosystem='beastmen', Family='antica' },
         ['Lightning Wyvern'] = { Name='Lightning Wyvern', Ecosystem='dragons', Family='wyverns' },
         ['Maat'] = { Name='Maat', Ecosystem='humanoids', Family='humes' },
-        ['Maat\'s Wyvern'] = { Name='Maat\'s Wyvern', Ecosystem='dragons', Family='pet wyverns' },
+        ['Maat\'s Wyvern'] = { Name='Maat\'s Wyvern', Ecosystem='dragons', Family='wyverns' },
         ['Nanaa Mihgo'] = { Name='Nanaa Mihgo', Ecosystem='humanoids', Family='mithra' },
         ['Princeps V-XI'] = { Name='Princeps V-XI', Ecosystem='beastmen', Family='antica' },
         ['Purson'] = { Name='Purson', Ecosystem='beasts', Family='manticores' },

@@ -11,7 +11,7 @@ return {
         ['Qull the Fallstopper'] = { Name='Qull the Fallstopper', Ecosystem='beastmen', Family='sahagin' },
         ['Rauu the Whaleswooner'] = { Name='Rauu the Whaleswooner', Ecosystem='beastmen', Family='sahagin' },
         ['Sable-tongued Gonberry'] = { Name='Sable-tongued Gonberry', Ecosystem='beastmen', Family='tonberries' },
-        ['Sahagin\'s Wyvern'] = { Name='Sahagin\'s Wyvern', Ecosystem='dragons', Family='pet wyverns' },
+        ['Sahagin\'s Wyvern'] = { Name='Sahagin\'s Wyvern', Ecosystem='dragons', Family='wyverns' },
         ['Shantotto'] = { Name='Shantotto', Ecosystem='humanoids', Family='tarutaru' },
         ['Tonberry\'s Avatar'] = { Name='Tonberry\'s Avatar', Ecosystem='unclassified', Family='avatars' },
         ['Tonberry\'s Elemental'] = { Name='Tonberry\'s Elemental', Ecosystem='elementals', Family='elementals' },

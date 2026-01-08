@@ -30,7 +30,7 @@ return {
         ['Vanguard Visionary'] = { Name='Vanguard Visionary', Ecosystem='beastmen', Family='yagudo' },
         ['Vanguard\'s Avatar'] = { Name='Vanguard\'s Avatar', Ecosystem='unclassified', Family='avatars' },
         ['Vanguard\'s Crow'] = { Name='Vanguard\'s Crow', Ecosystem='birds', Family='birds' },
-        ['Vanguard\'s Wyvern'] = { Name='Vanguard\'s Wyvern', Ecosystem='dragons', Family='pet wyverns' },
+        ['Vanguard\'s Wyvern'] = { Name='Vanguard\'s Wyvern', Ecosystem='dragons', Family='wyverns' },
         ['Wuu Qoho the Razorclaw'] = { Name='Wuu Qoho the Razorclaw', Ecosystem='beastmen', Family='yagudo' },
         ['Xoo Kaza the Solemn'] = { Name='Xoo Kaza the Solemn', Ecosystem='beastmen', Family='yagudo' },
         ['Xuu Bhoqa the Enigma'] = { Name='Xuu Bhoqa the Enigma', Ecosystem='beastmen', Family='yagudo' },

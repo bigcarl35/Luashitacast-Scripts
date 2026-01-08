@@ -46,7 +46,7 @@ return {
         ['Rock Crab'] = { Name='Rock Crab', Ecosystem='aquans', Family='crabs' },
         ['Royal Leech'] = { Name='Royal Leech', Ecosystem='amorphs', Family='leeches' },
         ['Sahagin Parasite'] = { Name='Sahagin Parasite', Ecosystem='amorphs', Family='leeches' },
-        ['Sahagin\'s Wyvern'] = { Name='Sahagin\'s Wyvern', Ecosystem='dragons', Family='pet wyverns' },
+        ['Sahagin\'s Wyvern'] = { Name='Sahagin\'s Wyvern', Ecosystem='dragons', Family='wyverns' },
         ['Sea Bonze'] = { Name='Sea Bonze', Ecosystem='aquans', Family='sea monks' },
         ['Sea Hog'] = { Name='Sea Hog', Ecosystem='aquans', Family='pugils' },
         ['Seww the Squidlimbed'] = { Name='Seww the Squidlimbed', Ecosystem='beastmen', Family='sahagins' },

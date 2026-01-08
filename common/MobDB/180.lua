@@ -9,6 +9,6 @@ return {
         ['Ark Angel TT'] = { Name='Ark Angel TT', Ecosystem='humanoids', Family='tarutaru' },
         ['Ark Angel\'s Mandragora'] = { Name='Ark Angel\'s Mandragora', Ecosystem='plantoids', Family='mandragoas' },
         ['Ark Angel\'s Tiger'] = { Name='Ark Angel\'s Tiger', Ecosystem='beasts', Family='tigers' },
-        ['Ark Angel\'s Wyvern'] = { Name='Ark Angel\'s Wyvern', Ecosystem='dragons', Family='pet wyverns' },
+        ['Ark Angel\'s Wyvern'] = { Name='Ark Angel\'s Wyvern', Ecosystem='dragons', Family='wyverns' },
     },
 };
