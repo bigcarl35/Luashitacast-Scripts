@@ -2,7 +2,7 @@
 --Zone ID: 144
 return {
     Names = {
-        ['Atori-Tutori ???']        = { Name='Atori-Tutori ???', Ecosystem='humanoids', Family='tarutarus'},
+        ['Atori-Tutori ???']        = { Name='Atori-Tutori ???', Ecosystem='humanoids', Family='tarutaru'},
         ['Ayakashi']                = { Name='Ayakashi', Ecosystem='arcana', Family='avatars'},
         ['Bi\'Fho Jestergrin']      = { Name='Bi\'Fho Jestergrin', Ecosystem='beastmen', Family='quadav'},
         ['Chest O\'Plenty']         = { Name='Chest O\'Plenty', Ecosystem='arcana', Family='mimics'},
@@ -20,7 +20,7 @@ return {
         ['Ku\'Jhu Graniteskin']     = { Name='Ku\'Jhu Graniteskin', Ecosystem='beastmen', Family='quadav'},
         ['Ku\'Tya Hotblood']        = { Name='Ku\'Tya Hotblood', Ecosystem='beastmen', Family='quadav'},
         ['Maat']                    = { Name='Maat', Ecosystem='humanoids', Family='humes'},
-        ['Maat\'s Pet']             = { Name='Maat\'s Pet', Ecosystem='undefined', Family='monsters'},
+        ['Maat\'s Pet']             = { Name='Maat\'s Pet', Ecosystem='unclassified', Family='monsters'},
         ['Macha']                   = { Name='Macha', Ecosystem='birds', Family='birds'},
         ['Metal Crab']              = { Name='Metal Crab', Ecosystem='aquans', Family='crabs'},
         ['Metsanhaltija']           = { Name='Metsanhaltija', Ecosystem='plantoids', Family='saplings'},
@@ -42,10 +42,10 @@ return {
         ['Tartaruga Gigante']       = { Name='Tartaruga Gigante', Ecosystem='lizards', Family='adamantoises'},
         ['The Waughroon Kid']       = { Name='The Waughroon Kid', Ecosystem='plantoids', Family='goobues'},
         ['Time Bomb']               = { Name='Time Bomb', Ecosystem='arcana', Family='bombs'},
-        ['Titanis Dax']             = { Name='Titanis Dax', Ecosystem='birds', Family='greater birds'},
-        ['Titanis Jax']             = { Name='Titanis Jax', Ecosystem='birds', Family='greater birds'},
-        ['Titanis Max']             = { Name='Titanis Max', Ecosystem='birds', Family='greater birds'},
-        ['Titanis Xax']             = { Name='Titanis Xax', Ecosystem='birds', Family='greater birds'},
+        ['Titanis Dax']             = { Name='Titanis Dax', Ecosystem='birds', Family='rocs'},
+        ['Titanis Jax']             = { Name='Titanis Jax', Ecosystem='birds', Family='rocs'},
+        ['Titanis Max']             = { Name='Titanis Max', Ecosystem='birds', Family='rocs'},
+        ['Titanis Xax']             = { Name='Titanis Xax', Ecosystem='birds', Family='rocs'},
         ['Yo\'Bhu Hideousmask']     = { Name='Yo\'Bhu Hideousmask', Ecosystem='beastmen', Family='quadav'},
         ['Zo\'Dhu Legslicer']       = { Name='Zo\'Dhu Legslicer', Ecosystem='beastmen', Family='quadav'},
     },

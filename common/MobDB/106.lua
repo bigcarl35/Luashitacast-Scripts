@@ -5,7 +5,7 @@ return {
         ['Amber Quadav']            = { Name='Amber Quadav', Ecosystem='beastmen', Family='quadav' },
         ['Amethyst Quadav']         = { Name='Amethyst Quadav', Ecosystem='beastmen', Family='quadav' },
         ['Bedrock Barry']           = { Name='Bedrock Barry', Ecosystem='amorphs', Family='worms' },
-        ['Black Wolf']              = { Name='Black Wolf', Ecosystem='undead', Family='hound' },
+        ['Black Wolf']              = { Name='Black Wolf', Ecosystem='undead', Family='hounds' },
         ['Blobdingnag']             = { Name='Blobdingnag', Ecosystem='beastmen', Family='quadav' },
         ['Brass Quadav']            = { Name='Brass Quadav', Ecosystem='beastmen', Family='quadav' },
         ['Deathly Stinger']         = { Name='Deathly Stinger', Ecosystem='vermin', Family='bees' },
