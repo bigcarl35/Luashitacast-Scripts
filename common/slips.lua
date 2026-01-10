@@ -1,7 +1,5 @@
 local slips = {};
 
-local utilities = require('common.utilities');
-
 --[[
     This component contains all routines that deal with storage and claim slips
 
@@ -668,7 +666,7 @@ function slips.FindSlips()
     end
 
     -- Now search for storage slips
-    for i,desc in pairs(utilities.NON_GEAR) do
+    for i,desc in pairs(gVars.NON_GEAR) do
         containerID = desc['id'];
         -- then loop through the container
         for j = 1,inventory:GetContainerCountMax(containerID),1 do
@@ -750,3 +748,5 @@ function slips.fFindClaimSlips()
 
     return s;
 end     -- slips.fFindClaimSlips
+
+return slips;

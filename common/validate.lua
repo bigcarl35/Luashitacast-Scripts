@@ -1,9 +1,5 @@
 local validate = {};
 
-local displaybar = require('common.displaybar');
-local utilities = require('common.utilities');
-local reporting = require('common.reporting');
-
 --[[
 	This component contains all functions that are associated with the /val command used to validate gear sets.
 	They are intended to help the player to insure the designated (or all) gear sets contain valid: conditional
@@ -240,7 +236,7 @@ function lValidateConditionalList(tGs,line,bLeft,bRight,pFile)
 				iPos2 = string.find(j,':');
 				if iPos2 ~= nil then
 					local sSlot = string.sub(j,iPos+3,iPos2-1);
-					local bValid = utilities.fValidSlots(sSlot,utilities._SLOT_UA);
+					local bValid = utilities.fValidSlots(sSlot,gVars._SLOT_UA);
 					if bValid == false then
 						sOut  = displaybar.fColor('red','//'.. j) ..' contains an unrecognized slot name.';
 						sfOut = '//' ..j .. ' contains an unrecognized slot name.';
@@ -270,6 +266,8 @@ function lValidateConditionalList(tGs,line,bLeft,bRight,pFile)
 		end
 	end
 end		-- lValidateConditionalList
+
+return validate;
 
 
 

@@ -1,9 +1,5 @@
 local magic = {};
 
-local crossjobs = require('common.crossjobs');
-local utilities = require('common.utilities');
-local gear = require('common.gear');
-
 --[[
     This component contains all routines that deal with magic
 
@@ -35,7 +31,7 @@ local gear = require('common.gear');
     Please note that entries that will be included when Treasures of Aht Urgan is released are currently commented out.
 --]]
 
-magic.Tiered = {
+magic.tTiered = {
     ['spells'] = {
         ['aero'] = {
             [1] = { ['Name'] = 'Aero IV', ['SID'] = 157, ['MP'] = 115, ['BLM'] = 72, ['SCH'] = 72 },
@@ -373,14 +369,14 @@ function magic.fBardSongType(sType)
     end
 
     if string.lower(sType) == 'enh' then
-        for i,j in pairs(utilities.tSpellGroupings['brd-enh']) do
+        for i,j in pairs(gVars.tSpellGroupings['brd-enh']) do
             if string.find(string.lower(spell.Name),j) ~= nil then
                 bGood = true;
                 break;
             end
         end
     else
-        for i,j in pairs(utilities.tSpellGroupings['brd-enf']) do
+        for i,j in pairs(gVars.tSpellGroupings['brd-enf']) do
             if string.find(string.lower(spell.Name),j) ~= nil then
                 bGood = true;
                 break;
@@ -438,14 +434,14 @@ function magic.HandleMidcast()
         MidcastSummoning();
     elseif spell.Skill == 'Blue Magic' then
     	MidcastBlueMagic();
-    --elseif spell.Skill == 'Geomancy' then
-    --	MidcastGeomancy();
+    elseif spell.Skill == 'Geomancy' then
+    	MidcastGeomancy();
     elseif spell.Skill == 'Ninjutsu' then
         MidcastNinjutsu();
     end
 
     gear.EquipTheGear(sets.CurrentGear);
-end		-- magic.MidcastNinjutsu
+end		-- magic.HandleMidcast
 
 --[[
     MidcastSinging handles all of the equipment management when a song is cast
@@ -501,7 +497,7 @@ function MidcastHealingMagic()
                 end
 
                 -- See if Macc should be added
-                if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
+                if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
                     gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
                 end
             else
@@ -538,12 +534,12 @@ function MidcastDarkMagic()
 
     root = utilities.fGetRoot(spell.Name,false);
 
-    if table.find(utilities.tSpellGroupings['absorb'],root) ~= nil then
+    if table.find(gVars.tSpellGroupings['absorb'],root) ~= nil then
         -- It's an absorb spell
         gear.MoveToDynamicGS(gProfile.Sets.Absorb,crossjobs.Sets.CurrentGear,false,'Absorb');
 
         -- See if Macc should be added
-        if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
+        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
             gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
     elseif root == 'drain' then
@@ -560,7 +556,7 @@ function MidcastDarkMagic()
         end
 
         -- See if Macc should be added
-        if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
+        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
             gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
 
@@ -572,7 +568,7 @@ function MidcastDarkMagic()
             -- and sGear = 'Dark Staff', then don't equip it. Y's scythe grants +1
             -- dark magic affinity which is what a dark staff does. There's no
             -- advantage to equipping the staff.
-            if not (utilities.fGetToggle('WSwap') == true and
+            if not (utilities.fGetToggle(gVars._WSWAP) == true and
                     ew['Main'] == 'Y\'s Scythe' and sGear == 'Dark Staff') then
                 gear.fSwapToStave(sGear,false,crossjobs.Sets.CurrentGear);
             end
@@ -591,7 +587,7 @@ function MidcastDarkMagic()
         end
 
         -- See if Macc should be added
-        if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
+        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
             gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
 
@@ -603,7 +599,7 @@ function MidcastDarkMagic()
             -- and sGear = 'Dark Staff', then don't equip it. Y's scythe grants +1
             -- dark magic affinity which is what a dark staff does. There's no
             -- advantage to equipping the staff.
-            if not (utilities.fGetToggle('WSwap') == true and
+            if not (utilities.fGetToggle(gVars._WSWAP) == true and
                 ew['Main'] == 'Y\'s Scythe' and sGear == 'Dark Staff') then
                 gear.fSwapToStave(sGear,false,crossjobs.Sets.CurrentGear);
             end
@@ -616,7 +612,7 @@ function MidcastDarkMagic()
         gear.MoveToDynamicGS(gProfile.Sets.DarkMagic,crossjobs.Sets.CurrentGear,false,'DarkMagic');
 
         -- See if Macc should be added
-        if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
+        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
             gear.MoveToCurrent(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
     end
@@ -650,7 +646,7 @@ function MidcastDivineMagic()
         end
 
         -- See if Macc should be added
-        if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
+        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
             gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
     elseif table.find({'flash','repose'},root) ~= nil then
@@ -658,7 +654,7 @@ function MidcastDivineMagic()
         gear.MoveToDynamicGS(gProfile.Sets.EnfeebleDivine,crossjobs.Sets.CurrentGear,false,'EnfeebleDivine');
 
         -- See if Macc should be added
-        if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
+        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
             gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
     else
@@ -687,10 +683,10 @@ function MidcastEnfeeblingMagic()
 
     root = utilities.fGetRoot(spell.Name);
 
-    if table.find(utilities.tSpellGroupings['int'],root) ~= nil then
+    if table.find(gVars.tSpellGroupings['int'],root) ~= nil then
         -- INT: gravity,bind,blind,dispel,sleep,sleepga,poison,poisonga
         gear.MoveToDynamicGS(gProfile.Sets.EnfeeblingINT,crossjobs.Sets.CurrentGear,false,'EnfeeblingINT');
-    elseif table.find(utilities.tSpellGroupings['mnd'],root) ~= nil then
+    elseif table.find(gVars.tSpellGroupings['mnd'],root) ~= nil then
         -- MND: paralyze,silence,slow,slowga,frazzle,distract
         gear.MoveToDynamicGS(gProfile.Sets.EnfeeblingMND,crossjobs.Sets.CurrentGear,false,'EnfeeblingMND');
     else
@@ -707,7 +703,7 @@ function MidcastEnfeeblingMagic()
     end
 
     -- See if Macc should be added
-    if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
+    if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
         gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
     end
 
@@ -731,11 +727,11 @@ function MidcastEnhancingMagic()
 
     root = utilities.fGetRoot(spell.Name,false);
 
-    if table.find(utilities.tSpellGroupings['barspell']['ele'],root) ~= nil or
-        table.find(utilities.tSpellGroupings['barspell']['status'],root) ~= nil then
+    if table.find(gVars.tSpellGroupings['barspell']['ele'],root) ~= nil or
+        table.find(gVars.tSpellGroupings['barspell']['status'],root) ~= nil then
         -- A bar spell
         gear.MoveToDynamicGS(gProfile.Sets.Barspell,crossjobs.Sets.CurrentGear,false,'Barspell');
-    elseif table.find(utilities.tSpellGroupings['enspell'],root) ~= nil then
+    elseif table.find(gVars.tSpellGroupings['enspell'],root) ~= nil then
         -- En-spell: en"element". Sword enhancing gear applies to all melee
         -- weapons and is applied when the spell is cast. Damage is calculated
         -- after the weapon hits.
@@ -749,7 +745,7 @@ function MidcastEnhancingMagic()
                 crossjobs.Sets.CurrentGear['Waist'] = sGear;
             end
         end
-    elseif table.find(utilities.tSpellGroupings['spikes'],root) ~= nil then
+    elseif table.find(gVars.tSpellGroupings['spikes'],root) ~= nil then
         -- Spike spell: Blaze, Ice, and Shock. Damage based on INT (capped), MAB,
         -- day/weather bonuses, Magic Affinity at time of hit. Enhancing spike gear
         -- is equipped when cast
@@ -795,7 +791,7 @@ function MidcastElementalMagic()
 
     root = utilities.fGetRoot(spell.Name,false);
 
-    if table.find(utilities.tSpellGroupings['eDebuff'],root) ~= nil then
+    if table.find(gVars.tSpellGroupings['eDebuff'],root) ~= nil then
         -- Elemental debuff spell
         gear.MoveToDynamicGS(gProfile.Sets.ElementalDebuff,crossjobs.Sets.CurrentGear,false,'ElementalDebuff');
     else
@@ -813,7 +809,7 @@ function MidcastElementalMagic()
     end
 
     -- See if Macc should be added
-    if utilities.fGetToggle('Macc') and gProfile.settings.EmbedOnlyMacc == false then
+    if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
         gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
     end
 
@@ -870,14 +866,14 @@ function MidcastNinjutsu()
 
     -- There's three types of ninjutsu: buff, debuff and elemental. Anything
     -- else is a mystery and will be processed with the current gear.
-    if table.find(utilities.tSpellGroupings['nin-buff'],root) ~= nil then
+    if table.find(gVars.tSpellGroupings['nin-buff'],root) ~= nil then
         -- Buff
         gear.MoveToDynamicGS(gProfile.Sets.NinjutsuBuff,crossjobs.Sets.CurrentGear,false,'NinjutsuBuff');
     else
-        if table.find(utilities.tSpellGroupings['nin-debuff'],root) ~= nil then
+        if table.find(gVars.tSpellGroupings['nin-debuff'],root) ~= nil then
             -- Debuff
             gear.MoveToDynamicGS(gProfile.Sets.NinjutsuDebuff,crossjobs.Sets.CurrentGear,false,'NinjutsuDebuff');
-        elseif table.find(utilities.tSpellGroupings['nin-ele'],root) ~= nil then
+        elseif table.find(gVars.tSpellGroupings['nin-ele'],root) ~= nil then
             -- Elemental
             gear.MoveToDynamicGS(gProfile.Sets.NinjutsuElemental,crossjobs.Sets.CurrentGear,false,'NinjutsuElemental');
 
@@ -951,9 +947,9 @@ function magic.MaxCast(sName,bSpell,sTarget,bCast)
 
     -- Now, determine where in the Tiered structure to point to based on whether a spell or a song
     if bSpell == true then
-        tInd = magic.Tiered.spells;
+        tInd = magic.tTiered.spells;
     else
-        tInd = magic.Tiered.songs;
+        tInd = magic.tTiered.songs;
     end
 
     root = utilities.fGetRoot(sName);
@@ -1040,3 +1036,5 @@ function magic.MaxCast(sName,bSpell,sTarget,bCast)
         end
     end
 end     -- magic.MaxCast
+
+return magic;

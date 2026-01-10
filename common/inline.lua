@@ -1,141 +1,35 @@
 local inline = {};
 
-local utilities = require('common.utilities');
-local crossjobs = require('common.crossjobs');
-local gear = require('common.gear');
-
 --[[
     This component contains all routines that deal with inline conditionals
 
     List of routines-
         Functions:
-            fCheckInline               Coordinates all the checkinline functions
-            lfCheckInlineActivity      Checks the validity of the passed gather/craft inline code
-            lfCheckInlineBuff          Checks the validity of the inline buff code
-            lfCheckInlineConditional   Checks the validity of the conditional inline code
-            lfCheckInlineCustomType    Checks whether the custom conditional is enabled
-            lfCheckInlineDay           Checks the validity of the conditional day code
-            lfCheckInlineDebuff        Checks the validity of the inline debuff code
-            lfCheckInlineGear          Checks the validity of the inline gear check code
-            lfCheckInlineJob           Checks the validity of the inline job code
-            lfCheckInlineMagicType     Checks the validity of the inline magic type code
-            lfCheckInlineMoon          Checks the validity of the inline moon phase code
-            lfCheckInlineOther         Checks the validity of the inline other code
-            lfCheckInlinePet           Checks the validity of the inline pet code
-            lfCheckInlineSlot          Checks the validity of the inline slot code
-            lfCheckInlineSongs         Checks the validity of the inline song code
-            lfCheckInlineTarget        Checks the validity of the inline target code
-            lfCheckInlineTime          Checks the validity of the inline time code
-            lfCheckInlineToggle        Checks the validity of the inline toggle code
-            lfCheckInlineWeaponType    Checks the validity of the inline weapon type code
-            lfCheckInlineWeather       Checks the validity of the inline weather code
-            lfEvaluateCondition        Determines if the passed condition is true
+            fCheckInline              Coordinates all the checkinline functions
+            fCheckInlineActivity      Checks the validity of the passed gather/craft inline code
+            fCheckInlineBuff          Checks the validity of the inline buff code
+            fCheckInlineConditional   Checks the validity of the conditional inline code
+            fCheckInlineCustomType    Checks whether the custom conditional is enabled
+            fCheckInlineDay           Checks the validity of the conditional day code
+            fCheckInlineDebuff        Checks the validity of the inline debuff code
+            fCheckInlineGear          Checks the validity of the inline gear check code
+            fCheckInlineJob           Checks the validity of the inline job code
+            fCheckInlineMagicType     Checks the validity of the inline magic type code
+            fCheckInlineMoon          Checks the validity of the inline moon phase code
+            fCheckInlineOther         Checks the validity of the inline other code
+            fCheckInlinePet           Checks the validity of the inline pet code
+            fCheckInlineSlot          Checks the validity of the inline slot code
+            fCheckInlineSongs         Checks the validity of the inline song code
+            fCheckInlineTarget        Checks the validity of the inline target code
+            fCheckInlineTime          Checks the validity of the inline time code
+            fCheckInlineToggle        Checks the validity of the inline toggle code
+            fCheckInlineWeaponType    Checks the validity of the inline weapon type code
+            fCheckInlineWeather       Checks the validity of the inline weather code
+            fEvaluateCondition        Determines if the passed condition is true
 --]]
 
--- Define a list of all towns and the areas that are specific to each nation and Jeuno
-inline.tAreas = {
-    ['Towns'] = { 'Tavnazian Safehold','Al Zahbi','Aht Urhgan Whitegate','Nashmau','Southern San d\'Oria [S]','Bastok Markets [S]',
-        'Windurst Waters [S]','San d\'Oria-Jeuno Airship','Bastok-Jeuno Airship','Windurst-Jeuno Airship','Kazham-Jeuno Airship',
-        'Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille','Bastok Mines','Bastok Markets',
-        'Port Bastok','Metalworks','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower',
-        'Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno','Rabao','Selbina','Mhaura','Kazham','Norg','Mog Garden',
-        'Celennia Memorial Library','Western Adoulin','Eastern Adoulin' },
-    ['Windy']  = { 'Windurst Waters [S]','Windurst Waters','Windurst Walls','Port Windurst','Windurst Woods','Heavens Tower' },
-    ['Sandy']  = { 'Southern San d\'Oria [S]','Southern San d\'Oria','Northern San d\'Oria','Port San d\'Oria','Chateau d\'Oraguille' },
-    ['Bastok'] = { 'Bastok Markets [S]','Bastok Mines','Bastok Markets','Port Bastok','Metalworks' },
-    ['Jeuno']  = { 'Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno' }
-};
-
--- Define target familes for Aquans and Amorphs
-inline.tTargetFamily = {
-    ['aquans'] = {
-        ['crabs'] = {
-            'river crab','limicoline crab','palm crab','savanna crab','stone crab','tree crab','sand crab','mine crab','land crab',
-            'mole crab','mugger crab','vermivorous crab','wadi crab','coral crab','passage crab','ocean crab','sea crab','thickshell',
-            'stag crab','triangle crab','snipper','snapper','blind crab','clipper','cutter','ghost crab','grindylow','gugru crab',
-            'crimson knight crab','knight crab','ironshell','bigclaw','jungle crab','cyan deep crab','submarine nipper','rock crab',
-            'scavanger crab','robber crab','greatclaw','aydeewa crab','wootzshell','sicklemoon crab','nipper','steelshell',
-            'mamook crab','carrion crab','kelp crab','angler crab','aquarius','cancer','cargo crab colin','duke decapod','king arthro',
-            'metal shears','tegmine','wake warder wanda','aphotic crab','bubbly bernie','bloody coffin','crabshaw','ferrocrab',
-            'heike crab','megapod megalops','metal crab','heavy metal crab','adamantshell','nightmare crab','overlord arthro',
-            'lord\'s bruiser','lord\'s wizard','poisonous crab'
-        },
-        ['pugils'] = {
-            'pugil','cheval pugil','giddeus pugil','ghelbsa pugil','pug pugil','mud pugil','fighting pugil','giant pugil','sea pugil',
-            'puffer pugil','ocean pugil','land pugil','spring pugil','swamp pugil','sand pugil','davoi pugil','pirate pugil','bigjaw',
-            'ferocious pugil','fosse pugil','beach pugil','shoal pugil','quifim pugil','greater pugil','spinous pugil','fatty pugil',
-            'vepar','dagon','ocean jagil','gugru pugil','jagil','makara','apsaras','grotto pugil','cyan deep pugil','razorjaw pugil',
-            'thalassic pugil','abyssal pugil','canal pugil','stygian pugil','immolatory pugil','demonic pugil','azoth apsaras',
-            'terror pugil','mercurial makara','cave pugil','suhur mas','la vaule pugil','zazalda jagil','sicklemoon jagil',
-            'vozold jagil','sulphuric jagil','buburimboo','capricornus','hippomaritimus','lancet jagil','qoofim','sea hog','serra',
-            'swamfisk','ziphius','abhac','isonade','water leaper','odontotyrannus','blind moby','percipient fish','archer pugil',
-            'sniper pugil','aipaloovok','enhanced pugil','nightmare makaras'
-        },
-        ['ruszors'] = {
-            'ruszor','savage ruszor', 'scylla'
-        },
-        ['sea monks'] = {
-            'sea monk','sea bishop','kraken','colossal calamari','ocean kraken','morgawr','blanched kraken','sea bonze','flying manta',
-            'kulshedra','bathybic kulushedra','devil manta','lahama','nostokulshedra','charybdis','lord of onzozo','peg powler',
-            'proteus','sea horror','beach monk','glyryvilu','tros','vu-murt','dalham','honor','valor','fe\'e','nightmare kraken',
-            'scolooendra','sjokrakjen','tieholtsodi'
-        },
-        ['toads'] = {
-            'toad','flume toad'
-        },
-        ['uragnites'] = {
-            'uragnite','coraline uragnite','young uragnite','nightmare uragnite','harajnite','shankha','shen','zoredonite','amphitrite',
-            'blademall','nepionic blademall','parata','cyclopean conch'
-        }
-    },
-    ['amorphs'] = {
-        ['flans'] = {
-            'black pudding','ebony pudding','pitchy pudding','dextrose','flammeri','immortal flan','two-faced flan','anise custard',
-            'caraway custard','cinnamon custard','cumin custard','ginger custard','nutmeg custard','mint custard','vanilla custard',
-            'black pudding','empathic flan','flux flan','princess pudding','fighting flan','mokkuralfi','liquified einherjar'
-        },
-        ['hecteyes'] = {
-            'hecteyes','taisai','gazer','blubber eyes','desert gazer','thousand eyes','dodomeki','mindgazer','million eyes','argus',
-            'hakutaku','hyakume','shoggoth','taisaijin','galgalim','mokumomuren','compound eyes','sobbing eyes','vanguard hecteyes',
-            'waldgeist'
-        },
-        ['leeches'] = {
-            'stickpin','wadi leech','swamp leech','thread leech','forrest leech','poison leech','gigas\'s leech','huge leech',
-            'horrid fluke','acrophies','big leech','royal leech','goblin\'s leech','goobbue parasite','canal leech','labyrinth leech',
-            'yagudo parasite','uggalepih leech','sahagin parasite','bloodsucker','caedarva leech','bouncing ball','leech',
-            'anautogenous slug','red smoocher','red osculator','red kisser','phlebotomic slug','kissing leech','mamool ja bloodsucker',
-            'ashakku','volcanic leech','arrapago leech','blood ball','nirgali','nightmare leech','aroma leech','bloodpool vorax',
-            'bloodsucker','canal moocher','chocoboleech','jammer leech','leech king','masan','slippery sucker','cetic parasite',
-            'korroloka leech','undead leech','pepper','phoedme','prune','hazhalm leech','utgarth leech'
-        },
-        ['sandworms'] = {
-            'sandworm','glavoid'
-        },
-        ['slimes'] = {
-            'giant amoeba','oil slick','rotten jam','blob','goblin gruel','black slime','jelly','sponge','water pumpkin','ooze',
-            'protozoan','freshwater trepang','clot','rancid ooze','stroper chyme','davoi mush','amoebic nodule','mush',
-            'ogreish rissoto','gloop','viscous clot','bavarois','oil spill','acid grease','dark aspic','mousse','caedarva pondscum',
-            'caedarva marshscum','cave mold','slime mold','zazalda clot','mountain clot','vozold clot','chimera clot','brei',
-            'talacca clot','blubbery bulge','ichorous ire','maltha','sewer syrup','hermatic cyst','pudding','gigaplasm','macroplasm',
-            'microplasm','nanoplasm','hinge oil','princess jelly','queen jelly','vanguard\'s slime','woodnix\'s slime','enhanced jelly',
-            'enhanced slime','ghost clot','metalloid amoeba','agar agar','claret','fistule','konjac','mucoid mass','glibber',
-            'metallic slime','swamp muck','einherjar brei','winebibber'
-        },
-        ['slugs'] = {
-            'scabrous slug','lou carcolh','edible slug','dyinyinga','nommo'
-        },
-        ['worms'] = {
-            'tunnel worm','carrion worm','stone eater','dirt eater','giant grub','rock eater','earth eater','mineral eater','maze maker',
-            'eikon eater','land worm','ore eater','abyss worm','amphisbaena','cliff worm','flesh eater','boreal worm','desert worm',
-            'sand eater','glacier eater','cave worm','sand digger','kuftal digger','mountain worm','mold eater','bedrock barry',
-            'bigmouth billy','morion worm','olgoi-khorkhoi','phantom worm','trembler tabitha','nightmare worm','mineral eater',
-            'flayer franz','flesh eater','ziryu','einherjar eater','wayward event'
-        }
-    }
-};
-
 --[[
-    lfCheckInlineBuff checks the validity of the passed inline code and then determines if the
+    fCheckInlineBuff checks the validity of the passed inline code and then determines if the
     coded condition is true.
 
     Parameter
@@ -146,7 +40,7 @@ inline.tTargetFamily = {
         smsg        likely nil, but if validation fails, returns error message
 --]]
 
-function lfCheckInlineBuff(sCode)
+function inline.fCheckInlineBuff(sCode)
     local bGood = nil;
     local bNot = false;
     local smsg = nil;
@@ -203,10 +97,10 @@ function lfCheckInlineBuff(sCode)
     end
 
     return bGood,smsg;
-end     -- lfCheckInlineBuff
+end     -- inline.fCheckInlineBuff
 
 --[[
-    lfCheckInlineDebuff checks the validity of the passed inline code and then determines if the
+    fCheckInlineDebuff checks the validity of the passed inline code and then determines if the
     coded condition is true.
 
     Parameter
@@ -217,7 +111,7 @@ end     -- lfCheckInlineBuff
         smsg        likely nil, but if validation fails, returns error message
 --]]
 
-function lfCheckInlineDebuff(sCode)
+function inline.fCheckInlineDebuff(sCode)
     local bGood = nil;
     local bNot = false;
     local bFound = false;
@@ -227,12 +121,12 @@ function lfCheckInlineDebuff(sCode)
         ['CODE']    = {
                 'ADDLED','AMNESIA','BANED','BLINDED','BOUND','BUSTED','CHARMED','CURSED','DISEASED',
                 'DOOMED','ENCUMBERED','IMPAIRED','KO','MEDICATED','MUTED','PARALYZED','PETRIFIED','PLAGUED',
-                'POISONED','SILENCED','SLEPT','STUNNED','TERRIFIED','WEAKENED','WEIGHTED'
+                'POISONED','SILENCED','SLEPT','STUNNED','TERRIFIED','WEAKENED','WEIGHTED','SJ_RESTRICTION'
                 },
         ['BUFF']    = {
                 'Addle','Amnesia','Bane','Blind','Bind','Bust','Charm','Curse','Disease',
                 'Doom','Encumbrance','Impairment','KO','Medicine','Mute','Paralysis','Petrify','Plague',
-                'Poison','Silence','Sleep','Stun','Terror','Weak','Weight'
+                'Poison','Silence','Sleep','Stun','Terror','Weak','Weight','SJ Restriction'
                 }
     };
 
@@ -269,10 +163,10 @@ function lfCheckInlineDebuff(sCode)
     end
 
     return bGood,smsg;
-end     -- lfCheckInlineDebuff
+end     -- inline.fCheckInlineDebuff
 
 --[[
-    lfEvaluateCondition determines if the passed condition is true or not, no validity
+    fEvaluateCondition determines if the passed condition is true or not, no validity
     is checked.
 
     Parameters
@@ -284,7 +178,7 @@ end     -- lfCheckInlineDebuff
         bGood   was the coded condition met? T/F
 --]]
 
-function lfEvaluateCondition(sType,sOp,iNum)
+function fEvaluateCondition(sType,sOp,iNum)
     local player = gData.GetPlayer();
     local party = gData.GetParty();
     local pet = gData.GetPet();
@@ -328,10 +222,10 @@ function lfEvaluateCondition(sType,sOp,iNum)
     end
 
     return bGood;
-end     --  lfEvaluateCondition
+end     --  fEvaluateCondition
 
 --[[
-    lfCheckInlineConditional checks the validity of the passed inline code and then determines if the
+    fCheckInlineConditional checks the validity of the passed inline code and then determines if the
     coded condition is true.
 
     Parameter
@@ -342,7 +236,7 @@ end     --  lfEvaluateCondition
         smsg        likely nil, but if validation fails, returns error message
 --]]
 
-function lfCheckInlineConditional(sCode)
+function inline.fCheckInlineConditional(sCode)
     local player = gData.GetPlayer();
     local pet = gData.GetPet();
     local tConds = { 'HP.','HPP.','MP.','MPP.','TP.','TPP.','LVL.','PARTY.','PETHPP.' };
@@ -439,10 +333,10 @@ function lfCheckInlineConditional(sCode)
     end
 
     return bGood,smsg;
-end     -- lfCheckInlineConditional
+end     -- inline.fCheckInlineConditional
 
 --[[
-    lfCheckInlineActivity checks the validity of the passed inline code and then determines if the
+    fCheckInlineActivity checks the validity of the passed inline code and then determines if the
     coded condition is true.
 
     Parameter
@@ -453,7 +347,7 @@ end     -- lfCheckInlineConditional
         smsg        if an error message occurs, will contain the error message
 --]]
 
-function lfCheckInlineActivity(sCode)
+function inline.fCheckInlineActivity(sCode)
     local bGood = nil;
     local bNot = false;
     local smsg = nil;
@@ -470,15 +364,15 @@ function lfCheckInlineActivity(sCode)
     end
 
     if sCode == 'CR:ANY' then
-        bGood = (crossjobs.Craft ~= nil);
+        bGood = (gVars.Craft ~= nil);
     elseif sCode == 'GA:ANY' then
-        bGood = (crossjobs.Gather ~= nil);
+        bGood = (gVars.Gather ~= nil);
     else
         local iPos = string.find(sCode,':');
-        if table.find(tActs['CRAFTS'],sCode) ~= nil then                 -- One of tActs['CRAFTS']
-            bGood = (crossjobs.Craft == string.sub(sCode,iPos+1,-1));    -- Check for a match on the craft type
+        if table.find(tActs['CRAFTS'],sCode) ~= nil then             -- One of tActs['CRAFTS']
+            bGood = (gVars.Craft == string.sub(sCode,iPos+1,-1));    -- Check for a match on the craft type
         elseif table.find(tActs['GATHERS'],sCode) ~= nil then            -- One of tActs['GATHERS']
-            bGood = (crossjobs.Gather == string.sub(sCode,iPos+1,-1));   -- Check for a match on the gather type
+            bGood = (gVars.Gather == string.sub(sCode,iPos+1,-1));   -- Check for a match on the gather type
         end
     end
 
@@ -487,10 +381,10 @@ function lfCheckInlineActivity(sCode)
     end
 
     return bGood,smsg;
-end     -- lfCheckInlineActivity
+end     -- inline.fCheckInlineActivity
 
 --[[
-    lfCheckInlineDay checks the validity of the passed inline code and then determines if the
+    fCheckInlineDay checks the validity of the passed inline code and then determines if the
     coded condition is true.
 
     Parameter
@@ -501,7 +395,7 @@ end     -- lfCheckInlineActivity
         smsg        if an error message occurs, will contain the error message
 --]]
 
-function lfCheckInlineDay(sCode)
+function inline.fCheckInlineDay(sCode)
     local environ = gData.GetEnvironment();
     local bGood = nil;
     local bNot = false;
@@ -523,10 +417,10 @@ function lfCheckInlineDay(sCode)
     end
 
     return bGood,smsg;
-end     -- lfCheckInlineDay
+end     -- inline.fCheckInlineDay
 
 --[[
-    lfCheckInlineMoon checks the validity of the passed inline code and then determines if the
+    fCheckInlineMoon checks the validity of the passed inline code and then determines if the
     coded condition is true.
 
     Parameter
@@ -537,7 +431,7 @@ end     -- lfCheckInlineDay
         smsg        if an error message occurs, will contain the error message
 --]]
 
-function lfCheckInlineMoon(sCode)
+function inline.fCheckInlineMoon(sCode)
     local environ = gData.GetEnvironment();
     local bGood = nil;
     local bNot = false;
@@ -567,10 +461,10 @@ function lfCheckInlineMoon(sCode)
     end
 
     return bGood,smsg;
-end     -- lfCheckInlineMoon
+end     -- inline.fCheckInlineMoon
 
 --[[
-    lfCheckInlineGear checks the validity of the passed inline code and then determines if the
+    fCheckInlineGear checks the validity of the passed inline code and then determines if the
     coded condition is true.
 
     Parameters
@@ -587,7 +481,7 @@ end     -- lfCheckInlineMoon
         originally thought. The goal has been moved to a future, post-2.0 implementation.
 --]]
 
-function lfCheckInlineGear(sCode,sSlot,ts)
+function inline.fCheckInlineGear(sCode,sSlot,ts)
     local gSet = gData.GetCurrentSet();
     local bGood = nil;
     local ssLot = nil;
@@ -623,7 +517,7 @@ function lfCheckInlineGear(sCode,sSlot,ts)
             end
         elseif string.sub(sCode,3,1) == '-' then
             local j = string.find(sCode,':');
-            ssLot = utilities.fValidSlots(string.sub(sCode,4,j-1),utilities._SLOT_FA);
+            ssLot = utilities.fValidSlots(string.sub(sCode,4,j-1),gVars._SLOT_FA);
             if ssLot == nil then
                 -- Slot was Unrecognized
                 smsg = 'Warning: Invalid slot in inline conditional: ' .. sCodeHold;
@@ -696,10 +590,10 @@ function lfCheckInlineGear(sCode,sSlot,ts)
     end
 
     return bGood,smsg;
-end     -- lfCheckInlineGear
+end     -- inline.fCheckInlineGear
 
 --[[
-    lfCheckInlineTarget checks the validity of the passed inline code and then determines if the
+    fCheckInlineTarget checks the validity of the passed inline code and then determines if the
     coded condition is true.
 
     Parameter
@@ -710,26 +604,22 @@ end     -- lfCheckInlineGear
         smsg         if an error message occurs, will contain the error message
 --]]
 
-function lfCheckInlineTarget(sCode)
+function inline.fCheckInlineTarget(sCode)
     local tg = gData.GetTarget();
     local bGood = nil;
     local bNot = false;
-    local bFound = false;
     local smsg = nil;
 
     sCode = string.lower(sCode);
     local i = string.find(sCode,'not_');
-    local ln = string.lower(tg.Name);
     if i ~= nil and i == 1 then
         bNot == true;
         sCode = string.sub(sCode,5,-1);         -- Remove the NOT_
     end
 
-    if sCode == 'amorph' then
-        -- Equip if the target is of type Amorph
-        bGood = utilities.GetMobType('amorph');
-    elseif sCode == 'aquan' then
-        bGood = utilities.GetMobType('aquan');
+    if string.find('fam=,eco=',sCode) ~= nil then
+        -- Equip if the target's ecosytem/family contains passed substring
+        bGood = utilities.fGetMobType(sCode);
     elseif sCode == 'ME' then
         -- Equip if target is the player
         local me = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0);
@@ -741,10 +631,10 @@ function lfCheckInlineTarget(sCode)
     end
 
     return bGood,smsg;
-end     -- lfCheckInlineTarget
+end     -- inline.fCheckInlineTarget
 
 --[[
-    lfCheckInlinePet checks the validity of the passed inline code and then determines if the
+    fCheckInlinePet checks the validity of the passed inline code and then determines if the
     coded condition is true.
 
     Parameter
@@ -755,7 +645,7 @@ end     -- lfCheckInlineTarget
         smsg         if an error message occurs, will contain the error message
 --]]
 
-function lfCheckInlinePet(sCode)
+function inline.fCheckInlinePet(sCode)
     local environ   = gData.GetEnvironment();
     local petAction = gData.GetPetAction();
     local player    = gData.GetPlayer();
@@ -860,23 +750,16 @@ function lfCheckInlinePet(sCode)
             -- if //NOT_ and match found w/o error, then flip result
             bGood = not bGood;
         end
-    elseif sCode == 'SMN:AVATARS' then
-        -- Equip if the pet being summoned is an elemental spirit
+    elseif sCode == 'SMN:AVATAR' then
+        -- Equip if the pet being summoned is an avatar, but not an elemental spirit
         if spell ~= nil and spell.Name ~= nil then
-            bGood = (table.find(utilities.tSpellGroupings['avatars'],string.lower(spell.Name)) ~= nil);
+            bGood = (table.find(gVars.tSpellGroupings['avatars'],string.lower(spell.Name)) ~= nil);
         else
             bGood = false;
         end
     elseif sCode == 'SMN:PET' then
         --Is there a summoner's pet out
         bGood = (pets.fSummonerPet(pet) ~= nil);
-    elseif string.find(sCode,'SMN:SUMMONS:') ~= nil then
-        -- Is the named summoner's pet being summoned. Equip if the pet being summoned is named ...
-        if spell == nil then
-            bGood = false;
-        else
-            bGood = (string.find(string.lower(spell.Name),string.lower(string.sub(sCode,12,-1)) ~= nil);
-        end
     elseif sCode == 'SMN:PETMD' then
         -- Does the summoner's pet's element matches the day's element
         local ele = pets.fElementByPetName(pet.Name);
@@ -903,13 +786,20 @@ function lfCheckInlinePet(sCode)
     elseif sCode == 'SMN:SPIRIT:ES' then
         -- Equip if the pet being summoned is an elemental spirit
         if spell ~= nil and spell.Name ~= nil then
-            bGood = (table.find(utilities.tSpellGroupings['spirits'],string.lower(spell.Name)) ~= nil);
+            bGood = (table.find(gVars.tSpellGroupings['avatars'],string.lower(spell.Name)) ~= nil);
         else
             bGood = false;
         end
     elseif sCode == 'SMN:SPIRIT:EP' then
         -- Is the player's pet an elemental spirit
-        bGood = (pet ~= nil and pet.Name ~= nil and table.find(utilities.tSpellGrouping['spirits'],string.lower(pet.Name)) ~= nil);
+        bGood = (pet ~= nil and pet.Name ~= nil and table.find(gVars.tSpellGrouping['spirits'],string.lower(pet.Name)) ~= nil);
+    elseif string.find(sCode,'SMN:SUMMONS:') ~= nil then
+        -- Is the named summoner's pet being summoned.
+        if spell == nil then
+            bGood = false;
+        else
+            bGood = (string.find(string.lower(spell.Name),string.lower(string.sub(sCode,12,-1)) ~= nil);
+        end
     end
 
     if bGood ~= nil and bNot == true and bErr == false then
@@ -923,10 +813,10 @@ function lfCheckInlinePet(sCode)
     end
 
     return bGood,smsg;
-end     -- lfCheckInlinePet
+end     -- inline.fCheckInlinePet
 
 --[[
-    lfCheckInlineSlot checks the validity of the passed inline code and then determines if the
+    fCheckInlineSlot checks the validity of the passed inline code and then determines if the
     coded condition is true.
 
     Parameters
@@ -939,7 +829,7 @@ end     -- lfCheckInlinePet
         smsg         if an error message occurs, will contain the error message
 --]]
 
-function lfCheckInlineSlot(sCode,sSlot,ts)
+function inline.fCheckInlineSlot(sCode,sSlot,ts)
     local bGood = nil;
     local smsg = nil;
     local bNot = false;
@@ -988,10 +878,10 @@ function lfCheckInlineSlot(sCode,sSlot,ts)
     end
 
     return bGood,smsg;
-end     -- lfCheckInlineSlot
+end     -- inline.fCheckInlineSlot
 
 --[[
-    lfCheckInlineSongs checks the validity of the passed inline code and then determines
+    fCheckInlineSongs checks the validity of the passed inline code and then determines
     if the coded condition is true.
 
     Parameter
@@ -1002,7 +892,7 @@ end     -- lfCheckInlineSlot
         smsg        if an error message occurs, will contain the error message
 --]]
 
-function lfCheckInlineSongs(sCode)
+function inline.fCheckInlineSongs(sCode)
     local song = gData.GetAction();
     local pet = gData.GetPet();
     local bGood = nil;
@@ -1083,10 +973,10 @@ function lfCheckInlineSongs(sCode)
     end
 
     return bGood,smsg;
-end     -- lfCheckInlineSongs
+end     -- inline.fCheckInlineSongs
 
 --[[
-    lfCheckInlineOther checks the validity of the passed inline code and then determines
+    fCheckInlineOther checks the validity of the passed inline code and then determines
     if the coded condition is true.
 
     Parameter
@@ -1097,7 +987,7 @@ end     -- lfCheckInlineSongs
         smsg        if an error message occurs, will contain the error message
 --]]
 
-function lfCheckInlineOther(sCode)
+function inline.fCheckInlineOther(sCode)
     local spell = gData.GetAction();
     local party = gData.GetParty();
     local player = gData.GetPlayer();
@@ -1127,9 +1017,9 @@ function lfCheckInlineOther(sCode)
             -- Check to see if spell being cast is of a specific category
             local sCat = string.sub(sCode,10,-1);
             if sCat == 'barelemental' then
-                bGood = table.find(utilities.tSpellGroupings['barspell']['ele'],spell.Name);
+                bGood = table.find(gVars.tSpellGroupings['barspell']['ele'],spell.Name);
             elseif sCat == 'barstatus' then
-                bGood = table.find(utilities.tSpellGroupings['barspell']['status'],spell.Name);
+                bGood = table.find(gVars.tSpellGroupings['barspell']['status'],spell.Name);
             else
                 smsg = 'Warning: Unknown spell category found in: ' .. sCode;
                 bGood = false;
@@ -1154,7 +1044,7 @@ function lfCheckInlineOther(sCode)
             bGood = (party ~= nil and party.Count ~= nil and party.Count > 1);
         elseif sCode == 'own' then
             -- Is region controlled by player's nation?
-            bGood = (utilities.fGetCycle('Region') == 'Owned');
+            bGood = (utilities.fGetCycle(gVars._REGION) == 'Owned');
         elseif string.find(sCode,'party:') ~= nil then
             local iNum = tonumber(string.sub(sCode,7,-1));
             bGood = (party ~= nil and party.Count ~= nil and party.Count == iNum);
@@ -1163,13 +1053,13 @@ function lfCheckInlineOther(sCode)
             if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
                 -- Has to be a smn
                 local x = string.sub(sCode,6,-1);
-                local sMode = string.lower(utilities.fGetCycle('Mode'));
+                local sMode = string.lower(utilities.fGetCycle(gVars._MODE));
                 bGood = (sMode == x);
             else
                 bGood = false;
             end
         elseif sCode == 'town' then
-            bGood = (environ.Area ~= nil and table.find(inline.tAreas['Towns'],environ.Area) ~= nil);
+            bGood = (environ.Area ~= nil and table.find(gVars.tTownAreas['Towns'],environ.Area) ~= nil);
         elseif sCode == 'town-ak' then
             bFlip = false;
             -- Equip the appropriate national/ducal aketon if in the appropriate town
@@ -1178,23 +1068,23 @@ function lfCheckInlineOther(sCode)
 
             if slcGear == 'ducal aketon' then
                 bGood = (environ.Area ~= nil and
-                    (table.find(inline.tAreas['Windy'],environ.Area) ~= nil or
-                    table.find(inline.tAreas['Sandy'],environ.Area) ~= nil or
-                    table.find(inline.tAreas['Bastok'],environ.Area) ~= nil or
-                    table.find(inline.tAreas['Jeuno'],environ.Area) ~= nil)
+                    (table.find(gVars.tTownAreas['Windy'],environ.Area) ~= nil or
+                    table.find(gVars.tTownAreas['Sandy'],environ.Area) ~= nil or
+                    table.find(gVars.tTownAreas['Bastok'],environ.Area) ~= nil or
+                    table.find(gVars.tTownAreas['Jeuno'],environ.Area) ~= nil)
                     );
             elseif slcGear == 'federation aketon' then
-                if environ.Area ~= nil and table.find(inline.tAreas['Windy'],environ.Area) ~= nil then
+                if environ.Area ~= nil and table.find(gVars.tTownAreas['Windy'],environ.Area) ~= nil then
                     -- Equip the Windurstian national aketon if in Windurst
                     bGood = (pNation == 2);
                 end
             elseif slcGear == 'republic aketon' then
-                if environ.Area ~= nil and table.find(inline.tAreas['Bastok'],environ.Area) == nil then
+                if environ.Area ~= nil and table.find(gVars.tTownAreas['Bastok'],environ.Area) == nil then
                     -- Equip the Bastokian national aketon if in Bastok
                     bGood = (pNation == 1);
                 end
             elseif slcGear == 'kingdom aketon' then
-                if environ.Area ~= nil and table.find(inline.tAreas['Sandy'],environ.Area) == nil then
+                if environ.Area ~= nil and table.find(gVars.tTownAreas['Sandy'],environ.Area) == nil then
                     -- Equip the Sandorian national aketon if in San d'Oria
                     bGood = (pNation == 0);
                 end
@@ -1217,10 +1107,10 @@ function lfCheckInlineOther(sCode)
         bGood = not bGood;
     end
     return bGood,smsg;
-end     -- lfCheckInlineOther
+end     -- inline.fCheckInlineOther
 
 --[[
-    lfCheckInlineJob checks the validity of the passed inline code and then determines
+    fCheckInlineJob checks the validity of the passed inline code and then determines
     if the coded condition is true.
 
     Parameter
@@ -1231,7 +1121,7 @@ end     -- lfCheckInlineOther
         smsg        if an error message occurs, will contain the error message
 --]]
 
-function lfCheckInlineJob(sCode)
+function inline.fCheckInlineJob(sCode)
     local player = gData.GetPlayer();
     local sj = player.SubJob;
     local job;
@@ -1265,14 +1155,9 @@ function lfCheckInlineJob(sCode)
         if sCode == 'MSJ' then
             --  Player has a subjob that can do magic
             bGood = string.find(crossjobs._sMagicJobs,sj);
-        elseif string.sub(sCode,1,3) == 'SJ[' then
+        elseif string.sub(sCode,1,3) == 'SJ:' then
             -- Player's subjob matches one of the listed jobs
-            local iPos = string.find(sCode,']');
-            if iPos ~= nil and iPos > 3 then
-                bGood = (string.find(string.sub(sCode,4,iPos-1),sj) ~= nil);
-            else
-                smsg = 'Warning: Subjob list not definied correctly';
-            end
+            bGood = (string.find(string.sub(sCode,4,-1),sj) ~= nil);
         elseif string.find(sCode,'SJ'..sj) ~= nil then
             -- Player's subjob matches the specified job
             bGood = true;
@@ -1287,10 +1172,10 @@ function lfCheckInlineJob(sCode)
     end
 
     return bGood,smsg;
-end     -- lfCheckInlineJob
+end     -- inline.fCheckInlineJob
 
 --[[
-    lfCheckInlineTime checks the validity of the passed inline code and then determines
+    fCheckInlineTime checks the validity of the passed inline code and then determines
     if the coded condition is true.
 
     Parameter
@@ -1301,7 +1186,7 @@ end     -- lfCheckInlineJob
         smsg        if an error message occurs, will contain the error message
 --]]
 
-function lfCheckInlineTime(sCode)
+function inline.fCheckInlineTime(sCode)
     local player = gData.GetPlayer();
     local timestamp = gData.GetTimestamp();
     local bGood = nil;
@@ -1329,7 +1214,7 @@ function lfCheckInlineTime(sCode)
     end
 
     return bGood,smsg;
-end     -- lfCheckInlineTime
+end     -- inline.fCheckInlineTime
 
 --[[
     fCheckInlineToggle checks the validity of the passed inline code and then determines
@@ -1343,7 +1228,7 @@ end     -- lfCheckInlineTime
         smsg        if an error message occurs, will contain the error message
 --]]
 
-function fCheckInlineToggle(sCode)
+function inline.fCheckInlineToggle(sCode)
     local player = gData.GetPlayer();
     local bGood = nil;
     local smsg = nil;
@@ -1353,7 +1238,7 @@ function fCheckInlineToggle(sCode)
         return false;
     end
 
-    sCode = string.lower(sCode);
+    sCode = string.upper(sCode);
 
     local i = string.find(sCode,'NOT_');
     if i ~= nil and i == 1 then
@@ -1361,37 +1246,37 @@ function fCheckInlineToggle(sCode)
         sCode = string.sub(sCode,5,-1); -- remove the "not_"
     end
 
-    local dt = string.find(sCode,'dt:');
+    local dt = string.find(sCode,'DT:');
     if dt ~= nil and dt == 1 then       -- Damage Taken
-        if sCode == 'dt:breath' then
-            bGood = (utilities.fGetCycle('DT') == 'Breath');
-        elseif sCode == 'dt:magical' then
-            bGood = (utilities.fGetCycle('DT') == 'Magical');
-        elseif sCode == 'dt:physical' then
-            bGood = (utilities.fGetCycle('DT') == 'Physical');
+        if sCode == 'DT:BREATH' then
+            bGood = (utilities.fGetCycle(gVars._DT) == 'Breath');
+        elseif sCode == 'DT:MAGICAL' then
+            bGood = (utilities.fGetCycle(gVars._DT) == 'Magical');
+        elseif sCode == 'DT:PHYSICAL' then
+            bGood = (utilities.fGetCycle(gVars._DT) == 'Physical');
         end
     elseif sCode == 'ACCURACY' then     -- Accuracy
-        if utilities.fGetToggle('Tank') == true then
-            bGood = (gear.Progressive['Tank_Accuracy']['CurStage'] > 0)
+        if utilities.fGetToggle(gVars._TANK) == true then
+            bGood = (gVars.tProgressive['Tank_Accuracy']['CurStage'] > 0)
         else
-            bGood = (gear.Progressive['Accuracy']['CurStage'] > 0)
+            bGood = (gVars.tProgressive['Accuracy']['CurStage'] > 0)
         end
     elseif sCode == 'RACCURACY' then    -- Ranged Accuracy
-        if utilities.fGetToggle('Tank') == true then
-            bGood = (gear.Progressive['Tank_Ranged_Accuracy']['CurStage'] > 0)
+        if utilities.fGetToggle(gVars._TANK) == true then
+            bGood = (gVars.tProgressive['Tank_Ranged_Accuracy']['CurStage'] > 0)
         else
-            bGood = (gear.Progressive['Ranged_Accuracy']['CurStage'] > 0)
+            bGood = (gVars.tProgressive['Ranged_Accuracy']['CurStage'] > 0)
         end
     elseif sCode == 'EVASION' then      -- Evasion
         -- Is 'Evasion' enabled
-        bGood = (utilities.fGetToggle('Eva') == true);
+        bGood = (utilities.fGetToggle(gVars._EVASION) == true);
     elseif sCode == 'IDLE' then         -- Idle
         -- Is 'Idle' enabled
-        bGood = (utilities.GetToggle('Idle') == true);
+        bGood = (utilities.GetToggle(gVars._IDLE) == true);
     elseif sCode == 'TANK' then         -- Tank
         -- Is 'Tank' enabled
-        if string.find(utilities._TankJobs,player.MainJob) ~= nil then
-            bGood = (utilities.fGetToggle('Tank') == true);
+        if string.find(gVars._Tankjobs,player.MainJob) ~= nil then
+            bGood = (utilities.fGetToggle(gVars._TANK) == true);
         else
             smsg = 'Warning: //[NOT_]TANK only applicable for jobs that can tank: ' .. crossjobs._TankJobs;
             bGood = false;
@@ -1399,9 +1284,9 @@ function fCheckInlineToggle(sCode)
         end
     elseif sCode == 'MACC' then         -- Magical accuracy
         -- Is 'Macc' (Magic Accuracy) enabled
-        if string.find(utilities._sMagicJobs,player.MainJob) ~= nil or
-                string.find(utilities._sMagicJobs,player.SubJob) ~= nil then
-            bGood = utilities.fGetToggle('Macc');
+        if string.find(gVars._sMagicjobs,player.MainJob) ~= nil or
+                string.find(gVars._sMagicjobs,player.SubJob) ~= nil then
+            bGood = utilities.fGetToggle(gVars._MACC);
         else
             smsg = 'Warning: //[NOT_]MACC only applicable for magical jobs/subjobs: ' .. crossjobs._sMagicJobs;
             bGood = false;
@@ -1410,7 +1295,7 @@ function fCheckInlineToggle(sCode)
     elseif sCode == 'WSWAP' then        -- Weapon swap
         -- Is 'WSWAP' (Weapon Swap) enabled
         if crossjobs.settings.bWSOverride == false then
-            bGood = utilities.fGetToggle('WSWAP');
+            bGood = utilities.fGetToggle(gVars._WSWAP);
         else
             smsg = 'Warning: Your job (' .. player.MainJob .. ') does not support //WSWAP';
             bGood = false;
@@ -1418,16 +1303,16 @@ function fCheckInlineToggle(sCode)
         end
     elseif sCode == 'KITE' then         -- Kite
         -- Is 'Kite' (Kiting) enabled
-        bCode = utilities.fGetToggle('Kite');
+        bCode = utilities.fGetToggle(gVars._KITE);
     elseif sCode == 'RIDING' then       -- Riding a "chocobo"
         bCode = utilities.fBuffed('CHOCOBO',true);
     elseif sCode == 'SPF' then          -- Show Pull Feedback
         -- Should 'Show Pull Feedback' be displayed
-        bGood = utilities.fGetToggle('sPF');
+        bGood = utilities.fGetToggle(gVars._SPF);
     elseif sCode == 'BRD:HORN' then     -- Instrument: Horn
         -- Is Bard's instrument set to a horn
         if player.MainJob == 'BRD' then
-            bGood = (utilities.fGetToggle('Instrument') == 'Horn');
+            bGood = (utilities.fGetToggle(gVars._INSTRUMENT) == 'Horn');
         else
             smsg = 'Warning: //[NOT_]BRD_HORN is only valid if you\'re a bard';
             bGood = false;
@@ -1436,7 +1321,7 @@ function fCheckInlineToggle(sCode)
     elseif sCode == 'BRD:STRING' then   -- Instrument: String
         -- Is Bard's  instrument set to a string
         if player.MainJob == 'BRD' then
-            bGood = (utilities.fGetToggle('Instrument') == 'String');
+            bGood = (utilities.fGetToggle(gVars._INSTRUMENT) == 'String');
         else
             smsg = 'Warning: //[NOT_]BRD_STRING is only valid if you\'re a bard';
             bGood = false;
@@ -1445,7 +1330,7 @@ function fCheckInlineToggle(sCode)
     elseif sCode == 'BST:AJUG' then     -- Automatic jug pet
         -- Is Beastmaster's 'AJUG' (automatic pet jug selection) enabled
         if player.MainJob == 'BST' then
-            bGood = utilities.fGetToggle('AJug');
+            bGood = utilities.fGetToggle(gVars._AJUG);
         else
             smsg = 'Warning: //[NOT_]BST_AJUG is only valid if you\'re a beastmaster';
             bGood = false;
@@ -1454,7 +1339,7 @@ function fCheckInlineToggle(sCode)
     elseif sCode == 'BST:DB:BPP' then   -- BST Debuff: blind, poison, paralyze
         -- Is Beastmaster's 'DB:BPP' (debuff:blind,poison,paralyze) enabled
         if player.MainJob == 'BST' then
-            bGood = (utilities.fGetToggle('DB') == 'BPP');
+            bGood = (utilities.fGetToggle(gVars._DB) == 'BPP');
         else
             smsg = 'Warning: //[NOT_]BST_DB_BPP is only valid if you\'re a beastmaster';
             bGood = false;
@@ -1463,7 +1348,7 @@ function fCheckInlineToggle(sCode)
     elseif sCode == 'BST:DB:WSS' then   -- BST Debuff: weight, slow, silence
         -- Is Beastmaster's 'DB:WSS' (debuff:weight,slow,silence) enabled
         if player.MainJob == 'BST' then
-            bGood = (utilities.fGetToggle('DB') == 'WSS');
+            bGood = (utilities.fGetToggle(gVars._DB) == 'WSS');
         else
             smsg = 'Warning: //[NOT_]BST_DB_WSS is only valid if you\'re a beastmaster';
             bGood = false;
@@ -1472,7 +1357,7 @@ function fCheckInlineToggle(sCode)
     elseif sCode == 'SMN:SBP' then      -- Show blood pact
         -- Is Summoner's 'sBP' (Show Blood Pact) enabled
         if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
-            bGood = utilities.fGetToggle('sBP');
+            bGood = utilities.fGetToggle(gVars._SBP);
         else
             smsg = 'Warning: //[NOT_]SBP is only valid if you\'re a summoner (main or sj)';
             bGood = false;
@@ -1481,7 +1366,7 @@ function fCheckInlineToggle(sCode)
     elseif sCode == 'THF:TH' then       -- Treasure Hunter
         -- Is Thief's 'TH' (Treasure Hunter) enabled
         if player.MainJob == 'THF' then
-            bGood = utilities.fGetToggle('TH');
+            bGood = utilities.fGetToggle(gVars._TH);
         else
             smsg = 'Warning: //[NOT_]THF_TH is only valid if your main job is a thief';
             bGood = false;
@@ -1490,15 +1375,29 @@ function fCheckInlineToggle(sCode)
     elseif sCode == 'THF:SS' then       -- Show steal
         -- Is Thief's 'SS' (Show Steal) enabled
         if player.MainJob == 'THF' or player.SubJob == 'THF' then
-            bGood = utilities.fGetToggle('SS');
+            bGood = utilities.fGetToggle(gVars._SS);
         else
             smsg = 'Warning: //[NOT_]SBP is only valid if you\'re a thief';
             bGood = false;
             bErr = true;
         end
     elseif string.sub(sCode,1,2) == 'CC' then   -- Custom code
-        -- Custom Code
-        bGood = utilities.fGetToggle(sCode);
+        -- Custom Code - make sure it's a known code
+        local bFound = false;
+        for i,j in gProfile.CustomConditionals do
+            if string.upper(j['Code']) == sCode then
+                bFound = true;
+                break;
+            end
+        end
+
+        if bFound == true then
+            bGood = utilities.fGetToggle(sCode);
+        else
+            smsg = 'Warning: //'.. sCode .. ' is an unknown custom code'
+            bGood = false;
+            bErr = true;
+        end
     end
 
     -- Assuming there's no error and the results need flipping, do so
@@ -1507,10 +1406,10 @@ function fCheckInlineToggle(sCode)
     end
 
     return bGood,smsg;
-end     -- lfCheckInlineToggle
+end     -- inline.fCheckInlineToggle
 
 --[[
-    lfCheckInlineWeaponType checks the validity of the passed inline code and then determines
+    fCheckInlineWeaponType checks the validity of the passed inline code and then determines
     if the coded condition is true.
 
     Parameters
@@ -1522,7 +1421,7 @@ end     -- lfCheckInlineToggle
         smsg        if an error message occurs, will contain the error message
 --]]
 
-function lfCheckInlineWeaponType(sCode,sGear)
+function inline.fCheckInlineWeaponType(sCode,sGear)
     local bGood = nil;
     local bNot = false;
 
@@ -1537,7 +1436,7 @@ function lfCheckInlineWeaponType(sCode,sGear)
         sCode = string.sub(sCode,5,-1); -- remove the "not_"
     end
 
-    if string.find(utilities._WeaponTypes,sCode) ~= nil then
+    if table.find(gVars.tWeaponTypes['all'],sCode) ~= nil then
         -- It's a valid weapon type
         if crossjobs.WeaponTypes[sCode] == nil then
             -- missing entries. Load up appropriately
@@ -1552,10 +1451,10 @@ function lfCheckInlineWeaponType(sCode,sGear)
     end
 
     return bGood,nil;
-end     -- lfCheckInlineWeaponType
+end     -- inline.fCheckInlineWeaponType
 
 --[[
-    lfCheckInlineWeather checks the validity of the passed inline code and then determines
+    fCheckInlineWeather checks the validity of the passed inline code and then determines
     if the coded condition is true.
 
     Parameter
@@ -1566,7 +1465,7 @@ end     -- lfCheckInlineWeaponType
         smsg        if an error message occurs, will contain the error message
 --]]
 
-function lfCheckInlineWeather(sCode)
+function inline.fCheckInlineWeather(sCode)
     local environ = gData.GetEnvironment();
     local bGood = nil;
     local bNot = false;
@@ -1586,7 +1485,7 @@ function lfCheckInlineWeather(sCode)
     sCode = string.sub(sCode,5,-1);
 
     -- Make sure passed in code is a valid weather
-    local sfCode = utilities.fFormattedWord(sCode,utilities._SLOT_FA);
+    local sfCode = utilities.fFormattedWord(sCode,gVars._SLOT_FA);
     if table.find(gData.Constants.Weather,sfCode) == nil then
         if sSetName ~= nil then
             smsg = 'Warning: Unknown weather specified: ' .. sfCode .. ' in ' .. sSetName;
@@ -1606,10 +1505,10 @@ function lfCheckInlineWeather(sCode)
     end
 
    return bGood,smsg;
-end     -- lfCheckInlineWeather
+end     -- inline.fCheckInlineWeather
 
 --[[
-    lfCheckInlineMagicType checks the validity of the passed inline code and then determines
+    fCheckInlineMagicType checks the validity of the passed inline code and then determines
     if the coded magic type is what the current spell is part of.
 
     Parameter
@@ -1620,7 +1519,7 @@ end     -- lfCheckInlineWeather
         smsg        if an error message occurs, will contain the error message
 --]]
 
-function lfCheckInlineMagicType(sCode)
+function inline.fCheckInlineMagicType(sCode)
     local spell = gData.GetAction();
     local ti = gData.GetTargetIndex();
     local target = gData.GetEntity(ti);
@@ -1698,7 +1597,7 @@ function lfCheckInlineMagicType(sCode)
     end
 
     return bGood,smsg;
-end     -- lfCheckInlineMagicType
+end     -- inline.fCheckInlineMagicType
 
 --[[
     fCheckInline checks for inline conditionals on the passed piece and determines
@@ -1772,91 +1671,91 @@ function inline.fCheckInline(gear,sSlot,ts,bLeft,bValidate,sSetName)
     -- be true for the results to be true.
     for _,suCode in pairs(suCodeTbl) do
         -- Start with Buffs
-        bGood,smsg = lfCheckInlineBuff(suCode);
+        bGood,smsg = inline.fCheckInlineBuff(suCode);
 
         if bGood == nil then
             -- Next, Debuffs.
-            bGood,smsg = lfCheckInlineDebuff(suCode);
+            bGood,smsg = inline.fCheckInlineDebuff(suCode);
         end
 
         if bGood == nil then
             -- Then Conditionals
-            bGood,smsg = lfCheckInlineConditional(suCode);
+            bGood,smsg = inline.fCheckInlineConditional(suCode);
         end
 
         if bGood == nil then
             -- Then Activity
-            bGood,smsg = lfCheckInlineActivity(suCode);
+            bGood,smsg = inline.fCheckInlineActivity(suCode);
         end
 
         if bGood == nil then
             -- Then Day
-            bGood,smsg = lfCheckInlineDay(suCode);
+            bGood,smsg = inline.fCheckInlineDay(suCode);
         end
 
         if bGood == nil then
             -- Then Moon
-            bGood,smsg = lfCheckInlineMoon(suCode);
+            bGood,smsg = inline.fCheckInlineMoon(suCode);
         end
 
         if bGood == nil then
             -- Then conditional Gear
-            bGood,smsg = lfCheckInlineGear(suCode,sSlot,ts);
+            bGood,smsg = inline.fCheckInlineGear(suCode,sSlot,ts);
         end
 
         if bGood == nil then
             -- Then Slots
-            bGood,smsg = lfCheckInlineSlot(suCode,sSlot,ts,bSubset);
+            bGood,smsg = inline.fCheckInlineSlot(suCode,sSlot,ts,bSubset);
         end
 
         if bGood == nil then
             -- Then Songs
-            bGood,smsg = lfCheckInlineSongs(suCode);
+            bGood,smsg = inline.fCheckInlineSongs(suCode);
         end
 
         if bGood == nil then
             -- Then Other
-            bGood,smsg = lfCheckInlineOther(suCode);
+            bGood,smsg = inline.fCheckInlineOther(suCode);
         end
 
         if bGood == nil then
             -- Then Job
-            bGood,smsg = lfCheckInlineJob(suCode);
+            bGood,smsg = inline.fCheckInlineJob(suCode);
         end
 
         if bGood == nil then
             -- Then Target
-            bGood,smsg = lfCheckInlineTarget(suCode);
+            bGood,smsg = inline.fCheckInlineTarget(suCode);
         end
 
         if bGood == nil then
             -- Then Pet
-            bGood,smsg = lfCheckInlinePet(suCode);
+            bGood,smsg = inline.fCheckInlinePet(suCode);
         end
 
         if bGood == nil then
             -- Then Time
-            bGood,smsg = lfCheckInlineTime(suCode);
+            bGood,smsg = inline.fCheckInlineTime(suCode);
         end
 
         if bGood == nil then
             -- Then Toggles
-            bGood,smsg = lfCheckInlineToggle(suCode);
+            bGood,smsg = inline.fCheckInlineToggle(suCode);
         end
 
         if bGood == nil then
             -- Then Weapon Type
-            bGood,smsg = lfCheckInlineWeaponType(suCode,sGear);
+            bGood,smsg = inline.fCheckInlineWeaponType(suCode,sGear);
         end
 
         if bGood == nil then
             -- Then Weather
-            bGood,smsg = lfCheckInlineWeather(suCode);
+            bGood,smsg = inline.fCheckInlineWeather(suCode);
         end
 
         if bGood == nil then
             -- Then Magic Type
-            bGood,smsg = lfCheckInlineMagicType(suCode);
+            bGood,smsg = inline.fCheckInlineMagicType(suCode);
         end
 
         -- If an error occurred or the conditional wasn't recognized, then the results
@@ -1887,4 +1786,6 @@ function inline.fCheckInline(gear,sSlot,ts,bLeft,bValidate,sSetName)
 
     -- By getting to this point, the conditional(s) have to be true or the validation pass is complete
     return bGood,sGear;
-end     -- fCheckInline
+end     -- inline.fCheckInline
+
+return inline;

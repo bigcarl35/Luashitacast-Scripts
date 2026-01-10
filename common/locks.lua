@@ -1,26 +1,7 @@
 local locks = {};
 
-local utilities = require('common.utilities');
-local gear = require('common.gear');
-
---[[
-    This component contains all routines that deal with locks
-
-    List of routines-
-        Subroutines:
-            LockByGearSet           Locks all slots that have gear in them from passed gear set
-            LockUnlock              Locks or unlocks specified slots
-            ProcessLocks            Processes the invocation of the lock/unlock command
-
-        Functions:
-            fAreSlotsLocked         Determines if one or more passed slots are locked
-            fGetLockedList          Returns comma delimited list of locked slots
-            fIsSlotLocked           Determines if passed slot is locked
-            fMultiSlotLockCheck     Determines if multislotted item blocked by locks
---]]
-
--- The following structure is used for locks
-locks.tLocks = {
+-- List of all slots used for tracking locks and for the dynamic temporary locks
+locks.tSlotLocks = {
     [1] =  { ['slot'] = 'main',  ['mask'] = {1,3},              ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
     [2] =  { ['slot'] = 'sub',   ['mask'] = {2,3},              ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
     [3] =  { ['slot'] = 'range', ['mask'] = {4},                ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil },
@@ -39,8 +20,21 @@ locks.tLocks = {
     [16] = { ['slot'] = 'feet',  ['mask'] = {256},              ['lock'] = false, ['bPrimed'] = false, ['expiry'] = nil }
 };
 
--- Define list of locks
-locks.LocksNumeric = 'None';
+--[[
+    This component contains all routines that deal with locks
+
+    List of routines-
+        Subroutines:
+            LockByGearSet           Locks all slots that have gear in them from passed gear set
+            LockUnlock              Locks or unlocks specified slots
+            ProcessLocks            Processes the invocation of the lock/unlock command
+
+        Functions:
+            fAreSlotsLocked         Determines if one or more passed slots are locked
+            fGetLockedList          Returns comma delimited list of locked slots
+            fIsSlotLocked           Determines if passed slot is locked
+            fMultiSlotLockCheck     Determines if multislotted item blocked by locks
+--]]
 
 --[[
 	fIsSlotLocked determines if the passed slot is locked. Please note that only slot
@@ -61,12 +55,12 @@ function locks.fIsSlotLocked(val)
         print(chat.message('Warning: only one slot can be identified. ' .. val .. ' was sent to be processed'));
         return true;    -- This error should never occur. Assume it's locked.
     else
-        local slot = utilities.fValidSlots(val,utilities._SLOT_LA);
+        local slot = utilities.fValidSlots(val,gVars._SLOT_LA);
         if slot == nil then
             print(chat.message('Warning: unrecognized slot: ' .. val));
             return true;    -- This error should never occur. Assume it's locked.
         end
-        return locks.tLocks[slot]['lock'];
+        return locks.tSlotLocks[slot]['lock'];
     end
     return true;	-- This line should never be encountered. Assume it's locked.
 end		-- locks.fIsSlotLocked
@@ -93,7 +87,7 @@ function locks.fAreSlotsLocked(vals,bAll)
     end
 
     if vals == nil then     -- Process all equipment
-        for i,j in pairs(locks.tLocks) do
+        for i,j in pairs(locks.tSlotLocks) do
             if bAll == true then
                 if j['lock'] == false then  -- This is a failure since all slots need to be locked
                     return false;
@@ -226,6 +220,8 @@ end     -- locks.LockByGearSet
 
     Returned:
         list        List of slots locked or nil
+
+        ** revisit **
 --]]
 
 function locks.fGetLockedList(bNumeric)
@@ -239,19 +235,19 @@ function locks.fGetLockedList(bNumeric)
     for i,j in ipairs(locks.tLocks) do
         if j[sWhich] == true then
             if sList == nil then
-                sList = utilities.fFormattedWord(j['slot'],utilities._SLOT_FA);
+                sList = utilities.fFormattedWord(j['slot'],gVars._SLOT_FA);
                 snList = tostring(i);
-                locks.LocksNumeric = tostring(i);
+                gVars.LocksListNumeric = tostring(i);
             else
-                sList = sList .. ', ' .. utilities.fFormattedWord(j['slot'],utilities._SLOT_FA);
+                sList = sList .. ', ' .. utilities.fFormattedWord(j['slot'],gVars._SLOT_FA);
                 snList = snList .. ',' .. tostring(i);
-                locks.LocksNumeric = locks.LocksNumeric .. ',' .. tostring(i);
+                gVars.LocksListNumeric = gVars.LocksListNumeric .. ',' .. tostring(i);
             end
         end
     end
 
     if sList == nil then
-        locks.LocksNumeric = 'None';
+        gVars.LocksListNumeric = 'None';
     end
 
     if bNumeric == true then
@@ -352,13 +348,13 @@ end		-- locks.fMultiSlotLockCheck
 --]]
 
 function locks.LockUnlock(sType,sWhich)
-    local ss = utilities._LOCK .. ',' .. utilities._UNLOCK;
+    local ss = gVars._LOCK .. ',' .. gVars._UNLOCK;
     local sList;
 
     if sWhich == nil or (string.find(ss,string.lower(sType) == nil)) then
         return;
     elseif string.lower(sWhich) ~= 'all' then
-        sList = utilities.fValidSlots(sWhich,utilities._SLOT_LA);        -- fValidSlots will expand out EARS and RINGS
+        sList = utilities.fValidSlots(sWhich,gVars._SLOT_LA);        -- fValidSlots will expand out EARS and RINGS
     else
         sList = 'all';
     end
@@ -366,7 +362,7 @@ function locks.LockUnlock(sType,sWhich)
     sList = ',' .. sList .. ',';
     for k,l in ipairs(locks.tLocks) do
         if (sWhich == ',all,') or (string.find(sWhich,l['slot']) ~= nil) then
-            locks.tLocks[k][s] = (string.lower(sType) == utilities._LOCK);
+            locks.tLocks[k][s] = (string.lower(sType) == gVars._LOCK);
         end
     end
 end		-- locks.LockUnlock
@@ -380,9 +376,9 @@ end		-- locks.LockUnlock
 
 function locks.ProcessLocks(args)
 
-    if args[1] == utilities._LOCK then
+    if args[1] == gVars._LOCK then
         if args[2] ~= nil then
-            locks.LockUnlock(utilities._LOCK,args[2]);
+            locks.LockUnlock(gVars._LOCK,args[2]);
             sList = locks.fGetLockedList(false);
             if sList ~= nil then
                 print(chat.message('Info: The following slot(s) are locked: ' .. sList));
@@ -394,7 +390,7 @@ function locks.ProcessLocks(args)
         if args[2] == nil then
             args[2] = 'all';
         end
-        locks.LockUnlock(utilities._UNLOCK,args[2]);
+        locks.LockUnlock(gVars._UNLOCK,args[2]);
         if string.lower(args[2]) == 'all' then
             print(chat.message('Info: All slots are unlocked'));
         else
@@ -403,3 +399,5 @@ function locks.ProcessLocks(args)
         locks.fGetLockedList(true);
     end
 end		-- locks.ProcessLocks
+
+return locks;

@@ -1,15 +1,13 @@
 local utilities = {};
 
-local crossjobs = require('common/crossjobs');
-local locks = require('common/locks');
-
 --[[
     This component contains functions that are of general use to any of the othe luashitacast compenents.
 
     List of routines-
         Subroutines:
-            local ClearAliasAll     Unregisters all luashitacast commands from alias list
-            local ClearAliasCC      Unregisters all custom conditional alias commands
+            bRangeOrThrowing        Makes sure player has appropriate weapon to pull with
+            ClearAliasAll           Unregisters all luashitacast commands from alias list
+            ClearAliasCC            Unregisters all custom conditional alias commands
             ClearSet                Empties the passed gear set
             GetWeaponsList          Imports the list of all weapons of the type passed in
             Initialize              Defines initial settings for luashitacast
@@ -20,7 +18,6 @@ local locks = require('common/locks');
             Reminder                Reminder function to nag player to /gc
             SetAliasCC              Registers all custom conditional commands
             SetAliasAll             Registers all luashitacast commands
-            Unload                  Clean up routine when jobs are changed/logout
 
             AdvanceCycle            Advance the setting of a specific cycle
             AdvanceToggle           Advance the setting of a specific toggle
@@ -63,469 +60,8 @@ local locks = require('common/locks');
             fSetCycle                Set a specific cycle's value
 --]]
 
--- List of all days including the strong and weak elements
-utilities.tWeekDayElement = {
-    ['Firesday'] =     { ['strong'] = 'fire',    ['weak'] = 'water' },
-    ['Earthsday'] =    { ['strong'] = 'earth',   ['weak'] = 'wind' },
-    ['Watersday'] =    { ['strong'] = 'water',   ['weak'] = 'thunder' },
-    ['Windsday'] =     { ['strong'] = 'wind',    ['weak'] = 'ice' },
-    ['Iceday'] =       { ['strong'] = 'ice',     ['weak'] = 'fire' },
-    ['Lightningday'] = { ['strong'] = 'thunder', ['weak'] = 'earth' },
-    ['Lightsday'] =    { ['strong'] = 'light',   ['weak'] = 'dark' },
-    ['Darksday'] =     { ['strong'] = 'dark',    ['weak'] = 'light' }
-};
-
--- Lists all player storage containers available in FFXI.
--- Quite a number of them are not valid on HorizonXI yet.
-utilities.STORAGES = {
-    [1] = { ['id'] = 0,  ['name'] = 'Inventory' },
-    [2] = { ['id'] = 1,  ['name'] = 'Safe' },
-    [3] = { ['id'] = 2,  ['name'] = 'Storage' },
-    [4] = { ['id'] = 3,  ['name'] = 'Temporary' },
-    [5] = { ['id'] = 4,  ['name'] = 'Locker' },
-    [6] = { ['id'] = 5,  ['name'] = 'Satchel' },
-    [7] = { ['id'] = 6,  ['name'] = 'Sack' },
-    [8] = { ['id'] = 7,  ['name'] = 'Case' },
-    [9] = { ['id'] = 8,  ['name'] = 'Wardrobe' },
-    [10]= { ['id'] = 9,  ['name'] = 'Safe 2' },
-    [11]= { ['id'] = 10, ['name'] = 'Wardrobe 2' },
-    [12]= { ['id'] = 11, ['name'] = 'Wardrobe 3' },
-    [13]= { ['id'] = 12, ['name'] = 'Wardrobe 4' },
-    [14]= { ['id'] = 13, ['name'] = 'Wardrobe 5' },
-    [15]= { ['id'] = 14, ['name'] = 'Wardrobe 6' },
-    [16]= { ['id'] = 15, ['name'] = 'Wardrobe 7' },
-    [17]= { ['id'] = 16, ['name'] = 'Wardrobe 8' }
-};
-
-
--- Listed below are spells grouped by a dependency or a type. These are
--- root names
-utilities.tSpellGroupings = {
-    ['int']		  =  {
-        'gravity','blind','sleep','sleepga','poison',
-        'poisonga','bind','dispel','blaze','ice','shock',
-    },
-    ['mnd']		   = {
-        'paralyze','slow','slowga','frazzle','distract',
-        'silence'
-    },
-    ['eDebuff']	   = { 'drown','burn','frost','choke','rasp','shock' },
-    ['barspell']   = {
-        ['ele'] = { 'baraero','baraera','barblizzard','barblizzara','barfire','barfira','barstone','barstonra','barthunder','barthundra','barwater','barwatera' },
-        ['status'] = { 'barsleep','barsleepra','barpoison','barpoisonra','barparalyze','barparalyzra','barblind','barblindra','barvirus','barvira','barpetrify','barpetra' }
-    },
-    ['enspell']    = { 'enthunder','enstone','enaero','enblizzard','enfire','enwater','enlight','endark' },
-    ['spikes']	   = { 'blaze','ice','shock','dread' },
-    ['spirits']    = {
-        'fire','firespirit','fire spirit','ice','icespirit','ice spirit','air','airspirit','air spirit','earth','earthspirit','earth spirit','thunder','thunderspirit',
-        'thunder spirit','water','waterspirit','water spirit','light','lightspirit','light spirit','dark','darkspirit','dark spirit'
-    },
-    ['absorb']     = { 'absorb-agi','absorb-chr','absorb-dex','absorb-int','absorb-mnd','absorb-str','absorb-vit','absorb-acc','absorb-tp' },
-    ['nin-buff']   = { 'tonko','utsusemi','monomi' },
-    ['nin-debuff'] = { 'kurayami','hojo','dokumori','jubaku' },
-    ['nin-ele']    = { 'katon','suiton','raiton','doton','huton','hyoton' },
-    ['brd-enh']	   = { 'minne','minuet','paeon','pastoral','madrigal','mambo','operetta','etude','ballad','march','prelude','aubade','carol','mazurka','gavotte','capriccio',
-        'fantasia','hymnus','round'
-    },
-    ['brd-enf']	   = { 'requiem','threnody','lullaby','finale','elegy','virelai' }
-};
-
--- Lists all of the elemental gear broken out by type, element, and usage.
--- included in a reference to where the item that matches that type/element
--- can be found in the GearDetails table.
-utilities.tElemental_gear = {
-    ['relic'] = {
-        ['level'] = 75,
-        ['type'] = 'STAVE',
-        { ['Name'] = 'Claustrum', ['Ref'] = {} }
-    },
-    ['staff'] = {
-        ['level'] = 51,
-        ['fire'] = {
-            ['Weak'] = 'water',
-            ['NQ'] = { ['Name'] = 'Fire staff', ['Ref'] = {} },
-            ['HQ'] = { ['Name'] = 'Vulcan\'s staff', ['Ref'] = {} },
-            ['Grip'] = { ['Name'] = 'Fire Grip', ['Ref'] = {} },
-            ['Affinity'] = { 'blaze','burn','firaga','fire','flare','enfire','katon' },
-            ['SongAffinity'] = { 'ice threnody' },
-            ['Summons'] = { 'ifrit','fire spirit','firespirit','fire' }
-        },
-        ['ice'] = {
-            ['Weak'] = 'fire',
-            ['NQ'] = { ['Name'] = 'Ice staff', ['Ref'] = {} },
-            ['HQ'] = {['Name'] = 'Aquilo\'s staff', ['Ref'] = {} },
-            ['Grip'] = { ['Name'] = 'Ice Grip', ['Ref'] = {} },
-            ['Affinity'] = { 'blizzaga','blizzard','freeze','frost','ice','enblizzard','jubaku','hyoton','bind','distract','paralyze' },
-            ['SongAffinity'] = { 'wind threnody' },
-            ['Summons'] = { 'shiva','ice spirit','icespirit','ice' },
-        },
-        ['wind'] = {
-            ['Weak'] = 'ice',
-            ['NQ'] = { ['Name'] = 'Wind staff', ['Ref'] = {} },
-            ['HQ'] = { ['Name'] = 'Auster\'s staff', ['Ref'] = {} },
-            ['Grip'] = { ['Name'] = 'Wind Grip', ['Ref'] = {} },
-            ['Affinity'] = { 'aero','aeroga','choke','tornado','enaero','huton','gravity','silence' },
-            ['SongAffinity'] = { 'earth threnody' },
-            ['Summons'] = { 'garuda','air spirit','fCheckInlineWeatherairspirit','air','siren' },
-        },
-        ['earth'] = {
-            ['Weak'] = 'wind',
-            ['NQ'] = { ['Name'] = 'Earth staff', ['Ref'] = {} },
-            ['HQ'] = { ['Name'] = 'Terra\'s staff', ['Ref'] = {} },
-            ['Grip'] = { ['Name'] = 'Earth Grip', ['Ref'] = {} },
-            ['Affinity'] = { 'quake','rasp','stone','stonega','enstone','hojo','doton','slow' },
-            ['SongAffinity'] = { 'lightning threnody', 'battlefield elegy', 'carnage elegy' },
-            ['Summons'] = {'titan','earth spirit','earthspirit','earth' },
-        },
-        ['thunder'] = {
-            ['Weak'] = 'earth',
-            ['NQ'] = { ['Name'] = 'Thunder staff', ['Ref'] = {} },
-            ['HQ'] = { ['Name'] = 'Jupiter\'s staff', ['Ref'] = {} },
-            ['Grip'] = { ['Name'] = 'Thunder Grip', ['Ref'] = {} },
-            ['Affinity'] = { 'burst','shock','thundaga','thunder','enthunder','raiton' },
-            ['SongAffinity'] = { 'water threnody' },
-            ['Summons'] = { 'ramuh','thunder spirit','thunderspirit','thunder' },
-        },
-        ['water'] = {
-            ['Weak'] = 'thunder',
-            ['NQ'] = { ['Name'] = 'Water staff', ['Ref'] = {} },
-            ['HQ'] = { ['Name'] = 'Neptune\'s staff', ['Ref'] = {} },
-            ['Grip'] = { ['Name'] = 'Water Grip', ['Ref'] = {} },
-            ['Affinity'] = { 'drown','flood','poison','poisonga','water','waterga','enwater','dokumori','suiton' },
-            ['SongAffinity'] = { 'fire threnody' },
-            ['Summons'] = { 'leviathan','water spirit','waterspirit','water' },
-        },
-        ['light'] = {
-            ['Weak'] = 'dark',
-            ['NQ'] = { ['Name'] = 'Light staff', ['Ref'] = {} },
-            ['HQ'] = { ['Name'] = 'Apollo\'s staff', ['Ref'] = {} },
-            ['Grip'] = { ['Name'] = 'Light Grip', ['Ref'] = {} },
-            ['Affinity'] = { 'banish','banishga','curaga','cure','dia','diaga','flash','holy','enlight','repose','inundation' },
-            ['SongAffinity'] = { 'dark threnody','foe requiem','foe requiem ii','foe requiem iii','foe requiem iv','foe requiem v','foe requiem vi','foe lullaby','horde lullaby',
-                'magic finale','maiden\'s virelai' },
-            ['Summons'] = {'carbuncle','light spirit','lightspirit','light','cait sith','caitsith','alexander'},
-        },
-        ['dark'] = {
-            ['Weak'] = 'light',
-            ['NQ'] = { ['Name'] = 'Dark staff', ['Ref'] = {} },
-            ['HQ'] = { ['Name'] = 'Pluto\'s staff', ['Ref'] = {} },
-            ['Grip'] = { ['Name'] = 'Dark Grip', ['Ref'] = {} },
-            ['Affinity'] = { 'absorb','aspir','blind','bio','dispel','drain','dread','frazzle','sleep','sleepga','endark','kurayami' },
-            ['SongAffinity'] = { 'light threnody' },
-            ['Summons'] = { 'fenrir','diabolos','dark spirit','darkspirit','dark','atomos','odin' },
-        },
-    },
-    ['obi'] = {
-        ['level'] = 71,
-        ['fire'] = {
-            ['Weak'] = 'water',
-            ['Name'] = 'Karin obi',
-            ['Ref'] = {},
-            ['MEacc'] = { 'burn','firaga','fire','flare','blaze','enfire','blaze','katon' },
-            ['eleWS'] = { 'burning blade','red lotus blade','tachi: Kagero','flaming arrow','hot shot','wildfire' },
-        },
-        ['ice'] = {
-            ['Weak'] = 'fire',
-            ['Name'] = 'Hyorin obi',
-            ['Ref'] = {},
-            ['MEacc'] = { 'frost','blizzaga','blizzard','freeze','paralyze','bind','distract','ice','enblizzard','hyoton' },
-            ['eleWS'] = { 'frostbite','freezebite','herculean slash','blade: to' },
-            ['Other'] = 'elemental magic',
-        },
-        ['wind'] = {
-            ['Weak'] = 'ice',
-            ['Name'] = 'Furin obi',
-            ['Ref'] = {},
-            ['MEacc'] = { 'choke','aero','aeroga','tornado','silence','gravity','flurry','enaero','huton' },
-            ['eleWS'] = { 'gust slash','cyclone','aeolian edge','tachi: jinpu' },
-        },
-        ['earth'] = {
-            ['Weak'] = 'wind',
-            ['Name'] = 'Dorin obi',
-            ['Ref'] = {},
-            ['MEacc'] = { 'rasp','quake','stone','stonega','slow','enstone','doton' },
-            ['eleWS'] = { 'blade: chi','rock crusher','earth crusher' },
-        },
-        ['thunder'] = {
-            ['Weak'] = 'earth',
-            ['Name'] = 'Rairin obi',
-            ['Ref'] = {},
-            ['MEacc'] = { 'shock','burst','thundaga','thunder','stun','enthunder','raiton' },
-            ['eleWS'] = { 'cloudsplitter','thunder thrust','raiden thrust','tachi: goten' },
-        },
-        ['water'] = {
-            ['Weak'] = 'thunder',
-            ['Name'] = 'Suirin obi',
-            ['Ref'] = {},
-            ['MEacc'] = { 'drown','flood','water','waterga','poison','enwater','suiton' },
-            ['eleWS'] = { 'blade: teki','blade: yu' },
-            ['Other'] = 'divine magic',
-        },
-        ['light'] = {
-            ['Weak'] = 'dark',
-            ['Name'] = 'Korin obi',
-            ['Ref'] = {},
-            ['MEacc'] = { 'banish','banishga','dia','diaga','flash','repose','holy','auspice','esuna','sacrifice','reprisal','cure','curaga','enlight' },
-            ['eleWS'] = { 'shining blade','seraph blade','primal rend','tachi: koki','shining strike','seraph strike','starburst','sunburst','garland of bliss','trueflight' },
-            ['Other'] = 'cure potency',
-        },
-        ['dark'] = {
-            ['Weak'] = 'light',
-            ['Name'] = 'Anrin obi',
-            ['Ref'] = {},
-            ['MEacc'] = { 'blind','bio','sleep','dispel','frazzle','drain','warp','tractor','aspir','escape','sleep','sleepga','retrace','endark' },
-            ['eleWS'] = { 'energy steal','energy drain','sanguine blade','dark harvest','shadow death','infernal scythe','blade: ei','starburst',
-                          'sunburst','cataclysm','vidohunir','omniscience','leaden suite' },
-        },
-    },
-    ['gorget'] = {
-        ['level'] = 72,
-        ['fire'] = {
-            ['Weak'] = 'water',
-            ['Name'] = 'Flame gorget',
-            ['Ref'] = {},
-            ['skillProp'] = { 'liquefaction','fusion' },
-            ['eleWS'] = { 'arching arrow','ascetic\'s fury','asuran fists','atonement','blade: shun','decimation','detonator','drakesbane','dulling arrow','empyreal arrow','final heaven',
-                'flaming arrow','full swing','garland of bliss','heavy shot','hexa strike','hot shot','insurgency','knights of round','last stand','mandalic stab','mistral axe',
-                'metatron torment','realmrazer','red lotus blade','scourge','shijin spiral','sniper shot','spinning attack','spinning axe','stringing pummel','tachi: kagero','tachi: kasha',
-                'upheaval','wheeling thrust' },
-        },
-        ['ice'] = {
-            ['Weak'] = 'fire',
-            ['Name'] = 'Snow gorget',
-            ['Ref'] = {},
-            ['skillProp'] = { 'induration','distortion' },
-            ['eleWS'] = { 'blade: to','blast arrow','cross reaper','death blossom','expiacion','freezebite','frostbite','full break','geirskogul','ground strike','guillotine','quietus',
-                'impulse drive','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','ruinator','raging rush','shadow of death','shattersoul','skullbreaker',
-                'smash axe','spiral hell','steel cyclone','tachi: gekko','tachi: hobaku','tachi: rana','tachi: yukikaze','tornado kick','vidohunir' },
-        },
-        ['wind'] = {
-            ['Weak'] = 'ice',
-            ['Name'] = 'Breeze gorget',
-            ['Ref'] = {},
-            ['skillProp'] = { 'detonation','fragmentation' },
-            ['eleWS'] = { 'aeolian edge','backhand blow','black halo','blade: jin','blade: kamu','blade: to','camlann\'s torment','coronach','cyclone','dancing edge','death blossom',
-                'dragon kick','earth crusher','exenterator','freezebite','gale axe','ground strike','gust slash','king\'s justice','mordant rime','raging axe','randgrith',
-                'red lotus blade','resolution','ruinator','savage blade','shark bite','shell crusher','sidewinder','slug shot','spinning slash','steel cyclone','tachi: jinpu',
-                'tachi: kaiten','taichi: shoha','taichi: yukikaze','tornado kick','trueflight','true strike','victory smite','vidohunir' },
-        },
-        ['earth'] = {
-            ['Weak'] = 'wind',
-            ['Name'] = 'Soil gorget',
-            ['Ref'] = {},
-            ['skillProp'] = { 'scission','gravitation' },
-            ['eleWS'] = { 'aeolian edge','asuran fists','avalanche axe','blade: ei','blade: ku','blade: ten','calamity','catastrophe','crescent moon','dancing edge','entropy','eviseration',
-                'exenterator','expiacion','fast blade','hard slash','impulse drive','iron tempest','king\'s justice','leaden salute','mercy stroke','nightmare scythe','omniscience',
-                'primal rend','pyrrhic kleos','rampage','requiscat','resolution','retibution','savage blade','seraph blade','shattersoul','shining blade','sickle moon','slice','spinning axe',
-                'spinning scythe','spiral hell','stardiver','stringing pummel','sturmwind','swift blade','tachi: enpi','tachi: jinpu','tachi: rana','trueflight','viper bite','vorpal blade',
-                'wasp sting' },
-        },
-        ['thunder'] = {
-            ['Weak'] = 'earth',
-            ['Name'] = 'Thunder gorget',
-            ['Ref'] = {},
-            ['skillProp'] = { 'impaction','fragmentation' },
-            ['eleWS'] = { 'aeolian edge','apex arrow','armor break','avalanche axe','black halo','blade: chi','blade: jin','blade: kamu','blade: shun','calamity','camlann\'s torment',
-                'circle blade','combo','cyclone','death blossom','dragon kick','earth crusher','exenterator','flat blade','full swing','ground strike','heavy swing','howling fist',
-                'judgement','king\'s justice','leg sweep','mordant rime','raging axe','raging fist','raiden thrust','realmrazer','resolution','rock crusher','savage blade','seraph strike',
-                'shark bite','shield break','shining strike','shoulder tackle','sickle moon','skewer','spinning attack','spinning axe','tachi: goten','tachi: koki','tachi: shoha',
-                'thunder thrust','true strike','victory smite','vidohunir','vorpal blade','weapon break' },
-        },
-        ['water'] = {
-            ['Weak'] = 'thunder',
-            ['Name'] = 'Aqua gorget',
-            ['Ref'] = {},
-            ['skillProp'] = { 'reverberation','distortion' },
-            ['eleWS'] = { 'atonement','blade: teki','brainshaker','circle blade','cross reaper','dark harvest','entropy','quietus','death blossom','decimation','expiacion','full break',
-                'garland of bliss','gate of tartarus','geirskogul','ground strike','last stand','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','primal rend',
-                'raging rush','retribution','ruinator','shadow of death','shockwave','shoulder tackle','sidewinder','skullbreaker','slug shot','smash axe','spinning scythe','spiral hell',
-                'split shot','steel cyclone','sturmwind','sunburst','tachi: gekko','tachi: koki','vidohunir','vorpal thrust' },
-        },
-        ['light'] = {
-            ['Weak'] = 'dark',
-            ['Name'] = 'Light gorget',
-            ['Ref'] = {},
-            ['skillProp'] = { 'transfixion','fusion','light' },
-            ['eleWS'] = { 'apex arrow','arching arrow','ascetic\'s fury','atonement','blade: chi','blade: ku','blade: rin','blade: shun','blast arrow','blast shot','camlann\'s torment',
-                'decimation','detonator','double thrust','drakesbane','dulling arrow','empyreal arrow','eviseration','final heaven','flaming arrow','garland of bliss','heavy shot',
-                'hexa strike','hot shot','howling fist','insurgency','knight\'s of round','leaden salute','last stand','mandalic stab','metatron torment','mistral axe','omniscience',
-                'piercing arrow','power slash','realmrazer','raiden thrust','scourge','shijin spiral','sidewinder','skewer','slug shot','sniper shot','split shot','stardiver','tachi: enpi',
-                'tachi: goten','tachi: kasha','thunder thrust','torcleaver','victory smite','upheaval','vorpal scythe','vorpal thrust','wheeling thrust' },
-        },
-        ['dark'] = {
-            ['Weak'] = 'light',
-            ['Name'] = 'Shadow gorget',
-            ['Ref'] = {},
-            ['skillProp'] = { 'compression','gravitation','darkness' },
-            ['eleWS'] = { 'asuran fists','black halo','blade: ei','blade: hi','blade: kamu','blade: ku','blade: ten','catastrophe','quietus','entropy','eviseration','impulse drive',
-                'insurgency','keen edge','leaden salute','mandalic stab','mercy stroke','requiscat','rundra\'s storm','nightmare scythe','omniscience','one inch punch','penta thrust',
-                'primal rend','retribution','shattersoul','starburst','stardiver','stringing pummel','sunburst','swift blade','tachi: kasha','tachi: rana','tachi: shoha','upheaval',
-                'gate of tartarus' },
-        },
-        ['searched'] = false,
-    },
-};
-
--- The following define all the weaponskills according to the desired stats
-utilities.tWeaponSkills = {
-    ['CHR']    = { 'shadowstitch' },
-    ['DEX']    = { 'wasp sting','viper bite','blade: metsu','dancing edge' },
-    ['DEXAGI'] = { 'shark bite','coronach' },
-    ['DEXCHR'] = { 'eviseration' },
-    ['DEXINT'] = { 'gust slash','cyclone' },
-    ['INT']    = { 'gate of tartarus' },
-    ['INTMND'] = { 'spirit taker' },
-    ['MND']    = { 'energy steal','energy drain' },
-    ['RANGED_AGI']  = { 'hot shot','split shot','sniper shot','slugshot','blast shot','heavy shot','detonator' }, -- MARKSMANSHIP
-    ['RANGED_STRAGI'] = { 'flaming arrow','piercing arrow','dulling arrow','sidewinder','blast arrow','arching arrow','empyreal arrow','namas arrow' }, -- ARCHERY
-    ['STR']    = { 'raging axe','smash axe','gale axe','avalanche axe','spinning axe','rampage','mistral axe','decimation','spinning attack','flat blade',
-                   'circle blade','vorpal blade','hard slash','crescent moon','mercy stroke','iron tempest','sturmwind','keen edge','raging rush',
-                   'metatron torment','leg sweep','skewer','wheeling thrust','impulse drive','tachi: enpi','tachi: hobaku','tachi: goten','tachi: kagero',
-                   'tachi: jinpu','tachi: yukikaze','tachi: gekko','tachi: kasha','tachi: kaiten','brainshaker','skullbreaker','true strike','heavy swing',
-                   'shell crusher','full swing','onslaught','double thrust','spinning scythe','Vorpal Scythe' },
-    ['STRAGI'] = { 'sickle moon','vorpal thrust' },
-    ['STRDEX'] = { 'combo','backhand blow','raging fists','fast blade','penta thrust','blade: rin','blade: retsu','blade: jin','blade: ten','blade: ku','Geirskogul' },
-    ['STRINT'] = { 'dark harvest','shadow of death','nightmare scythe','spiral hell','burning blade','frostbite','freezebite','spinning slash','ground strike',
-                   'thunder thrust','raiden thrust','blade: teki','blade: to','blade: chi','blade: ei','rock crusher','earth crusher','catastrophe' },
-    ['STRINT_30_20'] = { 'red lotus blade' },
-    ['STRMND'] = { 'guillotine','cross reaper','shining blade','seraph blade','swift blade','savage blade','shockwave','tachi: koki','shining strike','seraph strike',
-                   'judgment','hexa strike','randgrith','retribution', 'knights of round' },
-    ['STRMND_30_50'] = { 'black halo' },
-    ['STRVIT'] = { 'shoulder tackle','one inch punch','final heaven' },
-    ['Skill']  = { 'starlight','moonlight' },
-    ['HP']     = { 'spirits within' }
-};
-
--- List of all mob families indexed by ecosystem (or a representative name if no ecosystem)
-utilities.tFamilies = {
-    ['beasts']    = 'behemoths,buffalo,cerberuses,coeurls,dhahmels,gnoles,manticores,marids,opo-opo,rabbits,rams,sheep,tigers,yztargs',
-    ['lizards']   = 'adamantoises,bugards,efts,gabbraths,lizards,matamatas,peistes,raptors,wivres',
-    ['vermin']    = 'antlions,apian beasts,bees,beetles,bztavians,chapuli,chigoes,crawlers,diremites,flies,fluturinis,gnats,ladybugs,mantids,scorpions,spiders,twitherym,wamoura,wamouracampa',
-    ['plantoids'] = 'belladonnas,flytraps,funguars,goobbues,leafkin,mandragora,morbols,panopts,rafflesia,sabotenders,saplings,snapweeds,treants,yggdreants',
-    ['aquans']    = 'crabs,craklaws,oroban,pteraketos,pugils,rockfins,ruszors,sea monks,toads,urgannites',
-    ['amorphs']   = 'acuexes,boituli,flans,hecteyes,leeches,sandworms,slimes,slugs,worms',
-    ['birds']     = 'amphipteres,apkullu,bat trios,birds,cockatrices,colibris,bats,harpeia,hippogryphs,rocs,tulfaires,waktza',
-    ['undead']    = 'corpselights,corses,doomed,dullahans,fomors,ghosts,hounds,naraka,qutrub,shadows,skeletons,vampyrs',
-    ['arcana']    = 'acroliths,bombs,cardians,caturae,clusters,djinn,dolls,evil weapons,golems,iron giants,khimaira,magic pots,mammets,maroliths,mimics,snolls,spheroids',
-    ['dragons']   = 'dragons,hydra,pet wyverns,puks,wyrms,wyverns,zilant',
-    ['demons']    = 'ahriman,dark kindred,dvergr,gallu,gargouilles,imps,soulflayers,tauri',
-    ['luminians'] = 'aern,euvi,hpemde,phuabo,xzomit,yorva',
-    ['luminions'] = 'grah,zdei',
-    ['empty']     = 'cravers,gorgers,memory,receptacles,seethers,thinkers,wanderers,weepers',
-    ['achaia']    = 'chariots,gears,ramparts',
-    ['beastmen']  = 'antica,bugbears,gigas,goblins,lamiae,mamool ja,meebles,moblins,orcs,orcish,warmachines,poroggos,qiqirn,quadav,sahagin,siege turrets,shadow,lords,tonberries,trolls,velkk,yagudo',
-    ['elmentals'] = 'elementals,heatwings,monoceros,pixies,umbrils',
-    ['vorageans'] = 'amoebans,clionidae,limule,murex',
-    ['races']     = 'astoitian slimes,avatars,humanoids,moogles,spriggans,supreme beings',
-    ['natural formations'] = 'blossoms,fungi,geysers,lairs,obstacles',
-    ['animated objects']   = 'animated weapons,automatons,biotechnological weapons,grimoires,living crystals,simulacra',
-    ['tools']     = 'mines,structures,tubes',
-};
-
--- Lists storage containers that can be equipped from outside of a moghouse
-utilities.EQUIPABLE = {
-    utilities.STORAGES[1],		-- Inventory
-    utilities.STORAGES[9],		-- Wardrobe
-    utilities.STORAGES[11],		-- Wardrobe 2
-    utilities.STORAGES[17]		-- Wardrobe 8
-};
-
-utilities.EQUIPABLE_NONHOLIDAY = {
-    utilities.STORAGES[1],		-- Inventory
-    utilities.STORAGES[9],		-- Wardrobe
-    utilities.STORAGES[11]		-- Wardrobe 2
-};
-
-utilities.NON_GEAR = {
-    utilities.STORAGES[1],		-- Inventory
-    utilities.STORAGES[2],		-- Safe
-    utilities.STORAGES[3],		-- Storage
-    utilities.STORAGES[5],		-- Locker
-    utilities.STORAGES[6],		-- Satchel
-    utilities.STORAGES[7],		-- Sack
-    utilities.STORAGES[8],		-- Case
-    utilities.STORAGES[10],		-- Safe 2
-};
-
--- Define constants for input/output types for how slot references are formatted
-utilities._SLOT_LA = 'LA';     -- lowercase slot name
-utilities._SLOT_UA = 'UA';     -- uppercase slot name
-utilities._SLOT_N  = 'N';      -- numeric
-utilities._SLOT_FA = 'FA';     -- formatted output: first letter uppercase, rest lowercase
-
--- Define constants for LOCK and UNLOCK
-utilities._LOCK   = 'lock';
-utilities._UNLOCK = 'unlock';
-
--- JobMask holds a list of all the jobs recogized by FFXI. Each job is referenced via a mask
--- that is used to determine if the piece of gear can be equipped by the said job.
-utilities.JobMask = { ['None'] = 0x0,
-    ['WAR'] = 0x2, ['MNK'] = 0x4, ['WHM'] = 0x8, ['BLM'] = 0x10, ['RDM'] = 0x20, ['THF'] = 0x40, ['PLD'] = 0x80, ['DRK'] = 0x100,
-    ['BST'] = 0x200, ['BRD'] = 0x400, ['RNG'] = 0x800, ['SAM'] = 0x1000, ['NIN'] = 0x2000, ['DRG'] = 0x4000, ['SMN'] = 0x8000,
-    ['BLU'] = 0x10000, ['COR'] = 0x20000, ['PUP'] = 0x40000, ['DNC'] = 0x80000, ['SCH'] = 0x100000, ['GEO'] = 0x200000,
-    ['RUN'] = 0x400000, ['MON'] = 0x800000, ['JOB24'] = 0x1000000, ['JOB25'] = 0x2000000, ['JOB26'] = 0x4000000,
-    ['JOB27'] = 0x8000000, ['JOB28'] = 0x10000000, ['JOB29'] = 0x20000000,['JOB30'] = 0x30000000, ['JOB31'] = 0x80000000,
-    ['Alljobs'] = 0x007FFFFE };
-
--- List of all valid slot names and two special types
-utilities.SlotNames = { 'subset','group','main','sub','range','ammo','head','neck','ear1','ear2','ears','body','hands','ring1',
-    'rings2','rings','back','waist','legs','feet' };
-
--- List of numeric representations for who controls a region
-utilities.RegionAreas = {
-    [-1] = 'Unassigned', [0]  = 'N/A', [1]  = 'San d\'Orian', [2]  = 'Bastokian', [3]  = 'Windurstian', [4]  = 'Beastmen'
-};
-
-utilities.WeaponTypes = {
-    'ammo','archery','axe','club','dagger','gaxe','gkatana','gsword','hwh','katana','marksmanship',
-    'polearm','scythe','shield','sword','throwing'
-};
-
--- List of all supported commands
-utilities.AliasList = {
-    '911','acc','ajug','cc','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','horn','idle','kite',
-    'lock','macc','man','maxsong','maxspell','petfood','ptt','pull','racc','rc','rv','sbp','showit','smg','spf','ss',
-    'string','sw','tank','th','unlock','val','ver','wsdistance','wswap','t1'
-};
-
--- Define constants for DT so typos aren't made
-utilities.OFF = 'Off';
-utilities.PHY = 'Physical';
-utilities.MAG = 'Magical';
-utilities.BRE = 'Breath';
-
--- define constants for Instrument so typos aren't made
-utilities.HORN = 'Horn';
-utilities.STRING = 'String';
-
--- define the code lists for the crafting and gathering types
-utilities.Crafting_Types = 'ALC,BONE,CLOTH,COOK,GSM,LTH,BSM,WW';
-utilities.Gathering_Types = 'HELM,DIG,CLAM,FISH';
-
--- Define list of all valid jobs
-utilities._validJobs = 'BLM,BLU,BRD,BST,COR,DNC,DRG,DRK,GEO,MNK,PLD,PUP,RDM,RNG,RUN,SAM,SCH,SMN,THF,WAR,WHM';
-
--- Define list of all magic using jobs
-utilities._sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,BLU,SCH,GEO,RUN';
-
--- Define list of all jobs that can tank
-utilities._TankJobs = 'PLD,NIN,RUN,DRK,WAR,THF,RDM,BLU';
-
--- Define list of all elements
-utilities._AllElements = 'fire,ice,wind,earth,thunder,water,light,dark';
-
--- Define lists of valid Weapon Types.
--- Note: while SHIELD isn't a weapon, it conforms to the weapon type mechanism in this program
-utilities._WeaponTypes = 'ARCHERY,AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,MARKSMANSHIP,POLEARM,SCYTHE,STAVE,SWORD,THROWING,SHIELD,AMMO';
-utilities._WeaponMelee = 'AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,POLEARM,SCYTHE,STAVE,SWORD,SHIELD';
-utilities._WeaponRange = 'ARCHERY,MARKSMANSHIP,THROWING,AMMO';
-
--- Define list of all pet commands
-utilities._PetCommands = 'FIGHT,HEEL,STAY,LEAVE,SIC,READY,STEADY WING,DISMISS,ASSAULT,RELEASE,RETREAT';
-
--- Define arrays for toggles and cycles
-utilities.Toggles = {};
-utilities.Cycles = {};
+-- Timer base time used in the /GC nag reminder
+utilities.basetime = os.time();
 
 --[[
     CreateCycle creates a table variable with multiple defined values. The index identifies which value
@@ -542,7 +78,7 @@ function utilities.CreateCycle(name, values)
         Array = values
     };
 
-    utilities.Cycles[name] = newCycle;
+    gVars.Cycles[name] = newCycle;
 end		-- utilities.CreateCycle
 
 --[[
@@ -556,7 +92,7 @@ end		-- utilities.CreateCycle
 --]]
 
 function utilities.fGetCycle(name)
-    local ctable = utilities.Cycles[name];
+    local ctable = gVars.Cycles[name];
 
     if (type(ctable) == 'table') then
         return ctable.Array[ctable.Index];
@@ -574,7 +110,7 @@ end		-- utilities.GetCycle
 --]]
 
 function utilities.AdvanceCycle(name)
-    local ctable = utilities.Cycles[name];
+    local ctable = gVars.Cycles[name];
 
     if (type(ctable) ~= 'table') then
         return;
@@ -595,7 +131,7 @@ end		-- utilities.AdvanceCycle
 --]]
 
 function utilities.fSetCycle(name,val)
-    local ctable = utilities.Cycles[name];
+    local ctable = gVars.Cycles[name];
 
     if (type(ctable) ~= 'table') then
         return;
@@ -619,7 +155,7 @@ end		-- utilities.SetCycle
 --]]
 
 function displaybar.CreateToggle(name, default)
-    utilities.Toggles[name] = default;
+    gVars.Toggles[name] = default;
 end		-- utilities.CreateToggle
 
 --[[
@@ -634,8 +170,8 @@ end		-- utilities.CreateToggle
 
 function utilities.fGetToggle(name)
 
-    if utilities.Toggles[name] ~= nil then
-        return utilities.Toggles[name];
+    if gVars.Toggles[name] ~= nil then
+        return gVars.Toggles[name];
     else
         return false;
     end
@@ -650,12 +186,12 @@ end		-- utilities.fGetToggle
 
 function utilities.AdvanceToggle(name)
 
-    if (type(utilities.Toggles[name]) ~= 'boolean') then
+    if (type(gVars.Toggles[name]) ~= 'boolean') then
         return;
-    elseif utilities.Toggles[name] then
-        utilities.Toggles[name] = false;
+    elseif gVars.Toggles[name] then
+        gVars.Toggles[name] = false;
     else
-        utilities.Toggles[name] = true;
+        gVars.Toggles[name] = true;
     end
 end		-- utilities.AdvanceToggle
 
@@ -669,10 +205,10 @@ end		-- utilities.AdvanceToggle
 
 function utilities.SetToggle(name,val)
 
-    if (type(utilities.Toggles[name]) ~= 'boolean' or type(val) ~= 'boolean') then
+    if (type(gVars.Toggles[name]) ~= 'boolean' or type(val) ~= 'boolean') then
         return;
     else
-        utilities.Toggles[name] = val;
+        gVars.Toggles[name] = val;
     end
 end		-- utilities.SetToggle
 
@@ -697,7 +233,7 @@ function utilities.Reminder()
         iTestVal = crossjobs.settings.bMaxBasetime;
     end
 
-    if os.difftime(iNow,crossjobs.basetime) >= iTestVal then
+    if os.difftime(iNow,utilities.basetime) >= iTestVal then
         print(chat.message('************'));
         if iTestVal == crossjobs.settings.bMinBasetime then
             print(chat.message('FYI: Remember to do a /gc once \'data download\' finishes'));
@@ -707,7 +243,7 @@ function utilities.Reminder()
         print(chat.message('************'));
         crossjobs.settings.bGCReminder = true;
         -- Change the base to current so that comparison is from now forward
-        crossjobs.basetime = iNow;
+        utilities.basetime = iNow;
     end
 end     -- utilities.Reminder
 
@@ -747,11 +283,11 @@ function utilities.fFormattedWord(sWord,sStyle)
 local sTmp = nil;
 
     if sWord ~= nil then
-        if sStyle == utilities._SLOT_FA then
+        if sStyle == gVars._SLOT_FA then
             sTmp = string.upper(string.sub(sWord,1,1)) .. string.lower(string.sub(sWord,2,-1));
-        elseif sStyle == utilities._SLOT_LA then
+        elseif sStyle == gVars._SLOT_LA then
             sTmp = string.lower(sWord);
-        elseif sStyle == utilities._SLOT_UA = 'UA' then
+        elseif sStyle == gVars._SLOT_UA = 'UA' then
             sTmp = string.upper(sWord);
         end
     end
@@ -846,9 +382,9 @@ function utilities.fValidSlots(sList,sFmt)
          [15] = {['Name'] = 'LEGS',  ['Have'] = false},  [16] = {['Name'] = 'FEET',  ['Have'] = false}
         };
 
-    local s = utilities._SLOT_LA .. utilities._SLOT_UA .. utilities._SLOT_FA .. utilities._SLOT_N;
+    local s = gVars._SLOT_LA .. gVars._SLOT_UA .. gVars._SLOT_FA .. gVars._SLOT_N;
     if sFmt == nil or string.find(s,sFmt) == nil then
-        sFmt = utilities._SLOT_FA;      -- Unknown or missing code, assume Upper first letter and lower rest
+        sFmt = gVars._SLOT_FA;      -- Unknown or missing code, assume Upper first letter and lower rest
     end
 
     sList = ',' .. string.upper(sList) .. ',';
@@ -904,7 +440,7 @@ end     -- utilities.fValidSlots
 --]]
 
 function utilities.fTranslateWhichSlot(val,sType)
-    local sValidSlotOutputTypes = utilities._SLOT_LA .. ',' .. utilities._SLOT_UA .. ',' .. utilities._SLOT_FA .. ',' .. utilities._SLOT_N;
+    local sValidSlotOutputTypes = gVars._SLOT_LA .. ',' .. gVars._SLOT_UA .. ',' .. gVars._SLOT_FA .. ',' .. gVars._SLOT_N;
     local slots = {
         { ['aSlot'] = 'main',  ['nSlot'] = 1,  ['fSlot'] = 'Main' },
         { ['aSlot'] = 'sub',   ['nSlot'] = 2,  ['fSlot'] = 'Sub' },
@@ -937,7 +473,7 @@ function utilities.fTranslateWhichSlot(val,sType)
     end
 
     if sType == nil or string.find(sValidSlotOutputTypes,sType) == nil then
-        sType = utilities._SLOT_LA;       -- assume lowercase slot name
+        sType = gVars._SLOT_LA;       -- assume lowercase slot name
     end
 
     val = string.lower(val);             -- Make sure lowercase
@@ -947,13 +483,13 @@ function utilities.fTranslateWhichSlot(val,sType)
         if (type(val) == 'string' and (j['aSlot'] == val or j['nSlot'] == tonumber(val)) or (type(val) == 'number' and j['nSlot'] == val) then
             -- There was a match, format the result accordingly
             local rVal;
-            if sType == utilities._SLOT_FA then      -- Mixed case: Upper first letter, lower rest
+            if sType == gVars._SLOT_FA then      -- Mixed case: Upper first letter, lower rest
                 rVal = j['fSlot'];
-            elseif sType == utilities._SLOT_LA then  -- lowercase name
+            elseif sType == gVars._SLOT_LA then  -- lowercase name
                 rVal = j['aSlot'];
-            elseif sType == utilities._SLOT_N then  -- lowercase name
+            elseif sType == gVars._SLOT_N then  -- lowercase name
                 rVal = j['nSlot']
-            elseif sType == utilities._SLOT_UA then  -- uppercase name
+            elseif sType == gVars._SLOT_UA then  -- uppercase name
                 rVal = string.upper(j['aSlot']);
             else                                    -- numeric
                 rVal = j['nSlot'];
@@ -1055,7 +591,7 @@ end     -- utilities.fGetAllGearSetNames
 function utilities.fGetAllSlotNames()
     local t{};
 
-    for _,i in pairs(gear.tGearDetails) do
+    for _,i in pairs(gVars.tGearDetails) do
         table.insert(t,i);
     end
 
@@ -1272,24 +808,30 @@ function utilities.PullTarget()
     local targetEntity = gData.GetEntity(targetIndex);
     local sTxt = nil;
 
-    if targetIndex ~= 0 then
+    if targetIndex ~= 0 and targetIndex ~= nil then
+        sTxt = nil;
         if string.find('BST,SMN,PUP',player.MainJob) ~= nil then
             if gData.GetPet() ~= nil then
                 sTxt = '/pet assault <t>';
             else
                 print(chat.message('Info: No pet found, assuming a normal pull'));
             end
-
-            if sTxt == nil then
-                sTxt = '/ra <t>';
-            end
-
-            if utilities.fGetToggle('sPF') == true then
-                local sMsg = '/p Pulling ' .. targetEntity.Name .. ' [' .. utilities.fTargetId(targetIndex) .. ']';
-                AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
-            end
-            AshitaCore:GetChatManager():QueueCommand(-1, sTxt);
         end
+
+        if sTxt == nil then
+            if bRangeOrThrowing() == true then
+                sTxt = '/ra <t>';
+            else
+                print(chat.message('Info: No ranged device equipped to pull with'));
+                return
+            end
+        end
+
+        if utilities.fGetToggle(gVers._SPF) == true then
+            local sMsg = '/p Pulling ' .. targetEntity.Name .. ' [' .. utilities.fTargetId(targetIndex) .. ']';
+            AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
+        end
+        AshitaCore:GetChatManager():QueueCommand(-1, sTxt);
     else
         print(chat.message('Info: Unable to pull anything, no target selected'));
     end
@@ -1396,7 +938,7 @@ function utilities.fCheckItemOwned(gear)
     end
 
     -- Loop through all searching for the passed gear piece
-    for i,desc in pairs(utilities.STORAGES) do
+    for i,desc in pairs(gVars.STORAGES) do
         containerID = desc['id'];
         -- then loop through the container
         for j = 1,inventory:GetContainerCountMax(containerID),1 do
@@ -1410,7 +952,7 @@ function utilities.fCheckItemOwned(gear)
                     elseif string.find(tOwned['locations'],','..desc['name']..',') == nil then
                         tOwned['locations'] = tOwned['locations'] .. desc['name'] .. ',';
                     end
-                    if table.find(utilities.EQUIPABLE_LIST,desc['id']) then
+                    if table.find(gVars.EQUIPABLE_LIST,desc['id']) then
                         tOwned['accessible'] = true;
                     end
                 end
@@ -1495,7 +1037,7 @@ function utilities.fSlotMatch(sSlot,iSlot)
     -- to the tLocks structure. Even though the mask is a bit pattern, the
     -- composited value is included too. That's why I only need to look for
     -- a match.
-    for i,j in ipairs(locks.tLocks) do
+    for i,j in ipairs(locks.tSlotLocks) do
         if j['slot'] == sSlot then
             bGood = (table.find(j['mask'],iSlot) ~= nil);
         break;
@@ -1589,12 +1131,12 @@ function utilities.fCheckObiDW(ele)
     local PctWeather = 0;
 
     -- Make sure a valid element specified
-    if ele == nil or string.find(utilities._AllElements,ele) == nil then
+    if ele == nil or string.find(gVars._AllElements,ele) == nil then
         return nil;
     end
 
     ele = string.lower(ele);
-    sWeak = utilities.tElemental_gear['staff'][ele]['Weak'];    -- Elemental weakness tracked here
+    sWeak = gVars.tElemental_gear['staff'][ele]['Weak'];    -- Elemental weakness tracked here
 
     -- First, the day
     if string.lower(sDay) == ele then
@@ -1640,7 +1182,7 @@ end		-- utilities.fCheckObiDW
 
 function SetAliasAll()
 
-    for _, v in ipairs(utilities.AliasList) do
+    for _, v in ipairs(crossjobs.AliasList) do
         AshitaCore:GetChatManager():QueueCommand(-1, '/alias /' .. v .. ' /lac fwd ' .. v);
     end
 end		-- SetAliasAll
@@ -1660,22 +1202,22 @@ end		-- SetAliasCC
     ClearAliasAll removes the luashitacast commands that were registered here
 --]]
 
-function ClearAliasAll()
-    for _, v in ipairs(utilities.AliasList) do
+function utilities.ClearAliasAll()
+    for _, v in ipairs(crossjobs.AliasList) do
         AshitaCore:GetChatManager():QueueCommand(-1, '/alias del /' .. v);
     end
-end		-- ClearAliasAll
+end		-- utilities.ClearAliasAll
 
 
 --[[
     ClearAliasCC removes all custiom conditional commands that were registered here
 --]]
 
-function ClearAliasCC()
+function utilities.ClearAliasCC()
     for _, v in ipairs(gProfile.CustomConditionals) do
         AshitaCore:GetChatManager():QueueCommand(-1, '/alias del /' .. string.lower(v['code']));
     end
-end		-- ClearAliasCC
+end		-- utilities.ClearAliasCC
 
 --[[
     Initialize gives luashitacast it's initial settings
@@ -1687,20 +1229,6 @@ function utilities.Initialize()
     SetAliasAll:once(2);
     SetAliasCC:once(2);
 end		-- utilities.Initialize
-
-
---[[
-    Unload ensures that the display settings are saved, the aliases are removed,
-    and the display objects are removed
---]]
-
-function utilities.Unload()
-    --SaveSettingFile();
-    ClearAliasAll();
-    ClearAliasCC();
-    ashita.events.unregister('packet_in', 'packet_in_callback1');
-    displaybar.Unload();
-end		-- utilities.Unload
 
 --[[
     fCheckWsBailout determines if there's a debuff, distance to target, or insufficient TP
@@ -1744,9 +1272,8 @@ end		-- utilities.fCheckWsBailout
 
 function utilities.fMagicalSubJob()
     local player = gData.GetPlayer();
-    local sj = player.SubJob;
 
-    return (string.find(utilities._sMagicJobs,sj) ~= nil);
+    return (string.find(gVars._sMagicjobs,player.SubJob) ~= nil);
 end		-- utilities.fMagicalSubJob
 
 --[[
@@ -1874,7 +1401,7 @@ end     -- utilities.fSplitStringByDelimiter
         True/False
 --]]
 function utilities.fAccEnabled(sType)
-    local bTank = utilities.fGetToggle('Tank');
+    local bTank = utilities.fGetToggle(gVars._TANK);
 
     if sType == nil then
         sType = 'Accuracy';
@@ -1884,8 +1411,67 @@ function utilities.fAccEnabled(sType)
         sType = 'Tank_' .. sType;
     end
 
-    return(gear.Progressive[sType]['CurStage'] > 0);
+    return(gVars.tProgressive[sType]['CurStage'] > 0);
 end     -- utilities.fAccEnabled
+
+--[[
+    bRangeOrThrowing determines if the player has valid equipment in their "Range" and/or "ammo"
+    slots to range attack the target.
+
+    Returned:
+        True/False
+
+    Note: This function only checks for archery/marksmanship and throwing. It is assumed that
+    pet pulling will be done somewhere else.
+
+    Note 2: A lot is assumed about the client like mixing bolts with bows will not work. Also,
+    while there are specific weapon files for bolts and arrows, I'll be checking a composite
+    called ammo. So yes, it's possible you'll trick the function into assuming all is good when
+    it's not, but the client will let you know.
+--]]
+
+function bRangeOrThrowing()
+    local targetIndex = gData.GetTargetIndex();
+    local tEntity = gData.GetEntity(targetIndex);
+    local ew = gData.GetEquipment();
+    local bGood = false;
+
+    -- Make sure the player is targetting something
+    if targetIndex ~= 0 and targetIndex ~= nil then
+        print(chat.message('Warning: No target selected. Cancelling'));
+        return false;
+    end
+
+    -- Make sure the player has "some" ranged weapon
+    if ew['Range'].Name == nil and ew['Ammo'].Name == nil then
+        print(chat.message('Warning: No ranged gear equipped. Cancelling'));
+        return false;
+    end
+
+    -- Make sure these gear types are loaded
+    utilities.GetWeaponsList('ARCHERY');
+    utilities.GetWeaponsList('MARKSMANSHIP');
+    utilities.GetWeaponsList('AMMO');
+    utilities.GetWeaponsList('THROWING');
+
+    -- Query each type for identification
+    local b1 = (table.find(crossjobs.WeaponTypes['ARCHERY'],string.lower(ew['Range'].Name)) ~= nil);
+    local b2 = (table.find(crossjobs.WeaponTypes['MARKSMANSHIP'],string.lower(ew['Range'].Name)) ~= nil);
+    local b3 = (table.find(crossjobs.WeaponTypes['AMMO'],string.lower(ew['Ammo'].Name)) ~= nil);
+    -- Gear for throwing can be in either slot
+    local b4 = (table.find(crossjobs.WeaponTypes['THROWING'],string.lower(ew['Range'].Name)) ~= nil);
+    local b5 = (table.find(crossjobs.WeaponTypes['THROWING'],string.lower(ew['Ammo'].Name)) ~= nil);
+
+    if b1 == true or b2 == true and b3 == false then
+        print(chat.message('Warning: Ranged and Ammo gear an invalid pair. Cancelling'));
+        return false;
+    end
+
+    -- Archery and Ammo or marksmanship and ammo or throwing in range slot or ammo slot
+    bGood = ((b1 == true and b3 == true) or (b2 == true and b3 == true) or b4 == true or b5 == true);
+
+    return bGood;
+end       -- bRangeOrThrowing
 
 --[[
     GetWeaponsList determines if the specified weapon type has been loaded or not. If it hasn't,
@@ -1901,22 +1487,15 @@ function utilities.GetWeaponsList(sType)
         return;
     end
 
-    if crossjobs.WeaponTypes[string.upper(sType)] ~= nil then
+    local osType = sType;
+    sType = string.upper(sType);
+    if crossjobs.WeaponTypes[sType] ~= nil then
         -- definition already loaded
         return;
     end
 
-    sType = string.lower(sType);
-    if table.find(utilities.WeaponTypes,sType) == nil then
-        -- invalid weapons type specified
-        msg = 'Warning: invalid weapon type specified: ' .. sType;
-        reporting.DisplayOnce(msg);
-        return;
-    end
-
-    local path = string.format('%sconfig/addons/LuAshitacast/common/WeaponTypes/%s.lua', string.lower(sType));
+    local path = string.format('config/addons/LuAshitacast/common/WeaponTypes/%s.lua', string.lower(sType));
     if (ashita.fs.exists(path)) then
-        -- Unable to load the weapons type definition
         local success, loadError = loadfile(path);
         if not success then
             reporting.DisplayOnce(string.format('Warning: Failed to load resource file: %s', path));
@@ -1931,13 +1510,12 @@ function utilities.GetWeaponsList(sType)
             return;
         end
 
-        sType = string.upper(sType);
         crossjobs.WeaponTypes[sType] = output.wt[sType];
     end
 end     -- utilities.GetWeaponsList
 
 --[[
-    fGetMobType determines if the player's target is of the passed type. If that type is not definied,
+    fGetMobType determines if the player's target is of the passed type. If that type is not defined,
     it will update the master list accordingly. Note: the master list is based on zone id's. Only one
     zone will be defined at a time.
 
@@ -1946,20 +1524,30 @@ end     -- utilities.GetWeaponsList
 
     Returned
         T/F, was the target of the specified type or no target selected?
+
+        ** revise **
 --]]
-function utilities.fGetMobType(sType)
+function utilities.fGetMobType(sType,bFamily)
     local curr = AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0);
     local targetIndex = gData.GetTargetIndex();
     local tEntity = gData.GetEntity(targetIndex);
+    local iPos = nil;
+    local bFamily = false;
 
-    if tEntity.Name == nil or tEntity.Type ~= 'Monster' then
-        -- no target or target is an NPC/PC
+    if tEntity.Name == nil then
+        -- no target, might need to change in the future. Beneficial spells default to <me>
         return false;
     end
 
-    if curr ~= crossjobs.CurrentZone
+    iPos = string.find(sType,'=');
+    if iPos ~= nil then
+        bFamily = (string.sub(sType,1,iPos)) ~= 'fam=');
+        sType = string.sub(sType,iPos+1,-1);
+    end
+
+    if curr ~= crossjobs.CurrentZone then
         crossjobs.ZoneList = {};
-        local path = string.format('%sconfig/addons/luAshitacast/common/Mobs/%u.lua', AshitaCore:GetInstallPath(), curr);
+        local path = string.format('%sconfig/addons/luAshitacast/common/MobDB/%u.lua', AshitaCore:GetInstallPath(), curr);
         if (ashita.fs.exists(path)) then
             local success, loadError = loadfile(path);
             if not success then
@@ -1978,12 +1566,37 @@ function utilities.fGetMobType(sType)
         crossjobs.ZoneList = output.Names;
     end
 
-    sType == string.upper(sType);
+    sType == string.lower(sType);
     for i,j in pairs(crossjobs.ZoneList) do
-        if string.upper(j['Family']) == sType then
+        if (bFamily == true and string.find(j['Family'],sType) ~= nil) or
+            (bFamily == false and string.find(j['Ecosystem'],sType ~= nil) then
             return true;
         end
     end
 
     return false;
 end     -- utilities.fGetMobType
+
+
+--[[
+    fValidCustomCommand determines if the passed command is a custom conditional code.
+--]]
+
+function utilities.fValidCustomCommand(cmd)
+    local bValid = false;
+
+    if cmd == nil then
+        return false;
+    end
+
+    for _,j in ipairs(gProfile.CustomConditionals) do
+        if string.upper(j['code']) == string.upper(cmd) then
+            bValid = true;
+            break;
+        end
+    end
+
+    return bValid;
+end		-- utilities.fValidCustomCommand
+
+return utilities;

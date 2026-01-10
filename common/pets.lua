@@ -1,9 +1,5 @@
 local pets = {};
 
-local crossjobs = require('common.crossjobs');
-local utilities = require('common.utilities');
-local gear      = require('common.gear');
-
 --[[
     This component contains all routines that deal with pets
 
@@ -31,7 +27,6 @@ pets.tPetFood = {
     [5] = { ['name'] = 'pet fd. epsilon', ['lvl'] = 60, ['have'] = false },
     [6] = { ['name'] = 'pet food zeta',   ['lvl'] = 72, ['have'] = false }
 };
-pets._PetFoodCount = #pets.tPetFood;
 
 -- list of all jug pets available on HorizonXI.
 pets.tJugPets = {
@@ -111,6 +106,9 @@ pets.SmnBPWardList = { 'Healing Ruby','Somnolence','Lunar Cry','Shining Ruby','A
     'Lunar Roar','Slowga','Ultimate Terror','Whispering Wind','Crimson Howl','Sleepga','Lightning Armor','Ecliptic Howl','Glittering Ruby',
     'Earthen Ward','Spring Water','Hastega','Noctoshield','Ecliptic Growl','Dream Shroud','Healing Ruby II'
 };
+
+-- List of all pet commands
+pets._PetCommands = 'FIGHT,HEEL,STAY,LEAVE,SIC,READY,STEADY WING,DISMISS,ASSAULT,RELEASE,RETREAT';
 
 --[[
     HandlePetAction processes the passed in pet action so that the appropriate gear set
@@ -220,7 +218,7 @@ end     -- pets.FavoredJugPets
 function lfFindAllJugs()
     local resources = AshitaCore:GetResourceManager();
     local player = gData.GetPlayer();
-    local tStorage = utilities.EQUIPABLE_NONHOLIDAY;
+    local tStorage = gVars.EQUIPABLE_NONHOLIDAY;
     local iCount = 0;
 
     -- Clear the table ownership settings
@@ -338,7 +336,7 @@ function pets.fPetReward(sFood,bMax)
     local inventory = AshitaCore:GetMemoryManager():GetInventory();
     local resources = AshitaCore:GetResourceManager();
     local player = gData.GetPlayer();
-    local tStorage = utilities.EQUIPABLE_NONHOLIDAY;
+    local tStorage = gVars.EQUIPABLE_NONHOLIDAY;
     local containerID;
     local i1,i2,step;
     local _ammo = 4;	-- Lock # for ammo slot
@@ -379,10 +377,11 @@ function pets.fPetReward(sFood,bMax)
     end
 
     -- Determine order to process
+    local petFoodCount = #pets.tPetFood;
     if bMax == true then
-        i1 = 1; i2 = pets._PetFoodCount; step = 1;
+        i1 = 1; i2 = petFoodCount; step = 1;
     else
-        i1 = pets._PetFoodCount; i2 = 1; step = -1;
+        i1 = petFoodCount; i2 = 1; step = -1;
     end
 
     -- Then see if you can find the preferred food
@@ -490,7 +489,7 @@ function pets.fElementByPetName(pName)
 
     lcName = string.lower(pName);
 
-    for i,j in pairs(utilities.tElemental_gear['staff']) do
+    for i,j in pairs(gVars.tElemental_gear['staff']) do
         if string.find(utilities._AllElements,i) ~= nil then
             if table.find(j['Summons'],lcName) ~= nil then
                 ele = i;
@@ -634,3 +633,5 @@ function pets.Call911()
     AshitaCore:GetChatManager():QueueCommand(1, sCmd);
     return;
 end     -- pets.Call911
+
+return pets;

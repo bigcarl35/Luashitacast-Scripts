@@ -1,8 +1,5 @@
 local displaybar = {};
 
-local crossjobs = require('common/crossjobs');
-local utilities = require('common/utilities');
-local gear = require('common/gear');
 local fonts = require('fonts');
 
 --[[
@@ -142,7 +139,7 @@ function displaybar.RegionDisplay()
     end
 
     -- Determine if current zone in region controlled by player's nation
-    for i,j in pairs(crossjobs.RegionControl) do
+    for i,j in pairs(gVars.RegionControl) do
         if table.find(j['zones'],zoneId) ~= nil then
             if j['own'] == crossjobs.OwnNation then
                 utilities.fSetCycle('Region','Owned');
@@ -161,10 +158,13 @@ end		-- displaybar.RegionDisplay
 --]]
 
 function displaybar.Unload()
+
+    -- Remove any dynamic objects
     if (displaybar.FontObject ~= nil) then
         displaybar.FontObject:destroy();
     end
 
+    -- Unregister the displaybar and the toggle command for turning the display off
     ashita.events.unregister('d3d_present', 'displaybar_present_cb');
     ashita.events.unregister('command', 'displaybar_cb');
 end		-- displaybar.Unload
@@ -277,7 +277,7 @@ function fAccuracyDisplay(sType)
         return "";
     end
 
-    for i,j in pairs(gear.Progressive) do
+    for i,j in pairs(gVars.tProgressive) do
         if string.lower(sType) == string.lower(j['Abbr']) then
             which = j;
         break;
@@ -339,7 +339,7 @@ function displaybar.InitializeDisplayBar()
         end
         display = display .. '|';
 
-        for k, v in pairs(utilities.Toggles) do
+        for k, v in pairs(gVars.Toggles) do
             if displaybar.fDisplayIt(k) == true then
                 display = display .. ' ';
                 if (v == true) then
@@ -357,7 +357,7 @@ function displaybar.InitializeDisplayBar()
         end
 
         -- Accuracy
-        if utilities.GetToggle('Tank') == true then
+        if utilities.GetToggle(gVars._TANK) == true then
             display = display .. ' | Acc: ' .. fAccuracyDisplay('TAcc');
             display = display .. ' | Racc: ' .. fAccuracyDisplay('TRAcc');
         else
@@ -380,10 +380,10 @@ function displaybar.InitializeDisplayBar()
         end
 
         -- Locks
-        if locks.LocksNumeric ~= 'None' then
-            display = display .. ' | Locks: ' .. fColor('green',locks.LocksNumerics);
+        if gVars.LocksListNumeric ~= 'None' then
+            display = display .. ' | Locks: ' .. fColor('green',gVars.LocksListNumerics);
         else
-            display = display .. ' | Locks: ' .. fColor('red',locks.LocksNumeric);
+            display = display .. ' | Locks: ' .. fColor('red',gVars.LocksListNumeric);
         end
 
         local env = gData.GetEnvironment();
@@ -416,25 +416,25 @@ function displaybar.SetAccCur(sType,val)
     end
 
     if sType == 'Acc' then
-        if val < 0 or val > gear.Progressive['Accuracy']['MaxStage'] then
+        if val < 0 or val > gVars.tProgressive['Accuracy']['MaxStage'] then
             val = 0;
         end
-        gear.Progressive['Accuracy']['CurStage'] = val;
+        gVars.tProgressive['Accuracy']['CurStage'] = val;
     elseif sType == 'TAcc' then
-        if val < 0 or val > gear.Progressive['Tank_Accuracy']['MaxStage'] then
+        if val < 0 or val > gVars.tProgressive['Tank_Accuracy']['MaxStage'] then
             val = 0;
         end
-        gear.Progressive['Tank_Accuracy']['CurStage'] = val;
+        gVars.tProgressive['Tank_Accuracy']['CurStage'] = val;
     elseif sType == 'RAcc' then
-        if val < 0 or val > gear.Progressive['Ranged_Accuracy']['MaxStage'] then
+        if val < 0 or val > gVars.tProgressive['Ranged_Accuracy']['MaxStage'] then
             val = 0;
         end
-        gear.Progressive['Ranged_Accuracy']['CurStage'] = val;
+        gVars.tProgressive['Ranged_Accuracy']['CurStage'] = val;
     elseif sType == 'TRAcc' then
-        if val < 0 or val > gear.Progressive['Tank_Ranged_Accuracy']['MaxStage'] then
+        if val < 0 or val > gVars.tProgressive['Tank_Ranged_Accuracy']['MaxStage'] then
             val = 0;
         end
-        gear.Progressive['Tank_Ranged_Accuracy']['CurStage'] = val;
+        gVars.tProgressive['Tank_Ranged_Accuracy']['CurStage'] = val;
     end
 end		-- displaybar.SetAccCur
 
@@ -455,3 +455,5 @@ ashita.events.register('command', 'displaybar_cb', function (e)
         displaybar.FontObject.visible = not displaybar.FontObject.visible;
     end
 end);
+
+return displaybar;

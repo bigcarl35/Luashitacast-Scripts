@@ -1,10 +1,5 @@
 local reporting = {};
 
-local crossjobs = require('common.crossjobs');
-local utilities = require('common.utilities');
-local gear = require('common.gear');
-local slips = require('common.slips');
-
 --[[
     This component contains all functions associated with reporting
 
@@ -28,12 +23,6 @@ local slips = require('common.slips');
         Functions:
             fCompactLocks           Generates a compact list of the locks
 --]]
-
--- List of all valid slots for /smg reports
-local _refSlotNames = {
-    [1] = 'main', [2] = 'sub', [3] = 'range', [4] = 'ammo', [5] = 'head', [6] = 'neck',[7] = 'ears',
-    [8] = 'body', [9] = 'hands', [10] = 'rings', [11] = 'back', [12] = 'waist', [13] = 'legs', [14] = 'feet'
-};
 
 --[[
     DB_ShowIt will display debug details
@@ -73,7 +62,7 @@ function reporting.DisplayVersion()
     rfn = rfn:reverse() .. 'Documentation\\changelog.txt';
 
     print(chat.message(' '));
-    print(chat.message(version.name .. ' Version: ' .. crossjobs.version));
+    print(chat.message(version.name .. ' Version: ' .. gVars.version));
     for line in io.lines (rfn) do
         if bSkip == false then
             print(chat.message(' '));
@@ -89,6 +78,7 @@ end     -- reporting.DisplayVersion
 --]]
 
 function reporting.RegionControlDisplay()
+-- List of numeric representations for who controls a region
 
     -- Make sure we know what nation we belong to
     if crossjobs.OwnNation == -1 then
@@ -103,11 +93,11 @@ function reporting.RegionControlDisplay()
     end
 
     print(' ');
-    for i,j in pairs(crossjobs.RegionControl) do
+    for i,j in pairs(gVars.RegionControl) do
         if j['own'] < 0 or j['own'] > 4 then
             print(chat.message('Huh? ' .. i ..' = ' .. tostring(j['own'])));
         else
-            for ii,jj in pairs(utilities.RegionAreas) do
+            for ii,jj in pairs(gVars.tRegionControllerSettings) do
                 if ii == j['own'] then
                     if j['own'] == 0 and utilities.fBuffed('Signet') == true then
                         print(chat.message(i .. ' = ' .. jj .. ', but \'not owned\' gear works'));
@@ -131,7 +121,7 @@ function reporting.DisplayCC()
         print(chat.message('Info: Custom conditionals list:'));
         for _,j in ipairs(gProfile.CustomConditionals) do
             j['code'] = string.upper(j['code']);
-            print(chat.message('   ' ... j['code'] .. ' - ' .. j['question'] .. ': ' .. utiliies.GetToggle(j[code])));
+            print(chat.message('   ' ... j['code'] .. ' - ' .. j['question'] .. ': ' .. utilities.GetToggle(j[code])));
         end
     else
        print(chat.message('Info: No custom conditionals are defined'));
@@ -164,13 +154,13 @@ function lFileItemStats(sName,sSlot,fptr)
     sSlot = string.lower(sSlot);
     sName = string.lower(sName);
 
-    if gear.tGearDetails[sSlot] == nil or gear.tGearDetails[sSlot][sName] == nil then
+    if gVars.tGearDetails[sSlot] == nil or gVars.tGearDetails[sSlot][sName] == nil then
         -- You get here if the item isn't a valid item
         fptr.write('   ' .. sName .. ' - Invalid item');
         return;
     end
 
-    tWhat = gear.tGearDetails[sSlot][sName];
+    tWhat = gVars.tGearDetails[sSlot][sName];
     -- You get here if the item is valid or it's invalid because the slot
     -- is incorrect
     msg = '   ' .. string.upper(sName);
@@ -407,27 +397,27 @@ function lGearSetListingReport(rec,fptr)
         -- For each gear set
         t = {};
         if fptr == nil then
-            print('Gearset: ' .. utilities.fTranslateWhichSlot(j,utilities._SLOT_FA))
+            print('Gearset: ' .. utilities.fTranslateWhichSlot(j,gVars._SLOT_FA))
         else
-            fptr.write('Gearset: ' .. utilities.fTranslateWhichSlot(j,utilities._SLOT_FA) .. '\n');
+            fptr.write('Gearset: ' .. utilities.fTranslateWhichSlot(j,gVars._SLOT_FA) .. '\n');
         end
 
-        for k,l in ipairs(_refSlotNames) do
+        for k,l in ipairs(gVars.tSlotNames['smg']) do
             -- For each slot
             if sOp2 == '*' or string.find(rec['slot'],l) ~= nil then
                 -- Either any slot or slot found in the specified slot list
                 if fptr == nil then
-                    print('Slot: ' .. utilities.fTranslateWhichSlot(l,utilities._SLOT_FA));
+                    print('Slot: ' .. utilities.fTranslateWhichSlot(l,gVars._SLOT_FA));
                 else
-                    fptr.write('Slot: ' .. utilities.fTranslateWhichSlot(l,utilities._SLOT_FA) .. '\n');
+                    fptr.write('Slot: ' .. utilities.fTranslateWhichSlot(l,gVars._SLOT_FA) .. '\n');
                 end
 
-                if gear.tGearsetDetails[j][l] ~= nil then
-                    for m = 1,#gear.tGearsetDetails[j][l]['items'],1 do
-                        local item = gear.tGearsetDetails[j][l]['items'][m];
+                if gVars.tGearsetDetails[j][l] ~= nil then
+                    for m = 1,#gVars.tGearsetDetails[j][l]['items'],1 do
+                        local item = gVars.tGearsetDetails[j][l]['items'][m];
                         if (rec['bNoac'] == true and
-                            (gear.tGearDetails[l][item.gear]['valid'] == false or
-                            gear.tGearDetails[l][item.gear]['accessible'] == false)) or
+                            (gVars.tGearDetails[l][item.gear]['valid'] == false or
+                            gVars.tGearDetails[l][item.gear]['accessible'] == false)) or
                             rec['bNoac'] == false
                         then
                             -- Make sure the item id has not been displayed already for the gearset/slot
@@ -497,15 +487,15 @@ function lSlotListingReport(rec,fptr)
         fptr.write('\n');
     end
 
-     for k,l in ipairs(_refSlotNames) do
+     for k,l in ipairs(gVars.tSlotNames['smg']) do
         -- For each slot
         t = {};
         if sOp2 == '*' or string.find(rec['slot'],l) ~= nil then
             -- Either any slot or slot found in the specified slot list
             if fptr == nil then
-                print('Slot: ' .. utilities.fTranslateWhichSlot(l,utilities._SLOT_FA));
+                print('Slot: ' .. utilities.fTranslateWhichSlot(l,gVars._SLOT_FA));
             else
-                fptr.write('Slot: ' .. utilities.fTranslateWhichSlot(l,utilities._SLOT_FA) .. '\n');
+                fptr.write('Slot: ' .. utilities.fTranslateWhichSlot(l,gVars._SLOT_FA) .. '\n');
             end
             for i,j in pairs(rec.tgs) do
                 -- For each gear set
@@ -513,12 +503,12 @@ function lSlotListingReport(rec,fptr)
 
 
 
-                if gear.tGearsetDetails[j][l] ~= nil then
-                    for m = 1,#gear.tGearsetDetails[j][l]['items'],1 do
-                        local item = gear.tGearsetDetails[j][l]['items'][m];
+                if gVars.tGearsetDetails[j][l] ~= nil then
+                    for m = 1,#gVars.tGearsetDetails[j][l]['items'],1 do
+                        local item = gVars.tGearsetDetails[j][l]['items'][m];
                         if (rec['bNoac'] == true and
-                            (gear.tGearDetails[l][item.gear]['valid'] == false or
-                            gear.tGearDetails[l][item.gear]['accessible'] == false)) or
+                            (gVars.tGearDetails[l][item.gear]['valid'] == false or
+                            gVars.tGearDetails[l][item.gear]['accessible'] == false)) or
                             rec['bNoac'] == false
                         then
                             if fptr == nil then
@@ -568,7 +558,7 @@ end     -- reporting.DisplayMessage
 function reporting.GearCheckList()
 
     if gear.fHasGCBeenRun() == true then
-        for i,j in pairs(gear.tGearDetails) do
+        for i,j in pairs(gVars.tGearDetails) do
             print(chat.message('   [' .. i .. '] - ' .. tostring(j['num'])));
         end
     else
@@ -605,14 +595,14 @@ function reporting.DisplayOnce(msg,bOverride)
         tmp = msg;
     end
 
-    if crossjobs.GearWarnings == nil or (crossjobs.GearWarnings ~= nil and string.find(crossjobs.GearWarnings,tmp) == nil) or
+    if gVars.GearWarnings == nil or (gVars.GearWarnings ~= nil and string.find(gVars.GearWarnings,tmp) == nil) or
         bOverride == true then
         print(chat.message(msg));
 
-        if crossjobs.GearWarnings == nil then
-            crossjobs.GearWarnings = msg;
+        if gVars.GearWarnings == nil then
+            gVars.GearWarnings = msg;
         else
-            crossjobs.GearWarnings = crossjobs.GearWarnings .. ',' .. msg;
+            gVars.GearWarnings = gVars.GearWarnings .. ',' .. msg;
         end
     end
 end     -- reporting.fDisplayOnce
@@ -672,3 +662,5 @@ function reporting.fCompactLocks()
         end
     end
 end     -- reporting.fCompactLocks
+
+return reporting;
