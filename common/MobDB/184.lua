@@ -4,7 +4,7 @@ return {
     Names = {
         ['Akvan'] = { Name='Akvan', Ecosystem='demons', Family='ahriman' },
         ['Ancient Bat'] = { Name='Ancient Bat', Ecosystem='birds', Family='bats' },
-        ['Bogy'] = { Name='Bogy', Ecosystem='undead', Family='ghost' },
+        ['Bogy'] = { Name='Bogy', Ecosystem='undead', Family='ghosts' },
         ['Chaos Idol'] = { Name='Chaos Idol', Ecosystem='arcana', Family='dolls' },
         ['Disaster Idol'] = { Name='Disaster Idol', Ecosystem='arcana', Family='dolls' },
         ['Epialtes'] = { Name='Epialtes', Ecosystem='beastmen', Family='gigas' },
