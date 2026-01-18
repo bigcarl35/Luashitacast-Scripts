@@ -1123,6 +1123,7 @@ end     -- inline.fCheckInlineOther
 
 function inline.fCheckInlineJob(sCode)
     local player = gData.GetPlayer();
+    local mj = player.MainJob;
     local sj = player.SubJob;
     local job;
     local smsg = nil;
@@ -1152,15 +1153,18 @@ function inline.fCheckInlineJob(sCode)
         -- Note: inversion not supported
         bGood = (utilities.fCheckPartyJob(string.sub(suCode,4,3),true));
     else        -- These codes support negation
+        elseif sCode = 'MMJ' then
+            --  Player has a main job that can do magic
+            bGood = string.find(crossjobs._sMagicJobs,mj);
         if sCode == 'MSJ' then
-            --  Player has a subjob that can do magic
+            --  Player has a sub job that can do magic
             bGood = string.find(crossjobs._sMagicJobs,sj);
+        elseif string.sub(sCode,1,3) == 'MJ:' then
+            -- Player's main job matches one of the listed jobs
+            bGood = (string.find(string.sub(sCode,4,-1),mj) ~= nil);
         elseif string.sub(sCode,1,3) == 'SJ:' then
-            -- Player's subjob matches one of the listed jobs
+            -- Player's sub job matches one of the listed jobs
             bGood = (string.find(string.sub(sCode,4,-1),sj) ~= nil);
-        elseif string.find(sCode,'SJ'..sj) ~= nil then
-            -- Player's subjob matches the specified job
-            bGood = true;
         elseif string.find(sCode,'PJP') ~= nil then
             -- Determine if any player in the party has the specified job
             bGood = (crossjobs.fCheckPartyJob(string.sub(suCode,4,3),false));
