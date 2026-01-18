@@ -1,18 +1,9 @@
 local profile = {};
 
-local crossjobs = require('common.crossjobs');
-local displaybar = require('common./displaybar');
-local gear = require('common.gear');
-local help = require('common.help');
-local locks = require('common.locks');
-local magic = require('common.magic');
-local pets = require('common.pets');
-local utilities = require('common.utilities');
-
 --[[
 	This file contains all the gear sets associated with the DRK job.
 
-	Gear Sets last updated: December 4, 2025
+	Gear Sets last updated: January 16, 2026
 	Code update: December 4, 2025
 
 	Intended Role: Endgame
@@ -346,7 +337,7 @@ local sets = {
 		Main  = 'Auster\'s Staff//WSWAP',				-- +10 EVA
 		Ammo  = 'Orphic Egg//PJPBRD',					-- +1 Eva if BRD in group
 		Head  = 'Optical Hat',							-- +10 Eva
-		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Genin Earring//SJNIN', 'Drone Earring' },		-- +15 Eva while blinded, +5 Eva, +4 AGI if sj NIN, +3 AGI
+		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Genin Earring//SJ:NIN', 'Drone Earring' },		-- +15 Eva while blinded, +5 Eva, +4 AGI if sj NIN, +3 AGI
 		Body  = 'Scorpion Harness',						-- +10 Eva
 		Waist = 'Swift Belt//IF:Tilt Belt',				-- filler, Tilt Belt has -5 Eva
 		Legs  = 'Chaos Flanchard',						-- +5 Eva
@@ -409,7 +400,7 @@ local sets = {
 			Main = 'Maneater',
 			Sub  = 'Tabarzin',
 		}
-		GROUP//SJTHF = {
+		GROUP//SJ:THF = {
 			Main = 'Martial Sword',
 		},
 		GROUP//NOT_DUALWIELD = {
@@ -485,7 +476,7 @@ local sets = {
 	-- Agility Reference gear set
 	['rAGI'] = {
 		Head   = 'Empress Hairpin',								-- +3 AGI
-		Ears   = { 'Genin Earring//SJNIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
+		Ears   = { 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
 		Body   = 'Homam Corazza//IF:Haubergeon',				-- filler, voids -5 AGI
 		Rings  = 'Kshama Ring No.3',							-- +3 AGI
 		Back   = 'Fed. Army Mantle',							-- +2 AGI
@@ -1405,7 +1396,7 @@ local sets = {
 		SUBSET = 'rAttackPower',
 		Head   = { 'Chaos Burgeonet', 'Empress Hairpin' },			-- +4 STR, +3 AGI
 		Neck   = 'Justice Torque',									-- +5 STR
-		Ears   = { 'Genin Earring//SJNIN', 'Drone Earring' },		-- +4/3 AGI
+		Ears   = { 'Genin Earring//SJ:NIN', 'Drone Earring' },		-- +4/3 AGI
 		Body   = 'Plastron',										-- +8 STR
 		Hands  = 'Wonder Mitts',									-- +3 STR
 		Rings  = { 'Flame Ring', 'Kshama Ring No.8' },				-- +5/3 STR
@@ -1716,7 +1707,7 @@ local sets = {
 	['A_SATA'] = {
 		Head = 'Empress Hairpin',							-- +3 DEX/+3 AGI
 		Neck = 'Spike Necklace',							-- +3 DEX
-		Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
+		Ears = { 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
 		Body = 'Brigandine',								-- +2 DEX
 		Hands = 'Abs. Gauntlets +1',						-- +5 DEX
 		Rings = { 'Kshama Ring No.2', 'Kshama Ring No.3', 'Balance Ring' },	-- +3 DEX, +3 AGI, +2 DEX
@@ -1823,6 +1814,9 @@ profile.CustomConditionals = {
 	[1] = [ ['code'] = 'CC1', ['question'] = 'Is minus fire resistance an issue', ['init'] = false },
 	[2] = [ ['code'] = 'CC2', ['question'] = 'Should optional gear be included', ['init'] = false },
 };
+
+-- Load gVars to define most globals and the individual modules
+gVars = gFunc.LoadFile('common\\gVars.lua');
 
 --[[
 	********

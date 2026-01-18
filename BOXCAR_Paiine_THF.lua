@@ -1,18 +1,9 @@
 local profile = {};
 
-local crossjobs = require('common.crossjobs');
-local displaybar = require('common.displaybar');
-local gear = require('common.gear');
-local help = require('common.help');
-local locks = require('common.locks');
-local magic = require('common.magic');
-local pets = require('common.pets');
-local utilities = require('common.utilities');
-
 --[[
 	This file contains all the gear sets associated with the THF job.
 	
-	Gear Sets last updated: December 2, 2025
+	Gear Sets last updated: January 16, 2026
 	Code update: December 2, 2025
 
 	Intended Role: All levels
@@ -145,7 +136,7 @@ local sets = {
 				},
 				GROUP//NOT_RIDING = {
 					Neck   = { 'Opo-opo necklace//SLEPT', 'Peacock Amulet' },
-					Ears   = { 'Bat Earring//BLINDED', 'Coral Earring//DT_MAGICAL', 'Brutal Earring', 'Stealth Earring//SJNIN',
+					Ears   = { 'Bat Earring//BLINDED', 'Coral Earring//DT_MAGICAL', 'Brutal Earring', 'Stealth Earring//SJ:NIN',
 							'Ethereal Earring', 'Fang Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
 					Hands  = { 'Homam Manopolas', 'Rogue\'s Armlets', 'Battle Gloves' },
 					Back   = 'Forager\'s Mantle',
@@ -357,7 +348,7 @@ local sets = {
 	
 	['Evasion'] = {
         Head  = { 'Optical Hat', 'Empress Hairpin' },			-- +10/10 Eva
-        Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Genin Earring//SJNIN', 'Drone Earring' },	-- +15 Eva if blind, +5 Eva, +4 AGI if sj NIN, +3 AGI
+        Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +15 Eva if blind, +5 Eva, +4 AGI if sj NIN, +3 AGI
         Body  = { 'Scorpion Harness', 'Narasimha\'s Vest' },	-- +10/4 Eva
         Hands = 'Battle Gloves',								-- +3 Eva
         Rings = 'Kshama Ring No.3',								-- +3 AGI
@@ -419,7 +410,7 @@ local sets = {
 			Sub  = 'X\'s Knife',
 		},
 		GROUP//NOT_DUALWIELD = {
-			Main = 'X\'s Knife//SJNIN',
+			Main = 'X\'s Knife//SJ:NIN',
 			Sub  = 'Tatami Shield',
 		},
     },
@@ -490,7 +481,7 @@ local sets = {
 	-- Agility Reference gear set
 	['rAGI'] = {
 		Head   = 'Empress Hairpin',								-- +3 AGI
-		Ears   = { 'Genin Earring//SJNIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
+		Ears   = { 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
 		Body   = { 'Assassin\'s Vest', 'Blue Cotehardie' },		-- +4/4 AGI
 		Rings  = 'Kshama Ring No.3',							-- +3 AGI
 		Back   = 'Assassin\'s Cape',							-- +4 AGI
@@ -1396,7 +1387,7 @@ local sets = {
 		SUBSET = 'rAttackPower',
 		Head   = 'Empress Hairpin',								-- +3 AGI
 		Neck   = 'Spike Necklace',								-- +3 STR
-		Ears   = { 'Genin Earring//SJNIN', 'Drone Earring' },	-- +4 AGI if sj is NIN, +3 AGI
+		Ears   = { 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +4 AGI if sj is NIN, +3 AGI
 		Body   = { 'Blue Cotehardie', 'Assassin\'s Vest', 'Rogue\'s Vest', 'Wonder Kaftan' },	-- +4 STR/+4 AGI, +4 AGI, +3/1 STR
 		Hands  = 'Wonder Mitts',								-- +3 STR
 		Rings  = { 'Flame Ring', 'Kshama Ring No.8', 'Kshama Ring No.3' },	-- +5/3 STR, +3 AGI
@@ -1518,7 +1509,7 @@ local sets = {
 		SUBSET = 'rAttackPower',
 		Head   = { 'Asn. Bonnet +1', 'Assassin\'s Bonnet', 'Empress Hairpin' },		-- +6/5/3 DEX
 		Neck   = { 'Love Torque', 'Spike Necklace' },				-- +5/3 DEX
-		Ears   = { 'Genin Earring//SJNIN', 'Drone Earring' },		-- +4 AGI if sj is NIN, +3 AGI
+		Ears   = { 'Genin Earring//SJ:NIN', 'Drone Earring' },		-- +4 AGI if sj is NIN, +3 AGI
 		Body   = { 'Assassin\'s Vest', 'Brigandine' },				-- +4 AGI, +2 DEX
 		Hands  = 'Rogue\'s Armlets',								-- +3 DEX
 		Rings  = { 'Kshama Ring No.2', 'Kshama Ring No.3' },		-- +3 DEX, +3 AGI
@@ -1683,7 +1674,7 @@ local sets = {
 	['A_SATA']  = {
 		Head  = 'Empress Hairpin',												-- +3 DEX/3 AGI
 		Neck  = { 'Love Torque', 'Spike Necklace' },							-- +5/3 DEX
-		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },					-- +4 AGI if sj is NIN, +3 AGI
+		Ears  = { 'Genin Earring//SJ:NIN', 'Drone Earring' },					-- +4 AGI if sj is NIN, +3 AGI
 		Body  = { 'Assassin\'s Vest', 'Brigandine' },							-- +4 AGI, +2 DEX
 		Hands = 'Rogue\'s Armlets',												-- +3 DEX
 		Rings = { 'Kshama Ring No.3', 'Kshama Ring No.2' },						-- +3 AGI/+3 DEX
@@ -1856,6 +1847,9 @@ profile.CustomConditionals = {
 	[1] = [ ['code'] = 'CC1', ['question'] = 'Is minus fire resistance an issue', ['init'] = false },
 	[2] = [ ['code'] = 'CC2', ['question'] = 'Should optional gear be included', ['init'] = false },
 };
+
+-- Load gVars to define most globals and the individual modules
+gVars = gFunc.LoadFile('common\\gVars.lua');
 
 --[[
 	********

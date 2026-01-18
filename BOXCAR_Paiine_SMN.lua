@@ -1,18 +1,9 @@
 local profile = {};
 
-local crossjobs = require('common.crossjobs');
-local displaybar = require('common./displaybar');
-local gear = require('common.gear');
-local help = require('common.help');
-local locks = require('common.locks');
-local magic = require('common.magic');
-local pets = require('common.pets');
-local utilities = require('common.utilities');
-
 --[[
 	This file contains all the gear sets associated with the SMN job.
 	
-	Gear Sets last updated: December 3, 2025
+	Gear Sets last updated: January 16, 2026
 	Code update: December 3, 2025
 
 	Intended Role: All Levels
@@ -344,7 +335,7 @@ local sets = {
 		Ammo  = 'Orphic Egg//PJPBRD',					-- +1 Eva if BRD in party
 		Head  = { 'Optical Hat', 'Empress Hairpin' },	-- +10/10 Eva
 		Neck  = 'Spirit Torque',						-- +5 Eva
-		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Genin Earring//SJNIN', 'Drone Earring' },	-- +15 Eva while blinded, +5 Eva, +4/3 AGI
+		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +15 Eva while blinded, +5 Eva, +4/3 AGI
 		Body  = 'Yinyang Robe//IF:Vermillion Cloak',	-- Filler, V.Cloak has -10 eva
 		Hands = 'Battle Gloves',						-- +3 Eva
 		Rings = { 'Ether Ring//IF:Woodsman Ring', 'Astral Ring//IF:Woodsman Ring', 'Astral Ring//IF:Woodsman Ring' },	-- Filler, Woodsman Ring has -5 eva
@@ -539,7 +530,7 @@ local sets = {
 	-- Agility Reference gear set
 	['rAGI'] = {
 		Head   = 'Empress Hairpin',								-- +3 AGI
-		Ears   = { 'Genin Earring//SJNIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
+		Ears   = { 'Genin Earring//SJ::NIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
 		Body   = 'Yinyang Robe//IF:Errant Hpl.',				-- filler, voids -7 AGI
 		Rings  = 'Kshama Ring No.3',							-- +3 AGI
 		Back   = 'Fed. Army Mantle',							-- +2 AGI
@@ -1631,7 +1622,7 @@ local sets = {
 	['A_SATA'] = {
 		Head  = 'Empress Hairpin',							-- +3 DEX/+3 AGI
 		Neck  = 'Spike Necklace',							-- +3 DEX
-		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
+		Ears  = { 'Genin Earring//SJ::NIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
 		Rings = { 'Kshama Ring No.2', 'Kshama Ring No.3' },	-- +3 DEX, +3 AGI
 		Waist = 'Mrc.Cpt. Belt',							-- +1 DEX/+1 AGI
 	},
@@ -1740,6 +1731,9 @@ profile.CustomConditionals = {
 -- Tracked pet action
 profile.sPetAction = nil;
 
+-- Load gVars to define most globals and the individual modules
+gVars = gFunc.LoadFile('common\\gVars.lua');
+
 --[[
 	********
 	* Code *
@@ -1813,8 +1807,8 @@ function profile.OnLoad()
 	end
 
 	-- Make sure the saved weapons are the starting weapons
-	gear.weapon = crossjobs.Sets.CurrentGear['Main'];
-	gear.offhand = crossjobs.sets.CurrentGear['Sub';
+	gVars.weapon = crossjobs.Sets.CurrentGear['Main'];
+	gVars.offhand = crossjobs.sets.CurrentGear['Sub';
 end		-- OnLoad
 
 --[[

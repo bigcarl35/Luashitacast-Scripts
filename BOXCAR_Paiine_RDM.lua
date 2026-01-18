@@ -1,18 +1,9 @@
 local profile = {};
 
-local crossjobs = require('common.crossjobs');
-local displaybar = require('common./displaybar');
-local gear = require('common.gear');
-local help = require('common.help');
-local locks = require('common.locks');
-local magic = require('common.magic');
-local pets = require('common.pets');
-local utilities = require('common.utilities');
-
 --[[
 	This file contains all the gear sets associated with the RDM job.
 	
-	Gear Sets last updated: December 5, 2025
+	Gear Sets last updated: January 16, 2026
 	Code update: December 5, 2025
 
 	Intended Role: Endgame
@@ -224,7 +215,7 @@ local sets = {
 				SUBSET = 'rEnmity_Plus',
 				Head   = { 'Duelist\'s Chapeau', 'Wlk. Chapeau +1' },
 				Neck   = { 'Opo-opo necklace//SLEPT', 'Spirit Torque' },
-				Ears   = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Stealth Earring//SJNIN', 'Brutal Earring' },
+				Ears   = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Stealth Earring//SJ:NIN', 'Brutal Earring' },
 				Body   = { 'Wlk. Tabard +1', 'Narasimha\'s Vest' },
 				Hands  = { 'Wlk. Gloves +1', 'Battle Gloves' },
 				Rings  = { 'Bomb Queen Ring//CC1', 'Kshama Ring No.4', 'Kshama Ring No.8' },
@@ -253,7 +244,7 @@ local sets = {
 				GROUP//NOT_WSWAP = {	-- assumes to be melee
 					Head  = { 'Duelist\'s Chapeau', 'Wlk. Chapeau +1', 'Empress Hairpin' },
 					Neck  = { 'Opo-opo necklace//SLEPT', 'Justice Torque', 'Spike Necklace' },
-					Ears  = { 'Ethereal Earring', 'Stealth Earring//SJNIN', 'Pilferer\'s Earring//SJTHF', 'Brutal Earring' },
+					Ears  = { 'Ethereal Earring', 'Stealth Earring//SJ:NIN', 'Pilferer\'s Earring//SJ:THF', 'Brutal Earring' },
 					Body  = { 'Wlk. Tabard +1', 'Narasimha\'s Vest' },
 					Hands = { 'Wlk. Gloves +1', 'Ogre Gloves' },
 					Rings = { 'Flame Ring', 'Kshama Ring No.8', 'Kshama Ring No.2' },
@@ -381,7 +372,7 @@ local sets = {
 	['Evasion'] = {
         Head  = 'Optical Hat',									-- +10 Eva
 		Neck  = 'Spirit Torque',								-- +5 Eva
-		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Genin Earring//SJNIN', 'Drone Earring' },	-- +15 Eva while blinded, +5 Eva, +4/3 AGI
+		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +15 Eva while blinded, +5 Eva, +4/3 AGI
 		Body  = 'Scorpion Harness',								-- +10 Eva
 		Hands = 'Battle Gloves',								-- +3 Eva
 		Waist = 'Swift Belt//IF:Tilt Belt',						-- filler, Tilt Belt has -5 Eva
@@ -519,7 +510,7 @@ local sets = {
 	-- Agility Reference gear set
 	['rAGI'] = {
 		Head  = 'Empress Hairpin',										-- +3 AGI
-		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },			-- +4 AGI if sj NIN, +3 AGI
+		Ears  = { 'Genin Earring//SJ:NIN', 'Drone Earring' },			-- +4 AGI if sj NIN, +3 AGI
 		Body  = { 'Duelist\'s Tabard', 'Blue Cotehardie' },				-- +4/4 AGI
 		Rings = 'Kshama Ring No.3',										-- +3 AGI
 		Back  = 'Fed. Army Mantle',										-- +2 AGI
@@ -1607,7 +1598,7 @@ local sets = {
 		SUBSET = 'rAttackPower',
 		Head   = 'Empress Hairpin',											-- +3 DEX/+3 AGI
 		Neck   = 'Spike Necklace',											-- +3 DEX
-		Ears   = { 'Genin Earring//SJNIN', 'Drone Earring' },				-- +4 AGI if SJ NIN, +3 AGI
+		Ears   = { 'Genin Earring//SJ:NIN', 'Drone Earring' },				-- +4 AGI if SJ NIN, +3 AGI
 		Body   = 'Black Cotehardie',										-- +3 AGI/+2 DEX
 		Hands  = 'Wlk. Gloves +1',											-- +6 DEX
 		Rings  = { 'Kshama Ring No.3', 'Kshama Ring No.2' },				-- +3 AGI, +3 DEX
@@ -1737,7 +1728,7 @@ local sets = {
 	-- If only Trick Attack is enabled, the following will be equipped
 	['A_Trick_Attack'] = {
 		Head  = 'Empress Hairpin',							-- +3 AGI
-		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },-- +4 AGI if sj NIN, +3 AGI
+		Ears  = { 'Genin Earring//SJ:NIN', 'Drone Earring' },-- +4 AGI if sj NIN, +3 AGI
 		Rings = 'Kshama Ring No.3',							-- +3 AGI
 		Waist = 'Mrc.Cpt. Belt',							-- +1 AGI
 		Feet  = 'Bounding Boots',							-- +3 AGI
@@ -1747,7 +1738,7 @@ local sets = {
 	['A_SATA'] = {
 		Head = 'Empress Hairpin',							-- +3 DEX/+3 AGI
 		Neck = 'Spike Necklace',							-- +3 DEX
-		Ears = { 'Genin Earring//SJNIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
+		Ears = { 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
 		Body = 'Brigandine',								-- +2 DEX
 		Rings = { 'Kshama Ring No.2', 'Kshama Ring No.3' },	-- +3 DEX, +3 AGI
 		Waist = 'Warwolf Belt',								-- +5 DEX
@@ -1853,6 +1844,9 @@ profile.CustomConditionals = {
 	[1] = [ ['code'] = 'CC1', ['question'] = 'Is minus fire resistance an issue', ['init'] = false },
 	[2] = [ ['code'] = 'CC2', ['question'] = 'Should optional gear be included', ['init'] = false },
 };
+
+-- Load gVars to define most globals and the individual modules
+gVars = gFunc.LoadFile('common\\gVars.lua');
 
 --[[
 	********

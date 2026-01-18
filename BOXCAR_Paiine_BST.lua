@@ -1,18 +1,9 @@
 local profile = {};
 
-local crossjobs = require('common.crossjobs');
-local displaybar = require('common./displaybar');
-local gear = require('common.gear');
-local help = require('common.help');
-local locks = require('common.locks');
-local magic = require('common.magic');
-local pets = require('common.pets');
-local utilities = require('common.utilities');
-
 --[[
 	This file contains all the gear sets associated with the BST job.
 	
-	Gear Sets last updated: December 3, 2025
+	Gear Sets last updated: January 16, 2026
 	Code update: December 3, 2025
 
 	Intended Role: 50+
@@ -127,7 +118,7 @@ local sets = {
 				GROUP//NOT_RIDING = {
 					Head   = { 'President. Hairpin//NOT_OWN//HPP.LT.94', 'Empress Hairpin' },
 					Neck   = { 'Opo-opo necklace//SLEPT', 'Peacock Amulet' },
-					Ears   = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Coral Earring//DT_MAGICAL', 'Beastly Earring', 'Brutal Earring', 'Genin Earring//SJNIN', 'Bat Earring//MSJ', 'Fang Earring',
+					Ears   = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Coral Earring//DT_MAGICAL', 'Beastly Earring', 'Brutal Earring', 'Genin Earring//SJ:NIN', 'Bat Earring//MSJ', 'Fang Earring',
 							   'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
 					Body   = { 'Gaudy Harness//MSJ//MP.LT.50', 'Narasimha\'s Vest' },
 					Hands  = { 'Beast Gloves', 'Ogre Gloves' },
@@ -287,7 +278,7 @@ local sets = {
 	['Evasion'] = {
 		Ammo  = 'Orphic Egg//PJPBRD',							-- +1 Eva if BRD in party
         Head  = { 'Optical Hat', 'Empress Hairpin' },			-- +10/10 Eva
-		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Reraise Earring', 'Genin Earring//SJNIN', 'Drone Earring' },	-- +15 Eva while blinded, +5/2 Eva, +4/3 AGI
+		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Reraise Earring', 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +15 Eva while blinded, +5/2 Eva, +4/3 AGI
         Body  = { 'Scorpion Harness', 'Narasimha\'s Vest' },	-- +10/4 Eva
 		Hands = 'Battle Gloves',								-- +3 Eva
         Legs  = 'Shep. Hose//PETFNPF',							-- +3 Pet Eva
@@ -420,7 +411,7 @@ local sets = {
 	-- Agility Reference gear set
 	['rAGI'] = {
 		Head  = 'Empress Hairpin',							-- +3 AGI
-		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },-- +4 AGI if /NIN, +3 AGI
+		Ears  = { 'Genin Earring//SJ:NIN', 'Drone Earring' },-- +4 AGI if /NIN, +3 AGI
 		Rings = 'Kshama Ring No.3',							-- +3 AGI
 		Back  = 'Fed. Army Mantle',							-- +2 AGI
 		Waist = 'Scouter\'s Rope',							-- +4 AGI
@@ -1600,7 +1591,7 @@ local sets = {
 	['A_SATA'] = {
 		Head  = 'Empress Hairpin',							-- +3 DEX/+3 AGI
 		Neck  = { 'Justice Torque', 'Spike Necklace', 'Opo-opo Necklace' },	-- +5/3/3 DEX
-		Ears  = { 'Genin Earring//SJNIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
+		Ears  = { 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
 		Rings = { 'Kshama Ring No.2', 'Kshama Ring No.3' },	-- +3 DEX, +3 AGI
 	},
 
@@ -1747,6 +1738,9 @@ profile.CustomConditionals = {
 	[1] = [ ['code'] = 'CC1', ['question'] = 'Is minus fire resistance an issue', ['init'] = false },
 	[2] = [ ['code'] = 'CC2', ['question'] = 'Should optional gear be included', ['init'] = false },
 };
+
+-- Load gVars to define most globals and the individual modules
+gVars = gFunc.LoadFile('common\\gVars.lua');
 
 --[[
 	********
