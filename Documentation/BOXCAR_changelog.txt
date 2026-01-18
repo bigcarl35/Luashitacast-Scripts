@@ -23,8 +23,8 @@
 
 - Added support for groups to inline reference translation. Subsets are still ignored.
 
-- Fixed issue where code for a buff has a "_" in them thus not matching buff name. It checks for both
-  with and without "_" (as in, if the buff name has a "_" or if the player designated the " " as a "_".)
+- Fixed issue where code for a buff has a " " in them thus not matching buff name. It checks for both
+  with and without " " (as in, if the buff name has a " " or if the player designated the " " as a "_".)
 
 - You can now indicate whether Refresh or Regen has priority when you rest.
 
@@ -58,7 +58,7 @@
 - Added code to remove "see-saw" effect when resting between refresh and regen gear because gear
   change uncapped capped stat setting. (25)
 
-- Added inline condition to //SJ to accept a list of jobs as in //SJ[NIN,DNC] to mean subjob is
+- Added inline condition to //SJ to accept a list of jobs as in //SJ:NIN,DNC to mean subjob is
   either Ninja or Dancer. If merit is found for other conditionals, they will be implemented
   conditional by conditional. (A16)
 
@@ -73,9 +73,7 @@
 
 - Added inline conditionals: ACCURACY and NOT_ACCURACY. This changes accuracy from stages to "has
   any stage been set" on the conditional. It's a mechanism that lets the player ignore progressive
-  accuracy although they still have to set a stage to make the inline conditional work. Added
-  inline conditionals: RARE and NOT_RARE. This is used to indicate whether rare items should be
-  added to the pool (ex: dig pool).
+  accuracy although they still have to set a stage to make the inline conditional work.
 
 - Added inline conditionals: DUALWIELD and NOT_DUALWIELD. These detect if your job/subjob permits
   dual wielding. Added inline conditionals: RIDING and NOT_RIDING. These detect if you are riding
@@ -89,3 +87,6 @@
 
 - Changed monster family lookup to zone specific listing. Changed weapon type check to using
   typed master weapons listing.
+
+- Changed all the //SJjob conditionals to use //SJ:job. Added //MMJ and //MJjob,job,...for main
+  jobs. (Likely to be used in crossjobs.lua since that's for common gear sets.)

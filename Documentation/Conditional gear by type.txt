@@ -219,9 +219,9 @@ Debuff:
     //PETRIFIED          Equip if player is petrified
 *   //PLAGUED            Equip if player has plague debuff
     //POISONED           Equip if player is poisoned
-+   //SJ_RESTRICTION     Equip if player is under subjob restriction (Dreamland Dynamis)
+*   //SJ_RESTRICTION     Equip if player is under subjob restriction (Dreamland Dynamis)
     //SILENCED           Equip if player is silenced
-    //SLEPT              Equip if player is slept + or lullaby
+    //SLEPT              Equip if player is slept or lullaby
 *   //STUNNED            Equip if player has stun debuff
 *   //TERRIFIED          Equip if player has terror debuff
     //WEAKENED           Equip if player is weakened
@@ -268,7 +268,6 @@ o   //UNLESS-slot:gear   Equip unless the specified gear is found in the specifi
             drake ring          HP% < 75% and TP% < 100%, enhances Jump
             shinobi ring        HP% < 75% and TP% < 100%, +4% Haste
             minstrel's ring     HP% < 75% and TP% < 100%, -25% spell casting time
-+   //TRACK:#            Tracks the piece of gear it's attached to holding onto the piece seconds after it should be removed where # is in seconds
 
     Inverse -
 *   //NOT_IF:gear        Equip if not wearing the specified item in the slot (was //UNLESS:gear)
@@ -292,15 +291,14 @@ Slot:
     //EMPTY              Equip if slot in temporary set is empty. If ears/rings, it checks both for at least one slot being empty
     //EMPTY:1            Equip if ears/rings slot #1 is empty. Note: command will not force loading into slot 1, it just checks for absence
     //EMPTY:2            Equip if ears/rings slot #2 is empty. Note: command will not force loading into slot 2, it just checks for absence
-+   //SSLOTS:list        Subset only conditional, will load only the specified slots from the attached subset (targetted for post 3.0 release)
 
     Inverse -
 *   //NOT_EMPTY          Equip if slot in temporary set is not empty
 *   //NOT_EMPTY:1        Equip if ears/rings slot #1 is not empty. Note: command will not force loading into slot 1, it just checks for the presence of an item
 *   //NOT_EMPTY:2        Equip if ears/rings slot #2 is not empty. Note: command will not force loading into slot 2, it just checks for the presence of an item
-+   //NOT_SSLOTS:list    Subset only conditional, will load all slots from the attached subset except for those listed (targetted for post 3.0 release)
 
 Other:
+*   //CC#                Equip if the custom conditional is enabled
 *   //DUALWIELD          Equip if main or sub job can dual wield
 r   //INPARTY            Equip item if in a party (was //PARTY)
     //OWN                Equip if area's region controlled by player's nation
@@ -308,15 +306,14 @@ r   //SPELL:xxx          Equip if the spell being cast's name contains the "xxx"
 *   //SPELLCAT:xxx       Equip if spell being cast is in the designated group, where xxx is: BARELEMENTAL or BARSTATUS
     //TOWN               Equip if player's in town
     //TOWN-AK            Equip ducal aketon or national aketon if the player is in the appropriate town
-+   //MODE:xxx           SMN or /SMN only. Equip if the mode:xxx matches the value of PET_MODE (PERP or ATK)
+*   //MODE:xxx           SMN or /SMN only. Equip if the mode:xxx matches the value of PET_MODE (PERP or ATK)
 
 *   //STATUS:ENGAGED     Equip if the player is engaged (fighting or weapons drawn)
 *   //STATUS:RESTING     Equip if the player is resting
 *   //STATUS:IDLING      Equip if the player is idling
 
-~   //CC#                Equip if the custom conditional is enabled; returns true atm
-
     Inverse -
+*   //NOT_CC#            Equip if the custom conditional is false
 *   //NOT_DUALWIELD      Equip if main or sub job cannot dual wield
 *   //NOT_INPARTY        Equip item if not in a party
     //NOT_OWN            Equip if the area's region not controlled by player's nation
@@ -328,8 +325,6 @@ r   //SPELL:xxx          Equip if the spell being cast's name contains the "xxx"
 *   //NOT_STATUS:ENGAGED Equip if the player is not engaged (fighting or weapons drawn)
 *   //NOT_STATUS:RESTING Equip if the player is not resting
 *   //NOT_STATUS:IDLING  Equip if the player is not idling
-
-~   //NOT_CC#            Equip if the custom conditional is false; returns true atm
 
 Songs:
 r   //SONG:xxx           Equip if song being cast's name contains the "xxx" substring (was invoked via SP:xxx)
@@ -422,59 +417,46 @@ r   //NOT_SMN:PET         Equip if player's pet is not a smn avatar/elemental sp
 *   //NOT_SMN:SPIRIT:EP   Equip if current pet is not an elemental spirit
 
 Job:
+    Player's Mainjob - (likely used in crossjob's gearsets)
+
+*   //MMJ                Equip if player's main job is magical
+*   //MJ:job,job,...     Equip if the player's main job is one of the jobs listed
+
+    Inverse -
+*    //NOT_MSJ           Equip if player's main job is not magical
+*    //NOT_MJ:job,job,... Equip if the player's main job is not one of the jobs listed
+
     Player's Subjob -
     //MSJ                Equip if player's subjob is magical
-    //SJBLM              Equip if the player's subjob is a Black Mage
-    //SJBLU              Equip if the player's subjob is a Blue Mage
-    //SJBRD              Equip if the player's subjob is a Bard
-    //SJBST              Equip if the player's subjob is a Beastmaster
-    //SJCOR              Equip if the player's subjob is a Corsair
-    //SJDNC              Equip if the player's subjob is a Dancer
-    //SJDRG              Equip if the player's subjob is a Dragoon
-    //SJDRK              Equip if the player's subjob is a Dark Knight
-    //SJGEO              Equip if the player's subjob is a Geomancer
-    //SJMNK              Equip if the player's subjob is a Monk
-    //SJNIN              Equip if the player's subjob is a Ninja
-    //SJPLD              Equip if the player's subjob is a Paladin
-    //SJPUP              Equip if the player's subjob is a Puppeteer
-    //SJRDM              Equip if the player's subjob is a Red Mage
-    //SJRNG              Equip if the player's subjob is a Ranger
-    //SJRUN              Equip if the player's subjob is a Rune Fencer
-    //SJSAM              Equip if the player's subjob is a Samurai
-    //SJSCH              Equip if the player's subjob is a Scholar
-    //SJSMN              Equip if the player's subjob is a Summoner
-    //SJTHF              Equip if the player's subjob is a Thief
-    //SJWAR              Equip if the player's subjob is a Warrior
-    //SJWHM              Equip if the player's subjob is a White Mage
+o   //SJBLM              Equip if the player's subjob is a Black Mage (obsolete, use //SJ:BLM)
+o   //SJBLU              Equip if the player's subjob is a Blue Mage (obsolete,use //SJ:BLU)
+o   //SJBRD              Equip if the player's subjob is a Bard (obsolete,use //SJ:BRD)
+o   //SJBST              Equip if the player's subjob is a Beastmaster (obsolete,use //SJ:BST)
+o   //SJCOR              Equip if the player's subjob is a Corsair (obsolete,use //SJ:COR)
+o   //SJDNC              Equip if the player's subjob is a Dancer (obsolete,use //SJ:DNC)
+o   //SJDRG              Equip if the player's subjob is a Dragoon (obsolete,use //SJ:DRG)
+o   //SJDRK              Equip if the player's subjob is a Dark Knight (obsolete,use //SJ:DRK)
+o   //SJGEO              Equip if the player's subjob is a Geomancer (obsolete,use //SJ:GEO)
+o   //SJMNK              Equip if the player's subjob is a Monk (obsolete,use //SJ:MNK)
+o   //SJNIN              Equip if the player's subjob is a Ninja (obsolete,use //SJ:NIN)
+o   //SJPLD              Equip if the player's subjob is a Paladin (obsolete,use //SJ:PLD)
+o   //SJPUP              Equip if the player's subjob is a Puppeteer (obsolete,use //SJ:PUP)
+o   //SJRDM              Equip if the player's subjob is a Red Mage (obsolete,use //SJ:RDM)
+o   //SJRNG              Equip if the player's subjob is a Ranger (obsolete,use //SJ:RNG)
+o   //SJRUN              Equip if the player's subjob is a Rune Fencer (obsolete,use //SJ:RUN)
+o   //SJSAM              Equip if the player's subjob is a Samurai (obsolete,use //SJ:SAM)
+o   //SJSCH              Equip if the player's subjob is a Scholar (obsolete,use //SJ:SCH)
+o   //SJSMN              Equip if the player's subjob is a Summoner (obsolete,use //SJ:SUM)
+o   //SJTHF              Equip if the player's subjob is a Thief (obsolete,use //SJ:THF)
+o   //SJWAR              Equip if the player's subjob is a Warrior (obsolete,use //SJ:WAR)
+o   //SJWHM              Equip if the player's subjob is a White Mage (obsolete,use //SJ:WHM)
 
-*    //SJ[job,job...]    Equip if the player's subjob is one of the jobs listed
+*    //SJ:job,job,...    Equip if the player's subjob is one of the jobs listed
 
     Inverse -
 *    //NOT_MSJ           Equip if player's subjob is not magical
-*    //NOT_SJBLM         Equip if the player's subjob is not a Black Mage
-*    //NOT_SJBLU         Equip if the player's subjob is not a Blue Mage
-*    //NOT_SJBRD         Equip if the player's subjob is not a Bard
-*    //NOT_SJBST         Equip if the player's subjob is not a Beastmaster
-*    //NOT_SJCOR         Equip if the player's subjob is not a Corsair
-*    //NOT_SJDNC         Equip if the player's subjob is not a Dancer
-*    //NOT_SJDRG         Equip if the player's subjob is not a Dragoon
-*    //NOT_SJDRK         Equip if the player's subjob is not a Dark Knight
-*    //NOT_SJGEO         Equip if the player's subjob is not a Geomancer
-*    //NOT_SJMNK         Equip if the player's subjob is not a Monk
-*    //NOT_SJNIN         Equip if the player's subjob is not a Ninja
-*    //NOT_SJPLD         Equip if the player's subjob is not a Paladin
-*    //NOT_SJPUP         Equip if the player's subjob is not a Puppeteer
-*    //NOT_SJRDM         Equip if the player's subjob is not a Red Mage
-*    //NOT_SJRNG         Equip if the player's subjob is not a Ranger
-*    //NOT_SJRUN         Equip if the player's subjob is not a Rune Fencer
-*    //NOT_SJSAM         Equip if the player's subjob is not a Samurai
-*    //NOT_SJSCH         Equip if the player's subjob is not a Scholar
-*    //NOT_SJSMN         Equip if the player's subjob is not a Summoner
-*    //NOT_SJTHF         Equip if the player's subjob is not a Thief
-*    //NOT_SJWAR         Equip if the player's subjob is not a Warrior
-*    //NOT_SJWHM         Equip if the player's subjob is not a White Mage
 
-*    //NOT_SJ[job,job...] Equip if the player's subjob is not one of the jobs listed
+*    //NOT_SJ:job,job,... Equip if the player's subjob is not one of the jobs listed
 
 Job in Party:
     //PJPBLM             Equip if there's a Black Mage in your party
@@ -552,15 +534,15 @@ r    //PJPWHM_NOT_ME     Equip if there's a White Mage in your party and it's no
     the job and that's a given since each of your jobs have specific luashitacast job files. Skipping.
 
 Target:
-+    //FAM=xxx            Equip if target is part of the specified family
-+    //ECO=xxx            Equip if target is part of the specified Eco-System
-r    //AMORPH             Equip if target is from the amorph family
-r    //AQUAN              Equip if target is from the aquan family
++   //FAM=xxx            Equip if target is part of the specified family
++   //ECO=xxx            Equip if target is part of the specified eco-System
+r   //AMORPH             Equip if target is from the amorph family
+r   //AQUAN              Equip if target is from the aquan family
     //ME                 Equip if the target is me
 
     Inverse -
 +    //NOT_FAM=xxx        Equip if target is part of the specified family
-+    //NOT_ECO=xxx        Equip if target is part of the specified Eco-System
++    //NOT_ECO=xxx        Equip if target is part of the specified eco-System
 r   //NOT_AMORPH         Equip if target is not from the amorph family
 r   //NOT_AQUAN          Equip if target is not from the aquan family
     //NOT_ME             Equip if the target is not me
@@ -650,7 +632,7 @@ Weapon type:
     //SWORD              Equip if weapon in Main/Sub is known
     //THROWING           Equip if weapon in Range/Amdmo is known
 
-+   //AMMO               Equip if ammo in ammo slot is known
+*   //AMMO               Equip if ammo in ammo slot is known
 *   //SHIELD             Equip if there's a known
 
     Inverse -
@@ -670,7 +652,7 @@ Weapon type:
 *   //NOT_SWORD          Equip if weapon in Main/Sub is not known
 *   //NOT_THROWING       Equip if weapon in Range/Amdmo is not known
 
-+   //NOT_AMMO           equip if ammo in ammo slot is not known
+*   //NOT_AMMO           equip if ammo in ammo slot is not known
 *   //NOT_SHIELD         Equip if sub known
 
 Weather:
@@ -702,6 +684,11 @@ Weather:
 *   //NOT_WTH:WATER      Equip if the weather is not water
 *   //NOT_WTH:WIND       Equip if the weather is not wind
 *   //NOT_WTH-DAY	     Equip if the weather does not match the day's element
+
+Post 3.0 conditionals to be implemented:
++   //TRACK:#            Tracks the piece of gear it's attached to holding onto the piece seconds after it should be removed where # is in seconds
++   //SSLOTS:list        Subset only conditional, will load only the specified slots from the attached subset
++   //NOT_SSLOTS:list    Subset only conditional, will load all slots from the attached subset except for those listed
 
 Keywords:
     conditionals - .EQ.,.GT.,.GE.,.LT.,.LE.,.NE.
