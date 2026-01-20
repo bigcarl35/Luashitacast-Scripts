@@ -78,5 +78,7 @@ return {
         ['Will-o\'-the-Wisp']       = { Name='Will-o\'-the-Wisp', Ecosystem='arcana', Family='bombs' },
         ['Yacumama']                = { Name='Yacumama', Ecosystem='aquans', Family='sea monks' },
         ['Yilbegan']                = { Name='Yilbegan', Ecosystem='dragons', Family='zilant' },
+        -- Custom content for HorizonXI
+        ['Despotic Decapod']        = { Name='Despotic Decapod', Ecosystem='aquans', Family='crabs' },
     },
 };

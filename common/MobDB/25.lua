@@ -64,5 +64,7 @@ return {
         ['Warder Thalia'] = { Name='Warder Thalia', Ecosystem='arcana', Family='spheroids'},
         ['Wingrats'] = { Name='Wingrats', Ecosystem='birds', Family='bat trios'},
         ['Ziphius'] = { Name='Ziphius', Ecosystem='aquans', Family='pugils'},
+        -- Custom content for HorizonXI
+        ['Mammet-9999'] = { Name='Mammet-9999', Ecosystem='arcana', Family='mammets' },
     },
 };

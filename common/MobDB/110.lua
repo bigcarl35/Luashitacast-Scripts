@@ -60,5 +60,7 @@ return {
         ['Yatagarasu']              = { Name='Yatagarasu', Ecosystem='birds', Family='rocs' },
         ['Yilbegan']                = { Name='Yilbegan', Ecosystem='dragons', Family='zilant' },
         ['Zircon Quadav']           = { Name='Zircon Quadav', Ecosystem='beastmen', Family='quadav' },
+        -- Custom content for HorizonXI
+        ['Ruinous Rocs']            = { Name='Ruinous Rocs', Ecosystem='birds', Family='rocs' },
     },
 };

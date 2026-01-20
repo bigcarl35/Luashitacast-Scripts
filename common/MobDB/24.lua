@@ -82,5 +82,7 @@ return {
         ['Vu-Murt'] = { Name='Vu-Murt', Ecosystem='aquans', Family='sea monks'},
         ['Wingrats'] = { Name='Wingrats', Ecosystem='birds', Family='bat trios'},
         ['Yal-un Eke'] = { Name='Yal-un Eke', Ecosystem='arcana', Family='clusters'},
+        -- Custom content for HorizonXI
+        ['Ultimega'] = { Name='Ultimega', Ecosystem='unclassified', Family='biotechnological weapons' },
     },
 };
