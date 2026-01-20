@@ -44,5 +44,7 @@ return {
         ['Wendigo'] = { Name='Wendigo', Ecosystem='undead', Family='skeletons'},
         ['Wight'] = { Name='Wight', Ecosystem='undead', Family='skeletons'},
         ['Wounded Wurfel'] = { Name='Wounded Wurfel', Ecosystem='undead', Family='ghosts'},
+        -- Custom content for HorizonXI
+        ['Ghouls'] = { Name='Ghouls', Ecosystem='undead', Family='skeletons' },
     },
 };

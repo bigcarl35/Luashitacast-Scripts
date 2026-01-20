@@ -32,5 +32,7 @@ return {
         ['Taisaijin'] = { Name='Taisaijin', Ecosystem='amorphs', Family='hecteyes' },
         ['Tros'] = { Name='Tros', Ecosystem='aquans', Family='sea monks' },
         ['Wind Bats'] = { Name='Wind Bats', Ecosystem='birds', Family='bat trios' },
+        -- Custom content for HorizonXI
+        ['Goblin Smithy'] = { Name='Goblin Smithy', Ecosystem='beastmen', Family='goblins' },
     },
 };

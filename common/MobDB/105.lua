@@ -5,7 +5,7 @@ return {
         ['Ahtu']                    = { Name='Ahtu', Ecosystem='plantoids', Family='treants' },
         ['Aither']                  = { Name='Aither', Ecosystem='elementals', Family='elementals' },
         ['Ba']                      = { Name='Ba', Ecosystem='birds', Family='birds' },
-        ['Badshah']                 = { Name='Badshah', Ecosystem='beast', Family='tiger' },
+        ['Badshah']                 = { Name='Badshah', Ecosystem='beasts', Family='tigers' },
         ['Beorht']                  = { Name='Beorht', Ecosystem='elementals', Family='elementals' },
         ['Cherufe']                 = { Name='Cherufe', Ecosystem='lizards', Family='wivres' },
         ['Clipper']                 = { Name='Clipper', Ecosystem='aquans', Family='crabs' },
@@ -65,5 +65,8 @@ return {
         ['Weeping Willow']          = { Name='Weeping Willow', Ecosystem='plantoids', Family='treants' },
         ['Wight']                   = { Name='Wight', Ecosystem='undead', Family='skeletons' },
         ['Yilbegan']                = { Name='Yilbegan', Ecosystem='dragons', Family='zilant' },
+        -- Custom content for HorizonXI
+        ['Downslime']               = { Name='Downslime', Ecosystem='amorphs', Family='slimes' },
+        ['Rancideyes']              = { Name='Rancideyes', Ecosystem='amorphs', Family='hecteyes' },
     },
 };

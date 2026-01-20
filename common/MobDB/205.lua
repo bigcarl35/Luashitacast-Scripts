@@ -35,5 +35,7 @@ return {
         ['Volcanic Gas'] = { Name='Volcanic Gas', Ecosystem='arcana', Family='bombs' },
         ['Volcano Wasp'] = { Name='Volcano Wasp', Ecosystem='vermin', Family='bees' },
         ['Vouivre'] = { Name='Vouivre', Ecosystem='dragons', Family='wyverns' },
+        -- Custom content for HorizonXI
+        ['Cauldron Eruca'] = { Name='Cauldron Eruca', Ecosystem='vermin', Family='crawlers' },
     },
 };

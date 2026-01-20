@@ -29,5 +29,8 @@ return {
         ['Steely Weapon']       = { Name='Steely Weapon', Ecosystem='arcana', Family='evil weapons' },
         ['Thunder Elemental']   = { Name='Thunder Elemental', Ecosystem='elementals', Family='elementals' },
         ['Water Elemental']     = { Name='Water Elemental', Ecosystem='elementals', Family='elementals' },
+        -- Custom content for HorizonXI
+        ['Luminous Cluster']    = { Name='Luminous Cluster', Ecosystem='arcana', Family='clusters' },
+        ['Lunar Guardian']      = { Name='Lunar Guardian', Ecosystem='arcana', Family='dolls' },
     },
 };

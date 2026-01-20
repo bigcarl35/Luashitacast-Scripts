@@ -41,5 +41,9 @@ return {
         ['Vampire Bat'] = { Name='Vampire Bat', Ecosystem='birds', Family='bats' },
         ['Wekufe'] = { Name='Wekufe', Ecosystem='undead', Family='ghosts' },
         ['Western Shadow'] = { Name='Western Shadow', Ecosystem='undead', Family='shadows' },
+        -- Custom content for HorizonXI
+        ['Rancid Flesh'] = { Name='Rancid Flesh', Ecosystem='undead', Family='doomed' },
+        ['Apparition'] = { Name='Apparition', Ecosystem='undead', Family='shadows' },
+        ['Perdition Bat'] = { Name='Perdition Bat', Ecosystem='birds', Family='bats'},
     },
 };

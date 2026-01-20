@@ -53,5 +53,8 @@ return {
         ['Uleguerand Tiger']        = { Name='Uleguerand Tiger', Ecosystem='beasts', Family='tigers' },
         ['Variable Hare']           = { Name='Variable Hare', Ecosystem='beasts', Family='rabbits' },
         ['White Coney']             = { Name='White Coney', Ecosystem='beasts', Family='rabbits' },
+        -- Custom content for HorizonXI
+        ['Gigas Brawler']           = { Name='Gigas Brawler', Ecosystem='beastmen', Family='gigas' },
+        ['Gigas Crusher']           = { Name='Gigas Crusher', Ecosystem='beastmen', Family='gigas' },
     },
 };

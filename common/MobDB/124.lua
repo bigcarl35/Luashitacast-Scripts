@@ -62,5 +62,8 @@ return {
         ['Young Opo-opo'] = { Name='Young Opo-opo', Ecosystem='beasts', Family='opo-opos'},
             -- Custom content for HorizonXI
         ['Tonberry Sovereign'] = { Name='Tonberry Sovereign', Ecosystem='beastmen', Family='tonberries' },
+        ['Opotrap'] = { Name='Opotrap', Ecosystem='plantoids', Family='flytraps' },
+        ['Snap Jaw'] = { Name='Snap Jaw', Ecosystem='aquans', Family='pugils' },
+        ['Jungle Crab'] = { Name='Jungle Crab', Ecosystem='aquans',Family='crabs' },
     },
 };

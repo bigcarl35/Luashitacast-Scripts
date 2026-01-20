@@ -65,5 +65,8 @@ return {
         ['Yilbegan']                = { Name='Yilbegan', Ecosystem='dragons', Family='zilant' },
         -- Custom content for HorizonXI
         ['Sacred Scorpions']        = { Name='Sacred Scorpions', Ecosystem='vermin', Family='scorpions' },
+        ['Evil Weapons']            = { Name='Evil Weapons', Ecosystem='arcana', Family='evil weapons' },
+        ['Flying Beetle']           = { Name='Flying Beetle', Ecosystem='vermin', Family='beetles' },
+        ['Young Uragnite']          = { Name='Young Uragnite', Ecosystem='aquans', Family='uragnites' },
     },
 };

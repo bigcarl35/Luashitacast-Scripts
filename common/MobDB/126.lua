@@ -39,7 +39,7 @@ return {
         ['Land Worm']               = { Name='Land Worm', Ecosystem='amorphs', Family='worms' },
         ['Light Elemental']         = { Name='Light Elemental', Ecosystem='elementals', Family='elementals' },
         ['Malefic Fencer']          = { Name='Malefic Fencer', Ecosystem='arcana', Family='evil weapons' },
-        ['Ophiotaurus']             = { Name='Ophiotaurus', Ecosystem='beasts', Family='yztarg' },
+        ['Ophiotaurus']             = { Name='Ophiotaurus', Ecosystem='beasts', Family='yztargs' },
         ['Qoofim']                  = { Name='Qoofim', Ecosystem='aquans', Family='pugils' },
         ['Qufim Pugil']             = { Name='Qufim Pugil', Ecosystem='aquans', Family='pugils' },
         ['Sea Bishop']              = { Name='Sea Bishop', Ecosystem='aquans', Family='sea monks' },
@@ -50,5 +50,9 @@ return {
         ['Trickster Kinetix']       = { Name='Trickster Kinetix', Ecosystem='arcana', Family='evil weapons' },
         ['Vepar']                   = { Name='Vepar', Ecosystem='aquans', Family='pugils' },
         ['Wight']                   = { Name='Wight', Ecosystem='undead', Family='skeletons' },
+        -- Custom content for HorizonXI
+        ['Island Gloop']            = { Name='Island Gloop', Ecosystem='amorphs', Family='slimes' },
+        ['Hexed Weapon']            = { Name='Hexed Weapon', Ecosystem='arcana', Family='evil weapons' },
+        ['Cliff Worm']              = { Name='Cliff Worm', Ecosystem='amorphs', Family='worms' },
     },
 };

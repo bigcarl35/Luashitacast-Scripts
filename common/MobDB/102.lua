@@ -21,7 +21,7 @@ return {
         ['Goblin Thug']             = { Name='Goblin Thug', Ecosystem='beastmen', Family='goblins' },
         ['Goblin Tinkerer']         = { Name='Goblin Tinkerer', Ecosystem='beastmen', Family='goblins' },
         ['Goblin Weaver']           = { Name='Goblin Weaver', Ecosystem='beastmen', Family='goblins' },
-        ['Grass Funguar']           = { Name='Grass Funguar', Ecosystem='beastmen', Family='funguars' },
+        ['Grass Funguar']           = { Name='Grass Funguar', Ecosystem='plantoids', Family='funguars' },
         ['Grenade']                 = { Name='Grenade', Ecosystem='arcana', Family='bombs' },
         ['Huge Wasp']               = { Name='Huge Wasp', Ecosystem='birds', Family='bees' },
         ['Ironhorn Baldurno']       = { Name='Ironhorn Baldurno', Ecosystem='beasts', Family='rams' },
@@ -34,7 +34,7 @@ return {
         ['Orcish Mesmerizer']       = { Name='Orcish Mesmerizer', Ecosystem='beastmen', Family='orcs' },
         ['Orcish Neckchopper']      = { Name='Orcish Neckchopper', Ecosystem='beastmen', Family='orcs' },
         ['Orcish Stonechucker']     = { Name='Orcish Stonechucker', Ecosystem='beastmen', Family='orcs' },
-        ['Otherworldly Rimester']   = { Name='Otherworldly Rimester', Ecosystem='beastmen', Family='ghosts' },
+        ['Otherworldly Rimester']   = { Name='Otherworldly Rimester', Ecosystem='undead', Family='ghosts' },
         ['Pixie']                   = { Name='Pixie', Ecosystem='elementals', Family='elementals' },
         ['Plague Bats']             = { Name='Plague Bats', Ecosystem='birds', Family='bat trios' },
         ['Poison Bat']              = { Name='Poison Bat', Ecosystem='birds', Family='bats' },
@@ -58,5 +58,10 @@ return {
         ['Wolf Zombie']             = { Name='Wolf Zombie', Ecosystem='undead', Family='hounds' },
         ['Yilbegan']                = { Name='Yilbegan', Ecosystem='dragons', Family='zilant' },
         ['Zagh']                    = { Name='Zagh', Ecosystem='birds', Family='birds' },
+        -- Custom content for HorizonXI
+        ['Mineral Eater']           = { Name='Mineral Eater', Ecosystem='amorphs', Family='worms' },
+        ['Plateau Hare']            = { Name='Plateau Hare', Ecosystem='beasts', Family='rabbits' },
+        ['Snapper']                 = { Name='Snapper', Ecosystem='aquans', Family='crabs' },
+        ['Eikon Worm']              = { Name='Eikon Worm', Ecosystem='amorphs', Family='worms'}
     },
 };

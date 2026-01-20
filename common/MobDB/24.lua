@@ -84,5 +84,6 @@ return {
         ['Yal-un Eke'] = { Name='Yal-un Eke', Ecosystem='arcana', Family='clusters'},
         -- Custom content for HorizonXI
         ['Ultimega'] = { Name='Ultimega', Ecosystem='unclassified', Family='biotechnological weapons' },
+        ['Meadow Buffalo'] = { Name='Meadow Buffalo', Ecosystem='beasts', Family='buffaloes' },
     },
 };

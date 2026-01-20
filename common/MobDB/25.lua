@@ -66,5 +66,9 @@ return {
         ['Ziphius'] = { Name='Ziphius', Ecosystem='aquans', Family='pugils'},
         -- Custom content for HorizonXI
         ['Mammet-9999'] = { Name='Mammet-9999', Ecosystem='arcana', Family='mammets' },
+        ['Migrant Dobsonfly'] = { Name='Migrant Dobsonfly', Ecosystem='vermin', Family='flies' },
+        ['Beast Bugard'] = { Name='Beast Bugard', Ecosystem='beasts', Family='bugards' },
+        ['Raging Sheep'] = { Name='Raging Sheep', Ecosystem='beasts', Family='Sheep' },
+        ['Coastal Slime'] = { Name='Coastal Slime', Ecosystem='amorphs', Family='slimes' },
     },
 };

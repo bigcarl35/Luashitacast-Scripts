@@ -47,5 +47,8 @@ return {
         ['Wolf Zombie']             = { Name='Wolf Zombie', Ecosystem='undead' Family='hounds' },
         ['Yilbegan']                = { Name='Yilbegan', Ecosystem='dragons' Family='zilant' },
         ['Young Quadav']            = { Name='Young Quadav', Ecosystem='beastmen' Family='quadav' },
+        -- Custom content for HorizonXI
+        ['Mineral Eater']           = { Name='Mineral Eater', Ecosystem='amorphs', Family='worms' },
+        ['Yellow Jacket']           = { Name='Yellow Jacket', Ecosystem='vermin', Family='bees' },
     },
 };

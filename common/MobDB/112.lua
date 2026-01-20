@@ -52,5 +52,8 @@ return {
         ['Shadow Eye']              = { Name='Shadow Eye', Ecosystem='demons', Family='ahriman' },
         ['Timeworn Warrior']        = { Name='Timeworn Warrior', Ecosystem='undead', Family='skeletons' },
         ['Yilbegan']                = { Name='Yilbegan', Ecosystem='dragons', Family='zilant' },
+        -- Custom content for HorizonXI
+        ['Ice Crab']                = { Name='Ice Crab', Ecosystem='aquans', Family='crabs' },
+        ['Icefallo']                = { Name='Icefallo', Ecosystem='beasts', Family='buffaloes'}
     },
 };
