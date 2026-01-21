@@ -61,5 +61,9 @@ return {
         -- Custom content for HorizonXI
         ['Diremite']                = { Name='Diremite', Ecosystem='vermin', Family='diremites' },
         ['Glacier Crab']            = { Name='Glacier Crab', Ecosystem='aquans', Family='crabs' },
+        ['Winter Slime']            = { Name='Winter Slime', Ecosystem='amorphs', Family='slimes' },
+        ['Boreal Worm']             = { Name='Boreal Worm', Ecosystem='amorphs', Family='worms' },
+        ['Snofallo']                = { Name='Snofallo', Ecosystem='beasts', Family='buffaloes' },
+        ['Rime Lynx']               = { Name='Rime Lynx', Ecosystem='beasts', Family='coeurls' },
     },
 };

@@ -62,5 +62,6 @@ return {
         ['Zircon Quadav']           = { Name='Zircon Quadav', Ecosystem='beastmen', Family='quadav' },
         -- Custom content for HorizonXI
         ['Ruinous Rocs']            = { Name='Ruinous Rocs', Ecosystem='birds', Family='rocs' },
+        ['Shell Grub']              = { Name='Shell Grub', Ecosystem='vermin', Family='crawlers' },
     },
 };

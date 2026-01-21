@@ -42,7 +42,7 @@ return {
         ['Starmite'] = { Name='Starmite', Ecosystem='vermin', Family='beetles' },
         ['Stygian Pugil'] = { Name='Stygian Pugil', Ecosystem='aquans', Family='pugils' },
         -- Custom content for HorizonXI
-        ['Diphylla'] = { Name='Diphylla', Ecosystem='plantoids', Family='flytraps' }, -- Not sure what this is, need to look for it. In "real life" it's a plant
+        ['Diphylla'] = { Name='Diphylla', Ecosystem='birds', Family='bats' },
         ['Channel Pugil'] = { Name='Channel Pugil', Ecosystem='aquans', Family='pugils' },
     },
 };

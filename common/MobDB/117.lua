@@ -47,6 +47,7 @@ return {
         ['Yara Ma Yha Who']         = { Name='Yara Ma Yha Who', Ecosystem='plantoids', Family='saplings' },
         ['Yilbegan']                = { Name='Yilbegan', Ecosystem='dragons', Family='zilant' },
         -- Custom content for HorizonXI
+        ['Cactus Bee']              = { Name='Cactus Bee', Ecosystem='vermin', Family='bees' },
         ['Cactus Grub']             = { Name='Cactus Grub', Ecosystem='vermin', Family='crawlers' },
         ['Canyon Wasp']             = { Name='Canyon Wasp', Ecosystem='vermin', Family='bees' },
         ['Killer Bee']              = { Name='Killer Bee', Ecosystem='vermin', Family='bees' },

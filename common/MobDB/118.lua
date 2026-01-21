@@ -60,7 +60,6 @@ return {
         ['Zu']                      = { Name='Zu', Ecosystem='birds', Family='birds' },
         -- Custom content for HorizonXI
         ['Cape Coney']              = { Name='Cape Coney', Ecosystem='beasts', Family='rabbits' },
-        ['Cactus Bee']              = { Name='Cactus Bee', Ecosystem='vermin', Family='bees' },
         ['Cape Dhalmels']           = { Name='Cape Dhalmels', Ecosystem='beasts', Family='dhalmels' },
     },
 };

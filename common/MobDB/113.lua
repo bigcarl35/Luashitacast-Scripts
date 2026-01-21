@@ -49,7 +49,6 @@ return {
         ['Zmey Gorynych']           = { Name='Zmey Gorynych', Ecosystem='lizards', Family='raptors' },
         -- Custom content for HorizonXI
         ['Arid Lizard']             = { Name='Arid Lizard', Ecosystem='lizards', Family='lizards' },
-        ['Dust Bats']               = { Name='Dust Bats', Ecosystem='birds', Family='bats' },
-        ['Manticore']               = { Name='Manticore', Ecosystem='beasts', Family='manticores' },
+        ['Dust Bat']                = { Name='Dust Bat', Ecosystem='birds', Family='bats' },
     },
 };

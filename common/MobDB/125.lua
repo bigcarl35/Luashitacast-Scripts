@@ -47,7 +47,6 @@ return {
         ['Scorch Dhalmel']          = { Name='Scorch Dhalmel', Ecosystem='beasts', Family='dhalmels' },
         ['Bloody Beetle']           = { Name='Bloody Beetle', Ecosystem='vermin', Family='beetles' },
         ['Desert Gazer']            = { Name='Desert Gazer', Ecosystem='amorphs', Family='hecteyes' },
-        ['Desert Worm']             = { Name='Desert Worm', Ecosystem='amorphs', Family='worms' },
         ['Desert Slime']            = { Name='Desert Slime', Ecosystem='amorphs', Family='slimes' },
     },
 };
