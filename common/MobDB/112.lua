@@ -54,6 +54,6 @@ return {
         ['Yilbegan']                = { Name='Yilbegan', Ecosystem='dragons', Family='zilant' },
         -- Custom content for HorizonXI
         ['Ice Crab']                = { Name='Ice Crab', Ecosystem='aquans', Family='crabs' },
-        ['Icefallo']                = { Name='Icefallo', Ecosystem='beasts', Family='buffaloes'}
+        ['Icefallo']                = { Name='Icefallo', Ecosystem='beasts', Family='buffaloes'},
     },
 };

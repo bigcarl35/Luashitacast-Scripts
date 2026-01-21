@@ -62,6 +62,6 @@ return {
         ['Mineral Eater']           = { Name='Mineral Eater', Ecosystem='amorphs', Family='worms' },
         ['Plateau Hare']            = { Name='Plateau Hare', Ecosystem='beasts', Family='rabbits' },
         ['Snapper']                 = { Name='Snapper', Ecosystem='aquans', Family='crabs' },
-        ['Eikon Worm']              = { Name='Eikon Worm', Ecosystem='amorphs', Family='worms'}
+        ['Eikon Worm']              = { Name='Eikon Worm', Ecosystem='amorphs', Family='worms'},
     },
 };
