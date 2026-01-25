@@ -1616,74 +1616,37 @@ local sets = {
 	Note: how you capitalize the name is up to you.
 --]]
 
---[[
-	TH is used to enhance your treasure hunter score. It will be equipped via the /th command
---]]
-
-	['TH'] = {
-		Neck  = 'Nanaa\'s Charm',			-- +1 TH
-		Hands = 'Assassin\'s Armlets'		-- +1 TH
-	},
 
 --[[
-	The following are your main job (thief) abilities. Unlike sub job abilities, this section
+	The following are your main job (dragoon) abilities. Unlike sub job abilities, this section
 	will explicitly list all of your abilities. Please note that all abilities will be prefixed
 	with an 'A_'. This is to ensure there's no conflict with any other predefined gear set (this
 	is a bigger issue with subjob abilities than with main jobs.)
 --]]
 
-	['A_Perfect_Dodge'] = {
+	['A_Spirit_Surge'] = {
 	},
 
-	['A_Steal'] = {
-		Head  = 'Rogue\'s Bonnet',				-- +1 Steal
-		Hands = 'Rogue\'s Armlets',				-- +1 Steal
-		Legs  = 'Rogue\'s Culottes',			-- +1 Steal
-		Feet  = 'Rogue\'s Poulaines',			-- +2 Steal
+	['A_Call_Wyvern'] = {
+		Body = 'Wyrm Mail',				-- Adds DRG's traits (up to half DRG's level) to the wyvern
 	},
 
-	['A_Flee'] = {
-		Feet = 'Rogue\'s Poulaines',												-- Increase Flee duration
+	['A_Ancient_Circle'] = {
+		Legs  = 'Drachen Brais',		-- Enhances Ancient Circle
 	},
 
-	-- if only Sneak Attack is enabled, the following will be equipped
-	['A_Sneak_Attack'] = {
-		SUBSET = 'rDEX',
+	['A_Jump'] = {
+		Feet = 'Drachen Greaves',		-- Enhances Jump
 	},
 
-	-- If only Trick Attack is enabled, the following will be equipped
-	['A_Trick_Attack'] = {
-		SUBSET = 'rAGI',
+	['A_Spirit_Link'] = {
 	},
 
-	-- When both Sneak Attack and Trick Attack are enabled, the following will be equipped
-	['A_SATA']  = {
-		Head  = 'Empress Hairpin',												-- +3 DEX/3 AGI
-		Neck  = { 'Love Torque', 'Spike Necklace' },							-- +5/3 DEX
-		Ears  = { 'Genin Earring//SJ:NIN', 'Drone Earring' },					-- +4 AGI if sj is NIN, +3 AGI
-		Body  = { 'Assassin\'s Vest', 'Brigandine' },							-- +4 AGI, +2 DEX
-		Hands = 'Rogue\'s Armlets',												-- +3 DEX
-		Rings = { 'Kshama Ring No.3', 'Kshama Ring No.2' },						-- +3 AGI/+3 DEX
-		Back  = { 'Assassin\'s Cape', 'Forager\'s Mantle' },					-- +4 AGI/+4 DEX, +3 STR/+15 Att (While the forager's cape probably would do more damage, the enmity of the assassin's cape is too useful)
-		Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },							-- +5 DEX. +1 DEX/+1 AGI
-		Feet  = 'Bounding Boots',												-- +3 DEX/+3 AGI
+	['A_High_Jump'] = {
+		Rings = 'Vaulter\'s Ring',		-- Enhances High Jump
 	},
 
-	['A_Mug'] = {
-		Head = { 'Asn. Bonnet +1', 'Assassin\'s Bonnet' },						-- Enhances Mug
-	},
-
-	['A_Bully'] = {
-	},
-
-	['A_Hide'] = {
-		Body = 'Rog. Vest +1',													-- Extends Hide duration
-	},
-
-	['A_Accomplice'] = {
-	},
-
-	['A_Collaborator'] = {
+	['A_Super_Jump'] = {
 	},
 
 --[[
@@ -1698,6 +1661,7 @@ local sets = {
 	Note: how you capitalize the name is up to you.
 --]]
 
+	--* BST *--
 	-- CHR and Charm + gear. (Every +1 Charm adds 5% Charm duration)
 	['A_Charm'] = {
 		SUBSET = 'rCHR',
@@ -1711,13 +1675,36 @@ local sets = {
 	['A_Reward'] = {
 		SUBSET = 'rMND',
 		Main//WSWAP = 'Neptune\'s Staff',			-- +5 MND
-		Hands = 'Ogre Gloves',						-- Enhances Reward
 	},
 
 	-- Tame success rate. Resistence depends on your INT vs target's INT
 	['A_Tame'] = {
 		SUBSET = 'rINT',
 		Main//WSWAP = 'Aquilo\'s Staff',			-- +5 INT
+	},
+
+	--* /THF *--
+	-- if only Sneak Attack is enabled, the following will be equipped
+	['A_Sneak_Attack'] = {
+		SUBSET = 'rDEX',
+	},
+
+	-- If only Trick Attack is enabled, the following will be equipped
+	['A_Trick_Attack'] = {
+		SUBSET = 'rAGI',
+	},
+
+	-- When both Sneak Attack and Trick Attack are enabled, the following will be equipped
+	['A_SATA'] = {
+		Head = 'Empress Hairpin',							-- +3 DEX/+3 AGI
+		Neck = 'Spike Necklace',							-- +3 DEX
+		Ears = 'Drone Earring',								-- +3 AGI
+		Body = 'Brigandine',								-- +2 DEX
+		Hands = 'Abs. Gauntlets +1',						-- +5 DEX
+		Rings = { 'Kshama Ring No.2', 'Kshama Ring No.3', 'Balance Ring' },	-- +3 DEX, +3 AGI, +2 DEX
+		Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },		-- +5 DEX, +1 DEX/+1 AGI
+		Legs  = 'Ryl.Kgt. Breeches',						-- +2 DEX
+		Feet = 'Bounding Boots',							-- +3 DEX/+3 AGI
 	},
 
 --[[
@@ -1753,10 +1740,50 @@ local sets = {
 	},
 
 --[[
+	DRG's wyvern breath has both an offensive and healing role. Sepending on what your
+	subjob is defines which type of breath skill will be used. The following "Wyvern"
+	sets are used to maximize the breath attacks potency
+--]]
+
+	-- WyvernMaxHPUpSet is a reference set containing gear to increase you pet's maximum HP.
+	-- It is used to increase the potency of the wyvern's breath weapon
+	['WyvernMaxHPUpSet'] = {
+		Body = 'Wyvern Mail',		-- Pet: +65HP
+		Legs = 'Drachen Brais',		-- Pet: +10% HP
+		Feet = 'Homam Gambieras',	-- Pet: +50HP
+	},
+
+	-- WyvernBreathHealing is equipped to maximize how much healing a wyvern's breath will do
+	['WyvernBreathHealing'] = {
+		Subset = 'WyvernMaxHPUpSet',
+		Head = 'Drachen Armet',		-- Pet: Enhances breath attack
+	},
+
+	-- WyvernBreathAttack is equipped to maximize how much damage a wyvern's breath will do
+	['WyvernBreathAttack'] = {
+		Subset = 'WyvernMaxHPUpSet',
+		Head = 'Wyrm Armet',		-- Pet: Enhances breath attack
+	},
+
+--[[
 	If you want to create any custom gear sets, those you'd use with the /gs command, include
 	the gear set definitions here. (There's no naming convention, call them what you want, but
 	try to avoid any set names defined above.)
 --]]
+
+	-- MaxHPUpSet is used to increase the max HP which in turn will decrease the HP%. This is
+	-- useful when trying to trigger your wyvern's healing breath.
+
+	['MaxHPUpSet'] = {
+		Head = 'Homam Zucchetto',			-- +22 HP
+		Ears = 'Ethereal Rings',			-- +15 HP
+		Body = 'Homam Corazza',				-- +28 HP
+		Hands = 'Homam Manopolas',			-- +20 HP
+		Rings = { 'Bomb Queen Ring', 'Toreador\'s Rings' },		-- +75/10 HP
+		Waist = 'Powerful Rope',			-- +20 HP
+		Legs = 'Homam Cosciales',			-- +26 HP
+		Feet = 'Creek F Clomps',			-- +35 HP
+	},
 
 	-- MP150 equips gear to add at least 150 to max MP (for doing a raise)
 	-- Current list adds +134 MP. Maybe at a higher level I'll have the gear.
@@ -1801,6 +1828,8 @@ profile.settings = {
 	--*********************************************************************
 	-- From this point forward, all entries can be modified by the player *
 	--*********************************************************************
+	WyvernName = nil;					-- Name of pet wyvern
+	FavorDRGHBreath = true;				-- Indicates if MaxHPUpSet should be equipped before healing breath
 	defaultSpirit = 'Light Spirit',		-- for /911, what spirit should be defaulted to
 	defaultPetFood = nil;				-- What (if any) pet food to use when Reward processed
 	-- Order of operations:
@@ -1813,7 +1842,7 @@ profile.settings = {
 	postGSWeaponSkill = { [1] = 'Acc', [2] = 'eGorget', [3] = 'eObi' };
 	-- Priority settings define process of supplimental orders after gear set processing
 	bPriorityRefresh = false;			-- When kneeling, Refresh over Regen if true. if false, vice versa
-	bLockAllCraftGather = true;			-- Lock all slots when crafting or gathering?
+	bLockAllOnGS = true;				-- Lock all slots when a gear set is equipped. Most useful on craft and gathering sets
 	-- Override settings are used to indicate the order sets are processed. It's recommended to leave these
 	-- entries false.
 	EmbedOnlyAccuracy = false;			-- Restricts accuracy to only inline conditionals if true
@@ -2167,6 +2196,11 @@ function profile.HandlePrecast()
 	end
 
 	magic.HandlePrecast();
+
+	-- Special case when using magic to trigger your wyvern's healing breath
+	HealingBreath();
+
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandlePrecast
 
 --[[
@@ -2183,7 +2217,59 @@ function profile.HandleMidcast()
 
 	-- Call the common HandleMidcast now
 	magic.HandleMidcast();
+
+	-- Special case when using magic to trigger your wyvern's healing breath
+	HealingBreath();
+
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandleMidcast
+
+--[[
+	HealingBreath determines if the appropriate conditions are met for your wyvern to cast a healing
+	breath on either you or someone in your party.
+--]]
+
+function HealingBreath()
+	local pet = gData.GetPet();
+	local player = gData.GetPlayer();
+	local pParty = AshitaCore:GetMemoryManager():GetParty();
+
+	if pet ~= nil and pet.Name == profile.WyvernName then
+		if string.find('PLD,DRK,NIN,BRD',player.SubJob) ~= nil then
+			-- Because of the subjob, the only player that can be affected by the heal is the DRG.
+			-- Equipping an HP Up set makes it more likely that the conditions for a healing breath
+			-- will occur. Target HP% is 25% or 33% if you equip a "drachen armet(+1)"
+			-- Now, check to see if the HP% is low enough for a healing breath
+			gear.EquipTheGear(profile.Sets.MaxHPUpSet);
+			if player.MainJobLevel < 60 and player.HPP <= 25 or
+				(player.MainJobLevel >= 60 and player.HPP <= 33 and
+				(gVars.tGearDetails['head']['drachen armet'] ~= nil or
+				 gVars.tGearDetails['head']['drachen armet +1'] ~= nil)) then
+				gear.MoveToDynamicGS(profile.Sets.Pet_BreathHealing,crossjobs.Sets.CurrentGear,true,'Pet_BreathHealing');
+			end
+		else
+			-- Since the DRG has a defensive subjob, we need to see if anyone in their party meets
+			-- the criteria for healing. Target HP% is 33% or 50% if you equip a "drachen armet(+1)"
+			-- Based on a setting, upping the max HP of the DRG might be warranted (dead healer, no
+			-- heals. Decision on this though is made when configuring the DRG job file.)
+			if profile.settings.FavorDRGHBreath == true then
+				gear.EquipTheGear(profile.Sets.MaxHPUpSet);
+			end
+
+			for i=0,5,1 do		-- First 6 is your party, you're 0
+				if pParty:GetMemberHP(i) ~= nil then
+					if player.MainJobLevel < 60 and pParty:GetMemberHPPercent(i) <= 33 or
+						(player.MainJobLevel >= 60 and pParty:GetMemberHPPercent(i) <= 50 and
+						(gVars.tGearDetails['head']['drachen armet'] ~= nil or
+						 gVars.tGearDetails['head']['drachen armet +1'] ~= nil)) then
+						gear.MoveToDynamicGS(profile.Sets.Pet_BreathHealing,crossjobs.Sets.CurrentGear,true,'Pet_BreathHealing');
+						break;
+					end
+				end
+			end
+		end
+	end
+end		-- HealingBreath
 
 --[[
 	HandlePreshot is similar to HandlePrecast, but for ranged actions. It loads Ranged Accuracy

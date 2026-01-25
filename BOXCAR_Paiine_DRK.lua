@@ -1707,7 +1707,7 @@ local sets = {
 	['A_SATA'] = {
 		Head = 'Empress Hairpin',							-- +3 DEX/+3 AGI
 		Neck = 'Spike Necklace',							-- +3 DEX
-		Ears = { 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
+		Ears = 'Drone Earring',								-- +3 AGI
 		Body = 'Brigandine',								-- +2 DEX
 		Hands = 'Abs. Gauntlets +1',						-- +5 DEX
 		Rings = { 'Kshama Ring No.2', 'Kshama Ring No.3', 'Balance Ring' },	-- +3 DEX, +3 AGI, +2 DEX
@@ -1794,7 +1794,7 @@ profile.settings = {
 	postGSWeaponSkill = { [1] = 'Acc', [2] = 'eGorget', [3] = 'eObi' };
 	-- Priority settings define process of supplimental orders after gear set processing
 	bPriorityRefresh = false;			-- priority setting. If true, Refresh over Regen. False inverts
-	bLockAllCraftGather = true;			-- Lock all slots when crafting or gathering?
+	bLockAllOnGS = true;				-- Lock all slots when a gear set is equipped. Most useful on craft and gathering sets
 	-- Override settings are used to indicate the order sets are processed. It's recommended to leave these
 	-- entries false.
 	EmbedOnlyAccuracy = false;			-- Restricts accuracy to only inline conditionals if true
@@ -2139,6 +2139,8 @@ function profile.HandlePrecast()
 	end
 
 	magic.HandlePrecast();
+
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandlePrecast
 
 --[[
@@ -2156,6 +2158,8 @@ function profile.HandleMidcast()
 
 	-- Call the common HandleMidcast now
 	magic.HandleMidcast();
+
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandleMidcast
 
 --[[

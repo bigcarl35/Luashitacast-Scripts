@@ -1718,7 +1718,7 @@ profile.settings = {
 	postGSWeaponSkill = { [1] = 'Acc', [2] = 'eGorget', [3] = 'eObi' };
 	-- Priority settings define process of supplimental orders after gear set processing
 	bPriorityRefresh = false;			-- priority setting. If true, Refresh over Regen. False inverts
-	bLockAllCraftGather = true;			-- Lock all slots when crafting or gathering?
+	bLockAllOnGS = true;				-- Lock all slots when a gear set is equipped. Most useful on craft and gathering sets
 	-- Override settings are used to indicate the order sets are processed. It's recommended to leave these
 	-- entries false.
 	EmbedOnlyAccuracy = false;			-- Restricts accuracy to only inline conditionals if true
@@ -2070,6 +2070,8 @@ function profile.HandlePrecast()
 	end
 
 	magic.HandlePrecast();
+
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandlePrecast
 
 --[[
@@ -2087,6 +2089,8 @@ function profile.HandleMidcast()
 
 	-- Call the common HandleMidcast now
 	magic.HandleMidcast();
+
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- utilities.HandleMidcast
 
 --[[

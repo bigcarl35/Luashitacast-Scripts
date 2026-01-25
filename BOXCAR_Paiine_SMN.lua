@@ -3,7 +3,7 @@ local profile = {};
 --[[
 	This file contains all the gear sets associated with the SMN job.
 	
-	Gear Sets last updated: January 16, 2026
+	Gear Sets last updated: January 18, 2026
 	Code update: December 3, 2025
 
 	Intended Role: All Levels
@@ -243,8 +243,8 @@ local sets = {
 		GROUP//PETF = {			-- Accuracy is for pets
 			Head  = 'Shep. Bonnet',					-- Pet: +5 Acc/+3Macc
 			Ears  = 'Beastly Earring',				-- Pet: +10 Acc
-			Hands = 'SMN. Bracers +1//SMN_PET',		-- Avatar: Enhances acc
-			Legs  = 'Evk. Spats +1//SMN_PET',		-- Avatar: Enhances acc
+			Hands = 'SMN. Bracers +1//SMN:PET',		-- Avatar: Enhances acc
+			Legs  = 'Evk. Spats +1//SMN:PET',		-- Avatar: Enhances acc
 		},
 		GROUP//NOT_PETF = {		-- Accuracy is for player
 			Ammo  = 'Orphic Egg//PJPBRD',								-- +1 Acc if BRD in party
@@ -254,6 +254,7 @@ local sets = {
 			Hands = 'Battle Gloves',									-- +3 Acc
 			Rings = { 'Toreador\'s Ring', 'Toreador\'s Ring', 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring', 'Kshama Ring No.2' },	-- +7/+7/+5/+5/4/2 Acc
 			Waist = { 'Life Belt', 'Tilt Belt', 'Mrc.Cpt. Belt' },		-- +10/5 Acc, +1 DEX
+			Legs  = 'Hydra Brais',										-- +10 Acc
 		},
     },
 
@@ -585,7 +586,7 @@ local sets = {
 		Hands = { 'Nashira Gages', 'Errant Cuffs' },	-- -4/-2 Enmity
 		Rings = 'Tamas Ring',							-- -5 Enmity
 		Waist = 'Penitent\'s Rope',						-- -3 Enmity
-		Legs  = { 'Evk. Spats +1', 'Errant Slops' },	-- -3/-3 Enmity
+		Legs  = { 'Hydra Brais', 'Evk. Spats +1', 'Errant Slops' },	-- -6/3/-3 Enmity
 		Feet  = 'Evoker\'s Boots',						-- -2 Enmity
 	},
 	
@@ -1707,7 +1708,7 @@ profile.settings = {
 	postGSWeaponSkill = { [1] = 'Acc', [2] = 'eGorget', [3] = 'eObi' };
 	-- Priority settings define process of supplimental orders after gear set processing
 	bPriorityRefresh = true;			-- priority setting. If true, Refresh over Regen. False inverts
-	bLockAllCraftGather = true;			-- Lock all slots when crafting or gathering?
+	bLockAllOnGS = true;				-- Lock all slots when a gear set is equipped. Most useful on craft and gathering sets
 	-- Override settings are used to indicate the order sets are processed. It's recommended to leave these
 	-- entries false.
 	EmbedOnlyAccuracy = false;			-- Restricts accuracy to only inline conditionals if true
@@ -1821,13 +1822,11 @@ end		-- OnUnload
 
 --[[
 	HandleCommand is run when you type in a command defined in LUASHITACAST. The commands handled here instead
-	of in crossjobs.HandleCommands are specific to SMN or the help system.
+	of in crossjobs.HandleCommands are specific to SMN.
 --]]
 
 function profile.HandleCommand(args)
-	if args[1] == 'man' then
-		help.ShowHelp(args);
-	elseif args[1] == 'petfood' then
+	if args[1] == 'petfood' then
 		pets.fPetReward(args[2],true);
 	else
 		crossjobs.HandleCommands(args);profile.sPetAction
@@ -2062,6 +2061,8 @@ function profile.HandlePrecast()
 	end
 
 	magic.HandlePrecast();
+
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandlePrecast
 
 --[[
@@ -2078,6 +2079,8 @@ function profile.HandleMidcast()
 
 	-- Call the common HandleMidcast now
 	magic.HandleMidcast();
+
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- profile.HandleMidcast
 
 --[[

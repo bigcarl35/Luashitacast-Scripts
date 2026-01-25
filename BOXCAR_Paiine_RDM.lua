@@ -3,7 +3,7 @@ local profile = {};
 --[[
 	This file contains all the gear sets associated with the RDM job.
 	
-	Gear Sets last updated: January 16, 2026
+	Gear Sets last updated: January 18, 2026
 	Code update: December 5, 2025
 
 	Intended Role: Endgame
@@ -283,7 +283,7 @@ local sets = {
 		Hands = { 'Wlk. Gloves +1', 'Battle Gloves' },		-- +6 DEX, +3 Acc
 		Rings = { 'Toreador\'s Ring', 'Toreador\'s Ring' },	-- +7/+7 Acc
 		Waist = 'Life Belt',								-- +10 Acc
-		Legs  = 'Duelist\'s Tights',						-- +5 DEX
+		Legs  = { 'Hydra Brais', 'Duelist\'s Tights' },		-- +10 Acc/5 DEX
 		Feet  = 'Bounding Boots',							-- +3 DEX
     },
 
@@ -334,7 +334,8 @@ local sets = {
 		['Accuracy'] = { 
 			[1] = {
 				['Head'] = 'rAccuracy::Head',
-				['Neck'] = 'rAccuracy::Neck'.
+				['Neck'] = 'rAccuracy::Neck',
+				['Legs'] = 'rAccuracy::Legs',
 			},
 			[2] = {
 				['Body']  = 'rAccuracy::Body',
@@ -376,6 +377,7 @@ local sets = {
 		Body  = 'Scorpion Harness',								-- +10 Eva
 		Hands = 'Battle Gloves',								-- +3 Eva
 		Waist = 'Swift Belt//IF:Tilt Belt',						-- filler, Tilt Belt has -5 Eva
+		Legs  = 'Hydra Brais',									-- +10 Eva
 		Feet  = { 'Duelist\'s Boots', 'Bounding Boots' },		-- +5 Eva, +3 AGI
     },
 	
@@ -569,7 +571,7 @@ local sets = {
 		Hands = 'Errant Cuffs',											-- -2 Enmity
 		Rings = 'Tamas Ring',											-- -5 Enmity
 		Waist = 'Penitent\'s Rope',										-- -3 Enmity
-		Legs  = 'Errant Slops',											-- -3 Enmity
+		Legs  = { 'Hydra Brais','Errant Slops' },						-- -6/3 Enmity
 	},
 
 	-- Magic Attack Bonus Reference set
@@ -1824,7 +1826,7 @@ profile.settings = {
 	postGSWeaponSkill = { [1] = 'Acc', [2] = 'eGorget', [3] = 'eObi' };
 	-- Priority settings define process of supplimental orders after gear set processing
 	bPriorityRefresh = false;			-- priority setting. If true, Refresh over Regen. False inverts
-	bLockAllCraftGather = true;			-- Lock all slots when crafting or gathering?
+	bLockAllOnGS = true;				-- Lock all slots when a gear set is equipped. Most useful on craft and gathering sets
 	-- Override settings are used to indicate the order sets are processed. It's recommended to leave these
 	-- entries false.
 	EmbedOnlyAccuracy = false;			-- Restricts accuracy to only inline conditionals if true
@@ -2168,6 +2170,8 @@ function profile.HandlePrecast()
 	end
 
 	magic.HandlePrecast();
+
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandlePrecast
 
 --[[
@@ -2184,6 +2188,8 @@ function profile.HandleMidcast()
 
 	-- Call the common HandleMidcast now
 	magic.HandleMidcast();
+
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandleMidcast
 
 --[[

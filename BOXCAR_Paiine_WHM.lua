@@ -3,7 +3,7 @@ local profile = {};
 --[[
 	This file contains all the gear sets associated with the WHM job.
 	
-	Gear Sets last updated: January 16, 2026
+	Gear Sets last updated: January 18, 2026
 	Code update: December 6, 2025
 
 	Intended Role: Endgame
@@ -155,7 +155,7 @@ local sets = {
 	focuses on evasion tanking. Accuracy and Evasion (ACC and EVA) are applied separately from
 	this set. If you want ACC or EVA gear pieces always equipped when fighting, including them
 	here is the way to do it.
-
+	January 16, 2026
 	Stat priority order:
 		Melee: Haste, STR, Attack Power
 		Caster: MP, Enmity Down, SIR, Resistances
@@ -213,6 +213,7 @@ local sets = {
         Hands = 'Battle Gloves',				--  +3 Acc
         Waist = 'Life Belt',					-- +10 Acc
 		Rings = { 'Toreador\'s Ring', 'Toreador\'s Ring' },	-- +7/7 Acc
+		Legs  = 'Hydra Brais',					-- +10 Acc
     },
 		
 --[[
@@ -262,12 +263,13 @@ local sets = {
 			[1] = { 
 				Head = 'rAccuracy::Head',
 				Neck = 'rAccuracy::Neck',
+				Legs = 'rAccuracy::Legs'
 			},
 			[2] = {
 				Rings = 'rAccuracy::Rings',
 			},
 			[3] = {
-				SUBSET = 'rAccuracy'.
+				SUBSET = 'rAccuracy',
 			},
 		},
 		['Ranged_Accuracy'] = {
@@ -290,6 +292,7 @@ local sets = {
         Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +15 Eva while blinded, +5 Eva, +4/3 AGI
         Hands = 'Battle Gloves',						--  +3 Eva
         Waist = 'Scouter\'s Rope',						-- +10 Eva
+        Legs  = 'Hydra Brais',							-- +10 Eva
         Feet  = 'Dance Shoes',							-- +6 Eva
     },
 
@@ -328,7 +331,7 @@ local sets = {
 		Main/WSWAP  = { 'Pluto\'s Staff', 'Blessed Hammer', 'Pilgrim\'s Wand' },								-- +10/3/2 MP/tic
 		Body  = { 'Errant Hpl.', 'Noble\'s Tunic', 'Cleric\'s Bliaut', 'Vermillion Cloak', 'Seer\'s Tunic' },	-- +5 MP/tic, adds refresh x2, +1 MP/tic
 		Waist = 'Cleric\'s Belt',					-- +3 MP/tic
-		Legs  = 'Baron\'s Slops'					-- +1 MP/tic
+		Legs  = { 'Hydra Brais', 'Baron\'s Slops' },-- +1/+1 MP/tic
 	},
 
 	['Resting_Regen'] = { 
@@ -481,7 +484,7 @@ local sets = {
 		Hands = { 'Healer\'s Mitts', 'Cleric\'s Mitts', 'Blessed Mitts' },		-- -4/3/3 Enmity down
 		Rings = 'Tamas Ring',		-- -5 Enmity down
 		Waist = 'Penitent\'s Rope',	-- -3 Enmity down
-		Legs  = { 'Blessed Trousers', 'Errant Slops', 'Cleric\'s Pantaln.' },	-- -5/3/2 Enmity down
+		Legs  = { 'Hydra Brais', 'Blessed Trousers', 'Errant Slops', 'Cleric\'s Pantaln.' },	-- -6/5/3/2 Enmity down
 		Feet  = { 'Blessed Pumps', 'Cleric\'s Duckbills' },	-- -4/1 Enmity down
 	},
 
@@ -1710,7 +1713,7 @@ profile.settings = {
 	postGSWeaponSkill = { [1] = 'Acc', [2] = 'eGorget', [3] = 'eObi' };
 	-- Priority settings define process of supplimental orders after gear set processing
 	bPriorityRefresh = false;			-- priority setting. If true, Refresh over Regen. False inverts
-	bLockAllCraftGather = true;			-- Lock all slots when crafting or gathering?
+	bLockAllOnGS = true;				-- Lock all slots when a gear set is equipped. Most useful on craft and gathering sets
 	-- Override settings are used to indicate the order sets are processed. It's recommended to leave these
 	-- entries false.
 	EmbedOnlyAccuracy = false;			-- Restricts accuracy to only inline conditionals if true
@@ -2059,6 +2062,8 @@ function profile.HandlePrecast()
 	end
 
 	magic.HandlePrecast();
+
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandlePrecast
 
 --[[
@@ -2075,6 +2080,8 @@ function profile.HandleMidcast()
 
 	-- Call the common HandleMidcast now
 	magic.HandleMidcast();
+
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandleMidcast
 
 --[[
