@@ -10,6 +10,7 @@ local gear = {};
             EquipTheGear                    Cleans up dynamic gear set and equips the gear
             GearCheck                       Extracts all gear in all gear sets and processes
             MoveToDynamicGS                 Process gear set and place in target gear set
+            ProcessGC                       Processes and coordinates the /gc invocation
             ProcessGS                       Processes the specified crafting/gathering gear set
 
         Functions:
@@ -83,51 +84,115 @@ function gear.fHasGCBeenRun()
 end     -- gear.fHasGCBeenRun
 
 --[[
-    ProcessGS processes the specified crafting/gathering Gear Set
+    ProcessGC parses the passed parameters and coordinates the invocation of the /gc command
+
+    Parameter
+        args        Passed argument list
+
+    Form: /gc [list] [file[=name]\][+]
+
+    Note: The parameters are position independent. This means they can be in any order.
+    "file" designates that the output should be written to a file in the \reports
+    directory. If a name is specified, that's the name of the report file. (No name
+    will generate a report name based on player's name, job, and the date.) The "+"
+    indicates that if the report file already exists, the output should be appended
+    to it. (The absense of a "+" will indicate an existing file should be overwritten.)
+    Inclusion of a "+" without designating a file has no meaning.
+--]]
+
+function gear.ProcessGC(args)
+    local bList = false;
+    local bFile = false;
+    local sFile;
+    local fptr = nil;
+    local bAppend = false;
+    local bWarn = false;
+
+    for _,j in pairs(args) do
+        j = string.lower(j);
+        if j == 'list' then
+            bList = true;
+        elseif (j == '+') then
+            bAppend = true;
+        elseif string.find(j,'file') ~= nil then
+            bFile = true;
+            sFile,bAppend = utilities.fParseFileDesignation(j);
+            if sFile == nil then
+                bWarn = true;
+            end
+        else
+            print(chat.message('Warning: Unrecognized /gc option: ' .. j));
+            bWarn = true;
+        end
+    end
+
+    if bWarn == true then
+        print(chat.message('Info: /gc [list] [file[=name]][+]'));
+        print(chat.message('Info: Please fix and resubmit'));
+    else
+        if sFile ~= nil then
+            fptr = utilities.fOpenByFilename(sFile,bAppend);
+            if fptr == nil then
+                print(chat.message('Warning: Unable to open file: ' .. sFile));
+                print(chat.message('/gc output redirected to screen'));
+            end
+        end
+
+        gear.GearCheck(fptr);
+
+        if fptr ~= nil then
+            if bAppend == true then
+                print(chat.message('Info: /GC output appended to '.. sFile));
+            else
+                print(chat.message('Info: /GC output written to '.. sFile));
+            end
+            io.close(fptr);
+        end
+    end
+end     -- gear.ProcessGC
+
+--[[
+    ProcessGS processes the specified gear set
 
     Pararameter
-        args		Passed arguement list
+        args		Passed argument list
+
+    A general routine for any gear set.
+
+    Note: Unlike prior versions of Luashitacast this version has an explicit listing
+    for all gathering and crafting set types. As such, there's no special calls needed
+    for these sets. (What was done previously was a kludge to get the right gear loaded.)
+    You just need to explicitly identify the set. That means you need to know the
+    appropriate acronym:
+
+        Gathering - HELM, DIG, CLAM, and FISH
+        Crafting - ALC, BONE, CLOTH, COOK, GSM, LTH, BSM, and WW
 --]]
 
 function gear.ProcessGS(args)
-    local bCraftGather = false;
 
     if #args > 1 then
         local sArg = string.upper(args[2]);
-        local sTmp = ',' .. gVars._Crafting_Types .. ',';
-        local sTmp2 = ',' .. gVars._Gathering_Types .. ',';
-        if string.find(sTmp,sArg) ~= nil or string.find(sTmp2,sArg) ~= nil then
-            -- gather or crafting set
-            if string.find(sTmp,sArg) then
-                -- Crafting set
-                gVars.Craft = sArg;
-                gear.MoveToDynamicGS(crossjobs.Sets.Crafting,crossjobs.Sets.CurrentGear,false,'Crafting');
-                bCraftGather = true;
-            else
-                -- Gather set
-                gVars.Gather = sArg;
-                gear.MoveToDynamicGS(crossjobs.Sets.Gathering,crossjobs.Sets.CurrentGear,false,'Gathering');
-                bCraftGather = true;
-            end
+        local tTable = utilities.fGetTableByName(sArg);	-- Change string to table
+        if tTable ~= nil then
+           gear.MoveToDynamicGS(tTable,crossjobs.Sets.CurrentGear,false,sArg);
         else
-            local tTable = utilities.fGetTableByName(sArg);	-- Change string to table
-            if tTable ~= nil then
-                gear.MoveToDynamicGS(tTable,crossjobs.Sets.CurrentGear,false,sArg);
-            else
-                print(chat.message('Warning: Gear set not found: ' .. sArg));
-                return;
-            end
+            print(chat.message('Warning: Gear set not found: ' .. sArg));
+            return;
         end
 
         gear.EquipTheGear(crossjobs.sets.CurrentGear,true);
-        if bCraftGather == true and gProfile.settings.bLockAllCraftGather == true then
-            -- lock all slots
+
+        -- Lock the appropriate slots
+        if gProfile.settings.bLockAll == true then
+            -- predefined setting indicating to lock all slots. Tends to be used when
+            -- doing gathering or crafting, but can apply to any set
             locks.LockUnlock(gVars._LOCK,'all');
         else
-            locks.LockByGearSet(crossjobs.sets.CurrentGear,nil,false,bIgnoreWSWAP,bDisplay)
+            locks.LockByGearSet(crossjobs.sets.CurrentGear,nil,false,true,bDisplay)
         end
     else
-        print(chat.message('Error: No set specified for /gearset. Command ignored.'));
+        print(chat.message('Warning: No set specified for /gearset. Command ignored.'));
     end
 end		-- gear.ProcessGS
 
@@ -517,6 +582,137 @@ function gear.CheckForExceptions(tSet)
 end		-- gear.CheckForExceptions
 
 --[[
+    fParseDescription parses the passed description for the stated item
+    looking for HP/HPP/MP/MPP/CHPMP/CMPHP and nation control information
+    if appropriate. The record is returned.
+
+    Parameters
+        item        Name of item to parse
+        sDesc       Description attached to item
+
+    Returned:
+        rec         The record structure that's tallying HP/MP details
+--]]
+
+    function fParseDescription(item,sDesc)
+        local bFound,ic,sType,ipos,ival,bPct;
+        local rec = {   ['own'] = { ['ctrl'] = nil, ['HP'] = 0, ['HPP'] = 0,
+                        ['MP'] = 0, ['MPP'] = 0, ['cHM'] = 0, ['cMH'] = 0 },
+                        ['HP'] = 0, ['HPP'] = 0, ['MP'] = 0, ['MPP'] = 0,
+                        ['cHM'] = 0, ['cMH'] = 0 };
+
+        if item == nil or sDesc == nil then
+            return rec;
+        end
+
+        item = string.lower(item);
+
+        bFound,rec = fParseDescriptionExceptions(rec,item,sDesc);
+        if bFound == true then
+            return rec;
+        end
+
+        -- Look for nation control settings
+        if string.find(sDesc,'under own') ~= nil then
+            rec['own']['ctrl'] = 'T';
+        elseif string.find(sDesc,'outside own') ~= nil then
+            rec['own']['ctrl'] = 'F';
+        end
+
+        -- Then conversions
+        ic = string.find(sDesc,'Converts');
+        if ic ~= nil then
+            ival = tonumber(string.match(string.sub(sDesc,ic), "%d+"));
+            if string.find(sDesc,' HP to MP') ~= nil then
+                sType = 'cHM';
+            else
+                sType = 'cMH';
+            end
+            if rec['own']['ctrl'] ~= nil then
+                rec['own'][sType] = ival;
+            else
+                rec[sType] = ival;
+            end
+        end
+
+        -- See if it's HP%
+        ipos = string.find(sDesc,'HP[%+%-]%d+%%');
+        if ipos ~= nil then
+            ival = tonumber(string.match(string.sub(sDesc,ipos+2), "%d+"));
+            if string.find(string.sub(sDesc,ipos+2,ipos+2),'%-') ~= nil then
+                ival = 0 - ival;
+            end
+
+            if rec['own']['ctrl'] ~= nil then
+                rec['own']['HPP'] = ival;
+            else
+                rec['HPP'] = ival;
+            end
+
+            -- remove the "HP" from the desc so that a non-HP% might be found
+            local iposp = string.find(sDesc,'%%');
+            if ipos == 1 then
+                sDesc = string.sub(sDesc,iposp+1,-1);
+            else
+                sDesc = string.sub(sDesc,1,ipos-1) .. string.sub(sDesc,iposp+1,-1);
+            end
+        end
+
+        -- See if it's HP
+        ipos = string.find(sDesc,'HP[%+%-]%d+');
+        if ipos ~= nil then
+            ival = tonumber(string.match(string.sub(sDesc,ipos+2), "%d+"));
+            if string.find(string.sub(sDesc,ipos+2,ipos+2),'%-') ~= nil then
+                ival = 0 - ival;
+            end
+
+            if rec['own']['ctrl'] ~= nil then
+                rec['own']['HP'] = ival;
+            else
+                rec['HP'] = ival;
+            end
+        end
+
+        -- Now use the same type of logic with MP%
+        ipos = string.find(sDesc,'MP[%+%-]%d+%%');
+        if ipos ~= nil then
+            ival = tonumber(string.match(string.sub(sDesc,ipos+2), "%d+"));
+            if string.find(string.sub(sDesc,ipos+2,ipos+2),'%-') ~= nil then
+                ival = 0 - ival;
+            end
+
+            if rec['own']['ctrl'] ~= nil then
+                rec['own']['MPP'] = ival;
+            else
+                rec['MPP'] = ival;
+            end
+
+            -- remove the "MP" from the desc so that a non-MP% might be found
+            local iposp = string.find(sDesc,'%%');
+            if ipos == 1 then
+                sDesc = string.sub(sDesc,iposp+1,-1);
+            else
+                sDesc = string.sub(sDesc,1,ipos-1) .. string.sub(sDesc,iposp+1,-1);
+            end
+        end
+
+        ipos = string.find(sDesc,'MP[%+%-]%d+');
+        if ipos ~= nil then
+            ival = tonumber(string.match(string.sub(sDesc,ipos+2), "%d+"));
+            if string.find(string.sub(sDesc,ipos+2,ipos+2),'%-') ~= nil then
+                ival = 0 - ival;
+            end
+
+            if rec['own']['ctrl'] ~= nil then
+                rec['own']['MP'] = ival;
+            else
+                rec['MP'] = ival;
+            end
+        end
+    return rec;
+end		-- fParseDescription
+
+--[[
     fParseDescriptionExceptions processes the descriptions for gear
     that requires special processing. It could have been included in
     fParseDescription, but was extracted so that function would not
@@ -729,53 +925,6 @@ function fTallyGear(sGear,sSlot)
     return rec;
 end		-- fTallyGear
 
---[[
-    fGetGearFromGS takes the passed gear set and parses it for all the gear
-    contained within the definition. Returned is a table with a list of said
-    gear
-
-    Parameter:
-        gsname      Name of gear set to parse
-
-    Returned:
-        Table containing list of the gear and what slot it's found in
-
-        !!!
---]]
-
-function gear.fGetGearFromGS(gsname)
-    local t = {};
-    local s= ',';
-    local ln,g,lLeft,lRight;
-
-    if gsname == nil then
-        return nil,nil;
-    end
-
-    ln = string.lower(gsname);
-    -- Gear sets Progressive and CurrentGear are ignored
-    if string.find('progressive,currentgear',ln) ~= nil then
-        return nil,nil;
-    end
-    -- Get the definition of the gear set
-    g = utilities.fGetTableByName(sname);
-    if g == nil then
-        print(chat.message('Warning: no such gear set found: ' .. gsname))
-        return nil,nil;
-    end
-
-    -- Walk the gear set and generate the list of found items. Duplicates are
-    -- ignored. All subsets and inline references are ignored. Only gear piece
-    -- name and slot are kept.
-    for i,j in pairs(gs) do
-        lLeft = string.lower(i);
-        lRight = string.lower(j)
-        if string.find(lLeft,'subset') ~= nil then
-            -- Subset was found. Grab the names and append them to the list
-
-        end
-    end
-end     -- gear.fGetGearFromGS
 --[[
     fValidateSpecial determines if the passed gear's special settings are true
 
@@ -1022,10 +1171,13 @@ end	-- fGearCheckItem
 
 --[[
     GearCheck is a coordinating routine that searches and extracts all the pieces of gear from all the
-    gear sets in the appropriate job and crossjobsr luas
+    gear sets in the appropriate job and crossjobs luas.
+
+    Parameter
+        fp      File pointer to where output should go or nil
 --]]
 
-function gear.GearCheck()
+function gear.GearCheck(fp)
 	local player = gData.GetPlayer();
     local tTarget = { gProfile.Sets, crossjobs.Sets };
     local ts = {};

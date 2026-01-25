@@ -401,8 +401,6 @@ function magic.HandlePrecast()
     else
        gear.MoveToDynamicGS(gProfile.Sets.Precast,crossjobs.Sets.CurrentGear,false,'Precast');
     end
-
-    gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- magic.HandlePrecast
 
 --[[
@@ -439,8 +437,6 @@ function magic.HandleMidcast()
     elseif spell.Skill == 'Ninjutsu' then
         MidcastNinjutsu();
     end
-
-    gear.EquipTheGear(sets.CurrentGear);
 end		-- magic.HandleMidcast
 
 --[[

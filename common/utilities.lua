@@ -11,7 +11,6 @@ local utilities = {};
             ClearSet                Empties the passed gear set
             GetWeaponsList          Imports the list of all weapons of the type passed in
             Initialize              Defines initial settings for luashitacast
-            Message                 Toggles on/off feedback mechanism
             OpenByFilename          Opens passed file for append (or generates new name and opens)
             ProcessedTally          Notification system for every 'n' entries
             PullTarget              Pulls character's target and announces to party
@@ -24,6 +23,7 @@ local utilities = {};
             CreateCycle             Create a dynamic cycle
             CreateToggle            Create a dynamic toggle (on/off)
             SetToggle               Set a specific value to a toggle
+            ToggleState             Toggles on/off feedback mechanism
 
         Functions:
             local fBit              2^(n-1) resultant
@@ -37,7 +37,6 @@ local utilities = {};
             fCheckWSBailout         Determines range to target would fail Weapon Skill
             fFormattedWord          Capitalization routine for passed in word
             fGetAllGearSetNames     Creates and returns a list of all gear sets
-            fGetAllSlotNames        Creates and returns a lost of all slots
             fGetLevel               Determines gear level cap for player
             fGetMobType             Determines if the target is of the passed type
             fGetRoot                Retrieves the "base" of the passed in spell/song
@@ -46,6 +45,8 @@ local utilities = {};
             fMagicalSubjob          Determines if the player's subjob can do magic
             fMakeConditionalTable   Splits apart conditionals into a table
             local fNewFileName      Generates a new report file name
+            fOpenByFilename         Opens the passed in file for writing/appending
+            fParseFileDesignation   Determines the file name from the passed file designation
             fReferenceCheck         Determines if any gear is reference to another set's slot
             fRemoveConditional      Removes inline conditionals from string
             fSetColorText           Colors text for displaying on screen
@@ -296,14 +297,14 @@ local sTmp = nil;
 end     -- utilities.fFormattedWord
 
 --[[
-    Message toggles on/off a feedback mechanism for all luashitacast commands
+    ToggleState toggles on/off a feedback mechanism for all luashitacast commands
 --]]
 
-function utilities.Message(toggle, status)
+function utilities.ToggleState(toggle, status)
     if toggle ~= nil and status ~= nil then
         print(chat.message('Info: ' .. toggle .. ' is now ' .. tostring(status))))
     end
-end		-- utilities.Message
+end		-- utilities.ToggleState
 
 --[[
     fCheckTime determines if the current server time is found in the passed name time range.
@@ -579,24 +580,6 @@ function utilities.fGetAllGearSetNames()
 
     return t;
 end     -- utilities.fGetAllGearSetNames
-
---[[
-    fGetAllSlotNames creates a table containing a list of all the valid slot names that
-    can be displayed.
-
-    Returned:
-        Table containing all of the slot names
---]]
-
-function utilities.fGetAllSlotNames()
-    local t{};
-
-    for _,i in pairs(gVars.tGearDetails) do
-        table.insert(t,i);
-    end
-
-    return t;
-end     -- utilities.fGetAllSlotNames
 
 --[[
     returns the gear set that is associated with the set name passed to it.
@@ -1286,38 +1269,50 @@ end		-- utilities.fMagicalSubJob
 
 function utilities.fNewFileName()
     local player = gData.GetPlayer();
-    local sName = string.upper(player.Name) .. '_' .. player.MainJob .. '_';
+    local sName = string.format('%s_%s_%x.txt',string.upper(player.Name),player.MainJob,os.clock);
 
-    sName = sName .. string.gsub(string.format("%x",os.clock),'/','_') .. '.txt';
     return sName;
 end     -- utilities.fNewFileName
 
 --[[
-    OpenByFilename determines if the passed file name is a wild card. If so, it
-    creates a file named after the player's name and date. The file is opened and
-    the file pointer and name is returned.
+    fOpenByFilename will open the passed file name (in the reports directory
+    or the directory if a path provided) in the mode specified.
 
     Parameter
-        sname       Name of the report or * if program should create a name
+        fName       File name of the report to create/append
+        bAppend     Append or overwrite mode
 
     Returned
         fptr        Pointer to opened file
+
+    Note: All files are opened in the "game path"/config/addons/LuAshitacast/Reports/
+    directory unless a path is explicitly identified on the file name
 --]]
 
-function utilities.OpenByFilename(sname)
-    local fname,tname;
+function utilities.fOpenByFilename(fName,bAppend)
     local fptr;
+    local sPath = string.format('%sconfig\\addons\\luashitacast\\Reports', AshitaCore:GetInstallPath());
+    local sTemp,sOp;
 
-    if sname == nil or sname == '*' then
-        tname = utilities.fNewFileName();
+    -- See if the file name already has a path in it's name
+    if string.find(fName,'\\') ~= nil or string.find(fName,'/') ~= nil then
+        -- Ok, contains a path
+        sTemp = fName;
     else
-        tname = sname;
+        -- No path, make sure that the Reports directory exists
+        ashita.fs.create_directory(sPath);
+        sTemp = sPath .. '\\' .. fname;
     end
 
-    fname = 'Reports\\' .. tname;
-    fptr = io.open(fname,"a");
-    return fptr,tname;
-end     -- utilities.OpenByFilename
+    if bAppend == true then
+        sOp = 'a';
+    else
+        sOp = 'w+';
+    end
+
+    fptr = io.open(sTemp,sOp);
+    return fptr;
+end     -- utilities.fOpenByFilename
 
 -- The following functions were copied or modified from code found in:
 -- https://snippets.bentasker.co.uk/posts/lua. I didn't see the need to
@@ -1600,3 +1595,48 @@ function utilities.fValidCustomCommand(cmd)
 end		-- utilities.fValidCustomCommand
 
 return utilities;
+
+--[[
+    fParseFileDesignation dissects the passed file designation and returns the name of the file and
+    whether the new entries should be appended or not
+
+    Parameter
+        s       string to parse
+
+    Returned
+        sFile       file name
+        bAppend     should statements be appended to the file
+
+    Form: [file[=name]\][+] without the \. (Needed to escape the ] so lua wouldn't think that it's
+    a close to a block comment.)
+--]]
+function utilities.fParseFileDesignation(s)
+    local sName = nil;
+    local bAppend = false;
+
+    s = string.lower(s);
+    local iPos = string.find(s,'file');
+    local iPos2 = string.find(s,'=');
+    local iPos3 = string.find(s,'%+');
+
+    if iPos == nil then     -- "file" has to exist to get into this routine. How this would happen...
+        return nil,nil;
+    end
+
+    bAppend = (iPos ~= nil);
+
+    if iPos2 ~= nil then
+        -- make surre not 'file=' or file+
+        if iPos2+1 < string.len(s) and utilities.fTrim(string.sub(s,iPos+1,-1)) ~= '+' then
+            sName = utilities.fTrim(string.sub(s,iPos+1,-1));
+        else
+            -- should have just been 'file'
+            sName = utilities.fNewFileName();
+        end
+    else
+        -- just a file designation
+        sName = utilities.fNewFileName()
+    end
+
+    return sName,bAppend
+end     -- utilities.fParseFileDesignation

@@ -147,11 +147,17 @@ function pets.HandlePetAction(PetAction)
        table.find(pets.SmnBPAccuracy,PetAction.Name) ~= nil or
        table.find(pets.SmnBPHybrid,PetAction.Name) ~= nil then
         gear.MoveToDynamicGS(gProfile.Sets.MidBP,crossjobs.Sets.CurrentGear,false,'MidBP');
-    -- And DRG's Steady Wing'
-    elseif PetAction.Name == 'Steady Wing' then
-        sn = utilities.fGetTableByName('PC_Steady_Wing');
-        if sn ~= nil then
-            gear.MoveToDynamicGS(sn,crossjobs.Sets.CurrentGear,false,'PC_Steady_Wing');
+    elseif player.MainJob == 'DRG' then
+        -- And DRG's Steady Wing'
+        if PetAction.Name == 'Steady Wing' then
+            -- And DRG's Steady Wing'
+            sn = utilities.fGetTableByName('PC_Steady_Wing');
+            if sn ~= nil then
+                gear.MoveToDynamicGS(sn,crossjobs.Sets.CurrentGear,false,'PC_Steady_Wing');
+            end
+        else
+            -- This has to be a breath attack
+            gear.MoveToDynamicGS(gProfile.Sets.WyvernBreathAttack,crossjobs.Sets.CurrentGear,false,'WyvernBreathAttack');
         end
     -- Lastly, any other leftover commands
     else
