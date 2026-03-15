@@ -8,18 +8,18 @@ easier to add and validate new conditionals. Validation tends to focus on format
 You can use impossible conditionals that are perfectly formatted and the validation routine will
 not detect the problem. (Validation is intended to identify syntax issues and not logic issues.)
 
-Last updated - September 29, 2025
+Last updated - March 11, 2026
 
 Buff:
 *   //AFTERMATH          Equip if player has Aftermath
 *   //ANCIENT_CIRCLE     Equip if player has Anicient Circle buff
-r   //ARCANE_CIRCLE      Equip if player has Arcane Circle buff (was ARC_CIRCLE)
+    //ARCANE_CIRCLE      Equip if player has Arcane Circle buff
     //COVER              Equip if player has Cover active
 *   //FLEE               Equip if player has Flee active
     //HOLY_CIRCLE        Equip if player has Holy Circle buff
 *   //REPRISAL           Equip if player has Reprisal buff
 *   //SAMBA              Equip if player has Samba buff they applied
-o   //SHINING_RUBY       Equip if player has Shining Ruby buff (was //BP:Shining Ruby, but that was wrong)
+    //SHINING_RUBY       Equip if player had Shinging Ruby buff
     //SPIKE              Equip if player has a spike spell buff: blaze,ice,shock,dread
     //UTSUSEMI           Equip if player has Utsusemi buff
     //WARD_CIRCLE        Equip if player has Warding Circle buff
@@ -41,7 +41,7 @@ o   //SHINING_RUBY       Equip if player has Shining Ruby buff (was //BP:Shining
 *   //NOT_YONIN          Equip if player does not have Yonin buff
 
 Barspells:
-r   //BARANY             Equip if player has any "bar" type buff   (was //BARSPELL)
+    //BARANY             Equip if player has any barspell buff
 *   //BARELEMENTAL       Equip if the player has a "bar" elemental buff
 *   //BARSTATUS          Equip if the player has a "bar" status buff
 *   //BARAERO            Equip if player has baraero buff
@@ -129,7 +129,7 @@ Conditional:
     //TP.conditional.#       Equip if conditional is found true for TP
     //TPP.conditional.#      Equip if conditional is found true for TP%
     //LVL.conditional.#      Equip if conditional is found true for the primary job's level
-*r  //PARTY.conditional.#    Equip based on how large party is. # is number in your party (was //PARTY#)
+    //PARTY.condition.#      Equip if party number meets conditional criteria
 *   //PETHPP.conditional.#   Equip if pet's HP% meets the comparison
 
     //LVLDIV:#              Equip if the primary job's level is evenly divisible by #
@@ -142,41 +142,6 @@ Conditional:
         .LT.            Less than
         .LE.            Less than or equal to
         .NE.            Not equal to
-
-Crafting and Gathering:
-*   //CR:ANY             Equip if any crafting gearset indicated
-    //CR:ALC             Equip if Alchemy gearset indicated
-    //CR:BONE            Equip if Bonecraft gearset indicated
-    //CR:BSM             Equip if Blacksmithing gearset indicated
-    //CR:CLOTH           Equip if Clothcraft gearset indicated
-    //CR:COOK            Equip if Cooking gearset indicated
-    //CR:GSM             Equip if Gold Smithing gearset indicated
-    //CR:LTH             Equip if Leathercraft gearset indicated
-    //CR:WW              Equip if Wood Working gearset indicated
-
-    Inverse -
-*   //NOT_CR:ANY         Equip if no craft's gearset indicated
-*   //NOT_CR:ALC         Equip if not Alchemy gearset indicated
-*   //NOT_CR:BONE        Equip if not Bonecraft gearset indicated
-*   //NOT_CR:BSM         Equip if not Blacksmithing gearset indicated
-*   //NOT_CR:CLOTH       Equip if not Clothcraft gearset indicated
-*   //NOT_CR:COOK        Equip if not Cooking gearset indicated
-*   //NOT_CR:GSM         Equip if not Gold Smithing gearset indicated
-*   //NOT_CR:LTH         Equip if not Leathercraft gearset indicated
-*   //NOT_CR:WW          Equip if not Wood Working gearset indicated
-
-*   //GA:ANY             Equip if any gathering gearset indicated
-    //GA:HELM            Equip if H.E.L.M. gearset indicated (Harvesting, Excavation, Logging, Mining)
-    //GA:DIG             Equip if Digging gearset indicated
-    //GA:CLAM            Equip if Clamming gearset indicated
-    //GA:FISH            Equip if Fishing gearset indicated
-
-    Inverse -
-*   //NOT_GA:ANY         Equip if no gather's gearset indicated
-*   //NOT_GA:HELM        Equip if not H.E.L.M. gearset indicated (Harvesting, Excavation, Logging, Mining)
-*   //NOT_GA:DIG         Equip if not Digging gearset indicated
-*   //NOT_GA:CLAM        Equip if not Clamming gearset indicated
-*   //NOT_GA:FISH        Equip if not Fishing gearset indicated
 
 Day:
     //DARKSDAY           Equip if the day's element is dark
@@ -258,8 +223,6 @@ Debuff:
 Gear:
     //IF:gear            Equip if currently wearing specified gear in current slot
     //IF-slot:gear       Equip if currently wearing specified item in the specified slot
-o   //UNLESS:gear        Equip if the specified gear is currently equipped in the associated slot (obsolete, use NOT_IF)
-o   //UNLESS-slot:gear   Equip unless the specified gear is found in the specified slot (obsolete, use NOT_IF-slot)
     //SPECIAL            Equip if the special comparisons match
         Gear supported -
             uggalepih pendant   MP% < 51% on visible gear, +8 MAB
@@ -270,8 +233,8 @@ o   //UNLESS-slot:gear   Equip unless the specified gear is found in the specifi
             minstrel's ring     HP% < 75% and TP% < 100%, -25% spell casting time
 
     Inverse -
-*   //NOT_IF:gear        Equip if not wearing the specified item in the slot (was //UNLESS:gear)
-*   //NOT_IF-slot:gear   Equip if not wearing specified item in the specified slot (was //UNLESS-slot:gear)
+    //NOT_IF:gear        Equip if not wearing the specified item in the slot
+    //NOT_IF-slot:gear   Equip if not wearing specified item in the specified slot
 
 Moon Phase:
     //FULLMOON           Equip if moon phase is full moon
@@ -300,13 +263,14 @@ Slot:
 Other:
 *   //CC#                Equip if the custom conditional is enabled
 *   //DUALWIELD          Equip if main or sub job can dual wield
-r   //INPARTY            Equip item if in a party (was //PARTY)
     //OWN                Equip if area's region controlled by player's nation
-r   //SPELL:xxx          Equip if the spell being cast's name contains the "xxx" substring (was //SP:)
+    //SONG:xxx           Equip if the song's name being cast contains xxx
+*   //SONGCAT:xxx        Equip if the song's category contains xxx
+    //SPELL:xxx          Equip if the spell's name being cast contains xxx
 *   //SPELLCAT:xxx       Equip if spell being cast is in the designated group, where xxx is: BARELEMENTAL or BARSTATUS
     //TOWN               Equip if player's in town
     //TOWN-AK            Equip ducal aketon or national aketon if the player is in the appropriate town
-*   //MODE:xxx           SMN or /SMN only. Equip if the mode:xxx matches the value of PET_MODE (PERP or ATK)
+*   //MODE:xxx           SMN or /SMN only. Equip if the mode:xxx matches the value of PET_MODE (PERP, ATK or ENMM)
 
 *   //STATUS:ENGAGED     Equip if the player is engaged (fighting or weapons drawn)
 *   //STATUS:RESTING     Equip if the player is resting
@@ -327,7 +291,6 @@ r   //SPELL:xxx          Equip if the spell being cast's name contains the "xxx"
 *   //NOT_STATUS:IDLING  Equip if the player is not idling
 
 Songs:
-r   //SONG:xxx           Equip if song being cast's name contains the "xxx" substring (was invoked via SP:xxx)
 *   //CAROL              Equip if song is a carol
 *   //ELEGY              Equip if song is an elegy
 *   //ETUDE              Equip if song is an etude
@@ -371,10 +334,9 @@ Testing (for debug purposes only):
 *   //NOT_TRUE           Never equips since it never evaluates to true
 
 Pet:
-*   //BST_PET_ATTACK     Equip if BST pet does an Attack skill
-*   //BST_PET_MATT       Equip if BST pet does Magical Attack skill
-*   //BST_PET_MACC       Equip if BST pet does Magic accuracy skill
-o   //CARBY              Equip if carbuncle out (obsolete, use PETNAME:xxx)
+*   //BST:PET_ATTACK     Equip if BST pet does an Attack skill
+*   //BST:PET_MATT       Equip if BST pet does Magical Attack skill
+*   //BST:PET_MACC       Equip if BST pet does Magic accuracy skill
     //PET                Equip if player has a pet
     //PETF               Equip if player has pet and it is fighting
     //PETFNPF            Equip if pet is fighting but not player
@@ -386,21 +348,21 @@ o   //CARBY              Equip if carbuncle out (obsolete, use PETNAME:xxx)
 *   //SMN:BP:SKILL       Equip if SMN blood pact is skill based
 *   //SMN:BP:ACC         Equip if SMN blood pact is accuracy based
 *   //SMN:BP:HYBRID      Equip if SMN blood pact is a hybrid, both physical and magical
-r   //SMN:PET            Equip if player has a summoner's avatar/elemenal spirit out (was //SMNPET)
-r   //SMN:SUMMONS:xxx    Equip if the identified pet is being summoned (was //SMN:xxx)
-r   //SMN:PETMD          Equip if SMN's pet's element matches day's element (was //SMNPETMD)
-r   //SMN:PETMW          Equip if SMN's pet's element matches current weather element (was //SMNPETMW)
-r   //SMN:BP:xxx         Equip if blood pact name contains xxx.
-r   //SMN:SPIRIT:ES      Equip if avatar being summoned is an elemental spirit (was //SPIRIT:ES)
-r   //SMN:SPIRIT:EP      Equip if current pet is an elemental spirit (was //SPIRIT:EP)
+*   //SMN:BP:xxx         Equip if blood pact name contains xxx.
+    //SMN:PET            Equip if player has a smn's avatar or spirit pet
+    //SMN:SUMMONS:xxx    Equip if player is summoning avatar/spirit whose name contains xxx
+    //SMN:PETMW          Equip if SMN's pet's element matches the weather's element
+    //SMN:PETMD          Equip if SMN's pet's element matches day's element
+    //SMN:SPIRIT:ES      Equip if avatar being summoned is an elemental spirit
+    //SMN:SPIRIT:EP      Equip if current pet is an elemental spirit
 
     Inverse -
 *   //NOT_BST:PET_ATTACK  Equip if BST pet does not do an Attack skill
 *   //NOT_BST:PET_MATT    Equip if BST pet does not do a Magical Attack skill
 *   //NOT_BST:PET_MACC    Equip if BST pet does not do a Magic accuracy skill
-r   //NOT_PET             Equip if the player has no pet (was //NO_PET)
-r   //NOT_PETF            Equip if player has pet and it is not fighting (was //PETNF)
+*   //NOT_PET             Equip if player has no pet
 *   //NOT_PETFNPF         Equip if pet not fighting but player is fighting
+    //NOT_PETF            Equip if pet is not fighting
     //NOT_PETNAME:xxx     Equip if player has no pet or pet is not named "xxx"
 *   //NOT_SMN:AVATAR      Equip if a SMN avatar being summoned is a spirit
 *   //NOT_SMN:BP:PHYS     Equip if SMN blood pact is not physical based
@@ -408,7 +370,7 @@ r   //NOT_PETF            Equip if player has pet and it is not fighting (was //
 *   //NOT_SMN:BP:SKILL    Equip if SMN blood pact is not skill based
 *   //NOT_SMN:BP:ACC      Equip if SMN blood pact is not accuracy based
 *   //NOT_SMN:BP:HYBRID   Equip if SMN blood pact is not a hybrid
-r   //NOT_SMN:PET         Equip if player's pet is not a smn avatar/elemental spirit (was //NO_PET)
+*   //NOT_SMN:PET         Equip if player's pet is not a smn avatar/elemental spirit
 *   //NOT_SMN:SUMMONS:xxx Equip if the specified SMN pet being summoned
 *   //NOT_SMN:PETMW       Equip if SMN's pet's element does not match the current weather element
 *   //NOT_SMN:PETMD       Equip if SMN's pet's element matches day's element
@@ -423,134 +385,44 @@ Job:
 *   //MJ:job,job,...     Equip if the player's main job is one of the jobs listed
 
     Inverse -
-*    //NOT_MSJ           Equip if player's main job is not magical
-*    //NOT_MJ:job,job,... Equip if the player's main job is not one of the jobs listed
+*   //NOT_MSJ           Equip if player's main job is not magical
+*   //NOT_MJ:job,job,... Equip if the player's main job is not one of the jobs listed
 
     Player's Subjob -
-    //MSJ                Equip if player's subjob is magical
-o   //SJBLM              Equip if the player's subjob is a Black Mage (obsolete, use //SJ:BLM)
-o   //SJBLU              Equip if the player's subjob is a Blue Mage (obsolete,use //SJ:BLU)
-o   //SJBRD              Equip if the player's subjob is a Bard (obsolete,use //SJ:BRD)
-o   //SJBST              Equip if the player's subjob is a Beastmaster (obsolete,use //SJ:BST)
-o   //SJCOR              Equip if the player's subjob is a Corsair (obsolete,use //SJ:COR)
-o   //SJDNC              Equip if the player's subjob is a Dancer (obsolete,use //SJ:DNC)
-o   //SJDRG              Equip if the player's subjob is a Dragoon (obsolete,use //SJ:DRG)
-o   //SJDRK              Equip if the player's subjob is a Dark Knight (obsolete,use //SJ:DRK)
-o   //SJGEO              Equip if the player's subjob is a Geomancer (obsolete,use //SJ:GEO)
-o   //SJMNK              Equip if the player's subjob is a Monk (obsolete,use //SJ:MNK)
-o   //SJNIN              Equip if the player's subjob is a Ninja (obsolete,use //SJ:NIN)
-o   //SJPLD              Equip if the player's subjob is a Paladin (obsolete,use //SJ:PLD)
-o   //SJPUP              Equip if the player's subjob is a Puppeteer (obsolete,use //SJ:PUP)
-o   //SJRDM              Equip if the player's subjob is a Red Mage (obsolete,use //SJ:RDM)
-o   //SJRNG              Equip if the player's subjob is a Ranger (obsolete,use //SJ:RNG)
-o   //SJRUN              Equip if the player's subjob is a Rune Fencer (obsolete,use //SJ:RUN)
-o   //SJSAM              Equip if the player's subjob is a Samurai (obsolete,use //SJ:SAM)
-o   //SJSCH              Equip if the player's subjob is a Scholar (obsolete,use //SJ:SCH)
-o   //SJSMN              Equip if the player's subjob is a Summoner (obsolete,use //SJ:SUM)
-o   //SJTHF              Equip if the player's subjob is a Thief (obsolete,use //SJ:THF)
-o   //SJWAR              Equip if the player's subjob is a Warrior (obsolete,use //SJ:WAR)
-o   //SJWHM              Equip if the player's subjob is a White Mage (obsolete,use //SJ:WHM)
-
-*    //SJ:job,job,...    Equip if the player's subjob is one of the jobs listed
+    //MSJ               Equip if player's subjob is magical
+*   //SJ:job,job,...    Equip if the player's subjob is one of the jobs listed
 
     Inverse -
-*    //NOT_MSJ           Equip if player's subjob is not magical
+*   //NOT_MSJ           Equip if player's subjob is not magical
 
-*    //NOT_SJ:job,job,... Equip if the player's subjob is not one of the jobs listed
+*   //NOT_SJ:job,job,... Equip if the player's subjob is not one of the jobs listed
 
 Job in Party:
-    //PJPBLM             Equip if there's a Black Mage in your party
-    //PJPBLU             Equip if there's a Blue Mage in your party
-    //PJPBRD             Equip if there's a Bard in your party
-    //PJPBST             Equip if there's a Beastmaster in your party
-    //PJPCOR             Equip if there's a Corsair in your party
-    //PJPDNC             Equip if there's a Dancer in your party
-    //PJPDRG             Equip if there's a Dragoon in your party
-    //PJPDRK             Equip if there's a Dark Knight in your party
-    //PJPGEO             Equip if there's a Geomancer in your party
-    //PJPMNK             Equip if there's a Monk in your party
-    //PJPNIN             Equip if there's a Ninja in your party
-    //PJPPLD             Equip if there's a Paladin in your party
-    //PJPPUP             Equip if there's a Puppeteer in your party
-    //PJPRDM             Equip if there's a Red Mage in your party
-    //PJPRNG             Equip if there's a Ranger in your party
-    //PJPRUN             Equip if there's a Rune Fencer in your party
-    //PJPSAM             Equip if there's a Samurai in your party
-    //PJPSCH             Equip if there's a Scholar in your party
-    //PJPSMN             Equip if there's a Summoner in your party
-    //PJPTHF             Equip if there's a Thief in your party
-    //PJPWAR             Equip if there's a Warrior in your party
-    //PJPWHM             Equip if there's a White Mage in your party
+    //PJB:job,job,...   Equip if there's one of the specified jobs in your party
 
     Inverse -
-*    //NOT_PJPBLM        Equip if there's no Black Mages in your party
-*    //NOT_PJPBLU        Equip if there's no Blue Mages in your party
-*    //NOT_PJPBRD        Equip if there's no Bards in your party
-*    //NOT_PJPBST        Equip if there's no Beastmasters in your party
-*    //NOT_PJPCOR        Equip if there's no Corsairs in your party
-*    //NOT_PJPDNC        Equip if there's no Dancers in your party
-*    //NOT_PJPDRG        Equip if there's no Dragoons in your party
-*    //NOT_PJPDRK        Equip if there's no Dark Knights in your party
-*    //NOT_PJPGEO        Equip if there's no Geomancers in your party
-*    //NOT_PJPMNK        Equip if there's no Monks in your party
-*    //NOT_PJPNIN        Equip if there's no Ninjas in your party
-*    //NOT_PJPPLD        Equip if there's no Paladins in your party
-*    //NOT_PJPPUP        Equip if there's no Puppeteers in your party
-*    //NOT_PJPRDM        Equip if there's no Red Mages in your party
-*    //NOT_PJPRNG        Equip if there's no Rangers in your party
-*    //NOT_PJPRUN        Equip if there's no Rune Fencers in your party
-*    //NOT_PJPSAM        Equip if there's no Samurai in your party
-*    //NOT_PJPSCH        Equip if there's no Scholars in your party
-*    //NOT_PJPSMN        Equip if there's no Summoners in your party
-*    //NOT_PJPTHF        Equip if there's no Thieves in your party
-*    //NOT_PJPWAR        Equip if there's no Warriors in your party
-*    //NOT_PJPWHM        Equip if there's no White Mages in your party
+*   //NOT_PJB:job,job,...Equip if there's not one of the specied jobs in your party
+
 
 Job in Party, but not me:
-r    //PJPBLM_NOT_ME     Equip if there's a Black Mage in your party and it's not you    (was //PJPNMBLM)
-r    //PJPBLU_NOT_ME     Equip if there's a Blue Mage in your party and it's not you     (was //PJPNMBLU)
-r    //PJPBRD_NOT_ME     Equip if there's a Bard in your party and it's not you          (was //PJPNMBRD)
-r    //PJPBST_NOT_ME     Equip if there's a Beastmaster in your party and it's not you   (was //PJPNMBST)
-r    //PJPCOR_NOT_ME     Equip if there's a Corsair in your party and it's not you       (was //PJPNMCOR)
-r    //PJPDNC_NOT_ME     Equip if there's a Dancer in your party and it's not you        (was //PJPNMDNC)
-r    //PJPDRG_NOT_ME     Equip if there's a Dragoon in your party and it's not you       (was //PJPNMDRG)
-r    //PJPDRK_NOT_ME     Equip if there's a Dark Knight in your party and it's not you   (was //PJPNMDRK)
-r    //PJPGEO_NOT_ME     Equip if there's a Geomancer in your party and it's not you     (was //PJPNMGEO)
-r    //PJPMNK_NOT_ME     Equip if there's a Monk in your party and it's not you          (was //PJPNMMNK)
-r    //PJPNIN_NOT_ME     Equip if there's a Ninja in your party and it's not you         (was //PJPNMNIN)
-r    //PJPPLD_NOT_ME     Equip if there's a Paladin in your party and it's not you       (was //PJPNMPLD)
-r    //PJPPUP_NOT_ME     Equip if there's a Puppeteer in your party and it's not you     (was //PJPNMPUP)
-r    //PJPRDM_NOT_ME     Equip if there's a Red Mage in your party and it's not you      (was //PJPNMRDM)
-r    //PJPRNG_NOT_ME     Equip if there's a Ranger in your party and it's not you        (was //PJPNMRNG)
-r    //PJPRUN_NOT_ME     Equip if there's a Rune Fencer in your party and it's not you   (was //PJPNMRUN)
-r    //PJPSAM_NOT_ME     Equip if there's a Samurai in your party and it's not you       (was //PJPNMSAM)
-r    //PJPSCH_NOT_ME     Equip if there's a Scholar in your party and it's not you       (was //PJPNMSCH)
-r    //PJPSMN_NOT_ME     Equip if there's a Summoner in your party and it's not you      (was //PJPNMSMN)
-r    //PJPTHF_NOT_ME     Equip if there's a Thief in your party and it's not you         (was //PJPNMTHF)
-r    //PJPWAR_NOT_ME     Equip if there's a Warrior in your party and it's not you       (was //PJPNMWAR)
-r    //PJPWHM_NOT_ME     Equip if there's a White Mage in your party and it's not you    (was //PJPNMWHM)
+*    //PJBNM:job,job,... Equip if there's one of the specified jobs in your party but not you
 
-    I'm not sure that the inversion (job in party and is me) makes sense since it would be a test if you are
-    the job and that's a given since each of your jobs have specific luashitacast job files. Skipping.
+    Supporting the inversion makes no sense. Just use //MJ: since that checks just you
 
 Target:
 +   //FAM=xxx            Equip if target is part of the specified family
 +   //ECO=xxx            Equip if target is part of the specified eco-System
-r   //AMORPH             Equip if target is from the amorph family
-r   //AQUAN              Equip if target is from the aquan family
     //ME                 Equip if the target is me
 
     Inverse -
-+    //NOT_FAM=xxx        Equip if target is part of the specified family
-+    //NOT_ECO=xxx        Equip if target is part of the specified eco-System
-r   //NOT_AMORPH         Equip if target is not from the amorph family
-r   //NOT_AQUAN          Equip if target is not from the aquan family
++   //NOT_FAM=xxx        Equip if target is part of the specified family
++   //NOT_ECO=xxx        Equip if target is part of the specified eco-System
     //NOT_ME             Equip if the target is not me
 
 Time:
-r    //TIME:DAYTIME      Equip if it's daytime (6:00 to 18:00) (was //DAYTIME)
-r    //TIME:DUSK2DAWN    Equip if it's between dusk and dawn (17:00 to 7:00) (was //DUSK2DAWN)
-r    //TIME:NIGHTTIME    Equip if it's nighttime (17:00 to 6:00) (was NIGHTTIME)
+     //TIME:DAYTIME      Equip if it's daytime (6:00 to 18:00)
+     //TIME:DUSK2DAWN    Equip if it's between dusk and dawn (17:00 to 7:00)
+     //TIME:NIGHTTIME    Equip if it's nighttime (17:00 to 6:00)
 *    //TIME:DAWN         Equip if it's dawn (6:00 to 7:00)
 *    //TIME:DAY          Equip if it's day (7:00 to 17:00)
 *    //TIME:DUSK         Equip if it's dusk (17:00 to 18:00)
@@ -581,15 +453,15 @@ Toggled Condition:
     //KITE               Equip if 'kite' is enabled
 *   //SPF                Equip if 'sPF' is enabled (show pull feedback)
 *   //RIDING             Equip if you're riding a "chocobo"
+    //TH                 Equip if 'TH' is enabled
 
-r   //BRD:HORN           Equip if instrument is set to HORN
-r   //BRD:STRING         Equip if instrument is set to STRING
+    //BRD:HORN           Equip if instrument is set to HORN
+    //BRD:STRING         Equip if instrument is set to STRING
 *   //BST:AJUG           Equip if 'Ajug' is enabled
-r   //BST:DB:BPP         Equip if debuff cycle set to BPP (blind,poison,paralyze) (was DB:BPP)
-r   //BST:DB:WSS         Equip if debuff cycle set to WSS (weight,slow,silence) (was DB:WSS)
+    //BST:DB:BPP         Equip if debuff cycle set to BPP (blind,poison,paralyze)
+    //BST:DB:WSS         Equip if debuff cycle set to WSS (weight,slow,silence)
 *   //SMN:SBP            Equip if 'sBP' is enabled
-r   //THF:TH             Equip if 'TH' is enabled (was TH)
-*   //THF:SS
+*   //THF:SS             Equip if 'SS' is enabled
 
     Inverse -
 *   //NOT_DT:BREATH      Equip item if damage taken is not set to breath
@@ -690,6 +562,62 @@ Post 3.0 conditionals to be implemented:
 +   //SSLOTS:list        Subset only conditional, will load only the specified slots from the attached subset
 +   //NOT_SSLOTS:list    Subset only conditional, will load all slots from the attached subset except for those listed
 
+Obsolete Codes
+    The following codes are no longer recognized. Where a new code replaces them, the new code
+    is included. Obsolete codes that have no replacement are no longer used, the lua code has
+    been changed so they're no loger needed.
+
+    Obsolete            Replacement             Details
+    ---------------------------------------------------
+    //GA:FISH                                   Gathering uses explicit sets now
+    //GA:HELM                                   Gathering uses explicit sets now
+    //GA:DIG                                    Gathering uses explicit sets now
+    //GA:CLAM                                   Gathering uses explicit sets now
+    //CR:ALC                                    Crafting uses explicit sets now
+    //CR:BONE                                   Crafting uses explicit sets now
+    //CR:CLOTH                                  Crafting uses explicit sets now
+    //CR:COOK                                   Crafting uses explicit sets now
+    //CR:GSM                                    Crafting uses explicit sets now
+    //CR:LTH                                    Crafting uses explicit sets now
+    //CR:BSM                                    Crafting uses explicit sets now
+    //CR:WW                                     Crafting uses explicit sets now
+
+    //ARC_CIRCLE        //ARCANE_CIRCLE
+    //Barspells         //BARANY
+    //PART#             //PARTY.conditional.#   Enhanced and renamed
+    //PARTY             //INPARTY
+    //SP:xxx            //SPELL:xxx
+    //SP:xxx            //SONG:xxx              Clarity issue
+    //SMNPET            //SMN:PET
+    //SMN:xxx           //SMN:SUMMONS:xxx
+    //SMNPETMD          //SMN:PETMD
+    //SMNPETMW          //SMN:PETMW
+    //SPIRIT:escape     //SMN:SPIRIT:ES
+    //SPIRIT:escape     //SMN:SPIRIT:EP
+    //NO_PET            //NOT_PET
+    //PETNF             //NOT_PETF
+    //UNLESS:gear       //NOT_IF:gear
+    //UNLESS-slot:gear  //NOT_IF-slot:gear
+    //CARBY             //PETNAME:Carbuncle
+    //SJxxx             //SJ:job,job,...
+    //PJBxxx            //PJB:job,job,...
+    //PJBxxx_NOT_ME     //PJBNM:job,job,...
+    //AMORPH            //ECO=amorph
+    //AQUAN             //ECO=aquan
+    //NOT_AMORPH        //NOT_ECO=amorph
+    //NOT_AQUAN         //NOT_ECO=aquan
+    //DAYTIME           //TIME:DAYTIME
+    //DUSK2DAWN         //TIME:DUSK2DAWN
+    //NIGHTTIME         //TIME:NIGHTTIME
+    //HORN              //BRD:HORN
+    //STRING            //BRD:STRING
+    //DB:BPP            //BST:DB:BPP
+    //DB:WSS            //BST:DB:WSS
+    //then              //THF:TH
+    //BST_PET_ATTACK    //BST:PET_ATTACK
+    //BST_PET_MATT      //BST:PET_MATT
+    //BST_PET_MACC      //BST:PET_MACC
+
 Keywords:
     conditionals - .EQ.,.GT.,.GE.,.LT.,.LE.,.NE.
     jobs - WAR,MNK,WHM,BLM,RDM,THF,PLD,DRK,BST,BRD,RNG,SAM,NIN,DRG,SMN,
@@ -699,7 +627,4 @@ Keywords:
 
 Note:
     + designates entries that are not implemented yet
-    * designates entries that are only found in BOXCAR (pending next version)
-    ~ designates entries are temporary stub functions (it always returns true), only found in BOXCAR
-    o designates entries currently found that are removed in BOXCAR (obsolete, being removed)
-    r designates entries that exist, but are renamed
+    * designates entries that are only found in BOXCAR

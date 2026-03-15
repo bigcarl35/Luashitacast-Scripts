@@ -23,7 +23,7 @@
 
 - Added support for groups to inline reference translation. Subsets are still ignored.
 
-- Fixed issue where code for a buff has a " " in them thus not matching buff name. It checks for both
+- Fixed issue where code for a buff that has a " " in them thus not matching buff name. It checks for both
   with and without " " (as in, if the buff name has a " " or if the player designated the " " as a "_".)
 
 - You can now indicate whether Refresh or Regen has priority when you rest.
@@ -48,7 +48,7 @@
 - All action routines in the job files now call shared action routines in the crossjobs module. (A9)
 
 - The display bar has been modified to show the actions in the same order regardless of job. (Job
-  specific actions can be interspersed in the bar.)
+  specific actions can be interspersed in the bar.) (B8)
 
 - Added configurable option to job files so that player can indicate if they want LUASHITACAST to
   equip the job appropriate macro book and macro page.
@@ -62,7 +62,7 @@
   either Ninja or Dancer. If merit is found for other conditionals, they will be implemented
   conditional by conditional. (A16)
 
-- Added command: sw to force the start weapons to be reloaded. (Often the weapons equipped when
+- Added command: /sw to force the start weapons to be reloaded. (Often the weapons equipped when
   you just log in are incorrect since /gc must be run first. This lets the player get the weapons
   right.)
 
@@ -83,10 +83,19 @@
   function.
 
 - Player can now designate that all slots are locked when crafting/gather. (This is to avoid
-  an error when an item changes based on time/day/weather.)
+  an error when an item changes based on time/day/weather.) Alternatively they can just add
+  a piece of gear to block that behavior, player's choice.
 
 - Changed monster family lookup to zone specific listing. Changed weapon type check to using
   typed master weapons listing.
 
 - Changed all the //SJjob conditionals to use //SJ:job. Added //MMJ and //MJjob,job,...for main
   jobs. (Likely to be used in crossjobs.lua since that's for common gear sets.)
+
+- Crafting gearsets and Gathering gearsets now have their own explicit gearsets in crossjobs.
+  Invocation is the same though.
+
+- Reworked display bar so that player can change what is displayed. Fixed issue where remenants
+  of what was previously displayed was "peeking through". (A19,29)
+
+- Fixed an issue where /gc did not drill down into Groups.
