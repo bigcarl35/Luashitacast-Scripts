@@ -1,0 +1,177 @@
+inline.fCheckInlineBuff
+        Example: //HOLY_CIRCLE means does the player have the 'holy circle' buff
+                 //BARELEMENTAL means does the player have one of the bar elemental buffs
+
+        'ARC_CIRCLE','COVER','HOLY_CIRCLE','SPIKE','UTSUSEMI','WARD_CIRCLE','SAMBA','ENAERO','ENBLIZZARD',
+        'ENDARK','ENFIRE','ENLIGHT','ENSTONE','ENTHUNDER','ENWATER','BARAERO','BARBLIZZARD','BARFIRE',
+        'BARSTONE','BARTHUNDER','BARWATER','BARSLEEP','BARPOISON','BARPARALYZE','BARBLIND','BARVIRUS',
+        'BARPETRIFY','ANCIENT_CIRCLE','AFTERMATH','REPRISAL','YONIN','FLEE','SHINING_RUBY'
+
+        BARELEMENTAL { 'BARAERO','BARBLIZZARD','BARFIRE','BARSTONE','BARTHUNDER','BARWATER' }
+        BARSTATUS { 'BARSLEEP','BARPOISON','BARPARALYZE','BARBLIND','BARVIRUS','BARPETRIFY' }
+
+        Inversions supported
+
+        Tested:
+
+inline.fCheckInlineDebuff
+        Example: //BLINDED means is the player blinded. Currently cannot be applied to pets.
+
+        'ADDLED','AMNESIA','BANED','BLINDED','BOUND','BUSTED','CHARMED','CURSED','DISEASED',
+        'DOOMED','ENCUMBERED','IMPAIRED','KO','MEDICATED','MUTED','PARALYZED','PETRIFIED','PLAGUED',
+        'POISONED','SILENCED','SLEPT','STUNNED','TERRIFIED','WEAKENED','WEIGHTED','SJ_RESTRICTION'
+
+        Inversions supported
+
+        Tested: //BLINDED (only false)
+
+inline.fCheckInlineConditional
+        Example: //HPP.LT.90 means HP% < 90%
+
+        'HP.','HPP.','MP.','MPP.','TP.','TPP.','LVL.','PARTY.','PETHPP.'
+        '.EQ.','.GT.','.GE.','.LT.','.LE.','.NE.'
+
+        LVLDIV:
+
+        Inversions NOT supported
+
+        Tested: //MPP.LT.95
+
+fCheckInlineDay
+        Example: //FIRESDAY means that the item should be equipped if it's firesday
+
+        'DARKSDAY','EARTHSDAY','FIRESDAY','ICEDAY','LIGHTNINGDAY','LIGHTSDAY','WATERSDAY','WINDSDAY'
+
+        Inversions supported
+
+        Tested:
+
+inline.fCheckInlineMoon
+        Example: //FULLMOON means that the in game moon must be full
+
+        'FULLMOON','NEWMOON','GIBBIOUS','QUARTERMOON','QUARTERMOON','CRESCENT'
+
+        Inversions supported
+
+        Tested:
+
+inline.fCheckInlineGear
+        Example: //IF:Waders means that this is true if your character is wearing waders
+
+        'IF','SPECIAL'
+
+        Inversions support for //IF, but not //SPECIAL
+
+        Tested:
+
+inline.fCheckInlineTarget
+        Example: //ECO=AQUANS means equip item if target is an aquan (eg, crab, pugil, etc)
+
+        'FAM=','ECO=','ME'
+
+        Inversions supported
+
+        Tested:
+
+inline.fCheckInlinePet
+        Example: //PET means that the player has a pet
+
+        'PET','PETF','PETFPNF','PETNAME:',
+        'SMN:AVATAR','SMN:PET','SMN:PETMD','SMN:PETMW','SMN:SPIRIT:ES','SMN:SPIRIT:EP','SMN:SUMMONS:'
+        'BST:PET_ATTACK','BST:PET_MATT','BST:PET_MACC',
+        'SMN:BP:SKILL','SMN:BP:MAG','SMN:BP:PHYS','SMN:BP:ACC','SMN:BP:HYBRID'
+
+        Inversions supported
+
+        Tested: //PET, //SMN:PET, //NOT_SMN:PET
+
+inline.fCheckInlineSlot
+        Example:
+
+        'EMPTY','EMPTY:1','EMPTY:2'
+
+        Inversions supported
+
+        Tested:
+
+inline.fCheckInlineSongs
+        Example: //SONG:ARMY means that the piece will be equipped if any of the 'ARMY' song buffs exist on the player
+                 //SONGCAT:MINUET means that the piece will be equipped if any minuet buff exists on the player
+
+        'SONG:','SONGCAT:'
+
+        Inversions supported
+
+        Tested:
+
+inline.fCheckInlineOther
+        Example: //PARTY:3 means that player in a party and there's three members
+
+        'SPELL:','SPELLCAT:','TRUE','FALSE','DUALWIELD','INPARTY','OWN','PARTY:','TOWN','TOWN:AK'
+        'MODE=PERP','MODE=ATTK','MODE=ENMM','STATUS:ENGAGED','STATUS:RESTING','STATUS:IDLING'
+
+        Inversions supported
+
+        Tested: //TOWN, //NOT_TOWN, //TOWN:AK
+
+inline.fCheckInlineJob
+        Example: //SJ:WHM,RDM means true if player's subjob is either a WHM or a RDM
+
+        'PJBNM:','MMJ','MSJ','MJ:','SJ:','PJB'
+
+        Inversions supported for all except PJBNM:
+
+        Tested:
+
+inline.fCheckInlineTime
+        Example: //TIME:NIGHTTIME means true if the in game clock is between 17 and 6
+
+        'TIME:NIGHTTIME','TIME:DAYTIME','TIME:DUSK2DAWN','TIME:DAWN','TIME:DAY','TIME:DUSK','TIME:EVENING','TIME:DEADOFNIGHT'
+
+        Inversions supported
+
+        Tested: //TIME:NIGHTTIME, //TIME:DAYTIME
+
+inline.fCheckInlineToggle
+        Example: //WSWAP means that weapon swapping is turned on
+
+        'DT:BREATH','DT:MAGICAL','DT:PHYSICAL','TH','CC#'
+        'ACCURACY','RACCURACY','EVASION','IDLE','TANK','MACC','WSWAP','KITE','RIDING','SPF',
+        'BRD:HORN','BRD:STRING','BST:AJUG','BST:DB:BPP','BST:DB:WSS','SMN:SBP','THF:SS'
+
+        Inversions supported
+
+        Tested: //WSWAP, //KITE, //NOT_KITE, //RIDING(only false), //NOT_RIDING(only true), //DT:MAGICAL (only false)
+
+inline.fCheckInlineWeaponType
+        Example: //DAGGER means will be equipped if you're currently wielding a dagger
+
+        'ARCHERY','AXE','CLUB','DAGGER','GAXE','GKATANA','GSWORD','H2H','KATANA','MARKSMANSHIP','POLEARM','SCYTHE','STAVE','SWORD','THROWING','SHIELD','AMMO'
+
+        Inversions supported
+
+        Tested:
+
+inline.fCheckInlineWeather
+        Example: //WIND means that there's wind weather
+
+        'CLEAR','SUNSHINE', 'CLOUDS', 'FOG','FIRE','WATER','EARTH','WIND','ICE','THUNDER','LIGHT','DARK'
+        (The x2 versions need to be supported to. Codes to follow)
+
+        Inversions supported
+
+        Tested:
+
+inline.fCheckInlineMagicType
+        Example: //MT:DIVINE means that piece equipped if a divine spell being cast
+
+        'MT:BLUE','MT:DARK','MT:DIVINE','MT:ELEMENTAL','MT:ENFEEBLING','MT:ENHANCING','MT:HEALING',
+        'MT:NINJUTSU','MT:OFFENSIVE_HEALING','MT:SINGING','MT:SUMMONING','MT:OFFENSIVE_HEALING'
+
+        Inversions supported
+
+        Tested:
+
+
+
+
