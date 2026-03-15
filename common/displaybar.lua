@@ -7,7 +7,6 @@ local fonts = require('fonts');
 
     List of routines-
         Subroutines:
-            RegionDisplay           Updates the display bar with whether region is controlled by nation's kingdom
             SetAccCur               Sets the appropriate tracking current stage
             Unload                  Unloads the font objects and registered events
             UpdateBarStatic         Updates the static portion of the display bar's variables
@@ -15,7 +14,6 @@ local fonts = require('fonts');
         Functions:
             local fAccuracyDisplay  Returns the colorized display of the appropriate accuracy
             fColor                  Formats passed string with passed color keyword
-            fDisplayIt              Determines if pieces of JobBar should be displayed
 --]]
 
 -- List of know color codes by keyword for displaying to the screen
@@ -58,29 +56,7 @@ local tkwEle = {	-- cOORRGGBB where OO is opacity, RR red, GG green, BB blue
     { ['kw'] = 'waxing gibbous', ['color'] = '|cFFE5E4E2|' }, -- platinum
     { ['kw'] = 'green',			 ['color'] = '|cFF00FF00|' }, -- green
     { ['kw'] = 'red',			 ['color'] = '|cFFFF0000|' }, -- red
-};
-
--- The following defines what should be displayed in the display bar
-local JobBar = {
-     [1] = { ['Code'] = 'WSWAP', ['Jobs'] = '-SMN,BLM', ['MJSJ'] = 'M' },		-- Some jobs swap weapons all the time
-     [2] = { ['Code'] = 'Kite', ['Jobs'] = 'ALL', ['MJSJ'] = 'MS' },
-     [3] = { ['Code'] = 'Tank', ['Jobs'] = 'PLD,NIN,RUN,WAR,DRK,THF,RDM,BLU', ['MJSJ'] = 'M' },
-     [4] = { ['Code'] = 'Idle', ['Jobs'] = 'ALL', ['MJSJ'] = 'MS' },
-     [5] = { ['Code'] = 'Eva', ['Jobs'] = 'ALL', ['MJSJ'] = 'MS' },
-     [6] = { ['Code'] = 'Macc', ['Jobs'] = 'BLM,WHM,RDM,SMN,PLD,DRK,BLU,SCH,GEO,RUN', ['MJSJ'] = 'MS' },
-     [7] = { ['Code'] = 'SPF', ['Jobs'] = 'ALL', ['MJSJ'] = 'MS' },
-     -- Single job specific assignments
-     [8] = { ['Code'] = 'TH', ['Jobs'] = 'THF', ['MJSJ'] = 'MS' },
-     [9] = { ['Code'] = 'SS', ['Jobs'] = 'THF', ['MJSJ'] = 'MS' },
-    [10] = { ['Code'] = 'AJug', ['Jobs'] = 'BST', ['MJSJ'] = 'M' },
-    [11] = { ['Code'] = 'DB', ['Jobs'] = 'BST', ['MJSJ'] = 'M' },
-    [12] = { ['Code'] = 'sBP', ['Jobs'] = 'SMN', ['MJSJ'] = 'MS' },
-    [13] = { ['Code'] = 'Mode', ['Jobs'] = 'SMN', ['MJSJ'] = 'MS' },
-    [14] = { ['Code'] = 'GSWAP', ['Jobs'] = 'ALL', ['MJSJ'] = 'MS'},
-    -- Separate area displayed
-    [15] = { ['Code'] = 'Instrument', ['Jobs'] = 'BRD', ['MJSJ'] = 'M' },
-    [16] = { ['Code'] = 'DT', ['Jobs'] = 'ALL', ['MJSJ'] = 'MS' },
-    [17] = { ['Code'] = 'Region', ['Jobs'] = 'ALL', ['MJSJ'] = 'MS' }
+    { ['kw'] = 'yellow', 		 ['color'] = '|cFFFFEA00|' }, -- bright yellow
 };
 
 -- Local variables used for display purposes
@@ -126,34 +102,6 @@ function displaybar.UpdateBarStatic()
 end		-- displaybar.UpdateBarStatic
 
 --[[
-    RegionDisplay determines if the player's nation owns the area the character is in
-    or not and updates the display bar accordingly.
---]]
-
-function displaybar.RegionDisplay()
-    local zoneId = AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0);
-
-    -- Make sure the player's nation is known
-    if crossjobs.OwnNation == -1 then
-        crossjobs.OwnNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation() + 1;
-    end
-
-    -- Determine if current zone in region controlled by player's nation
-    for i,j in pairs(gVars.RegionControl) do
-        if table.find(j['zones'],zoneId) ~= nil then
-            if j['own'] == crossjobs.OwnNation then
-                utilities.fSetCycle('Region','Owned');
-            elseif j['own'] == 0 and utilities.fBuffed('Signet') == false then
-                utilities.fSetCycle('Region','N/A');
-            else
-                utilities.fSetCycle('Region','Not Owned');
-            end
-            break;
-        end
-    end
-end		-- displaybar.RegionDisplay
-
---[[
     Unload removes the objects and commands created by the display bar code
 --]]
 
@@ -186,7 +134,6 @@ function fWhichJobBar(s)
         if string.upper(j['Code']) == string.upper(s) then
             bFound = true;
             return j;
-            break;
         end
     end
 
@@ -194,38 +141,6 @@ function fWhichJobBar(s)
         return nil;
     end
 end     -- fWhichJobBar
-
---[[
-    fDisplayIt is a function that determines if the passed string should be displayed in the luashita
-    display bar.
---]]
-
-function displaybar.fDisplayIt(s)
-    local ptr = fWhichJobBar(s);local gcdisplay = require('common.gcdisplay');
-
-    if s == nil or ptr == nil or ptr['Jobs'] == 'ALL' then	-- Missing from table or applies to all jobs, assume it should be displayed
-        return true;
-    else
-        -- Something specific about the entry. Parse it out
-        if string.sub(ptr['Jobs'],1,1) == '-' then			-- Indicates ALL but the jobs mentioned
-            if string.find(ptr['MJSJ'],'M') ~= nil and string.find(ptr['Jobs'],Main) ~= nil then
-                return false;
-            end
-            if string.find(ptr['MJSJ'],'S') ~= nil and string.find(ptr['Jobs']],Sub) ~= nil then
-                return false;
-            end
-            return true;
-        else	-- Only valid for the explicit jobs mentioned
-            if string.find(ptr['MJSJ'],'M') ~= nil and string.find(ptr['Jobs',Main) ~= nil then
-                return true;
-            end
-            if string.find(ptr['MJSJ'],'S') ~= nil and string.find(ptr['Jobs'],Sub) ~= nil then
-                return true;
-            end
-        end
-    end
-    return false;
-end		-- displaybar.fDisplayIt
 
 --[[
     fColor will return the colorized string according to the keyword's color. All
@@ -293,15 +208,15 @@ function fAccuracyDisplay(sType)
             for i=1,which['MaxStage'],1 do
                 if i <= which['CurStage'] then
                     if msg == nil then
-                        msg = fColor('green',tostring(i))
+                        msg = displaybar.fColor('green',tostring(i))
                     else
-                        msg = msg .. fColor('green',',' .. tostring(i))
+                        msg = msg .. displaybar.fColor('green',',' .. tostring(i))
                     end
                 else
                     if msg == nil then
-                        msg = fColor('red',tostring(i))
+                        msg = displaybar.fColor('red',tostring(i))
                     else
-                        msg = msg .. fColor('red',',' .. tostring(i))
+                        msg = msg .. displaybar.fColor('red',',' .. tostring(i))
                     end
                 end
             end
@@ -311,88 +226,183 @@ function fAccuracyDisplay(sType)
 end		-- fAccuracyDisplay
 
 --[[
+    fColorizedEntry displays the label based on the passed in value in the display bar
+--]]
+
+function fColorizedEntry(lbl,val)
+    local s;
+    if lbl == nil or val == nil then
+        return;
+    end
+
+    if val == true then
+        s = displaybar.fColor('green',lbl) .. ' ';
+    else
+        s = displaybar.fColor('red',lbl) .. ' ';
+    end
+    return s;
+end     -- fColorizedEntry
+
+--[[
     InitializeDisplayBar creates the display bar and assigns it to an event. It is
     only run once.
 --]]
 
 function displaybar.InitializeDisplayBar()
-    local pEntity = AshitaCore:GetMemoryManager():GetEntity();
-    local myIndex = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0);
+    local player = gData.GetPlayer();
+    local cmn = { [1] = gVars._WSWAP, [2] = gVars._KITE , [3] = gVars._TH, [4] = gVars._TANK ,
+                  [5] = gVars._IDLE, [6] = gVars._EVASION , [7] = gVars._SPF , [8] = gVars._GSWAP
+    };
     local cc;
 
     displaybar.UpdateBarStatic();
     displaybar.FontObject = fonts.new(fontSettings);
 
     ashita.events.register('d3d_present', 'displaybar_present_cb', function ()
-        local display = MainLV;
+        local display = 'X:';
 
-        if gProfile.settings.PlayerCappedLevel > 0 then
-            local stmp = string.format('[%d]',gProfile.settings.PlayerCappedLevel);
-            display = display .. displaybar.fColor('red',stmp);
+        -- Now process the tool bar
+        if gProfile.settings.DisplayBar[gVars._JOB] ~= nil and gProfile.settings.DisplayBar[gVars._JOB]['visible'] == true then
+            display = display .. MainLV .. Main .. '/' .. SubLV .. Sub .. ' ';
         end
-        display = display .. Main .. '/' .. SubLV .. Sub .. ' |';
 
-        if gear.fHasGCBeenRun() == true then
-            display = display .. ' ' .. fColor('green','GC') .. ' ';
-        else
-            display = display .. ' ' .. fColor('red','GC') .. ' ';
-        end
-        display = display .. '|';
-
-        for k, v in pairs(gVars.Toggles) do
-            if displaybar.fDisplayIt(k) == true then
-                display = display .. ' ';
-                if (v == true) then
-                    display = display .. fColor('green',k) .. ' ';
-                else
-                    display = display .. fColor('red',k) .. ' ';
-                end
+        if gProfile.settings.DisplayBar[gVars._CAP] ~= nil and gProfile.settings.DisplayBar[gVars._CAP]['visible'] == true then
+            display = display .. '| L.Cap: ';
+            if gProfile.settings.PlayerCappedLevel > 0 then
+                local stmp = tostring(gProfile.settings.PlayerCappedLevel);
+                display = display .. fColorizedEntry(stmp,false) .. ' | ';
+            else
+                display = display .. fColorizedEntry('None',true) .. ' | ';
             end
         end
-        display = display .. '|';
-        for key, value in pairs(utilities.Cycles) do
-            if displaybar.fDisplayIt(key) == true then
-                display = display .. '  ' .. key .. ': ' .. fColor('green',value.Array[value.Index]);
+
+        if gProfile.settings.DisplayBar[gVars._GC] ~= nil and gProfile.settings.DisplayBar[gVars._GC]['visible'] == true then
+            display = display .. fColorizedEntry('GC',gear.fHasGCBeenRun()) .. '| ';
+        end
+
+        -- Display the common (cross jobs) toggles
+        for k,v in ipairs(cmn) do
+            if gProfile.settings.DisplayBar[v] ~= nil and gProfile.settings.DisplayBar[v]['visible'] == true then
+                display = display .. fColorizedEntry(v,utilities.fGetToggle(v)) .. ' ';
             end
+        end
+
+        -- Now the job or class specific toggles. Note that the logic for limiting what is displayed use to be
+        -- a copy of what's in crossjobs.SetVariables(). This is no longer the case. Variables will be displayed
+        -- in the displaybar based on the gProfile.settings.DisplayBar definitions in the job file. Thus, the
+        -- player determines what is displayed and what is not displayed.
+        if gProfile.settings.DisplayBar[gVars._MACC] ~= nil and gProfile.settings.DisplayBar[gVars._MACC]['visible'] == true then
+            display = display .. fColorizedEntry(gVars._MACC,utilities.fGetToggle(gVars._MACC)) .. ' '; -- /MACC
+        end
+
+        if gProfile.settings.DisplayBar[gVars._SS] ~= nil and gProfile.settings.DisplayBar[gVars._SS]['visible'] == true then
+            display = display .. fColorizedEntry(gVars._SS,utilities.fGetToggle(gVars._SS)) .. ' ';     -- /SS
+        end
+
+        if gProfile.settings.DisplayBar[gVars._AJUG] ~= nil and gProfile.settings.DisplayBar[gVars._AJUG]['visible'] == true then
+            display = display .. fColorizedEntry(gVars._AJUG,utilities.fGetToggle(gVars._AJUG)) .. ' '; -- /AJug
+        end
+
+        if gProfile.settings.DisplayBar[gVars._DB] ~= nil and gProfile.settings.DisplayBar[gVars._DB]['visible'] == true then
+            display = display .. 'DB: ' .. fColorizedEntry(utilities.fGetCycle(gVars._DB),true) .. ' '; -- /DB
+        end
+
+        if gProfile.settings.DisplayBar[gVars._SBP] ~= nil and gProfile.settings.DisplayBar[gVars._SBP]['visible'] == true then
+            display = display .. fColorizedEntry(gVars._SBP,utilities.fGetToggle(gVars._SBP)) .. ' ';   -- /sBP
+        end
+
+        if gProfile.settings.DisplayBar[gVars._INSTRUMENT] ~= nil and gProfile.settings.DisplayBar[gVars._INSTRUMENT]['visible'] == true then
+            display = display .. 'Instrument: ' .. fColorizedEntry(utilities.fGetCycle(gVars._INSTRUMENT),true) .. ' ';  -- /horn or /string
+        end
+
+        if gProfile.settings.DisplayBar[gVars._MODE] ~= nil and gProfile.settings.DisplayBar[gVars._MODE]['visible'] == true or
+           gProfile.settings.DisplayBar[gVars._DT] ~= nil and gProfile.settings.DisplayBar[gVars._DT]['visible'] == true or
+           gProfile.settings.DisplayBar[gVars._REGION] ~= nil and gProfile.settings.DisplayBar[gVars._REGION]['visible'] == true then
+            display = display .. '| ';
+        end
+
+        if gProfile.settings.DisplayBar[gVars._MODE] ~= nil and gProfile.settings.DisplayBar[gVars._MODE]['visible'] == true then
+            display = display .. 'Mode: ' .. fColorizedEntry(utilities.fGetCycle(gVars._MODE),true) .. ' ';  -- /Mode
+        end
+
+        -- and the last two all-job cycles
+        if gProfile.settings.DisplayBar[gVars._DT] ~= nil and gProfile.settings.DisplayBar[gVars._DT]['visible'] == true then
+            display = display .. 'DT: ' .. fColorizedEntry(utilities.fGetCycle(gVars._DT),true) .. ' ';    -- /dt
+        end
+
+        if gProfile.settings.DisplayBar[gVars._REGION] ~= nil and gProfile.settings.DisplayBar[gVars._REGION]['visible'] == true then
+            local srColor;
+            if gVars.sRegion == gVars._REGION_STATUS_MUST_ZONE then
+                srColor = 'yellow';
+            elseif gVars.sRegion == gVars._REGION_STATUS_OWNED then
+                srColor = 'green';
+            else
+                srColor = 'red';
+            end
+            display = display .. 'Region: ' .. displaybar.fColor(srColor,gVars.sRegion) .. ' ';
         end
 
         -- Accuracy
-        if utilities.GetToggle(gVars._TANK) == true then
-            display = display .. ' | Acc: ' .. fAccuracyDisplay('TAcc');
-            display = display .. ' | Racc: ' .. fAccuracyDisplay('TRAcc');
-        else
-            display = display .. ' | Acc: ' .. fAccuracyDisplay('Acc');
-            display = display .. ' | Racc: ' .. fAccuracyDisplay('RAcc');
+        if gProfile.settings.DisplayBar[gVars._ACC] ~= nil and gProfile.settings.DisplayBar[gVars._ACC]['visible'] == true then
+            if utilities.fGetToggle(gVars._TANK) == true then
+                display = display .. '| Acc: ' .. fAccuracyDisplay('TAcc') .. ' ';
+                if gProfile.settings.DisplayBar[gVars._RACC] ~= nil and gProfile.settings.DisplayBar[gVars._RACC]['visible'] == true then
+                    display = display .. 'RAcc: ' .. fAccuracyDisplay('TRAcc') .. ' ';
+                end
+            else
+                display = display .. '| Acc: ' .. fAccuracyDisplay('Acc') .. ' ';
+                if gProfile.settings.DisplayBar[gVars._RACC] ~= nil and gProfile.settings.DisplayBar[gVars._RACC]['visible'] == true then
+                    display = display .. 'RAcc: ' .. fAccuracyDisplay('RAcc') .. ' ';
+                end
+            end
         end
 
         -- Custom Conditionals
-        display = display .. ' | CC: ';
-        for i,j in ipairs(gProfile.CustomConditionals) do
-            cc = utilities.GetToggle(j['code']);
-            if i > 1 then
-                display = display .. ',';
-            end
-            if cc == true then
-                display = display .. fColor('green',i);
-            else
-                display = display .. fColor('red',i);
+        if gProfile.settings.DisplayBar[gVars._CC] ~= nil and gProfile.settings.DisplayBar[gVars._CC]['visible'] == true then
+            display = display .. '| CC: ';
+            for i,j in ipairs(gProfile.CustomConditionals) do
+                cc = utilities.fGetToggle(j['code']);
+                if i > 1 then
+                    display = display .. ',';
+                end
+                if cc == true then
+                    display = display .. displaybar.fColor('green',i);
+                else
+                    display = display .. displaybar.fColor('red',i);
+                end
             end
         end
 
         -- Locks
-        if gVars.LocksListNumeric ~= 'None' then
-            display = display .. ' | Locks: ' .. fColor('green',gVars.LocksListNumerics);
-        else
-            display = display .. ' | Locks: ' .. fColor('red',gVars.LocksListNumeric);
+        if gProfile.settings.DisplayBar[gVars._LOCKS] ~= nil and gProfile.settings.DisplayBar[gVars._LOCKS]['visible'] == true then
+            local s = locks.fCompactLocks();
+            if s ~= 'None' then
+                display = display .. ' | Locks: ' .. displaybar.fColor('red',s);
+            else
+                display = display .. ' | Locks: ' .. displaybar.fColor('green',s);
+            end
         end
 
         local env = gData.GetEnvironment();
-        display = display .. string.format(' | %s | %02d:%02d | %d%% %s | %s ',
-            fColor(env.Day,env.Day),env.Timestamp.hour,env.Timestamp.minute,env.MoonPercent,fColor(env.MoonPhase,env.MoonPhase),fColor(env.RawWeather,env.RawWeather));
-        display = display .. ' | ' .. Zone;
+        if gProfile.settings.DisplayBar[gVars._DAY] ~= nil and gProfile.settings.DisplayBar[gVars._DAY]['visible'] == true then
+            display = display .. ' | ' .. displaybar.fColor(env.Day,env.Day) .. ' ';
+        end
+        if gProfile.settings.DisplayBar[gVars._TIME] ~= nil and gProfile.settings.DisplayBar[gVars._TIME]['visible'] == true then
+            display = display .. string.format('| %02d:%02d ',env.Timestamp.hour,env.Timestamp.minute) .. ' ';
+        end
+        if gProfile.settings.DisplayBar[gVars._MOON] ~= nil and gProfile.settings.DisplayBar[gVars._MOON]['visible'] == true then
+            display = display .. string.format('| %d%% %s ',env.MoonPercent,displaybar.fColor(env.MoonPhase,env.MoonPhase)) .. ' ';
+        end
+        if gProfile.settings.DisplayBar[gVars._WEATHER] ~= nil and gProfile.settings.DisplayBar[gVars._WEATHER]['visible'] == true then
+            display = display .. '| ' .. displaybar.fColor(env.RawWeather,env.RawWeather) .. ' ';
+        end
+        if gProfile.settings.DisplayBar[gVars._ZONE] ~= nil and gProfile.settings.DisplayBar[gVars._ZONE]['visible'] == true then
+            display = display .. '| ' .. Zone;
+        end
+
         displaybar.FontObject.text = display;
     end);
-end		-- displaybar.Initialize
+end		-- displaybar.InitializeDisplayBar
 
 --[[
     SetAccCur sets the current stage level for the specified type of

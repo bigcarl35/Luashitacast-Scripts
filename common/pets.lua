@@ -8,6 +8,7 @@ local pets = {};
             Call911                 Determines spirit to summon and summons it
             FavoredJugPets          Updates jug pet list indicating favorites
             HandlePetAction         Handles all pet actions not specific to one job
+            HealingBreath           Maximizes DRG's wyvern's healing breath if applicable
             ptt                     Pet to Target information
 
         Functions:
@@ -134,8 +135,8 @@ function pets.HandlePetAction(PetAction)
 
     -- Check for BST's Sic or Ready attack skills
     if table.find(pets.BstPetAttack,PetAction.Name) ~= nil or
-       table.find(pets.BstPetMagicAccuracy,PetAction.Name) ~= nil or
-       table.find(pets.BstPetMagicAttack,PetAction.Name ~= nil then
+       table.find(pets.BstPetMagicalAccuracy,PetAction.Name) ~= nil or
+       table.find(pets.BstPetMagicalAttack,PetAction.Name) ~= nil then
         sn = utilities.fGetTableByName('PC_Sic_Ready');
         if sn ~= nil then
             gear.MoveToDynamicGS(sn,crossjobs.Sets.CurrentGear,false,'PC_Sic_Ready');
@@ -167,8 +168,48 @@ function pets.HandlePetAction(PetAction)
             gear.MoveToDynamicGS(sn,crossjobs.Sets.CurrentGear,false,sName);
         end
     end
-    gear.EquipTheGear(sets.CurrentGear);
+    gear.EquipTheGear(crossjobs.Sets.CurrentGear,false,false);
 end		-- pets.HandlePetAction
+
+--[[
+    HealingBreath determines if the appropriate conditions are met for your wyvern to cast a healing
+    breath on either you or someone in your party.
+--]]
+
+function pets.HealingBreath()
+    local pet = gData.GetPet();
+    local player = gData.GetPlayer();
+    local pParty = AshitaCore:GetMemoryManager():GetParty();
+
+    if pet ~= nil and pet.Name == gProfile.settings.WyvernName then
+        if string.find('PLD,DRK,NIN,BRD',player.SubJob) ~= nil then
+            -- Because of the subjob, the only player that can be affected by the heal is the DRG.
+            -- Target HP% is 25% or 33% if you equip a "drachen armet(+1)". Now, check to see if the
+            -- HP% is low enough for a healing breath
+            gear.EquipTheGear(profile.Sets.MaxHPUpSet,false,false);
+            if player.MainJobLevel < 60 and player.HPP <= 25 or
+                (player.MainJobLevel >= 60 and player.HPP <= 33 and
+                (gVars.tGearDetails['head']['drachen armet'] ~= nil or
+                gVars.tGearDetails['head']['drachen armet +1'] ~= nil)) then
+                gear.MoveToDynamicGS(profile.Sets.WyvernBreathHealing,crossjobs.Sets.CurrentGear,true,'WyvernBreathHealing');
+            end
+        else
+            -- Since the DRG has a defensive subjob, we need to see if anyone in their party meets
+            -- the criteria for healing. Target HP% is 33% or 50% if you equip a "drachen armet(+1)"
+            for i=0,5,1 do		-- First 6 is your party, you're 0
+                if pParty:GetMemberHP(i) ~= nil then
+                    if player.MainJobLevel < 60 and pParty:GetMemberHPPercent(i) <= 33 or
+                        (player.MainJobLevel >= 60 and pParty:GetMemberHPPercent(i) <= 50 and
+                        (gVars.tGearDetails['head']['drachen armet'] ~= nil or
+                         gVars.tGearDetails['head']['drachen armet +1'] ~= nil)) then
+                        gear.MoveToDynamicGS(profile.Sets.WyvernBreathHealing,crossjobs.Sets.CurrentGear,true,'WyvernBreathHealing');
+                        break;
+                    end
+                end
+            end
+        end
+    end
+end		-- pets.HealingBreath
 
 --[[
     fIsValidJugPet determines if the passed item name is a valid jug pet name
@@ -474,7 +515,11 @@ end		-- pets.ptt
 function pets.fSummonerPet()
     local pet = gData.GetPet();
 
-    return (pet ~= nil and pets.fElementByPetName(pet.Name) ~= nil);
+    if pet == nil then
+        return false;
+    else
+        return (pets.fElementByPetName(pet.Name) ~= nil);
+    end
 end     -- pets.fSummonerPet
 
 --[[
@@ -496,7 +541,7 @@ function pets.fElementByPetName(pName)
     lcName = string.lower(pName);
 
     for i,j in pairs(gVars.tElemental_gear['staff']) do
-        if string.find(utilities._AllElements,i) ~= nil then
+        if string.find(gVars._AllElements,i) ~= nil then
             if table.find(j['Summons'],lcName) ~= nil then
                 ele = i;
                 break;
@@ -609,7 +654,7 @@ function pets.Call911()
                         iWhich = i;
                         break;
                     else
-                        print(chat.message('Info: Default spirit: ' .. gProfile.settings.defaultSpirit .. ' is either unknown or on cool down. Defaulting to a spirit can summon'))
+                        print(chat.message('Info: Default spirit: ' .. gProfile.settings.defaultSpirit .. ' is either unknown or on cool down. Defaulting to a spirit you can summon'))
                         break;
                     end
                 end
@@ -627,7 +672,7 @@ function pets.Call911()
 
             if iWhich == 0 then
                 -- If one isn't selected at this point, then no spirit is possible. Notify player
-                print(chat.message('Warning: No spirit can be summoned at this time'));
+                print(chat.message('Warning: No spirit can be summoned at this time. You\'re gonna die'));
                 return;
             end
         end

@@ -1,4 +1,4 @@
-local gcinclude = {};
+local gcinclude = T{};
 
 require 'common'
 
@@ -21,6 +21,7 @@ gcinclude.sets = {
 	Please note that Crafting sets ignore the /WSWAP setting.
 --]]
 	['Crafting'] = {
+		Hands = 'carpenter\'s gloves//CR:WW',
 	},
 
 --[[
@@ -99,7 +100,6 @@ gcinclude.settings = {
 
 
 -- The following arrays are used by the functions contained in this file. Probably best to leave them alone
-
 gcdisplay = gFunc.LoadFile('common\\gcdisplay.lua');
 
 gcinclude.AliasList = T{'acc','ajug','db','dt','ei','equipit','eva','gc','gcmessages','gearset','gs','gswap','help','horn','idle','kite','lock','macc','maxsong','maxspell','petfood','ptt','pull','racc','rc','rv','sbp','showit','smg','spf','ss','string','tank','th','unlock','ver','wsdistance','wswap','t1'};
@@ -455,7 +455,7 @@ gcinclude.tElemental_gear = T{
 				['NQ'] = { ['Name'] = 'Light staff', ['Ref'] = {} },
 				['HQ'] = { ['Name'] = 'Apollo\'s staff', ['Ref'] = {} },
 				['Affinity'] = { 'banish','banishga','curaga','cure','dia','diaga','flash','holy','enlight','repose','inundation' },
-				['SongAffinity'] = { 'dark threnody','foe requiem','foe requiem ii','foe requiem iii','foe requiem iv','foe requiem v','foe requiem vi','foe lullaby','horde lullaby','magic finale','maiden\'s virelai' },
+				['SongAffinity'] = { 'dark threnody', 'foe requiem', 'foe requiem ii', 'foe requiem iii', 'foe requiem iv', 'foe requiem v', 'foe requiem vi', 'foe lullaby', 'horde lullaby', 'magic finale', 'maiden\'s virelai' },
 				['Summons'] = {'carbuncle','light spirit','lightspirit','light','cait sith','caitsith','alexander'},
 			},
 			['dark'] = {
@@ -536,77 +536,56 @@ gcinclude.tElemental_gear = T{
 				['Name'] = 'Flame gorget', 
 				['Ref'] = {},
 				['skillProp'] = { 'liquefaction','fusion' },
-				['eleWS'] = { 'arching arrow','ascetic\'s fury','asuran fists','atonement','blade: shun','decimation','detonator','drakesbane','dulling arrow','empyreal arrow','final heaven','flaming arrow','full swing',
-					'garland of bliss','heavy shot','hexa strike','hot shot','insurgency','knights of round','last stand','mandalic stab','mistral axe','metatron torment','realmrazer','red lotus blade','scourge',
-					'shijin spiral','sniper shot','spinning attack','spinning axe','stringing pummel','tachi: kagero','tachi: kasha','upheaval','wheeling thrust' },
+				['eleWS'] = { 'arching arrow','ascetic\'s fury','asuran fists','atonement','blade: shun','decimation','detonator','drakesbane','dulling arrow','empyreal arrow','final heaven','flaming arrow','full swing','garland of bliss','heavy shot','hexa strike','hot shot','insurgency','knights of round','last stand','mandalic stab','mistral axe','metatron torment','realmrazer','red lotus blade','scourge','shijin spiral','sniper shot','spinning attack','spinning axe','stringing pummel','tachi: kagero','tachi: kasha','upheaval','wheeling thrust' },
 			},
 			['ice'] = {
 				['Weak'] = 'fire',
 				['Name'] = 'Snow gorget', 
 				['Ref'] = {},
 				['skillProp'] = { 'induration','distortion' },
-				['eleWS'] = { 'blade: to','blast arrow','cross reaper','death blossom','expiacion','freezebite','frostbite','full break','geirskogul','ground strike','guillotine','quietus','impulse drive','mordant rime',
-					'namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','ruinator','raging rush','shadow of death','shattersoul','skullbreaker','smash axe','spiral hell','steel cyclone','tachi: gekko',
-					'tachi: hobaku','tachi: rana','tachi: yukikaze','tornado kick','vidohunir' },
+				['eleWS'] = { 'blade: to','blast arrow','cross reaper','death blossom','expiacion','freezebite','frostbite','full break','geirskogul','ground strike','guillotine','quietus','impulse drive','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','ruinator','raging rush','shadow of death','shattersoul','skullbreaker','smash axe','spiral hell','steel cyclone','tachi: gekko','tachi: hobaku','tachi: rana','tachi: yukikaze','tornado kick','vidohunir' },
 			},
 			['wind'] = {
 				['Weak'] = 'ice',
 				['Name'] = 'Breeze gorget', 
 				['Ref'] = {},
 				['skillProp'] = { 'detonation','fragmentation' },
-				['eleWS'] = { 'aeolian edge','backhand blow','black halo','blade: jin','blade: kamu','blade: to','camlann\'s torment','coronach','cyclone','dancing edge','death blossom','dragon kick','earth crusher','exenterator',
-					'freezebite','gale axe','ground strike','gust slash','king\'s justice','mordant rime','raging axe','randgrith','red lotus blade','resolution','ruinator','savage blade','shark bite','shell crusher','sidewinder',
-					'slug shot','spinning slash','steel cyclone','tachi: jinpu','tachi: kaiten','taichi: shoha','taichi: yukikaze','tornado kick','trueflight','true strike','victory smite','vidohunir' },
+				['eleWS'] = { 'aeolian edge','backhand blow','black halo','blade: jin','blade: kamu','blade: to','camlann\'s torment','coronach','cyclone','dancing edge','death blossom','dragon kick','earth crusher','exenterator','freezebite','gale axe','ground strike','gust slash','king\'s justice','mordant rime','raging axe','randgrith','red lotus blade','resolution','ruinator','savage blade','shark bite','shell crusher','sidewinder','slug shot','spinning slash','steel cyclone','tachi: jinpu','tachi: kaiten','taichi: shoha','taichi: yukikaze','tornado kick','trueflight','true strike','victory smite','vidohunir' },
 			},
 			['earth'] = {
 				['Weak'] = 'wind',
 				['Name'] = 'Soil gorget', 
 				['Ref'] = {},
 				['skillProp'] = { 'scission','gravitation' },
-				['eleWS'] = { 'aeolian edge','asuran fists','avalanche axe','blade: ei','blade: ku','blade: ten','calamity','catastrophe','crescent moon','dancing edge','entropy','eviseration','exenterator','expiacion',
-					'fast blade','hard slash','impulse drive','iron tempest','king\'s justice','leaden salute','mercy stroke','nightmare scythe','omniscience','primal rend','pyrrhic kleos','rampage','requiscat',
-					'resolution','retibution','savage blade','seraph blade','shattersoul','shining blade','sickle moon','slice','spinning axe','spinning scythe','spiral hell','stardiver','stringing pummel','sturmwind',
-					'swift blade','tachi: enpi','tachi: jinpu','tachi: rana','trueflight','viper bite','vorpal blade','wasp sting' },
+				['eleWS'] = { 'aeolian edge','asuran fists','avalanche axe','blade: ei','blade: ku','blade: ten','calamity','catastrophe','crescent moon','dancing edge','entropy','eviseration','exenterator','expiacion','fast blade','hard slash','impulse drive','iron tempest','king\'s justice','leaden salute','mercy stroke','nightmare scythe','omniscience','primal rend','pyrrhic kleos','rampage','requiscat','resolution','retibution','savage blade','seraph blade','shattersoul','shining blade','sickle moon','slice','spinning axe','spinning scythe','spiral hell','stardiver','stringing pummel','sturmwind','swift blade','tachi: enpi','tachi: jinpu','tachi: rana','trueflight','viper bite','vorpal blade','wasp sting' },
 			},
 			['thunder'] = {
 				['Weak'] = 'earth',
 				['Name'] = 'Thunder gorget', 
 				['Ref'] = {},
 				['skillProp'] = { 'impaction','fragmentation' },
-				['eleWS'] = { 'aeolian edge','apex arrow','armor break','avalanche axe','black halo','blade: chi','blade: jin','blade: kamu','blade: shun','calamity','camlann\'s torment','circle blade','combo','cyclone',
-					'death blossom','dragon kick','earth crusher','exenterator','flat blade','full swing','ground strike','heavy swing','howling fist','judgement','king\'s justice','leg sweep','mordant rime','raging axe',
-					'raging fist','raiden thrust','realmrazer','resolution','rock crusher','savage blade','seraph strike','shark bite','shield break','shining strike','shoulder tackle','sickle moon','skewer','spinning attack',
-					'spinning axe','tachi: goten','tachi: koki','tachi: shoha','thunder thrust','true strike','victory smite','vidohunir','vorpal blade','weapon break' },
+				['eleWS'] = { 'aeolian edge','apex arrow','armor break','avalanche axe','black halo','blade: chi','blade: jin','blade: kamu','blade: shun','calamity','camlann\'s torment','circle blade','combo','cyclone','death blossom','dragon kick','earth crusher','exenterator','flat blade','full swing','ground strike','heavy swing','howling fist','judgement','king\'s justice','leg sweep','mordant rime','raging axe','raging fist','raiden thrust','realmrazer','resolution','rock crusher','savage blade','seraph strike','shark bite','shield break','shining strike','shoulder tackle','sickle moon','skewer','spinning attack','spinning axe','tachi: goten','tachi: koki','tachi: shoha','thunder thrust','true strike','victory smite','vidohunir','vorpal blade','weapon break' },
 			},
 			['water'] = {
 				['Weak'] = 'thunder',
 				['Name'] = 'Aqua gorget', 
 				['Ref'] = {},
 				['skillProp'] = { 'reverberation','distortion' },
-				['eleWS'] = { 'atonement','blade: teki','brainshaker','circle blade','cross reaper','dark harvest','entropy','quietus','death blossom','decimation','expiacion','full break','garland of bliss',
-					'gate of tartarus','geirskogul','ground strike','last stand','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','primal rend','raging rush','retribution','ruinator',
-					'shadow of death','shockwave','shoulder tackle','sidewinder','skullbreaker','slug shot','smash axe','spinning scythe','spiral hell','split shot','steel cyclone','sturmwind','sunburst',
-					'tachi: gekko','tachi: koki','vidohunir','vorpal thrust' },
+				['eleWS'] = { 'atonement','blade: teki','brainshaker','circle blade','cross reaper','dark harvest','entropy','quietus','death blossom','decimation','expiacion','full break','garland of bliss','gate of tartarus','geirskogul','ground strike','last stand','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','primal rend','raging rush','retribution','ruinator','shadow of death','shockwave','shoulder tackle','sidewinder','skullbreaker','slug shot','smash axe','spinning scythe','spiral hell','split shot','steel cyclone','sturmwind','sunburst','tachi: gekko','tachi: koki','vidohunir','vorpal thrust' },
 			},
 			['light'] = {
 				['Weak'] = 'dark',
 				['Name'] = 'Light gorget', 
 				['Ref'] = {},
 				['skillProp'] = { 'transfixion','fusion','light' },
-				['eleWS'] = { 'apex arrow','arching arrow','ascetic\'s fury','atonement','blade: chi','blade: ku','blade: rin','blade: shun','blast arrow','blast shot','camlann\'s torment','decimation','detonator',
-					'double thrust','drakesbane','dulling arrow','empyreal arrow','eviseration','final heaven','flaming arrow','garland of bliss','heavy shot','hexa strike','hot shot','howling fist','insurgency',
-					'knight\'s of round','leaden salute','last stand','mandalic stab','metatron torment','mistral axe','omniscience','piercing arrow','power slash','realmrazer','raiden thrust','scourge','shijin spiral',
-					'sidewinder','skewer','slug shot','sniper shot','split shot','stardiver','tachi: enpi','tachi: goten','tachi: kasha','thunder thrust','torcleaver','victory smite','upheaval','vorpal scythe',
-					'vorpal thrust','wheeling thrust' },
+				['eleWS'] = { 'apex arrow','arching arrow','ascetic\'s fury','atonement','blade: chi','blade: ku','blade: rin','blade: shun','blast arrow','blast shot','camlann\'s torment','decimation','detonator','double thrust','drakesbane','dulling arrow','empyreal arrow','eviseration','final heaven','flaming arrow','garland of bliss','heavy shot','hexa strike','hot shot','howling fist','insurgency','knight\'s of round','leaden salute','last stand','mandalic stab','metatron torment','mistral axe','omniscience','piercing arrow','power slash','realmrazer','raiden thrust','scourge','shijin spiral','sidewinder','skewer','slug shot','sniper shot','split shot','stardiver','tachi: enpi','tachi: goten','tachi: kasha','thunder thrust','torcleaver','victory smite','upheaval','vorpal scythe','vorpal thrust','wheeling thrust' },
 			},
 			['dark'] = {
 				['Weak'] = 'light',
 				['Name'] = 'Shadow gorget', 
 				['Ref'] = {},
 				['skillProp'] = { 'compression','gravitation','darkness' },
-				['eleWS'] = { 'asuran fists','black halo','blade: ei','blade: hi','blade: kamu','blade: ku','blade: ten','catastrophe','quietus','entropy','eviseration','impulse drive','insurgency','keen edge','leaden salute',
-					'mandalic stab','mercy stroke','requiscat','rundra\'s storm','nightmare scythe','omniscience','one inch punch','penta thrust','primal rend','retribution','shattersoul','starburst','stardiver',
-					'stringing pummel','sunburst','swift blade','tachi: kasha','tachi: rana','tachi: shoha','upheaval','gate of tartarus' },
+				['eleWS'] = { 'asuran fists','black halo','blade: ei','blade: hi','blade: kamu','blade: ku','blade: ten','catastrophe','quietus','entropy','eviseration','impulse drive','insurgency','keen edge','leaden salute','mandalic stab','mercy stroke','requiscat','rundra\'s storm','nightmare scythe','omniscience','one inch punch','penta thrust','primal rend','retribution','shattersoul','starburst','stardiver','stringing pummel','sunburst','swift blade','tachi: kasha','tachi: rana','tachi: shoha','upheaval','gate of tartarus' },
 			},
 			['searched'] = false,	
 		},
@@ -627,7 +606,7 @@ gcinclude.tSpell = {
 	['barspell']   = { 
 				['ele'] = {
 						   'baraero','baraera','barblizzard','barblizzara',
-						   'barfire','barfira','barstone','barstonra',
+						   'barfire','barfira','barstone','barstonera',
 						   'barthunder','barthundra','barwater','barwatera' 
 						  },
 				['status'] = {
@@ -641,6 +620,8 @@ gcinclude.tSpell = {
 					 'enwater','enlight','endark'
 				     },
 	['spikes']	   = { 'blaze','ice','shock','dread' },
+	['avatars']	   = { 'garuda','shiva','titan','ifrit','ramuh','leviathan',
+					   'carbuncle', 'fenrir', 'diabolos' },
 	['spirits']    = { 
 					 'fire','firespirit','fire spirit','ice','icespirit','ice spirit',
 					 'air','airspirit','air spirit','earth','earthspirit','earth spirit',
@@ -1053,9 +1034,9 @@ gcinclude.tEquipIt = {
 	['home']   = { ['Name'] = 'Homing Ring', ['Slot'] = 'Ring' },
 	['ret']    = { ['Name'] = 'Return Ring', ['Slot'] = 'Ring' },
 	['tav']    = { ['Name'] = 'Tavnazian Ring', ['Slot'] = 'Ring' },
-	['tin']	   = { ['Name'] = 'Tinfoil Hat', ['Slot'] = 'Head' },
 	['dcl']    = { ['Name'] = 'Dcl.Grd. Ring', ['Slot'] = 'Ring' },
 	['warp']   = { ['Name'] = 'Warp Cudgel', ['Slot'] = 'Main' },
+	['tin']	   = { ['Name'] = 'Tinfoil Hat', ['Slot'] = 'Head' },
 	['trick2'] = { ['Name'] = 'Trick Staff II', ['Slot'] = 'Main' },
 	['treat2'] = { ['Name'] = 'Treat Staff II', ['Slot'] = 'Main' },
 	['purgo']  = { ['Name'] = 'Wonder Top +1', ['Slot'] = 'Body' },
@@ -1581,7 +1562,11 @@ gcinclude.ClaimSlips = {
 -- The slots will have a set structure providing details about every gear
 -- piece in the job file/gcinclude so that when checking for the piece of
 -- gear, the details that would require looking up item details will already
--- be known, thus avoiding excessive server requests.
+-- be known, thus avoiding successive server requests. It is hoped this will
+-- help alleviate some of the lag. (Each piece is identified by name and 
+-- includes the item's level, if it can be worn by the player's job, and 
+-- is the piece accessible out of the moghouse. The item ID number will
+-- also be tracked for verification purposes, but not included in the search.)
 gcinclude.GearDetails = {
 	['main']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },		
 	['sub']   = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} },
@@ -1614,25 +1599,25 @@ gcinclude.Sets = gcinclude.sets;
 ashita.events.register('packet_in', 'packet_in_callback1', function (e)
 
 	if (e.id == 0x05E) then
-		gcinclude.RegionControl['Ronfaure']['own'] =        struct.unpack('B', e.data, 0x1E)
-		gcinclude.RegionControl['Zulkheim']['own'] =        struct.unpack('B', e.data, 0x22)
-		gcinclude.RegionControl['Norvallen']['own'] =       struct.unpack('B', e.data, 0x26)
-		gcinclude.RegionControl['Gustaberg']['own'] =       struct.unpack('B', e.data, 0x2A)
-		gcinclude.RegionControl['Derfland']['own'] =        struct.unpack('B', e.data, 0x2E)
-		gcinclude.RegionControl['Sarutabaruta']['own'] =    struct.unpack('B', e.data, 0x32)
-		gcinclude.RegionControl['Kolshushu']['own']    =    struct.unpack('B', e.data, 0x36)
-		gcinclude.RegionControl['Argoneau']['own'] =        struct.unpack('B', e.data, 0x3A)
-		gcinclude.RegionControl['Fauregandi']['own'] =      struct.unpack('B', e.data, 0x3E)
-		gcinclude.RegionControl['Valdeaunia']['own'] =      struct.unpack('B', e.data, 0x42)
-		gcinclude.RegionControl['QuifimIsland']['own'] =    struct.unpack('B', e.data, 0x46)
-		gcinclude.RegionControl['LiTelor']['own'] =         struct.unpack('B', e.data, 0x4A)
-		gcinclude.RegionControl['Kuzotz']['own'] =          struct.unpack('B', e.data, 0x4E)
-		gcinclude.RegionControl['Vollbow']['own'] =         struct.unpack('B', e.data, 0x52)
+		gcinclude.RegionControl['Ronfaure']['own'] = struct.unpack('B', e.data, 0X1E)
+		gcinclude.RegionControl['Zulkheim']['own'] = struct.unpack('B', e.data, 0x22)
+		gcinclude.RegionControl['Norvallen']['own'] = struct.unpack('B', e.data, 0x26)
+		gcinclude.RegionControl['Gustaberg']['own'] = struct.unpack('B', e.data, 0x2A)
+		gcinclude.RegionControl['Derfland']['own'] = struct.unpack('B', e.data, 0x2E)
+		gcinclude.RegionControl['Sarutabaruta']['own'] = struct.unpack('B', e.data, 0x32)
+		gcinclude.RegionControl['Kolshushu']['own'] = struct.unpack('B', e.data, 0x36)
+		gcinclude.RegionControl['Argoneau']['own'] = struct.unpack('B', e.data, 0x3A)
+		gcinclude.RegionControl['Fauregandi']['own'] = struct.unpack('B', e.data, 0x3E)
+		gcinclude.RegionControl['Valdeaunia']['own'] = struct.unpack('B', e.data, 0x42)
+		gcinclude.RegionControl['QuifimIsland']['own'] = struct.unpack('B', e.data, 0x46)
+		gcinclude.RegionControl['LiTelor']['own'] = struct.unpack('B', e.data, 0x4A)
+		gcinclude.RegionControl['Kuzotz']['own'] = struct.unpack('B', e.data, 0x4E)
+		gcinclude.RegionControl['Vollbow']['own'] = struct.unpack('B', e.data, 0x52)
 		gcinclude.RegionControl['ElshimoLowlands']['own'] = struct.unpack('B', e.data, 0x56)
-		gcinclude.RegionControl['ElshimoUplands']['own'] =  struct.unpack('B', e.data, 0x5A)
-		gcinclude.RegionControl['Tulia']['own'] =           struct.unpack('B', e.data, 0x5E)
-		gcinclude.RegionControl['Movapolos']['own'] =       struct.unpack('B', e.data, 0x62)
-		gcinclude.RegionControl['Tavnazia']['own'] =        struct.unpack('B', e.data, 0x66)
+		gcinclude.RegionControl['ElshimoUplands']['own'] = struct.unpack('B', e.data, 0x5A)
+		gcinclude.RegionControl['Tulia']['own'] = struct.unpack('B', e.data, 0x5E)
+		gcinclude.RegionControl['Movapolos']['own'] = struct.unpack('B', e.data, 0x62)
+		gcinclude.RegionControl['Tavnazia']['own'] = struct.unpack('B', e.data, 0x66)
 		if gcdisplay ~= nil then
 			RegionDisplay();
 		end	
@@ -2005,7 +1990,7 @@ function gcinclude.fIsLocked(val)
 	local index = nil;
 	
 	if val == nil then
-		print(chat.header('fIsLocked'):append(chat.message('Error: slot undefined')));
+		print(chat.header('fIsLocked'):append(chat.message('Error: "val" undefined')));
 		return true;	-- This error should never occur. Assume it's locked.
 	else
 		if type(val) == "number" then
@@ -2243,7 +2228,7 @@ function RefreshVariables()
 	gcdisplay.CreateToggle('WSwap', (string.find('WHM,BRD,RDM',player.MainJob) ~= nil));
 
 	-- SPF		-- Show Pull Feedback
-	gcdisplay.CreateToggle('sPF', true);
+	gcdisplay.CreateToggle('SPF', true);
 
 	-- Macc
 	if string.find(gcinclude._sMagicJobs,player.MainJob) ~= nil or
@@ -2280,6 +2265,7 @@ function RefreshVariables()
 	-- SMN: sBP		-- Show Blood Pact
 	if player.MainJob == 'SMN' then
 		gcdisplay.CreateToggle('sBP', true);
+		gcdisplay.CreateCycle('Mode', {[1] = 'PERP', [2] = 'ATTK'});
 	end	
 end		-- RefreshVariables
 
@@ -2296,10 +2282,10 @@ function SetVariables()
 	gcdisplay.CreateToggle('Eva', false);
 	gcdisplay.CreateToggle('Idle', true);
 	gcdisplay.CreateToggle('SS', false);
-	gcdisplay.CreateToggle('sPF', true);
+	gcdisplay.CreateToggle('SPF', true);
 		
 	if string.find('SMN,BLM',player.MainJob) == nil then
-		gcdisplay.CreateToggle('WSwap',(string.find('WHM,RDM,BRD',player.MainJob) ~= nil));
+		gcdisplay.CreateToggle('WSwap',(string.find('WHM,RDM',player.MainJob) ~= nil));
 	end
 
 	-- Job specific toggles	
@@ -2330,6 +2316,7 @@ function SetVariables()
 	
 	if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
 		gcdisplay.CreateToggle('sBP', true);
+		gcdisplay.CreateCycle('Mode', {[1] = 'PERP', [2] = 'ATTK'});
 	end
 	
 	-- General cycles
@@ -3785,7 +3772,7 @@ function gcinclude.fBuffed(test,bStart)
 		bStart = false;
 	end
 	
-	test = string.lower(test);
+	test = string.lower(string.gsub(test,'_',' '));
 	for _, buff in pairs(buffs) do
 		local buffString = AshitaCore:GetResourceManager():GetString("buffs.names", buff);
 			
@@ -4010,7 +3997,7 @@ function fCheckInline(gear,sSlot,ts)
 					 (gSet['Ammo'] ~= nil and 
 					  table.find(gProfile.WeaponType[suCode],gSet['Ammo']) ~= nil)));
 		elseif suCode == 'AMORPH' then
-			-- Equip if target creature is from the Amorph family			print('EnhancementSinging');
+			-- Equip if target creature is from the Amorph family
 			bGood = false;
 			local tg = gData.GetTarget();
 			if tg ~= nil and tg.Name ~= nil then
@@ -4321,6 +4308,9 @@ function fCheckInline(gear,sSlot,ts)
 		elseif suCode == 'POISONED' then
 			-- Equip if the player is poisoned
 			bGood = gcinclude.fBuffed('Poison');
+		elseif suCode == 'SHINING_RUBY' then
+			-- Equip if player has the shining ruby buff
+			bGood = (gcinclude.fBuffed('Shining Ruby',true));
 		elseif suCode == 'SILENCED' then
 			-- Equip if the player is silenced
 			bGood = gcinclude.fBuffed('Silence');
@@ -4330,7 +4320,7 @@ function fCheckInline(gear,sSlot,ts)
 		elseif suCode == 'SLEPT' then
 			-- Equip if the player is slept
 			bGood = gcinclude.fBuffed('Sleep');
-		elseif string.sub(suCode,1,4) == 'SMN:' then
+		elseif string.sub(suCode,1,4) == 'SMN:' and suCode ~= 'SMN:AVATAR' then
 			-- Equip if the pet being summoned is named ...
 			if spell == nil then
 				bGood = false;
@@ -4380,6 +4370,13 @@ function fCheckInline(gear,sSlot,ts)
 		elseif suCode == 'SPIKE' then
 			-- Equip if player has a "spike" buff
 			bGood = (gcinclude.fBuffed('Spike'));
+		elseif suCode == 'SMN:AVATAR' then
+			-- Equip if the pet being summoned is an avatar (not elemental spirit)
+			if spell == nil then
+				bGood = false;
+			else
+				bGood = (table.find(gcinclude.tSpell['avatars'],string.lower(spell.Name)) ~= nil);
+			end
 		elseif suCode == 'SPIRIT:ES' then
 			-- Equip if the pet being summoned is an elemental spirit
 			if spell == nil then
@@ -4634,11 +4631,12 @@ function RegionControlDisplay()
 end		-- RegionControlDisplay
 
 function gcinclude.t1(args)
-	local pEntity = AshitaCore:GetMemoryManager():GetEntity();
 	local targetIndex = gData.GetTargetIndex();
-	local x = pEntity:GetRace(targetIndex);
+	local tEntity = gData.GetEntity(targetIndex);
 
-	print(chat.message('ID: ' .. tostring(pEntity.Id)));
+	if tEntity.Name ~= nil then
+		print(chat.message(string.format('%s: %s',tEntity.Name,tEntity.Type)));
+	end
 end
 
 --[[
@@ -4704,12 +4702,12 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride,bIgnoreWSWAP)
 		return;
 	end
 
-	-- bIgnoreWSWAP let's the invoker ignore the check on swapping in weapons if true
 	if bIgnoreWSWAP == nil then
 		bIgnoreWSWAP = false;
 	end
 	
-	-- bOverride let's the invoker ignore any locks currently enabled wherever a slot collides
+	-- bOverride indicates that weapons, if specified, will be
+	-- equipped regardless of the /WSWAP setting
 	if bOverride == nil then
 		bOverride = false;
 	end
@@ -4903,26 +4901,7 @@ function CheckForExceptions(tSet)
 				end
 			end	
 		end
-
-		if gear.Ring1 ~= nil then
-			-- Pelican Ring can be on either finger. If enchant going, keep equipped
-			if gear.Ring1.Name == 'Pelican Ring' and tSet['Ring1'] ~= nil and tSet['Ring1'] ~= 'Pelican Ring' then
-				tSet['Ring1'] = 'Albatross Ring';
-			if sList == nil then
-				sList = 'Pelican Ring';
-			else
-				sList = sList .. ',' .. 'Pelican Ring';
-			end
-			elseif gear.Ring2.Name == 'Pelican Ring' and tSet['Ring2'] ~= nil and tSet['Ring2'] ~= 'Pelican Ring' then
-				tSet['Ring2'] = 'Pelican Ring';
-				if sList == nil then
-					sList = 'Pelican Ring';
-				else
-					sList = sList .. ',' .. 'Pelican Ring';
-				end
-			end
-		end
-
+		
 		if gear.Main ~= nil  and tSet['Main'] ~= nil then
 			-- 'High Mana Wand' and 'Mana Wand' have to be equipped if enchantment going
 			if gear.Main.Name == 'High Mana Wand' and tSet['Main'] ~= 'High Mana Wand' then
@@ -5972,6 +5951,12 @@ function gcinclude.HandleCommands(args)
 		else
 			print(chat.header('HandleCommands'):append(chat.message('Error: /sBP is only available to summoners. Ignoring command')));
 		end
+	elseif (args[1] == 'mode') then			-- Turns on/off smn emphasis on gear type when pet out
+		if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
+			gcdisplay.AdvanceCycle('Mode');
+		else
+			print(chat.header('HandleCommands'):append(chat.message('Error: /Mode is only available to summoners. Ignoring command')));
+		end
 	elseif (args[1] == 'ajug') then			-- Turns on/off whether Automatic Jug assignment enabled
 		if player.MainJob == 'BST' then
 			gcdisplay.AdvanceToggle('AJug');
@@ -5979,10 +5964,10 @@ function gcinclude.HandleCommands(args)
 			print(chat.header('HandleCommands'):append(chat.message('Error: /AJug is only available to beastmasters. Ignoring command')));
 		end	
 	elseif (args[1] == 'th') then			-- Turns on/off whether TH gear should be equipped
-		if player.MainJob == 'THF' then
+		if player.MainJob == 'THF' or player.SubJob == 'THF' then
 			gcdisplay.AdvanceToggle('TH');
 		else
-			print(chat.header('HandleCommands'):append(chat.message('Error: /TH is only available to thieves. Ignoring command')));
+			print(chat.header('HandleCommands'):append(chat.message('Error: /TH is only available to thieves (THF/ or /THF). Ignoring command')));
 		end
 	elseif (args[1] == 'ss') then			-- Turns on/off whether Show Action feedback should be displayed
 		if player.MainJob == 'THF' then
@@ -5991,7 +5976,7 @@ function gcinclude.HandleCommands(args)
 			print(chat.header('HandleCommands'):append(chat.message('Error: /SS is only available to thieves. Ignoring command')));
 		end
 	elseif (args[1] == 'spf') then			-- Turns on/off whether Show Pull feedback should be displayed
-		gcdisplay.AdvanceToggle('sPF');
+		gcdisplay.AdvanceToggle('SPF');
 	elseif (args[1] == 'db') then
 		if player.MainJob == 'BST' then
 			if args[2] ~= nil then
@@ -6113,7 +6098,7 @@ function gcinclude.HandleCommands(args)
 				sTxt = '/ra <t>';
 			end
 			if bSkip == false and sTxt ~= nil then
-				if gcdisplay.GetToggle('sPF') == true then
+				if gcdisplay.GetToggle('SPF') == true then
 					local sMsg = '/p Pulling ' .. targetEntity.Name .. ' [' .. gcinclude.fTargetId(targetIndex) .. ']';
 					AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
 				end
@@ -6140,6 +6125,7 @@ function gcinclude.HandleCommands(args)
 			local sArg = string.upper(args[2]);
 			local sTmp = ',' .. gcinclude.Crafting_Types .. ',';
 			local sTmp2 = ',' .. gcinclude.Gathering_Types .. ',';
+print(sArg);
 			if string.find(sTmp,sArg) ~= nil or string.find(sTmp2,sArg) ~= nil then
 				-- gather or crafting set
 				if string.find(sTmp,sArg) then
@@ -6147,7 +6133,7 @@ function gcinclude.HandleCommands(args)
 					gcinclude.Craft = sArg;
 					gcinclude.MoveToCurrent(gcinclude.sets.Crafting,gcinclude.sets.CurrentGear,false,true);					
 				else
-				-- Gather set
+					-- Gather set
 					gcinclude.Gather = sArg;
 					gcinclude.MoveToCurrent(gcinclude.sets.Gathering,gcinclude.sets.CurrentGear,false,true);
 				end
@@ -6341,6 +6327,10 @@ end		-- gcinclude.CheckWsBailout
 	PetReward scans all equipable storage containers for all of the pet foods and
 	tallies which ones the player has. Then, it picks the one likely to have the
 	most benefit for the "reward" based on the level and what was passed in.
+
+	Parameters
+		sFood
+		bMax
 --]]
 
 function gcinclude.fPetReward(sFood,bMax)
@@ -6351,7 +6341,7 @@ function gcinclude.fPetReward(sFood,bMax)
 	local containerID;
 	local i1,i2,step;
 	local _ammo = 4;	-- Lock # for ammo slot
-	
+
 	if bMax == nil then
 		bMax = true;
 	end
@@ -6361,12 +6351,12 @@ function gcinclude.fPetReward(sFood,bMax)
 		print(chat.header('PetReward'):append(chat.message('Ammo slot locked. Unable to equip any pet food')));
 		return false;
 	end
-		
+
 	-- Reset the pet food indicators
 	for i,j in ipairs(gcinclude.tPetFood) do
 		j['have'] = false;;
 	end
-	
+
 	-- Now, note which pet foods the player has
 	for i,j in ipairs(tStorage) do
 		containerID = j['id'];
@@ -6386,7 +6376,7 @@ function gcinclude.fPetReward(sFood,bMax)
 			end
 		end
 	end
-	
+
 	-- Determine order to process
 	if bMax == true then
 		i1 = 1; i2 = gcinclude._PetFoodCount; step = 1;
@@ -6397,16 +6387,16 @@ function gcinclude.fPetReward(sFood,bMax)
 	-- Then process what was found
 	local iFound = -1;
 	for i = i1,i2,step do
-		if sFood ~= nil and string.lower(sFood) == gcinclude.tPetFood[i]['name'] and 
-			gcinclude.tPetFood[i]['have'] == true and 
+		if sFood ~= nil and string.lower(sFood) == gcinclude.tPetFood[i]['name'] and
+			gcinclude.tPetFood[i]['have'] == true and
 			gcinclude.tPetFood[i]['lvl'] <= player.MainJobSync then
 			iFound = i;
-		elseif gcinclude.tPetFood[i]['have'] == true and 
+		elseif gcinclude.tPetFood[i]['have'] == true and
 			gcinclude.tPetFood[i]['lvl'] <= player.MainJobSync then
 			iFound = i;
 		end
 	end
-	
+
 	if iFound > 0 then
 		local sName = gcinclude.tPetFood[iFound]['name'];
 		gFunc.ForceEquip('Ammo', sName);
@@ -6451,11 +6441,11 @@ end		-- gcinclude.Initialize
 function gcinclude.HandlePrecast()
 	local spell = gData.GetAction();
 	local bTank = gcdisplay.GetToggle('Tank');
-	
+
 	if bTank == nil then
 		bTank = false;
 	end
-	
+
 	if spell.Skill == 'Singing' then
 		gcinclude.MoveToCurrent(gProfile.Sets.SingingPrecast,gProfile.Sets.CurrentGear);
 	else
@@ -6654,6 +6644,16 @@ function MidcastDarkMagic()
 			gcinclude.MoveToCurrent(gProfile.Sets.Tank_Aspir,gProfile.Sets.CurrentGear);
 		else
 			gcinclude.MoveToCurrent(gProfile.Sets.Aspir,gProfile.Sets.CurrentGear);
+		end	
+		
+		-- Check for an elemental obi. First determine if a bonus is possible 
+		-- based on day's element and/or weather
+		sGear,sEle = gcinclude.fCheckForElementalGearByValue('obi','MEacc',root);
+		if sGear ~= nil then
+			pDay,pWeather = fCheckObiDW(sEle);
+			if pDay + pWeather > 0 then
+				gProfile.Sets.CurrentGear['Waist'] = sGear;
+			end
 		end	
 		
 		-- Check for an elemental obi. First determine if a bonus is possible 

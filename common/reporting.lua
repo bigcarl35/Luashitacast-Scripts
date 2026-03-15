@@ -19,9 +19,6 @@ local reporting = {};
             lGearSetListingReport   Display gear list in gearset format
             ProcessSMG              Processes the invocation of /smg
             RegionControlDisplay    Displays all regions and who controls them
-
-        Functions:
-            fCompactLocks           Generates a compact list of the locks
 --]]
 
 --[[
@@ -38,9 +35,8 @@ function reporting.DB_ShowIt()
     print(chat.message('Job: ' .. player.MainJob .. '/' .. player.SubJob));
     print(chat.message('Level: ' .. tostring(player.MainJobSync) .. '(' .. tostring(player.MainJobLevel) .. ')'));
     print(chat.message(' '));
-    print(chat.message('WScheck: ' .. tostring(crossjobs.settings.WScheck)));
-    print(chat.message('WSdistance: ' .. tostring(crossjobs.settings.WSdistance)));
-    print(chat.message('bWSOverride: ' .. tostring(crossjobs.settings.bWSOverride)));
+    print(chat.message('WScheck: ' .. tostring(gProfile.settings.WScheck)));
+    print(chat.message('WSdistance: ' .. tostring(gProfile.settings.WSdistance)));
     print(chat.message('GC run? ' .. tostring(gear,bGC)));
     if sSlip == nil then
         print(chat.message('Slips: None'));
@@ -75,9 +71,14 @@ end     -- reporting.DisplayVersion
 --[[
     RegionControlDisplay displays all the regions under conquest control
     along with who currently controls them.
+
+    Pararameter
+        args    possible file designation
+
+++ modify for file ++
 --]]
 
-function reporting.RegionControlDisplay()
+function reporting.RegionControlDisplay(args)
 -- List of numeric representations for who controls a region
 
     -- Make sure we know what nation we belong to
@@ -89,7 +90,7 @@ function reporting.RegionControlDisplay()
     if crossjobs.OwnNation < -1 or crossjobs.OwnNation > 4 then
         print(chat.message('Warning: Unknown player\'s nation = ' .. tostring(crossjobs.OwnNation)));
     else
-        print(chat.message('Info: Player\'s nation = ' .. sAreas[crossjobs.OwnNation]));
+        print(chat.message('Info: Player\'s nation = ' .. gVars.tRegionControllerSettings[crossjobs.OwnNation]));
     end
 
     print(' ');
@@ -120,8 +121,7 @@ function reporting.DisplayCC()
     if gProfile.CustomConditionals ~= nil and #gProfile.CustomConditionals > 0 then
         print(chat.message('Info: Custom conditionals list:'));
         for _,j in ipairs(gProfile.CustomConditionals) do
-            j['code'] = string.upper(j['code']);
-            print(chat.message('   ' ... j['code'] .. ' - ' .. j['question'] .. ': ' .. utilities.GetToggle(j[code])));
+            print(chat.message('   ' .. string.upper(j['code']) .. ' - ' .. j['question'] .. ': ' .. tostring(utilities.fGetToggle(j['code']))));
         end
     else
        print(chat.message('Info: No custom conditionals are defined'));
@@ -149,7 +149,7 @@ function lFileItemStats(sName,sSlot,fptr)
 
     if fptr == nil then
         return;
-    emd
+    end
 
     sSlot = string.lower(sSlot);
     sName = string.lower(sName);
@@ -241,7 +241,7 @@ end	-- lDisplayItemStats
     ProcessSMG processes the invocation of Show My Gear reporting command.
 
     Syntax
-        /smg gs|sl [noac] [gs=set name,set name,...] [slot=slot name,slot name,...] [|]
+        /smg [g|s] [noac] [gs=set name,...] [slot=slot name|number,...] [file[=name] ][+]
 
         The invocation parameters can be applied in any order. The more you
         specify, the more restricted the report. Each invocation produces only
@@ -295,13 +295,13 @@ function reporting.ProcessSMG(args)
 
             if lv == 'noac' then
                 rec['bNoac'] = true;
-            if string.find('gs,sl',lv) ~= nil then
+            elseif string.find('gs,sl',lv) ~= nil then
                 rec['type'] = lv;
             elseif string.find(lv,'gs=') ~= nil and string.len(lv) > 3 then
-                rec['gs'] = string.sub(args[i],4,-1));      -- skip the gs=
+                rec['gs'] = string.sub(args[i],4,-1);      -- skip the gs=
                 rec['tgs'] = utilities.fSplitStringByDelimiter(rec['gs'],',');
             elseif string.find(lv,'slot=') ~= nil and string.len(lv) > 5 then
-                rec['slot'] = string.sub(args[i],6,-1));    -- skip the slot=
+                rec['slot'] = string.sub(args[i],6,-1);    -- skip the slot=
                 rec['tslot'] = utilities.fSplitStringByDelimiter(rec['slot'],',');
             elseif string.sub(lv,1,1) == '|' then
                 rec['bFile'] = true
@@ -558,6 +558,7 @@ end     -- reporting.DisplayMessage
 function reporting.GearCheckList()
 
     if gear.fHasGCBeenRun() == true then
+        print(chat.message('Resultant gear breakdown:'));
         for i,j in pairs(gVars.tGearDetails) do
             print(chat.message('   [' .. i .. '] - ' .. tostring(j['num'])));
         end
@@ -606,61 +607,5 @@ function reporting.DisplayOnce(msg,bOverride)
         end
     end
 end     -- reporting.fDisplayOnce
-
---[[
-    fCompactLocks walks the locks list and generates a compact display of the active locks.
-
-    Return:
-        List of active locks
---]]
-
-function reporting.fCompactLocks()
-    local bFound = false;
-    local iStart = nil;
-    local sList = nil;
-
-    for i,j in ipairs(locks.tLocks) do
-        if j['lock'] == true then
-            -- locked slot. Tag if no range started yet
-            if iStart == nil then
-                iStart = i;
-            end
-        elseif iStart ~= nil then
-            -- no lock, but indicates range is done
-            if i == (iStart + 1) then
-                -- No range, just back to back locks
-                if sList == nil then
-                    sList = tostring(iStart) ;
-                else
-                    sList = sList .. ',' .. tostring(iStart);
-                end
-            else
-                -- it is a range
-                if sList == nil then
-                    sList = tostring(iStart) .. '-' .. tostring(i-1);
-                else
-                    sList = sList .. ',' .. tostring(iStart) .. '-' .. tostring(i-1);
-                end
-            end
-            iStart = nil;
-        end
-    end
-
-    if iStart ~= nil then
-        if iStart < 16 then
-            if sList == nil then
-                sList = tostring(iStart) .. '-16';
-            else
-                sList = sList .. ',' .. tostring(iStart) .. '-16';
-            end
-        else
-            if sList == nil then
-                sList = '16'
-            else
-                sList = sList .. ',16';
-            end
-        end
-    end
-end     -- reporting.fCompactLocks
 
 return reporting;

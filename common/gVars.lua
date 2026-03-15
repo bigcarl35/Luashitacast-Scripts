@@ -239,7 +239,7 @@ gVars.tElemental_gear = {
             ['Ref'] = {},
             ['skillProp'] = { 'compression','gravitation','darkness' },
             ['eleWS'] = { 'asuran fists','black halo','blade: ei','blade: hi','blade: kamu','blade: ku','blade: ten','catastrophe','quietus','entropy','eviseration','impulse drive',
-                'insurgency','keen edge','leaden salute','mandalic stab','mercy stroke','requiscat','rundra\'s storm','nightmare scythe','omniscience','one inch punch','penta thrust',
+                'insurgency','keen edge','leaden salute','maturns gear swapping on or offndalic stab','mercy stroke','requiscat','rundra\'s storm','nightmare scythe','omniscience','one inch punch','penta thrust',
                 'primal rend','retribution','shattersoul','starburst','stardiver','stringing pummel','sunburst','swift blade','tachi: kasha','tachi: rana','tachi: shoha','upheaval',
                 'gate of tartarus' },
         },
@@ -247,37 +247,58 @@ gVars.tElemental_gear = {
     },
 };
 
+-- Define constants for Region so typos aren't made
+gVars._REGION_SANDY = 1;
+gVars._REGION_BASTOK = 2;
+gVars._REGION_WINDY = 3;
+gVars._REGION_NA = 0;
+gVars._REGION_UNKNOWN = -1;
+
 -- This table tracks regional control using zone id's associated with a region, and querying the server for who last gained
 -- conquest of the region. This table is automatically populated by digesting the appropriate packet from the server when
--- the player zones. 1 - San d'Orian, 2 - Bastokian, 3 - Windurstian, 0 - not applicable, -1 unassigned.
+-- the player zones.
+
 gVars.RegionControl = {
-    ['Argoneau'] 		= { ['own'] = -1, ['zones'] = {152,7,8,151,200,119,120}},
-    ['Bastok'] 			= { ['own'] =  2, ['zones'] = {234,235,236,237}},
-    ['Derfland']		= { ['own'] = -1, ['zones'] = {147,197,109,148,110}},
-    ['ElshimoLowlands']	= { ['own'] = -1, ['zones'] = {250,252,176,123}},
-    ['ElshimoUplands']	= { ['own'] = -1, ['zones'] = {207,211,160,205,163,159,124}},
-    ['Fauregandi']		= { ['own'] = -1, ['zones'] = {111,203,204,9,206,166,10}},
-    ['Gustaberg']		= { ['own'] = -1, ['zones'] = {191,173,106,143,107,144,172}},
-    ['Jeuno']			= { ['own'] =  0, ['zones'] = {243,244,245,246}},
-    ['Kolshushu']		= { ['own'] = -1, ['zones'] = {4,118,213,3,198,249,117}},	-- Purgonorgo Isle doesn't have a separate ID
-    ['Kuzotz']			= { ['own'] = -1, ['zones'] = {209,114,168,208,247,125}},
-    ['LiTelor']			= { ['own'] = -1, ['zones'] = {153,202,154,251,122,121}},
-    ['Movapolos']		= { ['own'] = -1, ['zones'] = {13,12,11}},
-    ['Norvallen']		= { ['own'] = -1, ['zones'] = {105,104,2,150,149,1,195}},
-    ['QuifimIsland']	= { ['own'] = -1, ['zones'] = {127,184,157,126,179,158}},
-    ['Ronfaure']		= { ['own'] = -1, ['zones'] = {167,101,141,140,139,190,100,142}},
-    ['Sandoria']		= { ['own'] =  1, ['zones'] = {230,231,232,233}},
-    ['Sarutabaruta']	= { ['own'] = -1, ['zones'] = {146,116,170,145,192,194,169,115}},
-    ['Tavnazia']		= { ['own'] = -1, ['zones'] = {24,25,31,27,30,29,28,32,26}},
-    ['Tulia']			= { ['own'] = -1, ['zones'] = {181,180,130,178,177}},
-    ['Valdeaunia']		= { ['own'] = -1, ['zones'] = {6,161,162,165,5,112}},
-    ['Vollbow']			= { ['own'] = -1, ['zones'] = {113,201,212,174,128}},
-    ['Windurst']		= { ['own'] =  3, ['zones'] = {238,239,240,241,242}},
-    ['Zulkheim']		= { ['own'] = -1, ['zones'] = {196,108,102,193,248,103}},
-    ['Dynamis']			= { ['own'] =  0, ['zones'] = {39,40,41,42,134,135,185,186,187,188}},
-    ['Lumoria']			= { ['own'] =  0, ['zones'] = {33,34,35,36,37,38}},
-    ['Promyvion']		= { ['own'] =  0, ['zones'] = {16,17,18,19,20,21,22,23,39,40,41,42}}
+    ['Argoneau'] 		= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {152,7,8,151,200,119,120}},
+    ['Bastok'] 			= { ['own'] = gVars._REGION_BASTOK,  ['zones'] = {234,235,236,237}},
+    ['Derfland']		= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {147,197,109,148,110}},
+    ['ElshimoLowlands']	= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {250,252,176,123}},
+    ['ElshimoUplands']	= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {207,211,160,205,163,159,124}},
+    ['Fauregandi']		= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {111,203,204,9,206,166,10}},
+    ['Gustaberg']		= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {191,173,106,143,107,144,172}},
+    ['Jeuno']			= { ['own'] = gVars._REGION_NA,      ['zones'] = {243,244,245,246}},
+    ['Kolshushu']		= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {4,118,213,3,198,249,117}},	-- Purgonorgo Isle doesn't have a separate ID
+    ['Kuzotz']			= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {209,114,168,208,247,125}},
+    ['LiTelor']			= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {153,202,154,251,122,121}},
+    ['Movapolos']		= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {13,12,11}},
+    ['Norvallen']		= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {105,104,2,150,149,1,195}},
+    ['QuifimIsland']	= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {127,184,157,126,179,158}},
+    ['Ronfaure']		= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {167,101,141,140,139,190,100,142}},
+    ['Sandoria']		= { ['own'] = gVars._REGION_SANDY,   ['zones'] = {230,231,232,233}},
+    ['Sarutabaruta']	= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {146,116,170,145,192,194,169,115}},
+    ['Tavnazia']		= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {24,25,31,27,30,29,28,32,26}},
+    ['Tulia']			= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {181,180,130,178,177}},
+    ['Valdeaunia']		= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {6,161,162,165,5,112}},
+    ['Vollbow']			= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {113,201,212,174,128}},
+    ['Windurst']		= { ['own'] = gVars._REGION_WINDY,   ['zones'] = {238,239,240,241,242}},
+    ['Zulkheim']		= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {196,108,102,193,248,103}},
+    ['Dynamis']			= { ['own'] = gVars._REGION_NA,      ['zones'] = {39,40,41,42,134,135,185,186,187,188}},
+    ['Lumoria']			= { ['own'] = gVars._REGION_NA,      ['zones'] = {33,34,35,36,37,38}},
+    ['Promyvion']		= { ['own'] = gVars._REGION_NA,      ['zones'] = {16,17,18,19,20,21,22,23,39,40,41,42}}
 };
+
+-- List of all conquest region controller's designations
+gVars.tRegionControllerSettings = {
+    [-1] = 'Unassigned', [0]  = 'N/A', [1]  = 'San d\'Orian', [2]  = 'Bastokian', [3]  = 'Windurstian', [4]  = 'Beastmen'
+};
+
+-- Define region status
+gVars._REGION_STATUS_UNKNOWN = 'Unknown';
+gVars._REGION_STATUS_NA = 'N/A';
+gVars._REGION_STATUS_OWNED = 'Owned';
+gVars._REGION_STATUS_NOT_OWNED = 'Not Owned';
+gVars._REGION_STATS_NA_NOT_OWNED = 'N/A (Not Owned)';
+gVars._REGION_STATUS_MUST_ZONE = 'Must Zone';
 
 -- This table contains a list of all of the gear found by Luashitacast in your job and crossjob file's gear sets.
 -- It is dynamically populated by the fGearCheck function found in gear.lua. This table was a solution to lag that
@@ -299,12 +320,17 @@ gVars.tGearDetails = {
     ['feet']  = { ['num'] = 0, ['acc'] = 0, ['vis'] = true, {} }
 };
 
+gVars._Progressive_ACC = 'Acc';
+gVars._Progressive_TACC = 'TAcc';
+gVars._Progressive_RACC = 'RAcc';
+gVars._Progressive_TRACC = 'TRAcc';
+
 -- This table holds tallied information about the different types of accuracy found in progressive structure
 gVars.tProgressive =  {
-    ['Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = 'Acc' },
-    ['Tank_Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = 'TAcc' },
-    ['Ranged_Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = 'RAcc' },
-    ['Tank_Ranged_Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = 'TRAcc' }
+    ['Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = gVars._Progressive_ACC },
+    ['Tank_Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = gVars._Progressive_TACC },
+    ['Ranged_Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = gVars._Progressive_RACC },
+    ['Tank_Ranged_Accuracy'] = { ['MaxStage'] = 0, ['CurStage'] = 0, ['Abbr'] = gVars._Progressive_TRACC },
 };
 
 -- This structure tracks gear pieces by gear set. It is dynamically populated by the fGearCheckItem function found
@@ -319,10 +345,17 @@ gVars.tGearsetDetails = {};
 --]]
 
 -- Version reference for Luashitacast (Boxcar)
-local gVars.version = {
+gVars.version = {
     ['author']	= 'Paiine',
     ['name']	= 'Luashitacast (Boxcar)',
-    ['version']	= '3.alpha.2',
+    ['version']	= '3.alpha.3',
+};
+
+-- List of all supported commands
+gVars.AliasList = {
+    '911','acc','ajug','cap','cc','db','dt','ei','equipit','eva','gc','gearset','gs','gswap','horn','idle',
+    'kite','lock','macc','man','maxsong','maxspell','mode','petfood','ptt','pull','racc','rc','rv','sbp',
+    'showit','smg','spf','ss','string','sw','tank','th','unlock','val','ver','wsdistance','wswap','t1'
 };
 
 -- Lists all player storage containers available in FFXI.
@@ -349,7 +382,7 @@ gVars.STORAGES = {
 
 -- Lists spells grouped by a dependency or a type. These are "root" names
 gVars.tSpellGroupings = {
-    ['int']		  =  { 'gravity','blind','sleep','sleepga','poison','poisonga','bind','dispel','blaze','ice','shock', },
+    ['int']		  =  { 'gravity','blind','sleep','sleepga','poison','poisonga','bind','dispel','blaze','ice','shock' },
     ['mnd']		   = { 'paralyze','slow','slowga','frazzle','distract','silence' },
     ['eDebuff']	   = { 'drown','burn','frost','choke','rasp','shock' },
     ['barspell']   = {
@@ -381,7 +414,7 @@ gVars.tWeaponSkills = {
     ['DEXINT']          = { 'gust slash','cyclone' },
     ['INT']             = { 'gate of tartarus' },
     ['INTMND']          = { 'spirit taker' },
-    ['MND']             = { 'energy steal','energy drain' },
+    ['MND']             = { 'energy steal','energy drain'},
     ['RANGED_AGI']      = { 'hot shot','split shot','sniper shot','slugshot','blast shot','heavy shot','detonator' }, -- MARKSMANSHIP
     ['RANGED_STRAGI']   = { 'flaming arrow','piercing arrow','dulling arrow','sidewinder','blast arrow','arching arrow','empyreal arrow','namas arrow' }, -- ARCHERY
     ['STR']             = { 'raging axe','smash axe','gale axe','avalanche axe','spinning axe','rampage','mistral axe','decimation','spinning attack','flat blade',
@@ -411,8 +444,8 @@ gVars.tSlotNames = {
     ['full']        = { 'subset','group','main','sub','range','ammo','head','neck','ear1','ear2','ears','body','hands','ring1','rings2','rings','back','waist','legs','feet' },
     ['progressive'] = { 'subset','main','sub','range','ammo','head','neck','ear1','ear2','ears','body','hands','ring1','rings2','rings','back','waist','legs','feet' },
     ['smg']         = {
-                         [1] = 'main',  [2] = 'sub',    [3] = 'range', [4] = 'ammo', [5] = 'head', [6] = 'neck', [7] = 'ears', [8] = 'body', [9] = 'hands', [10] = 'rings',
-                        [11] = 'back', [12] = 'waist', [13] = 'legs', [14] = 'feet'
+                         [1] = 'main', [2] = 'sub', [3] = 'range', [4] = 'ammo', [5] = 'head', [6] = 'neck', [7] = 'ears', [8] = 'body',
+                         [9] = 'hands', [10] = 'rings', [11] = 'back', [12] = 'waist', [13] = 'legs', [14] = 'feet',
                       },
 };
 
@@ -437,17 +470,6 @@ gVars.tTownAreas = {
     ['Jeuno']  = { 'Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno' }
 };
 
--- List of all conquest region controller's designations
-gVars.tRegionControllerSettings = {
-    if table.find(tWeaponTypes,sType) == nil then
-        -- invalid weapons type specified
-        msg = 'Warning: invalid weapon type specified: ' .. osType;
-    reporting.DisplayOnce(msg);
-    return;
-    end
-    [-1] = 'Unassigned', [0]  = 'N/A', [1]  = 'San d\'Orian', [2]  = 'Bastokian', [3]  = 'Windurstian', [4]  = 'Beastmen'
-};
-
 -- Lists of gear storages that contain gear that can be equipped from outside of a moghouse
 gVars.EQUIPABLE = {
     gVars.STORAGES[1],		-- Inventory
@@ -456,11 +478,19 @@ gVars.EQUIPABLE = {
     gVars.STORAGES[17]		-- Wardrobe 8
 };
 
+-- List of gear storages that can contain gear that can be equipped
+gVars.EQUIPABLE_LIST = {
+    gVars.STORAGES[1]['id'],    -- Inventory
+    gVars.STORAGES[9]['id'],    -- Wardrobe
+    gVars.STORAGES[11]['id'],   -- Wardrobe 2
+    gVars.STORAGES[17]['id']    -- Wardrobe 8
+};
+
 -- List of gear storages that can contain gear that can be equipped, but not event gear
 gVars.EQUIPABLE_NONHOLIDAY = {
     gVars.STORAGES[1],		-- Inventory
     gVars.STORAGES[9],		-- Wardrobe
-    gVars.STORAGES[11]		-- Wardrobe 2utilities
+    gVars.STORAGES[11]		-- Wardrobe 2
 };
 
 -- List of storages that can contain other items besides gear. Please not that gear can be
@@ -482,9 +512,6 @@ gVars.NON_GEAR = {
     ********************
 --]]
 
--- Defined list of locks
-gVars.LocksListNumeric = 'None';
-
 -- Define arrays for toggles and cycles
 gVars.Toggles = {};
 gVars.Cycles = {};
@@ -503,6 +530,8 @@ gVars.offhand = nil;
 -- Indicates if /GC has been run or not
 gVars.bGC = false;
 
+-- Current regional setting
+gVars.sRegion = gVars._REGION_STATUS_MUST_ZONE;
 --[[
     ********************
     * global constants *
@@ -527,35 +556,77 @@ gVars._Gathering_Types = 'HELM,DIG,CLAM,FISH';
 gVars._validJobs = 'BLM,BLU,BRD,BST,COR,DNC,DRG,DRK,GEO,MNK,PLD,PUP,RDM,RNG,RUN,SAM,SCH,SMN,THF,WAR,WHM';
 
 -- List of all magic using jobs
-gVars._sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,BLU,SCH,GEO,RUN';
+gVars._sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,BLU,SCH,GEO,RUN,NIN,BRD';
 
--- List of all jobs that can tank
-gVars._TankJobs = 'PLD,NIN,RUN,DRK,WAR,THF,RDM,BLU';
+-- List of all jobs that can use ranged weapons (either range or ammo slot)
+gVars._sRangedJobs = 'NIN,PUP,SAM,DNC,COR,RNG,BLM,SCH,THF,WAR,BRD,MNK,WHM,RDM';
 
--- Llist of all elements
+-- List of all elements
 gVars._AllElements = 'fire,ice,wind,earth,thunder,water,light,dark';
+
+-- List of valid bst buff settings
+gVars._sDB_Debuffs = 'BPP,WSS';
+
+gVars._sDB_NORM = 'Norm';
+gVars._sDB_BPP = 'BPP';
+gVars._sDB_WSS = 'WSS';
 
 -- List of all toggles and cycles to reduce the likeliness of a typo or case mismatch.
 -- Start with ones that are
-gVars._GSWAP        = 'GSWAP';      -- Gear Swap
+gVars._GSWAP        = 'GSwap';      -- Gear Swap
 gVars._KITE         = 'Kite';       -- Kiting
 gVars._EVASION      = 'Eva';        -- Evasion
 gVars._IDLE         = 'Idle';       -- Idle
 gVars._SPF          = 'SPF';        -- Show Pull Feedback
-gVars._RARE         = 'RARE';       -- Permit rare items to be equipped (I think should be replaced by custom conditionals)
 gVars._WSWAP        = 'WSwap';      -- Weapon Swap
 gVars._TANK         = 'Tank';       -- Tanking
-gVars._MACC         = 'Macc';       -- Magic Accuracy
+gVars._MACC         = 'MAcc';       -- Magic Accuracy
+gVars._TH           = 'TH';         -- Treasure Hunter
 -- Job specific ones
 gVars._AJUG         = 'AJug';       -- Automatic pet Jug equipping
 gVars._DB           = 'DB';         -- pet DeBuff removal
 gVars._INSTRUMENT   = 'Instrument'; -- What type of instrument is the default
 gVars._SBP          = 'sBP';        -- Show Blood Pact
-gVars._MODE         = 'Mode';       -- SMN preference mode: ATTK (attack) or PERP (perpetuation)
-gVars._TH           = 'TH';         -- Treasure Hunter
+gVars._MODE         = 'Mode';       -- SMN preference mode: ATTK (attack), PERP (perpetuation), or ENMM (emnity minus)
 gVars._SS           = 'SS';         -- Show Steals
 gVars._DT           = 'DT';         -- Damage Taken
 gVars._REGION       = 'Region';     -- Region ownership
+-- Static display bar referernces
+gVars._JOB          = 'Job';        -- Job/sj
+gVars._CAP          = 'Cap';        -- Level cap
+gVars._GC           = 'GC';         -- Gear Check
+gVars._ACC          = 'Acc';        -- Accuracy
+gVars._RACC         = 'RAcc';       -- Range Accuracy
+gVars._LOCKS        = 'Locks';      -- Locked slots
+gVars._DAY          = 'Day';        -- Day
+gVars._TIME         = 'Time';       -- Time
+gVars._MOON         = 'Moon';       -- Moon phase
+gVars._WEATHER      = 'Weather';    -- Weather
+gVars._ZONE         = 'Zone';       -- Zone name
+gVars._CC           = 'CC';         -- Conditional Codes
+
+-- Define constants for DT so typos aren't made
+gVars._DT_OFF = 'Off';
+gVars._DT_PHY = 'Physical';
+gVars._DT_MAG = 'Magical';
+gVars._DT_BRE = 'Breath';
+
+gVars._DT_P = 'P';
+gVars._DT_M = 'M';
+gVars._DT_B = 'B';
+
+-- Define constants for Mode so typos aren't made
+gVars._MODE_ATTACK = 'ATTK';
+gVars._MODE_PERPETUATION = 'PERP';
+gVars._MODE_ENMITY_MINUS = 'ENMM';
+
+gVars._MODE_A = 'A';
+gVars._MODE_P = 'P';
+gVars._MODE_E = 'E';
+
+-- define constants for Instrument so typos aren't made
+gVars._HORN = 'Horn';
+gVars._STRING = 'String';
 
 -- Since gVars is loaded from all job files, the individual modules will be loaded here
 crossjobs   = gFunc.LoadFile('common\\crossjobs.lua');

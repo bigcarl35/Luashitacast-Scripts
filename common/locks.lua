@@ -31,6 +31,7 @@ locks.tSlotLocks = {
 
         Functions:
             fAreSlotsLocked         Determines if one or more passed slots are locked
+            fCompactLocks           Returns comma delimited list of locks in a compact manner
             fGetLockedList          Returns comma delimited list of locked slots
             fIsSlotLocked           Determines if passed slot is locked
             fMultiSlotLockCheck     Determines if multislotted item blocked by locks
@@ -47,7 +48,6 @@ locks.tSlotLocks = {
 --]]
 
 function locks.fIsSlotLocked(val)
-
 	if val == nil then
 		print(chat.message('Warning: slot undefined'));
 		return true;	-- This error should never occur. Assume it's locked.
@@ -55,12 +55,16 @@ function locks.fIsSlotLocked(val)
         print(chat.message('Warning: only one slot can be identified. ' .. val .. ' was sent to be processed'));
         return true;    -- This error should never occur. Assume it's locked.
     else
-        local slot = utilities.fValidSlots(val,gVars._SLOT_LA);
-        if slot == nil then
+        local bGood,slot = utilities.fValidSlots(val,gVars._SLOT_LA);
+        if bGood == false then
             print(chat.message('Warning: unrecognized slot: ' .. val));
             return true;    -- This error should never occur. Assume it's locked.
         end
-        return locks.tSlotLocks[slot]['lock'];
+        for i,j in ipairs(locks.tSlotLocks) do
+            if j['slot'] == slot then
+                return locks.tSlotLocks[i]['lock'];
+            end
+        end
     end
     return true;	-- This line should never be encountered. Assume it's locked.
 end		-- locks.fIsSlotLocked
@@ -118,9 +122,9 @@ function locks.fAreSlotsLocked(vals,bAll)
                 vals = nil;
             end
 
-            if locks.tLocks[sSlot] ~= nil then
+            if locks.tSlotLocks[sSlot] ~= nil then
                 -- Getting here means the slot was valid
-                if locks.tLocks[sSlot]['lock'] == true then
+                if locks.tSlotLocks[sSlot]['lock'] == true then
                     if bAll == false then
                         -- We found one which is enough
                         return true;
@@ -134,7 +138,7 @@ function locks.fAreSlotsLocked(vals,bAll)
                 end
             else
                 -- Can only get here if the slot is unrecognized
-                print(chat.message('Warning: Unrecognized slot in ' .. vals .. ': ' .. sSlot)));
+                print(chat.message('Warning: Unrecognized slot in ' .. vals .. ': ' .. sSlot));
                 return false;
             end
         until vals == nil;
@@ -160,112 +164,43 @@ end     -- locks.fAreSlotsLocked
         sExceptions     nil or list of slots to omit
         bIgnoreLocks    lets invoke ignore current locks
         bIgnoreWSWAP    lets invoke ignore WSWAP setting
-        bDisplay        should the display bar be updated
 
     Note: The previous implementation assumed all associated slots with the gearset would be
     occuppied. This implementation makes sure that's true and if not, will not lock the empty
     slot.
 
-    Note 2: This routine does not get rid of any current locks, it just adds locks for the
-    slots in the passed in gearset that evaluate to adding a piece of gear. Also, this
-    routine assumes that currently locked positions will block that passed in gearset's
-    overriding gear piece and that checks for multislot items will be handled in the
-    MoveToCurrent function.
+    Note 2: This version assumes that all of the slots in the passed in gearset that have
+    items are what is to be locked. Multislotted items and any current locks have already
+    been addressed.
 --]]
 
-function locks.LockByGearSet(gs,sExceptions,bIgnoreLocks,bIgnoreWSWAP,bDisplay)
-    local tDGS = {};    -- temporary dynamic gearset
+function locks.LockByGearSet(gs,sExceptions,bDisplay)
 
     if gs == nil then
         print(chat.message('Warning: No gearset or an undefined gearset was passed in. No slots will be locked.'));
         return;
     end
 
-    sExceptions = string.lower(sExceptions);
+    if sExceptions ~= nil then
+        sExceptions = string.lower(sExceptions);
+    end
 
-    if bIgnoreLocks == nil then
-        bIgnoreLocks = false;       -- Assume current locks will block a slot from being overriden
-    end
-    if bIgnoreWSWAP == nil then
-        bIgnoreWSWAP = false;       -- Assume ignoring weapon swapping is turned off
-    end
     if bDisplay == nil then
         bDisplay = true;            -- Assume that the display bar will need to be refreshed
     end
 
-    -- Now, load up the local dynamic gearset with the evaluated gearset
-    gear.MoveToDynamicGS(gs,tDGS,false,nil);
-
-    -- Then, walk the temporary dynamic set and lock any slot entries with a value unless
-    -- the slot is in the passed in exceptions list.
-
-    for i,j in pairs(tDGS) do
-        if sExceptions == nil or string.find(sExceptions,i) == nil then
-            if j ~= nil and j ~= '' then
-                locks.tLocks[i]['lock'] = true;
+    for i,j in pairs(gs) do
+        if not (j == nil or j == '') then
+            if sExceptions == nil or string.find(sExceptions,i) == nil then
+                for ii,jj in pairs(locks.tSlotLocks) do
+                    if jj['slot'] == utilities.fFormattedWord(i,gVars._SLOT_LA) then
+                        locks.tSlotLocks[ii]['lock'] = true;
+                    end
+                end
             end
         end
-    end
-
-    if bDisplay == true then
-            (true);
     end
 end     -- locks.LockByGearSet
-
---[[
-    fGetLockedList determines if any of the slots are locked and returns the appropriate list
-
-    Parameters:
-        bNumeric    Indicates if slot numbers or names should be returned, comma delimited
-
-    Returned:
-        list        List of slots locked or nil
-
-        ** revisit **
---]]
-
-function locks.fGetLockedList(bNumeric)
-    local sList = nil;
-    local snList = nil;
-
-    if bNumeric == nil then
-        bNumeric = true;
-    end
-
-    for i,j in ipairs(locks.tLocks) do
-        if j[sWhich] == true then
-            if sList == nil then
-                sList = utilities.fFormattedWord(j['slot'],gVars._SLOT_FA);
-                snList = tostring(i);
-                gVars.LocksListNumeric = tostring(i);
-            else
-                sList = sList .. ', ' .. utilities.fFormattedWord(j['slot'],gVars._SLOT_FA);
-                snList = snList .. ',' .. tostring(i);
-                gVars.LocksListNumeric = gVars.LocksListNumeric .. ',' .. tostring(i);
-            end
-        end
-    end
-
-    if sList == nil then
-        gVars.LocksListNumeric = 'None';
-    end
-
-    if bNumeric == true then
-        return snList;
-    else
-        return sList;
-    end
-end     -- locks.fgetLockedList
-
---[[
-   LockControl will either set or remove the locks on the specified slots passed in. Slots can be either the
-   numbered positions (1-16) or names. Multiples must be comma delimited.
-   !!!
---]]
-
-function locks.LockControl(bSet,list)
-
-end     -- locks.LockControl
 
 --[[
     fMultiSlotLockCheck determines if the passed item is a multislotted item and
@@ -345,26 +280,33 @@ end		-- locks.fMultiSlotLockCheck
     Parameters
         sType           'lock' or 'unlock'
         sWhich          Which slots are affected
+
+    Returned
+                        T/F, were the specified locks found
 --]]
 
 function locks.LockUnlock(sType,sWhich)
     local ss = gVars._LOCK .. ',' .. gVars._UNLOCK;
     local sList;
+    local bGood;
 
-    if sWhich == nil or (string.find(ss,string.lower(sType) == nil)) then
-        return;
-    elseif string.lower(sWhich) ~= 'all' then
-        sList = utilities.fValidSlots(sWhich,gVars._SLOT_LA);        -- fValidSlots will expand out EARS and RINGS
+    if string.lower(sWhich) ~= 'all' then
+        bGood,sList = utilities.fValidSlots(sWhich,gVars._SLOT_LA);        -- fValidSlots will expand out EARS and RINGS
+        if bGood == false then
+            print(chat.message('Warning: invalid slot(s) specified: ' .. sWhich));
+            return false;
+        end
     else
         sList = 'all';
     end
 
     sList = ',' .. sList .. ',';
-    for k,l in ipairs(locks.tLocks) do
-        if (sWhich == ',all,') or (string.find(sWhich,l['slot']) ~= nil) then
-            locks.tLocks[k][s] = (string.lower(sType) == gVars._LOCK);
+    for k,l in ipairs(locks.tSlotLocks) do
+        if (sList == ',all,') or (string.find(sList,l['slot']) ~= nil) then
+            locks.tSlotLocks[k]['lock'] = (string.lower(sType) == gVars._LOCK);
         end
     end
+    return true;
 end		-- locks.LockUnlock
 
 --[[
@@ -376,28 +318,104 @@ end		-- locks.LockUnlock
 
 function locks.ProcessLocks(args)
 
-    if args[1] == gVars._LOCK then
-        if args[2] ~= nil then
-            locks.LockUnlock(gVars._LOCK,args[2]);
-            sList = locks.fGetLockedList(false);
+    if args[1] == gVars._UNLOCK or args[2] == nil then
+        -- Both /unlock #,#,... or /lock with no slots will unlock
+        if args[2] == nil then
+            args[2] = 'all';
+        else
+            args[2] = string.lower(args[2]);
+        end
+
+        if locks.LockUnlock(gVars._UNLOCK,args[2]) == true then
+            if args[2] == 'all' then
+                print(chat.message('Info: All slots are unlocked'));
+            else
+                print(chat.message('Info: \'' .. args[2] .. '\' have been unlocked'));
+            end
+        end
+    else
+        if locks.LockUnlock(gVars._LOCK,args[2]) == true then
             if sList ~= nil then
                 print(chat.message('Info: The following slot(s) are locked: ' .. sList));
             else
                 print(chat.message('Info: All slots are unlocked'));
             end
         end
-    else		-- unlock
-        if args[2] == nil then
-            args[2] = 'all';
-        end
-        locks.LockUnlock(gVars._UNLOCK,args[2]);
-        if string.lower(args[2]) == 'all' then
-            print(chat.message('Info: All slots are unlocked'));
-        else
-            print(chat.message('Info: \'' .. args[2] .. '\' have been unlocked'));
-        end
-        locks.fGetLockedList(true);
     end
 end		-- locks.ProcessLocks
+
+--[[
+    fCompactLocks walks the locks list and generates a compact display of the active locks.
+
+    Return:
+        List of active locks
+--]]
+
+function locks.fCompactLocks()
+    local bFound = false;
+    local iStart = nil;
+    local sList = nil;
+
+    for i,j in ipairs(locks.tSlotLocks) do
+        if j['lock'] == true then
+            -- locked slot. Tag if no range started yet
+            if iStart == nil then
+                iStart = i;
+            end
+        elseif iStart ~= nil then
+            -- no lock, but indicates range is done
+            if i == iStart + 1 then
+                -- No range, just a single #
+                if sList == nil then
+                    sList = tostring(iStart);
+                else
+                    sList = sList .. ',' .. tostring(iStart);
+                end
+            elseif i == iStart + 2 then
+                -- No range, just back to back locks
+                if sList == nil then
+                    sList = tostring(iStart) .. ',' .. tostring(iStart+1);
+                else
+                    sList = sList .. ',' .. tostring(iStart) .. ',' .. tostring(iStart+1);
+                end
+            else
+                -- it is a range
+                if sList == nil then
+                    sList = tostring(iStart) .. '-' .. tostring(i-1);
+                else
+                    sList = sList .. ',' .. tostring(iStart) .. '-' .. tostring(i-1);
+                end
+            end
+            iStart = nil;
+        end
+    end
+
+    if iStart ~= nil then
+        if iStart+1 < 16 then
+            if sList == nil then
+                sList = tostring(iStart) .. '-16';
+            else
+                sList = sList .. ',' .. tostring(iStart) .. '-16';
+            end
+        elseif iStart+1 == 16 then
+            if sList == nil then
+                sList = '15,16';
+            else
+                sList = sList .. ',15,16';
+            end
+        else
+            if sList == nil then
+                sList = '16'
+            else
+                sList = sList .. ',16';
+            end
+        end
+    end
+
+    if sList == nil then
+        sList = 'None';
+    end
+    return sList;
+end     -- locks.fCompactLocks
 
 return locks;

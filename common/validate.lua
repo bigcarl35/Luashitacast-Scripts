@@ -65,8 +65,7 @@ local tCodeMaster = {
 	-- only right
 	['or'] = { 'SPECIAL','TRACK' },
 	-- conditionals
-	['cond'] = { 'HP.','HPP.','MP.','MPP.','TP.','TPP.','LVL.'.'PARTY.','PETHPP.' }
-
+	['cond'] = { 'HP.','HPP.','MP.','MPP.','TP.','TPP.','LVL.','PARTY.','PETHPP.' },
 };
 
 --[[
@@ -90,7 +89,7 @@ end		-- validate.HandleValidation
 		gs		Pointer to the gear set to process
 		pFile	Pointer to where the output should go. (Carried info)
 
-	Note: /val [gs=[*|name,name,...]] [file=[*|name]]
+	Note: /val [gs=[*|name,name,...] ] [file=[*|name]]
 
 --]]
 
@@ -183,7 +182,7 @@ function lValidateConditionalList(tGs,line,bLeft,bRight,pFile)
 				reporting.DisplayMessage(pFile,sOut,sfOut);
 			end
 			bFound = true;
-		elseif table.find(tCodeMaster['or',j]) ~= nil then
+		elseif table.find(tCodeMaster['or'],j) ~= nil then
 			bFound = true;
 			if bRight == false then
 				-- Code used on wrong side
@@ -258,9 +257,9 @@ function lValidateConditionalList(tGs,line,bLeft,bRight,pFile)
 				bFound = true;
 			end
 
-			if bFound = false;
+			if bFound == false then
 				sOut = displaybar.fColor('red','Warning: Unrecognized conditional: //' .. j);
-				sfOut = 'Warning: Unrecognized conditional: //' .. j);
+				sfOut = 'Warning: Unrecognized conditional: //' .. j;
 				reporting.DisplayMessage(pFile,sOut,sfOut);
 			end
 		end

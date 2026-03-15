@@ -33,6 +33,7 @@ local utilities = {};
             fCheckItemOwned         Determines if character owns piece of gear
             fCheckObiDW             Determines if Day/weather element advantageous for obi
             fCheckPartyJob          Is a member of your party a certain job?
+            fCheckRegionControl     Determines if player's nation controls region
             fCheckTime              Determines if passed time matches keyword
             fCheckWSBailout         Determines range to target would fail Weapon Skill
             fFormattedWord          Capitalization routine for passed in word
@@ -44,7 +45,7 @@ local utilities = {};
             fLtrim                  Trims leading spaces from the passed in string
             fMagicalSubjob          Determines if the player's subjob can do magic
             fMakeConditionalTable   Splits apart conditionals into a table
-            local fNewFileName      Generates a new report file name
+            fNewFileName            Generates a new report file name
             fOpenByFilename         Opens the passed in file for writing/appending
             fParseFileDesignation   Determines the file name from the passed file designation
             fReferenceCheck         Determines if any gear is reference to another set's slot
@@ -155,7 +156,7 @@ end		-- utilities.SetCycle
         default     Value of the toggle
 --]]
 
-function displaybar.CreateToggle(name, default)
+function utilities.CreateToggle(name, default)
     gVars.Toggles[name] = default;
 end		-- utilities.CreateToggle
 
@@ -218,31 +219,38 @@ end		-- utilities.SetToggle
     to run /GC. Initially it displayes 15 seconds after logging in, but from then on
     it will display every 5 minutes until /GC is run. (Gear swapping does not occur
     until this command is run.)
+
+    Note that the player can disable the reminder by setting the Enabled setting in
+    the settings.Reminder structure to false. This does not mean that /gc can be
+    skipped. Rather, it just turns off the reminder itself without resolving the need
+    to run /gc.
 --]]
 
 function utilities.Reminder()
-    local iTestVal = crossjobs.settings.bMinBasetime;
+    local iTestVal = gProfile.settings.Reminder.MinBasetime;
     local iNow = os.time();
 
-    if gear.fHasGCBeenRun() == true then
+    -- Skip reminder if /gc has been run or the reminder has been disabled
+    if gear.fHasGCBeenRun() == true or
+        (gProfile.settings.Reminder.Enabled ~= nil and gProfile.settings.Reminder.Enabled == false) then
         return;
     end
 
-    if crossjobs.settings.bGCReminder == true then
+    if gProfile.settings.Reminder.bGCReminder == true then
         -- Since reminder already shown once, change the wait
         -- interval from 15 seconds to 5 minutes
-        iTestVal = crossjobs.settings.bMaxBasetime;
+        iTestVal = gProfile.settings.Reminder.MaxBasetime;
     end
 
     if os.difftime(iNow,utilities.basetime) >= iTestVal then
         print(chat.message('************'));
-        if iTestVal == crossjobs.settings.bMinBasetime then
+        if iTestVal == gProfile.settings.Reminder.MinBasetime then
             print(chat.message('FYI: Remember to do a /gc once \'data download\' finishes'));
         else
             print(chat.message('FYI: Remember to do a /gc'));
         end
         print(chat.message('************'));
-        crossjobs.settings.bGCReminder = true;
+        gProfile.settings.Reminder.bGCReminder = true;
         -- Change the base to current so that comparison is from now forward
         utilities.basetime = iNow;
     end
@@ -264,7 +272,7 @@ function utilities.ProcessedTally(sWhat,iCnt,iDiv)
     end
 
     if math.floor(iCnt/iDiv) == iCnt/iDiv then
-        print(chat.message(tostring(iCnt) .. sWhat .. ' processed...'));
+        print(chat.message(string.format('%d %s processed...',iCnt,sWhat)));
     end
 end     -- utilities.ProcessedTally
 
@@ -288,7 +296,7 @@ local sTmp = nil;
             sTmp = string.upper(string.sub(sWord,1,1)) .. string.lower(string.sub(sWord,2,-1));
         elseif sStyle == gVars._SLOT_LA then
             sTmp = string.lower(sWord);
-        elseif sStyle == gVars._SLOT_UA = 'UA' then
+        elseif sStyle == gVars._SLOT_UA then
             sTmp = string.upper(sWord);
         end
     end
@@ -302,7 +310,7 @@ end     -- utilities.fFormattedWord
 
 function utilities.ToggleState(toggle, status)
     if toggle ~= nil and status ~= nil then
-        print(chat.message('Info: ' .. toggle .. ' is now ' .. tostring(status))))
+        print(chat.message('Info: ' .. toggle .. ' is now ' .. tostring(status)))
     end
 end		-- utilities.ToggleState
 
@@ -383,13 +391,12 @@ function utilities.fValidSlots(sList,sFmt)
          [15] = {['Name'] = 'LEGS',  ['Have'] = false},  [16] = {['Name'] = 'FEET',  ['Have'] = false}
         };
 
-    local s = gVars._SLOT_LA .. gVars._SLOT_UA .. gVars._SLOT_FA .. gVars._SLOT_N;
+    local s = gVars._SLOT_LA .. ',' .. gVars._SLOT_UA .. ',' .. gVars._SLOT_FA .. ',' .. gVars._SLOT_N;
     if sFmt == nil or string.find(s,sFmt) == nil then
         sFmt = gVars._SLOT_FA;      -- Unknown or missing code, assume Upper first letter and lower rest
     end
 
     sList = ',' .. string.upper(sList) .. ',';
-
     -- Now process the list. Note: this process will not complain about a mistaken slot name/number
     if string.find(sList,'EARS') ~= nil then
         slots[7]['Have'] = true;    -- Assume both ears if EARS encountered
@@ -400,7 +407,7 @@ function utilities.fValidSlots(sList,sFmt)
     else
         for i,j in ipairs(slots) do
             if string.find(sList,j['Name']) ~= nil or string.find(sList,','..tostring(i)..',') ~= nil then
-                slots[i]['Have'] == true;
+                slots[i]['Have'] = true;
             end
         end
     end
@@ -481,7 +488,7 @@ function utilities.fTranslateWhichSlot(val,sType)
 
     for i,j in pairs(slots) do
         -- Since we don't know if the passed in value is a string or a number or a number passed in as a string...
-        if (type(val) == 'string' and (j['aSlot'] == val or j['nSlot'] == tonumber(val)) or (type(val) == 'number' and j['nSlot'] == val) then
+        if (type(val) == 'string' and (j['aSlot'] == val or j['nSlot'] == tonumber(val)) or (type(val) == 'number' and j['nSlot'] == val)) then
             -- There was a match, format the result accordingly
             local rVal;
             if sType == gVars._SLOT_FA then      -- Mixed case: Upper first letter, lower rest
@@ -619,7 +626,7 @@ function utilities.fGetTableByName(sName)
 
     if bCrossjobs == true or (bProfile == false and bCrossjobs == false) then
         for k,l in pairs(crossjobs.Sets) do
-            if string.lower(k) == s2 then
+            if string.lower(k) == sName2 then
                 return l;
             end
         end
@@ -645,7 +652,7 @@ function utilities.fMakeConditionalTable(sList,del)
     local iPos;
 
     if del == nil then
-        del == '//';
+        del = '//';
     end
 
     if string.find(sList,del) == nil then
@@ -976,7 +983,7 @@ function utilities.fCheckItemOwned(gear)
     end
 
     -- Lastly, see if stored on a claim slip
-    for i,desc in pairs(slips.ClaimSlips) do
+    for i,desc in pairs(slips.tClaimSlips) do
         if desc['own'] == true and table.find(desc['ids'],gear.Id) ~= nil then
             tOwned['own'] = true;
             tOwned['claim'] = true;
@@ -1086,8 +1093,12 @@ function utilities.fGetLevel(bActual)
         -- Actual max level wanted
         return player.MainJobSync;
     else
-        -- Player capped level wanted
-        return gProfile.settings.PlayerCappedLevel;
+        -- Player capped level wanted unless the sync level is lower
+        if player.MainJobSync < gProfile.settings.PlayerCappedLevel then
+            return player.MainJobSync;
+        else
+            return gProfile.settings.PlayerCappedLevel;
+        end
     end
 end     -- utilities.fGetLevel
 
@@ -1108,7 +1119,7 @@ end     -- utilities.fGetLevel
 
 function utilities.fCheckObiDW(ele)
     local sEnvironment = gData.GetEnvironment();
-    local sWeak =
+    local sWeak;
     local sDay = sEnvironment.DayElement;
     local PctDay = 0;
     local PctWeather = 0;
@@ -1165,7 +1176,7 @@ end		-- utilities.fCheckObiDW
 
 function SetAliasAll()
 
-    for _, v in ipairs(crossjobs.AliasList) do
+    for _, v in ipairs(gVars.AliasList) do
         AshitaCore:GetChatManager():QueueCommand(-1, '/alias /' .. v .. ' /lac fwd ' .. v);
     end
 end		-- SetAliasAll
@@ -1177,7 +1188,8 @@ end		-- SetAliasAll
 function SetAliasCC()
 
     for _, v in ipairs(gProfile.CustomConditionals) do
-        AshitaCore:GetChatManager():QueueCommand(-1, '/alias /' .. string.lower(v['code']) .. ' /lac fwd ' .. v);
+        local lv = string.lower(v['code']);
+        AshitaCore:GetChatManager():QueueCommand(-1, '/alias /' .. lv .. ' /lac fwd ' .. lv);
     end
 end		-- SetAliasCC
 
@@ -1186,7 +1198,7 @@ end		-- SetAliasCC
 --]]
 
 function utilities.ClearAliasAll()
-    for _, v in ipairs(crossjobs.AliasList) do
+    for _, v in ipairs(gVars.AliasList) do
         AshitaCore:GetChatManager():QueueCommand(-1, '/alias del /' .. v);
     end
 end		-- utilities.ClearAliasAll
@@ -1198,7 +1210,8 @@ end		-- utilities.ClearAliasAll
 
 function utilities.ClearAliasCC()
     for _, v in ipairs(gProfile.CustomConditionals) do
-        AshitaCore:GetChatManager():QueueCommand(-1, '/alias del /' .. string.lower(v['code']));
+        local lv = string.lower(v['code']);
+        AshitaCore:GetChatManager():QueueCommand(-1, '/alias del /' .. lv);
     end
 end		-- utilities.ClearAliasCC
 
@@ -1207,6 +1220,7 @@ end		-- utilities.ClearAliasCC
 --]]
 
 function utilities.Initialize()
+    gear.TallyProgressiveCaps();
     displaybar.InitializeDisplayBar:once(2);
     crossjobs.SetVariables:once(2);
     SetAliasAll:once(2);
@@ -1227,8 +1241,8 @@ function utilities.fCheckWsBailout()
     local target = gData.GetActionTarget();
     local bGood = true;
 
-    if crossjobs.settings.WScheck == true and
-       tonumber(target.Distance) > crossjobs.settings.WSdistance then
+    if gProfile.settings.WScheck == true and
+       tonumber(target.Distance) > gProfile.settings.WSdistance then
         print(chat.message('Warning: Distance to mob is too far! Move closer to target'));
         bGood = false;
     elseif player.TP <= 999 then
@@ -1240,7 +1254,7 @@ function utilities.fCheckWsBailout()
            utilities.fBuffed('Amnesia',true) == true or
            utilities.fBuffed('Charm', true) == true then
         print(chat.message('Warning: detrimental debuff inhibiting any action'));
-        bGood - false;
+        bGood = false;
     end
 
     return bGood;
@@ -1362,7 +1376,7 @@ end     -- utilities.fTrim
 
 --[[
     fSplitStringByDelimiter takes the passed in string and creates a table split by the
-    specified delimiter. Returned is the table of split values.
+    specified delimiter. Returned is the table of split values, minus the delimiters.
 
     Parameter
         s       String to be split
@@ -1379,9 +1393,9 @@ function utilities.fSplitStringByDelimiter(s,delim)
         delim = '//';
     end
 
-    for substr in string.gmatch(str, "[^".. delim.. "]*") do
+    for substr in string.gmatch(s, "[^".. delim.. "]*") do
         if substr ~= nil and string.len(substr) > 0 then
-            table.insert(t,substr)
+            table.insert(t,substr);
         end
     end
 
@@ -1490,7 +1504,7 @@ function utilities.GetWeaponsList(sType)
     end
 
     local path = string.format('config/addons/LuAshitacast/common/WeaponTypes/%s.lua', string.lower(sType));
-    if (ashita.fs.exists(path)) then
+    if ashita.fs.exists(path) then
         local success, loadError = loadfile(path);
         if not success then
             reporting.DisplayOnce(string.format('Warning: Failed to load resource file: %s', path));
@@ -1500,7 +1514,7 @@ function utilities.GetWeaponsList(sType)
         local result, output = pcall(success);
         if not result then
             -- unable to process the weapons type file
-            reporting,DisplayOnce(string.format('Warning: Failed to call resource file: %s', path));
+            reporting.DisplayOnce(string.format('Warning: Failed to call resource file: %s', path));
             reporting.DisplayOnce('Warning: ' .. loadError);
             return;
         end
@@ -1536,7 +1550,7 @@ function utilities.fGetMobType(sType,bFamily)
 
     iPos = string.find(sType,'=');
     if iPos ~= nil then
-        bFamily = (string.sub(sType,1,iPos)) ~= 'fam=');
+        bFamily = (string.sub(sType,1,iPos) ~= 'fam=');
         sType = string.sub(sType,iPos+1,-1);
     end
 
@@ -1550,21 +1564,22 @@ function utilities.fGetMobType(sType,bFamily)
                 reporting.DisplayOnce('Warning: ' .. loadError);
                 return false;
             end
-        local result, output = pcall(success);
-        if not result then
-            -- unable to process the weapons type file
-            reporting,DisplayOnce(string.format('Warning: Failed to call resource file: %s', path));
-            reporting.DisplayOnce('Warning: ' .. loadError);
-            return false;
+            local result, output = pcall(success);
+            if not result then
+                -- unable to process the weapons type file
+                reporting.DisplayOnce(string.format('Warning: Failed to call resource file: %s', path));
+                reporting.DisplayOnce('Warning: ' .. loadError);
+                return false;
+            end
         end
         crossjobs.CurrentZone = curr;
         crossjobs.ZoneList = output.Names;
     end
 
-    sType == string.lower(sType);
+    sType = string.lower(sType);
     for i,j in pairs(crossjobs.ZoneList) do
         if (bFamily == true and string.find(j['Family'],sType) ~= nil) or
-            (bFamily == false and string.find(j['Ecosystem'],sType ~= nil) then
+            (bFamily == false and string.find(j['Ecosystem'],sType) ~= nil) then
             return true;
         end
     end
@@ -1593,8 +1608,6 @@ function utilities.fValidCustomCommand(cmd)
 
     return bValid;
 end		-- utilities.fValidCustomCommand
-
-return utilities;
 
 --[[
     fParseFileDesignation dissects the passed file designation and returns the name of the file and
@@ -1640,3 +1653,38 @@ function utilities.fParseFileDesignation(s)
 
     return sName,bAppend
 end     -- utilities.fParseFileDesignation
+
+--[[
+    UpdateRegionalLabel determines what the label for the region control should be set to
+--]]
+
+function utilities.UpdateRegionalLabel()
+    local currentZoneID = AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0);
+    local currentZoneName = AshitaCore:GetResourceManager():GetString('zones.names', currentZoneID);
+
+    -- Make sure the player's nation is known
+    if crossjobs.OwnNation == -1 then
+        crossjobs.OwnNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation() + 1;
+    end
+
+    -- Determine if current zone in region controlled by player's nation
+    for i,j in pairs(gVars.RegionControl) do
+        if table.find(j['zones'],currentZoneID) ~= nil then
+            if j['own'] == crossjobs.OwnNation then
+                gVars.sRegion = gVars._REGION_STATUS_OWNED;
+            elseif j['own'] ~= crossjobs.OwnNation and j['own'] > 0 then
+                gVars.sRegion = gVars._REGION_STATUS_NOT_OWNED;
+            elseif j['own'] == gVars._REGION_NA then
+                if i == 'Jeuno' then
+                   gVars.sRegion = gVars._REGION_STATS_NA_NOT_OWNED;
+                else
+                   gVars.sRegion = gVars._REGION_STATUS_NA;
+                end
+            else        -- Unknown
+                gVars.sRegion =gVars._REGION_STATUS_UNKNOWN;
+            end
+        end
+    end
+end     -- utilities.UpdateRegionalLabel
+
+return utilities;

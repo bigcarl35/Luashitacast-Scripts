@@ -392,15 +392,23 @@ end		-- magic.fBardSongType
 
 function magic.HandlePrecast()
     local spell = gData.GetAction();
+    local player = gData.GetPlayer();
 
     -- Clear out the CurrentGear in case of leftovers
-    crossjobs.ClearSet(crossjobs.Sets.CurrentGear);
+    utilities.ClearSet(crossjobs.Sets.CurrentGear);
 
     if spell.Skill == 'Singing' then
         gear.MoveToDynamicGS(gProfile.Sets.SingingPrecast,crossjobs.Sets.CurrentGear,false,'SingingPrecast');
     else
        gear.MoveToDynamicGS(gProfile.Sets.Precast,crossjobs.Sets.CurrentGear,false,'Precast');
     end
+
+    if player.MainJob == 'DRG' then
+        -- Special case when using magic to trigger your wyvern's healing breath
+        pets.HealingBreath();
+    end
+
+    gear.EquipTheGear(crossjobs.Sets.CurrentGear,false,false);
 end		-- magic.HandlePrecast
 
 --[[
@@ -410,9 +418,10 @@ end		-- magic.HandlePrecast
 
 function magic.HandleMidcast()
     local spell = gData.GetAction();
+    local player = gData.GetPlayer();
 
     -- Clear out the CurrentGear in case of leftovers
-    crossjobs.ClearSet(crossjobs.Sets.CurrentGear);
+    utilities.ClearSet(crossjobs.Sets.CurrentGear);
 
     if spell.Skill == 'Singing' then
         MidcastSinging();
@@ -437,6 +446,13 @@ function magic.HandleMidcast()
     elseif spell.Skill == 'Ninjutsu' then
         MidcastNinjutsu();
     end
+
+    if player.MainJob == 'DRG' then
+        -- Special case when using magic to trigger your wyvern's healing breath
+        pets.HealingBreath();
+    end
+
+    gear.EquipTheGear(crossjobs.Sets.CurrentGear,false,false);
 end		-- magic.HandleMidcast
 
 --[[
@@ -493,7 +509,7 @@ function MidcastHealingMagic()
                 end
 
                 -- See if Macc should be added
-                if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
+                if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnly.Macc == false then
                     gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
                 end
             else
@@ -535,7 +551,7 @@ function MidcastDarkMagic()
         gear.MoveToDynamicGS(gProfile.Sets.Absorb,crossjobs.Sets.CurrentGear,false,'Absorb');
 
         -- See if Macc should be added
-        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
+        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnly.Macc == false then
             gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
     elseif root == 'drain' then
@@ -552,7 +568,7 @@ function MidcastDarkMagic()
         end
 
         -- See if Macc should be added
-        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
+        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnly.Macc == false then
             gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
 
@@ -583,7 +599,7 @@ function MidcastDarkMagic()
         end
 
         -- See if Macc should be added
-        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
+        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnly.Macc == false then
             gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
 
@@ -608,7 +624,7 @@ function MidcastDarkMagic()
         gear.MoveToDynamicGS(gProfile.Sets.DarkMagic,crossjobs.Sets.CurrentGear,false,'DarkMagic');
 
         -- See if Macc should be added
-        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
+        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnly.Macc == false then
             gear.MoveToCurrent(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
     end
@@ -642,7 +658,7 @@ function MidcastDivineMagic()
         end
 
         -- See if Macc should be added
-        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
+        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnly.Macc == false then
             gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
     elseif table.find({'flash','repose'},root) ~= nil then
@@ -650,7 +666,7 @@ function MidcastDivineMagic()
         gear.MoveToDynamicGS(gProfile.Sets.EnfeebleDivine,crossjobs.Sets.CurrentGear,false,'EnfeebleDivine');
 
         -- See if Macc should be added
-        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
+        if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnly.Macc == false then
             gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
         end
     else
@@ -699,7 +715,7 @@ function MidcastEnfeeblingMagic()
     end
 
     -- See if Macc should be added
-    if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
+    if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnly.Macc == false then
         gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
     end
 
@@ -805,7 +821,7 @@ function MidcastElementalMagic()
     end
 
     -- See if Macc should be added
-    if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnlyMacc == false then
+    if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnly.Macc == false then
         gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'Macc');
     end
 
@@ -902,7 +918,7 @@ end		-- MidcastNinjutsu
 
     Parameters:
         sName               Name of the spell's root or song's buff name
-        bSpell      T/F     Is the past value the name of a spell or song
+        bSpell      T/F     Is the passed value the name of a spell or song
         sTarget             Who/what should the spell/song be cast on
         bCast       T/F     Should the found spell/song be cast
 --]]
@@ -928,9 +944,9 @@ function magic.MaxCast(sName,bSpell,sTarget,bCast)
     if sTarget == nil then
         -- Since target is missing, use the appropriate default setting
         if bSpell == true then
-            sTarget = '<' .. crossjobs.settings.DefaultSpellTarget .. '>';
+            sTarget = '<' .. gProfile.settings.DefaultSpellTarget .. '>';
         else
-            sTarget = '<' .. crossjobs.settings.DefaultSongTarget .. '>';
+            sTarget = '<' .. gProfile.settings.DefaultSongTarget .. '>';
         end
     elseif string.find(sTarget,'<') == nil then
         sTarget = '<' .. sTarget .. '>';
@@ -1004,7 +1020,7 @@ function magic.MaxCast(sName,bSpell,sTarget,bCast)
                             end
                         end
                     else
-                        print(chat.message('Warning: Only bards can sing songs. Skipping')));
+                        print(chat.message('Warning: Only bards can sing songs. Skipping'));
                         break;
                     end
                 end
@@ -1028,7 +1044,6 @@ function magic.MaxCast(sName,bSpell,sTarget,bCast)
             print(chat.message('Info: Trying to cast/sing '.. sName.. ' as is'));
             sCmd = '/ma "' .. sName .. '" ' .. sTarget;
             AshitaCore:GetChatManager():QueueCommand(1, sCmd);
-            end
         end
     end
 end     -- magic.MaxCast

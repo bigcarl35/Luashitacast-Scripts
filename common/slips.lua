@@ -112,7 +112,7 @@ slips.tSlips = {
             11308, 15041, 16363, 11399}, -- 100 items
         ['own'] = false, ['extra'] = nil },
     [8]  = {
-        ['Name'] = 'Storage Slip 08', ['id'] = 29319,     -- Empyrean
+        ['name'] = 'Storage Slip 08', ['id'] = 29319,     -- Empyrean
         ['location'] = nil,
         ['items'] = {
             12008, 12028, 12048, 12068, 12088, 11591, 19253, 12009, 12029, 12049, 12069, 12089, 11592, 19254, 12010, 12030,
@@ -128,7 +128,7 @@ slips.tSlips = {
             11722}, -- 160 items
         ['own'] = false, ['extra'] = nil },
     [9]  = {
-        ['Name'] = 'Storage Slip 09', ['id'] = 29320,     -- Empyrean +1
+        ['name'] = 'Storage Slip 09', ['id'] = 29320,     -- Empyrean +1
         ['location'] = nil,
         ['items'] = {
             11164, 11184, 11204, 11224, 11244, 11165, 11185, 11205, 11225, 11245, 11166, 11186, 11206, 11226, 11246, 11167, 11187,
@@ -730,7 +730,7 @@ end     -- gear.fDisplaySlips
 --]]
 
 function slips.fFindClaimSlips()
-    local player = gData.GetPlayer();
+    local player = AshitaCore:GetMemoryManager():GetPlayer();
     local s = ',';
 
     for i,j in pairs(slips.tClaimSlips) do
