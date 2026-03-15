@@ -1,9 +1,9 @@
-local profile = {};
+	local profile = {};
 
 --[[
 	This file contains all the gear sets associated with the SMN job.
 	
-	Gear Sets last updated: January 18, 2026
+	Gear Sets last updated: February 11, 2026
 	Code update: December 3, 2025
 
 	Intended Role: All Levels
@@ -48,12 +48,12 @@ local sets = {
 
 			['Example'] = {
 				Subset = 'XXX',						-- Main level
-				Group//TANK = {
+				['Group//TANK'] = {
 					Subset = 'YYY',					-- //TANK level
 				},
-				Group//NOT_TANK = {
+				['Group//NOT_TANK'] = {
 					Subset = 'ZZZ',					-- //NOT_TANK level
-					Group//NIGHTTIME = {
+					['Group//TIME:NIGHTTIME'] = {
 						Neck = 'Uggalepih Pendant,	-- this is at another level
 					},
 				},
@@ -102,44 +102,43 @@ local sets = {
 --]]
 	
 	['Default'] = {
-		Main   = 'Terra\'s Staff',		-- -20% physical damage
-		Ammo   = 'Hedgehog Bomb',
-		GROUP//TOWN = {
+		Main   = { 'Terra\'s Staff//WSWAP', 'Pilgrim\'s Wand//WSWAP' },	-- -20% physical damage
+		Ammo   = { 'Hedgehog Bomb', 'Fortune Egg' },
+		['GROUP//TOWN'] = {
 			-- You're in town, show your fancy duds
 			SUBSET = 'rFancyAttire',
 		},
-		GROUP//NOT_TOWN = {
+		['GROUP//NOT_TOWN'] = {
 			-- Not in town, here's normal gear
-			GROUP//KITE = {
+			['GROUP//KITE'] = {
 				SUBSET = 'Evasion',
 			},
-			GROUP//NOT_KITE = {
-				GROUP//RIDING = {
+			['GROUP//NOT_KITE'] = {
+				['GROUP//RIDING'] = {
 					SUBSET = 'rFancyAttire',
 				},
-				GROUP//NOT_RIDING = {
+				['GROUP//NOT_RIDING'] = {
 					SUBSET = 'rEnmity_Minus',
-					Neck  = { 'Rep.Gold Medal//NOT_OWN','Uggalepih Pendant//NIGHTTIME', 'Fenrir\'s Torque//DAYTIME', 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
-					Ears  = { 'Bat Earring//BLINDED', 'Loquac. Earring', 'Coral Earring//DT_MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
+					Neck  = { 'Rep.Gold Medal//NOT_OWN','Uggalepih Pendant//TIME:NIGHTTIME', 'Fenrir\'s Torque//TIME:DAYTIME', 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
+					Ears  = { 'Bat Earring//BLINDED', 'Loquac. Earring', 'Coral Earring//DT:MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
 					Rings = { 'Evoker\'s Ring', 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
 					Back  = { 'Blue Cape', 'White Cape' },
 					Waist = { 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
-					Ammo  = { 'Hedgehog Bomb', 'Fortune Egg' },
-					GROUP//SMN_PET = {			-- has a SMN pet
+					['GROUP//SMN:PET'] = {			-- has a SMN pet
 						Head   = { 'Smn. Horn +1//SMNPETMW', 'Austere Hat', 'Silver Hairpin +1' },
 						Hands  = { 'Carbuncle Mitts//PETNAME:Carbuncle','Nashira Gages', 'Shep. Bracers' },
 						Body   = { 'Yinyang Robe//MPP.LT.94', 'Summoner\'s Dblt.//SMNPETMD', 'Yinyang Robe', 'Vermillion Cloak' },
 						Legs   = { 'Summoner\'s Spats//SPIRIT:EP', 'Shep. Hose' },
 						Feet   = 'Evk. Pigaches +1',
 					},
-					GROUP//NOT_SMN_PET = {		-- has a pet, but not a SMN pet. In case of /BST or /PUP, /DRG wyvern not an issue
+					['GROUP//NOT_SMN:PET'] = {		-- has a pet, but not a SMN pet. In case of /BST or /PUP, /DRG wyvern not an issue
 						Head   = 'Smn. Horn +1',
 						Hands  = 'Shep. Bracers',
-						Body   = { 'Yinyang Robe//MPP.LT.94', 'Vermillion Cloak//MPP.LT.94' },
-						Legs   = { 'Summoner\'s Spats//SPIRIT:EP', 'Shep. Hose' },
+						Body   = { 'Yinyang Robe//MPP.LT.94', 'Vermillion Cloak//MPP.LT.94','Summoner\'s Dblt.' },
+						Legs   = 'Shep. Hose',
 						Feet   = 'Evk. Pigaches +1',
 					},
-					GROUP//NOT_PET = {			-- no pet
+					['GROUP//NOT_PET'] = {			-- no pet
 						Head   = { 'Smn. Horn +1', 'Austere Hat', 'Silver Hairpin +1' },
 						Body   = { 'Yinyang Robe//MPP.LT.94', 'Vermillion Cloak//MPP.LT.94', 'Summoner\'s Dblt.', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
 						Hands  = { 'Smn. Bracers +1', 'Errant Cuffs', 'Carbuncle Mitts' },
@@ -185,35 +184,35 @@ local sets = {
 
 	['TP'] = {
 		SUBSET = 'Default',
-		GROUP//KITE = {
+		['GROUP//KITE'] = {
 			SUBSET = 'Evasion',
 		},
-		GROUP//NOT_KITE = {
-			GROUP//SMN_PET = {			-- has a SMN pet
+		['GROUP//NOT_KITE'] = {
+			['GROUP//SMN:PET'] = {			-- has a SMN pet
 				Head  = { 'Smn. Horn +1//SMN_PETMW', 'Shep. Bonnet//PETF' },
-				Ears  = { 'Bat Earring//BLINDED//NOT_PETF', 'Beastly Earring//PETF', 'Loquac. Earring', 'Coral Earring//DT_MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
-				Body  = { 'Summoner\'s Dblt.//SMN_PETMD', 'Yinyang Robe', 'Vermillion Cloak' },
+				Ears  = { 'Bat Earring//BLINDED//NOT_PETF', 'Beastly Earring//PETF', 'Loquac. Earring', 'Coral Earring//DT:MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
+				Body  = { 'Summoner\'s Dblt.//SMN:PETMD', 'Yinyang Robe', 'Vermillion Cloak' },
 				Hands = { 'Carbuncle Mitts//PETNAME:Carbuncle', 'Nashira Gages' },
 				Legs  = { 'Evk. Spats +1', 'Shep. Hose' },
 				Feet  = { 'Summoner\'s Pgch.', 'Evk. Pigaches +1', 'Mannequin Pumps', 'Waders' },
 			},
-			GROUP//NOT_SMN_PET = {		-- has to be a charmed BST pet or PUP pet that can only do maneauvers
+			['GROUP//NOT_SMN:PET'] = {		-- has to be a charmed BST pet or PUP pet that can only do maneauvers
 				Head  = 'Shep. Bonnet//PETF',
-				Ears  = { 'Bat Earring//BLINDED//NOT_PETF', 'Beastly Earring//PETF', 'Loquac. Earring', 'Coral Earring//DT_MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
+				Ears  = { 'Bat Earring//BLINDED//NOT_PETF', 'Beastly Earring//PETF', 'Loquac. Earring', 'Coral Earring//DT:MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
 				Body  = { 'Yinyang Robe', 'Vermillion Cloak' },
 				Rings = { 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
 				Legs  = 'Shep. Hose',
 				Feet  = { 'Mannequin Pumps', 'Waders' },
 			},
-			GROUP//NOT_PET = {		-- Emergency, no pet! Equip defense/evasion gear
+			['GROUP//NOT_PET'] = {		-- Emergency, no pet! Equip defense/evasion gear
 				Main  = 'Terra\'s Staff',																-- -20% Physical damage
 				Ammo  = 'Hedgehog Bomb',															-- -1 Enmity
 				Head  = { 'Smn. Horn +1', 'Austere Hat', 'Shep. Bonnet' },							-- Def: 19/13/7..+4 HP
 				Neck  = { 'Promise Badge', 'Justice Badge' },										-- Def: 3..+10 HP/1
-				Ears  = { 'Bat Earring//BLINDED', 'Coral Earring//DT_MAGICAL', 'Ethereal Earring' },-- +15 Eva,-1% Magical attack..-5 Eva,+5 Eva
+				Ears  = { 'Bat Earring//BLINDED', 'Coral Earring//DT:MAGICAL', 'Ethereal Earring' },-- +15 Eva,-1% Magical attack..-5 Eva,+5 Eva
 				Body  = { 'Yinyang Robe', 'Vermillion Cloak', 'Austere Robe', 'Seer\'s Tunic' },	-- Def: 43/46*/29/18
 				Hands = { 'Nashira Gages', 'Smn. Bracers +1', 'Wonder Mitts' },						-- Def: 18..-4 Enmity/16/6..12 HP
-				Rings = { 'Flame Ring', 'Bomb Queen Ring', 'Toreador Ring', 'Toreador Ring' },		-- Def: 3, +75 HP, Def: 1..10 HP, Def: 1..10 HP,
+				Rings = { 'Flame Ring', 'Bomb Queen Ring', 'Toreador\'s Ring', 'Toreador\'s Ring' },-- Def: 3, +75 HP, Def: 1..10 HP, Def: 1..10 HP,
 				Back  = 'White Cape',																-- Def: 3
 				Waist = { 'Hierarch Belt', 'Powerful Rope' },										-- Def: 3, +20 HP
 				Legs  = { 'Summoner\'s Spats', 'Wonder Braccae', 'Baron\'s Slops' },				-- Def: 29/12..+21 HP..+2 VIT/11
@@ -240,14 +239,14 @@ local sets = {
 --]]
 		
 	['rAccuracy'] = {
-		GROUP//PETF = {			-- Accuracy is for pets
+		['GROUP//PETF'] = {			-- Accuracy is for pets
 			Head  = 'Shep. Bonnet',					-- Pet: +5 Acc/+3Macc
 			Ears  = 'Beastly Earring',				-- Pet: +10 Acc
 			Hands = 'SMN. Bracers +1//SMN:PET',		-- Avatar: Enhances acc
 			Legs  = 'Evk. Spats +1//SMN:PET',		-- Avatar: Enhances acc
 		},
-		GROUP//NOT_PETF = {		-- Accuracy is for player
-			Ammo  = 'Orphic Egg//PJPBRD',								-- +1 Acc if BRD in party
+		['GROUP//NOT_PETF'] = {		-- Accuracy is for player
+			Ammo  = 'Orphic Egg//PJB:BRD',								-- +1 Acc if BRD in party
 			Head  = { 'Optical Hat', 'Empress Hairpin' },				-- +10 Acc, +3 DEX
 			Neck  = { 'Peacock Amulet',	'Spike Necklace' },				-- +10 Acc, +3 DEX
 			Body  = 'Mrc.Cpt. Doublet',									-- +1 DEX
@@ -333,7 +332,7 @@ local sets = {
 	
 	['Evasion'] = {
 		Main  = 'Auster\'s Staff',						-- +10 Eva
-		Ammo  = 'Orphic Egg//PJPBRD',					-- +1 Eva if BRD in party
+		Ammo  = 'Orphic Egg//PJB:BRD',					-- +1 Eva if BRD in party
 		Head  = { 'Optical Hat', 'Empress Hairpin' },	-- +10/10 Eva
 		Neck  = 'Spirit Torque',						-- +5 Eva
 		Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +15 Eva while blinded, +5 Eva, +4/3 AGI
@@ -350,13 +349,13 @@ local sets = {
 --]]
 
 	['rDamage_Taken'] = {
-		GROUP//DT_PHYSICAL = {
+		['GROUP//DT:PHYSICAL'] = {
 			Main = 'Terra\'s Staff',					-- -20% damage reduction from physical
 		},
-		GROUP//DT_BREATH = {
+		['GROUP//DT:BREATH'] = {
 		},
-		GROUP//DT_MAGICAL = {
-			Ears = 'Coral Earring',					--  -1% damage reduction from magic
+		['GROUP//DT:MAGICAL'] = {
+			Ears = 'Coral Earring',						--  -1% damage reduction from magic
 		},
 	},
 	
@@ -374,15 +373,17 @@ local sets = {
 	['Resting_Refresh'] = {
 		SUBSET = 'rDamage_Taken',
 		Main   = { 'Pluto\'s Staff', 'Kukulcan\'s Staff', 'Pilgrim\'s Wand' },			-- +10/3/2 MP/tick while resting
-        Body   = { 'Errant Hpl.', 'Yinyang Robe', 'Vermillion Cloak', 'Seer\'s Tunic' },-- +5 MP/tick while healing, adds "refresh", adds "refresh", +1/tick while healing
+		Neck   = 'Checkered Scarf',														-- +1 MP/tick while healing
+		Body   = { 'Errant Hpl.', 'Yinyang Robe', 'Vermillion Cloak', 'Seer\'s Tunic' },-- +5 MP/tick while healing, adds "refresh", adds "refresh", +1/tick while healing
 		Waist  = 'Hierarch Belt',														-- +2 MP/tick while resting
 		Legs   = 'Baron\'s Slops',														-- +1 MP/tick while resting
 	},
 
 	['Resting_Regen'] = {
 		SUBSET = 'rDamage_Taken',
-		Hands  = { 'Carbuncle Cuffs//SHINING_RUBY','Shep. Bracers' },		-- +5/1 HP/tick while resting
-		Waist  = 'Hierarch Belt',											-- +2 HP/tick while resting
+		Neck   = 'Checkered Scarf',														-- +1 HP/tick while healing
+		Hands  = { 'Carbuncle\'s Cuffs//SHINING_RUBY','Shep. Bracers' },				-- +5/1 HP/tick while resting
+		Waist  = 'Hierarch Belt',														-- +2 HP/tick while resting
 	},
 	
 --[[
@@ -430,7 +431,7 @@ local sets = {
 --]]
 
 	['PreBP'] = {
-		SUBSET = 'Summoning_Skill',
+		SUBSET = 'rSummoning_Magic_Skill',
 		Head   = { 'Smn. Horn +1', 'Austere Hat' },								-- BP ability delay -3
 		Body   = { 'Yinyang Robe', 'Summoner\'s Dblt.', 'Austere Robe' },		-- BP ability delay: -5/-3/-3
 		Hands  = 'Smn. Bracers +1',												-- BP ability delay -2
@@ -458,8 +459,8 @@ local sets = {
 --]]
 
 	['MidBP'] = {
-		SUBSET = 'Summoning_Skill',
-		GROUP//SMN_BP_PHYS = {
+		SUBSET = 'rSummoning_Magic_Skill',
+		['GROUP//SMN:BP:PHYS'] = {
 			Head   = 'Shep. Bonnet',			-- Pet: +5 Acc
 			Ears   = 'Beastly Earring',			-- Pet: +10 Acc
 			Body   = 'Summoner\'s Dblt.',		-- Avatar: +3% Crit Rate
@@ -467,18 +468,18 @@ local sets = {
 			Legs   = 'Evk. Spats +1',			-- Avatar: Enhances Acc
 			Feet   = 'Summoner\'s Pgch.',		-- Avatar: Enhances Att
 		},
-		GROUP//SMN_BP_MAG = {
+		['GROUP//SMN:BP:MAG'] = {
 			Head   = 'Shep. Bonnet',			-- Pet: +3 Macc
 		},
-		GROUP//SMN_BP_SKILL = {
+		['GROUP//SMN:BP:SKILL'] = {
 		},
-		GROUP//SMN_BP_ACC = {
+		['GROUP//SMN:BP:ACC'] = {
 			Head  = 'Shep. Bonnet',				-- Pet: +5 Acc/+3 Macc
 			Ears  = 'Beastly Earring',			-- Pet: +10 Acc
 			Hands = 'Smn. Bracers +1',			-- Avatar: Enhances Acc
 			Legs  = 'Evk. Spats +1',			-- Avatar: Enhances Acc
 		},
-		GROUP//SMN_BP_HYBRID = {
+		['GROUP//SMN:BP:HYBRID'] = {
 			Head  = 'Shep. Bonnet',				-- Pet: +5 Acc/+3 Macc
 			Ears  = 'Beastly Earring',			-- Pet: +10 Acc
 			Body  = 'Summoner\'s Dblt.',		-- Avatar: 3% Crit Rating
@@ -523,7 +524,7 @@ local sets = {
 		Body   = 'Wonder Kaftan',								-- +2 VIT
 		Hands  = 'Evoker\'s Bracers',							-- +4 VIT
 		Rings  = 'Kshama Ring No.4',							-- +3 VIT
-		Belt   = 'Mrc.Cpt. Belt',								-- +1 VIT
+		Waist  = 'Mrc.Cpt. Belt',								-- +1 VIT
 		Legs   = { 'Wonder Braccae', 'Shep. Hose' },			-- +2/2 VIT
 		Feet   = { 'Creek F Clomps', 'Summoner\'s Pgch.' },		-- +4/3 VIT
 	},
@@ -531,13 +532,12 @@ local sets = {
 	-- Agility Reference gear set
 	['rAGI'] = {
 		Head   = 'Empress Hairpin',								-- +3 AGI
-		Ears   = { 'Genin Earring//SJ::NIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
+		Ears   = { 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
 		Body   = 'Yinyang Robe//IF:Errant Hpl.',				-- filler, voids -7 AGI
 		Rings  = 'Kshama Ring No.3',							-- +3 AGI
 		Back   = 'Fed. Army Mantle',							-- +2 AGI
 		Waist  = 'Mrc.Cpt. Belt',								-- +1 AGI
 		Legs   = 'Evk. Spats +1//IF:Errant Slops',				-- filler, voids -5 AGI
-		Feet   = 'Evoker\'s Pgch.',								-- +5 AGI
 	},
 
 	-- Intelligence Reference gear set
@@ -582,7 +582,7 @@ local sets = {
 	-- Enmity- Reference gear set
 	['rEnmity_Minus'] = {
 		Ammo  = 'Hedgehog Bomb',						-- -1 Enmity
-		Neck  = 'Fenrir\'s Torque//NIGHTTIME',			-- -3 Emnity at night
+		Neck  = 'Fenrir\'s Torque//TIME:NIGHTTIME',		-- -3 Emnity at night
 		Hands = { 'Nashira Gages', 'Errant Cuffs' },	-- -4/-2 Enmity
 		Rings = 'Tamas Ring',							-- -5 Enmity
 		Waist = 'Penitent\'s Rope',						-- -3 Enmity
@@ -611,9 +611,8 @@ local sets = {
 --]]
 
 	['Precast'] = {	
-		Ears =  'Loquac. Earring',										-- Enhances Fastcast
-		--Hands = { 'Carbuncle\'s Cuffs//SMN:AVATAR', 'Carbuncle\'s Cuffs//SPIRIT:ES' },				-- Summoning magic casting time -1x2
-		Hands = 'Carbuncle\'s Cuffs//SMN:AVATAR',														-- Summoning magic casting time -1
+		Ears =  'Loquac. Earring',																		-- Enhances Fastcast
+		Hands = { 'Carbuncle\'s Cuffs//SMN:AVATAR', 'Carbuncle\'s Cuffs//SPIRIT:ES' },					-- Summoning magic casting time -1x2
 		Feet =  { 'Evoker\'s Boots//SMN:AVATAR', 'Evoker\'s Boots//SPIRIT:ES', 'Rostrum Pumps' },		-- Summoning magic casting time -1x2, Enhances Fastcast
 	},
 
@@ -700,7 +699,7 @@ local sets = {
 	cure potency is applied after the power cap is determined, it's a
 	very attractive parameter to boost up. Just remember though that 
 	cure potency is capped at 50%. Light's day and/or light weather 
-	has a 33% chance to boost the cure's effecacy by 10% each (25% 
+	has a 33% chance to boost the cure's effacacy by 10% each (25%
 	if double light weather.) Casting cures on darksday or in dark 
 	weather has an equal chance of a penalty.
 	
@@ -713,7 +712,7 @@ local sets = {
 		SUBSET  = {
 			[1] = 'rHealing_Magic_Skill',
 			[2] = 'rMND'
-			},
+		},
 		Ammo   = 'Enmity_Minus::Ammo',
 		Hands  = 'Evoker\'s Bracers',	-- +4 VIT
 		Legs   = 'Shep. Hose//EMPTY',	-- +2 VIT
@@ -748,7 +747,6 @@ local sets = {
 
 	['HealingMagic'] = {
 		SUBSET = 'Healing_Magic_Skill',
-		},
 	},
 	
 --[[
@@ -781,7 +779,7 @@ local sets = {
 	(ex: barparalyze and barblizzard).
 	
 	The potency of an elemental barspell depends only on Enhancing Magic
-	Skill as follows:
+	Skill as follows:January
 	
 		Resistance = 40 + floor(Enhancing Magic Skill / 5)
 		if Enhancing Magic Skill is above 300:
@@ -841,6 +839,7 @@ local sets = {
 		SUBSET  = {
 			[1] = 'rINT',
 			[2] = 'rMAB',
+		},
 	},
 	
 --[[
@@ -1008,11 +1007,11 @@ local sets = {
 	-- rSummoning_Magic_Skill specifies gear that boosts Summoning Magic Skill
 	['rSummoning_Magic_Skill'] = {
 		Head  = { 'Evoker\'s Horn',	'Austere Hat' },	-- +5/2 Summoning Skill
-		Neck  = 'Smn. Torque',							--  +7 Summoning Magic Skill
+		Neck  = 'Smn. Torque',							-- +7 Summoning Magic Skill
 		Body  = { 'Summoner\'s Dblt.', 'Austere Robe'}, -- Ensures that a V.Cloak not equipped since we want the head gear, Aus Robe: BP delay -3
 		Hands = 'Smn. Bracers +1',						-- +12 Summoning Skill
 		Rings = 'Evoker\'s Ring',						-- +10 Summoning Skill
-		Feet  = 'Nashira Crackows',						--  +5 Summoning Magic Skill
+		Feet  = 'Nashira Crackows',						-- +5 Summoning Magic Skill
 	},
 	
 --[[
@@ -1028,8 +1027,7 @@ local sets = {
 
 	['Summoning'] = {
 		SUBSET = 'rSummoning_Magic_Skill',
-		--Hands = { 'Carbuncle\'s Cuffs//SMN:AVATAR', 'Carbuncle\'s Cuffs//SPIRIT:ES' },	-- Summoning magic casting time -1x2, bug with casting time reduction and spirits
-		Hands = 'Carbuncle\'s Cuffs//SMN:AVATAR',	-- Summoning magic casting time -1
+		Hands = { 'Carbuncle\'s Cuffs//SMN:AVATAR', 'Carbuncle\'s Cuffs//SPIRIT:ES' },	-- Summoning magic casting time -1x2
 		Feet   = 'Evoker\'s Boots'					-- Summoning magic casting time -1
 	},
 
@@ -1125,9 +1123,9 @@ local sets = {
 	spell invocation.
 --]]
 	
---	['Dread'] = {
---		SUBSET = 'rDark_Magic_Skill',
---	},
+	['Dread'] = {
+		SUBSET = 'rDark_Magic_Skill',
+	},
 
 --[[
 	*************************
@@ -1623,9 +1621,15 @@ local sets = {
 	['A_SATA'] = {
 		Head  = 'Empress Hairpin',							-- +3 DEX/+3 AGI
 		Neck  = 'Spike Necklace',							-- +3 DEX
-		Ears  = { 'Genin Earring//SJ::NIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
+		Ears  = { 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
 		Rings = { 'Kshama Ring No.2', 'Kshama Ring No.3' },	-- +3 DEX, +3 AGI
 		Waist = 'Mrc.Cpt. Belt',							-- +1 DEX/+1 AGI
+	},
+
+	-- It's questionable if any gear provides Treasure Hunter that can be equipped by a
+	-- non-THF, but just in case... (Some folks believe that the Tinfoil Hat provides
+	-- TH to non-THF's)
+	['A_TH'] = {
 	},
 
 --[[
@@ -1644,7 +1648,7 @@ local sets = {
 	},
 
 	--* /BST *--
-	['PC_Reward']
+	['PC_Reward'] = {
 	},
 
 	['PC_Fight'] = {
@@ -1652,11 +1656,11 @@ local sets = {
 
 	-- This structure is for the Sic and Ready command, by skill type
 	['PC_Sic_Ready'] = {
-		GROUP//BST_PET_ATTACK = {
+		['GROUP//BST:PET_ATTACK'] = {
 		},
-		GROUP//BST_PET_MATT = {
+		['GROUP//BST:PET_MATT'] = {
 		},
-		GROUP//BST_PET_MACC = {
+		['GROUP//BST:PET_MACC'] = {
 			Head = 'Shep. Bonnet',		-- +3 Pet Macc
 		},
 	},
@@ -1681,7 +1685,10 @@ local sets = {
 
 profile.Sets = sets;
 
--- The following structure stores job related settings/variables. The first section is automatically
+-- Load gVars to define most globals and the individual modules
+gVars = gFunc.LoadFile('common\\gVars.lua');
+
+-- The following structure stores job/process settings. The first section is automatically
 -- populated by Luashitacast. The second section contains settings the player can modify.
 profile.settings = {
 	-- This first section is controlled by Luashitacast. Please do not modify any entries here
@@ -1704,77 +1711,152 @@ profile.settings = {
 	-- replacement for priorityEngaged. The TH gearset will always be run last.
 	postGSEngaged = { [1] = 'Eva', [2] = 'Acc' };
 	-- After the weaponskill gearset is loaded, three supplimental gearsets might also be run:
-	-- accuracy, elemental gorget, and elemental obi. (The latter is unimplemented for now.)
+	-- accuracy, elemental gorget, and elemental obi. (Note: support for closing elemental weapon
+	-- skill chain is currently unsupported.)
 	postGSWeaponSkill = { [1] = 'Acc', [2] = 'eGorget', [3] = 'eObi' };
 	-- Priority settings define process of supplimental orders after gear set processing
-	bPriorityRefresh = true;			-- priority setting. If true, Refresh over Regen. False inverts
-	bLockAllOnGS = true;				-- Lock all slots when a gear set is equipped. Most useful on craft and gathering sets
+	bPriorityRefresh = true;			-- Priority setting. If true, Refresh over Regen. False inverts
+	bLockAllOnGS = false;				-- Lock all slots when a gear set is equipped. Most useful on craft and gathering sets
+	bAutoStaveSwapping = true;			-- Indicates if elemental stave swapping should occur automatically
+	bConfirmation = true;				-- Should confirmation be displayed? Note: some actions give feedback regardless of setting
 	-- Override settings are used to indicate the order sets are processed. It's recommended to leave these
 	-- entries false.
-	EmbedOnlyAccuracy = false;			-- Restricts accuracy to only inline conditionals if true
-	EmbedOnlyEvasion = false;			-- Restricts evasion to only inline conditionals if true
-	EmbedOnlyMacc = false;				-- Restricts Macc to only inline conditionals if true
-	EmbedOnlyTH = false;				-- Restricts TH to only inline conditionals if true
-	EmbedOnlyeGorget = false;			-- Restricts elemental gorgets to only inline conditionals if true
-	EmbedOnlyeObi = false;				-- Restricts elemental obis to only inline conditionals if true
-	-- Macro book/page
-	bAutoMacrobook_page = true;			-- Should macro book/page be automatically assigned
-	bJustMacroBook = false;				-- Should only the macro book be automatically assigned
-	MacroBook = 13;						-- Which macro book should be equipped for SMN
+	EmbedOnly = {
+		Accuracy = false,				-- Restricts accuracy to only inline conditionals if true
+		Evasion = false,				-- Restricts evasion to only inline conditionals if true
+		Macc = false,					-- Restricts Macc to only inline conditionals if true
+		TH = false,						-- Restricts TH to only inline conditionals if true
+		eGorget = false;				-- Restricts elemental gorgets to only inline conditionals if true
+		eObi = false;					-- Restricts elemental obis to only inline conditionals if true
+	};
+	-- The AutoMacroBookPage structure is how you define which macro book and page (if wanted) will
+	-- automatically be set. Identify the macro book number in the "book" sub-setting or set it to nil
+	-- if you do not want Luashitacast to set it for you. The "page" sub-setting identifies which page
+	-- in the macrobook should be assigned. The default is 1, so you only need identify any subjobs whose
+	-- page number is greater than 1.
+	AutoMacroBookPage = {
+		bBook = true;					-- Should the macro book be automatically assigned?
+		bPage = true;					-- Should the macro page be automatically assigned?
+		-- if "bBook" is true, the following subsettings have meaning
+		book = 13;						-- What macro book should be assigned, if set to nil, has same effect as bBook=false
+		pages = { 						-- What page should be assingned based on subjob, 1 is default
+			['RDM'] = 2, 				-- Identify which page for each subjob should be equipped
+			['BLM'] = 3,
+		};
+	};
+	-- The reminder system is a "nag" system to remind the player to run /gc. Prior to /gc being run, no gear swapping
+	-- will occur. /gc is required for Luashitacast to perform gear swapping. You can disable to reminder (by setting
+	-- the Enabled attribute to false), but I highly recommend you leave it enabled. Nothing more frustrating then
+	-- realizing no gear swapping is occurring because /gc wasn't run.
+	Reminder = {
+		Enabled = true;					-- Should the reminder be enabled?
+		MinBasetime = 15;				-- minimum wait before reminding player to run /gc
+		MaxBasetime = 300;				-- once reminder shown, switch to every 5 minutes
+		-- bGCReminder indicates if the initial "nag" reminder has been shown. Setting this value to true will
+		-- indicate to Luashitacast that the initial reminder message has occurred and only the brief reminder
+		-- message should be displayed until /gc is run. No good reason to do that, let Luashitacast control
+		-- this setting.
+		bGCReminder = false;			-- Has GC reminder been displayed yet?
+	};
+	-- DisplayBar identifies each section displayed in the display bar. The player can indicate if the section should be
+	-- visible and in certain instances, what the setting should initially be set to. Please note though that just because
+	-- a section maybe invisible, it does not mean that the option is not available, it is just not displayed.
+	DisplayBar = {
+		[gVars._JOB] = { ['visible'] = true },							-- job/subjob display. Visible?
+		[gVars._CAP] = { ['visible'] = true },							-- gear level capped. Visible?
+		--
+		[gVars._GC]  = { ['visible'] = true },							-- gear check. Visible? Setting defined by running /gc
+		--
+		[gVars._WSWAP]   = { ['visible'] = true,  ['init'] = true },	-- weapon swap. Visible? Initial setting
+		[gVars._KITE]    = { ['visible'] = true,  ['init'] = false },	-- kiting. Visible? Initial setting
+		[gVars._TH]	     = { ['visible'] = false, ['init'] = false },	-- treasure hunter. Visible? Initial setting
+		[gVars._TANK]    = { ['visible'] = false, ['init'] = false },	-- tanking. Visible? Initial setting
+		[gVars._IDLE]    = { ['visible'] = false, ['init'] = true },	-- idle gear. Visible? Initial setting
+		[gVars._EVASION] = { ['visible'] = true,  ['init'] = false },	-- evasion. Visible? Initial setting
+		[gVars._SPF]     = { ['visible'] = true },						-- show pull. Visible?
+		[gVars._GSWAP]   = { ['visible'] = true,  ['init'] = true },	-- gear swapping. Visible? Initial setting
+		-- Magic accuracy is only available to jobs/subjobs that use magic
+		[gVars._MACC]    = { ['visible'] = true,  ['init'] = false },	-- Macc. Visible? Initial setting
+		[gVars._SBP]     = { ['visible'] = true,  ['init'] = true },	-- show blood pact. Visible? Initial setting
+		--
+		-- Mode let's the player define what emphasis gearing should have:
+		-- 		gVars_MODE_PERPETUASetSubjobSetTION - perpetuation cost, gVars_MODE_ATTACK - attack, gVars_MODE_ENMITY_MINUS - enmity minus
+		[gVars._MODE]    = { ['visible'] = true,  ['init'] = gVars._MODE_PERPETUATION },	-- Mode. Visible? Initial setting
+		[gVars._DT]		 = { ['visible'] = true,  ['init'] = gVars._DT_OFF },	-- Damage taken
+		[gVars._REGION]  = { ['visible'] = true },						-- region control. Visible?
+		--
+		[gVars._ACC]     = { ['visible'] = true },
+		-- racc displays the ranged accuracy stage(s). You can limit the display to only ranged subjobs (rangesj) and all
+		[gVars._RACC]    = { ['visible'] = true, ['init'] = true },		-- ranged accuracy. Visible? Initial setting
+		--
+		[gVars._LOCKS]   = { ['visible'] = true },						-- locks. Visible?
+		--
+		[gVars._DAY]     = { ['visible'] = true },						-- day. Visible?
+		[gVars._TIME]    = { ['visible'] = true },						-- time. Visible?
+		[gVars._MOON]    = { ['visible'] = true },						-- moon phase and percent. Visible?
+		[gVars._WEATHER] = { ['visible'] = true },						-- weather. Visible?
+		[gVars._ZONE]    = { ['visible'] = true },						-- zone name. Visible?
+		[gVars._CC]		 = { ['visible'] = true },						-- conditional codes. Visible?
+	};
+	-- Should distance be checked when performing a weapon skill?
+	WScheck = true; 	 				-- set to false if you don't want to use the WSdistance safety check
+	WSdistance = 4.7; 	 				-- default max distance (yalms) that a melee weapon skill can reach. 4.7 is the default for Tarutarus
+	-- MPP/HPP tolerance percentages
+	MPPTolerance = 98;					-- Tolerance used when checking special gear's MP% maximum
+	HPPTolerance = 98;					-- Tolerance used when checking special gear's HP% maximum
+	-- Default target
+	DefaultSpellTarget = 't'; 			-- What is the default target to use in MaxSpell if no target specified
+	DefaultSongTarget = 't';  			-- What is the default target to use in MaxSong if no target specified
 };
 
 -- Table of custom conditionals
 profile.CustomConditionals = {
-	[1] = [ ['code'] = 'CC1', ['question'] = 'Is minus fire resistance an issue', ['init'] = false },
-	[2] = [ ['code'] = 'CC2', ['question'] = 'Should optional gear be included', ['init'] = false },
+	[1] = { ['code'] = 'CC1', ['question'] = 'Is minus fire resistance an issue', ['init'] = false },
+	[2] = { ['code'] = 'CC2', ['question'] = 'Should optional gear be included', ['init'] = false },
 };
 
 -- Tracked pet action
 profile.sPetAction = nil;
 
--- Load gVars to define most globals and the individual modules
-gVars = gFunc.LoadFile('common\\gVars.lua');
+--[[
+	****************
+	* Code Section *
+	****************
+--]]
+
+
 
 --[[
-	********
-	* Code *
-	********
-
-	SetSubjobSet is used to pick the appropriate set for the loaded macrobook based on
-	which subjob is current. 
+	SetSubjobSet sets the appropriate macro page (if wanted) from the current
+	macro book.
 
 	Parameter
 		chkSJ		player's subjob
 --]]
 
 function SetSubjobSet(chkSJ)
-	-- "chkSJ" is the key for what toolbar is shown. All jobs are defined in the tSubs table.
-	-- A value of 0 means that job is not configured. All values > 0 indicate which toolbar
-	-- is to be displayed. The player must change the entries in this table to match their
-	-- needs.
-	local tSubs = {
-				['WAR'] = 0, ['MNK'] = 0, ['WHM'] = 1, ['BLM'] = 3, ['RDM'] = 2, ['THF'] = 0,
-				['PLD'] = 0, ['DRK'] = 0, ['BST'] = 0, ['BRD'] = 0, ['RNG'] = 0, ['SMN'] = 0,
-				['SAM'] = 0, ['NIN'] = 0, ['DRG'] = 0, ['BLU'] = 0, ['COR'] = 0, ['PUP'] = 0,
-				['DNC'] = 0, ['SCH'] = 0, ['GEO'] = 0, ['RUN'] = 0};
-	local sj = 1;	-- Default toolbar
-
-	if chkSJ == nil or chkSJ == 'NON' or
-		(profile.settings.sjb ~= nil and profile.settings.sjb == chkSJ) or
-		profile.settings.bAutoMacrobook_page == false then
+	-- Make sure a macro page is wanted or determinable
+	if chkSJ == nil or
+		chkSJ == 'NON' or
+		profile.settings.AutoMacroBookPage.bBook == false or
+		profile.settings.AutoMacroBookPage.book == nil or
+		profile.settings.AutoMacroBookPage.bPage == false or
+		(profile.settings.sjb ~= nil and profile.settings.sjb == chkSJ) then
 		return;
 	end
-	
-	-- Compare the stored subjob with the current subjob
-	if profile.settings.sjb == nil or chkSJ ~= profile.settings.sjb then
-		if tSubs[chkSJ] > 0 then
-			sj = tSubs[chkSJ];
-		end
+
+	-- At this point the macro page setting is wanted
+	local sj = profile.settings.AutoMacroBookPage.pages[chkSJ];
+
+	if sj == nil then
+		sj = 1;
 	end
 
 	-- Set the macro set
 	AshitaCore:GetChatManager():QueueCommand(1, '/macro set '..tostring(sj));
 	profile.settings.sjb = chkSJ;
+	displaybar.UpdateBarStatic();
+	crossjobs.SetVariables();
 end		-- SetSubjobSet
 
 --[[
@@ -1787,20 +1869,25 @@ function profile.OnLoad()
 	-- Initialize settings
 	gSettings.AllowAddSet = true;
 	utilities.Initialize();
-	crossjobs.settings.bWSOverride = true;
 	
-	-- Set which macro book should be displayed. Which macro set within the macro book to
+	-- Set which macro book should be displayed. Which macro page within the macro book to
 	-- display depends on what your subjob is.
-	if profile.settings.bAutoMacrobook_page == true then
-		AshitaCore:GetChatManager():QueueCommand(1, '/macro book ' .. tostring(profile.settings.MacroBook));		-- SMN macro book
-		if profile.settings.bJustMacroBook == false then
-			SetSubjobSet(player.SubJob);
-		end
+	if profile.settings.AutoMacroBookPage.bBook == nil then
+		profile.settings.AutoMacroBookPage.bBook = false;
+	end
+
+	if profile.settings.AutoMacroBookPage.bBook == true and
+		profile.settings.AutoMacroBookPage.book == nil then
+		print(chat.message('Info: AutoMacroBookPage.bBook was true, but AutoMacroBookPage.book is undefined. Turning off function'));
+	elseif profile.settings.AutoMacroBookPage.bBook == true and
+		profile.settings.AutoMacroBookPage.book ~= nil then
+		AshitaCore:GetChatManager():QueueCommand(1, '/macro book ' .. tostring(profile.settings.AutoMacroBookPage.book));		-- SMN macro book
+		SetSubjobSet(player.SubJob);
 	end
 
 	-- Load up the weapons bar.
 	gear.MoveToDynamicGS(profile.Sets.Start_Weapons,crossjobs.Sets.CurrentGear,true,'Start_Weapons');
-	gear.EquipTheGear(crossjobs.Sets.CurrentGear,false);
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear,false,false);
 
 	-- Now define the toggles for any custom conditionals.
 	for _,j in ipairs(profile.CustomConditionals) do
@@ -1809,7 +1896,7 @@ function profile.OnLoad()
 
 	-- Make sure the saved weapons are the starting weapons
 	gVars.weapon = crossjobs.Sets.CurrentGear['Main'];
-	gVars.offhand = crossjobs.sets.CurrentGear['Sub';
+	gVars.offhand = crossjobs.sets.CurrentGear['Sub'];
 end		-- OnLoad
 
 --[[
@@ -1817,21 +1904,16 @@ end		-- OnLoad
 --]]
 
 function profile.OnUnload()
-	utilities.Unload();
+	crossjobs.Unload();
 end		-- OnUnload
 
 --[[
-	HandleCommand is run when you type in a command defined in LUASHITACAST. The commands handled here instead
-	of in crossjobs.HandleCommands are specific to SMN.
+	HandleCommand is run when you type in a command defined in LUASHITACAST.
 --]]
 
 function profile.HandleCommand(args)
-	if args[1] == 'petfood' then
-		pets.fPetReward(args[2],true);
-	else
-		crossjobs.HandleCommands(args);profile.sPetAction
-	end
-end		-- HandleCommand
+	crossjobs.HandleCommands(args);
+end
 
 --[[
 	HandlePetAction prints the blood pact being invoked (if a SMN pet and
@@ -1854,11 +1936,12 @@ function HandlePetAction(PetAction)
 		if (profile.sPetAction == nil or profile.sPetAction ~= PetAction.Name) and
 		   utilities.fGetToggle('sBP') == true then
 			local sMsg;
-			if string.find(pets.SmnBPRageList,PetAction.Name) ~= nil then
+			if table.find(pets.SmnBPRageList,PetAction.Name) ~= nil then
 				sMsg = '/p  [<pet>] [Blood Pact: ' .. PetAction.Name .. '] >> <t>.';
 			else
-				sMsg = '/echo [<pet>] [Blood Pact: ' .. PetAction.Name .. ']';
+ 				sMsg = '/echo [<pet>] [Blood Pact: ' .. PetAction.Name .. ']';
 			end
+
 			AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
 			profile.sPetAction = PetAction.Name;
 		end
@@ -1886,15 +1969,18 @@ function profile.HandleDefault()
 	local bSA = utilities.fBuffed('Sneak Attack');
 	local bTA = utilities.fBuffed('Trick Attack');
 	local eWeap = nil;
-	local bIgnoreLocks;
+	local bIgnoreLocks = false;
+	local bOverride = false;
 	local cKey,sGear;
 
 	utilities.Reminder();		-- See if reminder should be printed
 
 	-- Make sure the macro set is shown and that the display on the top of the screen is correct
-	-- in case the subjob was changed.
-	SetSubjobSet(player.SubJob);
-	displaybar.UpdateBarStatic();
+	-- in case the subjob was changed. Note: the macro page will only be changed if there was a
+	-- subjob change.
+	if profile.settings.AutoMacroBookPage.bPage == true then
+		SetSubjobSet(player.SubJob);
+	end
 
 	-- No gear swapping should occure if GSwap is false or /gc has not been run
 	if utilities.fGetToggle('GSwap') == false or gear.fHasGCBeenRun() == false then
@@ -1943,12 +2029,16 @@ function profile.HandleDefault()
 			gear.MoveToDynamicGS(profile.Sets.TP,crossjobs.Sets.CurrentGear,false,'TP');
 			for _,j in ipairs(profile.settings.postGSEngaged) do
 				j = string.lower(j);
-				if j == 'eva' and utilities.fGetToggle('Eva') == true and profile.settings.EmbedOnlyEvasion == false then
+				if j == 'eva' and utilities.fGetToggle('Eva') == true and profile.settings.EmbedOnly.Evasion == false then
 					gear.MoveToDynamicGS(profile.Sets.Evasion,crossjobs.Sets.CurrentGear,false,'Evasion');
-				elseif j == 'acc' and profile.settings.EmbedOnlyAccuracy == false then
+				elseif j == 'acc' and profile.settings.EmbedOnly.Accuracy == false then
 					crossjobs.ProgressiveAccuracy('Acc');
 				end
 			end
+		end
+		-- TH (if enabled) is always loaded last
+		if utilities.fGetToggle('TH') == true and profile.settings.EmbedOnly.TH == false then
+			gear.MoveToDynamicGS(profile.Sets.A_TH,crossjobs.Sets.CurrentGear,false,'TH');
 		end
 	elseif player.Status == 'Resting' then	
 		local bRefresh = false;
@@ -1971,7 +2061,7 @@ function profile.HandleDefault()
 			if profile.settings.bCappedRegen == false then
 				gear.MoveToDynamicGS(profile.Sets.Resting_Regen,crossjobs.Sets.CurrentGear,false,'Resting_Regen');
 			elseif profile.settings.bPriorityRefresh then
-				gear.MoveToDynamicGS(profile.Sets.Resting_Refresh,crossjobs.Sets.CurrentGear),false,'Resting_Refresh';
+				gear.MoveToDynamicGS(profile.Sets.Resting_Refresh,crossjobs.Sets.CurrentGear,false,'Resting_Refresh');
 				bRefresh = true;
 			end
 		end
@@ -2000,16 +2090,13 @@ function profile.HandleDefault()
 	end
 	
 	-- Equip the composited HandleDefault set
-	gear.EquipTheGear(crossjobs.Sets.CurrentGear,bIgnoreLocks);
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear,bIgnoreLocks,bOverride);
 
 	-- And make sure a weapon equipped.
 	local tgear = gData.GetEquipment();
 	if tgear.Main == nil or tgear.Main.Name == nil then
 		gear.MoveToDynamicGS(profile.Sets.Start_Weapons,crossjobs.Sets.CurrentGear,true,'Start_Weapons');
 	end
-	
-	-- Lastly, update the display, just in case
-	displaybar.UpdateBarStatic();
 end		-- HandleDefault
 
 --[[
@@ -2018,6 +2105,7 @@ end		-- HandleDefault
 
 function profile.HandleAbility()
 	local ability = gData.GetAction();
+	local player = gData.GetPlayer();
 	local sj = player.SubJob;
 	
 	-- Make sure the data download is done
@@ -2061,8 +2149,6 @@ function profile.HandlePrecast()
 	end
 
 	magic.HandlePrecast();
-
-	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandlePrecast
 
 --[[
@@ -2079,8 +2165,6 @@ function profile.HandleMidcast()
 
 	-- Call the common HandleMidcast now
 	magic.HandleMidcast();
-
-	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- profile.HandleMidcast
 
 --[[
