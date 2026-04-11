@@ -75,38 +75,36 @@ end     -- reporting.DisplayVersion
     Pararameter
         args    possible file designation
 
+    Invocations: /rc [file[=name] ][+] | [visible|invisible]
+
 ++ modify for file ++
 --]]
 
 function reporting.RegionControlDisplay(args)
--- List of numeric representations for who controls a region
+    tColorList = { }
 
     -- Make sure we know what nation we belong to
     if crossjobs.OwnNation == -1 then
         crossjobs.OwnNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation() + 1;
     end
 
+
     -- Make sure controller ID is valid
-    if crossjobs.OwnNation < -1 or crossjobs.OwnNation > 4 then
+    if crossjobs.OwnNation < gVars._REGION_TRUE_NA or crossjobs.OwnNation > gVars._REGION_BEASTMEN then
         print(chat.message('Warning: Unknown player\'s nation = ' .. tostring(crossjobs.OwnNation)));
     else
-        print(chat.message('Info: Player\'s nation = ' .. gVars.tRegionControllerSettings[crossjobs.OwnNation]));
+        print(chat.message('Info: Player\'s nation = ' .. chat.color1(gVars.tRegionControllerColors[crossjobs.OwnNation],gVars.tRegionControllerSettings[crossjobs.OwnNation])));
     end
 
-    print(' ');
-    for i,j in pairs(gVars.RegionControl) do
-        if j['own'] < 0 or j['own'] > 4 then
-            print(chat.message('Huh? ' .. i ..' = ' .. tostring(j['own'])));
-        else
-            for ii,jj in pairs(gVars.tRegionControllerSettings) do
-                if ii == j['own'] then
-                    if j['own'] == 0 and utilities.fBuffed('Signet') == true then
-                        print(chat.message(i .. ' = ' .. jj .. ', but \'not owned\' gear works'));
-                    else
-                        print(chat.message(i ..' = ' .. jj));
-                    end
-                    break;
-                end
+    -- Check visibility setting
+    if utilities.fCheckVisibility(gVars._RC,args) == false then
+        -- Now process the list
+        print(' ');
+        for i,j in pairs(gVars.RegionControl) do
+            if j['own'] < gVars._REGION_NA or j['own'] > gVars._REGION_BEASTMEN then
+                print(chat.message('Huh? ' .. i ..' = ' .. tostring(j['own'])));
+            else
+                print(chat.message(i .. ' = ' .. chat.color1(gVars.tRegionControllerColors[j['own']],gVars.tRegionControllerSettings[j['own']])));
             end
         end
     end

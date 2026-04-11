@@ -251,8 +251,10 @@ gVars.tElemental_gear = {
 gVars._REGION_SANDY = 1;
 gVars._REGION_BASTOK = 2;
 gVars._REGION_WINDY = 3;
+gVars._REGION_BEASTMEN = 4;
 gVars._REGION_NA = 0;
 gVars._REGION_UNKNOWN = -1;
+gVars._REGION_TRUE_NA = -2;
 
 -- This table tracks regional control using zone id's associated with a region, and querying the server for who last gained
 -- conquest of the region. This table is automatically populated by digesting the appropriate packet from the server when
@@ -289,7 +291,16 @@ gVars.RegionControl = {
 
 -- List of all conquest region controller's designations
 gVars.tRegionControllerSettings = {
-    [-1] = 'Unassigned', [0]  = 'N/A', [1]  = 'San d\'Orian', [2]  = 'Bastokian', [3]  = 'Windurstian', [4]  = 'Beastmen'
+    [gVars._REGION_TRUE_NA] = 'Unknown', [gVars._REGION_UNKNOWN] = 'N/A', [gVars._REGION_NA]  = 'N/A, but \'not owned\' gear works',
+    [gVars._REGION_SANDY]  = 'San d\'Orian', [gVars._REGION_BASTOK]  = 'Bastokian', [gVars._REGION_WINDY]  = 'Windurstian',
+    [gVars._REGION_BEASTMEN]  = 'Beastmen'
+};
+
+-- 2 == green, 4 == blue, 7 == yellow, 8 == red
+gVars.tRegionControllerColors = {
+    [gVars._REGION_TRUE_NA] = 7, [gVars._REGION_UNKNOWN] = 7, [gVars._REGION_NA] = 7,
+    [gVars._REGION_SANDY] = 8, [gVars._REGION_BASTOK] = 4, [gVars._REGION_WINDY] = 2,
+    [gVars._REGION_BEASTMEN] = 5
 };
 
 -- Define region status
@@ -297,7 +308,7 @@ gVars._REGION_STATUS_UNKNOWN = 'Unknown';
 gVars._REGION_STATUS_NA = 'N/A';
 gVars._REGION_STATUS_OWNED = 'Owned';
 gVars._REGION_STATUS_NOT_OWNED = 'Not Owned';
-gVars._REGION_STATS_NA_NOT_OWNED = 'N/A (Not Owned)';
+gVars._REGION_STATUS_NA_NOT_OWNED = 'N/A (Not Owned)';
 gVars._REGION_STATUS_MUST_ZONE = 'Must Zone';
 
 -- This table contains a list of all of the gear found by Luashitacast in your job and crossjob file's gear sets.
@@ -353,9 +364,10 @@ gVars.version = {
 
 -- List of all supported commands
 gVars.AliasList = {
-    '911','acc','ajug','cap','cc','db','dt','ei','equipit','eva','gc','gearset','gs','gswap','horn','idle',
-    'kite','lock','macc','man','maxsong','maxspell','mode','petfood','ptt','pull','racc','rc','rv','sbp',
-    'showit','smg','spf','ss','string','sw','tank','th','unlock','val','ver','wsdistance','wswap','t1'
+    '911','acc','ajug','cap','cc','db','dbar','dt','ei','equipit','eva','gc','gearset','gs','gswap',
+    'horn','idle','kite','lachelp','lock','macc','maxsong','maxspell','mode','petfood','pull','racc',
+    'rc','rv','sbp','showit','smg','spf','ss','string','sw','tank','th','unlock','val','ver',
+    'wsdistance','wswap','t1'
 };
 
 -- Lists all player storage containers available in FFXI.
@@ -532,6 +544,10 @@ gVars.bGC = false;
 
 -- Current regional setting
 gVars.sRegion = gVars._REGION_STATUS_MUST_ZONE;
+
+-- Copy of the displaybar settings
+gVars.Displaybar = {};
+
 --[[
     ********************
     * global constants *
@@ -571,6 +587,10 @@ gVars._sDB_NORM = 'Norm';
 gVars._sDB_BPP = 'BPP';
 gVars._sDB_WSS = 'WSS';
 
+gVars._POS_X = 'POS_X';
+gVars._POS_Y = 'POS_Y';
+gVars._VISIBLE = 'VIS';
+
 -- List of all toggles and cycles to reduce the likeliness of a typo or case mismatch.
 -- Start with ones that are
 gVars._GSWAP        = 'GSwap';      -- Gear Swap
@@ -604,6 +624,25 @@ gVars._MOON         = 'Moon';       -- Moon phase
 gVars._WEATHER      = 'Weather';    -- Weather
 gVars._ZONE         = 'Zone';       -- Zone name
 gVars._CC           = 'CC';         -- Conditional Codes
+-- Additional constants for Help System
+gVars._911          = '911';        -- SMN 911 command
+gVars._DBAR         = 'dbar';       -- Display bar manipulation
+gVars._FILE         = 'file';       -- File
+gVars._EI           = 'ei';         -- Equip It
+gVars._GS           = 'gs';         -- Gear Set
+gVars._MAXSONG      = 'MSONG';      -- Max Song
+gVars._MAXSPELL     = 'MSPELL';     -- Max Spell
+gVars._PULL         = 'PULL';       -- Pull
+gVars._RC           = 'RC';         -- Region Control
+gVars._RV           = 'RV';         -- Refresh Variables
+gVars._SHOWIT       = 'SHOWIT';     -- Show it
+gVars._SMG          = 'SMG';        -- Show My Gear
+gVars._SPF          = 'SPF';        -- Show Pull Feedback
+gVars._SW           = 'SW';         -- Start Weapons
+gVars._VALIDATE     = 'VAL';        -- Validate
+gVars._VERSION      = 'VER';        -- Version
+gVars._VISIBLE      = 'vis';        -- Visible/Invisible
+gVars._WSDISTANCE   = 'WSD';        -- Weapon Skill Distance
 
 -- Define constants for DT so typos aren't made
 gVars._DT_OFF = 'Off';
@@ -614,6 +653,7 @@ gVars._DT_BRE = 'Breath';
 gVars._DT_P = 'P';
 gVars._DT_M = 'M';
 gVars._DT_B = 'B';
+gVars._DT_O = 'O';
 
 -- Define constants for Mode so typos aren't made
 gVars._MODE_ATTACK = 'ATTK';
@@ -627,6 +667,11 @@ gVars._MODE_E = 'E';
 -- define constants for Instrument so typos aren't made
 gVars._HORN = 'Horn';
 gVars._STRING = 'String';
+
+-- Define blood pact types
+gVars._RAGE = 'Rage';
+gVars._WARD = 'Ward';
+gVars._UNKNOWN = 'Unknown';
 
 -- Since gVars is loaded from all job files, the individual modules will be loaded here
 crossjobs   = gFunc.LoadFile('common\\crossjobs.lua');

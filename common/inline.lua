@@ -48,7 +48,8 @@ function inline.fCheckInlineBuff(sCode)
         'ARC_CIRCLE','COVER','HOLY_CIRCLE','SPIKE','UTSUSEMI','WARD_CIRCLE','SAMBA','ENAERO','ENBLIZZARD',
         'ENDARK','ENFIRE','ENLIGHT','ENSTONE','ENTHUNDER','ENWATER','BARAERO','BARBLIZZARD','BARFIRE',
         'BARSTONE','BARTHUNDER','BARWATER','BARSLEEP','BARPOISON','BARPARALYZE','BARBLIND','BARVIRUS',
-        'BARPETRIFY','ANCIENT_CIRCLE','AFTERMATH','REPRISAL','YONIN','FLEE','SHINING_RUBY'
+        'BARPETRIFY','ANCIENT_CIRCLE','AFTERMATH','REPRISAL','YONIN','FLEE','SHINING_RUBY','SNEAK_ATTACK',
+        'TRICK_ATTACK',
         };
     local tBarelemental  = { 'BARAERO','BARBLIZZARD','BARFIRE','BARSTONE','BARTHUNDER','BARWATER' };
     local tBarstatus     = { 'BARSLEEP','BARPOISON','BARPARALYZE','BARBLIND','BARVIRUS','BARPETRIFY' };
@@ -559,7 +560,7 @@ function inline.fCheckInlineTarget(sCode)
     local smsg = nil;
 
     sCode = string.lower(sCode);
---print('fCheckInlineTarget - ' .. sCode);
+
     local i = string.find(sCode,'not_');
     if i ~= nil and i == 1 then
         bNot = true;
@@ -609,7 +610,6 @@ function inline.fCheckInlinePet(sCode)
     local smsg      = nil;
 
     sCode = string.upper(sCode);
---print('fCheckInlinePet - ' .. sCode);
     sFull = sCode;
 
     local i = string.find(sCode,'NOT_');
@@ -659,6 +659,28 @@ function inline.fCheckInlinePet(sCode)
             bGood = false;
             bErr = true;
         end
+    elseif sCode == 'SMN:AVATAR' then
+        -- Equip if the pet being summoned is an avatar, but not an elemental spirit
+        if spell ~= nil and spell.Name ~= nil then
+            bGood = (table.find(gVars.tSpellGroupings['avatars'],string.lower(spell.Name)) ~= nil);
+        else
+            bGood = false;
+        end
+    elseif sCode == 'SMN:SPIRIT' then
+        -- Equip if the pet being summoned is an elemental spirit
+        if spell ~= nil and spell.Name ~= nil then
+            bGood = (table.find(gVars.tSpellGroupings['spirits'],string.lower(spell.Name)) ~= nil);
+        else
+            bGood = false;
+        end
+    elseif sCode == 'SMN:SUMMONS' then
+        -- Equip if the pet being summoned is an avatar or elemental spirit
+        if spell ~= nil and spell.Name ~= nil then
+            bGood = (table.find(gVars.tSpellGroupings['avatars'],string.lower(spell.Name)) ~= nil or
+                     table.find(gVars.tSpellGroupings['spirits'],string.lower(spell.Name)) ~= nil);
+        else
+            bGood = false;
+        end
     elseif table.find(tSMNList,sCode) ~= nil then
         -- Is the SMN avatar/spirit doing an offensive blood pact
         if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
@@ -689,10 +711,10 @@ function inline.fCheckInlinePet(sCode)
             bGood = false;
             bErr = true;
         end
-    elseif sCode == 'SMN:AVATAR' then
-        -- Equip if the pet being summoned is an avatar, but not an elemental spirit
-        if spell ~= nil and spell.Name ~= nil then
-            bGood = (table.find(gVars.tSpellGroupings['avatars'],string.lower(spell.Name)) ~= nil);
+    elseif string.find(sCode,'SMN:BP:') ~= nil then
+        -- Does the summoner's blood pact match the passed blood pact name
+        if (petAction ~= nil and petAction.Name ~= nil) then
+            bGood = (string.find(string.lower(petAction.Name),string.lower(string.sub(sCode,8,-1))));
         else
             bGood = false;
         end
@@ -703,14 +725,12 @@ function inline.fCheckInlinePet(sCode)
         else
             bGood = (pets.fSummonerPet(pet) ~= nil);
         end
-    elseif sCode == 'SMN:PETMD' then
-        -- Does the summoner's pet's element matches the day's element
-        local ele = pets.fElementByPetName(pet.Name);
-        if ele == nil then
-            bGood = false;
-        else
-            bGood = (ele == string.lower(environ.DayElement));
-        end
+    elseif sCode == 'SMN:PET:AVATAR' then
+        -- Is the player's pet an elemental spirit
+        bGood = (pet ~= nil and pet.Name ~= nil and table.find(gVars.tSpellGrouping['avatars'],string.lower(pet.Name)) ~= nil);
+    elseif sCode == 'SMN:PET:SPIRIT' then
+        -- Is the player's pet an elemental spirit
+        bGood = (pet ~= nil and pet.Name ~= nil and table.find(gVars.tSpellGrouping['spirits'],string.lower(pet.Name)) ~= nil);
     elseif sCode == 'SMN:PETMW' then
         -- Does the summoner's pet's element matches the weather's element
         local ele = pets.fElementByPetName(pet.Name);
@@ -719,29 +739,13 @@ function inline.fCheckInlinePet(sCode)
         else
             bGood = false;
         end
-    elseif string.find(sCode,'SMN:BP:') ~= nil then
-        -- Does the summoner's blood pact match the passed blood pact name
-        if (petAction ~= nil and petAction.Name ~= nil) then
-            bGood = (string.find(string.lower(petAction.Name),string.lower(string.sub(sCode,8,-1))));
-        else
-            bGood = false;
-        end
-    elseif sCode == 'SMN:SPIRIT:ES' then
-        -- Equip if the pet being summoned is an elemental spirit
-        if spell ~= nil and spell.Name ~= nil then
-            bGood = (table.find(gVars.tSpellGroupings['avatars'],string.lower(spell.Name)) ~= nil);
-        else
-            bGood = false;
-        end
-    elseif sCode == 'SMN:SPIRIT:EP' then
-        -- Is the player's pet an elemental spirit
-        bGood = (pet ~= nil and pet.Name ~= nil and table.find(gVars.tSpellGrouping['spirits'],string.lower(pet.Name)) ~= nil);
-    elseif string.find(sCode,'SMN:SUMMONS:') ~= nil then
-        -- Is the named summoner's pet being summoned.
-        if spell == nil then
+    elseif sCode == 'SMN:PETMD' then
+        -- Does the summoner's pet's element matches the day's element
+        local ele = pets.fElementByPetName(pet.Name);
+        if ele == nil then
             bGood = false;
         else
-            bGood = (string.find(string.lower(spell.Name),string.lower(string.sub(sCode,12,-1)) ~= nil));
+            bGood = (ele == string.lower(environ.DayElement));
         end
     end
 
@@ -948,7 +952,7 @@ function inline.fCheckInlineOther(sCode,sGear)
     end
 
     sCode = string.lower(sCode);
---print('fCheckInlineOther - ' .. sCode);
+
     local i = string.find(sCode,'not_');
     if i ~= nil and i == 1 then
         bNot = true;
@@ -1043,14 +1047,17 @@ function inline.fCheckInlineOther(sCode,sGear)
             bGood = ((player.Status == 'Engaged' and sCode == 'status:engaged') or
                      (player.Status == 'Resting' and sCode == 'status:resting') or
                      (player.Status == 'Idle'    and sCode == 'status:idling'));
-            if bNot == true then
-                bGood = not bGood;
-            end
         end
     end
 
     if bGood ~= nil and smsg == nil and bFlip == true and bNot == true and bErr == false then
-        bGood = not bGood;
+        if sCode == 'own' then
+            -- NOT_OWN is a special case. Simply flipping the result doesn't always work because
+            -- Jeuno and Dynamis while N/A treat it like it's NOT_OWN.
+            bGood = (gVars.sRegion == gVars._REGION_STATUS_NOT_OWNED or gVars.sRegion == gVars._REGION_STATUS_NA_NOT_OWNED);
+        else
+            bGood = not bGood;
+        end
     end
     return bGood,smsg;
 end     -- inline.fCheckInlineOther

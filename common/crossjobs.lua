@@ -14,17 +14,16 @@ local crossjobs = {};
 			Weaponskill					Coordinate all Weapon Skill gear equipping
 			packet_in_callback1			Dissects packed for region control info
 			ProcessAccuracy				Process the /acc or /racc commands
-			ProcessAjug					Enables/disables automatic pet jug, BST only
 			ProcessCap					Enables/disables an artificial level cap
 			ProcessCC					Displays custom conditionals or enable/disables the cc
 			ProcessDB					Sets the debuff indicator to the appropriate type, BST only
+			ProcessDBar					Processes the passed /dbar command
 			ProcessDT					Sequences or assigns directly the damage taken gear type
 			ProcessHornString			Determines the type of bard instrument should be default
 			ProcessMACC					Enables/disables magic accuracy gear when casting magic
 			ProcessMode					Toggles between perpetuation cost and attack power, SMN only
-			ProcessSBP					Toggles whether a party message is shown during a blood pact, SMN only
-			ProcessSS					Toggles whether attempted steals should be announced, THF only
 			ProcessSW					Equips the starting weapons
+			ProcessToggle				Toggles the specified toggle
 			ProcessWSDISTANCE			Changes WSDISTANCE or turns it on/off
 			ProcessWSWAP				Enables/Disables whether weapon swapping permitted
 			ProgressiveAccuracy			Equips the appropriate accuracy stage
@@ -186,23 +185,9 @@ end);
 
 function crossjobs.t1(args)
 
-	print(locks.fCompactLocks());
---[[
-	for i,j in ipairs(locks.tSlotLocks) do
-		print(j['slot'] .. ' - ' .. tostring(j['lock']));
+	for i=1,20,1 do
+		print(chat.color1(i,'color: ' .. tostring(i)));
 	end
-
-	for slot,name in pairs(gVars.tGearDetails) do
-		print(chat.message('Slot: ' .. slot));
-
-		for i,j in pairs(name) do
-			if string.find('num,acc,vis',i) == nil then
-				print(chat.message(i));
-			end
-		end
-		print(' ');
-	end
---]]
 end		-- crossjobs.t1
 
 --[[
@@ -213,8 +198,12 @@ end		-- crossjobs.t1
 	so the player can decide what they want to default to.
 --]]
 
-function crossjobs.SetVariables()
+function crossjobs.SetVariables(bRefresh)
 	local player = gData.GetPlayer();
+
+	if bRefresh == nil then
+		bRefresh = false;
+	end
 
 	-- General toggles
 	if gProfile.settings.DisplayBar[gVars._GSWAP]['init'] ~= nil then				-- Gear Swap
@@ -364,6 +353,10 @@ function crossjobs.SetVariables()
 			utilities.CreateToggle(j['code'],j['init']);
 		end
 	end
+
+	if bRefresh == true and gProfile.settings.bConfirmation == true then
+		print(chat.message('Info: Variables are refreshed'));
+	end
 end		-- crossjobs.SetVariables
 
 --[[
@@ -371,6 +364,8 @@ end		-- crossjobs.SetVariables
 
 	Pararameter
 		args		Passed in list of args from the command line
+
+	Invocation: 	/acc [#|MAX] | [visible|invisible]
 --]]
 
 function ProcessAccuracy(args)
@@ -392,173 +387,192 @@ function ProcessAccuracy(args)
 		end
 	end
 
-	if args[2] ~= nil and args[2] == '?' then
-		print(' ');
-		if string.find(gVars._Progressive_ACC..','..gVars._Progressive_TACC,tmp) ~= nil then
-			print(chat.message(string.format('Info: Accuracy at stage: %d',gear.fGetAccStage(gVars._Progressive_ACC,'CUR'))));
-			if bTank == true then
-				print(chat.message(string.format('Info: Tank Accuracy at stage: %d',gear.fGetAccStage(gVars._Progressive_TACC,'CUR'))));
+	if utilities.fCheckVisibility(args[1],args) == false then
+		-- Ok, visiblity has been processed. Now process (potentially) the rest of the command
+		if #args == 1 then
+			-- This is an unload acc command. Make sure both the appropriate acc and the tank versions are unloaded
+			if args[1] == 'acc' then
+				displaybar.SetAccCur(gVars._Progressive_ACC,0);
+				displaybar.SetAccCur(gVars._Progressive_TACC,0);
+			else
+				displaybar.SetAccCur(gVars._Progressive_RACC,0);
+				displaybar.SetAccCur(gVars._Progressive_TRACC,0);
 			end
-		else
-			print(chat.message(string.format('Info: Ranged Accuracy at stage: %d',gear.fGetAccStage(gVars._Progressive_RACC,'CUR'))));
-			if bTank == true then
-				print(chat.message(string.format('Info: Tank Ranged Accuracy at stage: %d',gear.fGetAccStage(gVars._Progressive_TRACC,'CUR'))));
-			end
-			return;
-		end
-	elseif args[2] ~= nil then
-		narg = tonumber(args[2]);
-		if narg < 0 or narg > gear.fGetAccStage(tmp,'MAX') then
-			print(chat.message('Warning: Invalid stage. Number must be between 0 and ' .. tostring(gear.fGetAccStage(tmp,'MAX'))));
-			return;
-		else
-			num = narg;
-		end
-	end
 
-	if num == 0 then
-		displaybar.SetAccCur(tmp,0);
-		-- Make sure that both tank and non-tank versions are turned off
-		if string.find(gVars._Progressive_ACC..','..gVars._Progressive_RACC,tmp) ~= nil then
-			tmp = 'T' .. tmp;				-- Add a 'T' to the beginning of tmp
+			if gProfile.settings.bConfirmation then
+				if tmp == gVars._Progressive_ACC or tmp == gVars._Progressive_TACC then
+					print(chat.message('Info: Accuracy has been turned off'));
+				else
+					print(chat.message('Info: Ranged Accuracy has been turned off'));
+				end
+			end
 		else
-			tmp = string.sub(tmp,2,-1);		-- Remove the 'T' from the beginning of tmp
+			for _,j in pairs(args) do
+				if string.upper(j) == 'MAX' then	-- Maximum (R)Acc stage
+					narg = gear.fGetAccStage(tmp,'MAX')
+				elseif string.find('visible,invisible',j) == nil then	-- This is a stage
+					narg = tonumber(args[2]);
+				end
+			end
+
+			if narg < 0 or narg > gear.fGetAccStage(tmp,'MAX') then
+				print(chat.message('Info: Invalid stage. Number must be between 0 and ' .. tostring(gear.fGetAccStage(tmp,'MAX'))));
+				return;
+			else
+				num = narg;
+			end
+
+			if num == 0 then
+				displaybar.SetAccCur(tmp,0);
+				-- Make sure that both tank and non-tank versions are turned off
+				if string.find(gVars._Progressive_ACC..','..gVars._Progressive_RACC,tmp) ~= nil then
+					tmp = 'T' .. tmp;				-- Add a 'T' to the beginning of tmp
+				else
+					tmp = string.sub(tmp,2,-1);		-- Remove the 'T' from the beginning of tmp
+				end
+				displaybar.SetAccCur(tmp,0);
+				if gProfile.settings.bConfirmation == true then
+					if tmp == gVars._Progressive_ACC or tmp == gVars._Progressive_TACC then
+						print(chat.message('Info: Accuracy has been turned off'));
+					else
+						print(chat.message('Info: Ranged Accuracy has been turned off'));
+					end
+				end
+			else
+				displaybar.SetAccCur(tmp,num);
+				if gProfile.settings.bConfirmation == true then
+					print(chat.message(string.format('Info: %s stage set to %d',tmp,num)));
+				end
+			end
 		end
-		displaybar.SetAccCur(tmp,0);
-		if tmp == gVars._Progressive_ACC or tmp == gVars._Progressive_TACC then
-			print(chat.message('Info: Accuracy has been turned off'));
-		else
-			print(chat.message('Info: Ranged Accuracy has been turned off'));
-		end
-	else
-		displaybar.SetAccCur(tmp,num);
-		print(chat.message(string.format('Info: %s stage set to %d',tmp,num)));
 	end
 end		-- ProcessAccuracy
 
 --[[
-	ProcessAjug enables/disables whether automatic pet jug occurs, BST only
---]]
-
-function ProcessAjug()
-	local player = gData.GetPlayer();
-
-	if player.MainJob == 'BST' then
-		utilities.AdvanceToggle(gVars._AJUG);
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: AJug is ' .. tostring(utilities.fGetToggle(gVars._AJUG))));
-		end
-	else
-		print(chat.message('Info: /AJug is only available to beastmasters'));
-	end
-end		-- ProcessAjug
-
---[[
 	ProcessCap enables/disables an artificial level cap
+
+	Invocation: /cap [#] | [visible|invisible]
 --]]
 
-function ProcessCap(s);
+function ProcessCap(args);
 	local player = gData.GetPlayer();
-	local ss = tonumber(s);
+	local ss;
 
-	if s ~= nil then
-		if ss < player.MainJobSync and ss >= 0 then
-			gProfile.settings.PlayerCappedLevel = ss;
-			if gProfile.settings.bConfirmation == true then
-				print(chat.message(string.format('Info: Player gear level capped at level %d',gProfile.settings.PlayerCappedLevel)));
+	if utilities.fCheckVisibility(gVars._CAP,args) == false then
+		-- Find the cap number
+		for _,j in pairs(args) do
+			if string.find('cap,visible,invisible',j) == nil then
+				ss = tonumber(j);
+				break;
+			end
+		end
+
+		if ss ~= nil then
+			if ss < player.MainJobSync and ss >= 0 then
+				gProfile.settings.PlayerCappedLevel = ss;
+				if gProfile.settings.bConfirmation == true then
+					print(chat.message(string.format('Info: Player gear level capped at level %d',gProfile.settings.PlayerCappedLevel)));
+				end
+			else
+				print(chat.message('Info: Invalid level cap specified: ' .. tostring(s)));
 			end
 		else
-			print(chat.message('Info: Invalid level cap specified: ' .. tostring(s)));
-		end
-	else
-		gProfile.settings.PlayerCappedLevel = 0;
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: Player gear level cap disabled'));
+			gProfile.settings.PlayerCappedLevel = 0;
+			if gProfile.settings.bConfirmation == true then
+				print(chat.message('Info: Player gear level cap disabled'));
+			end
 		end
 	end
 end		-- ProcessCap
 
 --[[
 	ProcessCC enables/disables the indicated custom conditional or lists the commands
+
+	Invocation: /cc[#] | [visible|invisible]
 --]]
 
-function ProcessCC(s)
+function ProcessCC(args)
 
-	if s == 'cc' then
-		reporting.DisplayCC();
-	else
-		local us = string.upper(s);
-		utilities.AdvanceToggle(us);
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: ' .. us .. ' is ' .. tostring(utilities.fGetToggle(us))));
+	if utilities.fCheckVisibility(gVars._CC,args) == false then
+		if args[1] == 'cc' then
+			reporting.DisplayCC();
+		else
+			if string.find(args[1],'cc') ~= nil then
+				local us = string.upper(args[1]);
+				utilities.AdvanceToggle(us);
+				if gProfile.settings.bConfirmation == true then
+					print(chat.message('Info: /' .. us .. ' is set to ' .. tostring(utilities.fGetToggle(us))));
+				end
+			end
 		end
 	end
 end		-- ProcessCC
 
 --[[
-	ProcessDB sets the debuff indicator to the appropriate value
---]]
-
-function ProcessDB(s)
-	local player = gData.GetPlayer();
-
-	if player.MainJob == 'BST' then
-		if s ~= nil then
-			s = string.upper(s);
-			if string.find(gVars._sDB_Debuffs,s) ~= nil then
-				utilities.fSetCycle(gVars._DB,s);
-			end
-		else
-			utilities.AdvanceCycle(gVars._DB);
-		end
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: DB is set to ' .. utilities.fGetCycle(us)));
-		end
-	else
-		print(chat.message('Info: /DB is only available to beastmasters and not /BST'));
-	end
-end		-- ProcessDB
-
---[[
 	ProcessDT either advances /DT setting or assigns the setting directly
+
+	Invocation: /dt [M|B|P|O] | [visible|invisible]
 --]]
 
-function ProcessDT(s)
+function ProcessDT(args)
+	local bFound = false;
 
-	if s == nil then
-		utilities.AdvanceCycle(gVars._DT);
-	else
-		local cType = string.upper(string.sub(s,1,1));
-		if  cType == gVars._DT_M then
-			utilities.fSetCycle(gVars._DT,gVars._DT_MAG);
-		elseif cType == gVars._DT_B then
-			utilities.fSetCycle(gVars._DT,gVars._DT_BRE);
-		elseif cType == gVars._DT_P then
-			utilities.fSetCycle(gVars._DT,gVars._DT_PHY);
-		else
-			utilities.fSetCycle(gVars._DT,gVars._DT_OFF);
+	if utilities.fCheckVisibility(gVars._DT,args) == false then
+		for i,j in pairs(args) do
+			local cType = string.upper(string.sub(j,1,1));
+			if cType == gVars._DT_M then
+				utilities.fSetCycle(gVars._DT,gVars._DT_MAG);
+				bFound = true;
+			elseif cType == gVars._DT_B then
+				utilities.fSetCycle(gVars._DT,gVars._DT_BRE);
+				bFound = true;
+			elseif cType == gVars._DT_P then
+				utilities.fSetCycle(gVars._DT,gVars._DT_PHY);
+				bFound = true;
+			elseif cType == gVars._DT_O then
+				utilities.fSetCycle(gVars._DT,gVars._DT_PHY);
+				bFound = true;
+			end
 		end
-	end
-	if gProfile.settings.bConfirmation == true then
-		print(chat.message('Info: DT is set to ' .. utilities.fGetCycle(gVars._DT)));
+
+		if bFound == false then
+			utilities.AdvanceCycle(gVars._DT);
+			bFound = true;
+		end
+
+		if gProfile.settings.bConfirmation == true and bFound == true then
+			print(chat.message('Info: /DT is set to ' .. utilities.fGetCycle(gVars._DT)));
+		end
 	end
 end		-- ProcessDT
 
 --[[
 	ProcessHornString sets which type of bard instrument should be the default
+
+	Invocation: /horn | [visible|invisible]
+				/string | [visible|invisible]
 --]]
 
-function ProcessHornString(s)
+function ProcessHornString(args)
 	local player = gData.GetPlayer();
+	local bFound = false;
 
 	if player.MainJob == 'BRD' then
-		if s == 'horn' then
-			utilities.fSetCycle(gVars._INSTRUMENT,gVars._HORN);
-		else
-			utilities.fSetCycle(gVars._INSTRUMENT,gVars._STRING);
-		end
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: Instrument is set to ' .. utilities.fGetCycle(gVars._INSTRUMENT)));
+		if utilities.fCheckVisibility(gVars._INSTRUMENT,args) == false then
+			for _,j in pairs(args) do
+				j = string.lower(j);
+				if j == 'horn' then
+					utilities.fSetCycle(gVars._INSTRUMENT,gVars._HORN);
+					bFound = true;
+				elseif j == 'string' then
+					utilities.fSetCycle(gVars._INSTRUMENT,gVars._STRING);
+					bFound = true;
+				end
+			end
+
+			if bFound == true and gProfile.settings.bConfirmation == true then
+				print(chat.message('Info: Instrument is set to ' .. utilities.fGetCycle(gVars._INSTRUMENT)));
+			end
 		end
 	else
 		print(chat.message('Info: Only bards use this command. Ignoring.'));
@@ -566,36 +580,26 @@ function ProcessHornString(s)
 end		-- ProcessHornString
 
 --[[
-	ProcessMACC enables/disables magic accuracy gear when casting magic
---]]
-
-function ProcessMACC()
-	local player = gData.GetPlayer();
-
-	if string.find(gVars._sMagicjobs,player.MainJob) ~= nil or
-	   string.find(gVars._sMagicjobs,player.SubJob) ~= nil then
-		utilities.AdvanceToggle(gVars._MACC);
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: MAcc is set to ' .. tostring(utilities.fGetToggle(gVars._MACC))));
-		end
-	else
-		print(chat.message('Info: Your job does not need magic accuracy'));
-	end
-end		-- ProcessMACC
-
---[[
 	ProcessMode indicates whether perpetuation cost or attack power should be emphasized, SMN only
+
+	Invocation: /mode [PERP|ATTK|ENMM] | [visible|invisible]
 --]]
 
 function ProcessMode(args)
 	local player = gData.GetPlayer();
+	local u2;
 
 	if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
-		if args[2] ~= nil then
-			local u2 = string.upper(args[2]);
-
-			if string.len(args[2]) >= 1 then
-				u2 = string.sub(u2,1,1);
+		if utilities.fCheckVisibility(gVars._MODE,args) == false then
+			for _,j in  pairs(args) do
+				j = string.upper(j);
+				if  string.find('ATTK,PERP,ENMM',j) ~= nil then
+					if string.len(j) >= 1 then
+						u2 = string.sub(u2,1,1);
+					else
+						u2 = j;
+					end
+				end
 			end
 
 			if u2 == gVars._MODE_A then
@@ -607,51 +611,14 @@ function ProcessMode(args)
 			else
 				utilities.AdvanceCycle(gVars._MODE);
 			end
-		else
-			utilities.AdvanceCycle(gVars._MODE);
-		end
-
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: Mode is set to ' .. utilities.fGetCycle(gVars._MODE)));
+			if gProfile.settings.bConfirmation == true then
+				print(chat.message('Info: Mode is set to ' .. utilities.fGetCycle(gVars._MODE)));
+			end
 		end
 	else
-		print(chat.message('Info: /Mode is only available to summoners'));
+		print(chat.message('Info: /mode is only available to summoners'));
 	end
 end		-- ProcessMode
-
---[[
-	ProcessSBP enables/disables whether blood pacts should display a party message when enacted, SMN only
---]]
-
-function ProcessSBP()
-	local player = gData.GetPlayer();
-
-	if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
-		utilities.AdvanceToggle(gVars._SBP);
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: sBP is set to ' .. tostring(utilities.fGetToggle(gVars._SBP))));
-		end
-	else
-		print(chat.message('Info: /sBP is only available to summoners'));
-	end
-end		-- ProcessSBP
-
---[[
-	ProcessSS enables/disables whether attempted steals should be announced, THF only
---]]
-
-function ProcessSS()
-	local player = gData.GetPlayer();
-
-	if player.MainJob == 'THF' or player.SubJob == 'THF' then
-		utilities.AdvanceToggle(gVars._SS);
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: SS is set to ' .. tostring(utilities.fGetToggle(gVars._SS))));
-		end
-	else
-		print(chat.message('Info: /SS is only available to thieves'));
-	end
-end		-- ProcessSS
 
 --[[
 	ProcessSW will equip the starting weapons. This is a method to force the correct
@@ -663,11 +630,13 @@ function ProcessSW()
 
 	utilities.ClearSet(crossjobs.Sets.CurrentGear);
 	gear.MoveToDynamicGS(gProfile.Sets.Start_Weapons,crossjobs.Sets.CurrentGear,false,'Start_Weapons');
-	gear.EquipTheGear(crossjobs.sets.CurrentGear,false,false);
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear,false,false);
 end		-- ProcessSW
 
 --[[
 	ProcessWSDISTANCE either sets a new weapon skil distance or turns the check on or off
+
+	Form: WSDISTANCE [#]
 --]]
 
 function ProcessWSDISTANCE(args)
@@ -687,6 +656,124 @@ function ProcessWSDISTANCE(args)
 end		-- ProcessWSDISTANCE
 
 --[[
+	ProcessToggle sets the passed toggle appropriately
+
+	Params:
+		args		Passed arguments
+		id			Id wanted flipped
+		job			Job to limit it to or nil
+		bSJ			Should the subjob be included
+		bMacc		Check on magic ability
+
+	Invocation:
+		/aJug | [visible|invisible]
+		/eva | [visible|invisible]
+		/gswap | [visible|invisible]
+		/idle | [visible|invisible]
+		/kite | [visible|invisible]
+		/macc | [visible|invisible]
+		/sbp | [visible|invisible]
+		/spf | [visible|invisible]
+		/ss | [visible|invisible]
+		/tank | [visible|invisible]
+		/th | [visible|invisible]
+		/wswap | [visible|invisible]
+--]]
+
+function ProcessToggle(args,id,job,bSJ,bMagic)
+	local player = gData.GetPlayer();
+
+	if bSJ == nil then
+		bSJ = false;
+	end
+
+	if bMagic == nil then
+		bMagic = false;
+	end
+
+	if utilities.fCheckVisibility(id,args) == false then
+		if (bMagic == true and utilities.fCheckMagicJob() == true) or bMagic == false then
+			if job == nil or player.MainJob == job or (bSJ == true and player.SubJob == job) then
+				utilities.AdvanceToggle(id);
+				if gProfile.settings.bConfirmation == true then
+					print(chat.message('Info: /' .. string.lower(id) .. ' is set to ' .. tostring(utilities.fGetToggle(id))));
+				end
+			else
+				if bSJ == true then
+					print(chat.message('Warning: /' .. string.lower(id) .. ' requires either your main job or sub job be ' .. job));
+				else
+					print(chat.message('Warning: /' .. string.lower(id) .. ' requires either your main job be ' .. job));
+				end
+			end
+		else
+			print(chat.message('Warning: /' .. string.lower(id) .. ' requires a magic job'));
+		end
+	end
+end		-- ProcessToggle
+
+--[[
+	ProcessDB sets the DeBuff conditional setting appropriately
+
+	Invocation: /db [BPP|WSS] | [visible|invisible]
+--]]
+
+function ProcessDB(args)
+	local s = nil;
+
+	if player.MainJob == 'BST' then
+		if utilities.fCheckVisibility(gVars._KITE,args) == false then
+			for _,j in pairs(args) do
+				j = string.upper(j);
+				if string.find(gVars._sDB_Debuffs,j) ~= nil then
+					s = j;
+					break;
+				end
+			end
+
+			if s ~= nil then
+				gcdisplay.SetCycle(gVars._DB,s);
+			else
+				gcdisplay.AdvanceCycle(gVars._DB);
+			end
+
+			if gProfile.settings.bConfirmation == true then
+				print(chat.message('Info: /' .. gVars._DB .. ' is set to ' .. utilities.fGetCycle(gVars._DB)));
+			end
+		end
+	else
+		print(chat.message('Warning: This command is only valid if your main job is BST'));
+	end
+end		-- ProcessDB
+
+--[[
+	ProcessDBar is used to setup/modify the display bar
+
+	Invocation: /dbar [show] [vis=[all|none|name,name,...] ] [invis=[all|none|name,name,...] ] [save|reset] [file[=name] ][+]
+--]]
+
+function ProcessDBar(args)
+	local bShow = false;
+	local sVis,sInvis;
+	local bReset = false;
+	local bSave = false;
+
+	print(chat.message('/dbar is not implemented yet'));
+
+	-- Process the inline options
+	if #args == 1 then
+		bShow = true;
+	else
+		for i = 2,#args,1 do
+			--args[i] == string.lower(args[i]);
+			--if
+			--end
+		end
+	end
+
+
+end		-- ProcessDBar
+
+--[[
 	HandleCommands processes any commands typed into luashitacast as defined in this file
 
 	Pararameters
@@ -701,36 +788,39 @@ function crossjobs.HandleCommands(args)
 	args[1] = string.lower(args[1]);
 
 	-- Clear out the local copy of current gear
-	utilities.ClearSet(crossjobs.sets.CurrentGear);
+	utilities.ClearSet(crossjobs.Sets.CurrentGear);
 
 	-- Now, process the commands. They're listed in alphabetical order
 	if args[1] == '911' then
 		-- /911, SMN Only. Emmergency call to summon an appropriate spirit
 		pets.Call911();
-	elseif string.find('acc,racc',args[1]) ~= nil then
+	elseif args[1] == 'acc' or args[1] == 'racc' then
 		-- /ACC or /RACC, sets the level for the accuracy/ranged accuracy
 		ProcessAccuracy(args);
 	elseif args[1] == 'ajug' then
 		-- /AJUG, BST only, Turns on/off Automatic Pet Jug assignment is enabled
-		ProcessAjug();
+		ProcessToggle(args,gVars._AJUG,'BST',false,false);
 	elseif args[1] == 'cap' then
 		-- /CAP, Sets an artificial level cap
-		ProcessCap(args[2]);
+		ProcessCap(args);
 	elseif string.find(args[1],'cc') ~= nil then
 		-- /CC#, Either displays Custom conditionals or turns them on/off
-		ProcessCC(args[1]);
+		ProcessCC(args);
+	elseif args[1] == 'db' then
+		-- /db, BST only, sets the cycle to the appropriate value
+		ProcessDB(args);
+	elseif args[1] == 'dbar' then
+		-- /dbar, manipulates the settings on the display bar
+		ProcessDBar(args);
 	elseif args[1] == 'dt' then
 		-- /DT, Indicates the type of damage taken gear that will be equipped if enabled
-		ProcessDT(args[2]);
+		ProcessDT(args);
 	elseif string.find('equipit,ei',args[1]) ~= nil then
 		-- /EQUIPIT or /EI, equip specified item or coded item
 		gear.EquipItem(args);
 	elseif args[1] == 'eva' then
-		-- /EVA, Turns on/off whether evasion gear should be equipped
-		utilities.AdvanceToggle(gVars._EVASION);
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: Evasion is set to ' .. tostring(utilities.fGetToggle(gVars._EVASION))));
-		end
+		-- /EVA, turns on/off whether evasion gear should be equipped
+		ProcessToggle(args,gVars._EVASION,nil,false,false);
 	elseif args[1] == 'gc' then
 		-- /GC, Invoke the Gear Check command
 		gear.ProcessGC(args);
@@ -739,34 +829,25 @@ function crossjobs.HandleCommands(args)
 		gear.ProcessGS(args);
 	elseif args[1] == 'gswap' then
 		-- /GSWAP, turns gear swapping on/off
-		utilities.AdvanceToggle(gVars._GSWAP);
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: GSwap is set to ' .. tostring(utilities.fGetToggle(gVars._GSWAP))));
-		end
+		ProcessToggle(args,gVars._GSWAP,nil,false,false);
 	elseif string.find('horn,string',args[1]) ~= nil then
 		-- /STRING or /HORN, BRD only, indicates type of default instrument
-		ProcessHornString(args[1]);
+		ProcessHornString(args);
 	elseif args[1] == 'idle' then
 		-- /IDLE, Turns on/off whether idle gear should be equipped during idle
-		utilities.AdvanceToggle(gVars._IDLE);
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: Idle is set to ' .. tostring(utilities.fGetToggle(gVars._IDLE))));
-		end
+		ProcessToggle(args,gVars._IDLE,nil,false,false);
 	elseif args[1] == 'kite' then
 		-- /KITE, Turns on/off whether movement gear is equipped
-		utilities.AdvanceToggle(gVars._KITE);
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: Kite is set to ' .. tostring(utilities.fGetToggle(gVars._KITE))));
-		end
+		ProcessToggle(args,gVars._KITE,nil,false,false);
+	elseif args[1] == 'lachelp' then
+		-- /LACKHELP, Shows the help system, either a list of valid commands or details on a specific command
+		help.ShowHelp(args);	-- needs more work
 	elseif string.find('lock,unlock',args[1]) ~= nil then
 		-- /LOCK, Lock/unlock gear slots
 		locks.ProcessLocks(args);
 	elseif args[1] == 'macc' then
 		-- /MACC, Turns on/off whether magic accuracy gear is equipped when casting magic
-		ProcessMACC();
-	elseif args[1] == 'man' then
-		-- /MAN, Shows the help system, either a list of valid commands or details on a specific command
-		help.ShowHelp(args[2]);
+		ProcessToggle(args,gVars._MACC,nil,false);
 	elseif args[1] == 'maxsong' then
 		-- MAXSONG, Determines highest level song of the type you specified and casts it
 		magic.MaxCast(args[2],false,args[3],true);
@@ -779,9 +860,6 @@ function crossjobs.HandleCommands(args)
 	elseif args[1] == 'petfood' then
 		-- /PETFOOD, equips the appropriate pet food
 		pets.fPetReward(args[2],true);
-	elseif args[1] == 'ptt' then
-		-- /PTT, proof of concept command, Displays distance from Pet To Target
-		pets.ptt();
 	elseif args[1] == 'pull' then
 		-- /PULL, pull the target
 		utilities.PullTarget();
@@ -790,13 +868,10 @@ function crossjobs.HandleCommands(args)
 		reporting.RegionControlDisplay(args);
 	elseif args[1] == 'rv' then		-- Refresh variables
 		-- /RV, refresh the starting variables
-		crossjobs.SetVariables();
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: Variables are refreshed'));
-		end
+		crossjobs.SetVariables(true);
 	elseif args[1] == 'sbp' then
 		-- /SBP, Turns on/off whether the SMN blood pact message is shown
-		ProcessSBP();
+		ProcessToggle(args,gVars._SBP,'SMN',true,false);
 	elseif args[1] == 'showit' then
 		-- /SHOWIT, Shows debug info
 		reporting.DB_ShowIt();
@@ -805,31 +880,24 @@ function crossjobs.HandleCommands(args)
 		reporting.ProcessSMG(args);
 	elseif args[1] == 'spf' then
 		-- /SPF, Turns on/off whether Show Pull feedback should be displayed
-		utilities.AdvanceToggle(gVars._SPF);
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: SPF is set to ' .. tostring(utilities.fGetToggle(gVars._SPF))));
-		end
+		ProcessToggle(args,gVars._SPF,nil,false,false);
 	elseif args[1] == 'ss' then
 		-- /SS, THF only, enables/disables whether attempted steals should be announced
-		ProcessSS();
+		ProcessToggle(args,gVars._SS,'THF',true,false);
 	elseif args[1] == 'sw' then
 		-- /sw, Equips the start weapons
 		ProcessSW();
 	elseif args[1] == 'tank' then
 		-- /TANK, Turns on/off whether tanking gear is equipped
-		utilities.AdvanceToggle(gVars._TANK);
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: Tank is set to ' .. tostring(utilities.fGetToggle(gVars._TANK))));
-		end
+		ProcessToggle(args,gVars._TANK,nil,false,false);
 	elseif args[1] == 't1' then
 		-- /T1, debug command. Used to test code
 		crossjobs.t1(args);
 	elseif args[1] == 'th' then
 		-- /TH, Turns on/off whether TH gear should be equipped
-		utilities.AdvanceToggle(gVars._TH);
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: TH is set to ' .. tostring(utilities.fGetToggle(gVars._TH))));
-		end
+		ProcessToggle(args,gVars._TH,nil,false,false);
+	elseif args[1] == 'val' then
+		print(chat.message('Info: command is not implemented yet'));
 	elseif args[1] == 'ver' then
 		-- /VER, Display version/change log
 		reporting.DisplayVersion();
@@ -838,10 +906,7 @@ function crossjobs.HandleCommands(args)
 		ProcessWSDISTANCE(args);
 	elseif args[1] == 'wswap' then
 		-- /WSWAP, Turns on/off whether weapon swapping is permitted
-		utilities.AdvanceToggle(gVars._WSWAP);
-		if gProfile.settings.bConfirmation == true then
-			print(chat.message('Info: WSwap is set to ' .. tostring(utilities.fGetToggle(gVars._WSWAP))));
-		end
+		ProcessToggle(args,gVars._WSWAP,nil,false,false);
 	else
 		-- Unrecognized command
 		print(chat.message('Info: Unrecognized command specified: ' .. args[1]));

@@ -314,29 +314,43 @@ end		-- locks.LockUnlock
 
     Pararameter
         args		Passed argument list
+
+    Invocation:
+        /lock [slot name|slot number[,...] ] [visible|invisible]
+        /unlock [all|list of slot names|list of slot numbers]
 --]]
 
 function locks.ProcessLocks(args)
+    local slots = nil;
 
-    if args[1] == gVars._UNLOCK or args[2] == nil then
-        -- Both /unlock #,#,... or /lock with no slots will unlock
-        if args[2] == nil then
-            args[2] = 'all';
+    if utilities.fCheckVisibility(gVars._LOCKS,args) == false then
+        for i,j in pairs(args) do
+            j = string.lower(j);
+            if string.find('lock,unlock,visible,invisible',j) == nil then
+                slots = j;
+            end
+        end
+    end
+
+    if args[1] == gVars._UNLOCK or slots == nil then
+        -- Both /unlock or /lock with no slots will unlock
+        if slots == nil then
+            slots = 'all';
         else
-            args[2] = string.lower(args[2]);
+            slots = string.lower(slots);
         end
 
-        if locks.LockUnlock(gVars._UNLOCK,args[2]) == true then
-            if args[2] == 'all' then
+        if locks.LockUnlock(gVars._UNLOCK,slots) == true then
+            if slots == 'all' and gProfile.settings.bConfirmation == true then
                 print(chat.message('Info: All slots are unlocked'));
             else
-                print(chat.message('Info: \'' .. args[2] .. '\' have been unlocked'));
+                print(chat.message('Info: \'' .. slots .. '\' have been unlocked'));
             end
         end
     else
-        if locks.LockUnlock(gVars._LOCK,args[2]) == true then
-            if sList ~= nil then
-                print(chat.message('Info: The following slot(s) are locked: ' .. sList));
+        if locks.LockUnlock(gVars._LOCK,slots) == true then
+            if slots ~= nil and gProfile.settings.bConfirmation == true then
+                print(chat.message('Info: The following slot(s) are locked: ' .. slots));
             else
                 print(chat.message('Info: All slots are unlocked'));
             end

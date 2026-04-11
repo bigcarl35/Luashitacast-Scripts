@@ -101,11 +101,12 @@ pets.SmnBPRageList = { 'Searing Light','Howling Moon','Inferno','Earthen Fury','
     'Ruinous Omen','Punch','Rock Throw','Barracuda Dive','Claw','Axe Kick','Shock Strike','Camisado','Poison Nails','Moonlit Charge',
     'Crescent Fang','Fire II','Stone II','Water II','Blizzard II','Thunder II','Aero II','Thunderspark','Rock Buster','Burning Strike',
     'Tail Whip','Double Punch','Megalith Throw','Double Slap','Meteorite','Fire IV','Stone IV','Water IV','Aero IV','Blizzard IV','Thunder IV',
-    'Eclipse Bite','Nether Blast','Flaming Crush','Mountain Buster','Spinning Dive','Predator Claws','Rush','Chaotic Strike'
+    'Eclipse Bite','Nether Blast','Flaming Crush','Mountain Buster','Spinning Dive','Predator Claws','Rush','Chaotic Strike',
 };
-pets.SmnBPWardList = { 'Healing Ruby','Somnolence','Lunar Cry','Shining Ruby','Aerial Armor','Frost Armor','Nightmare','Rolling Thunder',
-    'Lunar Roar','Slowga','Ultimate Terror','Whispering Wind','Crimson Howl','Sleepga','Lightning Armor','Ecliptic Howl','Glittering Ruby',
-    'Earthen Ward','Spring Water','Hastega','Noctoshield','Ecliptic Growl','Dream Shroud','Healing Ruby II'
+pets.SmnBPWardOffenseList = { 'Somnolence','Nightmare','Lunar Roar','Lunar Cry','Slowga','Ultimate Terror','Sleepga' };
+pets.SmnBPWardList = { 'Healing Ruby','Lunar Cry','Shining Ruby','Aerial Armor','Frost Armor','Rolling Thunder','Lunar Roar','Slowga',
+    'Ultimate Terror','Nightmare','Whispering Wind','Crimson Howl','Sleepga','Lightning Armor','Ecliptic Howl','Glittering Ruby',
+    'Earthen Ward','Spring Water','Hastega','Noctoshield','Ecliptic Growl','Dream Shroud','Healing Ruby II','Somnolence'
 };
 
 -- List of all pet commands
@@ -377,6 +378,8 @@ end     -- pets.fWhichJugToEquip
 
     Returned
         T/F         Was a piece of food successfully found
+
+    Invocation: /petfood [name]
 --]]
 
 function pets.fPetReward(sFood,bMax)
@@ -387,6 +390,7 @@ function pets.fPetReward(sFood,bMax)
     local containerID;
     local i1,i2,step;
     local _ammo = 4;	-- Lock # for ammo slot
+    local targetLevel = player.MainJobSync;
 
     if bMax == nil then
         bMax = true;
@@ -396,6 +400,11 @@ function pets.fPetReward(sFood,bMax)
     if locks.tLocks[_ammo]['lock'] == true then
         print(chat.message('Warning: Ammo slot is locked. Unable to equip any pet food'));
         return false;
+    end
+
+    -- Check for capped level
+    if gProfile.settings.PlayerCappedLevel > 0 then
+        targetLevel = gProfile.settings.PlayerCappedLevel;
     end
 
     -- Reset the pet food indicators
@@ -437,7 +446,7 @@ function pets.fPetReward(sFood,bMax)
         for i = i1,i2,step do
             if string.lower(sFood) == pets.tPetFood[i]['name'] and
                 pets.tPetFood[i]['have'] == true and
-                pets.tPetFood[i]['lvl'] <= player.MainJobSync then
+                pets.tPetFood[i]['lvl'] <= targetLevel then
                 iFound = i;
                 break;
             end
@@ -448,7 +457,7 @@ function pets.fPetReward(sFood,bMax)
     if iFound == -1 then
         for i = i1,i2,step do
             if pets.tPetFood[i]['have'] == true and
-                pets.tPetFood[i]['lvl'] <= player.MainJobSync then
+                pets.tPetFood[i]['lvl'] <= targetLevel then
                 iFound = i;
                 break;
             end
@@ -474,6 +483,9 @@ end		-- pets.PetReward
     can be formulated. It's intended to help classes that control pets.
     It displays the distance between the player and the pet, the player
     and the target, and the pet and the target.
+
+    Note: This is no longer available since you can get this information
+    from XIUI.
 --]]
 
 function pets.ptt()

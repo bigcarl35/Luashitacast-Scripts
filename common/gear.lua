@@ -89,7 +89,7 @@ end     -- gear.fHasGCBeenRun
     Parameter
         args        Passed argument list
 
-    Form: /gc [list] [file[=name]\][+]
+    Form: /gc [list] [file[=name]\][+] [visible|invisible]
 
     Note: The parameters are position independent. This means they can be in any order.
     "file" designates that the output should be written to a file in the \reports
@@ -108,52 +108,54 @@ function gear.ProcessGC(args)
     local bAppend = false;
     local bWarn = false;
 
-    for _,j in pairs(args) do
-        j = string.lower(j);
-        if j ~= 'gc' then
-            if j == 'list' then
-                bList = true;
-            elseif (j == '+') then
-                bAppend = true;
-            elseif string.find(j,'file') ~= nil then
-                bFile = true;
-                sFile,bAppend = utilities.fParseFileDesignation(j);
-                if sFile == nil then
+    if utilities.fCheckVisibility(gVars._GC,args) == false then
+        for _,j in pairs(args) do
+            j = string.lower(j);
+            if j ~= 'gc' then
+                if j == 'list' then
+                    bList = true;
+                elseif (j == '+') then
+                    bAppend = true;
+                elseif string.find(j,'file') ~= nil then
+                    bFile = true;
+                    sFile,bAppend = utilities.fParseFileDesignation(j);
+                    if sFile == nil then
+                        bWarn = true;
+                    end
+                else
+                    print(chat.message('Warning: Unrecognized /gc option: ' .. j));
                     bWarn = true;
                 end
-            else
-                print(chat.message('Warning: Unrecognized /gc option: ' .. j));
-                bWarn = true;
-            end
-        end
-    end
-
-    if bWarn == true then
-        print(chat.message('Info: /gc [list] [file[=name]][+]'));
-        print(chat.message('Info: Please fix and resubmit'));
-    else
-        if sFile ~= nil then
-            fptr = utilities.fOpenByFilename(sFile,bAppend);
-            if fptr == nil then
-                print(chat.message('Warning: Unable to open file: ' .. sFile));
-                print(chat.message('/gc output redirected to screen'));
             end
         end
 
-        if bList == true then
-            reporting.GearCheckList(fptr);
+        if bWarn == true then
+            print(chat.message('Info: /gc [list] [file[=name]][+]'));
+            print(chat.message('Info: Please fix and resubmit'));
         else
-            gear.GearCheck(fptr);
-            gVars.bGC = true;
-        end
-
-        if fptr ~= nil then
-            if bAppend == true then
-                print(chat.message('Info: /GC output appended to '.. sFile));
-            else
-                print(chat.message('Info: /GC output written to '.. sFile));
+            if sFile ~= nil then
+                fptr = utilities.fOpenByFilename(sFile,bAppend);
+                if fptr == nil then
+                    print(chat.message('Warning: Unable to open file: ' .. sFile));
+                    print(chat.message('/gc output redirected to screen'));
+                end
             end
-            io.close(fptr);
+
+            if bList == true then
+                reporting.GearCheckList(fptr);
+            else
+                gear.GearCheck(fptr);
+                gVars.bGC = true;
+            end
+
+            if fptr ~= nil then
+                if bAppend == true then
+                    print(chat.message('Info: /GC output appended to '.. sFile));
+                else
+                    print(chat.message('Info: /GC output written to '.. sFile));
+                end
+                io.close(fptr);
+            end
         end
     end
 end     -- gear.ProcessGC
@@ -174,31 +176,52 @@ end     -- gear.ProcessGC
 
         Gathering - HELM, DIG, CLAM, and FISH
         Crafting - ALC, BONE, CLOTH, COOK, GSM, LTH, BSM, and WW
+
+    Invocation: /gs "name" [w][l]
 --]]
 
 function gear.ProcessGS(args)
-    local bOverride = (args[3] ~= nil and string.find(string.lower(args[3]),'w') ~= nil);
-    local bIgnoreLocks = (args[3] ~= nil and string.find(string.lower(args[3]),'l') ~= nil);
+    local bOverride = false;
+    local bIgnoreLocks = false;
+    local sArg;
 
     if #args > 1 then
-        local sArg = string.upper(args[2]);
-        local tTable = utilities.fGetTableByName(sArg);	-- Change string to table
-        if tTable ~= nil then
-           gear.MoveToDynamicGS(tTable,crossjobs.Sets.CurrentGear,false,sArg);
-        else
-            print(chat.message('Warning: Gear set not found: ' .. sArg));
-            return;
+        for i,j in pairs(args) do
+            j = string.lower(j);
+            if j == 'w' then            -- indicates weaponswapping is permitted
+                bOverride = true;
+            elseif j == 'l' then        -- indicates locks should be ignored
+                bIgnoreLocks = true;
+            elseif string.find('gs,gearset',j) == nil then  -- has to be the name of the gearset
+                sArg = j;
+            end
         end
 
-        gear.EquipTheGear(crossjobs.Sets.CurrentGear,bOverride,bIgnoreLocks);
+        if sArg ~= nil then
+            local tTable = utilities.fGetTableByName(sArg);	-- Change string to table
+            if tTable ~= nil then
+                gear.MoveToDynamicGS(tTable,crossjobs.Sets.CurrentGear,false,sArg);
+            else
+                print(chat.message('Warning: Gear set not found: ' .. sArg));
+                return;
+            end
 
-        -- Lock the appropriate slots
-        if gProfile.settings.bLockAll == true then
-            -- predefined setting indicating to lock all slots. Tends to be used when
-            -- doing gathering or crafting, but can apply to any set
-            locks.LockUnlock(gVars._LOCK,'all');
+            gear.EquipTheGear(crossjobs.Sets.CurrentGear,bOverride,bIgnoreLocks);
+
+            -- Lock the appropriate slots
+            if gProfile.settings.bLockAll == true then
+                -- predefined setting indicating to lock all slots. Tends to be used when
+                -- doing gathering or crafting, but can apply to any set
+                locks.LockUnlock(gVars._LOCK,'all');
+            else
+                locks.LockByGearSet(crossjobs.Sets.CurrentGear,nil,bDisplay)
+            end
+
+            if gProfile.settings.bConfirmation == true then
+                print(chat.message('Info: Gear set ' .. sArg .. 'has been equipped'));
+            end
         else
-            locks.LockByGearSet(crossjobs.Sets.CurrentGear,nil,bDisplay)
+            print(chat.message('Warning: No set specified for /gearset. Command ignored.'));
         end
     else
         print(chat.message('Warning: No set specified for /gearset. Command ignored.'));
@@ -1105,8 +1128,9 @@ function fGearCheckItem(sSlot,sName,bAccess,gsname)
         return false,nil;
     end
 
-    sSlot = string.lower(sSlot);
-    sName = string.lower(sName);
+    -- Make sure the slot and name have had their conditionals removed and are in lowercase
+    sSlot = string.lower(utilities.fRemoveConditional(sSlot));
+    sName = string.lower(utilities.fRemoveConditional(sName));
 
     -- Subsets, groups, and inline reference dgear.GearDetailsefinitions are skipped
     if sSlot == 'subset' or sSlot == 'group' or string.find(sName,'::') ~= nil then
@@ -1127,21 +1151,12 @@ function fGearCheckItem(sSlot,sName,bAccess,gsname)
         bAccess = false;
     end
 
-
     -- Make sure all ear and ring variants represented by the generic category
     if string.find('ears,ear1,ear2',sSlot) ~= nil then
         sSlot = 'ears';
     elseif string.find('rings,ring1,ring2',sSlot) ~= nil then
         sSlot = 'rings';
     end
-
-    -- Then remove any inline conditionals
-    iPos = string.find(sName,'//');
-    if iPos ~= nil then
-        sCodes = string.sub(sName,iPos,-1);
-        sName = string.sub(sName,1,iPos-1);
-    end
-
 
     if gear.fHasGCBeenRun() == false then
         -- Since /gc has not happened, create the record
@@ -1191,15 +1206,13 @@ function fGearCheckItem(sSlot,sName,bAccess,gsname)
 
         -- gsName can be nil if routine called from a list rather than a gear set. Skip it
         if gsName ~= nil then
-            if gVars.tGearsetDetails[gsName][sSlot] ==  nil then
-                gVars.tGearsetDetails[gsName][sSlot] = {
-                    ['display'] = sName,
-                    ['items'] = {},
-                };
-                gVars.tGearsetDetails[gsName][sSlot][1] = { ['id'] = item.Id, ['gear'] = sName };
+            if gVars.tGearsetDetails[gsName][sSlot] ==  nil or gVars.tGearsetDetails[gsName][sSlot]['items'] == nil then
+                gVars.tGearsetDetails[gsName][sSlot]['items'][1] = gVars.tGearDetails[sSlot][sName];
             else
-                -- Add a new gear piece to the set's list for the current slot
-                gVars.tGearsetDetails[gsName][sSlot]['items'][#gVars.tGearsetDetails+1] = { ['id'] = item.id, ['gear'] = sName};
+                if utilities.fIsGearsetDetailsFound(gVars.tGearDetails[sSlot][sName],gVars.tGearsetDetails[gsName][sSlot]['items']) == false then
+                    -- Add a new gear piece to the set's list for the current slot
+                    gVars.tGearsetDetails[gsName][sSlot]['items'][#gVars.tGearsetDetails+1] = gVars.tGearDetails[sSlot][sName];
+                end
             end
         end
 
@@ -1636,6 +1649,11 @@ end		-- gear.fSwapToStave
 
     Parameter
         args    List of arguments for the call
+
+    Invocation: /ei code|item name [slot]
+
+    Note: Coded entries know the slot they go to. If specifying an item, you
+    must also specify the slot.
 --]]
 
 function gear.EquipItem(args)
@@ -1713,6 +1731,9 @@ function gear.EquipItem(args)
         -- Now try and load the item
         gFunc.ForceEquip(iSlot,iName);
         locks.LockUnlock('lock',sSlots);
+        if gProfile.settings.bConfirmation == true then
+            print(chat.message('Info: ' .. iName .. ' has been equipped'));
+        end
     else
         print(chat.message('Info: List of /equipit codes and items:'));
 

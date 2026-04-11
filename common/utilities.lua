@@ -9,6 +9,7 @@ local utilities = {};
             ClearAliasAll           Unregisters all luashitacast commands from alias list
             ClearAliasCC            Unregisters all custom conditional alias commands
             ClearSet                Empties the passed gear set
+            CopyDisplaybarSettings  Makes a copy of the player's displaybar settings in case of reset
             GetWeaponsList          Imports the list of all weapons of the type passed in
             Initialize              Defines initial settings for luashitacast
             OpenByFilename          Opens passed file for append (or generates new name and opens)
@@ -31,6 +32,7 @@ local utilities = {};
             fAccEnabled             Determines if any accuracy stage has been set
             fBuffed                 Determines if passed buff is on character
             fCheckItemOwned         Determines if character owns piece of gear
+            fCheckMagicJob          Determines if character has a magic job/subjob
             fCheckObiDW             Determines if Day/weather element advantageous for obi
             fCheckPartyJob          Is a member of your party a certain job?
             fCheckRegionControl     Determines if player's nation controls region
@@ -42,6 +44,9 @@ local utilities = {};
             fGetMobType             Determines if the target is of the passed type
             fGetRoot                Retrieves the "base" of the passed in spell/song
             fGetTableByName         Returns the gear set associated with name
+            fIsGearsetDetailsFound  Is the passed in gear details record found in the passed in list
+            fIsVisible              Determines if the visibility is true
+            fIsVisibleSetting       Determines if the visibility setting is valid
             fLtrim                  Trims leading spaces from the passed in string
             fMagicalSubjob          Determines if the player's subjob can do magic
             fMakeConditionalTable   Splits apart conditionals into a table
@@ -804,7 +809,9 @@ function utilities.PullTarget()
             if gData.GetPet() ~= nil then
                 sTxt = '/pet assault <t>';
             else
-                print(chat.message('Info: No pet found, assuming a normal pull'));
+                if gProfile.settings.bConfirmation == true then
+                    print(chat.message('Info: No pet found, assuming a normal pull'));
+                end
             end
         end
 
@@ -812,8 +819,10 @@ function utilities.PullTarget()
             if bRangeOrThrowing() == true then
                 sTxt = '/ra <t>';
             else
-                print(chat.message('Info: No ranged device equipped to pull with'));
-                return
+                if gProfile.settings.bConfirmation == true then
+                    print(chat.message('Info: No ranged device equipped to pull with'));
+                    return
+                end
             end
         end
 
@@ -823,7 +832,7 @@ function utilities.PullTarget()
         end
         AshitaCore:GetChatManager():QueueCommand(-1, sTxt);
     else
-        print(chat.message('Info: Unable to pull anything, no target selected'));
+        print(chat.message('Warning: Unable to pull anything, no target selected'));
     end
 end		-- utilities.PullTarget
 
@@ -1623,6 +1632,7 @@ end		-- utilities.fValidCustomCommand
     Form: [file[=name]\][+] without the \. (Needed to escape the ] so lua wouldn't think that it's
     a close to a block comment.)
 --]]
+
 function utilities.fParseFileDesignation(s)
     local sName = nil;
     local bAppend = false;
@@ -1675,8 +1685,8 @@ function utilities.UpdateRegionalLabel()
             elseif j['own'] ~= crossjobs.OwnNation and j['own'] > 0 then
                 gVars.sRegion = gVars._REGION_STATUS_NOT_OWNED;
             elseif j['own'] == gVars._REGION_NA then
-                if i == 'Jeuno' then
-                   gVars.sRegion = gVars._REGION_STATS_NA_NOT_OWNED;
+                if i == 'Jeuno' or i == 'Dynamis' then
+                   gVars.sRegion = gVars._REGION_STATUS_NA_NOT_OWNED;
                 else
                    gVars.sRegion = gVars._REGION_STATUS_NA;
                 end
@@ -1686,5 +1696,120 @@ function utilities.UpdateRegionalLabel()
         end
     end
 end     -- utilities.UpdateRegionalLabel
+
+--[[
+    fCheckVisability will update (if appropriate) the player's displaybar's settings. Returned is whether a change in visibility was requested
+--]]
+
+function utilities.fCheckVisibility(cmd,args)
+    local bVisible = nil;
+
+    if cmd == nil then
+        return false;
+    end
+
+    for _,j in pairs(args) do
+        lj = string.lower(j);
+        if lj == 'visible' then
+            bVisible = true;
+        elseif lj == 'invisible' then
+            bVisible = false;
+        end
+    end
+
+    if bVisible ~= nil then
+        if utilities.fIsVisibleSetting(cmd) == true then
+            gProfile.settings.DisplayBar[cmd]['visible'] = bVisible;
+            if gProfile.settings.bConfirmation == true then
+                print(chat.message('Info: /' .. cmd .. ' is visible? ' .. tostring(bVisible)));
+            end
+        else
+            print(chat.message('Info: /' .. cmd .. ' is either undefined or ' .. cmd .. '.\'visible\' is undefined in your job file\'s setting.Displaybar definition'));
+        end
+    end
+
+    return (bVisible ~= nil);
+end     -- utilities.fCheckVisibility
+
+--[[
+    fIsVisibleSetting determines if the passed setting name is valid
+
+    Parameter:
+        sName       Name of setting
+
+    Returned:
+        T/F         Is it valid
+--]]
+
+function utilities.fIsVisibleSetting(sName)
+
+    return (gProfile.settings.DisplayBar[sName] ~= nil and gProfile.settings.DisplayBar[sName]['visible'] ~= nil);
+end     -- utilities.fIsVisibleSetting
+
+--[[
+    fIsVisible determines if the passed setting name's visibility is true
+
+    Parameter:
+        sName       Name of setting
+
+    Returned:
+        T/F         Is it visible
+--]]
+
+function utilities.fIsVisible(sName)
+
+    return gProfile.settings.DisplayBar[sName]['visible'];
+end     -- utilities.fIsVisible
+
+
+--[[
+    CopyDisplaybarSettings makes a copy of the displaybar settings found in the job file. This is needed if the
+    player wants to reset the displaybar back to how it was before interactive modifications.
+--]]
+
+function utilities.CopyDisplaybarSettings()
+
+    for i,j in pairs(gProfile.settings.Displaybar) do
+        gVars.Displaybar[i] = j;
+    end
+end     -- utilities.CopyDisplaybarSettings
+
+--[[
+    fCheckMagicJob determines if the player's character can cast magic
+--]]
+
+function utilities.fCheckMagicJob()
+    local player = gData.GetPlayer();
+
+    if string.find(gVars._sMagicjobs,player.MainJob) ~= nil or
+        string.find(gVars._sMagicjobs,player.SubJob) ~= nil then
+        return true;
+    else
+        return false;
+    end
+    return false;
+end     -- fCheckMagicJob
+
+--[[
+    fIsGearsetDetailsFound determines if the passed in gear item exists in the passed in gearset item list for the
+    in common slot.
+
+    Parameter:
+        gRec        Reference to the gear's item definition
+        gsRec       Reference to the list of gear for the in common slot
+
+    Returned:
+        T/F         Was the record found
+--]]
+function utilities.fIsGearsetDetailsFound(gRec,gsRec)
+
+    for _,j in pairs(gsRec) do
+        if j['id'] == gRec['id'] then
+            return true;
+        end
+    end
+
+    return false;
+end     -- utilities.fIsGearsetDetailsFound
 
 return utilities;

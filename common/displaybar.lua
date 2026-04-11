@@ -57,6 +57,8 @@ local tkwEle = {	-- cOORRGGBB where OO is opacity, RR red, GG green, BB blue
     { ['kw'] = 'green',			 ['color'] = '|cFF00FF00|' }, -- green
     { ['kw'] = 'red',			 ['color'] = '|cFFFF0000|' }, -- red
     { ['kw'] = 'yellow', 		 ['color'] = '|cFFFFEA00|' }, -- bright yellow
+    { ['kw'] = 'lightgray', 	 ['color'] = '|cFFB2BEB5|' }, -- light gray
+    { ['kw'] = 'blue',		     ['color'] = '|cFF1F51FF|' }, -- neon blue
 };
 
 -- Local variables used for display purposes
@@ -114,7 +116,6 @@ function displaybar.Unload()
 
     -- Unregister the displaybar and the toggle command for turning the display off
     ashita.events.unregister('d3d_present', 'displaybar_present_cb');
-    ashita.events.unregister('command', 'displaybar_cb');
 end		-- displaybar.Unload
 
 --[[
@@ -258,16 +259,24 @@ function displaybar.InitializeDisplayBar()
     displaybar.UpdateBarStatic();
     displaybar.FontObject = fonts.new(fontSettings);
 
+    if gProfile.settings.DisplayBar[gVars._POS_X] ~= nil then
+        displaybar.FontObject.position_x = gProfile.settings.DisplayBar[gVars._POS_X];
+    end
+
+    if gProfile.settings.DisplayBar[gVars._POS_Y] ~= nil then
+        displaybar.FontObject.position_y = gProfile.settings.DisplayBar[gVars._POS_Y];
+    end
+
     ashita.events.register('d3d_present', 'displaybar_present_cb', function ()
         local display = 'X:';
 
         -- Now process the tool bar
-        if gProfile.settings.DisplayBar[gVars._JOB] ~= nil and gProfile.settings.DisplayBar[gVars._JOB]['visible'] == true then
-            display = display .. MainLV .. Main .. '/' .. SubLV .. Sub .. ' ';
+        if utilities.fIsVisibleSetting(gVars._JOB) == true and utilities.fIsVisible(gVars._JOB) == true then
+            display = display .. MainLV .. Main .. '/' .. SubLV .. Sub .. ' | ';
         end
 
-        if gProfile.settings.DisplayBar[gVars._CAP] ~= nil and gProfile.settings.DisplayBar[gVars._CAP]['visible'] == true then
-            display = display .. '| L.Cap: ';
+        if utilities.fIsVisibleSetting(gVars._CAP) == true and utilities.fIsVisible(gVars._CAP) == true then
+            display = display .. 'L.Cap: ';
             if gProfile.settings.PlayerCappedLevel > 0 then
                 local stmp = tostring(gProfile.settings.PlayerCappedLevel);
                 display = display .. fColorizedEntry(stmp,false) .. ' | ';
@@ -276,13 +285,13 @@ function displaybar.InitializeDisplayBar()
             end
         end
 
-        if gProfile.settings.DisplayBar[gVars._GC] ~= nil and gProfile.settings.DisplayBar[gVars._GC]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._GC) == true and utilities.fIsVisible(gVars._GC) == true then
             display = display .. fColorizedEntry('GC',gear.fHasGCBeenRun()) .. '| ';
         end
 
         -- Display the common (cross jobs) toggles
         for k,v in ipairs(cmn) do
-            if gProfile.settings.DisplayBar[v] ~= nil and gProfile.settings.DisplayBar[v]['visible'] == true then
+            if utilities.fIsVisibleSetting(v) == true and utilities.fIsVisible(v) == true then
                 display = display .. fColorizedEntry(v,utilities.fGetToggle(v)) .. ' ';
             end
         end
@@ -291,46 +300,46 @@ function displaybar.InitializeDisplayBar()
         -- a copy of what's in crossjobs.SetVariables(). This is no longer the case. Variables will be displayed
         -- in the displaybar based on the gProfile.settings.DisplayBar definitions in the job file. Thus, the
         -- player determines what is displayed and what is not displayed.
-        if gProfile.settings.DisplayBar[gVars._MACC] ~= nil and gProfile.settings.DisplayBar[gVars._MACC]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._MACC) == true and utilities.fIsVisible(gVars._MACC) == true then
             display = display .. fColorizedEntry(gVars._MACC,utilities.fGetToggle(gVars._MACC)) .. ' '; -- /MACC
         end
 
-        if gProfile.settings.DisplayBar[gVars._SS] ~= nil and gProfile.settings.DisplayBar[gVars._SS]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._SS) == true and utilities.fIsVisible(gVars._SS) == true then
             display = display .. fColorizedEntry(gVars._SS,utilities.fGetToggle(gVars._SS)) .. ' ';     -- /SS
         end
 
-        if gProfile.settings.DisplayBar[gVars._AJUG] ~= nil and gProfile.settings.DisplayBar[gVars._AJUG]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._AJUG) == true and utilities.fIsVisible(gVars._AJUG) == true then
             display = display .. fColorizedEntry(gVars._AJUG,utilities.fGetToggle(gVars._AJUG)) .. ' '; -- /AJug
         end
 
-        if gProfile.settings.DisplayBar[gVars._DB] ~= nil and gProfile.settings.DisplayBar[gVars._DB]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._DB) == true and utilities.fIsVisible(gVars._DB) == true then
             display = display .. 'DB: ' .. fColorizedEntry(utilities.fGetCycle(gVars._DB),true) .. ' '; -- /DB
         end
 
-        if gProfile.settings.DisplayBar[gVars._SBP] ~= nil and gProfile.settings.DisplayBar[gVars._SBP]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._SBP) == true and utilities.fIsVisible(gVars._SBP) == true then
             display = display .. fColorizedEntry(gVars._SBP,utilities.fGetToggle(gVars._SBP)) .. ' ';   -- /sBP
         end
 
-        if gProfile.settings.DisplayBar[gVars._INSTRUMENT] ~= nil and gProfile.settings.DisplayBar[gVars._INSTRUMENT]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._INSTRUMENT) == true and utilities.fIsVisible(gVars._INSTRUMENT) == true then
             display = display .. 'Instrument: ' .. fColorizedEntry(utilities.fGetCycle(gVars._INSTRUMENT),true) .. ' ';  -- /horn or /string
         end
 
-        if gProfile.settings.DisplayBar[gVars._MODE] ~= nil and gProfile.settings.DisplayBar[gVars._MODE]['visible'] == true or
-           gProfile.settings.DisplayBar[gVars._DT] ~= nil and gProfile.settings.DisplayBar[gVars._DT]['visible'] == true or
-           gProfile.settings.DisplayBar[gVars._REGION] ~= nil and gProfile.settings.DisplayBar[gVars._REGION]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._MODE) == true or
+           utilities.fIsVisibleSetting(gVars._DT) == true or
+           utilities.fIsVisibleSetting(gVars._REGION) == true then
             display = display .. '| ';
         end
 
-        if gProfile.settings.DisplayBar[gVars._MODE] ~= nil and gProfile.settings.DisplayBar[gVars._MODE]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._MODE) == true and utilities.fIsVisible(gVars._MODE) == true then
             display = display .. 'Mode: ' .. fColorizedEntry(utilities.fGetCycle(gVars._MODE),true) .. ' ';  -- /Mode
         end
 
         -- and the last two all-job cycles
-        if gProfile.settings.DisplayBar[gVars._DT] ~= nil and gProfile.settings.DisplayBar[gVars._DT]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._DT) == true and utilities.fIsVisible(gVars._DT) == true then
             display = display .. 'DT: ' .. fColorizedEntry(utilities.fGetCycle(gVars._DT),true) .. ' ';    -- /dt
         end
 
-        if gProfile.settings.DisplayBar[gVars._REGION] ~= nil and gProfile.settings.DisplayBar[gVars._REGION]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._REGION) == true and utilities.fIsVisible(gVars._REGION) == true then
             local srColor;
             if gVars.sRegion == gVars._REGION_STATUS_MUST_ZONE then
                 srColor = 'yellow';
@@ -343,22 +352,30 @@ function displaybar.InitializeDisplayBar()
         end
 
         -- Accuracy
-        if gProfile.settings.DisplayBar[gVars._ACC] ~= nil and gProfile.settings.DisplayBar[gVars._ACC]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._ACC) == true and utilities.fIsVisible(gVars._ACC) == true then
             if utilities.fGetToggle(gVars._TANK) == true then
                 display = display .. '| Acc: ' .. fAccuracyDisplay('TAcc') .. ' ';
-                if gProfile.settings.DisplayBar[gVars._RACC] ~= nil and gProfile.settings.DisplayBar[gVars._RACC]['visible'] == true then
+                if utilities.fIsVisibleSetting(gVars._RACC) == true then
                     display = display .. 'RAcc: ' .. fAccuracyDisplay('TRAcc') .. ' ';
                 end
             else
                 display = display .. '| Acc: ' .. fAccuracyDisplay('Acc') .. ' ';
-                if gProfile.settings.DisplayBar[gVars._RACC] ~= nil and gProfile.settings.DisplayBar[gVars._RACC]['visible'] == true then
+                if utilities.fIsVisibleSetting(gVars._RACC) == true then
                     display = display .. 'RAcc: ' .. fAccuracyDisplay('RAcc') .. ' ';
+                end
+            end
+        else
+            if utilities.fIsVisibleSetting(gVars._RACC) == true and utilities.fIsVisible(gVars._RACC) == true then
+                if utilities.fGetToggle(gVars._TANK) == true then
+                    display = display .. '| RAcc: ' .. fAccuracyDisplay('TRAcc') .. ' ';
+                else
+                    display = display .. '| RAcc: ' .. fAccuracyDisplay('RAcc') .. ' ';
                 end
             end
         end
 
         -- Custom Conditionals
-        if gProfile.settings.DisplayBar[gVars._CC] ~= nil and gProfile.settings.DisplayBar[gVars._CC]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._CC) == true and utilities.fIsVisible(gVars._CC) == true then
             display = display .. '| CC: ';
             for i,j in ipairs(gProfile.CustomConditionals) do
                 cc = utilities.fGetToggle(j['code']);
@@ -374,7 +391,7 @@ function displaybar.InitializeDisplayBar()
         end
 
         -- Locks
-        if gProfile.settings.DisplayBar[gVars._LOCKS] ~= nil and gProfile.settings.DisplayBar[gVars._LOCKS]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._LOCKS) == true and utilities.fIsVisible(gVars._LOCKS) == true then
             local s = locks.fCompactLocks();
             if s ~= 'None' then
                 display = display .. ' | Locks: ' .. displaybar.fColor('red',s);
@@ -384,19 +401,19 @@ function displaybar.InitializeDisplayBar()
         end
 
         local env = gData.GetEnvironment();
-        if gProfile.settings.DisplayBar[gVars._DAY] ~= nil and gProfile.settings.DisplayBar[gVars._DAY]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._DAY) == true and utilities.fIsVisible(gVars._DAY) == true then
             display = display .. ' | ' .. displaybar.fColor(env.Day,env.Day) .. ' ';
         end
-        if gProfile.settings.DisplayBar[gVars._TIME] ~= nil and gProfile.settings.DisplayBar[gVars._TIME]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._TIME) == true and utilities.fIsVisible(gVars._TIME) == true then
             display = display .. string.format('| %02d:%02d ',env.Timestamp.hour,env.Timestamp.minute) .. ' ';
         end
-        if gProfile.settings.DisplayBar[gVars._MOON] ~= nil and gProfile.settings.DisplayBar[gVars._MOON]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._MOON) == true and utilities.fIsVisible(gVars._MOON) == true then
             display = display .. string.format('| %d%% %s ',env.MoonPercent,displaybar.fColor(env.MoonPhase,env.MoonPhase)) .. ' ';
         end
-        if gProfile.settings.DisplayBar[gVars._WEATHER] ~= nil and gProfile.settings.DisplayBar[gVars._WEATHER]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._WEATHER) == true and utilities.fIsVisible(gVars._WEATHER) == true then
             display = display .. '| ' .. displaybar.fColor(env.RawWeather,env.RawWeather) .. ' ';
         end
-        if gProfile.settings.DisplayBar[gVars._ZONE] ~= nil and gProfile.settings.DisplayBar[gVars._ZONE]['visible'] == true then
+        if utilities.fIsVisibleSetting(gVars._ZONE) == true and utilities.fIsVisible(gVars._ZONE) == true then
             display = display .. '| ' .. Zone;
         end
 
@@ -447,23 +464,5 @@ function displaybar.SetAccCur(sType,val)
         gVars.tProgressive['Tank_Ranged_Accuracy']['CurStage'] = val;
     end
 end		-- displaybar.SetAccCur
-
---[[
-    displaybar_cb registers the command so that the display bar can be turned on or off
---]]
-
-ashita.events.register('command', 'displaybar_cb', function (e)
-    local args = e.command:args()
-
-    if #args == 0 or args[1] ~= '/displaybar' then
-        return
-    end
-
-    e.blocked = true
-
-    if #args == 1 then
-        displaybar.FontObject.visible = not displaybar.FontObject.visible;
-    end
-end);
 
 return displaybar;

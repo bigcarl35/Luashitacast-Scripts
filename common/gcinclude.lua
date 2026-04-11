@@ -34,6 +34,7 @@ gcinclude.sets = {
 	['Gathering'] = {
 		Range = 'Lu Shang\'s F. Rod//GA:FISH',
 		Ammo  = 'Sinking Minnow//GA:FISH',
+		Neck  = 'Justice Badge',
 		Body  = { 'Field Tunica//GA:HELM', 'Choc. Jack Coat//GA:DIG', 'Tarutaru Top +1//GA:CLAM', 'Angler\'s Tunica//GA:FISH' },
 		Hands = { 'Field Gloves//GA:HELM', 'Fsh. Gloves//GA:FISH' },
 		Legs  = { 'Field Hose//GA:HELM', 'Taru. Shorts +1//GA:CLAM', 'Fisherman\'s Hose//GA:FISH' },
