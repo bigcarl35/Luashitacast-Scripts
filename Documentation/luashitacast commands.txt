@@ -1,0 +1,365 @@
+This document lists all commands available in the BOXCAR version of Luashitacast. Included is the identifier, short description,
+usage form, and a longer descrription (where appropriate) on how to use it. This documents how these commands are intended to be
+implemented and are used as the basis for help.lua. (Note: the current version for some of these commands do not have all the
+options implemented yet.)
+
+Commands:
+
+While Luashitacast can run without input from the player the use of Luashitacast commands let's the players maximize the
+flexibility that the mod provides. Hopefully this will be of some use to you. (note: all commands have to be in lowercase.)
+
+acc         Set the progressive accuracy setting
+
+            Form: /acc [#|max|all|none]
+
+            Acc/Racc have defined stages in the "progressive" structure found in your job file. The numbers listed in the
+            display bar at the top of your screen reflect these stages. # in the form is a designation for a stage. Successive
+            stages incorporate the previous ones, so acc 3 means that stages 1, 2, and 3 will be equipped. Designating a lower
+            stage will remove gear. So, if "1,2,3" is equipped and you type /acc 2, then only "1,2" will be equipped. "Max"
+            and "all" both indicate that the maximum stage should be equipped. "None" is equivalent to no parameter being
+            specified and it means all gear from the stages should be removed. It's included for consistency sake. The currently
+            active stage(s) are highlighted in green in the display bar.
+
+cap         This command artificially caps the level of your gear
+
+            Form: /cap [#]
+
+            Mostly used for testing gear sets the "cap" command tells Luashitacast to not equip any gear higher than the capped
+            level. Please note that the level number must be higher than 0 and less than the max level of your current job.
+            Invoking just /cap will turn this feature off. (The display bar will show the capped level next to your main job's
+            level.)
+
+            The optional parameters visible|invisible let the player toggle whether the cap command should be visible on the
+            display bar. Please note that if it is invisible, the command (other than toggling it back on) does nothing.
+
+cc          Toggles specific custom conditionals on or off
+
+            Form: /cc[#] [file[=name]][+]
+
+            Custom conditionals are used in gear sets as a means to represent a Yes/No question when checking a piece of gear
+            that has not been defined already in Luashitacast. The list of valid custom conditionals can be found in the job
+            files (by default, everyone starts with two.) /cc by itself will display all defined custom conditionals. Typing
+            /cc# will toggle on or off the specified custom conditional. Which custom conditionals are enabled are displayed
+            in the display bar in green.
+
++dbar       This command is used to save or reset the display bar
+
+            Form: /dbar [show] [vis=[all|none|name,name,...]] [invis=[all|none|name,name,...]] [save|reset] [file[=name]][+]
+
+            Part of the display bar manipulation system, dbar gives the player information about the display bar and/or let
+            them save the layout to a startup configuration file. "Vis" lets you specify one of more fields that should be
+            visible on the display bar, "invis" is the opposite, letting the player indicate what fields should be invisible.
+            "Show" displays the current defninition, including all off the field names and whether they're visible or invisible.
+            (Please note that only fields accessible by the current job is displayed.) "Save" saves the configuration to the
+            startup ini file. "Reset" lets the player set the configuation back to the way it was when the job file was loaded.
+
+
+dt          Damage Taken indicates a type of damage the player wants to mitigate
+
+            Form: /dt [M|P|B]
+
+            There are three types of damage that are commonly found on gear that mitigates damage: magical, physical, and
+            breath (denoted by the first letters). Any other letter will turn /dt off. Alternatively, you can just type
+            /dt and cycle through the options. The display bar displays which type (if any) of damage gear should be equiped.
+
+ei|equipit  Equip the specified piece of gear via referenced shortcut or name
+
+            Form: /ei code|"name" or /equipit code|"name"
+
+            This command first determines if you have told it a code that it must translate to determine which piece of gear
+            should be equipped or have identified and explicit piece of gear. (If the name of the explicit piece of gear
+            consists of more than one word, you have to use quotes.) A list of coded gear definitions can be found in gear.lua
+            under gear.tEquipIt. This command ignores locks, equips the piece of gear and then locks the affected slot(s).
+            (More than one slot can be affected if the piece of gear is multi-slotted. A list of those can also be found
+            in gear.lua.)
+
+eva         Toggles whether evasion gear should be equipped or not
+
+            Form: /eva
+
+            Repeated use will turn on or off the equipping of evasion gear. The state of eva is visible in the display bar,
+            green for on and red for off.
+
+gc          Scans all gear sets for details on gear. This has to be run before gear swapping can occur
+
+            Form: /gc [list] [file[=name]][+]
+
+            All parameters are optional. If you've already run /gc and want to see the gear summary, add the "list"
+            parameter. If you want the output (from either the full /gc or just the summary report) to go to a file instead
+            of the screen, add the "file" parameter. "file" alone will write to a file in the /reports directory based on
+            your character's name, job, and the date. "file=name" does what "file" does except it uses the file name that
+            you supplied. "+" means to append to the file if it already exists. If the "+" is absent and the file exists,
+            this new report will overwrite the current contents. If GC is visible on the display bar, the "GC" will be
+            shown in in red if /gc has not been run yet and in green if it has been run.
+
+gs|gearset  Command to equip the specified gear set
+
+            Form: /gs "name" [w][l] or /gearset "name" [w][l]
+
+            "name" is the name of the set you wish to equip. It will first be looked for in your job file and next if not found,
+            in crossjobs.lua. The found set will be processed and equipped. After that, the equipment slots affected by that gear
+            set will be locked. (Please note that if in your job file the setting parameter bLockAllOnGS is set to true, all
+            equipment slots will be locked. It's a choice you have to make when configuring your job file.) Also, there's
+            two potential optional parameters. 'w' indicates that weaponswapping is permitted and 'l' indicates that current
+            locks should be honored. (By default /gs preserves your WSwap setting and ignores current locks.)
+
+gswap       Toggles gear swapping on or off
+
+            Form: /gswap
+
+            By default, "gswap" is on when you change jobs or force a reload of the current job file. If you turn it "off",
+            no gear swapping can occur. When it's turned on, gear swapping is not inhibited. (Please note though, /gc must
+            be run before gearswapping can occur regardless of the gswj['own']ap setting.) The display bar will show "gswap" in red
+            if /gswap is disabled and green if it is enabled.
+
+idle        Toggles whether gear swapping to default gear when idle should occur
+
+            Form: /idle
+
+            Available to all jobs, but originally defined for tanks so they could decide if tanking gear should be taken off
+            when idle. Repeated use will turn idle on or off. The display bar will show "idle" in red if /idle is disabled and
+            green if it is enabled.
+
+kite        Toggles gear swapping to kiting gear on or off
+
+            Form: /kite | [visible|invisible]
+
+            When toggled on, kiting gear will take priority over all other gear. Repeated use will toggle kiting gear on or off.
+            The display bar will show "kite" in red if /kite is disabled and green if it is enabled.
+
+lachelp     Form: /lachelp [command]
+
+            This command without any parameter will display a list of all the commands that are usable with Luashitacast
+            including a brief description.  If you add a parameter, a detailed description of that command will be displayed.
+
+lock        This command lets you lock equipment gear slots
+
+            Form: /lock [slot name|slot number[,...]]
+
+            Locked slots block the gear swapping ability on the locked slots until they are unlocked. You can designate slots
+            via either their name or number in a comma delimited list. (You can even mix and match if you want.) Locked slots
+            will be displayed in the display bar. This command without any parameters unlocks all locks similar to the /unlock
+            command.
+
+macc        Toggles whether magic accuracy gear should be equipped when casting spells
+
+            Form: /macc
+
+            This command only works if your main job or sub job is a magic casting job: BLM,WHM,RDM,SMN,PLD,DRK,BLU,SCH,GEO,RUN.
+            Repeated use will trigger whether magic accuracy gear will equip or not when casting magic. The display bar will show
+            "macc" in red if /macc is disabled and green if it is enabled.
+
+maxsong     Command to cast the highest level version of the specified song
+
+            Form: /maxsong song
+
+            Some songs have multiple tiers, like foe requiem. This command will determine what the highest tier of the specified
+            song you know and cast it. If that song is on cool down, it will cast the version that's one tier lower. "root" is
+            either the song's name or a substring of the name that will uniquely identify the song. Successive calls will cast
+            different versions of the same song.
+
+maxspell    Command to cast the highest level version of the specified spell
+
+            Form: /maxspell spell
+
+            Some spells have multiple tiers, like cure. This command will determine what the highest tier of the specified
+            spell you know and cast it. If that spell is on cool down, it will cast the version that's one tier lower. "root" is
+            either the spell's name or a substring of the name that will uniquely identify the spell. Successive calls will cast
+            different versions of the same spell.
+
+pull        Command used to pull a target
+
+            Form: /pull
+
+            This command will pull the target and print a message in party chat. If you have a pet that can be directed to attack,
+            it will be used for the pulling. If you do not, a ranged weapon is checked for. If found it will be used. Lack of a
+            ranged weapon will not print anything in party chat, but will inform you why it didn't work.
+
+racc        Set the progressive ranged accuracy setting
+
+            Form: /racc [#|max|all|none]
+
+            Acc/Racc have defined stages in the "progressive" structure found in your job file. The numbers listed in the
+            display bar at the top of your screen reflect these stages. # in the form is a designation for a stage. Successive
+            stages incorporate the previous ones, so acc 3 means that stages 1, 2, and 3 will be equipped. Designating a lower
+            stage will remove gear. So, if "1,2,3" is equipped and you type /acc 2, then only "1,2" will be equipped. "Max" and
+            "all" indicates the maximum stage should be equipped. "None" is equivalent to no parameter being specified and it means
+            all gear from the stages should be removed. It's included for consistency sake. The currently active stage(s) are
+            highlighted in green in the display bar.
+
+rc          Displays region control information
+
+            Form: /rc [file[=name]][+]
+
+            Displays a list of all the regions that fall under conquest control and who controls that area. The output can
+            be redirected to a file (either name the file or let Luashitacast name it based on the character name, job, and
+            the date) in the /reports directory. The + indicates you want to append the listing to an existing report. If the
+            "+" is absent and the file exists, this new report will overwrite the current contents.
+
+rv          Refreshes all of the tracked variables
+
+            Form: /rv
+
+            Sometimes refreshing the variables will fix odd behaviors (like what can arise if you do a /gc before "data
+            downloading" is complete.) It sets all the toggled switches back to default settings. Can be useful under
+            certain circumstances.
+
+ShowIt
+
+            Form: /showit [file[=name]][+]
+
+smg         Command to show currently equipped  gear
+
+            Form: /smg [g|s] [noac] [gs=set name,set name,...] [slot=slot name,slot name,...] [file[=name]][+]
+
+            This command is used to produce one of two types of reports: gearset oriented or gear slot oriented. The parameters
+            are not ordered, so they can be stated in any order you desire. The single letter, "g" or "s" defines the type. "g"
+            for gearset and "s" for slot. (The absense or either "g" or "s" defaults to a gearset report.) "noac" filters the
+            report to only those entries which you cannot access outside of town. "gs=" and "slot=" lets you define filters. "gs="
+            restricts the report to the specified gearsets and "slot" restricts the report to the specified slot(s). Like other
+            reports, the default is to display to the screen, but you can send the report to a file instead using the "file"
+            parameter. You can specify the file name to write the report to or leave the name out and Luashitacast will create
+            a file name for you based on your character's name, job, and the date. If you want to append a report to an existing
+            file, include the "+". If absent, the new report will overwrite any previous file by the same name.
+
+spf         Toggles whether show pull feedback should be displayed or not
+
+            Form: /spf
+
+            Used in association with /pull, this toggle indicates if the /party message should be displayed or not. Repeated
+            use of /spf will turn the option either on or off (current state is indicated in the display bar, red if disabled
+            and green if enabled.)
+
+sw          Equips the default starting weapons
+
+            Form: /sw
+
+            It's not uncommon for the starting weapons to not be equipped correctly because /gc has not been run yet. This
+            command forces the starting weapons to be equipped.
+
+tank        Toggles whether player is tanking or not
+
+            Form: /tank
+
+            When toggled on, gear in gear sets that are identified by //TANK will be equipped. When toggled off, that gear
+            will not be equipped. The display bar will show "tank" in red if /tank is disabled and green if it is enabled.
+
+th          Toggles treasure hunter on or off.
+
+            Form: /th |
+
+unlock      Command to unlock locks on the appropriate gear slots
+
+            Form: /unlock [all|list of slot names|list of slot numbers]
+
+            This command is a complement to the /lock command. You can unlock gear slots by providing a comma delimited list
+            of locks (either using slot names or slot numbers), or by specifying "all".
+
+val         Command to validate gear sets
+
+            Form: /val gs=[all|name,name,...] [file[=name]][+]
+
+            Validation can occur on a list of one or more gear sets or all gear sets definied in the job file and crossjobs
+            file. 'All' indicates all gear sets. (This will be a big report.) You can redirect the report to a file (either
+            you name or the system defines based on your character name, job, and the date. The optional '+' means you can
+            append the output to an existing file.)
+
+ver         Display the version of Luashitacast and the current patch notes
+
+            Form: /ver
+
+            This simple command displays the version of Luashitacast and then the current list of patch notes.
+
+
+wsdistance  This command lets the player define how far away from a target should an attempt at a weapon skill be permitted.
+
+            Form: /wsdistance [#]
+
+            By default, the distance check is enabled and set to 4.7 yalms (which is the appropriate distance for a tarutaru.
+            If you're a different race, you might make that a bit bigger.) Just the command without a number will turn this
+            distance check off. Otherwise, if you try to do a weapon skill and you're too far away, you'll get a warning
+            message and your weapon skill will not go off and your TP will be preserved. With this function turned off, in
+            a similar scenario, you still would not have your weapon skill go off, but you'd also lose your TP.
+
+wswap       Toggles weapon swapping on or off
+
+            Form: /wswap |
+
+            This command toggles on/off whether weapon swapping is permitted. Please note that some jobs (like SMN and BLM)
+            always have weapon swapping on, so this command will have no effect in this case. The display bar will show "wswap"
+            in red if /wswap is disabled and green if it is enabled.
+
+Some commands are job specific. These are listed below:
+
+BRD Specific
+
+horn        Command to indicate that "horn" should be the default instrument
+
+            Form: /horn
+
+            This command sets the "horn" to be the default instrument, which is reflected in the displaybar.
+
+string      Command to indicate that "string" should be the default instrument
+
+            Form: /string
+
+            This command sets the "string" to be the default instrument, which is reflected in the displaybar.
+
+BST Specific
+
+ajug        Toggles the automatic jug pet function on or off
+
+            Form: /ajug
+
+            This command toggles whether automatic jug pets should populate the ammo slot when the "reward" ability is used.
+            The display bar will show "ajug" in red if /ajug is disabled and green if it is enabled.
+
+db          Indicates type of debuff removal from pet wanted.
+
+            Form: /db [BPP|WSS]
+
+            If you have the appropriate +1 body piece (AF or Relic), the beastmaster can cure certain debuffs on their pet. This
+            command sets which type of debuff should be cured: BPP for blind, poison, and paralysis and WSS for weighted, silence,
+            and blind. Invoking the command without one of the optional parameters will just advance the setting. The display bar
+            will show "db's" setting on the displaybar. Please note: on HorizonXI, a Beast Jackcoat +1 cures all six types whereas
+            a Monster Jackcoat +1 only cures weight, slow, and silence.
+
+petfood     Command to autoequip pet food for use with Reward.
+
+            Form: /petfood [name]
+
+SMN Specific
+
+911         This command will summon the best spirit based on day's element and weather. It's used for an
+            emergency pet.
+
+            Form: /911
+
+            Which spirit gets summoned depends on a lot of criteria. First, it checks to see if you don't already have a pet and
+            whether you have the mana to cast it. All spirits cost 10 mp. If you do have a pet, this command does nothing. (Your
+            pet will block this command.) Next, a weighted system based on the day's element and weather is used to pick
+            the best spirit to summon. Next, it checks whether the SMN knows that spirit's spell and is it off cooldown. If so,
+            that spirit gets summoned. If all of the spirits that are advantageous because of day's element or weather element
+            are unknown, the profile.settings block in your job file is checked for a defaultSpirit. Assuming you have the mana
+            and know that spell, that spirit is summoned. If you still don't have a spirit summoned, then it picks the first
+            spirit spell you know and that one is summoned. If you don't know any spirit spells, it just gives you a "warning"
+            message.
+
+mode        This command lets the player decide if perpetuation costs or attack gear have priority.
+
+            Form: /mode [PERP|ATTK|ENMM]
+
+            Similar to a toggle, but instead the two states are explicitly definied.
+
+sbp         Displays a party message when an attack blood pact performed. Echos ward blood pacts
+
+            Form: /sbp
+
+THF Specific
+
+ss          Toggles whether steal messages should be displayed in "say" commands
+
+            Form: /ss
+
+Legend:
+    + before the command indicates a command that has yet to be implemented
