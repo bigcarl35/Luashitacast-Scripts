@@ -1,51 +1,108 @@
-- Added /SS (exclusive to THF.) When enabled, if the THF steals, a message will indicate they
-  did so, identifying the target and it's associated ID. If off, the steal happens without
-  a message.
+- Added a lot of new inline conditionals including inverted conditionals. (See "Conditional gear by
+  type.txt" for a complete list). (3)
 
-- Added /PULL. This will "pull" the target with a ranged attack or with a pet if you're a SMN,
-  BST, or PUP. A message identifying the name of the target and it's identifying ID is relayed
-  to the party. Added /SPF so that the message display can be turned on or off.
+- Added support for inline conditionals on slot names. (4)
 
-- Fixed problem with /SMG displaying a set which contained a subset of multiple sets. It can
-  now handle one depth down. The following example now displays correctly:
+- Added grouping and changed subset priority to be dependent on depth. (Subsets in groups will be
+  processed when the group is processed and not when the gear set is being processed.) (20)
 
-    ['Resting_Regen'] = {
-		Subset = {
-			[1] = {
-				'Damage_Taken_Breath//DT_BREATH',
-				'Damage_Taken_Magical//DT_MAGICAL',
-				'Damage_Taken_Physical//DT_PHYSICAL',
-			}
-		},
-        Waist = 'Hierarch Belt',		-- +2 HP/tick while resting
-    },
+- All tank sets have been removed. Instead, any gearset can have groups defined for TANK and NON_TANK
+  in them. (2)
 
-  Alternatively you might be inclined to change that set to:
+- Removed code that dynamically generates gear listings as sets are being loaded. This feature is
+  no longer being supported since /gc is now required and it creates all of the entries then. (A1)
 
-		Subset = {
-			[1] = 'Damage_Taken_Breath//DT_BREATH',
-			[2] = 'Damage_Taken_Magical//DT_MAGICAL',
-			[3] = 'Damage_Taken_Physical//DT_PHYSICAL',
-			}
-		},
-        Waist = 'Hierarch Belt',		-- +2 HP/tick while resting
-    },
+- Changed how BST's AJug's favorability works. tJugPets moved from Job file to gear.lua. Introduced
+  FavoredJugs into BST job file, a simple list ordering what is favored. This is read in and updated
+  via /GC.
 
-  Because the three damage taken sets are mutually exclusive, this would have the same result,
-  although the processing is less efficient.
+- Changed how MPP and HPP are gotten from the GetPlayer() function. Percentages are now more accurate.
+  (17)
 
-- Changed Gate of Tartarus from an Ice to Dark elemental skill.
+- Changed the display bar labels for Accuracy. Acc used for Acc and TAcc, RAcc for RAcc and TRAcc. (B22)
 
-- Changed slots affected on Mandragora Suit to Body, Hands, Legs, and Feet. Change needed due
-  to recent patch.
+- Added support for groups to inline reference translation. Subsets are still ignored.
 
-- Changed Midcast on THF to see if target is a monster and TH enabled, it will now equip
-  TH gear.
+- Fixed issue where code for a buff that has a " " in them thus not matching buff name. It checks for both
+  with and without " " (as in, if the buff name has a " " or if the player designated the " " as a "_".)
 
-- Fixed an error in /gc if the character has no storage slips. It now prints "none".
+- You can now indicate whether Refresh or Regen has priority when you rest.
 
-- Fixed small logic confusion when checking for national aketons, Ducal Aketon was uneffected.
+- HandleAbility, HandlePetAction, HandleItem, HandlePrecast, HandleMidcast, Handle Preshot, HandleMidshot,
+  and HandleWeaponskill are now stub functions in the job files (unless there's job specific functionality
+  needed) and now the in common aspects are in crossjobs by similarly named functions. (A4,A5,A6)
 
-- Fixed error in routine that checked for an enchantment buff.
+- Added support to all pet actions regardless if the pet is from a main or sub job. (A13)
 
-= Added //ME inline. It checks to see if the target is the player.
+- Custom weaponskill gear sets are now supported. (15)
+
+- Subsets don't require order numbers now if only one subset is specified. Further, subsets can be a
+  single string, an unindexed table, and an indexed table. All three types are supported. (19)
+
+- Added command /val for validating gear sets. This command checks item validity, inline conditionals
+  validity, code usage validity, subsets to ensure they include existing sets, and inline references are
+  checked for valid gear set references. (21)
+
+- All toggle/cycle manipulation is now done in the utilities module (A7)
+
+- All action routines in the job files now call shared action routines in the crossjobs module. (A9)
+
+- The display bar has been modified to show the actions in the same order regardless of job. (Job
+  specific actions can be interspersed in the bar.) (B8)
+
+- Added configurable option to job files so that player can indicate if they want LUASHITACAST to
+  equip the job appropriate macro book and macro page.
+
+- Support for custom conditionals has been added. (A10)
+
+- Added code to remove "see-saw" effect when resting between refresh and regen gear because gear
+  change uncapped capped stat setting. (25)
+
+- Added inline condition to //SJ to accept a list of jobs as in //SJ:NIN,DNC to mean subjob is
+  either Ninja or Dancer. This change has been done also for //MJ, //PJP, and //PJPNM. (A16)
+
+- Added command: /sw to force the start weapons to be reloaded. (Often the weapons equipped when
+  you just log in are incorrect since /gc must be run first. This lets the player get the weapons
+  right.)
+
+- Updated the storage slips list to define all the slips, even the ones out of era.
+
+- Made order of processing engaged activity/weaponskill more obvious. Added ability to disable
+  automatic processing in favor of embedded inline conditionals. This gives the player more agency.
+
+- Added inline conditionals: ACCURACY and NOT_ACCURACY. This changes accuracy from stages to "has
+  any stage been set" on the conditional. It's a mechanism that lets the player ignore progressive
+  accuracy although they still have to set a stage to make the inline conditional work.
+
+- Added inline conditionals: DUALWIELD and NOT_DUALWIELD. These detect if your job/subjob permits
+  dual wielding. Added inline conditionals: RIDING and NOT_RIDING. These detect if you are riding
+  a mount.
+
+- Changed /help to /man (taken from Unix/Linux) to avoid a conflict with the "Call for help"
+  function.
+
+- Player can now designate that all slots are locked when crafting/gather. (This is to avoid
+  an error when an item changes based on time/day/weather.) Alternatively they can just add
+  a piece of gear to block that behavior, player's choice.
+
+- Changed monster family lookup to zone specific listing. Changed weapon type check to using
+  typed master weapons listing.
+
+- Crafting gearsets and Gathering gearsets now have their own explicit gearsets in crossjobs.
+  Invocation is the same though.
+
+- Reworked display bar so that player can change what is displayed. Fixed issue where remenants
+  of what was previously displayed was "peeking through". (A19,29)
+
+- Fixed an issue where /gc did not drill down into Groups.
+
+- Even though Somnolence is a ward blood pact, it does actual damage. It has been moved to the
+  SMN'ers rage list.
+
+- /cap has been implemented. It restricts the level of gear equipped. The cap level must be
+  between 1 and your level. It can be turned off by typing /cap. (A12,A20) Note: Slight issue,
+  if you do a /gs command and a slot is empty, whatever was in that slot will still be in
+  that slot even if the level is too high. The provided function to empty that slot doesn't
+  seem to work.
+
+- The display bar now shows locks in a compact format. (A17)
