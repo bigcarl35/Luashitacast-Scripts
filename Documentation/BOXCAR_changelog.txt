@@ -59,8 +59,7 @@
   change uncapped capped stat setting. (25)
 
 - Added inline condition to //SJ to accept a list of jobs as in //SJ:NIN,DNC to mean subjob is
-  either Ninja or Dancer. If merit is found for other conditionals, they will be implemented
-  conditional by conditional. (A16)
+  either Ninja or Dancer. This change has been done also for //MJ, //PJP, and //PJPNM. (A16)
 
 - Added command: /sw to force the start weapons to be reloaded. (Often the weapons equipped when
   you just log in are incorrect since /gc must be run first. This lets the player get the weapons
@@ -69,7 +68,7 @@
 - Updated the storage slips list to define all the slips, even the ones out of era.
 
 - Made order of processing engaged activity/weaponskill more obvious. Added ability to disable
-  automatic processing in favor of enbedded inline conditionals. This gives the player more agency.
+  automatic processing in favor of embedded inline conditionals. This gives the player more agency.
 
 - Added inline conditionals: ACCURACY and NOT_ACCURACY. This changes accuracy from stages to "has
   any stage been set" on the conditional. It's a mechanism that lets the player ignore progressive
@@ -89,9 +88,6 @@
 - Changed monster family lookup to zone specific listing. Changed weapon type check to using
   typed master weapons listing.
 
-- Changed all the //SJjob conditionals to use //SJ:job. Added //MMJ and //MJjob,job,...for main
-  jobs. (Likely to be used in crossjobs.lua since that's for common gear sets.)
-
 - Crafting gearsets and Gathering gearsets now have their own explicit gearsets in crossjobs.
   Invocation is the same though.
 
@@ -99,3 +95,14 @@
   of what was previously displayed was "peeking through". (A19,29)
 
 - Fixed an issue where /gc did not drill down into Groups.
+
+- Even though Somnolence is a ward blood pact, it does actual damage. It has been moved to the
+  SMN'ers rage list.
+
+- /cap has been implemented. It restricts the level of gear equipped. The cap level must be
+  between 1 and your level. It can be turned off by typing /cap. (A12,A20) Note: Slight issue,
+  if you do a /gs command and a slot is empty, whatever was in that slot will still be in
+  that slot even if the level is too high. The provided function to empty that slot doesn't
+  seem to work.
+
+- The display bar now shows locks in a compact format. (A17)

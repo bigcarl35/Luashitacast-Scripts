@@ -21,6 +21,8 @@ Buff:
 *   //SAMBA              Equip if player has Samba buff they applied
     //SHINING_RUBY       Equip if player had Shinging Ruby buff
     //SPIKE              Equip if player has a spike spell buff: blaze,ice,shock,dread
+*   //SNEAK_ATTACK       Equip if player has sneak attack buff
+*   //TRICK_ATTACK       Equip if player has trick attack buff
     //UTSUSEMI           Equip if player has Utsusemi buff
     //WARD_CIRCLE        Equip if player has Warding Circle buff
 *   //YONIN              Equip if player has Yonin buff
@@ -35,7 +37,9 @@ Buff:
 *   //NOT_REPRISAL       Equip if player does not have Reprisal buff
 *   //NOT_SAMBA          Equip if player does not have the Samba buff
 *   //NOT_SHINING_RUBY   Equip if player does not have Shining Ruby buff
+*   //NOT_SNEAK_ATTACK   Equip if player does not have sneak attack buff
 *   //NOT_SPIKE          Equip if player does not have a spike spell buff: blaze,ice,shock,dread
+*   //NOT_TRICK_ATTACK   Equip if player does not have trick attack buff
     //NOT_UTSUSEMI       Equip if player does not have Utsusemi buff
 *   //NOT_WARD_CIRCLE    Equip if player does not have Warding Circle buff
 *   //NOT_YONIN          Equip if player does not have Yonin buff
@@ -334,15 +338,27 @@ Testing (for debug purposes only):
 *   //NOT_TRUE           Never equips since it never evaluates to true
 
 Pet:
-*   //BST:PET_ATTACK     Equip if BST pet does an Attack skill
-*   //BST:PET_MATT       Equip if BST pet does Magical Attack skill
-*   //BST:PET_MACC       Equip if BST pet does Magic accuracy skill
     //PET                Equip if player has a pet
     //PETF               Equip if player has pet and it is fighting
     //PETFNPF            Equip if pet is fighting but not player
     //PETNAME:xxx        Equip if pet named xxx. Note: "xxx" can be a substring
 
+*   //BST:PET_ATTACK     Equip if BST pet does an Attack skill
+*   //BST:PET_MATT       Equip if BST pet does Magical Attack skill
+*   //BST:PET_MACC       Equip if BST pet does Magic accuracy skill
+
+++  //DRG:PET            Equip if DRG player has their wyvern summoned
+++  //DRG:SUMMONS        Equip if DRG player is summoning their wyvern
+
+++  //PUP:PET            Equip if the PUP player has their puppet out
+++  //PUP:SUMMONS        Equip if the PUP player is summoning their puppet
+
+Note: More inlines will be created for puppets once I know what HorizonXI will support.
+
 *   //SMN:AVATAR         Equip if a SMN avatar (not spirit) is being summoned
+*   //SMN:SPIRIT         Equip if a SMN spirit (not avatar) is being summoned
+*   //SMN:SUMMONS        Equip if a SMN avatar or spirit is being summoned
+*   //SMN:SUMMONS:xxx    Equip if player is summoning avatar/spirit whose name contains xxx
 *   //SMN:BP:PHYS        Equip if SMN blood pact is physical based
 *   //SMN:BP:MAG         Equip if SMN blood pact is magical based
 *   //SMN:BP:SKILL       Equip if SMN blood pact is skill based
@@ -350,33 +366,43 @@ Pet:
 *   //SMN:BP:HYBRID      Equip if SMN blood pact is a hybrid, both physical and magical
 *   //SMN:BP:xxx         Equip if blood pact name contains xxx.
     //SMN:PET            Equip if player has a smn's avatar or spirit pet
-    //SMN:SUMMONS:xxx    Equip if player is summoning avatar/spirit whose name contains xxx
+*   //SMN:PET:AVATAR     Equip if player has a smn's avatar pet
+*   //SMN:PET:SPIRIT     Equip if player has a smn's spirit pet
     //SMN:PETMW          Equip if SMN's pet's element matches the weather's element
     //SMN:PETMD          Equip if SMN's pet's element matches day's element
-    //SMN:SPIRIT:ES      Equip if avatar being summoned is an elemental spirit
-    //SMN:SPIRIT:EP      Equip if current pet is an elemental spirit
 
     Inverse -
+
+*   //NOT_PET             Equip if player has no pet
+    //NOT_PETF            Equip if pet is not fighting
+*   //NOT_PETFNPF         Equip if pet not fighting but player is fighting
+    //NOT_PETNAME:xxx     Equip if player has no pet or pet is not named "xxx"
+
 *   //NOT_BST:PET_ATTACK  Equip if BST pet does not do an Attack skill
 *   //NOT_BST:PET_MATT    Equip if BST pet does not do a Magical Attack skill
 *   //NOT_BST:PET_MACC    Equip if BST pet does not do a Magic accuracy skill
-*   //NOT_PET             Equip if player has no pet
-*   //NOT_PETFNPF         Equip if pet not fighting but player is fighting
-    //NOT_PETF            Equip if pet is not fighting
-    //NOT_PETNAME:xxx     Equip if player has no pet or pet is not named "xxx"
-*   //NOT_SMN:AVATAR      Equip if a SMN avatar being summoned is a spirit
+
+++  //NOT_DRG:PET         Equip if DRG player has no wyvern
+++  //NOT_DRG:SUMMONS     Equip if DRG player is not summoning their wyvern
+
+++  //NOT_PUP:PET         Equip if PUP player has no puppet out
+++  //NOT_PUP:SUMMONS     Equip if PUP player is not summoning a puppet
+
+*   //NOT_SMN:AVATAR      Equip if a SMN spirit is being summoned. Equivalent to //SMN:SPIRIT
+*   //NOT_SMN:SPIRIT      Equip if a SMN avatar is being summoned. Equivalent to //SMN:AVATAR
+*   //NOT_SMN:SUMMONS     Equip if a SMN is not summoning an avatar or spirit
+*   //NOT_SMN:SUMMONS:xxx Equip if the specified SMN pet being summoned
 *   //NOT_SMN:BP:PHYS     Equip if SMN blood pact is not physical based
 *   //NOT_SMN:BP:MAG      Equip if SMN blood pact is not magical based
 *   //NOT_SMN:BP:SKILL    Equip if SMN blood pact is not skill based
 *   //NOT_SMN:BP:ACC      Equip if SMN blood pact is not accuracy based
 *   //NOT_SMN:BP:HYBRID   Equip if SMN blood pact is not a hybrid
+*   //NOT_SMN:BP:xxx      Equip if blood pact name does not contains xxx. (SMN or /SMN only)
 *   //NOT_SMN:PET         Equip if player's pet is not a smn avatar/elemental spirit
-*   //NOT_SMN:SUMMONS:xxx Equip if the specified SMN pet being summoned
+*   //NOT_SMN:PET:AVATAR  Equip if player's pet is not a smn's avatar
+*   //NOT_SMN:PET:SPIRIT  Equip if player's pet is not a smn's spirit
 *   //NOT_SMN:PETMW       Equip if SMN's pet's element does not match the current weather element
 *   //NOT_SMN:PETMD       Equip if SMN's pet's element matches day's element
-*   //NOT_SMN:BP:xxx      Equip if blood pact name does not contains xxx. (SMN or /SMN only)
-*   //NOT_SMN:SPIRIT:ES   Equip if avatar being summoned is not an elemental spirit
-*   //NOT_SMN:SPIRIT:EP   Equip if current pet is not an elemental spirit
 
 Job:
     Player's Mainjob - (likely used in crossjob's gearsets)
@@ -410,13 +436,13 @@ Job in Party, but not me:
     Supporting the inversion makes no sense. Just use //MJ: since that checks just you
 
 Target:
-+   //FAM=xxx            Equip if target is part of the specified family
-+   //ECO=xxx            Equip if target is part of the specified eco-System
+*   //FAM=xxx            Equip if target is part of the specified family
+*   //ECO=xxx            Equip if target is part of the specified eco-System
     //ME                 Equip if the target is me
 
     Inverse -
-+   //NOT_FAM=xxx        Equip if target is part of the specified family
-+   //NOT_ECO=xxx        Equip if target is part of the specified eco-System
+*   //NOT_FAM=xxx        Equip if target is part of the specified family
+*   //NOT_ECO=xxx        Equip if target is part of the specified eco-System
     //NOT_ME             Equip if the target is not me
 
 Time:
@@ -590,10 +616,14 @@ Obsolete Codes
     //SP:xxx            //SONG:xxx              Clarity issue
     //SMNPET            //SMN:PET
     //SMN:xxx           //SMN:SUMMONS:xxx
+    //SMN:SPIRIT:ES     //SMN:SPIRIT            Consistency issue
+    //SMN:SPIRIT:EP     //SMN:PET:SPIRIT        Consistency issue
     //SMNPETMD          //SMN:PETMD
     //SMNPETMW          //SMN:PETMW
     //SPIRIT:escape     //SMN:SPIRIT:ES
     //SPIRIT:escape     //SMN:SPIRIT:EP
+    //NOT_SMN:SPIRIT:ES //NOT_SMN:SPIRIT        Consistency issue
+    //NOT_SMN:SPIRIT:EP //NOT_SMN:PET:SPIRIT    Consistency issue
     //NO_PET            //NOT_PET
     //PETNF             //NOT_PETF
     //UNLESS:gear       //NOT_IF:gear
@@ -627,4 +657,5 @@ Keywords:
 
 Note:
     + designates entries that are not implemented yet
+    ++ designates entries that are not implemented yet and I am unsure how to implement
     * designates entries that are only found in BOXCAR

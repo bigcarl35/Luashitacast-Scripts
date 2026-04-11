@@ -1,9 +1,14 @@
 Planned for 3.0                                                                               Alpha Release
 
-1) GSWAP will be turned off if GC hasn't been run yet.                                        Targetting around early October
+Not Doing -1) GSWAP will be turned off if GC hasn't been run yet.                             Targetting around early October
    If player tries to change it before GC, appropriate                                        - Basic rewrite will be completed, inluding all modifications to gear sets
    error message will be displayed and GSWAP will remain                                      - Includes: 1,2,3,4,5,14,15,17,20,A1,A3,A4,A5,A8
    off.
+
+   GSWAP indicates that gear swapping is wanted. If /GC hasn't been
+   run, that blocks swapping, but has no impact on whether the
+   player wants to swap gear. Changing it to disable might be
+   confusing, so I'll leave it as is.
 
 Done - 2) Remove TANK sets. Instead, use //TANK and //NOT_TANK on
    the affected slots. As long as the definitions do not
@@ -33,10 +38,13 @@ Done - 4) Add inline conditionals support to slot definitions and
      The hands slot will be loaded only during daytime which
      6:00 to 18:00.
 
-IP - 5) Break up gcinclude.lua. Instead, have a bunch of .lua files
+     Note: Formatting requires:
+        ['Hands//DAYTIME'] = {}
+
+Done - 5) Break up gcinclude.lua. Instead, have a bunch of .lua files
    based on groupings of functionality
 
-IP - 6) Modify /GC to validate codes, ensure referencing is to a
+Done - 6) Modify /GC to validate codes, ensure referencing is to a
    valid subset and to valid slots from the designated sets.
 
    Example
@@ -72,7 +80,7 @@ IP - 6) Modify /GC to validate codes, ensure referencing is to a
 
     If a file by that name already exists, it will be opened in append mode.
 
-9) If ../reports does not exist, create that directory
+Done - 9) If ../reports does not exist, create that directory
 
 10) Also note, any action with a pop-up window stores it's position in
     the ../Documentation/karma.txt file. The name is a reminant from the
@@ -146,7 +154,7 @@ Done - 12) Change /SMG to be position independent. This means that parameters
         This would generated the /SMG listing for the TP gear set
         and output it to the tp-gear.txt file.
 
-14) New command for SMN planned: /911 for emergency pet. Evoking this command
+Done - 14) New command for SMN planned: /911 for emergency pet. Evoking this command
     will summon one of the following, in order: the elemental spirit that
     matches the weather, the elemental spirit that matches the element of
     the day, or a default elemental spirit. Obviously the player must know
@@ -222,7 +230,9 @@ Done - 20) Support "grouping". This will let you group lines in your gear set
         }
       },
 
-IP - 21) Add toggle for summoner: Mode. It flips between Perpetuation and Accuracy/
+      Note: Grouping is causing issues. Am unsure if I can get them to work.
+
+Done - 21) Add toggle for summoner: Mode. It flips between Perpetuation and Accuracy/
     Attack. Command will be: /MODE=PERP|ATK. Add inline conditionals: //MODE=xxx
     whene xxx is PERP or ATK. Display in the bar as M:Perp and M:Atk.
 
@@ -252,9 +262,9 @@ IP - 23) Add further validation of gear sets. Originally I was thinking about mo
         will be appended to it. The file will be written into the /Reporting
         subdirectory.
 
-24) Add /ignore option to /GS so that current locks can be ignored.
+Done - 24) Add /locks_ignored option to /GS so that current locks can be ignored.
 
-Done - 25) There's an issue in the resting state where when when an emphasized setting c 75, ['have'] = false, ['fav'] = false },aps
+Done - 25) There's an issue in the resting state where when when an emphasized setting
     and luashitacast switches to the opposite setting, switching the gear changes the
     capped stat (MP or HP) to be uncapped, causing a "see saw" effect. What's preposed
     here is that when the emphasized stat caps (in the current resting session), it
@@ -262,23 +272,50 @@ Done - 25) There's an issue in the resting state where when when an emphasized s
     can potentially be blocked (both hit cap). When the player stands or fights these
     temporary caps are removed.
 
-26) Add support for DRG breath attack whether Elemental or healing breath.
+Done - 26) Add support for DRG breath attack whether Elemental or healing breath.
 
-27) Change how monster type is done. Have dynamically loaded files (like done in IXUI)
+Done - 27) Change how monster type is done. Have dynamically loaded files (like done in IXUI)
    that load a list of all creatures by zone id. Track the name and the family type.
 
-There's some general cleanup and rewrite anticipated too
+Done - 27) If you're a DRG and casting a spell:
+    if you have a pet (do I need the name of the wyvern?) and someone in your party has
+    HP% < 50% if you have a wyvern armet (or +1) or HP% < 33% and you have a drachen armet
+    (or +1), make sure that helmet is loaded. This might be done all through inline conditionals
+    which means it could be added to the DRG's precast gear set. Worth checking out. If it
+    can't be handled there, then we need a special set.
+
+    For the midcast, a similar check has to be done, but for all spells: wyvern out, correct
+    subjob, the appropriate piece of gear, the appropriate HP% on a party member. You first
+    load what's appropriate for the spell and then the specifics for healing via dragon breath.
+    Specifically, you want the wyvern's HP to be at it's highest. The problem, of course, is
+    that it can be triggered by any spell. (Should the midcast have a default set beyond the
+    one specific to the type of magic?)
+
+    Lastly, the Breath set needs to load anything that enhances the breath attack. Remember
+    to also increase the DRG's HP and the wyvern's HP without removing the Breath enhancement.
+
+Done - 28) Adjust SBP to show offensive wards to party too.
+
+Done - 29) Have region display "Unknown" if player hasn't zoned yet.
+
+    Problem has cropped up. There's bleed through on the display bar's text if the zone you
+    go to has a shorter name than the zone you were in.
+
+    Specifically, because of the increased delay when you zone, it's not consistently
+    getting the job/subjob infor correctly.
+
+Done - 30) Change blood pact feedback. It will now always echo regardless of the sBP setting.
+    As for sBP, still show in party the rage bps and include the following wards:
+
+    Somnolence,Nightmare,Lunar Roar,Lunar Cry,Slowga,Ultimate Terror,Sleepga
+
+    Incude "Ward" and "Rage" in message.
 
 Done - A1) Remove the code that adds reference entries to the dynamic gear listing
     when a set is to be equipped. This feature is no longer necessary as
     /gc creates all the entries in one pass and is required to be run.
 
-Duplicate - A2) Turn gswap off when /gc has yet to be run. It cannot be enabled until
-    /gc is run. At that point it will assume the default setting for the
-    job. A warning message will be displayed if gswap is attempted to be
-    turned on before /gc run.
-
-IP - A3) Rewrite some of the code so that additional functionality isn't hanging
+Done - A3) Rewrite some of the code so that additional functionality isn't hanging
     onto the existing code, but instead well integrated. Rewriting though
     should be done juditiously since it's mostly just a repeat of what is
     already working.
@@ -295,7 +332,7 @@ Done - A6) Move generic PetAction to gcinclude and pass in specific message,
 Done - A7) Consider moving all the toggle/"one of" functionality to its own lua
     file and removing it from gcdisplay.lua.
 
-A8) Create variables for toolbar selection, and various feedback mechanisms
+Done - A8) Create variables for toolbar selection, and various feedback mechanisms
     so that the player can easily change them without surveying the code to
     find them.
 
@@ -328,7 +365,7 @@ A11) Create a I_AM_CHARMED set. In the HandleDefault['engaged'], equip the
 
     Implement a /DISROBE command to do above.
 
-IP - A12) New command: /CAP. CAP designates a maximum level for your gear to
+Done - A12) New command: /CAP. CAP designates a maximum level for your gear to
     be equipped. It's hoped that doing this prior to a level limited area
     or sync will lessen the impact on HP and MP when you get level capped.
 
@@ -354,9 +391,79 @@ Not Doing - A15a) A variation on the /MP might be for getting to a % as in /MPP8
    would change gear so that your MPP is at 85% or lower. Would be handy
    for a number of SPECIAL gear.
 
-Done - A16) Support "One of" conditionals. Start with something like SJ(NIN,DNC).
+Done - A16) Support "One of" conditionals. Start with something like SJ:NIN,DNC.
    What that does is check the player's subjob and it must match one of
    the abbreviations found in the list (in this case NIN or DNC).
+
+Done - A17) Compact locks list. Show ranges and individuals. Example: 1-7,12.
+   This will cut down on long lists.
+
+   -- Need to figure out how to integrate this
+
+Done - A18) Add WSWAP to all jobs. Remove the "always weaponswapping" option. Just
+    default the WSWAP setting appropriately for the job.
+
+Done - A19) add config to profile.settings to let the player decide what fields
+    should be displayed in the display bar. Probably should integrate the
+    initial settings into the substructure.
+
+Done - A20) Change how level cap is displayed. Add new field: Cap: green none
+    if there's no level cap and red # if the level is restricted.
+
+Done - A21) Make sure GSWAP and WSWAP are capitalized the same way
+
+Not doing - A22) Gear sets can designate slots to be locked. These will be slots that
+    are not affected by the pieces of the set directly. As it stands, when
+    a gearset is equipped, either all slots or the affected slots are locked.
+    This new feature will let the player designate additional locked slots
+    through the "locks =" designation in the gear set. /gc will populate a
+    table containing all of the lock entries in the gear sets. One or more
+    slots can be locked. The use of inline conditionals are permitted on
+    either side of the definition. Multiple slots can be designated in
+    the entry:
+
+        locks = 'slot,slot,etc',
+
+    An example would be to lock the neck slot in the fishing set. This
+    would stop the error that arises when luashitacast tries to change
+    the neckpiece while fishing:
+
+    	['FISH'] = {	-- Fishing
+            Locks = 'neck',
+			Range = 'Lu Shang\'s F. Rod',
+			Ammo  = 'Sinking Minnow',
+			Body  = 'Angler\'s Tunica',
+			Rings = 'Albatross Ring//CC2',
+			Legs  = 'Fisherman\'s Hose',
+			Feet  = 'Waders'
+        },
+
+    Note that in this example, there's no indication of an issue. The
+    problem arises from the default set and it's neck definition:
+
+    Neck  = { 'Rep.Gold Medal//NOT_OWN','Uggalepih Pendant//NIGHTTIME',
+        'Fenrir\'s Torque//DAYTIME', 'Star Necklace', 'Spirit Torque',
+        'Justice Badge' },
+
+    The //NIGHTTIME //DAYTIME toggling causes the error since the FISH
+    set does not have a neck designation. Alternatively, don't implement
+    "locks" and tell the player to just assign a neck piece into the
+    fishing set so that the Default set's fishing definition will block
+    this flickering.
+
+    -- I like the idea of not implementing this and just having the
+    player put a piece into the set that's being adversely affected.
+
+Done - A23) For some reason Hatchling Shield refuses to be recognized
+
+Done differentlt - A24) In profile.settings.displaybar, add the "enable" field. If set to
+    true, the commands can work as people are use to. If set to false,
+    the command will print a message saying that the command has been
+    disabled. (Player can turn on or disable a command by appending
+    enable=true/false after the command.) Fields that show static
+    values in the display bar cannot be disabled since there's no
+    associated command. On fields where it is disabled, but visible
+    is true, a special indicator will show it's disabled.
 
 Depending on time and my sanity, the following might also be included:
 
@@ -404,7 +511,7 @@ B4) Add pop-up for displaying player to target (ptt) information. Make it
     where they want it and the position and whether it's displayed will be
     remembered.
 
-B5) Add pop-up grid for displaying locks that can be dragged on top of HXUI's
+B5) Add pop-up grid for displaying locks that can be dragged on top of Equipmon's
     equipment grid. Position and whether it's displayed will be remembered.
 
 B6) Add pop-up for displaying day cycle noting current day. Player should be
@@ -414,11 +521,14 @@ B6) Add pop-up for displaying day cycle noting current day. Player should be
 B7) Fix bug when /smg gs=currentgear is run. For some reason ears and rings
     are empty although these slots are populated on equipped gear.
 
-B8) Make a section in displaybar for the "show" switches: sPF, sBP, and sS.
+Done - B8) Make a section in displaybar for the "show" switches: sPF, sBP, and sS.
     Adapt displaybar table to support different sections.
 
-B9) Add a toggle to equip an HP down set (used by BLM for sorcerous ring
-    check or other similar ring checks.) Alternatively, have a named
+    Modified: instead of a section, I have made all toggles and cycles show up
+    in the toolbar in the same order.
+
+B9) Add a toggle to equip an HP down/HP up set (used by BLM for sorcerous
+    ring check or other similar ring checks.) Alternatively, have a named
     gearset do the HP down such that an explicit invocation of /gearset
     does the lowering. (Could be invoked via macro.) That way, no switch
     is needed.
@@ -433,11 +543,11 @@ B11) Add optional parameter on /ei to designate a specific ring/earring lot
 
 The following are really questionable and further thought is needed to consider them
 
-B11) Add support for changing the macro bar when any of the
+Not Doing - B12) Add support for changing the macro bar when any of the
      crafts or gathering sets are equipped. Set the macro
      bar back to what it was when the locks are cleared.
 
-B12) New command: /SHOW. Mostly intended as a debugging option, this
+B13) New command: /SHOW. Mostly intended as a debugging option, this
     command will display how a decision is made to equip a piece of
     gear. Like /SMG, options are "gs=" and "slot=". Also "state="
     will be supported where values are: idle,tp,rest. The output will
@@ -455,15 +565,17 @@ B12) New command: /SHOW. Mostly intended as a debugging option, this
     - by default, (unless just slots), command is one and done. "Repeat"
       indicates to display til turned off.
 
-B13) Add feature that will track items with a cool down. If equipped it will
+B14) Add feature that will track items with a cool down. If equipped it will
    set up a timer to notify the player that the item is ready to be used. If
    item taken away before use, timer will be removed. Note: no check for
    item being on cooldown is possible yet.
 
+B15) Add color coding to the territories from a /rc command
+
 Post 3.0
 
 
-16) Add subset specific inline conditionals: //SLOTS: and //NOT_SLOTS:
+--) Add subset specific inline conditionals: //SLOTS: and //NOT_SLOTS:
     //SLOTS: lets the player limit which slots from the subset will be
     equipped and //NOT_SLOTS: lets players explicitly exclude certain
     slots from being equipped. Slot designation can either be the slot's
@@ -472,6 +584,22 @@ Post 3.0
 
     More complicated than originally thought. Pushing to a future
     implementation
+
+--) Change Subset to Preset and add a Postset, by depth level
+
+    xxx = {
+        Preset = '',
+        ...
+        Postset = '',
+    }
+
+    By the depth level, the "preset" is loaded first. Then any groups or normal
+    assignments, and lastly the "postset". That way you can guarantee what the
+    set starts out looking like and if there's any pieces that have to be equipped,
+    add it in the "postset".
+
+--> Add tool to help healer determine if they have enough healing magic skill/
+    MND/VIT to push over to higher tiered heals. re: power calculation.
 
 =====================================================================
 

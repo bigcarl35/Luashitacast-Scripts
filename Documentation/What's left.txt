@@ -1,0 +1,84 @@
+What is missing:
+
+The following commands are not implemented or only partially implemented. Please note that all commands that support saving
+the output to a file are WIP. That option is not supported.
+
+    Not at all or partially implemented/disabled: smg, dbar, val
+
+    Partially implemented: lachelp, cc (file), gc (file), rc (file)
+
+Planned for 3.0 but either only partially implemented or not implemented at all:
+
+    10) Any pop-ups will have their position information stored in an ini file.
+
+    11) Timed hold on gear, to lessen likelihood of "flickering". Please note that
+        something like that has been implemented when kneeling. Swapping between
+        healing HP or MP will not flicker back and forth.
+
+    18) New DG command. This displays the current gear set and can be written to
+        a file.
+
+    23) Implementing the VAL command to validate gear sets. This is a WIP.
+
+Not Doing - A11) Creating a I_AM_CHARMED set or a /disrobe command
+
+        Not Doing - Charmed players can no longer change equipment. Patch: 3/20/26
+
+    A14) Removing FractionalSet
+
+    B1) Separating gear sets from the code. It's more separated than it use to be,
+        but it is not completely separated. Not sure how to do this.
+
+    B2) Being able to designate an elemental obi in a generic form within a gear
+        set. The appropriate one will be loaded.
+
+    B3) Being able to designate an elemental gorget in a generic for within a
+        gear set. The appropriate one will be loaded.
+
+    B4) Add pop up to display ptt (pet to target) details, color coded. (XIUI
+        might do this already. Need to check.)
+
+    B5) Add pop up grid overlay for locks that can be positioned over the equipment
+        grid from equipmon.
+
+    B6) Add pop up display to show day cycle.
+
+    B9) Add feature to equip HP down/HP up set. This is needed for gear requirements
+        such as on a sorcerous ring or minstrels ring.
+
+    B10) When a gear set is equipped, display the name in the display bar. (Still
+         deciding if this makes sense since a lot of sets are composites.)
+
+    B11) Add optional parameter on /ei so you can designate a specific ring or
+         earring. (Coded gear already supports this. This parameter is needed
+         in case you explicitly use a piece of gear's name.)
+
+    B13) Add command SHOW to track gearset changes. Mostly will be used for debugging.
+         /lac debug currently does something similar.
+
+    B14) Add feature that can track cooldowns
+
+Also:
+
+    - Do a better job of integrating Claustrum
+
+    - Change Offensive Curing to recognize undead via the eco/family identification
+
+    - See if I can support color output to a file. (Maybe support html?)
+
+      Have the routine write pseudo colorization. Pass that line and the file pointer
+      (fptr) to an interpreter. If fptr is null, convert to display the line on the
+      screen. If fptr is not null, convert colorization to html.
+
+Other:
+
+    - visible/invisible on display bar switches works, but for the non-commands I'd
+      have to add a bunch of new commands. Instead, I'm removing the visible/invisible
+      option from the individual commands and moving them to options on the /dbar
+      command.
+
+    - In /rc, colorize Beastmen to purple. Also, yellow is light yellow. See if you
+      can find true yellow
+
+    - Make sure code to load monster eco/family definitions is working correctly.
+      (Maybe load on zoning?)
