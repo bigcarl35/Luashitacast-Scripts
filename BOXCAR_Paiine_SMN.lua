@@ -4,7 +4,7 @@
 	This file contains all the gear sets associated with the SMN job.
 	
 	Gear Sets last updated: February 11, 2026
-	Code update: December 3, 2025
+	Code update: April 33, 2026
 
 	Intended Role: All Levels
 --]]
@@ -111,6 +111,7 @@ local sets = {
 		['GROUP//NOT_TOWN'] = {
 			-- Not in town, here's normal gear
 			['GROUP//KITE'] = {
+				-- I don't have movement gear, so use my evasion set
 				SUBSET = 'Evasion',
 			},
 			['GROUP//NOT_KITE'] = {
@@ -173,28 +174,69 @@ local sets = {
 	and Evasion (ACC and EVA) are applied separately from this set. If you want ACC or EVA gear pieces
 	always equipped when fighting, including them here although SMN are weak fighters.
 
-	Stat priority order:
-		Pet enhancements (if you have a pet), perpetuation cost (if SMN pet), Haste, accuracy, critical
-		hit, etc). Adding stats for the SMN's fighting prowess is kind of pointless since SMNs are lousy
-		fighters, but you might consider focusing on defense.
+	If you're working with a Summoner Pet, what stat is emphasized depends on what the Mode is set to:
 
-	The kiting set needs fleshing out
+	Mode:PERP
+		Stat priority order:
+			Perpetuation cost, Pet enhancement, Haste, accuracy, critical hit, etc. Adding stats for
+			the SMN's fighting prowess is kind of pointless since SMNs are lousy fighters, but you
+			might consider defensive gear or enmity down gear.
 
+	Mode:ATTK
+		Stat priority order:
+			Pet attack enhancements, haste, accuracy, critical hit, etc. Perpetuation cost is more
+			of an addendum, something to fill in open slots with. Like with Mode:PERP,  SMN's are
+			lousy fighters, so maybe defensive gear or enmity down gear to round out the set.
+
+	Mode:ENMM
+		Stat priority order:
+			With the rebase and the sharing on enmity with your avatar, an option where your pet
+			doesn't generate as much enmity is a valid approach. Enmity down for your avatar,
+			perpetuation cost, and then gear that improves the damage your pet can do. Round it
+			out with player defensive gear if needed.
+
+	Kiting should be about movement gear followed by defensive, and perpetuation costs. I unfortunately
+	do not have much of those types of gear, so I have emphasized evasion gear. It works, but is not
+	ideal.
+
+	You might notice the lack of weapon specified. By default Luashitacast auto equips (unless you
+	indicate otherwise) the appropriate elemental staff for the action. Currently there's no way
+	to specify "equip this weapon if that avatar is out". Disabling the auto equips means you have to
+	explicitly define each case.
 --]]
 
 	['TP'] = {
-		SUBSET = 'Default',
+		SUBSET = 'rTP_Backdrop',
 		['GROUP//KITE'] = {
 			SUBSET = 'Evasion',
 		},
 		['GROUP//NOT_KITE'] = {
 			['GROUP//SMN:PET'] = {			-- has a SMN pet
-				Head  = { 'Smn. Horn +1//SMN_PETMW', 'Shep. Bonnet//PETF' },
+				Neck  = { 'Rep.Gold Medal//NOT_OWN','Uggalepih Pendant//TIME:NIGHTTIME', 'Fenrir\'s Torque//TIME:DAYTIME', 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
 				Ears  = { 'Bat Earring//BLINDED//NOT_PETF', 'Beastly Earring//PETF', 'Loquac. Earring', 'Coral Earring//DT:MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
-				Body  = { 'Summoner\'s Dblt.//SMN:PETMD', 'Yinyang Robe', 'Vermillion Cloak' },
-				Hands = { 'Carbuncle Mitts//PETNAME:Carbuncle', 'Nashira Gages' },
-				Legs  = { 'Evk. Spats +1', 'Shep. Hose' },
-				Feet  = { 'Summoner\'s Pgch.', 'Evk. Pigaches +1', 'Mannequin Pumps', 'Waders' },
+				Back  = { 'Blue Cape', 'Fed. Army Mantle', 'White Cape' },
+				Waist = { 'Hierarch Belt', 'Powerful Rope','Friar\'s Rope' },
+				Rings = { 'Evoker\'s Ring', 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
+				['GROUP//MODE:PERP'] = {	-- Emphasis on lowering perpetuation cost
+					Head  = 'Smn. Horn +1//SMN:PETMW', 									-- -3 perp if matches weather
+					Body  = { 'Summoner\'s Dblt.//SMN:PETMD', 'Austere Robe' },			-- -3 perp if pet's element matches day, -1 perp
+					Hands = { 'Carbuncle Mitts//PETNAME:Carbuncle', 'Nashira Gages' },	-- halves perp cost of carbuncle, -1 perp
+					Feet  = 'Evk. Pigaches +1',											-- -1 perp
+				},
+				['GROUP//MODE:ATTK'] = {	-- Emphasis on Attack
+					Head  = { 'Shep. Bonnet//PETF', 'Nashira Turban', 'Austere Hat' },	-- +5 pet accuracy, +5 MAcc/-5 Enmity/+2% Haste, +2 smn magic skill/-2 BP delay
+					Body  = 'Summoner\'s Dblt.',										-- +3% per crit rate/-3 BP delay/-3 perpetuation on matching days
+					Hands = { 'Smn. Bracers +1', 'Nashira Gages', 'Shep. Bracers' },	-- Enhanced pet accuracy/+12 smn magic skill/
+					Legs  = { 'Evk. Spats +1', 'Shep. Hose' },
+					Feet  = 'Summoner\'s Pgch.',
+				},
+				['GROUP//MODE:ENMM'] = {	-- Emphasis on Enmity Minus for avatar and summoner
+					Head  = { 'Nashira Turban', 'Evoker\'s Horn' },						-- -5 enmity, -3 pet enmity
+					Body  = 'Evoker\'s Doublet',										-- -2 pet enmity
+					Hands = { 'Nashira Gages', 'Evoker\'s Bracers' },					-- -4 enmity, -2 pet enmity
+					Legs  = { 'Hydra Brais', 'Evk. Spats +1' },							-- -6 enmity, -2 pet enmity
+					Feet  = { 'Evk. Pigaches +1', 'Evoker\'s Boots' },					-- -4 pet enmity, -2 enmity
+				},
 			},
 			['GROUP//NOT_SMN:PET'] = {		-- has to be a charmed BST pet or PUP pet that can only do maneauvers
 				Head  = 'Shep. Bonnet//PETF',
@@ -205,7 +247,7 @@ local sets = {
 				Feet  = { 'Mannequin Pumps', 'Waders' },
 			},
 			['GROUP//NOT_PET'] = {		-- Emergency, no pet! Equip defense/evasion gear
-				Main  = 'Terra\'s Staff',																-- -20% Physical damage
+				Main  = 'Terra\'s Staff',															-- -20% Physical damage
 				Ammo  = 'Hedgehog Bomb',															-- -1 Enmity
 				Head  = { 'Smn. Horn +1', 'Austere Hat', 'Shep. Bonnet' },							-- Def: 19/13/7..+4 HP
 				Neck  = { 'Promise Badge', 'Justice Badge' },										-- Def: 3..+10 HP/1
@@ -219,6 +261,23 @@ local sets = {
 				Feet  = { 'Dance Shoes', 'Creek F Clomps', 'Mannequin Pumps', 'Waders' }			-- Def: 13..+6 Eva..-1 VIT/9..+35 HP..+4 VIT/6/2
 			},
 		},
+	},
+
+--[[
+	Looking a the rTP_Backdrp reference set, you may be wondering why I didn't just copy this section into the beginning of the
+	TP set. I didn't do that because the results would have been different because of how a gear set is processed: first subsets
+	are processed, then groups, and lastly individual slots. rTP_Backdrop is just a copy of the Karma version of my TP gear set,
+	reformatted to conform to Boxcar's standards. It's the groundwork I want in place so that if any "holes" exist in the TP
+	definition, something appropriate will be there to bleed through.
+--]]
+	['rTP_Backdrp'] = {
+		SUBSET =  'Default',
+		Head  = { 'Smn. Horn +1//SMNPETMW', 'Shep. Bonnet//PETF' },
+		Ears  = { 'Bat Earring//BLINDED//PETNF', 'Loquac. Earring', 'Beastly Earring//PETF', 'Coral Earring//DT_MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
+		Body  = { 'Summoner\'s Dblt.//SMNPETMD', 'Yinyang Robe', 'Vermillion Cloak' },
+		Hands = { 'Carbuncle Mitts//CARBY', 'Nashira Gages//SMNPET' },
+		Legs  = 'Evk. Spats +1',
+		Feet  = { 'Summoner\'s Pgch.', 'Evk. Pigaches +1', 'Mannequin Pumps', 'Waders' },
 	},
 
 --[[
@@ -418,77 +477,6 @@ local sets = {
     },
 
 --[[
-	***************
-	* Blood Pacts *
-	***************
-
-	Blood pacts go through a simulated process that mimics spell casting. The precast
-	happens when the blood pact is invoked (either rage or ward), loading the 'PreBP'
-	gear set. You want gear that has Blood Pact Ability Delay, Blood Pact Recast
-	abilities, or Summoning Skill defined here.
-
-	Note: Blood Pact Delay has a cap of -15
---]]
-
-	['PreBP'] = {
-		SUBSET = 'rSummoning_Magic_Skill',
-		Head   = { 'Smn. Horn +1', 'Austere Hat' },								-- BP ability delay -3
-		Body   = { 'Yinyang Robe', 'Summoner\'s Dblt.', 'Austere Robe' },		-- BP ability delay: -5/-3/-3
-		Hands  = 'Smn. Bracers +1',												-- BP ability delay -2
-		Legs   = 'Summoner\'s Spats',											-- BP ability delay -2
-		Feet   = 'Summoner\'s Pgch.',											-- BP ability delay -2
-	},
-
---[[
-	The midcast for Blood pacts are divided by type: physical, magical, summoning
-	skill, accuracy, and hybrid. The 'MidBP' gear set encapsulates all those types
-	through the	use of groups.
-
-	Listed below are the criteria for each BP type:
-	SMN_BP_PHYS (Physical)
-		Pet attack, pet accuracy, pet critical hit, and blood pact physical damage
-	SMN_BP_MAG (Magical)
-		Pet magic attack burst, pet magical attack, pet magical accuracy, and
-		blood pact magical damage
-	SMN_BP_SKILL (Skill)
-		Summoning skill
-	SMN_BP_ACC (Accuracy)
-		Pet accuracy, pet magic accuracy
-	SMN_BP_HYBRID (Hybrid)
-		2x physical attacks and 1x magical, see SMN_BP_PHYS and SMN_BP_MAG for details
---]]
-
-	['MidBP'] = {
-		SUBSET = 'rSummoning_Magic_Skill',
-		['GROUP//SMN:BP:PHYS'] = {
-			Head   = 'Shep. Bonnet',			-- Pet: +5 Acc
-			Ears   = 'Beastly Earring',			-- Pet: +10 Acc
-			Body   = 'Summoner\'s Dblt.',		-- Avatar: +3% Crit Rate
-			Hands  = 'Smn. Bracers +1',			-- Avatar: Enhances Acc
-			Legs   = 'Evk. Spats +1',			-- Avatar: Enhances Acc
-			Feet   = 'Summoner\'s Pgch.',		-- Avatar: Enhances Att
-		},
-		['GROUP//SMN:BP:MAG'] = {
-			Head   = 'Shep. Bonnet',			-- Pet: +3 Macc
-		},
-		['GROUP//SMN:BP:SKILL'] = {
-		},
-		['GROUP//SMN:BP:ACC'] = {
-			Head  = 'Shep. Bonnet',				-- Pet: +5 Acc/+3 Macc
-			Ears  = 'Beastly Earring',			-- Pet: +10 Acc
-			Hands = 'Smn. Bracers +1',			-- Avatar: Enhances Acc
-			Legs  = 'Evk. Spats +1',			-- Avatar: Enhances Acc
-		},
-		['GROUP//SMN:BP:HYBRID'] = {
-			Head  = 'Shep. Bonnet',				-- Pet: +5 Acc/+3 Macc
-			Ears  = 'Beastly Earring',			-- Pet: +10 Acc
-			Body  = 'Summoner\'s Dblt.',		-- Avatar: 3% Crit Rating
-			Legs  = 'Evk. Spats +1',			-- Avatar: Enhances Acc
-			Feet  = 'Summoner\'s Pgch.',		-- Avatar: Enhances Att
-		},
-	},
-
---[[
 	*************************
 	* Spell Casting Subsets *
 	*************************
@@ -557,7 +545,7 @@ local sets = {
 		Ears  = 'Geist Earring',											-- +1 MND
 		Body  = { 'Errant Hpl.', 'Evoker\'s Doublet', 'Wonder Kaftan', 'Baron\'s Saio' },	-- +10/3/1/1 MND
 		Hands = 'Baron\'s Cuffs',											-- +1 MND
-		Rings = { 'Tamas Ring', 'Kshama Ring No.9', 'Tranquility Ring' },	-- +5/3/2 MND
+		Rings = { 'Tamas Ring', 'Kshama Ring No.9' },						-- +5/3/2 MND
 		Back  = 'White Cape',												-- +2 MND
 		Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt', 'Friar\'s Rope' },	-- +5/1/1 MND
 		Legs  = { 'Errant Slops', 'Summoner\'s Spats', 'Wonder Braccae' },	-- +7/3/2 MND
@@ -671,6 +659,7 @@ local sets = {
 
 	-- rHealing_Magic_Skill specifies gear that boosts Healing Magic Skill
 	['rHealing_Magic_Skill'] = {
+		Back = 'Altruistic Cape'		-- +5 Healing Magic Skill
 	},
 	
 --[[	
@@ -706,17 +695,38 @@ local sets = {
 	Once the "CuringMagic" set is equipped, the midcast routine will
 	also check to see if you have an Apollo/Light staff for it's Cure 
 	Potency.
+
+	Note: As a smn I have very little healing magic skill, so
+	what stat to emphasis needs to be decided upon individually
+	amongst healing	magic, MND and VIT. Using the above equation,
+	since MND is 3x times, let's use 3 as the base score.
+
+		1 MND == 5 healing magic skill == 3 VIT
+
+	Consider this ratio when deciding what piece should be equipped.
+
+	Also note that none of the pieces in this set have cure potency.
+	The use of a light/apollo staff and/or elemental obi's will be
+	done separately from this set. If in the future I get a piece
+	with cure potency, the question will be whether I meet the cap on
+	the power rating. Remember that healing magic, mnd and vit are
+	only used to determine if you meet the cap of a spell. Cure potency
+	is an additional affect that adds to the spell's potential amount
+	cured.
 --]]	
 	
 	['CuringMagic'] = {
-		SUBSET  = {
-			[1] = 'rHealing_Magic_Skill',
-			[2] = 'rMND'
-		},
-		Ammo   = 'Enmity_Minus::Ammo',
-		Hands  = 'Evoker\'s Bracers',	-- +4 VIT
-		Legs   = 'Shep. Hose//EMPTY',	-- +2 VIT
-		Feet   = 'Creek F Clomps//IF:Seer\'s Pumps',	-- +4 VIT
+		Ammo  = 'Hedgehog Bomb',							-- -1 emnity
+		Head  = 'Nashira Turban',							-- -5 emnity
+		Neck  = { 'Promise Badge', 'Justice Badge' },		-- +5/3 MND
+		Ears  = 'Geist Earring',							-- +1 MND
+		Body  = { 'Errant Hpl.', 'Evoker\'s Doublet', 'Wonder Kaftan', 'Baron\'s Saio' },	-- +10/3/1/1 MND
+		Hands = { 'Evoker\'s Bracers', 'Baron\'s Cuffs' },	-- +4 VIT, +1 MND
+		Rings = { 'Tamas Ring', 'Kshama Ring No.9','Kshama Ring No.4' },					-- +5/3 MND, 3 VIT
+		Back  = { 'White Cape', 'Altruistic Cape' },		-- +2 MND, +5 Healing Magic Skill
+		Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt', 'Friar\'s Rope' },	-- +5 MND, 1 MND/1 VIT, 1 MND
+		Legs  = { 'Errant Slops', 'Summoner\'s Spats', 'Wonder Braccae', 'Shep. Hose' },	-- +7/3/2 MND, 2 VIT
+		Feet  = { 'Rostrum Pumps', 'Mannequin Pumps', 'Creek F Clomps', 'Seer\'s Pumps' }, 	-- +3/2 MND, 4 VIT, 1 MND
 	},	
 	
 --[[
@@ -729,13 +739,17 @@ local sets = {
 	proc rate of the day's element/weather matching. Also, like normal
 	curing 	magic, an Apollo/Light staff will be check for,	but not for
 	the cure potency. Rather, for magic affinity.
+
+	Note: I'm including CuringMagic as a subset since it does not contain
+	any cure potency. If in the future this changes, this set should then
+	be changed to be explicitly defined since cure potency has no effect
+	on offensive curing.
 --]]
 
 	['OffensiveCuring'] = {
 		SUBSET = {
-			[1] = 'rHealing_Magic_Skill',
-			[2] = 'rMND',
-			[3] = 'rMAB',
+			[1] = 'CuringMagic',
+			[2] = 'rMAB',
 		},
 	},
 
@@ -746,7 +760,7 @@ local sets = {
 --]]
 
 	['HealingMagic'] = {
-		SUBSET = 'Healing_Magic_Skill',
+		SUBSET = 'rHealing_Magic_Skill',
 	},
 	
 --[[
@@ -1005,13 +1019,15 @@ local sets = {
 --]]
 
 	-- rSummoning_Magic_Skill specifies gear that boosts Summoning Magic Skill
+	-- Note: The slot names were bracketed for consistency. Only the "body" slot
+	-- name had to be bracketed.
 	['rSummoning_Magic_Skill'] = {
-		Head  = { 'Evoker\'s Horn',	'Austere Hat' },	-- +5/2 Summoning Skill
-		Neck  = 'Smn. Torque',							-- +7 Summoning Magic Skill
-		Body  = { 'Summoner\'s Dblt.', 'Austere Robe'}, -- Ensures that a V.Cloak not equipped since we want the head gear, Aus Robe: BP delay -3
-		Hands = 'Smn. Bracers +1',						-- +12 Summoning Skill
-		Rings = 'Evoker\'s Ring',						-- +10 Summoning Skill
-		Feet  = 'Nashira Crackows',						-- +5 Summoning Magic Skill
+		['Head']  = { 'Evoker\'s Horn',	'Austere Hat' },	-- +5/2 Summoning Skill
+		['Neck']  = 'Smn. Torque',							-- +7 Summoning Magic Skill
+		['Body//IF:Vermillion Cloak'] = { 'Summoner\'s Dblt.', 'Austere Robe'},		-- Conditional removes the V.Cloak so a head will be equipped
+		['Hands'] = 'Smn. Bracers +1',						-- +12 Summoning Skill
+		['Rings'] = 'Evoker\'s Ring',						-- +10 Summoning Skill
+		['Feet']  = 'Nashira Crackows',						-- +5 Summoning Magic Skill
 	},
 	
 --[[
@@ -1027,8 +1043,95 @@ local sets = {
 
 	['Summoning'] = {
 		SUBSET = 'rSummoning_Magic_Skill',
-		Hands = { 'Carbuncle\'s Cuffs//SMN:AVATAR', 'Carbuncle\'s Cuffs//SPIRIT:ES' },	-- Summoning magic casting time -1x2
+		Hands  = 'Carbuncle\'s Cuffs//SMN:PET',		-- Summoning magic casting time -1, works for both avatars and spirits
 		Feet   = 'Evoker\'s Boots'					-- Summoning magic casting time -1
+	},
+
+--[[
+	***************
+	* Blood Pacts *
+	***************
+
+	Blood pacts go through a simulated process that mimics spell casting. The precast
+	happens when the blood pact is invoked (either rage or ward), loading the 'PreBP'
+	gear set. You want gear that has Blood Pact Ability Delay, Blood Pact Recast
+	abilities, or Summoning Skill defined here.
+
+	Note: Blood Pact Delay has a cap of -15
+
+--]]
+
+	['PreBP'] = {
+		SUBSET = 'rSummoning_Magic_Skill',
+		Head   = { 'Smn. Horn +1', 'Evoker\'s Horn', 'Austere Hat' },			-- BP ability delay -3,
+		Body   = { 'Yinyang Robe', 'Summoner\'s Dblt.', 'Austere Robe' },		-- BP ability delay: -5/-3/-3
+		Hands  = 'Smn. Bracers +1',												-- BP ability delay -2
+		Legs   = 'Summoner\'s Spats',											-- BP ability delay -2
+		Feet   = 'Summoner\'s Pgch.',											-- BP ability delay -2
+	},
+
+--[[
+	The midcast for Blood pacts are divided by type: physical, magical, summoning
+	skill, accuracy, and hybrid. The 'MidBP' gear set, encapsulates all those types
+	through the	use of groups.
+
+	Listed below are the criteria for each BP type:
+	SMN_BP_PHYS (Physical)
+		Pet attack, pet accuracy, pet critical hit, and blood pact physical damage
+	SMN_BP_MAG (Magical)
+		Pet magic attack burst, pet magical attack, pet magical accuracy, and
+		blood pact magical damage
+	SMN_BP_SKILL (Skill)
+		Summoning skill
+	SMN_BP_ACC (Accuracy)
+		Pet accuracy, pet magic accuracy
+	SMN_BP_HYBRID (Hybrid)
+		2x physical attacks and 1x magical, see SMN_BP_PHYS and SMN_BP_MAG for details
+
+	Summoning Magic Skill when above cap affects the accuracy and magic accuracy of the
+	avatar's blood pact. Cap at level 75 is 269.
+--]]
+
+	['MidBP'] = {
+		SUBSET = 'rSummoning_Magic_Skill',
+		['GROUP//SMN:BP:PHYS'] = {
+			Head   = 'Shep. Bonnet',							-- +5 pet accuracy
+			Ears   = 'Beastly Earring',							-- +10 pet accuracy
+			Body   = 'Summoner\'s Dblt.',						-- +3% pet crit rate
+			Hands  = 'Smn. Bracers +1',							-- enhances pet accuracy/+12 summoning skill
+			Legs   = 'Evk. Spats +1',							-- enhances pet accuracy
+			Feet   = 'Summoner\'s Pgch.',						-- enhances pet attack
+		},
+		['GROUP//SMN:BP:MAG'] = {
+			['Head']  = { 'Shep. Bonnet', 'Evoker\'s Horn', 'Austere Hat' },		-- +3 pet macc, +5/2 Summoning Skill
+			['Neck']  = 'Smn. Torque',												-- +7 Summoning Magic Skill
+			['Body//IF:Vermillion Cloak'] = { 'Summoner\'s Dblt.', 'Austere Robe'}, -- Conditional removes the V.Cloak so a head will be equipped
+			['Hands'] = 'Smn. Bracers +1',						-- +12 Summoning Skill
+			['Rings'] = 'Evoker\'s Ring',						-- +10 Summoning Skill
+			['Feet']  = 'Nashira Crackows',						-- +5 Summoning Magic Skill
+		},
+		['GROUP//SMN:BP:SKILL'] = {
+			SUBSET = 'rSummoning_Magic_Skill',					-- Not necessary to repeat here, but clearer what's happening
+		},
+		['GROUP//SMN:BP:ACC'] = {
+			['Head']  = 'Shep. Bonnet',							-- +5 pet accuracy and +3 pet macc
+			['Neck']  = 'Smn. Torque',							-- +7 summoning magic skill
+			['Ears']  = 'Beastly Earring',						-- +10 pet accuracy
+			['Body//IF:Vermillion Cloak'] = { 'Summoner\'s Dblt.', 'Austere Robe'},		-- Conditional removes the V.Cloak so a head will be equipped
+			['Hands'] = 'Smn. Bracers +1',						-- enhances pet accuracy/+12 summoning skill
+			['Rings'] = 'Evoker\'s Ring',						-- +10 Summoning Skill
+			['Legs']  = 'Evk. Spats +1',						-- enhances pet accuracy
+			['Feet']  = 'Nashira Crackows',						-- +5 Summoning Magic Skill
+		},
+		['GROUP//SMN:BP:HYBRID'] = {
+			Head  = 'Shep. Bonnet',								-- +5 pet accuracy/+3 pet macc
+			Neck  = 'Smn. Torque',								-- +7 Summoning Magic Skill
+			Ears  = 'Beastly Earring',							-- +10 pet accuracy
+			Body  = 'Summoner\'s Dblt.',						-- 3% pet crit rate
+			Hands = 'Smn. Bracers +1',							-- enhances pet accuracy/+12 summoning skill
+			Legs  = 'Evk. Spats +1',							-- enhances pet accuracy
+			Feet  = 'Summoner\'s Pgch.',						-- enhances pet attack
+		},
 	},
 
 --[[
@@ -1697,9 +1800,6 @@ profile.settings = {
 	PlayerCappedLevel = 0;				-- Indicates gear capped level. 0 defaults to current level
 	bAmmo = false;						-- /BST specific. Is ammo equipped?
 	sAmmo = nil;						-- /BST specific. Name of ammo equipped
-	-- Trackers for the regen and refresh caps
-	bCappedRefresh = false;				-- Disables resting refresh gear equip if true
-	bCappedRegen = false;				-- Disables resting regen gear equip if true
 	--*********************************************************************
 	-- From this point forward, all entries can be modified by the player *
 	--*********************************************************************
@@ -1750,8 +1850,8 @@ profile.settings = {
 	-- realizing no gear swapping is occurring because /gc wasn't run.
 	Reminder = {
 		Enabled = true;					-- Should the reminder be enabled?
-		MinBasetime = 15;				-- minimum wait before reminding player to run /gc
-		MaxBasetime = 300;				-- once reminder shown, switch to every 5 minutes
+		MinBasetime = 15;				-- Minimum wait before reminding player to run /gc
+		MaxBasetime = 300;				-- Once reminder shown, switch to every 5 minutes
 		-- bGCReminder indicates if the initial "nag" reminder has been shown. Setting this value to true will
 		-- indicate to Luashitacast that the initial reminder message has occurred and only the brief reminder
 		-- message should be displayed until /gc is run. No good reason to do that, let Luashitacast control
@@ -1759,45 +1859,71 @@ profile.settings = {
 		bGCReminder = false;			-- Has GC reminder been displayed yet?
 	};
 	-- DisplayBar identifies each section displayed in the display bar. The player can indicate if the section should be
-	-- visible and in certain instances, what the setting should initially be set to. Please note though that just because
-	-- a section maybe invisible, it does not mean that the option is not available, it is just not displayed.
+	-- enabled (if associated with a command), visible, and in certain instances, what the setting should initially be set
+	-- to. Please note though that just because a section maybe invisible, it does not mean that the option is not available,
+	-- it is just not displayed. Also note that if a section is disabled, but visible, it will still show up on the display
+	-- bar, but grayed out.
 	DisplayBar = {
-		[gVars._JOB] = { ['visible'] = true },							-- job/subjob display. Visible?
-		[gVars._CAP] = { ['visible'] = true },							-- gear level capped. Visible?
+		[gVars._POS_X] = 325,																-- X coordinate of the display bar
+		[gVars._POS_Y] = 0,																	-- Y coordinate of the display bar
+		[gVars._VISIBLE] = true,															-- Should the display bar be visible
 		--
-		[gVars._GC]  = { ['visible'] = true },							-- gear check. Visible? Setting defined by running /gc
+		[gVars._JOB] = { ['visible'] = true },												-- job/subjob display. Visible?
+		[gVars._CAP] = { ['visible'] = true },												-- gear level capped. Visible?
 		--
-		[gVars._WSWAP]   = { ['visible'] = true,  ['init'] = true },	-- weapon swap. Visible? Initial setting
-		[gVars._KITE]    = { ['visible'] = true,  ['init'] = false },	-- kiting. Visible? Initial setting
-		[gVars._TH]	     = { ['visible'] = false, ['init'] = false },	-- treasure hunter. Visible? Initial setting
-		[gVars._TANK]    = { ['visible'] = false, ['init'] = false },	-- tanking. Visible? Initial setting
-		[gVars._IDLE]    = { ['visible'] = false, ['init'] = true },	-- idle gear. Visible? Initial setting
-		[gVars._EVASION] = { ['visible'] = true,  ['init'] = false },	-- evasion. Visible? Initial setting
-		[gVars._SPF]     = { ['visible'] = true },						-- show pull. Visible?
-		[gVars._GSWAP]   = { ['visible'] = true,  ['init'] = true },	-- gear swapping. Visible? Initial setting
+		[gVars._GC]  = { ['visible'] = true },												-- gear check. Visible?
+		--
+		[gVars._WSWAP]   = { ['visible'] = true,  ['init'] = true },						-- weapon swap. Visible? Initial setting
+		[gVars._KITE]    = { ['visible'] = true,  ['init'] = false },						-- kiting. Visible? Initial setting
+		[gVars._TH]	     = { ['visible'] = false, ['init'] = false },						-- treasure hunter. Visible? Initial setting
+		[gVars._TANK]    = { ['visible'] = false, ['init'] = false },						-- tanking. Visible? Initial setting
+		[gVars._IDLE]    = { ['visible'] = false, ['init'] = true },						-- idle gear. Visible? Initial setting
+		[gVars._EVASION] = { ['visible'] = true,  ['init'] = false },						-- evasion. Visible? Initial setting
+		[gVars._SPF]     = { ['visible'] = true },											-- show pull. Visible?
+		[gVars._GSWAP]   = { ['visible'] = true,  ['init'] = true },						-- gear swapping. Visible? Initial setting
 		-- Magic accuracy is only available to jobs/subjobs that use magic
-		[gVars._MACC]    = { ['visible'] = true,  ['init'] = false },	-- Macc. Visible? Initial setting
-		[gVars._SBP]     = { ['visible'] = true,  ['init'] = true },	-- show blood pact. Visible? Initial setting
+		[gVars._MACC]    = { ['visible'] = true,  ['init'] = false },						-- macc. Visible? Initial setting
+		[gVars._SBP]     = { ['visible'] = true,  ['init'] = true },						-- show blood pact. Visible? Initial setting
 		--
 		-- Mode let's the player define what emphasis gearing should have:
-		-- 		gVars_MODE_PERPETUASetSubjobSetTION - perpetuation cost, gVars_MODE_ATTACK - attack, gVars_MODE_ENMITY_MINUS - enmity minus
+		-- 		gVars_MODE_PERPETUATION - perpetuation cost, gVars_MODE_ATTACK - attack, gVars_MODE_ENMITY_MINUS - enmity minus
 		[gVars._MODE]    = { ['visible'] = true,  ['init'] = gVars._MODE_PERPETUATION },	-- Mode. Visible? Initial setting
-		[gVars._DT]		 = { ['visible'] = true,  ['init'] = gVars._DT_OFF },	-- Damage taken
-		[gVars._REGION]  = { ['visible'] = true },						-- region control. Visible?
+		[gVars._DT]		 = { ['visible'] = true,  ['init'] = gVars._DT_OFF },				-- Damage taken. Visible? Initial setting
+		[gVars._REGION]  = { ['visible'] = true },											-- region control. Visible?
 		--
-		[gVars._ACC]     = { ['visible'] = true },
+		[gVars._ACC]     = { ['visible'] = true },											-- accuracy. Visible?
 		-- racc displays the ranged accuracy stage(s). You can limit the display to only ranged subjobs (rangesj) and all
-		[gVars._RACC]    = { ['visible'] = true, ['init'] = true },		-- ranged accuracy. Visible? Initial setting
+		[gVars._RACC]    = { ['visible'] = true },											-- ranged accuracy. Visible?
 		--
-		[gVars._LOCKS]   = { ['visible'] = true },						-- locks. Visible?
+		[gVars._LOCKS]   = { ['visible'] = true },											-- locks. Visible?
 		--
-		[gVars._DAY]     = { ['visible'] = true },						-- day. Visible?
-		[gVars._TIME]    = { ['visible'] = true },						-- time. Visible?
-		[gVars._MOON]    = { ['visible'] = true },						-- moon phase and percent. Visible?
-		[gVars._WEATHER] = { ['visible'] = true },						-- weather. Visible?
-		[gVars._ZONE]    = { ['visible'] = true },						-- zone name. Visible?
-		[gVars._CC]		 = { ['visible'] = true },						-- conditional codes. Visible?
+		[gVars._DAY]     = { ['visible'] = true },											-- day. Visible?
+		[gVars._TIME]    = { ['visible'] = true },											-- time. Visible?
+		[gVars._MOON]    = { ['visible'] = true },											-- moon phase and percent. Visible?
+		[gVars._WEATHER] = { ['visible'] = true },											-- weather. Visible?
+		[gVars._ZONE]    = { ['visible'] = true },											-- zone name. Visible?
+		[gVars._CC]		 = { ['visible'] = true },											-- conditional codes. Visible?
 	};
+	-- While not implemented yet there are multiple overlays planned for BOXCAR. The following structure
+	-- is just an initial guess of what's needed. The entries are not used yet and when it's implemented
+	-- they might change, but it's worthwhile to include at least a skeleton structure now.
+	Overlays = {
+		-- Lock Grid
+		lockGrid = {
+			[gVars._VISIBLE] = true,		-- Display locks on the equipment grid
+			[gVars._POS_X] = 1000,			-- X coordinate of the equipment grid
+			[gVars._POS_Y] = 400,			-- Y coordinate of the equipment grid
+		},
+		-- Day Cycle
+		dayCycle = {
+			[gVars._VISIBLE] = true,		-- Display day cycle list
+			[gVars._POS_X] = 1000,			-- X coordinate of the day cycle list
+			[gVars._POS_Y] = 400,			-- Y coordinate of the day cycle list
+		},
+	};
+	-- Trackers for the regen and refresh caps
+	bCappedRefresh = false;				-- Disables resting refresh gear equip if true
+	bCappedRegen = false;				-- Disables resting regen gear equip if true
 	-- Should distance be checked when performing a weapon skill?
 	WScheck = true; 	 				-- set to false if you don't want to use the WSdistance safety check
 	WSdistance = 4.7; 	 				-- default max distance (yalms) that a melee weapon skill can reach. 4.7 is the default for Tarutarus
@@ -1823,8 +1949,6 @@ profile.sPetAction = nil;
 	* Code Section *
 	****************
 --]]
-
-
 
 --[[
 	SetSubjobSet sets the appropriate macro page (if wanted) from the current
@@ -1856,7 +1980,7 @@ function SetSubjobSet(chkSJ)
 	AshitaCore:GetChatManager():QueueCommand(1, '/macro set '..tostring(sj));
 	profile.settings.sjb = chkSJ;
 	displaybar.UpdateBarStatic();
-	crossjobs.SetVariables();
+	crossjobs.SetVariables(false);
 end		-- SetSubjobSet
 
 --[[
@@ -1925,6 +2049,8 @@ end
 --]]
 
 function HandlePetAction(PetAction)
+	local sType;
+	local sMsg,sMsg2;
 
 	if PetAction == nil or PetAction.Name == nil then
 		return;
@@ -1933,16 +2059,23 @@ function HandlePetAction(PetAction)
 	if pets.fSummonerPet() == true then
 		-- Since the pet is a smn avatar, give feedback on the blood pact.
 		-- If the action is a BP: rage, print out what happened in party chat
+		if table.find(pets.SmnBPRageList,PetAction.Name) ~= nil then
+			sType = gVars._RAGE;
+		elseif table.find(pets.SmnBPWardList,PetAction.Name) ~= nil then
+			sType = gVars._WARD;
+		else
+			sType = gVars._UNKNOWN;
+		end
+
 		if (profile.sPetAction == nil or profile.sPetAction ~= PetAction.Name) and
 		   utilities.fGetToggle('sBP') == true then
-			local sMsg;
-			if table.find(pets.SmnBPRageList,PetAction.Name) ~= nil then
-				sMsg = '/p  [<pet>] [Blood Pact: ' .. PetAction.Name .. '] >> <t>.';
-			else
- 				sMsg = '/echo [<pet>] [Blood Pact: ' .. PetAction.Name .. ']';
+			if table.find(pets.SmnBPRageList,PetAction.Name) ~= nil or
+			   table.find(pets.SmnBPWardOffenseList,PetAction.Name) ~= nil then
+				sMsg = '/p  [<pet>] [Blood Pact(' .. sType .. '): ' .. PetAction.Name .. '] >> <t>.';
+				AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
 			end
-
-			AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
+			sMsg2 = '/echo [<pet>] [Blood Pact(' .. sType .. '): ' .. PetAction.Name .. ']';
+			AshitaCore:GetChatManager():QueueCommand(-1, sMsg2);
 			profile.sPetAction = PetAction.Name;
 		end
 	end
@@ -2068,7 +2201,7 @@ function profile.HandleDefault()
 
 		-- Add a dark/pluto's staff if refresh wanted
 		if bRefresh == true then
-			local sStave = utilities.fCheckForEleGear('staff','dark');
+			local sStave = gear.fCheckForEleGear('staff','dark');
 			if sStave ~= nil then
 				gear.fSwapToStave(sStave,false,crossjobs.Sets.CurrentGear);
 			end
