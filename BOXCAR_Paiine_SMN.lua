@@ -4,7 +4,7 @@
 	This file contains all the gear sets associated with the SMN job.
 	
 	Gear Sets last updated: February 11, 2026
-	Code update: April 33, 2026
+	Code update: April 3, 2026
 
 	Intended Role: All Levels
 --]]
@@ -270,7 +270,7 @@ local sets = {
 	reformatted to conform to Boxcar's standards. It's the groundwork I want in place so that if any "holes" exist in the TP
 	definition, something appropriate will be there to bleed through.
 --]]
-	['rTP_Backdrp'] = {
+	['rTP_Backdrop'] = {
 		SUBSET =  'Default',
 		Head  = { 'Smn. Horn +1//SMNPETMW', 'Shep. Bonnet//PETF' },
 		Ears  = { 'Bat Earring//BLINDED//PETNF', 'Loquac. Earring', 'Beastly Earring//PETF', 'Coral Earring//DT_MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
@@ -524,7 +524,7 @@ local sets = {
 		Body   = 'Yinyang Robe//IF:Errant Hpl.',				-- filler, voids -7 AGI
 		Rings  = 'Kshama Ring No.3',							-- +3 AGI
 		Back   = 'Fed. Army Mantle',							-- +2 AGI
-		Waist  = 'Mrc.Cpt. Belt',								-- +1 AGI
+		Waist  = 'Mrc.Cpt. Belt',								-- +1 AGIhttps://tonypolecastro.com/home/
 		Legs   = 'Evk. Spats +1//IF:Errant Slops',				-- filler, voids -5 AGI
 	},
 
@@ -1668,11 +1668,11 @@ local sets = {
 --[[
 	The following are your main job (summoner) abilities. Unlike sub job abilities, this section
 	will explicitly list all of your abilities. Please note that all abilities will be prefixed
-	with an 'A_'. This is to ensure there's no conflict with any other predefined gear set (this
+	with a 'JA_'. This is to ensure there's no conflict with any other predefined gear set (this
 	is a bigger issue with subjob abilities than with main jobs.)
 --]]
 
-	['A_Astral_Flow'] = {
+	['JA_Astral_Flow'] = {
 	},
 
 --[[
@@ -1688,40 +1688,40 @@ local sets = {
 --]]
 
 	--* /BST *--
-	['A_Charm'] = {				-- charm skill, CHR gear
+	['JA_Charm'] = {				-- charm skill, CHR gear
 		SUBSET = 'rCHR',
 		Main   = 'Pluto\'s Staff',					-- +2 CHR
     },
 
-	['A_Gauge'] = {
+	['JA_Gauge'] = {
 		SUBSET = 'rCHR',
 	},
 
 	-- Reward potency, reward augment, reward enhancement, and MND gear
-	['A_Reward'] = {
+	['JA_Reward'] = {
 		SUBSET = 'rMND',
 		Main = 'Neptune\'s Staff',			-- +5 MND
 	},
 
 	-- Tame success rate. Resistence depends on your INT vs target's INT
-	['A_Tame'] = {
+	['JA_Tame'] = {
 		SUBSET = 'rINT',
 		Main = 'Aquilo\'s Staff',			-- +5 INT
 	},
 
 	--* /THF *--
 	-- if only Sneak Attack is enabled, the following will be equipped
-	['A_Sneak_Attack'] = {
+	['JA_Sneak_Attack'] = {
 		SUBSET = 'rDEX',
 	},
 
 	-- If only Trick Attack is enabled, the following will be equipped
-	['A_Trick_Attack'] = {
+	['JA_Trick_Attack'] = {
 		SUBSET = 'rAGI',
 	},
 
 	-- When both Sneak Attack and Trick Attack are enabled, the following will be equipped
-	['A_SATA'] = {
+	['JA_SATA'] = {
 		Head  = 'Empress Hairpin',							-- +3 DEX/+3 AGI
 		Neck  = 'Spike Necklace',							-- +3 DEX
 		Ears  = { 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
@@ -1732,13 +1732,13 @@ local sets = {
 	-- It's questionable if any gear provides Treasure Hunter that can be equipped by a
 	-- non-THF, but just in case... (Some folks believe that the Tinfoil Hat provides
 	-- TH to non-THF's)
-	['A_TH'] = {
+	['JA_TH'] = {
 	},
 
 --[[
-	Pet commands can also be made into a gear set. Unlike abilities with an 'A:' prefix,
-	pet commands use the 'PC:' prefix. By default the pet commands  most likely to
-	have gear associated with then ()(except for blood pacts) are predefined for: BST,
+	Pet commands can also be made into a gear set. Unlike abilities with an 'JA_' prefix,
+	pet commands use the 'PET_' prefix. By default the pet commands most likely to
+	have gear associated with then (except for blood pacts) are predefined for: BST,
 	DRG and SMN.
 
 	Note: commands like BST's SIC and READY and SMN's Blood Pact actually are identified
@@ -1747,18 +1747,18 @@ local sets = {
 	type. Blood pacts are handled separately by PreBP and MidBP, so not included here.
 --]]
 
-	['PC_Assault'] = {
+	['PET_Assault'] = {
 	},
 
 	--* /BST *--
-	['PC_Reward'] = {
+	['PET_Reward'] = {
 	},
 
-	['PC_Fight'] = {
+	['PET_Fight'] = {
 	},
 
 	-- This structure is for the Sic and Ready command, by skill type
-	['PC_Sic_Ready'] = {
+	['PET_Sic_Ready'] = {
 		['GROUP//BST:PET_ATTACK'] = {
 		},
 		['GROUP//BST:PET_MATT'] = {
@@ -1795,14 +1795,17 @@ gVars = gFunc.LoadFile('common\\gVars.lua');
 -- populated by Luashitacast. The second section contains settings the player can modify.
 profile.settings = {
 	-- This first section is controlled by Luashitacast. Please do not modify any entries here
+	--####################################
+	--# DO NOT MODIFY THIS FIRST SECTION #
+	--####################################
 	sjb = nil;							-- Tracks subjob name
 	sPetAction = nil;					-- What was the last action by your avatar
 	PlayerCappedLevel = 0;				-- Indicates gear capped level. 0 defaults to current level
 	bAmmo = false;						-- /BST specific. Is ammo equipped?
 	sAmmo = nil;						-- /BST specific. Name of ammo equipped
-	--*********************************************************************
-	-- From this point forward, all entries can be modified by the player *
-	--*********************************************************************
+	--###########################################################
+	--# THE ENTRIES BELOW THIS AREA IS MODIFIABLE BY THE PLAYER #
+	--###########################################################
 	defaultSpirit = 'Light Spirit',		-- for /911, what default spirit should be used
 	defaultPetFood = nil;				-- What (if any) pet food to use when Reward processed
 	-- Order of operations:
@@ -1816,7 +1819,7 @@ profile.settings = {
 	postGSWeaponSkill = { [1] = 'Acc', [2] = 'eGorget', [3] = 'eObi' };
 	-- Priority settings define process of supplimental orders after gear set processing
 	bPriorityRefresh = true;			-- Priority setting. If true, Refresh over Regen. False inverts
-	bLockAllOnGS = false;				-- Lock all slots when a gear set is equipped. Most useful on craft and gathering sets
+	bLockAllOnGS = false;				-- Lock ALL slots when a gear set is equipped. Most useful on craft and gathering sets
 	bAutoStaveSwapping = true;			-- Indicates if elemental stave swapping should occur automatically
 	bConfirmation = true;				-- Should confirmation be displayed? Note: some actions give feedback regardless of setting
 	-- Override settings are used to indicate the order sets are processed. It's recommended to leave these
@@ -2171,7 +2174,7 @@ function profile.HandleDefault()
 		end
 		-- TH (if enabled) is always loaded last
 		if utilities.fGetToggle('TH') == true and profile.settings.EmbedOnly.TH == false then
-			gear.MoveToDynamicGS(profile.Sets.A_TH,crossjobs.Sets.CurrentGear,false,'TH');
+			gear.MoveToDynamicGS(profile.Sets.JA_TH,crossjobs.Sets.CurrentGear,false,'TH');
 		end
 	elseif player.Status == 'Resting' then	
 		local bRefresh = false;
