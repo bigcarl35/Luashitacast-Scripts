@@ -40,6 +40,7 @@ local utilities = {};
             fCheckWSBailout         Determines range to target would fail Weapon Skill
             fFormattedWord          Capitalization routine for passed in word
             fGetAllGearSetNames     Creates and returns a list of all gear sets
+            fGetCCDescription       Returns the question associated with the passed code
             fGetLevel               Determines gear level cap for player
             fGetMobType             Determines if the target is of the passed type
             fGetRoot                Retrieves the "base" of the passed in spell/song
@@ -1811,5 +1812,27 @@ function utilities.fIsGearsetDetailsFound(gRec,gsRec)
 
     return false;
 end     -- utilities.fIsGearsetDetailsFound
+
+--[[
+    fGetCCDescription takes the passed custom conditional code and returns the associated question
+
+    Parameter:
+        ccc     Custom conditional code
+
+    Returned:
+        Associated question for the passed code
+--]]
+
+function utilities.fGetCCDescription(ccc)
+    local uc = string.upper(ccc);
+
+    for i=1,#gProfile.CustomConditionals,1 do
+        if uc == gProfile.CustomConditionals[i]['code'] then
+            return gProfile.CustomConditionals[i]['question'];
+        end
+    end
+
+    return('Not found');
+end     -- utilities.fGetCCDescription
 
 return utilities;

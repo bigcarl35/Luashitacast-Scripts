@@ -501,7 +501,7 @@ function ProcessCC(args)
 				local us = string.upper(args[1]);
 				utilities.AdvanceToggle(us);
 				if gProfile.settings.bConfirmation == true then
-					print(chat.message('Info: /' .. us .. ' is set to ' .. tostring(utilities.fGetToggle(us))));
+					print(chat.message('Info: /' .. us .. ', ' .. utilities.fGetCCDescription(us) .. ', is set to ' .. tostring(utilities.fGetToggle(us))));
 				end
 			end
 		end
