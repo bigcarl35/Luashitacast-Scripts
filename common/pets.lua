@@ -138,9 +138,9 @@ function pets.HandlePetAction(PetAction)
     if table.find(pets.BstPetAttack,PetAction.Name) ~= nil or
        table.find(pets.BstPetMagicalAccuracy,PetAction.Name) ~= nil or
        table.find(pets.BstPetMagicalAttack,PetAction.Name) ~= nil then
-        sn = utilities.fGetTableByName('PC_Sic_Ready');
+        sn = utilities.fGetTableByName('PET_Sic_Ready');
         if sn ~= nil then
-            gear.MoveToDynamicGS(sn,crossjobs.Sets.CurrentGear,false,'PC_Sic_Ready');
+            gear.MoveToDynamicGS(sn,crossjobs.Sets.CurrentGear,false,'PET_Sic_Ready');
         end
     -- Next, SMN Blood pacts
     elseif table.find(pets.SmnBPSkill,PetAction.Name) ~= nil or
@@ -153,9 +153,9 @@ function pets.HandlePetAction(PetAction)
         -- And DRG's Steady Wing'
         if PetAction.Name == 'Steady Wing' then
             -- And DRG's Steady Wing'
-            sn = utilities.fGetTableByName('PC_Steady_Wing');
+            sn = utilities.fGetTableByName('PET_Steady_Wing');
             if sn ~= nil then
-                gear.MoveToDynamicGS(sn,crossjobs.Sets.CurrentGear,false,'PC_Steady_Wing');
+                gear.MoveToDynamicGS(sn,crossjobs.Sets.CurrentGear,false,'PET_Steady_Wing');
             end
         else
             -- This has to be a breath attack
@@ -163,7 +163,7 @@ function pets.HandlePetAction(PetAction)
         end
     -- Lastly, any other leftover commands
     else
-        local sName = 'PC' .. string.gsub(PetAction.Name,' ','_');
+        local sName = 'PET_' .. string.gsub(PetAction.Name,' ','_');
         sn = utilities.fGetTableByName(sName);
         if sn ~= nil then
             gear.MoveToDynamicGS(sn,crossjobs.Sets.CurrentGear,false,sName);

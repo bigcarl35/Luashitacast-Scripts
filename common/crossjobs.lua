@@ -944,10 +944,10 @@ function crossjobs.HandleAbility()
 			if gProfile.settings.sAmmo == nil or string.find(string.lower(gProfile.settings.sAmmo),'pet f') == nil then		-- something else equipped
 				gProfile.settings.bAmmo = pets.PetReward(gProfile.settings.defaultPetFood,'max');
 			end
-			n = 'A_Reward';
+			n = 'JA_Reward';
 		elseif string.find('Sic,Ready',ability.Name) ~= nil then
 			-- Sic and Ready load the same set
-			n = 'A_Sic_Ready';
+			n = 'JA_Sic_Ready';
 		elseif string.match(ability.name, 'Call Beast') then
 			-- see if there's already a jug in the ammo slot
 			if utilities.fGetToggle(gVars._AJUG) == true then
@@ -965,9 +965,9 @@ function crossjobs.HandleAbility()
 					end
 				end
 			end
-			n = 'A_Call_Beast';
+			n = 'JA_Call_Beast';
 		else
-			n = 'A_' .. string.gsub(ability.Name,' ','_');
+			n = 'JA_' .. string.gsub(ability.Name,' ','_');
 		end
 
 		if n ~= nil then
@@ -975,7 +975,7 @@ function crossjobs.HandleAbility()
 			if ts ~= nil then
 				gear.MoveToDynamicGS(ts,crossjobs.Sets.CurrentGear,false,n);
 				-- Special case on Charm. Check for "light" staff
-				if n == 'A_Charm' then
+				if n == 'JA_Charm' then
 					local sStave = gear.fCheckForEleGear('staff','light');
 					if sStave ~= nil then
 						gear.fSwapToStave(sStave,false,crossjobs.Sets.CurrentGear);
@@ -994,10 +994,10 @@ function crossjobs.HandleAbility()
 	if bFound == false then
 		if string.find(pets._PetCommands,string.upper(ability.Name)) ~= nil then
 			-- Assume it's a pet command
-			n = 'PC_' .. string.gsub(ability.Name,' ','_');
+			n = 'PET_' .. string.gsub(ability.Name,' ','_');
 		else
 			-- Assume it's an ability
-			n = 'A_' .. string.gsub(ability.Name,' ','_');
+			n = 'JA_' .. string.gsub(ability.Name,' ','_');
 		end
 
 		ts = utilities.fGetTableByName(n);
