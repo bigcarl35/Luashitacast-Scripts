@@ -1940,8 +1940,8 @@ profile.settings = {
 
 -- Table of custom conditionals
 profile.CustomConditionals = {
-	[1] = { ['code'] = 'CC1', ['question'] = 'Is minus fire resistance an issue', ['init'] = false },
-	[2] = { ['code'] = 'CC2', ['question'] = 'Should optional gear be included', ['init'] = false },
+	[1] = { ['code'] = 'CC1', ['question'] = 'Is minus fire resistance an issue?', ['init'] = false },
+	[2] = { ['code'] = 'CC2', ['question'] = 'Should optional gear be included?', ['init'] = false },
 };
 
 -- Tracked pet action
