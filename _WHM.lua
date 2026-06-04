@@ -1179,7 +1179,7 @@ local sets = {
 		Hands = 'Errant Cuffs',								-- +5 INT
 		Rings = { 'Tamas Ring','Kshama Ring No.5','Flame Ring' },	-- +5/3/2 INT
 		Back = 'Fed. Army Mantle',							-- +2 INT
-		Waist = { 'Penetant\'s Rope','Mrc.Cpt. Belt' },		-- +5/1 INT
+		Waist = { 'Penitent\'s Rope','Mrc.Cpt. Belt' },		-- +5/1 INT
 		Legs  = 'Errant Slops',								-- +7 INT
 		Feet  = { 'Rostrum Pumps','Mannequin Pumps' },		-- +3/1 INT
 	},
