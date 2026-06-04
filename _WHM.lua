@@ -1194,7 +1194,7 @@ local sets = {
 		Subset = {
 			[1] = 'AttackPower'
 		},
-        Neck  = { 'Justice Torque', 'Spike Necklace' },							-- +5/3 STR
+        Neck  = 'Justice Torque', 												-- +5 STR
         Body  = { 'Black Cotehardie', 'Wonder Kaftan' },						-- +3/1 STR
         Hands = { 'Healer\'s Mitts', 'Wonder Mitts' },							-- +3/3 STR
         Rings = { 'Tamas Ring', 'Kshama Ring No.8', 'Kshama Ring No.5' },		-- +5 INT, +3 STR, +3 INT
