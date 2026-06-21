@@ -4,7 +4,7 @@ require 'common'
 
 version = { ['author']	= 'Paiine',
  		    ['name']	= 'Luashitacast (Karma)',
-			['version']	= '1.5.7' };
+			['version']	= '1.5.8' };
 	
 --[[
 	This file contains routines that are used with Luashitacast across any supported job.
