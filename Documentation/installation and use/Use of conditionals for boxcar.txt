@@ -1,0 +1,73 @@
+In the past, where you could use what inline conditional wasn't complicated. For the most part, all inline
+conditionals were pretty much used the same way: on the right side after a piece of gear, but with the
+changes being introduced in BOXCAR, that is not necessarily the case. New flexibility has been added that
+lets you put inline conditionals on slots as well as gear and some inline conditionals are for specific
+types of entries. This documemt lists all of the inline conditionals, where they can be placed, and includes
+any notes that are special in nature.
+
+First, let's diagram position through an example. The left side tends to identify the slots, and the right
+side the prioritized list of gear. Inline conditionals can be on the left side slots, the right side gear
+pieces, or on either side. Further, some conditionals are specific to subsets. Listed below are two gear
+sets representing a normal TP set and a tanking TP set for thief (THF). These are formatted according to
+the current version (KARMA) of luashitacast. Below that is a new version according to what BOXCAR will
+enable you to do.
+
+Current version (Karma):
+
+    ['TP'] = {
+        Subset = {
+            [1] = 'Default'
+        },
+        Head  = { 'Homam Zucchetto', 'Rogue\'s Bonnet', 'Empress Hairpin' },
+        Hands = { 'Homam Manopolas', 'Dusk Gloves' },
+        Waist = { 'Swift Belt', 'Mrc.Cpt. Belt' },
+    },
+
+    ['Tank_TP'] = {
+        Subset = {
+            [1] = 'Tank_Default'
+        },
+        Head  = { 'Asn. Bonnet +1', 'Assassin\'s Bonnet', 'Homam Zucchetto' },
+        Neck  = 'Peacock Amulet',
+        Ears  = { 'Ethereal Earring', 'Stealth Earring//SJNIN', 'Brutal Earring' },
+        Body  = { 'Dragon Harness//DT_BREATH', 'Narasimha\'s Vest', 'Assassin\'s Vest', 'Scorpion Harness', 'Brigandine', 'Wonder Kaftan' },
+        Hands = { 'Homam Manopolas', 'Assassin\'s Armlets' },
+        Rings = { 'Kshama Ring No.4', 'Bomb Queen Ring', 'Kshama Ring No.3' }
+    },
+
+New version (Boxcar):
+
+    ['TP'] = {
+        Subset = { 'Default//NOT_TANK','Tank_Default//TANK' },
+        Group//NOT_TANK = {
+            Head  = { 'Homam Zucchetto', 'Rogue\'s Bonnet', 'Empress Hairpin' },
+            Hands = Hands = { 'Homam Manopolas', 'Dusk Gloves' },
+            Waist = { 'Swift Belt', 'Mrc.Cpt. Belt' },
+        },
+        Group//TANK = {
+            Head  = { 'Asn. Bonnet +1', 'Assassin\'s Bonnet', 'Homam Zucchetto' },
+            Neck  = 'Peacock Amulet',
+            Ears  = { 'Ethereal Earring', 'Stealth Earring//SJNIN', 'Brutal Earring' },
+            Body  = { 'Dragon Harness//DT_BREATH', 'Narasimha\'s Vest', 'Assassin\'s Vest', 'Scorpion Harness', 'Brigandine', 'Wonder Kaftan' },
+            Hands = { 'Homam Manopolas', 'Assassin\'s Armlets' },
+            Rings = { 'Kshama Ring No.4', 'Bomb Queen Ring', 'Kshama Ring No.3' }
+        }
+    },
+
+Another thing to note is that most inline conditionals check for an existing condition: is TANKing enable, does
+the player have a specific buff/debuff, is it a specific time of day, etc. But some conditionals refer to an
+ongoing action. This would be things like //SPELL:BAR to see if a barspell is being cast or //SONG:ETUDE to
+see if one of a bard's etude songs is being cast. It's important to recognize context.
+
+With Boxcar, it's important to recognize that there sides. Some conditionals only work on the right side, the
+gear/subset definition while others work on both sides: slots and definitions. Others still work on both sides
+but omit specific circumstances like not on subsets or groups. See the list below for inline conditionals that
+are restricted in some way.
+
+Conditional         Side    Notes
+---------------------------------
+//[NOT_]SLOTS:list  Both    Can only be used on a subset
+//IF:               Both    Can't be attached to a subset or group
+//IF-slot:          Both
+//SPECIAL           Right   This is bound to a specific piece of gear
+//TRACK:#           Right   This is bound to a specific piece of gear
