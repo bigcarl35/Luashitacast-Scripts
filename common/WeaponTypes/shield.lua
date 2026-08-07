@@ -16,5 +16,5 @@ return {
             'legion scutum','ritter shield','ritter shield +1','tatami shield','ice shield','ice shield +1','palmerin\'s shield','januwiyah','januwiyah +1','kaiser shield','koenig shield',
             'tariqah','tariqah +1','genbu\'s shield','muse tariqah','riot shield','aegis','acheron shield','acheron shield +1','relic shield','ancile','bulwark shield','dynamis shield',
             'simba buckler' },
-    }.
+    },
 };
