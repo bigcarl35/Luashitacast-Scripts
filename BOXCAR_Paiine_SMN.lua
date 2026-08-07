@@ -3,8 +3,8 @@
 --[[
 	This file contains all the gear sets associated with the SMN job.
 	
-	Gear Sets last updated: February 11, 2026
-	Code update: April 3, 2026
+	Gear Sets last updated: July 9, 2026
+	Code update: July 30, 2026
 
 	Intended Role: All Levels
 --]]
@@ -30,7 +30,7 @@ local sets = {
 
 	You'll find there are two types of sets defined in this file: Gear Sets and Reference
 	Gear Sets. Both look very similar and contain gear listings, but are treated in different ways.
-	Gear Sets are what Luashitacast equips based on actions that the code tracks. So things like
+	Gear Sets are what Luashitacast equips based on actions that the code tracks. So things like:
 	are you fighting, casting a spell, resting, etc. Reference Gear Sets will never be directly
 	equipped by Luashitacast except as subsets found in Gear Sets. For example, ['rEnmity_plus']
 	is a Reference Gear Set since Luashitacast will not load it directly whereas ['TP'] is a Gear
@@ -69,7 +69,7 @@ local sets = {
 	If you're going to have multiple groups (like in the example) in the same gear set, it's
 	important that the different group definitions do not overlap. //TANK and //NOT_TANK are
 	mutually exclusive, one or the other will be true, but if you have GROUP//TANK and
-	GROUP//NIGHTTIME, it's possible that neither will be equipped nor both will be equipped.
+	GROUP//NIGHTTIME, it's possible that neither will be equipped or both will be equipped.
 	Since you can't guarantee which will be processed first, it's highly doubtful that what you
 	expect to happen actually will happen. Now, if your groups contain different slots, then
 	this is not a problem since you'll not have overlap. Just be conscious of this issue when
@@ -83,7 +83,8 @@ local sets = {
 		- Crimson Howl lasts 3 minutes
 		- Ecliptic Growl and Ecliptic Howl have been swapped, level 54 and 43 now
 		
-		- FYI: not noted, but top level elemental blood pact rage skills do not weapon skillchain
+		- FYI: not noted, but top level elemental blood pact rage skills do not close
+		  weapon skillchains
 --]]
 
 --[[
@@ -102,71 +103,62 @@ local sets = {
 --]]
 	
 	['Default'] = {
-		Main   = { 'Terra\'s Staff//WSWAP', 'Pilgrim\'s Wand//WSWAP' },	-- -20% physical damage
+		['Main//WSWAP'] = { 'Terra\'s Staff', 'Pilgrim\'s Wand' },	-- -20% physical damage
 		Ammo   = { 'Hedgehog Bomb', 'Fortune Egg' },
 		['GROUP//TOWN'] = {
 			-- You're in town, show your fancy duds
-			SUBSET = 'rFancyAttire',
+			Head  = 'Lilac Corsage',
+			Neck  = 'Uggalepih Pendant',
+			Ears  = { 'Loquac. Earring', 'Geist Earring' },
+			Body  = { 'Ducal Aketon//TOWN-AK', 'Yinyang Robe' },
+			Hands = 'Smn. Bracers +1',
+			Rings = { 'Evoker\'s Ring', 'Tamas Ring' },
+			Back  = 'Blue Cape',
+			Waist = 'Hierarch Belt',
+			Legs  = 'Evk. Spats +1',
+			Feet  = 'Evk. Pigaches +1',
 		},
 		['GROUP//NOT_TOWN'] = {
-			-- Not in town, here's normal gear
 			['GROUP//KITE'] = {
 				-- I don't have movement gear, so use my evasion set
 				SUBSET = 'Evasion',
 			},
 			['GROUP//NOT_KITE'] = {
-				['GROUP//RIDING'] = {
-					SUBSET = 'rFancyAttire',
+				-- Not kiting, this is normal gear when you're outside of town. Start with the pieces that are equipped
+				-- regardless of whether the player has a pet or not
+				SUBSET = 'rEnmity_Minus',
+				Neck  = { 'Rep.Gold Medal//NOT_OWN','Uggalepih Pendant//TIME:NIGHTTIME', 'Fenrir\'s Torque//TIME:DAYTIME', 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
+				Ears  = { 'Bat Earring//BLINDED', 'Loquac. Earring', 'Coral Earring//DT:MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
+				Rings = { 'Evoker\'s Ring', 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
+				Back  = { 'Blue Cape', 'White Cape' },
+				Waist = { 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
+				['GROUP//SMN:PET'] = {
+					-- has a SMN pet. Mode is ignored since that only applies when the pet is fighting. Perpetuation cost is emphasized here
+					-- with a consideration for the summoner's MP and/or safety
+					Head   = { 'Smn. Horn +1//SMN:PETMW', 'Austere Hat', 'Silver Hairpin +1' },
+					Hands  = { 'Carbuncle Mitts//PETNAME:CARBUNCLE','Nashira Gages', 'Shep. Bracers' },
+					Body   = { 'Yinyang Robe//MPP.LT.94', 'Summoner\'s Dblt.//SMN:PETMD', 'Yinyang Robe', 'Vermillion Cloak' },
+					Legs   = { 'Summoner\'s Spats//SMN:SPIRIT:EP', 'Shep. Hose' },
+					Feet   = 'Evk. Pigaches +1',
 				},
-				['GROUP//NOT_RIDING'] = {
-					SUBSET = 'rEnmity_Minus',
-					Neck  = { 'Rep.Gold Medal//NOT_OWN','Uggalepih Pendant//TIME:NIGHTTIME', 'Fenrir\'s Torque//TIME:DAYTIME', 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
-					Ears  = { 'Bat Earring//BLINDED', 'Loquac. Earring', 'Coral Earring//DT:MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
-					Rings = { 'Evoker\'s Ring', 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
-					Back  = { 'Blue Cape', 'White Cape' },
-					Waist = { 'Hierarch Belt', 'Powerful Rope', 'Friar\'s Rope' },
-					['GROUP//SMN:PET'] = {			-- has a SMN pet
-						Head   = { 'Smn. Horn +1//SMNPETMW', 'Austere Hat', 'Silver Hairpin +1' },
-						Hands  = { 'Carbuncle Mitts//PETNAME:Carbuncle','Nashira Gages', 'Shep. Bracers' },
-						Body   = { 'Yinyang Robe//MPP.LT.94', 'Summoner\'s Dblt.//SMNPETMD', 'Yinyang Robe', 'Vermillion Cloak' },
-						Legs   = { 'Summoner\'s Spats//SPIRIT:EP', 'Shep. Hose' },
-						Feet   = 'Evk. Pigaches +1',
-					},
-					['GROUP//NOT_SMN:PET'] = {		-- has a pet, but not a SMN pet. In case of /BST or /PUP, /DRG wyvern not an issue
-						Head   = 'Smn. Horn +1',
-						Hands  = 'Shep. Bracers',
-						Body   = { 'Yinyang Robe//MPP.LT.94', 'Vermillion Cloak//MPP.LT.94','Summoner\'s Dblt.' },
-						Legs   = 'Shep. Hose',
-						Feet   = 'Evk. Pigaches +1',
-					},
-					['GROUP//NOT_PET'] = {			-- no pet
-						Head   = { 'Smn. Horn +1', 'Austere Hat', 'Silver Hairpin +1' },
-						Body   = { 'Yinyang Robe//MPP.LT.94', 'Vermillion Cloak//MPP.LT.94', 'Summoner\'s Dblt.', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
-						Hands  = { 'Smn. Bracers +1', 'Errant Cuffs', 'Carbuncle Mitts' },
-						Legs   = { 'Evk. Spats +1', 'Summoner\'s Spats', 'Shep. Hose', 'Fisherman\'s Hose' },
-						Feet   = { 'Summoner\'s Pgch.', 'Mannequin Pumps', 'Waders' },
-					},
+				['GROUP//NOT_SMN:PET'] = {
+					-- has a pet, but not a SMN pet. This implies /BST or /PUP
+					Head   = 'Smn. Horn +1',
+					Hands  = 'Shep. Bracers',
+					Body   = { 'Yinyang Robe//MPP.LT.94', 'Vermillion Cloak//MPP.LT.94','Summoner\'s Dblt.' },
+					Legs   = 'Shep. Hose',
+					Feet   = 'Evk. Pigaches +1',
+				},
+				['GROUP//NOT_PET'] = {
+					-- has no pet
+					Head   = { 'Smn. Horn +1', 'Austere Hat', 'Silver Hairpin +1' },
+					Body   = { 'Yinyang Robe//MPP.LT.94', 'Vermillion Cloak//MPP.LT.94', 'Summoner\'s Dblt.', 'Austere Robe', 'Seer\'s Tunic', 'Angler\'s Tunica' },
+					Hands  = { 'Smn. Bracers +1', 'Errant Cuffs', 'Carbuncle Mitts' },
+					Legs   = { 'Evk. Spats +1', 'Summoner\'s Spats', 'Shep. Hose', 'Fisherman\'s Hose' },
+					Feet   = { 'Summoner\'s Pgch.', 'Mannequin Pumps', 'Waders' },
 				},
 			},
 		},
-	},
-
---[[
-	rFancyAttire is for when you want to look snazzy. It's intended to be used when you're not engaged and don't anticipate
-	being engaged in the near future (ex: in town or riding.) This is an optional reference set.
---]]
-
-	['rFancyAttire'] = {
-		Head  = { 'Lilac Corsage//TOWN', 'Smn. Horn +1' },
-		Neck  = 'Uggalepih Pendant',
-		Ears  = { 'Loquac. Earring', 'Geist Earring' },
-		Body  = { 'Ducal Aketon//TOWN-AK', 'Yinyang Robe' },
-		Hands = 'Smn. Bracers +1',
-		Rings = { 'Evoker\'s Ring', 'Tamas Ring' },
-		Back  = 'Blue Cape',
-		Waist = 'Hierarch Belt',
-		Legs  = 'Evk. Spats +1',
-		Feet  = 'Evk. Pigaches +1',
 	},
 
 --[[
@@ -206,31 +198,35 @@ local sets = {
 --]]
 
 	['TP'] = {
-		SUBSET = 'rTP_Backdrop',
+		SUBSET = 'rTP_Baseline',
 		['GROUP//KITE'] = {
 			SUBSET = 'Evasion',
 		},
 		['GROUP//NOT_KITE'] = {
-			['GROUP//SMN:PET'] = {			-- has a SMN pet
+			['GROUP//SMN:PET'] = {
+				-- has a SMN pet
 				Neck  = { 'Rep.Gold Medal//NOT_OWN','Uggalepih Pendant//TIME:NIGHTTIME', 'Fenrir\'s Torque//TIME:DAYTIME', 'Star Necklace', 'Spirit Torque', 'Justice Badge' },
 				Ears  = { 'Bat Earring//BLINDED//NOT_PETF', 'Beastly Earring//PETF', 'Loquac. Earring', 'Coral Earring//DT:MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
-				Back  = { 'Blue Cape', 'Fed. Army Mantle', 'White Cape' },
+				Back  = { 'Astute Cape', 'Blue Cape', 'Fed. Army Mantle', 'White Cape' },
 				Waist = { 'Hierarch Belt', 'Powerful Rope','Friar\'s Rope' },
 				Rings = { 'Evoker\'s Ring', 'Tamas Ring', 'Ether Ring', 'Astral Ring', 'Astral Ring' },
-				['GROUP//MODE:PERP'] = {	-- Emphasis on lowering perpetuation cost
+				['GROUP//MODE:PERP'] = {
+					-- Emphasis on lowering perpetuation cost
 					Head  = 'Smn. Horn +1//SMN:PETMW', 									-- -3 perp if matches weather
 					Body  = { 'Summoner\'s Dblt.//SMN:PETMD', 'Austere Robe' },			-- -3 perp if pet's element matches day, -1 perp
-					Hands = { 'Carbuncle Mitts//PETNAME:Carbuncle', 'Nashira Gages' },	-- halves perp cost of carbuncle, -1 perp
+					Hands = { 'Carbuncle Mitts//PETNAME:CARBUNCLE', 'Nashira Gages' },	-- halves perp cost of carbuncle, -1 perp
 					Feet  = 'Evk. Pigaches +1',											-- -1 perp
 				},
-				['GROUP//MODE:ATTK'] = {	-- Emphasis on Attack
+				['GROUP//MODE:ATTK'] = {
+					-- Emphasis on pet Attack Power
 					Head  = { 'Shep. Bonnet//PETF', 'Nashira Turban', 'Austere Hat' },	-- +5 pet accuracy, +5 MAcc/-5 Enmity/+2% Haste, +2 smn magic skill/-2 BP delay
 					Body  = 'Summoner\'s Dblt.',										-- +3% per crit rate/-3 BP delay/-3 perpetuation on matching days
 					Hands = { 'Smn. Bracers +1', 'Nashira Gages', 'Shep. Bracers' },	-- Enhanced pet accuracy/+12 smn magic skill/
 					Legs  = { 'Evk. Spats +1', 'Shep. Hose' },
 					Feet  = 'Summoner\'s Pgch.',
 				},
-				['GROUP//MODE:ENMM'] = {	-- Emphasis on Enmity Minus for avatar and summoner
+				['GROUP//MODE:ENMM'] = {
+					-- Emphasis on Enmity Minus for avatar and summoner
 					Head  = { 'Nashira Turban', 'Evoker\'s Horn' },						-- -5 enmity, -3 pet enmity
 					Body  = 'Evoker\'s Doublet',										-- -2 pet enmity
 					Hands = { 'Nashira Gages', 'Evoker\'s Bracers' },					-- -4 enmity, -2 pet enmity
@@ -238,7 +234,8 @@ local sets = {
 					Feet  = { 'Evk. Pigaches +1', 'Evoker\'s Boots' },					-- -4 pet enmity, -2 enmity
 				},
 			},
-			['GROUP//NOT_SMN:PET'] = {		-- has to be a charmed BST pet or PUP pet that can only do maneauvers
+			['GROUP//NOT_SMN:PET'] = {
+				-- since not a SMN pet, has to be either /BST with a charmed pet or /PUP which can only do maneauvers
 				Head  = 'Shep. Bonnet//PETF',
 				Ears  = { 'Bat Earring//BLINDED//NOT_PETF', 'Beastly Earring//PETF', 'Loquac. Earring', 'Coral Earring//DT:MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
 				Body  = { 'Yinyang Robe', 'Vermillion Cloak' },
@@ -246,7 +243,8 @@ local sets = {
 				Legs  = 'Shep. Hose',
 				Feet  = { 'Mannequin Pumps', 'Waders' },
 			},
-			['GROUP//NOT_PET'] = {		-- Emergency, no pet! Equip defense/evasion gear
+			['GROUP//NOT_PET'] = {
+				-- Emergency, no pet! Equip defense/evasion gear
 				Main  = 'Terra\'s Staff',															-- -20% Physical damage
 				Ammo  = 'Hedgehog Bomb',															-- -1 Enmity
 				Head  = { 'Smn. Horn +1', 'Austere Hat', 'Shep. Bonnet' },							-- Def: 19/13/7..+4 HP
@@ -255,27 +253,27 @@ local sets = {
 				Body  = { 'Yinyang Robe', 'Vermillion Cloak', 'Austere Robe', 'Seer\'s Tunic' },	-- Def: 43/46*/29/18
 				Hands = { 'Nashira Gages', 'Smn. Bracers +1', 'Wonder Mitts' },						-- Def: 18..-4 Enmity/16/6..12 HP
 				Rings = { 'Flame Ring', 'Bomb Queen Ring', 'Toreador\'s Ring', 'Toreador\'s Ring' },-- Def: 3, +75 HP, Def: 1..10 HP, Def: 1..10 HP,
-				Back  = 'White Cape',																-- Def: 3
+				Back  = { 'Fed. Army Mantle', 'White Cape' },										-- Def: 6/3
 				Waist = { 'Hierarch Belt', 'Powerful Rope' },										-- Def: 3, +20 HP
 				Legs  = { 'Summoner\'s Spats', 'Wonder Braccae', 'Baron\'s Slops' },				-- Def: 29/12..+21 HP..+2 VIT/11
-				Feet  = { 'Dance Shoes', 'Creek F Clomps', 'Mannequin Pumps', 'Waders' }			-- Def: 13..+6 Eva..-1 VIT/9..+35 HP..+4 VIT/6/2
+				Feet  = { 'Dance Shoes +1', 'Dance Shoes', 'Creek F Clomps', 'Mannequin Pumps', 'Waders' }	-- Def: 14/13..+7/6 Eva..-1 VIT/9..+35 HP..+4 VIT/6/2
 			},
 		},
 	},
 
 --[[
-	Looking a the rTP_Backdrp reference set, you may be wondering why I didn't just copy this section into the beginning of the
+	Looking a the rTP_Baseline reference set, you may be wondering why I didn't just copy this section into the beginning of the
 	TP set. I didn't do that because the results would have been different because of how a gear set is processed: first subsets
-	are processed, then groups, and lastly individual slots. rTP_Backdrop is just a copy of the Karma version of my TP gear set,
+	are processed, then groups, and lastly individual slots. rTP_Baseline is just a copy of the Karma version of my TP gear set,
 	reformatted to conform to Boxcar's standards. It's the groundwork I want in place so that if any "holes" exist in the TP
 	definition, something appropriate will be there to bleed through.
 --]]
-	['rTP_Backdrop'] = {
+	['rTP_Baseline'] = {
 		SUBSET =  'Default',
-		Head  = { 'Smn. Horn +1//SMNPETMW', 'Shep. Bonnet//PETF' },
-		Ears  = { 'Bat Earring//BLINDED//PETNF', 'Loquac. Earring', 'Beastly Earring//PETF', 'Coral Earring//DT_MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
-		Body  = { 'Summoner\'s Dblt.//SMNPETMD', 'Yinyang Robe', 'Vermillion Cloak' },
-		Hands = { 'Carbuncle Mitts//CARBY', 'Nashira Gages//SMNPET' },
+		Head  = { 'Smn. Horn +1//SMN:PETMW', 'Shep. Bonnet//PETF' },
+		Ears  = { 'Bat Earring//BLINDED//NOT_PETF', 'Loquac. Earring', 'Beastly Earring//PETF', 'Coral Earring//DT:MAGICAL', 'Bat Earring', 'Energy Earring +1', 'Energy Earring +1' },
+		Body  = { 'Summoner\'s Dblt.//SMN:PETMD', 'Yinyang Robe', 'Vermillion Cloak' },
+		Hands = { 'Carbuncle Mitts//PETNAME:CARBUNCLE', 'Nashira Gages//SMN:PET' },
 		Legs  = 'Evk. Spats +1',
 		Feet  = { 'Summoner\'s Pgch.', 'Evk. Pigaches +1', 'Mannequin Pumps', 'Waders' },
 	},
@@ -306,7 +304,7 @@ local sets = {
 		},
 		['GROUP//NOT_PETF'] = {		-- Accuracy is for player
 			Ammo  = 'Orphic Egg//PJB:BRD',								-- +1 Acc if BRD in party
-			Head  = { 'Optical Hat', 'Empress Hairpin' },				-- +10 Acc, +3 DEX
+			Head  = { 'Optical Hat', 'Hydra Beret','Empress Hairpin' },	-- +10/3 Acc, +3 DEX
 			Neck  = { 'Peacock Amulet',	'Spike Necklace' },				-- +10 Acc, +3 DEX
 			Body  = 'Mrc.Cpt. Doublet',									-- +1 DEX
 			Hands = 'Battle Gloves',									-- +3 Acc
@@ -358,7 +356,7 @@ local sets = {
   ['Progressive'] = { 
 		['Accuracy'] = { 
 			[1] = { 
-				['Neck']  = 'rAccuracy::Neck',
+				['Neck']  = 'rAccuracy::Necks',
 				['Hands'] = 'rAccuracy::Hands',
 				['Legs']  = 'rAccuracy::Legs'
 			},
@@ -398,6 +396,7 @@ local sets = {
 		Body  = 'Yinyang Robe//IF:Vermillion Cloak',	-- Filler, V.Cloak has -10 eva
 		Hands = 'Battle Gloves',						-- +3 Eva
 		Rings = { 'Ether Ring//IF:Woodsman Ring', 'Astral Ring//IF:Woodsman Ring', 'Astral Ring//IF:Woodsman Ring' },	-- Filler, Woodsman Ring has -5 eva
+		Back  = 'Boxer\'s Mantle',						-- +10 Eva
 		Waist = 'Swift Belt//IF:Tilt Belt', 			-- Filler, Tilt belt has -5 eva
     },
 
@@ -409,7 +408,7 @@ local sets = {
 
 	['rDamage_Taken'] = {
 		['GROUP//DT:PHYSICAL'] = {
-			Main = 'Terra\'s Staff',					-- -20% damage reduction from physical
+			Main = 'Terra\'s Staff//WSWAP',				-- -20% damage reduction from physical
 		},
 		['GROUP//DT:BREATH'] = {
 		},
@@ -431,11 +430,12 @@ local sets = {
 	
 	['Resting_Refresh'] = {
 		SUBSET = 'rDamage_Taken',
-		Main   = { 'Pluto\'s Staff', 'Kukulcan\'s Staff', 'Pilgrim\'s Wand' },			-- +10/3/2 MP/tick while resting
+		['Main//WSWAP'] = { 'Pluto\'s Staff', 'Kukulcan\'s Staff', 'Pilgrim\'s Wand' },	-- +10/3/2 MP/tick while resting
+		Head   = 'Hydra Beret',															-- +2 MP/tick while healing
 		Neck   = 'Checkered Scarf',														-- +1 MP/tick while healing
 		Body   = { 'Errant Hpl.', 'Yinyang Robe', 'Vermillion Cloak', 'Seer\'s Tunic' },-- +5 MP/tick while healing, adds "refresh", adds "refresh", +1/tick while healing
 		Waist  = 'Hierarch Belt',														-- +2 MP/tick while resting
-		Legs   = 'Baron\'s Slops',														-- +1 MP/tick while resting
+		Legs   = { 'Hydra Brais', 'Baron\'s Slops' },									-- +1/1	 MP/tick while resting
 	},
 
 	['Resting_Regen'] = {
@@ -600,8 +600,8 @@ local sets = {
 
 	['Precast'] = {	
 		Ears =  'Loquac. Earring',																		-- Enhances Fastcast
-		Hands = { 'Carbuncle\'s Cuffs//SMN:AVATAR', 'Carbuncle\'s Cuffs//SPIRIT:ES' },					-- Summoning magic casting time -1x2
-		Feet =  { 'Evoker\'s Boots//SMN:AVATAR', 'Evoker\'s Boots//SPIRIT:ES', 'Rostrum Pumps' },		-- Summoning magic casting time -1x2, Enhances Fastcast
+		Hands = { 'Carbuncle\'s Cuffs//SMN:AVATAR', 'Carbuncle\'s Cuffs//SMN:SPIRIT:ES' },				-- Summoning magic casting time -1x2
+		Feet =  { 'Evoker\'s Boots//SMN:AVATAR', 'Evoker\'s Boots//SMN:SPIRIT:ES', 'Rostrum Pumps' },	-- Summoning magic casting time -1x2, Enhances Fastcast
 	},
 
 --[[
@@ -1022,11 +1022,12 @@ local sets = {
 	-- Note: The slot names were bracketed for consistency. Only the "body" slot
 	-- name had to be bracketed.
 	['rSummoning_Magic_Skill'] = {
-		['Head']  = { 'Evoker\'s Horn',	'Austere Hat' },	-- +5/2 Summoning Skill
+		['Head']  = { 'Evoker\'s Horn',	'Austere Hat' },	-- +5/2 Summoning Magic Skill
 		['Neck']  = 'Smn. Torque',							-- +7 Summoning Magic Skill
 		['Body//IF:Vermillion Cloak'] = { 'Summoner\'s Dblt.', 'Austere Robe'},		-- Conditional removes the V.Cloak so a head will be equipped
-		['Hands'] = 'Smn. Bracers +1',						-- +12 Summoning Skill
-		['Rings'] = 'Evoker\'s Ring',						-- +10 Summoning Skill
+		['Hands'] = 'Smn. Bracers +1',						-- +12 Summoning MagicSkill
+		['Rings'] = 'Evoker\'s Ring',						-- +10 Summoning Magic Skill
+		['Back']  = 'Astute Cape',							-- +5 Summoning Magic Skill
 		['Feet']  = 'Nashira Crackows',						-- +5 Summoning Magic Skill
 	},
 	
@@ -1045,93 +1046,6 @@ local sets = {
 		SUBSET = 'rSummoning_Magic_Skill',
 		Hands  = 'Carbuncle\'s Cuffs//SMN:PET',		-- Summoning magic casting time -1, works for both avatars and spirits
 		Feet   = 'Evoker\'s Boots'					-- Summoning magic casting time -1
-	},
-
---[[
-	***************
-	* Blood Pacts *
-	***************
-
-	Blood pacts go through a simulated process that mimics spell casting. The precast
-	happens when the blood pact is invoked (either rage or ward), loading the 'PreBP'
-	gear set. You want gear that has Blood Pact Ability Delay, Blood Pact Recast
-	abilities, or Summoning Skill defined here.
-
-	Note: Blood Pact Delay has a cap of -15
-
---]]
-
-	['PreBP'] = {
-		SUBSET = 'rSummoning_Magic_Skill',
-		Head   = { 'Smn. Horn +1', 'Evoker\'s Horn', 'Austere Hat' },			-- BP ability delay -3,
-		Body   = { 'Yinyang Robe', 'Summoner\'s Dblt.', 'Austere Robe' },		-- BP ability delay: -5/-3/-3
-		Hands  = 'Smn. Bracers +1',												-- BP ability delay -2
-		Legs   = 'Summoner\'s Spats',											-- BP ability delay -2
-		Feet   = 'Summoner\'s Pgch.',											-- BP ability delay -2
-	},
-
---[[
-	The midcast for Blood pacts are divided by type: physical, magical, summoning
-	skill, accuracy, and hybrid. The 'MidBP' gear set, encapsulates all those types
-	through the	use of groups.
-
-	Listed below are the criteria for each BP type:
-	SMN_BP_PHYS (Physical)
-		Pet attack, pet accuracy, pet critical hit, and blood pact physical damage
-	SMN_BP_MAG (Magical)
-		Pet magic attack burst, pet magical attack, pet magical accuracy, and
-		blood pact magical damage
-	SMN_BP_SKILL (Skill)
-		Summoning skill
-	SMN_BP_ACC (Accuracy)
-		Pet accuracy, pet magic accuracy
-	SMN_BP_HYBRID (Hybrid)
-		2x physical attacks and 1x magical, see SMN_BP_PHYS and SMN_BP_MAG for details
-
-	Summoning Magic Skill when above cap affects the accuracy and magic accuracy of the
-	avatar's blood pact. Cap at level 75 is 269.
---]]
-
-	['MidBP'] = {
-		SUBSET = 'rSummoning_Magic_Skill',
-		['GROUP//SMN:BP:PHYS'] = {
-			Head   = 'Shep. Bonnet',							-- +5 pet accuracy
-			Ears   = 'Beastly Earring',							-- +10 pet accuracy
-			Body   = 'Summoner\'s Dblt.',						-- +3% pet crit rate
-			Hands  = 'Smn. Bracers +1',							-- enhances pet accuracy/+12 summoning skill
-			Legs   = 'Evk. Spats +1',							-- enhances pet accuracy
-			Feet   = 'Summoner\'s Pgch.',						-- enhances pet attack
-		},
-		['GROUP//SMN:BP:MAG'] = {
-			['Head']  = { 'Shep. Bonnet', 'Evoker\'s Horn', 'Austere Hat' },		-- +3 pet macc, +5/2 Summoning Skill
-			['Neck']  = 'Smn. Torque',												-- +7 Summoning Magic Skill
-			['Body//IF:Vermillion Cloak'] = { 'Summoner\'s Dblt.', 'Austere Robe'}, -- Conditional removes the V.Cloak so a head will be equipped
-			['Hands'] = 'Smn. Bracers +1',						-- +12 Summoning Skill
-			['Rings'] = 'Evoker\'s Ring',						-- +10 Summoning Skill
-			['Feet']  = 'Nashira Crackows',						-- +5 Summoning Magic Skill
-		},
-		['GROUP//SMN:BP:SKILL'] = {
-			SUBSET = 'rSummoning_Magic_Skill',					-- Not necessary to repeat here, but clearer what's happening
-		},
-		['GROUP//SMN:BP:ACC'] = {
-			['Head']  = 'Shep. Bonnet',							-- +5 pet accuracy and +3 pet macc
-			['Neck']  = 'Smn. Torque',							-- +7 summoning magic skill
-			['Ears']  = 'Beastly Earring',						-- +10 pet accuracy
-			['Body//IF:Vermillion Cloak'] = { 'Summoner\'s Dblt.', 'Austere Robe'},		-- Conditional removes the V.Cloak so a head will be equipped
-			['Hands'] = 'Smn. Bracers +1',						-- enhances pet accuracy/+12 summoning skill
-			['Rings'] = 'Evoker\'s Ring',						-- +10 Summoning Skill
-			['Legs']  = 'Evk. Spats +1',						-- enhances pet accuracy
-			['Feet']  = 'Nashira Crackows',						-- +5 Summoning Magic Skill
-		},
-		['GROUP//SMN:BP:HYBRID'] = {
-			Head  = 'Shep. Bonnet',								-- +5 pet accuracy/+3 pet macc
-			Neck  = 'Smn. Torque',								-- +7 Summoning Magic Skill
-			Ears  = 'Beastly Earring',							-- +10 pet accuracy
-			Body  = 'Summoner\'s Dblt.',						-- 3% pet crit rate
-			Hands = 'Smn. Bracers +1',							-- enhances pet accuracy/+12 summoning skill
-			Legs  = 'Evk. Spats +1',							-- enhances pet accuracy
-			Feet  = 'Summoner\'s Pgch.',						-- enhances pet attack
-		},
 	},
 
 --[[
@@ -1458,269 +1372,424 @@ local sets = {
 	* Weaponskills *
 	****************
 
-	The following weapon skill gearsets are defined by the stat(s) they emphasize.
-	Listed are all of the sets that	you will need to use every weapon skill 
-	that your job can do. The leading comment defines what weapon/weapon skill
-	combination the set applies to.
-	
-	SMN can use the following weapons: staff (B), club (C+), dagger (E).
-	
-	Please note that on HorizonXI you may have access to some weapon skills
-	through your subjob. While not explicitly supported here, the appropriate
-	weapon skill set will be loaded. If not listed below, you might have to
-	create a custom weapon skill set to do this. Remember, weapon skill sets
-	are named WS_attr. If you name the set appropriately, that set will auto-
-	matically be called when you use the weapon skill.
+	Weaponskills are identified by the stats that boost the damage they do.
+	With the introduction of groups in a gearset, weaponskills are now handled
+	by a singular gear set that is split out by the stats that need emphasizing.
+
+	SMN has proficiencies in: staff (B), club (C+), dagger (E), but you can
+	inherit proficiencies from a subjob. Each grouping within the weaponskill
+	gear set is based on one or more stats. Each stat grouping has a comment
+	outlining what skills use said stat. Listed is what weapon/weaponskill a
+	SMN has proficiency in as well as any other combination that uses that
+	stat combination. (There's no guarantee though that a SMN can wield the
+	weapon that is required to generate that weaponskill. It is included here
+	because it is a possibility from your sub job.)
 --]]
 
---[[
-		* Strength based *
-		
-		Staff: Heavy Swing,Shell Crusher,Full Swing
-		Club: Brainshaker,Skullbreaker,True Strike
--]]
-	
-	['WS_STR'] = {
-		SUBSET = {
-			[1] = 'rAttackPower',
-			[2] = 'rSTR',
+	['Weaponskill'] = {
+		SUBSET = 'rAttackPower',	-- All weaponskills gearsets have attack power as a foundation
+		['GROUP//WS_CHR'] = {
+			-- * Charisma based *
+
+			-- Dagger: Shadowstitch
+			SUBSET  = 'rCHR',
 		},
-    },
-	
---[[
-		* Strength and Intelligence based, even weighting *
-		
-		Staff: Rock Crusher,Earth Crusher,Cataclysm
---]]
-	
-	['WS_STRINT'] = {
-		SUBSET = 'rAttackPower',
-        Head   = { 'Smn. Horn +1', 'Evoker\'s Horn' },		-- +4/3 INT
-        Neck   = { 'Justice Torque','Spike Necklace' },		-- +5/3 STR
-        Body   = { 'Black Cotehardie', 'Wonder Kaftan', 'Baron\'s Saio' },	-- +3 STR/+2 INT, +1 STR, +1 INT
-        Hands  = { 'Errant Cuffs', 'Wonder Mitts' },		-- +5 INT, +3 STR
-		Rings  = { 'Tamas Ring', 'Flame Ring', 'Kshama Ring No.8', 'Kshama Ring No.5' },	-- +5 STR, +5 STR/+2 INT, +3 STR, +3 INT
-        Waist  = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },	-- +5 INT, +1 INT/+1 STR
-        Legs   = { 'Errant Slops', 'Wonder Braccae' },		-- +7 INT/-5 STR, +1 STR
-        Feet   = { 'Rostrum Pumps', 'Wonder Clomps', 'Mannequin Pumps' },	-- +3 INT, +2 STR, +1 INT
-    },
+		['GROUP//WS_DEX'] = {
+			-- * Dexterity based *
 
---[[
-		* Strength and Mind based, even weighting *
-		
-		Club: Shining Strike,Seraph Strike,Judgement
-		Staff: Retribution
---]]
-	
-	['WS_STRMND'] = {
-		SUBSET = 'rAttackPower',
-        Neck   = { 'Promise Badge', 'Justice Torque', 'Justice Badge' },	-- +5 MND, +5 STR, +3 MND
-		Ears   = 'Geist Earring',											-- +1 MND
-        Body   = { 'Black Cotehardie', 'Wonder Kaftan', 'Baron\'s Saio' },	-- +3 STR, +1/1 MND
-        Hands  = { 'Wonder Mitts', 'Baron\'s Cuffs' },						-- +3 STR, +1 MND
-		Rings  = { 'Tamas Ring', 'Flame Ring', 'Kshama Ring No.9', 'Kshama Ring No.8' },		-- +5 MND, +5 STR/-2 MND, +3 MND, +3 STR
-        Back   = 'White Cape',												-- +2 MND
-        Waist  = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt', 'Friar\'s Rope' },	-- +5 MND, +1 STR/+1 MND, +1 MND
-        Legs   = { 'Summoner\'s Spats', 'Errant Slops', 'Wonder Braccae' },	-- 3 MND, +7 MND/-5 STR, +2 MND
-        Feet   = { 'Creek F Clomps', 'Rostrum Pumps', 'Mannequin Pumps', 'Wonder Clomps' },	-- +4 STR, +3/2 MND, +2 STR
+			-- Dagger: Wasp Sting,Viper Bite^
+			--  ^ Subjob must be one of: RDM,THF,BRD,RNG,NIN
+			SUBSET  = 'rDEX',
+		},
+		['GROUP//WS_DEXAGI'] = {
+			-- * Dexterity and Agility based, even weighting *
+
+			-- SMN has no proficiency with this combination
+		},
+		['GROUP//WS_DEXCHR'] = {
+			-- * Dexterity and Charisma based, even weighting *
+
+			-- SMN has no proficiency with this combination
+		},
+		['GROUP//WS_DEXINT'] = {
+			-- * Dexterity and Intelligence based *
+
+			-- Dagger: Gust Slash,Cyclone^
+			-- 	^ Subjob must be one of: RDM,THF,BRD,RNG,NIN
+			Head   = { 'Smn. Horn +1', 'Evoker\'s Horn', 'Empress Hairpin' },	-- +4/3 INT, +3 DEX
+			Neck   = { 'Spike Necklace', 'Opo-opo Necklace' },	-- +3/1 DEX
+			Body   = { 'Black Cotehardie', 'Baron\'s Saio' },	-- +2 INT/+2 DEX, +1 INT
+			Hands  = 'Errant Cuffs',							-- +5 INT
+			Rings  = { 'Tamas Ring', 'Kshama Ring No.2', 'Kshama Ring No.5', 'Flame Ring' },	-- +5 INT, +3 DEX, +3 INT, +2 INT
+			Waist  = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },	-- +5 INT, +1 INT/+1 DEX
+			Legs   = 'Errant Slops',							-- +7 INT/-5 DEX
+			Feet   = { 'Rostrum Pumps', 'Mannequin Pumps' },	-- +3/1 INT
+		},
+		['GROUP//WS_INT'] = {
+			-- * Intellegence based *
+
+			-- Staff: Gate of Tartarus
+			SUBSET  = 'rINT',
+		},
+		['GROUP//WS_INTMND'] = {
+			-- * Intellegence and Mind based, even weighting *
+
+			-- Staff: Spirit Taker
+			Head   = { 'Smn. Horn +1', 'Evoker\'s Horn' },		-- +4/3 INT
+			Neck   = { 'Promise Badge', 'Justice Badge' },		-- +5/3 MND
+			Ears   = 'Geist Earring',							-- +1 MND
+			Body   = { 'Errant Hpl.', 'Evoker\'s Doublet', 'Wonder Kaftan', 'Baron\'s Saio' },	-- +10 INT/+10 MND, +3 MND, +1 INT, +1 MND
+			Hands  = { 'Errant Cuffs', 'Baron\'s Cuffs' },		-- +7 INT, +3/1 MND
+			Rings  = { 'Tamas Ring', 'Kshama Ring No.9', 'Kshama Ring No.5', 'Flame Ring' },	-- +5 INT/+5 MND, +3 MND, +3 INT, +2 INT
+			Waist  = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt', 'Friar\'s Rope' },	-- +5 INT/+5 MND, +1 INT/+1 MND, +1 MND
+			Legs   = { 'Errant Slops', 'Summoner\'s Spats', 'Wonder Braccae' },	-- +7 MND/+7 INT, +3/2 MND
+			Feet   = { 'Rostrum Pumps', 'Mannequin Pumps', 'Seer\'s Pumps' },	-- +3 MND/+3 INT, +2 MND/1 INT, +1 MND
+		},
+		['GROUP//WS_MND'] = {
+			-- * Mind based *
+
+			-- Dagger: Energy Steal, Energy Drain^
+			--	^ Subjob must be RDM,THF,BRD,RNG, or NIN
+			SUBSET  = 'rMND',
+		},
+		['GROUP//WS_RANGED_AGI'] = {
+			-- * Strength and Agility bases, even weighting *
+
+			-- SMN has no proficiency with this combination
+
+			-- Possibly from the subjob if you can equip the weapon:
+			-- Marksmanship: Hot Shot, Split Shot, Sniper Shot, Slug Shot
+		},
+		['GROUP//WS_RANGED_STRAGI'] = {
+			-- * Strength and Agility bases, even weighting *
+
+			-- SMN has no proficiency with this combination
+
+			-- Possibly from the subjob if you can equip the weapon:
+			-- Archery: Flaming Arrow, Piercing Arrow, Dulling Arrow, Sidewinder
+		},
+		['GROUP//WS_STR'] = {
+			-- * Strength based *
+
+			-- Staff: Heavy Swing,Shell Crusher,Full Swing
+			-- Club: Brainshaker,Skullbreaker,True Strike
+
+			-- Possibly from the subjob if you can equip the weapon:
+			-- Axe: Raging Axe, Smash Axe, Gale Axe, Avalanche Axe
+			-- Great Axe: Iron Tempest, Sturmwind
+			-- Great Katana: Tachi: Enpi, Tachi: Hobaku, Tachi: Goten, Tachi: Kagero
+			-- Great Sword: Hard Slash
+			-- Polearm: Double Thrust, Leg Sweep^
+			--  ^ Subjob cannot be PLD
+			-- Scythe: Slice
+			-- Sword: Flat Blade
+			SUBSET = 'rSTR',
+		},
+		['GROUP//WS_STRAGI'] = {	-- * Strength and Agility bases, even weighting *
+			-- SMN has no proficiency with this combination
+		},
+		['GROUP//WS_STRDEX'] = {	-- * Strength and Dexterity bases, even weighting *
+			-- SMN has no proficiency with this combination
+
+			-- Possibly from the subjob if you can equip the weapon:
+			-- Hand to hand: Combo, Backhand Blow^
+			--  ^ Subjob cannot be NIN or THF
+			-- Katana: Blade: Rin, Blade: Retsu
+			-- Sword: Fast Blade
+		},
+		['GROUP//WS_STRINT'] = {
+			-- * Strength and Intelligence based, even weighting *
+
+			-- Staff: Rock Crusher,Earth Crusher,Cataclysm
+
+			-- Possibly from the subjob if you can equip the weapon:
+			-- Katana: Blade: Teki, Blade: To
+			-- Sword: Burning Blade
+			-- Great Sword: Frostbite, Freezebite
+			-- Polearm: Thunder Thrust, Raiden Thrust^
+			--  ^ Subjob must be PLD or DRG
+			-- Scythe: Dark Harvest, Shadow of Death^,Nightmare Scythe^^
+			--  ^ Subjob must be WAR or DRK
+			--  ^^ Subjob cannot be BLM
+			Head   = { 'Smn. Horn +1', 'Evoker\'s Horn' },		-- +4/3 INT
+			Neck   = { 'Justice Torque','Spike Necklace' },		-- +5/3 STR
+			Body   = { 'Black Cotehardie', 'Wonder Kaftan', 'Baron\'s Saio' },	-- +3 STR/+2 INT, +1 STR, +1 INT
+			Hands  = { 'Errant Cuffs', 'Wonder Mitts' },		-- +5 INT, +3 STR
+			Rings  = { 'Tamas Ring', 'Flame Ring', 'Kshama Ring No.8', 'Kshama Ring No.5' },	-- +5 STR, +5 STR/+2 INT, +3 STR, +3 INT
+			Waist  = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },	-- +5 INT, +1 INT/+1 STR
+			Legs   = { 'Errant Slops', 'Wonder Braccae' },		-- +7 INT/-5 STR, +1 STR
+			Feet   = { 'Rostrum Pumps', 'Wonder Clomps', 'Mannequin Pumps' },	-- +3 INT, +2 STR, +1 INT
+		},
+		['GROUP//WS_STRINT_30_20'] = {
+			-- * Strength and Intellegence based, STR 30% to INT 20% weighting *
+
+			-- SMN has no proficiency with this combination
+
+			-- Possibly from the subjob if you can equip the weapon:
+			-- Sword: Red Lotus Blade
+		},
+		['GROUP//WS_STRMND'] = {
+			-- * Strength and Mind based, even weighting *
+
+			-- Club: Shining Strike,Seraph Strike,Judgement
+			-- Staff: Retribution
+
+			-- Possibly from the subjob if you can equip the weapon:
+			-- Sword: Shining Blade^
+			--	^ Subjob cannot be BST
+			Neck   = { 'Promise Badge', 'Justice Torque', 'Justice Badge' },	-- +5 MND, +5 STR, +3 MND
+			Ears   = 'Geist Earring',											-- +1 MND
+			Body   = { 'Black Cotehardie', 'Wonder Kaftan', 'Baron\'s Saio' },	-- +3 STR, +1/1 MND
+			Hands  = { 'Wonder Mitts', 'Baron\'s Cuffs' },						-- +3 STR, +1 MND
+			Rings  = { 'Tamas Ring', 'Flame Ring', 'Kshama Ring No.9', 'Kshama Ring No.8' },		-- +5 MND, +5 STR/-2 MND, +3 MND, +3 STR
+			Back   = 'White Cape',												-- +2 MND
+			Waist  = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt', 'Friar\'s Rope' },	-- +5 MND, +1 STR/+1 MND, +1 MND
+			Legs   = { 'Summoner\'s Spats', 'Errant Slops', 'Wonder Braccae' },	-- 3 MND, +7 MND/-5 STR, +2 MND
+			Feet   = { 'Creek F Clomps', 'Rostrum Pumps', 'Mannequin Pumps', 'Wonder Clomps' },	-- +4 STR, +3/2 MND, +2 STR
+		},
+		['GROUP//WS_STRMND_30_50'] = {
+			-- * Strength and Mind based, STR 30% to MND 50% weighting *
+
+			-- Club: Black Halo
+			Neck   = { 'Promise Badge', 'Justice Torque', 'Justice Badge' },	-- +5 MND, +5 STR, +3 MND
+			Ears   = 'Geist Earring',											-- +1 MND
+			Body   = { 'Black Cotehardie', 'Wonder Kaftan' },					-- +3 STR, +1 MND
+			Hands  = { 'Wonder Mitts', 'Baron\'s Cuffs' },						-- +3 STR, +1 MND
+			Rings  = { 'Tamas Ring', 'Flame Ring', 'Kshama Ring No.9', 'Kshama Ring No.8' },		-- +5 MND, +5 STR/-2 MND, +3 MND, +3 MND
+			Back   = 'White Cape',												-- +2 MND
+			Waist  = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt', 'Friar\'s Rope' },	-- +5 MND, +1 STR/+1 MND, +1 MND
+			Legs   = { 'Summoner\'s Spats', 'Errant Slops', 'Wonder Braccae' },	-- +3 MND, +7 MND/-5 STR, +2 MND
+			Feet   = { 'Creek F Clomps', 'Rostrum Pumps', 'Mannequin Pumps', 'Wonder Clomps' },		-- +4 STR, +3/2 MND, +2 STR
+		},
+		['GROUP//WS_STRVIT'] = {
+			-- * Strength and Vitality, even weighting *
+
+			-- SMN has no proficiency with this combination
+
+			-- Possibly from the subjob if you can equip the weapon:
+			-- Great Sword: Shield Break, Armor Break
+		},
+		['WS_SKILL'] = {
+			-- * Skill based *
+
+			-- Club: Starlight,Moonlight
+			Neck   = 'Love Torque//DAGGER',		-- +7 Dagger skill
+		},
+		['GROUP//WS_HP'] = {
+			-- * HP based *
+
+			-- SMN has no proficiency with this combination
+		},
 	},
 
 --[[
-		* Strength and Mind based, 30% to 50% weighting *
-		
-		Club: Black Halo
---]]
-
-	['WS_STRMND_30_50'] = {
-		SUBSET = 'rAttackPower',
-        Neck   = { 'Promise Badge', 'Justice Torque', 'Justice Badge' },	-- +5 MND, +5 STR, +3 MND
-		Ears   = 'Geist Earring',											-- +1 MND
-        Body   = { 'Black Cotehardie', 'Wonder Kaftan' },					-- +3 STR, +1 MND
-        Hands  = { 'Wonder Mitts', 'Baron\'s Cuffs' },						-- +3 STR, +1 MND
-		Rings  = { 'Tamas Ring', 'Flame Ring', 'Kshama Ring No.9', 'Kshama Ring No.8' },		-- +5 MND, +5 STR/-2 MND, +3 MND, +3 MND
-        Back   = 'White Cape',												-- +2 MND
-        Waist  = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt', 'Friar\'s Rope' },	-- +5 MND, +1 STR/+1 MND, +1 MND
-        Legs   = { 'Summoner\'s Spats', 'Errant Slops', 'Wonder Braccae' },	-- +3 MND, +7 MND/-5 STR, +2 MND
-        Feet   = { 'Creek F Clomps', 'Rostrum Pumps', 'Mannequin Pumps', 'Wonder Clomps' },		-- +4 STR, +3/2 MND, +2 STR
-    },
-	
---[[
-		* Dexterity based *
-		
-		Dagger: Wasp Sting,Viper Bite^
-
-		^ Subjob must be one of: RDM,THF,BRD,RNG,NIN
---]]
-	
-	['WS_DEX'] = {
-		SUBSET  = {
-			[1] = 'rAttackPower',
-			[2] = 'rDEX',
-		},
-    },
-
---[[
-		* Dexterity and Intelligence based *HR
-
-		Dagger: Gust Slash,Cyclone^
-
-		^ Subjob must be one of: RDM,THF,BRD,RNG,NIN
---]]
-	
-	['WS_DEXINT'] = {
-		SUBSET = 'rAttackPower',
-        Head   = { 'Smn. Horn +1', 'Evoker\'s Horn', 'Empress Hairpin' },	-- +4/3 INT, +3 DEX
-        Neck   = { 'Spike Necklace', 'Opo-opo Necklace' },	-- +3/1 DEX
-        Body   = { 'Black Cotehardie', 'Baron\'s Saio' },	-- +2 INT/+2 DEX, +1 INT
-        Hands  = 'Errant Cuffs',							-- +5 INT
-		Rings  = { 'Tamas Ring', 'Kshama Ring No.2', 'Kshama Ring No.5', 'Flame Ring' },	-- +5 INT, +3 DEX, +3 INT, +2 INT
-        Waist  = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },	-- +5 INT, +1 INT/+1 DEX
-        Legs   = 'Errant Slops',							-- +7 INT/-5 DEX
-        Feet   = { 'Rostrum Pumps', 'Mannequin Pumps' },	-- +3/1 INT
-    },
-
---[[
-		* Intellegence *
-
-		Staff: Gate of Tartarus
---]]
-	
-	['WS_INT'] = {
-		SUBSET  = {
-			[1] = 'rAttackPower',
-			[2] = 'rINT',
-		},
-    },
-	
---[[
-		* Intellegence and Mind based, even weighting *
-
-		Staff: Spirit Taker
---]]
-	
-	['WS_INTMND'] = {
-		SUBSET = 'rAttackPower',
-		Head   = { 'Smn. Horn +1', 'Evoker\'s Horn' },		-- +4/3 INT
-		Neck   = { 'Promise Badge', 'Justice Badge' },		-- +5/3 MND
-		Ears   = 'Geist Earring',							-- +1 MND
-		Body   = { 'Errant Hpl.', 'Evoker\'s Doublet', 'Wonder Kaftan', 'Baron\'s Saio' },	-- +10 INT/+10 MND, +3 MND, +1 INT, +1 MND
-		Hands  = { 'Errant Cuffs', 'Baron\'s Cuffs' },		-- +7 INT, +3/1 MND
-		Rings  = { 'Tamas Ring', 'Kshama Ring No.9', 'Kshama Ring No.5', 'Flame Ring' },	-- +5 INT/+5 MND, +3 MND, +3 INT, +2 INT
-		Waist  = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt', 'Friar\'s Rope' },	-- +5 INT/+5 MND, +1 INT/+1 MND, +1 MND
-		Legs   = { 'Errant Slops', 'Summoner\'s Spats', 'Wonder Braccae' },	-- +7 MND/+7 INT, +3/2 MND
-		Feet   = { 'Rostrum Pumps', 'Mannequin Pumps', 'Seer\'s Pumps' },	-- +3 MND/+3 INT, +2 MND/1 INT, +1 MND
-    },
-	
---[[
-		* Charisma based *
-
-		Dagger: Shadowstitch
---]]
-	
-	['WS_CHR'] = {
-		SUBSET  = {
-			[1] = 'rAttackPower',
-			[2] = 'rCHR',
-		},
-    },
-
---[[
-		* Mind based *
-
-		Dagger: Energy Steal, Energy Drain^
-		
-		^ Subjob must be RDM,THF,BRD,RNG, or NIN
---]]
-
-	['WS_MND'] = {
-		SUBSET  = {
-			[1] = 'rAttackPower',
-			[2] = 'rMND',
-		},
-    },
-	
---[[
-		* Skill based *
-		
-		Club: Starlight,Moonlight
-
-		Note: While club is the only skill-based weapon supported for SMN, HorizonXI
-		does support some basic weapon skills for other weapon types based on your
-		subjob. So, including non-club skill pieces here isn't a bad idea, but make
-		sure to use the	appropriate weapon type inline conditional.
---]]
-	
-	['WS_Skill'] = {
-		SUBSET = 'rAttackPower',
-		Neck   = { 'Justice Torque//SCYTHE', 'Justice Torque//GKATANA', 'Love Torque//DAGGER', 'Love Torque//POLEARM' },	-- +7 Scythe/G.Katana skill, +7 Dagger/Polearm skill
-    },
-
---[[
-	Custom weaponskill sets can be used in place of the generic stats-based sets. You must name
-	your custom set ['WS:skill'] where "skill" is the name of the weapon skill. If there's a blank
+	Custom weaponskill sets can be used in place of the generic stats-based sets. Place you weapon
+	skill definition in the Custom_Weaponskills gearset as a group. If the weapon skill contains
+	a blank in the name (ex: viper bite), change that to an underscore (ex: viper_bite)
 	in the name, substitue an underscore.
 
-	Example: a custom set for "viper bite" would be named:	['WS:Viper_Bite'].
-
-	Note: how you capitalize the name is up to you.
+	I've included a commented out example. (It's basically the strength based definition.)
 --]]
 
---[[
-	The following are your main job (summoner) abilities. Unlike sub job abilities, this section
-	will explicitly list all of your abilities. Please note that all abilities will be prefixed
-	with a 'JA_'. This is to ensure there's no conflict with any other predefined gear set (this
-	is a bigger issue with subjob abilities than with main jobs.)
---]]
-
-	['JA_Astral_Flow'] = {
+	['Custom_Weaponskills'] = {
+		--	['Heavy_Swing'] = {
+		--		SUBSTR = {
+		--			[1] = 'rAttackPower',
+		--			[2] = 'rSTR',
+		--		},
+		--	},
 	},
 
 --[[
-	All abilities associated with any subjob (up to level 37) are supported, whether they make sense to
-	do or not. Instead of explicitly listing all the abilities, you define the gear sets for the
-	abilities you wish to support. Like custom weaponskills there's a naming convention. For a subjob
-	ability (like a main job ability) you want to prefix the ability name with a 'A:' and if the ability
-	contains a space, replace with an underscore.
-
-	Example: if you want to support SAM's Third Eye, you would name the set: A:Third_Eye
-
-	Note: how you capitalize the name is up to you.
+	The Job_Ability structure contains every ability associated with a summoner as well as all
+	abilities that you can do for any subjob. While you can "flesh out" every ability, you really
+	only have to worry about the abilities for subjobs you plan on using. Leaving an ability's
+	group empty is fine. Not every group needs nor even has gear that can be equipped. Where
+	appropriate I will add hints at what stats to emphasize.
 --]]
 
-	--* /BST *--
-	['JA_Charm'] = {				-- charm skill, CHR gear
-		SUBSET = 'rCHR',
-		Main   = 'Pluto\'s Staff',					-- +2 CHR
-    },
+	['Job_Ability'] = {
+		-- SMN abilities
+		['GROUP//JA:ASTRAL_FLOW'] = {
+		},
+		-- /WAR abilities
+		['GROUP//JA:PROVOKE'] = {
+		},
+		['GROUP//JA:BERSERK'] = {
+		},
+		['GROUP//JA:DEFENDER'] = {
+		},
+		['GROUP//JA:WARCRY'] = {
+		},
+		-- /THF abilities
 
-	['JA_Gauge'] = {
-		SUBSET = 'rCHR',
+		-- Note: SNEAK_ATTACK, TRICK_ATTACK, and SATA are not included here. While they are
+		-- abilities, they are handled differently in HandleDefault since the gear has to
+		-- remain equipped to get the benefit.
+		['GROUP//JA:STEAL'] = {
+		},
+		['GROUP//JA:FLEE'] = {
+		},
+		['GROUP//JA:MUG'] = {
+		},
+		-- /BLM abilities
+		['GROUP//JA:ELEMENTAL_SEAL'] = {
+		},
+
+		-- /MNK abilities
+		['GROUP//JA:BOOST'] = {
+		},
+		['GROUP//JA:FOCUS'] = {
+		},
+		['GROUP//JA:DODGE'] = {
+		},
+		['GROUP//JA:CHAKRA'] = {
+		},
+		-- /WHM abilities
+		['GROUP//JA:DIVINE_SEAL'] = {
+		},
+		-- /RDM has abilities
+		-- /PLD abilities
+		['GROUP//JA:HOLY_CIRCLE'] = {
+		},
+		['GROUP//JA:SHIELD_BASH'] = {
+		},
+		['GROUP//JA:SENTINEL'] = {
+		},
+		['GROUP//JA:COVER'] = {
+		},
+		-- /BST abilities
+		['GROUP//JA:CHARM'] = {		-- charm skill, CHR gear
+			SUBSET = 'rCHR',
+			['Main//WSWAP'] = { 'Apollo\'s Staff', 'Light Staff' },	-- +2/1 CHR +15/10% Charm success
+		},
+		['GROUP//JA:GAUGE'] = {
+			-- Gauges success rate from Charm. Arguably you should equip your charm gear here
+			SUBSET = 'rCHR',
+			['Main//WSWAP'] = { 'Apollo\'s Staff', 'Pluto\'s Staff','Light Staff','Dark Staff' },	-- +2/1 CHR
+		},
+		['GROUP//JA:REWARD'] = {					-- Reward potency, reward augment, reward enhancement, MND gear
+			SUBSET = 'rMND',
+			['Main//WSWAP'] = { 'Neptune\'s Staff', 'Water Staff' },	-- +5/4 MND
+		},
+		['GROUP//JA:TAME'] = {
+			-- The success rate of tame is based on the delta INT between you and your target
+			SUBSET = 'rINT',
+			['Main//WSWAP'] = { 'Aquilo\'s Staff', 'Ice Staff' },	-- +5/4 INT
+		},
+		-- /RNG abilities
+		--	Very few ranged weapons (most low level gear) can be used by a smn
+		['GROUP//JA:SHARPSHOT'] = {
+		},
+		['GROUP//JA:SCAVENGE'] = {
+		},
+		['GROUP//JA:CAMOUFLAGE'] = {
+		},
+		['GROUP//JA:BARRAGE'] = {
+		},
+		['GROUP//JA:SHADOWBIND'] = {
+		},
+		-- /NIN abilities
+		['GROUP//SJ:NIN//JA:YONIN'] = {
+		},
+		-- /DRK abilities
+		['GROUP//JA:ARCANE_CIRCLE'] = {
+		},
+		['GROUP//JA:LAST_RESORT'] = {
+		},
+		['GROUP//JA:WEAPON_BASH'] = {
+		},
+		['GROUP//JA:SOULEATER'] = {
+		},
+		-- /BRD - No abilities
+		-- /SAM abilities
+		['GROUP//JA:WARDING_CIRCLE'] = {
+		},
+		['GROUP//JA:THIRD_EYE'] = {
+		},
+		['GROUP//JA:HASSO'] = {
+		},
+		['GROUP//JA:MEDITATE'] = {
+		},
+		['GROUP//JA:SEIGAN'] = {
+		},
+		-- /DRG abilities
+		['GROUP//JA:ANCIENT_CIRCLE'] = {
+		},
+		['GROUP//JA:JUMP'] = {
+			-- Damage from jump is calculated: floor((Base Damage)*(VIT/256+1)), so adding VIT will increase damage
+		},
+		['GROUP//JA:HIGH_JUMP'] = {
+		},
+		-- /COR abilities
+		-- Summoner's can't use guns, quick Draw and dice are not supported
+		['GROUP//JA:RANDOM_DEAL'] = {
+		},
+		-- /BLU abilities
+		['GROUP//JA:BURST_AFFINITY'] = {
+		},
+		-- /PUP abilities
+		['GROUP//JA:ACTIVATE'] = {
+		},
+		['GROUP//JA:DEUX_EX_AUTOMATA'] = {
+		},
+		['GROUP//JA:REPAIR'] = {
+		},
+		['GROUP//JA:MAINTENANCE'] = {
+		},
+		-- /SCH abilities
+		['GROUP//JA:LIGHT_ARTS'] = {
+		},
+		['GROUP//JA:DARK_ARTS'] = {
+		},
+		['GROUP//JA:STRATAGEMS'] = {
+		},
+		['GROUP//JA:SUBLIMATION'] = {
+		},
+		-- /DNC abilities
+		['GROUP//JA:SAMBAS'] = {
+		},
+		['GROUP//JA:WALTZES'] = {
+		},
+		['GROUP//JA:STEPS'] = {
+		},
+		['GROUP//JA:FLOURISHES'] = {
+		},
+		['GROUP//JA:JIGS'] = {
+		},
+		-- /GEO abilities
+		['GROUP//JA:FULL_CIRCLE'] = {
+		},
+		['GROUP//JA:LASTING_EMANATION'] = {
+		},
+		['GROUP//JA:ECLIPTIC_ATTRITION'] = {
+		},
+		-- /RUN abilities
+		['GROUP//JA:RUNE_ENCHANTMENT'] = {
+		},
+		['GROUP//JA:WARD'] = {
+		},
+		['GROUP//JA:SWORDPLAY'] = {
+		},
+		['GROUP//JA:EFFUSION'] = {
+		},
 	},
 
-	-- Reward potency, reward augment, reward enhancement, and MND gear
-	['JA_Reward'] = {
-		SUBSET = 'rMND',
-		Main = 'Neptune\'s Staff',			-- +5 MND
-	},
+--[[
+	The /THF abilities Sneak Attack and Trick Attack are handled separately from other abilities since
+	the gear must remain in place to affect the skill. Separate gear sets are supported for these two
+	skills and a combined one when both Sneak Attack and Trick Attack are active at the same time.
 
-	-- Tame success rate. Resistence depends on your INT vs target's INT
-	['JA_Tame'] = {
-		SUBSET = 'rINT',
-		Main = 'Aquilo\'s Staff',			-- +5 INT
-	},
+--]]
 
-	--* /THF *--
-	-- if only Sneak Attack is enabled, the following will be equipped
 	['JA_Sneak_Attack'] = {
 		SUBSET = 'rDEX',
 	},
 
-	-- If only Trick Attack is enabled, the following will be equipped
-	['JA_Trick_Attack'] = {
+	{'JA_Trick_Attack'} = {
 		SUBSET = 'rAGI',
 	},
 
-	-- When both Sneak Attack and Trick Attack are enabled, the following will be equipped
 	['JA_SATA'] = {
 		Head  = 'Empress Hairpin',							-- +3 DEX/+3 AGI
 		Neck  = 'Spike Necklace',							-- +3 DEX
@@ -1730,41 +1799,136 @@ local sets = {
 	},
 
 	-- It's questionable if any gear provides Treasure Hunter that can be equipped by a
-	-- non-THF, but just in case... (Some folks believe that the Tinfoil Hat provides
-	-- TH to non-THF's)
+	-- /THF, but just in case. Unlike other abilities, TH (barring gear) is based on
+	-- traits. Even so, the gear set is named like it is a job ability.
 	['JA_TH'] = {
 	},
 
 --[[
-	Pet commands can also be made into a gear set. Unlike abilities with an 'JA_' prefix,
-	pet commands use the 'PET_' prefix. By default the pet commands most likely to
-	have gear associated with then (except for blood pacts) are predefined for: BST,
-	DRG and SMN.
+	Pet commands are handled separately from abilities. While your main job is SMN it is also
+	possible that your pet is from your sub job. The Pet_Command gearset identifies every pet
+	command (across all jobs) that can have a pet (except for DRG since /DRG cannot summon
+	a wyvern). This set is effectively used as a mid command set. (SMN also supports a pre-
+	blood pact ability which uses a separate gearset: PC_Pre_BloodPact.)
 
-	Note: commands like BST's SIC and READY and SMN's Blood Pact actually are identified
-	by the skill they invoke. This means that the type of skill is what is processed
-	and not the actual command. Defined in utilities.lua are the BSTs skill according to
-	type. Blood pacts are handled separately by PreBP and MidBP, so not included here.
+
+	SMN Blood Pact is a special case. Like spell casting, the blood pact has a precast and a
+	midcast phase. The precast happens when the blood pact is invoked (either rage or ward),
+	loading the 'PC_Pre_BloodPact' gear set. You want gear that has Blood Pact Ability Delay,
+	Blood Pact Recast abilities, or Summoning Skill defined here.
+
+	Note: Blood Pact Delay has a cap of -15
 --]]
 
-	['PET_Assault'] = {
+	['PC_Pre_BloodPact'] = {
+		SUBSET = 'rSummoning_Magic_Skill',
+		Head   = { 'Smn. Horn +1', 'Evoker\'s Horn', 'Austere Hat' },			-- BP ability delay -3,
+		Body   = { 'Yinyang Robe', 'Summoner\'s Dblt.', 'Austere Robe' },		-- BP ability delay: -5/-3/-3
+		Hands  = 'Smn. Bracers +1',												-- BP ability delay -2
+		Legs   = 'Summoner\'s Spats',											-- BP ability delay -2
+		Feet   = 'Summoner\'s Pgch.',											-- BP ability delay -2
 	},
 
-	--* /BST *--
-	['PET_Reward'] = {
-	},
+	-- Now, all the different types of pet commands (including the midcast for a blood pact)
+	-- are supported in the Pet_Command gear set. Details on what is expected have been included
+	-- where appropriate.
 
-	['PET_Fight'] = {
-	},
-
-	-- This structure is for the Sic and Ready command, by skill type
-	['PET_Sic_Ready'] = {
-		['GROUP//BST:PET_ATTACK'] = {
+	['Pet_Command'] = {
+		-- SMN commands: Assault
+		['GROUP//PC:ASSAULT'] = {
 		},
-		['GROUP//BST:PET_MATT'] = {
+--[[
+		The midcast for Blood pacts are divided by type: physical, magical, summoning
+		skill, accuracy, and hybrid. The gear set encapsulates all those types through
+		the	use of groups. Summoning Magic Skill when above cap affects the accuracy and
+		magic accuracy of the avatar's blood pact. Cap at level 75 is 269.
+--]]
+
+		['GROUP//PC:BP:PHYS'] = {
+			-- PC:BP:PHYS (Physical)
+			--	Pet attack, pet accuracy, pet critical hit, and blood pact physical damage
+			SUBSET = 'rSummoning_Magic_Skill',
+			Head   = 'Shep. Bonnet',							-- +5 pet accuracy
+			Ears   = 'Beastly Earring',							-- +10 pet accuracy
+			Body   = 'Summoner\'s Dblt.',						-- +3% pet crit rate
+			Hands  = 'Smn. Bracers +1',							-- enhances pet accuracy/+12 summoning skill
+			Legs   = 'Evk. Spats +1',							-- enhances pet accuracy
+			Feet   = 'Summoner\'s Pgch.',						-- enhances pet attack
 		},
-		['GROUP//BST:PET_MACC'] = {
-			Head = 'Shep. Bonnet',		-- +3 Pet Macc
+		['GROUP//PC:BP:MAG'] = {
+			-- PC:BP:MAG (Magical)
+			-- 	Pet magic attack burst, pet magical attack, pet magical accuracy, and
+			-- 	blood pact magical damage
+			SUBSET = 'rSummoning_Magic_Skill',
+			['Head']  = { 'Shep. Bonnet', 'Evoker\'s Horn', 'Austere Hat' },	-- +3 pet macc, +5/2 Summoning Skill
+			['Neck']  = 'Smn. Torque',							-- +7 Summoning Magic Skill
+			['Body//IF:Vermillion Cloak'] = { 'Summoner\'s Dblt.', 'Austere Robe'}, -- Conditional removes the V.Cloak so a head will be equipped
+			['Hands'] = 'Smn. Bracers +1',						-- +12 Summoning Skill
+			['Rings'] = 'Evoker\'s Ring',						-- +10 Summoning Skill
+			['Feet']  = 'Nashira Crackows',						-- +5 Summoning Magic Skill
+		},
+		['GROUP//PC:BP:SKILL'] = {
+			-- PC:BP:SKILL (Skill)
+			--	Summoning skill
+			SUBSET = 'rSummoning_Magic_Skill',					-- Not necessary to repeat here, but clearer what's happening
+		},
+		['GROUP//PC:BP:ACC'] = {
+			-- PC:BP:ACC (Accuracy)
+			--	Pet accuracy, pet magic accuracy
+			SUBSET = 'rSummoning_Magic_Skill',
+			['Head']  = 'Shep. Bonnet',							-- +5 pet accuracy and +3 pet macc
+			['Neck']  = 'Smn. Torque',							-- +7 summoning magic skill
+			['Ears']  = 'Beastly Earring',						-- +10 pet accuracy
+			['Body//IF:Vermillion Cloak'] = { 'Summoner\'s Dblt.', 'Austere Robe'},		-- Conditional removes the V.Cloak so a head will be equipped
+			['Hands'] = 'Smn. Bracers +1',						-- enhances pet accuracy/+12 summoning skill
+			['Rings'] = 'Evoker\'s Ring',						-- +10 Summoning Skill
+			['Legs']  = 'Evk. Spats +1',						-- enhances pet accuracy
+			['Feet']  = 'Nashira Crackows',						-- +5 Summoning Magic Skill
+		},
+		['GROUP//PC:BP:HYBRID'] = {
+			-- PC:BP:HYBRID (Hybrid)
+			--	2x physical attacks and 1x magical, see SMN_BP_PHYS and SMN_BP_MAG for details
+			SUBSET = 'rSummoning_Magic_Skill',
+			Head  = 'Shep. Bonnet',								-- +5 pet accuracy/+3 pet macc
+			Neck  = 'Smn. Torque',								-- +7 Summoning Magic Skill
+			Ears  = 'Beastly Earring',							-- +10 pet accuracy
+			Body  = 'Summoner\'s Dblt.',						-- 3% pet crit rate
+			Hands = 'Smn. Bracers +1',							-- enhances pet accuracy/+12 summoning skill
+			Legs  = 'Evk. Spats +1',							-- enhances pet accuracy
+			Feet  = 'Summoner\'s Pgch.',						-- enhances pet attack
+		},
+		-- Release
+		['GROUP//PC:RELEASE'] = {
+		},
+		-- Retreat
+		['GROUP//PC:RETREAT'] = {
+		},
+		-- /BST commands: Fight
+		['GROUP//PC:FIGHT'] = {
+		},
+		-- Heel
+		['GROUP//PC:HEEL'] = {
+		},
+		-- Stay
+		['GROUP//PC:STAY'] = {
+		},
+		-- Sic
+		['GROUP//PC:SIC'] = {
+		},
+		-- Ready!
+		['GROUP//PC:READY'] = {
+		},
+		-- Leave
+		['GROUP//PC:LEAVE'] = {
+		},
+		-- /PUP commands: Deploy
+		['GROUP//PC:DEPLOY'] = {
+		},
+		-- Deactivate
+		['GROUP//PC:DEACTIVATE'] = {
+		},
+		-- Retrieve
+		['GROUP//PC:RETRIEVE'] = {
 		},
 	},
 	
@@ -1786,28 +1950,42 @@ local sets = {
 	and various priorities.
 --]]
 
-profile.Sets = sets;
-
 -- Load gVars to define most globals and the individual modules
 gVars = gFunc.LoadFile('common\\gVars.lua');
 
--- The following structure stores job/process settings. The first section is automatically
--- populated by Luashitacast. The second section contains settings the player can modify.
-profile.settings = {
-	-- This first section is controlled by Luashitacast. Please do not modify any entries here
-	--####################################
-	--# DO NOT MODIFY THIS FIRST SECTION #
-	--####################################
+-- The following structure contains settings that are controlled by the program.
+--
+-- ################################################
+-- # DO NOT MODIFY ANY SETTINGS IN THIS STRUCTURE #
+-- ################################################
+profile.system_settings = {
+	job = 'SMN';						-- Main job, used when NON encountered
+	race = 'tarutaru';					-- Character's race
+	gender = 'female';					-- Character's sex
 	sjb = nil;							-- Tracks subjob name
 	sPetAction = nil;					-- What was the last action by your avatar
 	PlayerCappedLevel = 0;				-- Indicates gear capped level. 0 defaults to current level
 	bAmmo = false;						-- /BST specific. Is ammo equipped?
 	sAmmo = nil;						-- /BST specific. Name of ammo equipped
-	--###########################################################
-	--# THE ENTRIES BELOW THIS AREA IS MODIFIABLE BY THE PLAYER #
-	--###########################################################
+	sLastSGS = 'none';					-- Last gear set displayed
+	bGCReminder = false;				-- Has GC reminder been displayed yet?
+	bDefault = false;					-- Switch to default gear?
+	-- Trackers for the regen and refresh caps
+	bCappedRefresh = false;				-- Disables resting refresh gear equip if true
+	bCappedRegen = false;				-- Disables resting regen gear equip if true
+	WSTypeName = nil;					-- Name of weaponskill based on stats
+};
+
+-- The following structure stores job/process settings. All the fields shown can be modified
+-- by the player, none of them are system-only fields.
+--
+-- ###########################################
+-- # PLAYER CAN MODIFY SETTINGS IN STRUCTURE #
+-- ###########################################
+profile.settings = {
 	defaultSpirit = 'Light Spirit',		-- for /911, what default spirit should be used
 	defaultPetFood = nil;				-- What (if any) pet food to use when Reward processed
+	petName = nil;						-- Leave nil for SMN. Defines pet name for DRG and PUP
 	-- Order of operations:
 	-- After TP gearset processed, three supplimental gearsets might be also run: evasion,
 	-- accuracy, and TH. postGSEngaged indicates the order to process the first two. It is a
@@ -1838,15 +2016,18 @@ profile.settings = {
 	-- in the macrobook should be assigned. The default is 1, so you only need identify any subjobs whose
 	-- page number is greater than 1.
 	AutoMacroBookPage = {
-		bBook = true;					-- Should the macro book be automatically assigned?
-		bPage = true;					-- Should the macro page be automatically assigned?
+		bBook = true,					-- Should the macro book be automatically assigned?
+		bPage = true,					-- Should the macro page be automatically assigned?
 		-- if "bBook" is true, the following subsettings have meaning
-		book = 13;						-- What macro book should be assigned, if set to nil, has same effect as bBook=false
+		book = 13,						-- What macro book should be assigned, if set to nil, has same effect as bBook=false
 		pages = { 						-- What page should be assingned based on subjob, 1 is default
 			['RDM'] = 2, 				-- Identify which page for each subjob should be equipped
 			['BLM'] = 3,
-		};
+		},
 	};
+	-- LockStyle automatically locks style set's gear upon startup. If set to an equipment set's number, it will equip
+	-- and lock that set's style. If nil, then nothing is lock styled on start up.
+	LockStyle = 21;
 	-- The reminder system is a "nag" system to remind the player to run /gc. Prior to /gc being run, no gear swapping
 	-- will occur. /gc is required for Luashitacast to perform gear swapping. You can disable to reminder (by setting
 	-- the Enabled attribute to false), but I highly recommend you leave it enabled. Nothing more frustrating then
@@ -1855,57 +2036,126 @@ profile.settings = {
 		Enabled = true;					-- Should the reminder be enabled?
 		MinBasetime = 15;				-- Minimum wait before reminding player to run /gc
 		MaxBasetime = 300;				-- Once reminder shown, switch to every 5 minutes
-		-- bGCReminder indicates if the initial "nag" reminder has been shown. Setting this value to true will
-		-- indicate to Luashitacast that the initial reminder message has occurred and only the brief reminder
-		-- message should be displayed until /gc is run. No good reason to do that, let Luashitacast control
-		-- this setting.
-		bGCReminder = false;			-- Has GC reminder been displayed yet?
 	};
-	-- DisplayBar identifies each section displayed in the display bar. The player can indicate if the section should be
-	-- enabled (if associated with a command), visible, and in certain instances, what the setting should initially be set
-	-- to. Please note though that just because a section maybe invisible, it does not mean that the option is not available,
-	-- it is just not displayed. Also note that if a section is disabled, but visible, it will still show up on the display
-	-- bar, but grayed out.
+	-- You can have up to two display bars. Each section definies which bar (either, both, or neither) a field should be
+	-- displayed in, and should the field be visible. The two overall entries define the two bars, identified by: gVars._BAR1
+	-- and gVars._BAR2. The first three entries affect the whole bar: should it be visible, and the X/Y coordinates of where
+	-- the bar should start on your screen. All entries after these fields define what can be displayed on that bar. If you
+	-- want to see it, it must be visible (i.e., ['visible'] = true].) You can also find a 'tag' parameter on some fields.
+	-- Leave those alone. They are used by the /smg command. Some fields let you define an initial value (e.g., ['init'] = true).
+	-- The initialization of these fields have been broken out into their own section: gVars._INITIALIZE. Not all fields support
+	-- initialization.
 	DisplayBar = {
-		[gVars._POS_X] = 325,																-- X coordinate of the display bar
-		[gVars._POS_Y] = 0,																	-- Y coordinate of the display bar
-		[gVars._VISIBLE] = true,															-- Should the display bar be visible
-		--
-		[gVars._JOB] = { ['visible'] = true },												-- job/subjob display. Visible?
-		[gVars._CAP] = { ['visible'] = true },												-- gear level capped. Visible?
-		--
-		[gVars._GC]  = { ['visible'] = true },												-- gear check. Visible?
-		--
-		[gVars._WSWAP]   = { ['visible'] = true,  ['init'] = true },						-- weapon swap. Visible? Initial setting
-		[gVars._KITE]    = { ['visible'] = true,  ['init'] = false },						-- kiting. Visible? Initial setting
-		[gVars._TH]	     = { ['visible'] = false, ['init'] = false },						-- treasure hunter. Visible? Initial setting
-		[gVars._TANK]    = { ['visible'] = false, ['init'] = false },						-- tanking. Visible? Initial setting
-		[gVars._IDLE]    = { ['visible'] = false, ['init'] = true },						-- idle gear. Visible? Initial setting
-		[gVars._EVASION] = { ['visible'] = true,  ['init'] = false },						-- evasion. Visible? Initial setting
-		[gVars._SPF]     = { ['visible'] = true },											-- show pull. Visible?
-		[gVars._GSWAP]   = { ['visible'] = true,  ['init'] = true },						-- gear swapping. Visible? Initial setting
-		-- Magic accuracy is only available to jobs/subjobs that use magic
-		[gVars._MACC]    = { ['visible'] = true,  ['init'] = false },						-- macc. Visible? Initial setting
-		[gVars._SBP]     = { ['visible'] = true,  ['init'] = true },						-- show blood pact. Visible? Initial setting
-		--
-		-- Mode let's the player define what emphasis gearing should have:
-		-- 		gVars_MODE_PERPETUATION - perpetuation cost, gVars_MODE_ATTACK - attack, gVars_MODE_ENMITY_MINUS - enmity minus
-		[gVars._MODE]    = { ['visible'] = true,  ['init'] = gVars._MODE_PERPETUATION },	-- Mode. Visible? Initial setting
-		[gVars._DT]		 = { ['visible'] = true,  ['init'] = gVars._DT_OFF },				-- Damage taken. Visible? Initial setting
-		[gVars._REGION]  = { ['visible'] = true },											-- region control. Visible?
-		--
-		[gVars._ACC]     = { ['visible'] = true },											-- accuracy. Visible?
-		-- racc displays the ranged accuracy stage(s). You can limit the display to only ranged subjobs (rangesj) and all
-		[gVars._RACC]    = { ['visible'] = true },											-- ranged accuracy. Visible?
-		--
-		[gVars._LOCKS]   = { ['visible'] = true },											-- locks. Visible?
-		--
-		[gVars._DAY]     = { ['visible'] = true },											-- day. Visible?
-		[gVars._TIME]    = { ['visible'] = true },											-- time. Visible?
-		[gVars._MOON]    = { ['visible'] = true },											-- moon phase and percent. Visible?
-		[gVars._WEATHER] = { ['visible'] = true },											-- weather. Visible?
-		[gVars._ZONE]    = { ['visible'] = true },											-- zone name. Visible?
-		[gVars._CC]		 = { ['visible'] = true },											-- conditional codes. Visible?
+		[gVars._BAR1] = {
+			-- By default, bar 1 is visible. During testing, the prefix is set to 'X:'. This will be set to nil (meaning no
+			-- prefix will be displayed) once Boxcar is ready to be deployed. You can set it to anything you want. It's just
+			-- what's displayed first on the bar.
+			[gVars._VISIBLE] = true,															-- should display bar 1 be visible
+			[gVars._POS_X] = 325,																-- x coordinate of display bar 1
+			[gVars._POS_Y] = 0,																	-- y coordinate of display bar 1
+			---
+			[gVars._PREFIX] = 'X:',																-- what to display prior to the fields
+			[gVars._JOB] = { ['visible'] = true, ['tag'] = 'job' },								-- job/subjob display. Visible?
+			[gVars._CAP] = { ['visible'] = true, ['tag'] = 'cap' },								-- gear level capped. Visible?
+			--
+			[gVars._GC]  = { ['visible'] = true, ['tag'] = 'gc' },								-- was gear check run. Visible?
+			--
+			[gVars._WSWAP]   = { ['visible'] = true,  ['tag'] = 'wswap' },						-- weapon swap. Visible?
+			[gVars._KITE]    = { ['visible'] = true,  ['tag'] = 'kite' },						-- kiting. Visible?
+			[gVars._TH]	     = { ['visible'] = false, ['tag'] = 'th' },							-- treasure hunter. Visible?
+			[gVars._TANK]    = { ['visible'] = false, ['tag'] = 'tank' },						-- tanking. Visible?
+			[gVars._IDLE]    = { ['visible'] = false, ['tag'] = 'idle' },						-- idle gear. Visible?
+			[gVars._EVASION] = { ['visible'] = true,  ['tag'] = 'eva' },						-- evasion. Visible?
+			[gVars._SPF]     = { ['visible'] = true,  ['tag'] = 'spf' },						-- show pull. Visible?
+			[gVars._SGS]     = { ['visible'] = true,  ['tag'] = 'sgs' },						-- show gear sets. Visible?
+			[gVars._GSWAP]   = { ['visible'] = true,  ['tag'] = 'gswap' },						-- gear swapping. Visible?
+			-- Magic accuracy is only available to jobs/subjobs that use magic
+			[gVars._MACC]    = { ['visible'] = true,  ['tag'] = 'macc' },						-- macc. Visible?
+			-- sBP is only available to summoners (SMN/ or /SMN)
+			[gVars._SBP]     = { ['visible'] = true,  ['tag'] = 'sbp' },						-- show blood pact. Visible?
+			-- Mode is currently only available to summoners (SMN/ or /SMN). Mode let's the player define what
+			-- emphasis gearing should have affecting their pet.
+			[gVars._MODE]    = { ['visible'] = true,  ['tag'] = 'mode' },						-- mode. Visible?
+			[gVars._DT]		 = { ['visible'] = true,  ['tag'] = 'dt' },							-- damage taken. Visible?
+			[gVars._REGION]  = { ['tag'] = 'region',  ['visible'] = true },						-- region control. Visible?
+			--
+			[gVars._ACC]     = { ['visible'] = true,  ['tag'] = 'acc' },						-- accuracy. Visible?
+			[gVars._RACC]    = { ['visible'] = true,  ['tag'] = 'racc' },						-- ranged accuracy. Visible?
+			--
+			[gVars._LOCKS]   = { ['visible'] = true,  ['tag'] = 'locks' },						-- locks. Visible?
+			--
+			[gVars._DAY]     = { ['visible'] = true,  ['tag'] = 'day' },						-- day. Visible?
+			[gVars._TIME]    = { ['visible'] = true,  ['tag'] = 'time' },						-- time. Visible?
+			[gVars._MOON]    = { ['visible'] = true,  ['tag'] = 'moon' },						-- moon phase and percent. Visible?
+			[gVars._WEATHER] = { ['visible'] = true,  ['tag'] = 'weather' },					-- weather. Visible?
+			[gVars._ZONE]    = { ['visible'] = true,  ['tag'] = 'zone' },						-- zone name. Visible?
+			[gVars._CC]		 = { ['visible'] = true,  ['tag'] = 'cc' },							-- custom conditionals? Visible?
+			},
+		[gVars._BAR2] = {
+			[gVars._VISIBLE] = false,															-- Should display bar 2 be visible
+			[gVars._POS_X] = 325,																-- X coordinate of second display bar
+			[gVars._POS_Y] = 40,																-- Y coordinate of second display bar
+			---
+			[gVars._PREFIX] = 'X2:',															-- what to display prior to the fields
+			[gVars._JOB] = { ['visible'] = true, ['tag'] = 'job' },								-- job/subjob display. Visible?
+			[gVars._CAP] = { ['visible'] = true, ['tag'] = 'cap' },								-- gear level capped. Visible?
+			--
+			[gVars._GC]  = { ['visible'] = true, ['tag'] = 'gc' },								-- was gear check run. Visible?
+			--            ScanGearDelay                   Populates the gear delay structure
+			[gVars._WSWAP]   = { ['visible'] = true,  ['tag'] = 'wswap' },						-- weapon swap. Visible?
+			[gVars._KITE]    = { ['visible'] = true,  ['tag'] = 'kite' },						-- kiting. Visible?
+			[gVars._TH]	     = { ['visible'] = false, ['tag'] = 'th' },							-- treasure hunter. Visible?
+			[gVars._TANK]    = { ['visible'] = false, ['tag'] = 'tank' },						-- tanking. Visible?
+			[gVars._IDLE]    = { ['visible'] = false, ['tag'] = 'idle' },						-- idle gear. Visible?
+			[gVars._EVASION] = { ['visible'] = true,  ['tag'] = 'eva' },						-- evasion. Visible?
+			[gVars._SPF]     = { ['visible'] = true,  ['tag'] = 'spf' },						-- show pull. Visible?
+			[gVars._SGS]     = { ['visible'] = true,  ['tag'] = 'sgs' },						-- show gear sets. Visible?
+			[gVars._GSWAP]   = { ['visible'] = true,  ['tag'] = 'gswap' },						-- gear swapping. Visible?
+			-- Magic accuracy is only available to jobs/subjobs that use magic
+			[gVars._MACC]    = { ['visible'] = true,  ['tag'] = 'macc' },						-- macc. Visible?
+			-- sBP is only available to summoners (SMN/ or /SMN)
+			[gVars._SBP]     = { ['visible'] = true,  ['tag'] = 'sbp' },						-- show blood pact. Visible?
+			-- Mode is currently only available to summoners (SMN/ or /SMN). Mode let's the player define what
+			-- emphasis gearing should have affecting their pet.
+			[gVars._MODE]    = { ['visible'] = true,  ['tag'] = 'mode' },						-- mode. Visible?
+			[gVars._DT]		 = { ['visible'] = true,  ['tag'] = 'dt' },							-- damage taken. Visible?
+			[gVars._REGION]  = { ['tag'] = 'region',  ['visible'] = true },						-- region control. Visible?
+			--
+			[gVars._ACC]     = { ['visible'] = true,  ['tag'] = 'acc' },						-- accuracy. Visible?
+			[gVars._RACC]    = { ['visible'] = true,  ['tag'] = 'racc' },						-- ranged accuracy. Visible?
+			--
+			[gVars._LOCKS]   = { ['visible'] = true,  ['tag'] = 'locks' },						-- locks. Visible?
+			--
+			[gVars._DAY]     = { ['visible'] = true,  ['tag'] = 'day' },						-- day. Visible?
+			[gVars._TIME]    = { ['visible'] = true,  ['tag'] = 'time' },						-- time. Visible?
+			[gVars._MOON]    = { ['visible'] = true,  ['tag'] = 'moon' },						-- moon phase and percent. Visible?
+			[gVars._WEATHER] = { ['visible'] = true,  ['tag'] = 'weather' },					-- weather. Visible?
+			[gVars._ZONE]    = { ['visible'] = true,  ['tag'] = 'zone' },						-- zone name. Visible?
+			[gVars._CC]		 = { ['visible'] = true,   ['tag'] = 'cc' },						-- custom conditionals? Visible?
+		},
+		[gVars._INITIALIZE] = {
+			-- Certain fields have initial values. Because all fields can be either in bar 1 or bar 2, the initialization
+			-- values have been moved to their own breakout section. These values are shared across both display bars.
+			[gVars._WSWAP] 		= true,
+			[gVars._KITE] 		= false,
+			[gVars._TH] 		= false,
+			[gVars._TANK] 		= false,
+			[gVars._IDLE] 		= true,
+			[gVars._EVASION]	= false,
+			[gVars._SGS] 		= false,
+			[gVars._GSWAP] 		= true,
+			-- Magic accuracy is only available to jobs/subjobs that use magic
+			[gVars._MACC] 		= false,
+			-- sBP enables display of blood pacts, it is only available to summoners (SMN/ or /SMN)
+			[gVars._SBP] 		= true,
+			-- Mode is currently only available to summoners (SMN/ or /SMN). Mode let's the player define what emphasis gearing should
+			-- have, affecting their pet: perpetuation cost (gVars_MODE_PERPETUATION), attack (gVars_MODE_ATTACK), or enmity down
+			-- (gVars_MODE_ENMITY_MINUS)
+			[gVars._MODE] 		= gVars._MODE_PERPETUATION,
+			-- Damage Taken is a cycle available to all jobs. Settings are: off (gVars._DT_OFF), magical (gVars._DT_MAG), breath (gVars._DT_BRE),
+			-- or physical (gVars._DT_PHY)
+			[gVars._DT] 		= gVars._DT_OFF,
+		},
 	};
 	-- While not implemented yet there are multiple overlays planned for BOXCAR. The following structure
 	-- is just an initial guess of what's needed. The entries are not used yet and when it's implemented
@@ -1913,20 +2163,19 @@ profile.settings = {
 	Overlays = {
 		-- Lock Grid
 		lockGrid = {
-			[gVars._VISIBLE] = true,		-- Display locks on the equipment grid
-			[gVars._POS_X] = 1000,			-- X coordinate of the equipment grid
-			[gVars._POS_Y] = 400,			-- Y coordinate of the equipment grid
+			[gVars._VISIBLE] = true,			-- Display locks on the equipment grid
+			[gVars._POS_X] = 1000,				-- X coordinate of the equipment grid
+			[gVars._POS_Y] = 400,				-- Y coordinate of the equipment grid
+			[gVars._LOCK_STYLE] = gVars._REDX,	-- WIP. Indicates how to display the locked gear slot
+			[gVars._SHOW_DELAY] = false,		-- WIP. Indicates on grid if gear slot has delayed piece
 		},
 		-- Day Cycle
 		dayCycle = {
-			[gVars._VISIBLE] = true,		-- Display day cycle list
-			[gVars._POS_X] = 1000,			-- X coordinate of the day cycle list
-			[gVars._POS_Y] = 400,			-- Y coordinate of the day cycle list
+			[gVars._VISIBLE] = true,			-- Display day cycle list
+			[gVars._POS_X] = 1000,				-- X coordinate of the day cycle list
+			[gVars._POS_Y] = 400,				-- Y coordinate of the day cycle list
 		},
 	};
-	-- Trackers for the regen and refresh caps
-	bCappedRefresh = false;				-- Disables resting refresh gear equip if true
-	bCappedRegen = false;				-- Disables resting regen gear equip if true
 	-- Should distance be checked when performing a weapon skill?
 	WScheck = true; 	 				-- set to false if you don't want to use the WSdistance safety check
 	WSdistance = 4.7; 	 				-- default max distance (yalms) that a melee weapon skill can reach. 4.7 is the default for Tarutarus
@@ -1936,16 +2185,15 @@ profile.settings = {
 	-- Default target
 	DefaultSpellTarget = 't'; 			-- What is the default target to use in MaxSpell if no target specified
 	DefaultSongTarget = 't';  			-- What is the default target to use in MaxSong if no target specified
-};
+	};
+
+profile.Sets = sets;
 
 -- Table of custom conditionals
 profile.CustomConditionals = {
 	[1] = { ['code'] = 'CC1', ['question'] = 'Is minus fire resistance an issue?', ['init'] = false },
 	[2] = { ['code'] = 'CC2', ['question'] = 'Should optional gear be included?', ['init'] = false },
 };
-
--- Tracked pet action
-profile.sPetAction = nil;
 
 --[[
 	****************
@@ -1968,7 +2216,7 @@ function SetSubjobSet(chkSJ)
 		profile.settings.AutoMacroBookPage.bBook == false or
 		profile.settings.AutoMacroBookPage.book == nil or
 		profile.settings.AutoMacroBookPage.bPage == false or
-		(profile.settings.sjb ~= nil and profile.settings.sjb == chkSJ) then
+		(profile.system_settings.sjb ~= nil and profile.system_settings.sjb == chkSJ) then
 		return;
 	end
 
@@ -1981,9 +2229,18 @@ function SetSubjobSet(chkSJ)
 
 	-- Set the macro set
 	AshitaCore:GetChatManager():QueueCommand(1, '/macro set '..tostring(sj));
-	profile.settings.sjb = chkSJ;
+	profile.system_settings.sjb = chkSJ;
 	displaybar.UpdateBarStatic();
 	crossjobs.SetVariables(false);
+
+	-- Lastly, if indicated, lockstyle either the current gear or a specific set
+	if profile.settings.LockStyle ~= nil then
+		local s = '/lockstyleset ' .. tostring(profile.settings.LockStyle);
+		AshitaCore:GetChatManager():QueueCommand(1, s);
+		if profile.settings.bConfirmation == true then
+			print(chat.message('Info: ' .. s .. ' completed'));
+		end
+	end
 end		-- SetSubjobSet
 
 --[[
@@ -1991,7 +2248,7 @@ end		-- SetSubjobSet
 --]]
 
 function profile.OnLoad()
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 
 	-- Initialize settings
 	gSettings.AllowAddSet = true;
@@ -2070,17 +2327,17 @@ function HandlePetAction(PetAction)
 			sType = gVars._UNKNOWN;
 		end
 
-		if (profile.sPetAction == nil or profile.sPetAction ~= PetAction.Name) and
+		if (profile.system_settings.sPetAction == nil or profile.system_settings.sPetAction ~= PetAction.Name) and
 		   utilities.fGetToggle('sBP') == true then
-			if table.find(pets.SmnBPRageList,PetAction.Name) ~= nil or
-			   table.find(pets.SmnBPWardOffenseList,PetAction.Name) ~= nil then
-				sMsg = '/p  [<pet>] [Blood Pact(' .. sType .. '): ' .. PetAction.Name .. '] >> <t>.';
+			if sType == gVars._Rage or sType == gVars._WARD then
+				sMsg = '/p [<pet>] Blood Pact[' .. sType .. ']: ' .. PetAction.Name .. ' >> <t>.';
 				AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
 			end
-			sMsg2 = '/echo [<pet>] [Blood Pact(' .. sType .. '): ' .. PetAction.Name .. ']';
+			sMsg2 = '/echo [<pet>] Blood Pact[' .. sType .. ']: ' .. PetAction.Name
 			AshitaCore:GetChatManager():QueueCommand(-1, sMsg2);
-			profile.sPetAction = PetAction.Name;
+			profile.system_settings.sPetAction = PetAction.Name;
 		end
+		--
 	end
 
 	-- Only gear swap if this flag is true
@@ -2099,7 +2356,7 @@ end		-- HandlePetAction
 function profile.HandleDefault()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 	local zone = gData.GetEnvironment();
 	local ew = gData.GetEquipment();
 	local bSA = utilities.fBuffed('Sneak Attack');
@@ -2129,7 +2386,7 @@ function profile.HandleDefault()
 		return;
 	end
 
-	profile.sPetAction = nil;
+	profile.system_settings.sPetAction = nil;
 
 	-- Save the name of the main weapon
 	if ew['Main'] ~= nil then
@@ -2140,11 +2397,11 @@ function profile.HandleDefault()
 	-- equipped, the current item in the ammo slot is saved. The following will set it back
 	-- to what you had before unless the slot is locked.
 	if player.SubJob == 'BST' and 
-	   profile.settings.bAmmo == true and
+	   profile.system_settings.bAmmo == true and
 	   locks.fIsSlotLocked('ammo') == false then
-		gFunc.ForceEquip('Ammo',profile.settings.sAmmo);
-		profile.settings.sAmmo = nil;
-		profile.settings.bAmmo = false;
+		gFunc.ForceEquip('Ammo',profile.system_settings.sAmmo);
+		profile.system_settings.sAmmo = nil;
+		profile.system_settings.bAmmo = false;
 	end
 
 	-- Clear out the CurrentGear in case of leftovers
@@ -2176,29 +2433,33 @@ function profile.HandleDefault()
 		if utilities.fGetToggle('TH') == true and profile.settings.EmbedOnly.TH == false then
 			gear.MoveToDynamicGS(profile.Sets.JA_TH,crossjobs.Sets.CurrentGear,false,'TH');
 		end
-	elseif player.Status == 'Resting' then	
+	elseif player.Status == 'Resting' and profile.system_settings.bDefault == false then
 		local bRefresh = false;
-		if profile.settings.bCappedRefresh == false and player.MP >= player.MaxMP then
-			profile.settings.bCappedRefresh = true;
+		if profile.system_settings.bCappedRefresh == false and player.MP >= player.MaxMP then
+			profile.system_settings.bCappedRefresh = true;
 		end
-		if profile.settings.bCappedRegen == false and player.HP >= player.MaxHP then
-			profile.settings.bCappedRegen = true;
+		if profile.system_settings.bCappedRegen == false and player.HP >= player.MaxHP then
+			profile.system_settings.bCappedRegen = true;
 		end
 
 		-- Player kneeling. Based on priority, order regen and refresh
 		if profile.settings.bPriorityRefresh == true then
-			if profile.settings.bCappedRefresh == false then
+			if profile.system_settings.bCappedRefresh == false then
 				gear.MoveToDynamicGS(profile.Sets.Resting_Refresh,crossjobs.Sets.CurrentGear,false,'Resting_Refresh');
 				bRefresh = true;
-			elseif profile.settings.bCappedRegen == false then
+			elseif profile.system_settings.bCappedRegen == false then
 				gear.MoveToDynamicGS(profile.Sets.Resting_Regen,crossjobs.Sets.CurrentGear,false,'Resting_Regen');
+			else
+				profile.system_settings.bDefault = true;	-- Indicates to switch to default gear
 			end
 		else
-			if profile.settings.bCappedRegen == false then
+			if profile.system_settings.bCappedRegen == false then
 				gear.MoveToDynamicGS(profile.Sets.Resting_Regen,crossjobs.Sets.CurrentGear,false,'Resting_Regen');
-			elseif profile.settings.bPriorityRefresh then
+			elseif profile.system_settings.bCappedRefresh == false then
 				gear.MoveToDynamicGS(profile.Sets.Resting_Refresh,crossjobs.Sets.CurrentGear,false,'Resting_Refresh');
 				bRefresh = true;
+			else
+				profile.system_settings.bDefault = true;	-- Indicates to switch to default gear
 			end
 		end
 
@@ -2209,10 +2470,15 @@ function profile.HandleDefault()
 				gear.fSwapToStave(sStave,false,crossjobs.Sets.CurrentGear);
 			end
 		end
-	else
-		-- Assume player idling
-		profile.settings.bCappedRefresh = false;
-		profile.settings.bCappedRegen = false;
+	else	-- idle or (resting and refresh/regen caps hit)
+		if player.Status == 'Idle' then
+			-- Once entering because 'idle' as opposed to refresh and regen being
+			-- capped, flip settings because player no long resting
+			profile.system_settings.bCappedRefresh = false;
+			profile.system_settings.bCappedRegen = false;
+			-- reset setting now that 'Resting' is over
+			profile.system_settings.bDefault = false;
+		end
 
 		gear.MoveToDynamicGS(profile.Sets.Default,crossjobs.Sets.CurrentGear,false,'Default');
 	end
@@ -2241,7 +2507,7 @@ end		-- HandleDefault
 
 function profile.HandleAbility()
 	local ability = gData.GetAction();
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 	local sj = player.SubJob;
 	
 	-- Make sure the data download is done
