@@ -1,0 +1,532 @@
+The following lists all of the conditional inline checks, grouped by type. Note: some conditionals
+have had their names changed, for consistency purposes. Also, many inverted conditionals have been
+added to represent the opposite of an existing conditional. These are all prefixed with: NOT_
+
+The sections represent types with the inverse conditionals to the right of each type. The groupings
+represent "in kind" categories and in the code have their own routines for processing. This makes it
+easier to add and validate new conditionals. Validation tends to focus on formatting and not logic.
+You can use impossible conditionals that are perfectly formatted and the validation routine will
+not detect the problem. (Validation is intended to identify syntax issues and not logic issues.)
+
+Last updated - July 31, 2026
+
+Buffs:
+    //AFTERMATH          Equip if player has Aftermath                                  //NOT_AFTERMATH      Equip if player does not have Aftermath
+    //ANCIENT_CIRCLE     Equip if player has Anicient Circle buff                       //NOT_ANCIENT_CIRCLE Equip if player does not have Ancient Circle
+    //ARCANE_CIRCLE      Equip if player has Arcane Circle buff                         //NOT_ARCANE_CIRCLE  Equip if player does not have Arcane Circle buff
+    //COVER              Equip if player has Cover active                               //NOT_COVER          Equip if player does not have Cover active
+    //FLEE               Equip if player has Flee active                                //NOT_FLEE           Equip if player does not have Flee active
+    //HOLY_CIRCLE        Equip if player has Holy Circle buff                           //NOT_HOLY_CIRCLE    Equip if player does not have Holy Circle buff
+~   //IONIS              Equip if player has Ionis buff (SoA)                         ~ //NOT_IONIS          Equip if player does not have Ionis buff (SoA)
+    //REPRISAL           Equip if player has Reprisal buff                              //NOT_REPRISAL       Equip if player does not have Reprisal buff
+    //SAMBA              Equip if player has Samba buff they applied                    //NOT_SAMBA          Equip if player does not have the Samba buff
+    //SANCTION           Equip if player has Sanction buff (ToAU)                       //NOT_SANCTION       Equip if player does not have Sanction buff (ToAU
+    //SHINING_RUBY       Equip if player has Shining Ruby buff                          //NOT_SHINING_RUBY   Equip if player does not have Shining Ruby buff
+~   //SIGIL              Equip if player has Sigil buff (WotG)                        ~ //NOT_SIGIL          Equip if player does not have Sigil buff (WotG)
+    //SIGNET             Equip if player has Signet buff (vanilla)                      //NOT_SIGNET         Equip if player does not have Signet buff (vanilla)
+    //SPIKE              Equip if player has a spike spell buff: blaze,ice,shock,dread  //NOT_SPIKE          Equip if player does not have a spike spell buff: blaze,ice,shock,dread
+    //SNEAK_ATTACK       Equip if player has sneak attack buff                          //NOT_SNEAK_ATTACK   Equip if player does not have sneak attack buff
+    //TRICK_ATTACK       Equip if player has trick attack buff                          //NOT_TRICK_ATTACK   Equip if player does not have trick attack buff
+    //UTSUSEMI           Equip if player has Utsusemi buff                              //NOT_UTSUSEMI       Equip if player does not have Utsusemi buff
+    //WARD_CIRCLE        Equip if player has Warding Circle buff                        //NOT_WARD_CIRCLE    Equip if player does not have Warding Circle buff
+    //YONIN              Equip if player has Yonin buff                                 //NOT_YONIN          Equip if player does not have Yonin buff
+
+Barspells:
+    //BARANY             Equip if player has any barspell buff                          //NOT_BARANY         Equip if player has no "bar" type buffs
+    //BARELEMENTAL       Equip if the player has a "bar" elemental buff                 //NOT_BARELEMENTAL   Equip if the player does not have a "bar" elemental buff
+    //BARSTATUS          Equip if the player has a "bar" status buff                    //NOT_BARSTATUS      Equip if the player does not have a "bar" status buff
+    //BARAERO            Equip if player has baraero buff                               //NOT_BARAERO        Equip if player hasn't baraero buff
+    //BARBLIZZARD        Equip if player has barblizzard buff                           //NOT_BARBLIZZARD    Equip if player hasn't barblizzard buff
+    //BARFIRE            Equip if player has barfire buff                               //NOT_BARFIRE        Equip if player hasn't barfire buff
+    //BARSTONE           Equip if player has barstone buff                              //NOT_BARSTONE       Equip if player hasn't barstone buff
+    //BARTHUNDER         Equip if player has barthunder buff                            //NOT_BARTHUNDER     Equip if player hasn't barthunder buff
+    //BARWATER           Equip if player has barwater buff                              //NOT_BARWATER       Equip if player hasn't barwater buff
+    //BARSLEEP           Equip if player has barsleep buff                              //NOT_BARSLEEP       Equip if player hasn't barsleep buff
+    //BARPOISON          Equip if player has barpoison buff                             //NOT_BARPOISON      Equip if player hasn't barpoison buff
+    //BARPARALYZE        Equip if player has barparalyze buff                           //NOT_BARPARALYZE    Equip if player hasn't barparalyze buff
+    //BARBLIND           Equip if player has barblind buff                              //NOT_BARBLIND       Equip if player hasn't barblind buff
+    //BARVIRUS           Equip if player has barvirus buff                              //NOT_BARVIRUS       Equip if player hasn't barvirus buff
+    //BARPETRIFY         Equip if player has barpetrify buff                            //NOT_BARPETRIFY     Equip if player hasn't barpetrify buff
+
+Enspells:
+    //ENANY              Equip if player has any en- spell buff                         //NOT_ENANY          Equip if player does not have any en- spell buff
+    //ENAERO             Equip if player has enaero buff                                //NOT_ENAERO         Equip if player does not have enaero buff
+    //ENBLIZZARD         Equip if player has enblizzard buff                            //NOT_ENBLIZZARD     Equip if player does not have enblizzard buff
+    //ENDARK             Equip if player has endark buff                                //NOT_ENDARK         Equip if player does not have endark buff
+    //ENFIRE             Equip if player has enfire buff                                //NOT_ENFIRE         Equip if player does not have enfire buff
+    //ENLIGHT            Equip if player has enlight buff                               //NOT_ENLIGHT        Equip if player does not have enlight buff
+    //ENSTONE            Equip if player has enstone buff                               //NOT_ENSTONE        Equip if player does not have enstone buff
+    //ENTHUNDER          Equip if player has enthunder buff                             //NOT_ENTHUNDER      Equip if player does not have enthunder buff
+    //ENWATER            Equip if player has enwater buff                               //NOT_ENWATER        Equip if player does not have enwater buff
+
+Magic Type:
+    //MT:BLUE               Equip if spell is type of blue magic                        //NOT_MT:BLUE           Equip if spell is not type of blue magic
+    //MT:DARK               Equip if spell is type of dark magic                        //NOT_MT:DARK           Equip if spell is not type of dark magic
+    //MT:DIVINE             Equip if spell is type of divine magic                      //NOT_MT:DIVINE         Equip if spell is not type of divine magic
+    //MT:ELEMENTAL          Equip if spell is type of elemental magic                   //NOT_MT:ELEMENTAL      Equip if spell is not type of elemental magic
+    //MT:ENFEEBLING         Equip if spell is type of enfeebling magic                  //NOT_MT:ENFEEBLING     Equip if spell is not type of enfeebling magic
+    //MT:ENHANCING          Equip if spell is type of enhancing magic                   //NOT_MT:ENHANCING      Equip if spell is not type of enhancing magic
+    //MT:HEALING            Equip if spell is type of healing magic                     //NOT_MT:HEALING        Equip if spell is not type of healing magic
+    //MT:NINJUTSU           Equip if spell is type of ninjutsu                          //NOT_MT:NINJUTSU       Equip if spell is not type of ninjutsu
+    //MT:OFFENSIVE_HEALING  Equip if spell is type of offensive healing magic
+    //MT:SINGING            Equip if action is a song                                   //NOT_MT:SINGING        Equip if action is not a song
+    //MT:SUMMONING          Equip if spell is type of summoning magic                   //NOT_MT:SUMMONING      Equip if spell is not type of summoning magic
+
+Conditional:
+    //HP.conditional.#       Equip if conditional is found true for HP
+    //HPP.conditional.#      Equip if conditional is found true for HP%
+    //HPPA.conditional.#     Like HPP, but it uses a standard max HP% for the specific gear set
+    //MP.conditional.#       Equip if conditional is found true for MP
+    //MPP.conditional.#      Equip if conditional is found true for MP%
+    //MPPA.conditional.#     Like MPP, but it uses a standard max MP% for the specific gear set
+    //TP.conditional.#       Equip if conditional is found true for TP
+    //TPP.conditional.#      Equip if conditional is found true for TP%
+    //LVL.conditional.#      Equip if conditional is found true for the primary job's level
+    //PARTY.condition.#      Equip if party number meets conditional criteria
+    //PETHPP.conditional.#   Equip if pet's HP% meets the comparison
+    //LVLDIV:#               Equip if the primary job's level is evenly divisible by #
+    //NOT_LVLDIV:#           Equip if primary job's level does not evenly divide by #
+
+    Valid conditionals are -
+        .EQ.            Equal to
+        .GT.            Greater than
+        .GE.            Greater than or equal to
+        .LT.            Less than
+        .LE.            Less than or equal to
+        .NE.            Not equal to
+
+Day:
+    //DARKSDAY           Equip if the day's element is dark                             //NOT_DARKDAY        Equip if the day's element is not dark
+    //EARTHSDAY          Equip if the day's element is earth                            //NOT_EARTHSDAY      Equip if the day's element is not earth
+    //FIRESDAY           Equip if the day's element is fire                             //NOT_FIRESDAY       Equip if the day's element is not fire
+    //ICEDAY             Equip if the day's element is ice                              //NOT_ICEDAY         Equip if the day's element is not ice
+    //LIGHTNINGDAY       Equip if the day's element is thunder                          //NOT_LIGHTNINGDAY   Equip if the day's element is not thunder
+    //LIGHTSDAY          Equip if the day's element is light                            //NOT_LIGHTSDAY      Equip if the day's element is not light
+    //WATERSDAY          Equip if the day's element is water                            //NOT_WATERSDAY      Equip if the day's element is not water
+    //WINDSDAY           Equip if the day's element is wind                             //NOT_WINDSDAY       Equip if the day's element is not wind
+
+Debuff:
+    //DEBUFFED           Equip if player has any debuff                                 //NOT_DEBUFFED       Equip if player has no debuffs
+    //ADDLED             Equip if player has addle debuff                               //NOT_ADDLED         Equip if player has no addle debuff
+    //AMNESIA            Equip if player has Amnesia debuff                             //NOT_AMNESIA        Equip if player has no Amnesia debuff
+    //BANED              Equip if player has Bane debuff                                //NOT_BANED          Equip if player has no Bane debuff
+    //BOUND              Equip if player is bound                                       //NOT_BOUND          Equip if player is not bound
+    //BLINDED            Equip if player is blinded                                     //NOT_BLINDED        Equip if player is not blinded
+    //BUSTED             Equip if player has Bust debuff                                //NOT_BUSTED         Equip if player has no Bust debuff
+    //CHARMED            Equip if player has Charm debuff                               //NOT_CHARMED        Equip if player has no Charm debuff
+    //CURSED             Equip if player is cursed                                      //NOT_CURSED         Equip if player is not cursed
+    //DISEASED           Equip if player has disease debuff                             //NOT_DISEASED       Equip if player has no disease debuff
+    //DOOMED             Equip if player is doomed                                      //NOT_DOOMED         Equip if player is not doomed
+    //ENCUMBERED         Equip if player has encumber debuff                            //NOT_ENCUMBERED     Equip if player has no encumber debuff
+    //IMPAIRED           Equip if player has impair debuff                              //NOT_IMPAIRED       Equip if player has no impair debuff
+    //KO                 Equip if player is KO                                          //NOT_KO             Equip if player is not KO
+    //MEDICATED          Equip if player has medicate debuff                            //NOT_MEDICATED      Equip if player has no medicate debuff
+    //MUTED              Equip if player has mute debuff                                //NOT_MUTED          Equip if player has no mute debuff
+    //PARALYZED          Equip if player is paralyzed                                   //NOT_PARALYZED      Equip if player is not paralyzed
+    //PETRIFIED          Equip if player is petrified                                   //NOT_PETRIFIED      Equip if player is not petrified
+    //PLAGUED            Equip if player has plague debuff                              //NOT_PLAGUED        Equip if player is not plagued
+    //POISONED           Equip if player is poisoned                                    //NOT_POISONED       Equip if player is not poisoned
+    //SJ_RESTRICTION     Equip if player is under subjob restriction                    //NOT_SJ_RESTRICTION Equip if player is not under a subjob restriction
+    //SILENCED           Equip if player is silenced                                    //NOT_SILENCED       Equip if player is not silenced
+    //SLEPT              Equip if player is slept or lullaby                            //NOT_SLEPT          Equip if player is not slept
+    //STUNNED            Equip if player has stun debuff                                //NOT_STUNNED        Equip if player has no stun debuff
+    //TERRIFIED          Equip if player has terror debuff                              //NOT_TERRORIFIED    Equip if player has no terror debuff
+    //WEAKENED           Equip if player is weakened                                    //NOT_WEAKENED       Equip if player is not weakened
+    //WEIGHTED           Equip if player has weight debuff                              //NOT_WEIGHTED       Equip if player has no weight debuff
+
+Gear:
+    //IF:gear,...        Equip if wearing one of the specified items in current slot        //NOT_IF:gear,...      Equip if not wearing one of the specified items in the current slot
+    //IF-slot:gear,...   Equip if wearing one of the specified items in the specified slot  //NOT_IF-slot:gear,... Equip if not wearing one of the specified items in the specified slot
+    //SPECIAL            Equip if the special comparisons match
+        Gear supported -
+            uggalepih pendant   MP% < 51% on visible gear, +8 MAB
+            parade gorget       HP%>=85% on visible gear, adds refresh, doesn't work if cursed
+            sorcerer's ring     HP% < 76% and TP% < 100%, ignore HP+ and convert gear, +10 MAB
+            drake ring          HP% < 75% and TP% < 100%, enhances Jump
+            shinobi ring        HP% < 75% and TP% < 100%, +4% Haste
+            minstrel's ring     HP% < 75% and TP% < 100%, -25% spell casting time
+
+Moon Phase:
+    //FULLMOON           Equip if moon phase is full moon                                   //NOT_FULLMOON       Equip if moon phase is not a full moon
+    //NEWMOON            Equip if moon phase is new moon                                    //NOT_NEWMOON        Equip if moon phase is not a new moon
+    //GIBBOUS            Equip if moon phase is either waning gibbous or waxing gibbous     //NOT_GIBBOUS        Equip if moon phase is either waning gibbous or waxing gibbous
+    //QUARTERMOON        Equip if moon phase is quarter moon (mistakenly called halfmoon)   //NOT_QUARTERMOON    Equip if moon phase is quarter moon (mistakenly called halfmoon)
+    //CRESCENT           Equip if moon phase is either waning crescent or waxing crescent   //NOT_CRESCENT       Equip if moon phase is either waning crescent or waxing crescent
+
+Slot:
+    //EMPTY              Equip if slot in temporary set is empty. If ears/rings, it checks both for at least one slot being empty               //NOT_EMPTY          Equip if slot in temporary set is not empty
+    //EMPTY:1            Equip if ears/rings slot #1 is empty. Note: command will not force loading into slot 1, it just checks for absence     //NOT_EMPTY:1        Equip if ears/rings slot #1 is not empty
+    //EMPTY:2            Equip if ears/rings slot #2 is empty. Note: command will not force loading into slot 2, it just checks for absence     //NOT_EMPTY:2        Equip if ears/rings slot #2 is not empty
+
+Other:
+    //CC#                Equip if the custom conditional is enabled                         //NOT_CC#            Equip if the custom conditional is false
+    //DUALWIELD          Equip if main or sub job can dual wield                            //NOT_DUALWIELD      Equip if main or sub job cannot dual wield
+    //INPARTY            Equip if player is in a party (doesn't count a party of 1)         //NOT_INPARTY        Equip item if not in a party
+    //OWN                Equip if area's region controlled by player's nation               //NOT_OWN            Equip if the area's region not controlled by player's nation
+    //PARTY:#            Equip if player in party of the specified size
+    //SONG:xxx           Equip if the song's name being cast contains xxx                   //NOT_SPELL:xxx      Equip if the song/spell being cast's name does not contain the "xxx" substring
+    //SONGTYPE:xxx       Equip if the song's category contains xxx                          //NOT_SPELLTYPE:xxx  Equip if spell being cast is not in the designated group, where xxx is: BARELEMENTAL or BARSTATUS
+    //SPELL:xxx          Equip if the spell's name being cast contains xxx                  //NOT_MODE=xxx       Equip if the mode is not set to xxx when xxx is either PERP or ATK
+    //TOWN               Equip if player's in town                                          //NOT_TOWN           Equip if player's not in town
+    //TOWN-AK            Equip ducal aketon or national aketon if the player is in the appropriate town
+    //MODE:xxx           SMN or /SMN only. Equip if the mode:xxx matches the value of PET_MODE (PERP, ATK or ENMM)
+
+    //STATUS:ENGAGED     Equip if the player is engaged (fighting or weapons drawn)         //NOT_STATUS:ENGAGED Equip if the player is not engaged (fighting or weapons drawn)
+    //STATUS:RESTING     Equip if the player is resting                                     //NOT_STATUS:RESTING Equip if the player is not resting
+    //STATUS:IDLING      Equip if the player is idling                                      //NOT_STATUS:IDLING  Equip if the player is not idling
+
+    Debug settings:
+    //TRUE               Always equips since always evaluates to true                       //NOT_TRUE           Never equips since it never evaluates to true
+    //FALSE              Never equips since it never evaluates to true                      //NOT_FALSE          Always equips since it's never false
+
+    List of all recognized Job Abilities. Inversions are not supported. The line with SJ= indicates
+    which ability can be used as a subjob
+
+    *SMN*
+    //JA:ASTRAL_FLOW, ~ //JA:ELEMENTAL_SIPHON, ~ //JA:APOGEE
+    SJ=
+
+    *WAR*
+    //JA:MIGHTY_STRIKES, //JA:PROVOKE, //JA:BERSERK, //JA:DEFENDER, //JA:WARCRY, //JA:AGGRESSOR,
+    ~ //JA:RETALIATION,~ //JA:WARRIORS_CHARGE,~ //JA:TOMAHAWK
+    SJ=PROVOKE,BERSERK,DEFENDER,WARCRY
+
+    *THF*
+    //JA:PERFECT_DODGE, //JA:STEAL, //JA:SNEAK_ATTACK, //JA:FLEE, //JA:TRICK_ATTACK, //JA:MUG,
+    //JA:BULLY, //JA:HIDE, //JA:ACCOMPLICE, //JA:COLLABORATOR,~ //JA:ASSASSINS_CHARGE,~ //JA:FEINT
+    SJ=STEAL,FLEE,MUG,SNEAK_ATTACK,TRICK_ATTACK
+
+    *BLM*
+    //JA:MANAFONT, //JA:ELEMENTAL_SEAL
+    SJ=ELEMENTAL_SEAL
+
+    *MNK*
+    //JA:HUNDRED_FISTS, //JA:BOOST, //JA:FOCUS, //JA:DODGE, //JA:CHAKRA, //JA:CHI_BLAST, //JA:COUNTERSTANCE
+    ~ //JA:FOOTWORK,~ //JA:MANTRA,~ //JA:FORMLESS_STRIKES
+    SJ=BOOST,FOCUS,DODGE,CHAKRA
+
+    *WHM*
+    //JA:BENEDICTION, //JA:DIVINE_SEAL, //JA:DEVOTION,~ //JA:MARTYR
+    SJ=DIVINE_SEAL
+
+    *RDM*
+    //JA:CHAINSPELL, //JA:CONVERT,~ //JA:COMPOSURE
+    SJ=
+
+    *PLD*
+    //JA:INVINCIBLE, //JA:HOLY_CIRCLE, //JA:SHIELD_BASH, //JA:SENTINEL, //JA:COVER, //JA:CHIVALRY,
+    //JA:RAMPART,~ //JA:MAJESTY,~ //JA:FEALTY
+    SJ=HOLY_CIRCLE,SHIELD_BASH,SENTINEL,COVER
+
+    *BST*
+    //JA:FAMILIAR, //JA:CHARM, //JA:GAUGE, //JA:REWARD, //JA:CALL_BEAST, //JA:TAME,~ //JA:BESTIAL_LOYALTY,
+    ~ //JA:FERAL_HOWL,~ //JA:KILLER_INSTINCT
+    SJ=CHARM,GAUGE,REWARD,TAME
+
+    *RNG*
+    //JA:EAGLE_EYE_SHOT, //JA:SHARPSHOT, //JA:SCAVENGE, //JA:CAMOUFLAGE, //JA:BARRAGE, //JA:SHADOWBIND,
+    //JA:VELOCITY_SHOT, //JA:UNLIMITED_SHOT,~ //JA:FLASHY_SHOT,~ //JA:STEALTH_SHOT
+    SJ=SHARPSHOT,SCAVENGE,CAMOUFLAGE,BARRAGE,SHADOWBIND
+
+    *NIN*
+    //JA:MIKAGE, //JA:YONIN,~ //JA:INNIN,~ //JA:SANGE
+    SJ=YONIN
+
+    *DRK*
+    //JA:BLOOD_WEAPON, //JA:ARCANE_CIRCLE, //JA:LAST_RESORT, //JA:WEAPON_BASH, //JA:SOULEATER,
+    ~ //JA:CONSUME_MANA,~ //JA:DARK_SEAL,~ //JA:DIABOLIC_EYE
+    SJ=ARCANE_CIRCLE,LAST_RESORT,WEAPON_BASH,SOULEATER
+
+    *BRD*
+    //JA:SOUL_VOICE,~ //JA:PIANISSIMO,~ //JA:NIGHTINGALE,~ //JA:TROUBADOUR
+    SJ=
+
+    *SAM*
+    //JA:MEIKYO_SHISUI, //JA:WARDING_CIRCLE, //JA:THIRD_EYE, //JA:HASSO, //JA:MEDITATE, //JA:SEIGAN,
+    ~ //JA:SEKKANOKI,~ //JA:KONZEN-ITTAI,~ //JA:BLADE_BASH,~ //JA:SHIKIKOYO
+    SJ=WARDING_CIRCLE,THIRD_EYE,HASSO,MEDITATE,SEIGAN
+
+    *DRG*
+    //JA:SPIRIT_SURGE, //JA:CALL_WYVERN, //JA:ANCIENT_CIRCLE, //JA:JUMP, //JA:SPIRIT_LINK, //JA:HIGH_JUMP,
+    //JA:SUPER_JUMP,~ //JA:SPIRIT_BOND,~ //JA:DEEP_BREATHING,~ //JA:ANGON
+    SJ=ANCIENT_CIRCLE,JUMP,HIGH_JUMP
+
+    *COR*
+    //JA:WILD_CARD, //JA:PHANTOM_ROLL, //JA:DOUBLE_UP, //JA:QUICK_DRAW, //JA:RANDOM_DEAL,~ //JA:SNAKE_EYE,
+    ~ //JA:FOLD
+    ~SJ=RANDOM_DEAL
+
+    *BLU*
+    //JA:AZURE_LORE, //JA:BURST_AFFINITY, //JA:CHAIN_AFFINITY,~ //JA:CONVERGENCE,~ //JA:DIFFUSION
+    ~SJ=BURST_AFFINITY
+
+    *PUP*
+    //JA:OVERDRIVE, //JA:ACTIVATE, //JA:DEUS_EX_AUTOMATA, //JA:REPAIR, //JA:MAINTENANCE,~ //JA:ROLE_REVERSAL,
+    ~ //JA:VENTRILOQUY
+    ~SJ=ACTIVATE,DEUS_EX_AUTOMATA,REPAIR,MAINTENANCE
+
+    *SCH*
+    TBD
+
+    *DNC*
+    TBD
+
+    *GEO*
+    TBD
+
+    *RUN*
+    TBD
+
+Songs:
+    //SONG:aaa          Equip if song cast contains specied string                          //NOT_SONG:xxx       Equip if song being cast's name does not contains the "aaa" substring
+    //SONGTYPE:xxx      Equip if the specified song type matches the song's type            //NOT_SONGTYPE:xxx   Equip is song type is not what's specified
+
+    where xxx is one of: AUBADE,BALLAD,CAPRICCIO,CAROL,ELEGY,ETUDE,FANTASIA,FINALE,GAVOTTE,HYMNUS,LULLABY,MADRIGAL,MAMBO,MARCH,MAZURKA,MINNE,MINUET,
+    OPERETTA,PAEON,PASTORAL,PRELUDE,REQUIEM,THRENODY,VIRELAI
+
+Tracked:
+    The following are a list of codes specific to a type that is compared to a setting that Luashitacast sets, for comparison. Individual definitions
+    are unneeded. NOT_ versions are not supported since they are too varied to have a meaning.
+
+    Weaponskill -
+        WS_STR, WS_STRAGI, WS_STRDEX, WS_STRINT, WS_STRINT_30_20, WS_STRMND,WS_STRMND_30_50, WS_STRVIT, WS_CHR, WS_DEX, WS_DEXAGI, WS_DEXCHR,
+        WS_DEXINT, WS_INT, WS_INTMND, WS_MND, WS_RANGED_AGI, WS_RANGED_STRAGI,WS_VIT, WS_SKILL, WS_HP
+
+Pet:
+    //PET                Equip if player has a pet                                          //NOT_PET             Equip if player has no pet
+    //PETF               Equip if player has pet and it is fighting                         //NOT_PETF            Equip if pet is not fighting
+    //PETFNPF            Equip if pet is fighting but not player                            //NOT_PETFNPF         Equip if pet not fighting but player is fighting
+    //PETNAME:xxx        Equip if pet named xxx. Note: "xxx" can be a substring             //NOT_PETNAME:xxx     Equip if player has no pet or pet is not named "xxx"
+    //PC:PET_ATTACK      Equip if BST pet does an Attack skill                              //NOT_PC:PET_ATTACK   Equip if BST pet does not do an Attack skill
+    //PC:PET_MATT        Equip if BST pet does Magical Attack skill                         //NOT_PC:PET_MATT     Equip if BST pet does not do a Magical Attack skill
+    //PC:PET_MACC        Equip if BST pet does Magic accuracy skill                         //NOT_PC:PET_MACC     Equip if BST pet does not do a Magic accuracy skill
+
+++  //DRG:PET            Equip if DRG player has their wyvern summoned                      //NOT_DRG:PET
+++  //DRG:SUMMONS        Equip if DRG player is summoning their wyvern                      //NOT_DRG:SUMMONS
+++  //PUP:PET            Equip if the PUP player has their puppet out                       //NOT_PUP:PET
+++  //PUP:SUMMONS        Equip if the PUP player is summoning their puppet                  //NOT_PUP:SUMMONS
+
+    //SMN:AVATAR         Equip if a SMN avatar (not spirit) is being summoned               //NOT_SMN:AVATAR      Equip if a SMN spirit is being summoned. Equivalent to //SMN:SPIRIT
+    //SMN:SPIRIT         Equip if a SMN spirit (not avatar) is being summoned               //NOT_SMN:SPIRIT      Equip if a SMN avatar is being summoned. Equivalent to //SMN:AVATAR
+    //SMN:SUMMONS        Equip if a SMN avatar or spirit is being summoned                  //NOT_SMN:SUMMONS     Equip if a SMN is not summoning an avatar or spirit
+    //SMN:SUMMONS:xxx    Equip if player is summoning avatar/spirit whose name contains xxx //NOT_SMN:SUMMONS:xxx Equip if the specified SMN pet being summoned
+
+    //SMN:BP:xxx         Equip if blood pact name contains xxx.                             //NOT_SMN:BP:xxx
+    //SMN:PET:AVATAR     Equip if player has a smn's avatar pet                             //NOT_SMN:PET:AVATAR
+    //SMN:PET:SPIRIT     Equip if player has a smn's spirit pet                             //NOT_SMN:PET:SPIRIT
+    //SMN:PETMW          Equip if SMN's pet's element matches the weather's element         //NOT_SMN:PETMW
+    //SMN:PETMD          Equip if SMN's pet's element matches day's element                 //NOT_SMN:PETMD
+    //SMN:PET            Equip if player has a smn's avatar or spirit pet                   //NOT_SMN:PET         Equip if player does not have a smn's avatar or spirit pet
+    //BST:PET            Equip if player's pet is a BST pet                                 //NOT_BST:PET         Equip if player's pet is not a BST pet
+    //DRG:PET            Equip if player's pet is a DRG pet                                 //NOT_DRG:PET         Equip if player's pet is not a DRG pet
+    //PUP:PET            Equip if player's pet is a puppet                                  //NOT_PUP:PET         Equip if player's pet is not a PUP pet
+++  //DRG:SUMMONS        Equip if DRG player is not summoning their wyvern                  //NOT_DRG:SUMMONS     Equip if DRG player is not summoning their wyvern
+++  //PUP:SUMMONS        Equip if PUP player is not summoning a puppet                      //NOT_PUP:SUMMONS     Equip if PUP player is not summoning a puppet
+    //PC:ASSAULT                                                                            //NOT_PC:ASSAULT
+    //PC:RELEASE                                                                            //NOT_PC:RELEASE
+    //PC:RETREAT                                                                            //NOT_PC:RETREAT
+    //SMN:BP:PHYS                                                                           //NOT_SMN:BP:PHYS     Equip if SMN blood pact is not physical based
+    //SMN:BP:MAG                                                                            //NOT_SMN:BP:MAG      Equip if SMN blood pact is not magical based
+    //SMN:BP:SKILL                                                                          //NOT_SMN:BP:SKILL    Equip if SMN blood pact is not skill based
+    //SMN:BP:ACC                                                                            //NOT_SMN:BP:ACC      Equip if SMN blood pact is not accuracy based
+    //SMN:BP:HYBRID                                                                         //NOT_SMN:BP:HYBRID   Equip if SMN blood pact is not a hybrid
+    //PC:FIGHT                                                                              //NOT_PC:FIGHT
+    //PC:HEEL                                                                               //NOT_PC:HEEL
+    //PC:STAY                                                                               //NOT_PC:STAY
+    //PC:SIC                                                                                //NOT_PC:SIC
+    //PC:READY                                                                              //NOT_PC:READY
+    //PC:LEAVE                                                                              //NOT_PC:LEAVE
+    //PC:SNARL                                                                              //NOT_PC:SNARL
+    //BST:PET_ATTACK                                                                        //NOT_BST:PET_ATTACK
+    //BST:PET_MATT                                                                          //NOT_BST:PET_MATT
+    //BST:PET_MACC                                                                          //NOT_BST:PET_MACC
+    //PC:DEPLOY                                                                             //NOT_PC:DEPLOY
+    //PC:DEACTIVATE                                                                         //NOT_PC:DEACTIVATE
+    //PC:RETRIEVE                                                                           //NOT_PC:RETRIEVE
+    //PC:DISMISS                                                                            //NOT_PC:DISMISS
+    //PC:STEADY_WING                                                                        //NOT_PC:STEADY_WING
+
+    List of all recognized Pet Commands.
+
+    *SMN*
+    //PC:ASSAULT,Blood Pacts: //SMN:BP:PHYS,//SMN:BP:MAG,//SMN:BP:SKILL,//SMN:BP:ACC,//SMN:BP:HYBRID
+    //PC:RELEASE,//PC:RETREAT,~ //PC:AVATARS_FAVOR
+
+    *BST*
+    //PC:FIGHT,//PC:HEEL,//PC:STAY,//PC:SIC,//PC:READY,//PC:LEAVE,//PC:SNARL,
+    //BST:PET_ATTACK,//BST:PET_MATT,//BST:PET_MACC
+
+    *PUP*
+    //PC:DEPLOY,//PC:DEACTIVATE,//PC:RETRIEVE
+
+    *DRG*
+    //PC:DISMISS,//PC:STEADY_WING
+
+    ** Consider supporting lists for //PETNAME: and //NOT_PETNAME:
+
+Job:
+    Player's Mainjob - (likely used in crossjob's gearsets)
+
+    //MMJ                Equip if player's main job is magical                              //NOT_MMJ            Equip if player's main job is not magical
+    //MJ:job,job,...     Equip if the player's main job is one of the jobs listed           //NOT_MJ:job,job,... Equip if the player's main job is not one of the jobs listed
+
+    Player's Subjob:
+    //MSJ               Equip if player's subjob is magical                                 //NOT_MSJ            Equip if player's subjob is not magical
+    //SJ:job,job,...    Equip if the player's subjob is one of the jobs listed              //NOT_SJ:job,job,... Equip if the player's subjob is not one of the jobs listed
+
+    Job in Party:
+    //PJB:job,job,...   Equip if there's one of the specified jobs in your party            //NOT_PJB:job,job,...Equip if there's not one of the specied jobs in your party
+
+
+Job in Party, but not me:
+     //PJBNM:job,job,... Equip if there's one of the specified jobs in your party but not you
+
+Target:
+    //FAM:xxx            Equip if target is part of the specified family                    //NOT_FAM:xxx        Equip if target is part of the specified family
+    //ECO:xxx            Equip if target is part of the specified eco-System                //NOT_ECO:xxx        Equip if target is part of the specified eco-System
+    //ME                 Equip if the target is me                                          //NOT_ME             Equip if the target is not me
+
+    List of valid ecosystems and their families
+
+    ** Consider supporting lists for //FAM:, //ECO:, and their inversions
+
+Time:
+     //TIME:DAYTIME      Equip if it's daytime (6:00 to 18:00)                              //NOT_DAYTIME          Equip if it's not daytime (18:01 to 5:59)
+     //TIME:DUSK2DAWN    Equip if it's between dusk and dawn (17:00 to 7:00)                //NOT_DUSK2DAWN        Equip if it's not between dusk and dawn (7:01 to 16:59)
+     //TIME:NIGHTTIME    Equip if it's nighttime (17:00 to 6:00)                            //NOT_NIGHTTIME        Equip if it's not nighttime (6:01 to 16:59)
+     //TIME:DAWN         Equip if it's dawn (6:00 to 7:00)                                  //NOT_TIME:DAWN        Equip if it's not dawn (7:01 to 5:59)
+     //TIME:DAY          Equip if it's day (7:00 to 17:00)                                  //NOT_TIME:DAY         Equip if it's not day (17:01 to 6:59)
+     //TIME:DUSK         Equip if it's dusk (17:00 to 18:00)                                //NOT_TIME:DUSK        Equip if it's not dusk (18:01 to 16:59)
+     //TIME:EVENING      Equip if it's evening (18:00 to 20:00)                             //NOT_TIME:EVENING     Equip if it's not evening (20:01 to 17:59)
+     //TIME:DEADOFNIGHT  Equip if it's deadofnight (20:00 to 4:00)                          //NOT_TIME:DEADOFNIGHT Equip if it's not deadofnight (4:01 to 19:59)
+
+Toggled Condition:
+    //DT:BREATH          Equip item if damage taken is set to breath                        //NOT_DT:BREATH      Equip item if damage taken is not set to breath
+    //DT:MAGICAL         Equip item if damage taken is set to magical                       //NOT_DT:MAGICAL     Equip item if damage taken is not set to magical
+    //DT:PHYSICAL        Equip item if damage taken is set to physical                      //NOT_DT:PHYSICAL    Equip item if damage taken is not set to physical
+    //ACCURACY           Equip item if some stage of appropriate accuracy is set            //NOT_ACCURACY       Equip item if some stage of accuracy is not set
+    //RACCURACY          Equip item if some stage of ranged accuracy is set                 //NOT_RACCURACY      Equip item if some stage of ranged accuracy is not set
+    //EVASION            Equip if 'Eva' is enabled                                          //NOT_EVASION        Equip if 'Eva' is disabled
+    //IDLE               Equip if 'Idle' is enabled                                         //NOT_IDLE           Equip if 'Idle' is disabled
+    //TANK               Equip if 'Tank' is enabled                                         //NOT_TANK           Equip if 'Tank' is disabled
+    //MACC               Equip if 'Macc' is enabled (limited to magical jobs/subjobs)       //NOT_MACC           Equip if 'Macc' is disabled (limited to magical jobs/subjobs)
+    //WSWAP              Equip if 'WSWAP' is enabled                                        //NOT_WSWAP          Equip if 'WSWAP' is disabled
+    //KITE               Equip if 'kite' is enabled                                         //NOT_KITE           Equip if 'kite' is disabled
+    //SPF                Equip if 'sPF' is enabled (show pull feedback)                     //NOT_SPF            Equip if 'sPF' is disabled (show pull feedback)
+    //RIDING             Equip if you're riding a "chocobo"                                 //NOT_RIDING         Equip if you're riding a "chocobo"
+    //TH                 Equip if 'TH' is enabled                                           //NOT_TH             Equip of TH is disabled
+
+    //BRD:HORN           Equip if instrument is set to HORN                                 //NOT_BRD:HORN       Equip if instrument is not set to horn (brd only)
+    //BRD:STRING         Equip if instrument is set to STRING                               //NOT_BRD:STRING     Equip if instrument is not set to string (brd only)
+    //BST:AJUG           Equip if 'Ajug' is enabled                                         //NOT_BST:AJUG       Equip if 'Ajug' is disabled
+    //BST:DB:BPP         Equip if debuff cycle set to BPP (blind,poison,paralyze)           //NOT_BST:DB:BPP     Equip if debuff cycle is not set to BPP (blind,poison,paralyze) (bst only)
+    //BST:DB:WSS         Equip if debuff cycle set to WSS (weight,slow,silence)             //NOT_BST:DB:WSS     Equip if debuff cycle is not set to WSS (weight,slow,silence) (bst only)
+    //SMN:SBP            Equip if 'sBP' is enabled                                          //NOT_SMN:SBP        Equip if 'sBP' is disabled
+    //THF:SS             Equip if 'SS' is enabled                                           //NOT_THF:SS         Equip if SS is disabled (thf only)
+
+Weapon type:
+    //ARCHERY            Equip if weapon in Range is a bow                                  //NOT_ARCHERY        Equip if weapon in Range is not a bow
+    //AXE                Equip if weapon in Main/Sub is an axe                              //NOT_AXE            Equip if weapon in Main/Sub is not an axe
+    //CLUB               Equip if weapon in Main/Sub is a club                              //NOT_CLUB           Equip if weapon in Main/Sub is not a club
+    //DAGGER             Equip if weapon in Main/Sub is a dagger                            //NOT_DAGGER         Equip if weapon in Main/Sub is a dagger
+    //GAXE               Equip if weapon in Main is a great axe                             //NOT_GAXE           Equip if weapon in Main is not a great axe
+    //GKATANA            Equip if weapon in Main is a great katana                          //NOT_GKATANA        Equip if weapon in Main is not a great kayana
+    //GSWORD             Equip if weapon in Main is a great sword                           //NOT_GSWORD         Equip if weapon in Main is not a great sword
+    //H2H                Equip if weapon in Main is hand to hand                            //NOT_H2H            Equip if weapon in Main is not an hand to hand
+    //KATANA             Equip if weapon in Main/Sub is a katana                            //NOT_KATANA         Equip if weapon in Main/Sub is not a katana
+    //MARKSMANSHIP       Equip if weapon in Range is a gun or crossbow                      //NOT_MARKSMANSHIP   Equip if weapon in Range is not a gun nor crossbow
+    //POLEARM            Equip if weapon in Main is a polearm                               //NOT_POLEARM        Equip if weapon in Main is not a polearm
+    //SCYTHE             Equip if weapon in Main is a scythe                                //NOT_SCYTHE         Equip if weapon in Main is not a scythe
+    //STAVE              Equip if weapon in Main is a stave                                 //NOT_STAVE          Equip if weapon in Main is not a stave
+    //SWORD              Equip if weapon in Main/Sub is a sword                             //NOT_SWORD          Equip if weapon in Main/Sub is not a sword
+    //THROWING           Equip if weapon in Range/Ammo is throwing weapon                   //NOT_THROWING       Equip if weapon in Range/Ammo is not a thrown weapon
+
+    //AMMO               Equip if ammo in ammo slot is ammo                                 //NOT_AMMO           equip if ammo in ammo slot is not ammo
+    //SHIELD             Equip if gear in Sub is a shield                                   //NOT_SHIELD         Equip if gear in Sub is not a shield
+
+Weather:
+    //WTH:CLEAR          Equip if sky is clear                                              //NOT_WTH:CLEAR      Equip if the sky is not clear
+    //WTH:CLOUDS         Equip if sky is cloudy                                             //NOT_WTH:CLOUDS     Equip if the sky is not cloudy
+    //WTH:DARK           Equip if weather is dark                                           //NOT_WTH:DARK       Equip if the weather is not dark
+    //WTH:EARTH          Equip if weather is earth                                          //NOT_WTH:EARTH      Equip if the weather is not earth
+    //WTH:FIRE           Equip if weather is fire                                           //NOT_WTH:FIRE       Equip if the weather is notfire
+    //WTH:FOG            Equip if sky is foggy                                              //NOT_WTH:FOG        Equip if the sky is not foggy
+    //WTH:ICE            Equip if weather is ice                                            //NOT_WTH:ICE        Equip if the weather is not ice
+    //WTH:LIGHT          Equip if weather is light                                          //NOT_WTH:LIGHT      Equip if the weather is not light
+    //WTH:SUNSHINE       Equip if sky is sunny                                              //NOT_WTH:SUNSHINE   Equip if the sky is not sunny
+    //WTH:THUNDER        Equip if weather is thunder                                        //NOT_WTH:THUNDER    Equip if the weather is not thunder
+    //WTH:WATER          Equip if weather is water                                          //NOT_WTH:WATER      Equip if the weather is not water
+    //WTH:WIND           Equip if weather is wind                                           //NOT_WTH:WIND       Equip if the weather is not wind
+    //WTH:DAY            Equip if the weather's element matches the day's element           //NOT_WTH-DAY	     Equip if the weather does not match the day's element
+
+Obsolete Codes
+    The following codes are no longer recognized. Where a new code replaces them, the new code
+    is included. Obsolete codes that have no replacement are no longer used, the lua code has
+    been changed so they're no loger needed.
+
+    Obsolete            Replacement             Details
+    ---------------------------------------------------
+    //GA:FISH                                   Gathering uses explicit sets now
+    //GA:HELM                                   Gathering uses explicit sets now
+    //GA:DIG                                    Gathering uses explicit sets now
+    //GA:CLAM                                   Gathering uses explicit sets now
+    //CR:ALC                                    Crafting uses explicit sets now
+    //CR:BONE                                   Crafting uses explicit sets now
+    //CR:CLOTH                                  Crafting uses explicit sets now
+    //CR:COOK                                   Crafting uses explicit sets now
+    //CR:GSM                                    Crafting uses explicit sets now
+    //CR:LTH                                    Crafting uses explicit sets now
+    //CR:BSM                                    Crafting uses explicit sets now
+    //CR:WW                                     Crafting uses explicit sets now
+
+    //ARC_CIRCLE        //ARCANE_CIRCLE
+    //Barspells         //BARANY
+    //PART#             //PARTY.conditional.#   Enhanced and renamed
+    //PARTY             //INPARTY
+    //SP:xxx            //SPELL:xxx
+    //SP:xxx            //SONG:xxx              Clarity issue
+    //SMNPET            //SMN:PET
+    //SMN:xxx           //SMN:SUMMONS:xxx
+    //SMN:SPIRIT:ES     //SMN:SPIRIT            Consistency issue
+    //SMN:SPIRIT:EP     //SMN:PET:SPIRIT        Consistency issue
+    //SMNPETMD          //SMN:PETMD
+    //SMNPETMW          //SMN:PETMW
+    //SPIRIT:escape     //SMN:SPIRIT:ES
+    //SPIRIT:escape     //SMN:SPIRIT:EP
+    //NOT_SMN:SPIRIT:ES //NOT_SMN:SPIRIT        Consistency issue
+    //NOT_SMN:SPIRIT:EP //NOT_SMN:PET:SPIRIT    Consistency issue
+    //NO_PET            //NOT_PET
+    //PETNF             //NOT_PETF
+    //UNLESS:gear       //NOT_IF:gear
+    //UNLESS-slot:gear  //NOT_IF-slot:gear
+    //CARBY             //PETNAME:Carbuncle
+    //SJxxx             //SJ:job,job,...
+    //PJBxxx            //PJB:job,job,...
+    //PJBxxx_NOT_ME     //PJBNM:job,job,...
+    //AMORPH            //ECO=amorph
+    //AQUAN             //ECO=aquan
+    //NOT_AMORPH        //NOT_ECO=amorph
+    //NOT_AQUAN         //NOT_ECO=aquan
+    //DAYTIME           //TIME:DAYTIME
+    //DUSK2DAWN         //TIME:DUSK2DAWN
+    //NIGHTTIME         //TIME:NIGHTTIME
+    //HORN              //BRD:HORN
+    //STRING            //BRD:STRING
+    //DB:BPP            //BST:DB:BPP
+    //DB:WSS            //BST:DB:WSS
+    //then              //THF:TH
+    //BST_PET_ATTACK    //BST:PET_ATTACK
+    //BST_PET_MATT      //BST:PET_MATT
+    //BST_PET_MACC      //BST:PET_MACC
+
+Keywords:
+    conditionals - .EQ.,.GT.,.GE.,.LT.,.LE.,.NE.
+    jobs - WAR,MNK,WHM,BLM,RDM,THF,PLD,DRK,BST,BRD,RNG,SAM,NIN,DRG,SMN,
+        Currently out of era: BLU,COR,PUP,DNC,SCH,GEO,RUN
+    weapon types - ARCHERY,AXE,CLUB,DAGGER,GAXE,GKATANA,GSWORD,H2H,KATANA,MARKSMANSHIP,
+        POLEARM,SCYTHE,STAVE,SWORD,THROWING
+
+Note:
+    + designates entries that are not implemented yet
+    ++ designates entries that are not implemented yet and I am unsure how to implement
+    ~ designates entries that "might" be added in a future expansion

@@ -1,0 +1,519 @@
+Process Flow Chart for Luashitacast. Start point:
+
+BOXCAR_Paiine_SMN.lua
+    profile.OnLoad
+        utilities.Initialize
+        SetSubjobSet
+        > gear.MoveToDynamicGS <    == Questionable. /GC hasn't been run yet
+        > gear.EquipTheGear         == Questionable. /GC hasn't been run yet
+        utilities.SetToggle
+
+    profile.OnUnload
+        crossjobs.Unload
+
+    profile.HandleCommand
+        help.ShowHelp              == plan on replacing...
+        pets.fPetReward
+        crossjobs.HandleCommands
+    profile.HandleAbility
+        utilities.fGetToggle
+        crossjobs.HandleAbility
+    profile.HandleItem
+        utilities.fGetToggle
+        crossjobs.HandleItem
+    profile.HandlePrecast
+        utilities.fGetToggle
+        magic.HandlePrecast
+    profile.HandleMidcast
+        utilities.fGetToggle
+        magic.HandleMidcast
+    profile.HandlePreshot
+        utilities.fGetToggle
+        crossjobs.HandlePreshot
+    profile.HandleMidshot
+        utilities.fGetToggle
+        crossjobs.HandleMidshot
+    profile.HandleWeaponskill
+        utilities.fGetToggle
+        crossjobs.HandleWeaponskill
+
+    HandleDefault
+        utilities.Reminder
+            gear.fHasGCBeenRun
+        SetSubjobSet
+        displaybar.UpdateBarStatic
+        HandlePetAction
+            pets.fSummonerPet
+            utilities.fGetToggle
+            pets.HandlePetAction
+        locks.fIsSlotLocked
+        utilities.ClearSet
+        gear.MoveToDynamicGS
+        crossjobs.ProgressiveAccuracy
+        gear.fCheckForEleGear
+        gear.fSwapToStave
+        gear.fCheckForElementalGearByValue
+        gear.fSwapToStave
+        gear.EquipTheGear
+        displaybar.UpdateBarStatic
+
+From here on down I've alphabetised the function listings in each file.
+
+crossjobs.lua
+    crossjobs.fHandleWeaponskill
+        utilities.fGetTableByName
+        gear.MoveToDynamicGS
+        crossjobs.ProgressiveAccuracy
+    crossjobs.HandleAbility
+        pets.PetReward
+        utilities.fGetToggle
+        pets.fIsValidJugPet
+        pets.fWhichJugToEquip
+        utilities.fGetTableByName
+        gear.MoveToDynamicGS
+        gear.fCheckForEleGear
+        gear.EquipTheGear
+    crossjobs.HandleCommands
+        utilities.fGetToggle
+        utilities.fValidCustomCommand
+        utilities.ClearSet
+        utilities.AdvanceToggle
+        pets.Call911
+        reporting.GearCheckList
+        gear.GearCheck
+        reporting.DisplayCC
+        utilities.AdvanceToggle
+        utilities.AdvanceCycle
+        pets.ptt
+        gear.MoveToDynamicGS
+        gear.EquipTheGear
+        utilities.fSetCycle
+        lProcessAccuracy
+        locks.ProcessLocks
+        reporting.RegionControlDisplay
+        SetVariables
+        utilities.PullTarget
+        reporting.DB_ShowIt
+        reporting.ProcessSMG
+        gear.ProcessGS
+        utilities.fSetCycle
+        magic.MaxCast
+        gear.EquipItem
+        reporting.DisplayVersion
+    crossjobs.HandleItem
+        crossjobs.ClearSet
+        gear.MoveToDynamicGS
+        gear.EquipTheGear
+    crossjobs.HandleMidshot
+        gcinclude.ClearSet
+        crossjobs.ProgressiveAccuracy
+        gear.EquipTheGear
+    crossjobs.HandlePreshot
+        crossjobs.ClearSet
+        gear.MoveToDynamicGS
+        gear.EquipTheGear
+    crossjobs.HandleWeaponskill
+        utilities.fCheckWsBailout
+        gear.ClearSet
+        crossjobs.fHandleWeaponskill
+        gear.EquipTheGear
+    crossjobs.fHandleWeaponskill
+    lProcessAccuracy
+        gear.fGetAccStage
+        displaybar.SetAccCur
+    crossjobs.ProgressiveAccuracy
+        utilities.GetToggle
+        gear.fGetAccStage
+        gear.MoveToDynamicGS
+        reporting.DisplayOnce
+    SetVariables
+        utilities.CreateToggle
+        utilities.fGetCycle
+        utilities.CreateCycle
+    crossjobs.t1
+    crossjobs.Unload
+        utilities.ClearAliasAll
+        utilities.ClearAliasCC
+        displaybar.Unload
+    event packet_in_callback1
+        displaybar.RegionDisplay
+
+displaybar.lua
+    fAccuracyDisplay
+    displaybar.fColor
+    displaybar.fDisplayIt
+        fWhichJobBar
+    fWhichJobBar
+    displaybar.InitializeDisplayBar
+        displaybar.UpdateBarStatic
+        displaybar.fColor
+        gear.fHasGCBeenRun
+        displaybar.fDisplayIt
+        utilities.GetToggle
+        fAccuracyDisplay
+    displaybar.RegionDisplay
+        utilities.fSetCycle
+        utilities.fBuffed
+    displaybar.UpdateBarStatic
+    displaybar.Unload
+    event displaybar_cb
+
+gear.lua
+    gear.fCheckForElementalGearByValue
+        locks.fIsSlotLocked
+        utilities.fGetRoot
+        fGearCheckItem
+    gear.CheckForExceptions
+        reporting.DisplayOnceSetAliasAll
+    gear.EquipTheGear
+        locks.fMultiSlotLockCheck
+        utilities.fGetToggle
+        gear.CheckForExceptions
+    gear.fExpandGearLine
+        inline.fCheckInline
+        utilities.fGetTableByName
+        utilities.fFormattedWord
+        gear.fGetSlotDefinition
+        gear.fExpandGearLine
+    gear.GearCheck
+        fTallyProgressiveCaps
+        slips.FindSlips
+        slips.fDisplaySlips
+        slips.fFindClaimSlips
+        fGearCheckItem
+        utilities.fFormattedWord
+        utilities.ProcessedTally
+        reporting.GearCheckList
+    fGearCheckItem
+        gear.fHasGCBeenRun
+        utilities.fCheckItemOwned
+            fHasBit
+            fBit
+        utilities.fSlotMatch
+    gear.fGetAccStage
+    gear.fGetSlotDefinition
+        inline.fCheckInline
+        gear.fGetSlotDefinition
+    gear.fHasGCBeenRun
+    gear.MoveToDynamicGS
+        utilities.fGetTableByName
+        inline.fCheckInline
+        gear.fHasGCBeenRun
+        gear.fValidateSpecial
+        gear.MoveToDynamicGS
+        utilities.fReferenceCheck
+        gear.fExpandGearLine
+        fGearCheckItem
+    fParseDescriptionExceptions
+        utilities.fCheckPartyJob
+    gear.ProcessGS
+        gear.MoveToDynamicGS
+        utilities.fGetTableByName
+        gear.EquipTheGear
+        locks.LockUnlock
+        locks.LockByGearSet
+    gear.fSwapToStave
+        utilities.fIsLocked
+        reporting.DisplayOnce
+        utilities.fGetToggle
+    fTallyGear
+        fParseDescription
+        utilities.fGetCycle
+    fTallyProgressiveCaps
+    gear.fValidateSpecial
+        fTallyGear
+
+help.lua
+    help.ShowHelp
+
+inline.lua
+    inline.fCheckInline
+        utilities.fSplitStringByDelimiter
+        inline.fCheckInlineBuff
+        inline.fCheckInlineDebuff
+        inline.fCheckInlineConditional
+        inline.fCheckInlineActivity
+        inline.fCheckInlineDay
+        inline.fCheckInlineMoon
+        inline.fCheckInlineGear
+        inline.fCheckInlineSlot
+        inline.fCheckInlineSongs
+        inline.fCheckInlineOther
+        inline.fCheckInlineJob
+        inline.fCheckInlineTarget
+        inline.fCheckInlinePet
+        inline.fCheckInlineTime
+        inline.fCheckInlineToggle
+        inline.fCheckInlineWeaponType
+        inline.fCheckInlineWeather
+        inline.fCheckInlineMagicType
+        reporting.DisplayMessage
+    inline.fCheckInlineActivity
+    inline.fCheckInlineConditional
+        fEvaluateCondition
+    inline.fCheckInlineDay
+    inline.fCheckInlineDebuff
+        utilities.fBuffed
+    inline.fCheckInlineGear
+        gear.fHasGCBeenRun
+        gear.fValidateSpecial
+    inline.fCheckInlineJob
+        utilities.fCheckPartyJob
+    inline.fCheckInlineMagicType
+    inline.fCheckInlineMoon
+    inline.fCheckInlinePet
+        pets.fSummonerPet
+        pets.fElementByPetName
+    inline.fCheckInlineOther
+        utilities.fGetCycle
+    inline.fCheckInlineSlot
+    inline.fCheckInlineSongs
+    inline.fCheckInlineTarget
+        utilities.fGetMobType
+    inline.fCheckInlineTime
+        utilities.fCheckTime
+    inline.fCheckInlineToggle
+        utilities.fGetCycle
+        utilities.fGetToggle
+        utilities.fAccEnabled
+            utilities.fGetToggle
+    inline.fCheckInlineWeaponType
+        utilities.GetWeaponsList
+    inline.fCheckInlineWeather
+        utilities.fFormattedWord
+    utilities.fCheckWsBailout
+        utilities.fBuffed
+    fEvaluateCondition
+    utilities.fFormattedWord
+
+locks.lua
+    locks.fGetLockedList
+        utilities.fFormattedWord
+    locks.fIsSlotLocked
+        utilities.fValidSlots
+    locks.fMultiSlotLockCheck
+        locks.fIsSlotLocked
+    locks.LockByGearSet
+        gear.MoveToDynamicGS
+    locks.LockUnlock
+        utilities.fValidSlots
+    locks.ProcessLocks
+        locks.LockUnlock
+
+magic.lua
+    magic.fBardSongType
+    magic.HandlePrecast
+        crossjobs.ClearSet
+        gear.MoveToDynamicGS
+        gear.EquipTheGear
+    magic.MaxCast
+        utilities.fGetRoot
+    magic.HandleMidcast
+        crossjobs.ClearSet
+        MidcastSinging
+        MidcastHealingMagic
+        MidcastDarkMagic
+        MidcastDivineMagic
+        MidcastEnfeeblingMagic
+        MidcastEnhancingMagic
+        MidcastElementalMagic
+        MidcastSummoning
+        MidcastBlueMagic
+        MidcastNinjutsu
+        gear.EquipTheGear
+    MidcastBlueMagic (stub function til more details known)
+    MidcastDarkMagic
+        utilities.fGetRoot
+        gear.MoveToDynamicGS
+        gear.fCheckForElementalGearByValue
+        utilities.fCheckObiDW
+        utilities.fGetToggle
+        gear.fSwapToStave
+    MidcastDivineMagic
+        utilities.fGetRoot
+        gear.MoveToDynamicGS
+        gear.fCheckForElementalGearByValue
+        utilities.fCheckObiDW
+        utilities.fGetToggle
+        gear.fSwapToStave
+    MidcastElementalMagic
+        utilities.fGetRoot
+        gear.MoveToDynamicGS
+        gear.fCheckForElementalGearByValue
+        utilities.fCheckObiDW
+        utilities.fGetToggle
+        gear.fSwapToStave
+    MidcastEnfeeblingMagic
+        utilities.fGetRoot
+        gear.MoveToDynamicGS
+        gear.fCheckForElementalGearByValue
+        utilities.fCheckObiDW
+        utilities.fGetToggle
+        gear.fSwapToStave
+    MidcastEnhancingMagic
+        utilities.fGetRoot
+        gear.MoveToDynamicGS
+        gear.fCheckForElementalGearByValue
+        utilities.fCheckObiDW
+    MidcastGeomancy (stub function til more details known)
+    MidcastHealingMagic
+        utilities.fGetRoot
+        gear.MoveToDynamicGS
+        gear.fCheckForElementalGearByValue
+        utilities.fCheckObiDW
+        utilities.fGetToggle
+        gear.fSwapToStave
+    MidcastNinjutsu
+        utilities.fGetRoot
+        gear.MoveToDynamicGS
+        gear.fCheckForElementalGearByValue
+        utilities.fCheckObiDW
+        gear.fSwapToStave
+    MidcastSinging
+        magic.fBardSongType
+        gear.MoveToDynamicGS
+    MidcastSummoning
+        gear.MoveToDynamicGS
+
+pets.lua
+    pets.Call911
+    pets.fElementByPetName
+    pets.fIsValidJugPet
+
+    pets.fPetReward
+    pets.fSummonerPet
+    pets.HandlePetAction
+        utilities.fGetTableByName
+        gear.MoveToDynamicGS
+        gear.EquipTheGear
+    lfFindAllJugs
+    pets.PetReward
+    pets.ptt
+    pets.fWhichJugToEquip
+        lfFindAllJugs
+
+reporting.lua
+    reporting.DB_ShowIt
+    reporting.DisplayCC
+        utilities.GetToggle
+    reporting.DisplayMessage
+    reporting.DisplayOnce
+    reporting.DisplayVersion
+    reporting.GearCheckList
+        gear.fHasGCBeenRun
+    reporting.ProcessSMG
+        utilities.fSplitStringByDelimiter
+        utilities.fNewFileName
+        utilities.fGetAllGearSetNames
+    reporting.RegionControlDisplay
+        utilities.fBuffed
+
+slips.lua
+    slips.fDisplaySlips
+    slips.fFindClaimSlips
+    slips.FindSlips
+        lfWhichSlip
+    lfWhichSlip
+
+utilities.lua
+    utilities.AdvanceCycle
+    utilities.AdvanceToggle
+    utilities.ClearAliasAll
+    utilities.ClearAliasCC
+    utilities.ClearSet
+    utilities.CreateCycle
+    utilities.CreateToggle
+    utilities.fBuffed
+    utilities.fCheckItemOwned
+    utilities.fCheckObiDW
+    utilities.fCheckPartyJob
+    utilities.fCheckTime
+    utilities.fFormattedWord
+    utilities.fGetAllGearSetNames
+    utilities.fGetCycle
+    utilities.fGetRoot
+    utilities.fGetMobType
+        reporting.DisplayOnce
+    utilities.fGetTableByName
+    utilities.fGetToggle
+    utilities.fMagicalSubJob
+    utilities.fMakeConditionalTable
+    utilities.fReferenceCheck
+    utilities.fSetCycle
+    utilities.fSlotMatch
+    utilities.fSplitStringByDelimiter
+    utilities.fValidCustomCommand
+    utilities.fValidSlots
+        utilities.fFormattedWord
+    utilities.GetWeaponsList
+        reporting.DisplayOnce
+    utilities.Initialize
+        displaybar.InitializeDisplayBar
+        SetAliasAll
+        SetAliasCC
+    utilities.fNewFileName
+    utilities.ProcessedTally
+    utilities.PullTarget
+        bRangeOrThrowing
+        utilities.fTargetId
+    bRangeOrThrowing
+        utilities.GetWeaponsList
+    SetAliasAll
+    SetAliasCC
+        utilities.ToggleState
+    utilities.SetToggle
+
+validate.lua    -- Not integrated yet
+    lFlowControl
+        utilities.fMakeConditionalTable
+        lValidateConditionalList
+    validate.HandleValidation (stub function)
+    lValidateConditionalList
+        reporting.DisplayMessage
+        displaybar.fColor
+        utilities.fValidSlots
+
+--- Known for future, but Unreferenced functions:
+    pets.lua
+        pets.FavoredJugPets
+
+    reporting.lua
+        reporting.fCompactLocks
+        lFileItemStats      -- Name doesn't represent function well, needs changing
+        lGearSetListingReport
+            utilities.fTranslateWhichSlot
+         lSlotListingReport (incomplete)
+            utilities.fTranslateWhichSlot
+            lDisplayItemStats
+            lFileItemStats
+
+    utilities.lua
+        DisplayItemStats
+            utilities.fSetColorText
+        utilities.fGetLevel
+        utilities.OpenByFilename        -- Needed for the dynamically generated reports
+            utilities.fNewFileName
+        utilities.fRemoveConditional
+        utilities.ToggleState
+
+--- Useful, but Unreferenced functions:
+    gear.lua
+        gear.FractionalSet
+            utilities.fGetTableByName
+            gear.MoveToDynamicGS
+            inline.fCheckInline
+            gear.FractionalSet
+
+    locks.lua
+        locks.fAreSlotsLocked
+
+    utilities.lua
+        utilities.fLtrim    -- trim off leading spaces
+        utilities.fRtrim    -- trim off trailing spaces
+        utilities.fTrim     -- trim off leading and trailing spaces
+
+*** consider changing gProfile.settings.RegenGearHPP and RefreshGearHP to MaxRegenHPP and MaxRefreshMPP
+    also consider moving them to gProfile.settings
+    consider moving gProfile.settings to gProfile.settings. I know why I did the split, but is it worth it?
+
+    WS toggle to enable/disable wsdistance check (ie., change gProfile.settings.wscheck into a toggle)

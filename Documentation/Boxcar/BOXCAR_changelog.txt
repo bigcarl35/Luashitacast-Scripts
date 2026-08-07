@@ -1,0 +1,34 @@
+- Added SGS command, to display what gear sets are being processed.
+
+- Added color coding to the territories from a /rc command. (B15)
+
+- Added DBAR command, to manipulate the display bar settings. (A24)
+
+- Added automatic ability to lockstyle/lockstyleset gear (B16)
+
+- Two display bars are supported now. This lets the player split what
+  is shown in the main bar to an ancillary bar. Can be helpful if
+  running 1440 or below resolution. (A24)
+
+- While resting, if max(HP) and max(MP) is hit, the player's gear
+  swaps to the idling set. (A25)
+
+- Added conquest tallies to the /rc output, color coded.
+
+- Added code so that the diabolos's pole can be equipped instead of
+  an elemental staff, where appropriate. (31)
+
+- Changed all requests on job to use a default main job from the
+  job file if the main job is NON. (This happens when "data downloading"
+  is occurring.) Unfortunately no similar trick can be done for subjob.
+
+- Implemented HPPA and MPPA in an attempt to avoid "flickering". (A26)
+
+- Added toggle for HP+ for DRG. Let's player boost their maxHP prior
+  to healing breath. (B15a)
+
+- Changed how abilities are processed to be more succinct and to use
+  the Job_Ability gear set. Also added support for the //JA:xxx inline.
+
+- Changed inline //IF: and //IF-slot: to support a comma delimited
+  list.

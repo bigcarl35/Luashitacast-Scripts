@@ -1,0 +1,81 @@
+What is missing:
+
+The following commands are not implemented or only partially implemented. Please note that all commands that support saving
+the output to a file are WIP. That option is not supported.
+
+    Not at all or partially implemented/disabled: smg, dbar, val
+
+    Partially implemented: lachelp, cc (file), gc (file), rc (file)
+
+Planned for 3.0 but either only partially implemented or not implemented at all:
+
+    10) Any pop-ups will have their position information stored in an ini file.
+
+    18) New DG command. This displays the current gear set and can be written to
+        a file.
+
+    23) Implementing the VAL command to validate gear sets. This is a WIP.
+
+    B1) Separating gear sets from the code. It's more separated than it use to be,
+        but it is not completely separated. Not sure how to do this.
+
+    B2) Being able to designate an elemental obi in a generic form within a gear
+        set. The appropriate one will be loaded.
+
+    B3) Being able to designate an elemental gorget in a generic form within a
+        gear set. The appropriate one will be loaded.
+
+    B3a) Being able to designate rse/af/etc gear in a genrtic manner. Some of
+        the structure has been designed. It's been given to Hyde to populate.
+
+    B4) Add pop up to display ptt (pet to target) details, color coded. (XIUI
+        might do this already. Need to check.)
+
+    B5) Add pop up grid overlay for locks that can be positioned over the equipment
+        grid from equipmon.
+
+    B6) Add pop up display to show day cycle.
+
+    B9) Add feature to equip HP down/HP up set. This is needed for gear requirements
+        such as on a sorcerous ring or minstrels ring. Still fleshing out the
+        specifics for this requirement.
+
+No - B10) When a gear set is equipped, display the name in the display bar. (Still
+         deciding if this makes sense since a lot of sets are composites.)
+
+         -- Not doing. This has too many opportunities for ambiguities.
+
+    B11) Add optional parameter on /ei so you can designate a specific ring or
+         earring. (Coded gear already supports this. This parameter is needed
+         in case you explicitly use a piece of gear's name.)
+
+    B14) Add feature that can track cooldowns. How to do this is currently
+        unknown.
+
+Also:
+
+    - Do a better job of integrating Claustrum
+
+    - Change Offensive Curing to recognize undead via the eco/family identification
+
+        I'm reworking the eco/family system completely. When done, this will
+        be trivial.
+
+    - See if I can support color output to a file. (Maybe support html?)
+
+      Have the routine write pseudo colorization. Pass that line and the file pointer
+      (fptr) to an interpreter. If fptr is null, convert to display the line on the
+      screen. If fptr is not null, convert colorization to html.
+
+        html will be written to a file. I've started to implement this.
+
+    - Add support for HP up/down sets regarding the use of sorcerous ring or
+        minstrels ring.
+
+Done - In /rc, colorize Beastmen to purple. Also, yellow is light yellow. See if you
+      can find true yellow
+
+    - Make sure code to load monster eco/family definitions is working correctly.
+      (Maybe load on zoning?)
+
+      Being rewritten.
