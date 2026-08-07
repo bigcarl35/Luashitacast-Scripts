@@ -283,7 +283,7 @@ local sets = {
 		Hands = 'Battle Gloves',								-- +3 Eva
         Legs  = 'Shep. Hose//PETFNPF',							-- +3 Pet Eva
 		Waist = 'Life Belt//IF:TILT Belt',						-- filler, removes -5 eva on tilt belt
-		Feet  = { 'Dance Shoes', 'Bounding Boots' },			-- +6 Eva, +3 AGI
+		Feet  = { 'Dance Shoes +1', 'Bounding Boots' },			-- +7/6 Eva, +3 AGI
     },
 
 --[[
@@ -447,7 +447,7 @@ local sets = {
 		Rings = 'Kshama Ring No.6',							-- +3 CHR
 		Waist = 'Monster Belt',								-- +6 CHR
 		Legs  = 'Beast Trousers',							-- +4 CHR
-		Feet  = { 'Dance Shoes', 'Beast Gaiters' },			-- +3/3 CHR
+		Feet  = { 'Dance Shoes +1', 'Dance Shoes', 'Beast Gaiters' },	-- +4/3/3 CHR
 	},
 
 	-- Then Enmity based sets
@@ -1785,7 +1785,7 @@ end		-- SetSubjobSet
 --]]
 
 function profile.OnLoad()
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 
 	gSettings.AllowAddSet = true;
 	utilities.Initialize();
@@ -1825,22 +1825,11 @@ function profile.OnUnload()
 end		-- OnUnload
 
 --[[
-	HandleCommand is run when you type in a command defined in LUASHITACAST. The commands 
-	handled here instead of in crossjobs.HandleCommands are specific to BST or the help
-	system.
+	HandleCommand is run when you type in a command defined in LUASHITACAST.
 --]]
 
 function profile.HandleCommand(args)
-
-	if args[1] == 'man' then
-		help.ShowHelp();
-	elseif (args[1] == 'ajug') then			-- Turns on/off whether Automated Jug Pets supported
-		utilities.AdvanceToggle('AJug');
-	elseif args[1] == 'petfood' then
-		pets.fPetReward(args[2],true);
-	else
-		crossjobs.HandleCommands(args);
-	end
+	crossjobs.HandleCommands(args);
 end		-- HandleCommand
 
 --[[
@@ -1873,7 +1862,7 @@ end		-- HandlePetAction
 function profile.HandleDefault()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 	local zone = gData.GetEnvironment();	
 	local ew = gData.GetEquipment();
 	local bSA = utilities.fBuffed('Sneak Attack');
@@ -2070,8 +2059,6 @@ function profile.HandlePrecast()
 	end
 
 	magic.HandlePrecast();
-
-	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandlePrecast
 
 --[[
@@ -2089,8 +2076,6 @@ function profile.HandleMidcast()
 
 	-- Call the common HandleMidcast now
 	magic.HandleMidcast();
-
-	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- utilities.HandleMidcast
 
 --[[

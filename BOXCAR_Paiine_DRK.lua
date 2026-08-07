@@ -1864,7 +1864,7 @@ end		-- SetSubjobSet
 --]]
 
 function profile.OnLoad()
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 
 	gSettings.AllowAddSet = true;
 	utilities.Initialize();
@@ -1903,18 +1903,11 @@ function profile.OnUnload()
 end		-- OnUnload
 
 --[[
-	HandleCommand is run when you type in a command defined in LUASHITACAST. The commands handled here instead
-	of in crossjobs.HandleCommands are specific to BST or the help system, which has been tailored to BST.
+	HandleCommand is run when you type in a command defined in LUASHITACAST.
 --]]
 
 function profile.HandleCommand(args)
-	if args[1] == 'man' then
-		help.ShowHelp();
-	elseif args[1] == 'petfood' then
-		pets.fPetReward((args[2],true);
-	else
-		crossjobs.HandleCommands(args);
-	end
+	crossjobs.HandleCommands(args);
 end		-- HandleCommand
 
 --[[
@@ -1946,7 +1939,7 @@ end		-- HandlePetAction
 function profile.HandleDefault()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();		
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 	local zone = gData.GetEnvironment();
 	local ew = gData.GetEquipment();
 	local bSA = utilities.fBuffed('Sneak Attack');
@@ -2139,8 +2132,6 @@ function profile.HandlePrecast()
 	end
 
 	magic.HandlePrecast();
-
-	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandlePrecast
 
 --[[
@@ -2158,8 +2149,6 @@ function profile.HandleMidcast()
 
 	-- Call the common HandleMidcast now
 	magic.HandleMidcast();
-
-	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandleMidcast
 
 --[[

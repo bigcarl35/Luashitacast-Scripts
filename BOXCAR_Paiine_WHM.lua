@@ -293,7 +293,7 @@ local sets = {
         Hands = 'Battle Gloves',						--  +3 Eva
         Waist = 'Scouter\'s Rope',						-- +10 Eva
         Legs  = 'Hydra Brais',							-- +10 Eva
-        Feet  = 'Dance Shoes',							-- +6 Eva
+        Feet  = { 'Dance Shoes +1','Dance Shoes' },		-- +7/6 Eva
     },
 
 --[[
@@ -1321,7 +1321,7 @@ local sets = {
 	your job can do. The leading comment defines what weapon/weapon	skill
 	combination the set applies to.
 
-	RDM can use the following weapons: Dagger (B), Sword (B), Club (D), Archery (E)
+	WHM can use the following weapons: Club (B+), Staff (C+)
 
 	Please note that on HorizonXI you may have access to some weapon skills
 	through your subjob. While not explicitly supported here, the appropriate
@@ -1340,12 +1340,11 @@ local sets = {
 	
 --[[
 		* Strength based *
-		
-		Sword: Flat Blade,Circle Blade,Vorpal Blade,Spirits Within,Mercy Stroke
-		Club: Starlight,Skull Breaker,True Strike
-		H2H: Spinning Attack
+
+		Club: Brain Shaker,Skull Breaker,True Strike
+		Staff: Heavy Swing,Shell Crusher,Full Swing,
 -]]
-	
+
 	['WS_STR'] = {
 		SUBSET = {
 			[1] = 'rAttackPower',
@@ -1354,49 +1353,22 @@ local sets = {
     },
 
 --[[
-		* Strength and Agility based *
-		
-		Archery: Flaming Arrow^,Piercing Arrow^,Dulling Arrow^,Sidewinder^
-		
-		^ Subjob must be RNG
+		* Intelligence based *
+
+		Staff: Gate of Tartarus
 --]]
 
-	['WS_STRAGI'] = {
-		SUBSET = 'rAttackPower',
-        Neck   = 'Justice Torque',								-- +5 STR
-        Ears   = { 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
-		Body   = 'Wonder Kaftan',								-- +1 STR
-        Hands  = { 'Healer\'s Mitts', 'Wonder Mitts' },			-- +3/3 STR
-        Waist  = 'Mrc.Cpt. Belt',								-- +1 STR/+1 AGI
-        Legs   = 'Wonder Braccae',								-- +1 STR
-        Feet   = 'Creek F Clomps',								-- +4 STR
-    },
-	
---[[
-		* Strength and Dexterity based, even weighting *
-		
-		Sword: Fast Blade
-		H2H: Combo,Backhand Blow,Raging Fist^
-		
-		^ Subjob must be MNK
---]]
-
-	['WS_STRDEX'] = {
-		SUBSET = 'rAttackPower'},
-        Head   = 'Empress Hairpin',								-- +3 DEX
-        Neck   = 'Justice Torque',								-- +5 STR
-        Body   = 'Wonder Kaftan',								-- +1 STR
-        Hands  = { 'Healer\'s Mitts', 'Wonder Mitts' },			-- +3/3 STR
-        Rings  = { 'Kshama Ring No.8', 'Kshama Ring No.2' },	-- +3 STR, +3 DEX
-        Waist  = 'Mrc.Cpt. Belt',								-- +1 STR/+1 DEX
-        Legs   = 'Wonder Braccae',								-- +1 STR
-        Feet   = { 'Creek F Clomps', 'Wonder Clomps' }			-- +4/2 STR
-    },
+	['WS_INT'] = {
+		Subset = {
+			[1] = 'rAttackPower',
+			[2] = 'rINT',
+		},
+	},
 
 --[[
 		* Strength and Intelligence based, even weighting *
 		
-		Sword: Burning Blade,Red Lotus Blade
+		Staff: Rock Crusher,Earth Crusher
 --]]
 	
 	['WS_STRINT'] = {
@@ -1414,123 +1386,35 @@ local sets = {
 --[[
 		* Strength and Mind based, even weighting *
 		
-		Sword: Shining Blade,Seraph Blade
-		Club: Shining Strike, Hexa Strike
+		Club: Shining Strike,Seraph Strike,Judgement,Hexa Strike,Randgrith
+		Staff: Spirit Taker,Retribution
 --]]
 
 	['WS_STRMND'] = {
 		SUBSET = 'rAttackPower',
-		Head   = 'Healer\'s Cap',										-- +4 MND
-		Neck   = 'Justice Torque',										-- +5 STR
-        Neck   = 'Promise Badge',										-- +5 INT
-        Body   = { 'Blessed Bliaut', 'Wonder Kaftan' },					-- +5/1 STR
-        Hands  = { 'Blessed Mitts', 'Healer\'s Mitts', 'Wonder Mitts' },-- +7 MND, +3/3 STR
-        Rings  = { 'Tamas Ring', 'Kshama Ring No.9' },					-- +5 INT, +3 MND
-        Back   = { 'Rainbow Cape', 'White Cape' },						-- +3/2 MND
-        Waist  = 'Penitent\'s Rope',									-- +5 MND
-        Legs   = { 'Blessed Trousers', 'Wonder Braccae' },				-- +6 MND, +1 STR
-        Feet   = 'Creek F Clomps',										-- +4 STR
+		Head   = 'Healer\'s Cap',											-- +4 MND
+		Neck  = { 'Justice Torque','Promise Badge', 'Justice Badge' },		-- +5 STR, +5/3 MND
+		Body  = { 'Blessed Bliaut', 'Black Cotehardie', 'Wonder Kaftan' },	-- +5/3/1 STR
+		Hands = { 'Blessed Mitts', 'Healer\'s Mitts', 'Wonder Mitts' },		-- +7 MND, +3/3 STR
+		Rings = { 'Tamas Ring', 'Kshama Ring No.9' },						-- +5/3 MND
+		Back  = { 'Rainbow Cape', 'White Cape' },							-- +3/2 MND
+		Waist = { 'Penitent\'s Rope', 'Mrc.Cpt. Belt' },					-- +5 MND, +1 STR/+1 MND
+		Legs  = { 'Blessed Trousers', 'Wonder Braccae' },					-- +6 MND, +1 STR
+		Feet  = { 'Creek F Clomps', 'Blessed Pumps', 'Mannequin Pumps', 'Wonder Clomps' }	-- +4 STR, +3/2 MND, +2 STR
     },
-	
+
 --[[
-		* Agility based *
-		
-		Marksmanship: Hot Shot^,Split Shot^,Sniper Shot^,Slug Shot^
-		
-		^ Subjob must be RNG
+		* Strength and Mind based, 30% to 50 % weighting *
+
+		Club: Black Halo
 --]]
 
-	['WS_AGI'] = {
+	['WS_STRMND_30_50'] = {
 		SUBSET = {
-			[1] = 'rAttackPower',
-			[2] = 'rAGI'
+			[1] = 'AttackPower',
+			[2] = 'WS_STRMND',
 		},
-    },
-	
---[[
-		* Charisma based *
-		
-		Dagger: Shadowstitch
---]]
-	
-	['WS_CHR'] = {
-		SUBSET = {
-			[1] = 'rAttackPower',
-			[2] = 'rCHR'
-		},
-    },
-
---[[
-		* Dexterity based *
-		
-		Dagger: Wasp Sting,Viper Bite, Dancing Edge
---]]
-	
-	['WS_DEX'] = {
-		SUBSET = {
-			[1] = 'rAttackPower',
-			[2] = 'rDEX'
-		},
-    },
-
---[[
-		* Dexterity and Agility based *
-		
-		Dagger: Eviseration
---]]
-	
-	['WS_DEXAGI'] = {
-		SUBSET = 'rAttackPower',
-        Head   = 'Empress Hairpin',								-- +3 DEX/+3 AGI
-        Neck   = 'Spike Necklace',								-- +3 DEX
-        Ears   = { 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +4 AGI if sj is /NIN, +3 AGI
-        Rings  = { 'Kshama Ring No.2', 'Kshama Ring No.3' },	-- +3 DEX, +3 AGI
-        Waist  = 'Mrc.Cpt. Belt',								-- +1 DEX/+1 AGI
-    },
-		
---[[
-		* Dexterity and Intelligence based *
-		
-		Dagger: Gust Slash,Cyclone
---]]
-	
-	['WS_DEXINT'] = {
-		SUBSET = 'rAttackPower',
-        Head   = 'Empress Hairpin',								-- +3 DEX
-        Neck   = { 'Spike Necklace', 'Philomath Stole' },		-- +3 DEX, +3 INT
-        Rings  = { 'Kshama Ring No.2', 'Kshama Ring No.5' },	-- +3 DEX, +3 INT
-        Waist  = 'Penitent\'s Rope',							-- +5 INT
-        Back   = 'Rainbow Cape',								-- +3 INT
-        Feet   = { 'Healer\'s Duckbills', 'Mannequin Pumps' },	-- +3 INT, +1 INT
-    },
-
---[[
-		* Mind based *
-		
-		Dagger: Energy Steal,Energy Drain
---]]
-
-	['WS_MND'] = {
-		SUBSET = {
-			[1] = 'rAttackPower',
-			[2] = 'rMND',
-		}
-    },
-	
---[[
-		* Vitality based *
-		
-		H2H: Shoulder Tackle,One Inch Punch^
-		
-		^ Subjob must be MNK
---]]
-
-	['WS_VIT'] = {
-		SUBSET = {
-			[1] = 'rAttackPower',
-			[2] = 'rVIT'
-		},
-    },
+	},
 
 --[[
 		* Skill based *
@@ -1540,23 +1424,6 @@ local sets = {
 
 	['WS_Skill'] = {
 		SUBSET = 'rAttackPower',
-		Neck   = { 'Justice Torque//SCYTHE', 'Justice Torque//GKATANA', 'Love Torque//DAGGER', 'Love Torque//POLEARM' },	-- +7 Scythe/G.Katana skill, +7 Dagger/Polearm skill
-    },
-
---[[
-		* HP based *
-		
-		Sword: Spirits Within
---]]
-
-	['WS_HP'] = {
-		Subset = 'rAttackPower',
-        Ears   = { 'Physical Earring', 'Physical Earring' },	-- Convert 25 MP to HP x2
-        Body   = 'Wonder Kaftan',								-- +36 HP
-        Waist  = 'Powerful Rope',								-- +20 HP
-		Back   = 'Rainbow Cape',								-- +9 HP
-        Legs   = 'Wonder Braccae',								-- +21 HP
-        Feet   = { 'Creek F Clomps', 'Wonder Clomps' }			-- +35/20 HP
     },
 	
 --[[
@@ -1786,7 +1653,7 @@ end		-- SetSubjobSet
 --]]
 
 function profile.OnLoad()
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 
 	gSettings.AllowAddSet = true;
 	utilities.Initialize();
@@ -1822,19 +1689,12 @@ function profile.OnUnload()
 end		-- OnUnload
 
 --[[
-	HandleCommand is run when you type in a command defined in LUASHITACAST. The commands handled here instead
-	of in gcinclude.HandleCommands are specific to BST or the help system, which has been tailored to BST.
+	HandleCommand is run when you type in a command defined in LUASHITACAST.
 --]]
 
 function profile.HandleCommand(args)
-	if args[1] == 'man' then
-		help.ShowHelp();
-	elseif args[1] == 'petfood' then			-- Supported since pet food is not job specific, but very niche
-		pets.doPetFood(args[2],args[3]);
-	else
-		crossjobs.HandleCommands(args);
-	end
-end		-- HandleCommand
+	crossjobs.HandleCommands(args);
+end
 
 --[[
 	HandlePetAction equips the appropriate gear set based on the type of action
@@ -1867,7 +1727,7 @@ end		-- HandlePetAction
 function profile.HandleDefault()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();
-	local player = gData.GetPlayer();	
+	local player = utilities.SetJob();
 	local zone = gData.GetEnvironment();
 	local ew = gData.GetEquipment();
 	local bSA = gcinclude.fBuffed('Sneak Attack');
@@ -2062,8 +1922,6 @@ function profile.HandlePrecast()
 	end
 
 	magic.HandlePrecast();
-
-	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandlePrecast
 
 --[[
@@ -2080,8 +1938,6 @@ function profile.HandleMidcast()
 
 	-- Call the common HandleMidcast now
 	magic.HandleMidcast();
-
-	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandleMidcast
 
 --[[

@@ -90,6 +90,15 @@ local sets = {
 		- The cost of Refresh has increased from 40 to 50 MP and it's recast time decreased
 		  from 18 to 16 seconds
 		- Poison's DOT has been increased from 1 to 4/tick
+
+	Note: RDM does not use modes like SMN does, but you can "kind of" simulate it via inline
+	conditionals as follows:
+
+		Role			Conditionals
+		------			------------
+		Tank			Tank is enabled
+		Melee			Tank is disabled, WSWAP is disabled
+		Healer			Tank is disabled, WSWAP is enabled
 --]]
 
 --[[
@@ -244,7 +253,7 @@ local sets = {
 				GROUP//NOT_WSWAP = {	-- assumes to be melee
 					Head  = { 'Duelist\'s Chapeau', 'Wlk. Chapeau +1', 'Empress Hairpin' },
 					Neck  = { 'Opo-opo necklace//SLEPT', 'Justice Torque', 'Spike Necklace' },
-					Ears  = { 'Ethereal Earring', 'Stealth Earring//SJ:NIN', 'Pilferer\'s Earring//SJ:THF', 'Brutal Earring' },
+					Ears  = { 'Ethereal Earring', 'Stealth Earring//SJ:NIN', 'Brutal Earring' },
 					Body  = { 'Wlk. Tabard +1', 'Narasimha\'s Vest' },
 					Hands = { 'Wlk. Gloves +1', 'Ogre Gloves' },
 					Rings = { 'Flame Ring', 'Kshama Ring No.8', 'Kshama Ring No.2' },
@@ -1897,7 +1906,7 @@ end		-- SetSubjobSet
 --]]
 
 function profile.OnLoad()
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 
 	gSettings.AllowAddSet = true;
 	utilities.Initialize();
@@ -1934,19 +1943,12 @@ function profile.OnUnload()
 end		-- OnUnload
 
 --[[
-	HandleCommand is run when you type in a command defined in LUASHITACAST. The commands handled here instead
-	of in gcinclude.HandleCommands are specific to BST or the help system, which has been tailored to BST.
+	HandleCommand is run when you type in a command defined in LUASHITACAST.
 --]]
 
 function profile.HandleCommand(args)
-	if args[1] == 'man' then
-		help.ShowHelp();
-	elseif args[1] == 'petfood' then			-- Supported since pet food is not job specific, but very niche
-		pets.doPetFood(args[2],true);
-	else
-		crossjobs.HandleCommands(args);
-	end
-end		-- HandleCommand
+crossjobs.HandleCommands(args);
+end
 
 --[[
 	HandlePetAction equips the appropriate gear set based on the type of action
@@ -1979,7 +1981,7 @@ end		-- HandlePetAction
 function profile.HandleDefault()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 	local ew = gData.GetEquipment();
 	local bSA = utilities.fBuffed('Sneak Attack');
 	local bTA = utilities.fBuffed('Trick Attack');
@@ -2170,8 +2172,6 @@ function profile.HandlePrecast()
 	end
 
 	magic.HandlePrecast();
-
-	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandlePrecast
 
 --[[
@@ -2188,8 +2188,6 @@ function profile.HandleMidcast()
 
 	-- Call the common HandleMidcast now
 	magic.HandleMidcast();
-
-	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandleMidcast
 
 --[[

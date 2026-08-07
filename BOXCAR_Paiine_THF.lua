@@ -353,7 +353,7 @@ local sets = {
         Hands = 'Battle Gloves',								-- +3 Eva
         Rings = 'Kshama Ring No.3',								-- +3 AGI
         Waist = 'Scouter\'s Rope',								-- +10 Eva
-        Feet  = { 'Dance Shoes', 'Bounding Boots' },			-- +6 Eva, +3 AGI
+        Feet  = { 'Dance Shoes +1', 'Dance Shoes', 'Bounding Boots' },	-- +7/6 Eva, +3 AGI
     },
 
 --[[
@@ -519,7 +519,7 @@ local sets = {
 		Hands = 'Asn. Armlets +1',							-- +5 CHR
 		Rings = 'Kshama Ring No.6',							-- +3 CHR
 		Waist = 'Mrc.Cpt. Belt',							-- +1 CHR
-		Feet  = { 'Assassin\'s Pouln.', 'Dance Shoes' },	-- +5/3 CHR
+		Feet  = { 'Assassin\'s Pouln.', 'Dance Shoes +1', 'Dance Shoes' },	-- +5/4/3 CHR
 	},
 
 	-- Then Enmity based sets
@@ -1897,7 +1897,7 @@ end		-- SetSubjobSet
 --]]
 
 function profile.OnLoad()
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 
 	gSettings.AllowAddSet = true;
 	utilities.Initialize();
@@ -1931,25 +1931,17 @@ end		-- OnLoad
 	OnUnload is run when you change to another job
 --]]
 
-	function profile.OnUnload()
+function profile.OnUnload()
 		utilities.Unload();
-	end		-- OnUnload
+end		-- OnUnload
 
 --[[
-	HandleCommand is run when you type in a command defined in LUASHITACAST. The commands handled here instead
-	of in crossjobs.HandleCommands are specific to BST or the help system, which has been tailored to BST.
+	HandleCommand is run when you type in a command defined in LUASHITACAST.
 --]]
 
 function profile.HandleCommand(args)
-
-	if args[1] == 'man' then
-		help.ShowHelp();
-	elseif args[1] == 'petfood' then
-		pets.fPetReward((args[2],true);
-	else
-		crossjobs.HandleCommands(args);
-	end
-end		-- HandleCommand
+	crossjobs.HandleCommands(args);
+end
 
 --[[
 	HandlePetAction equips the appropriate gear set based on the type of action
@@ -1980,7 +1972,7 @@ end		-- HandlePetAction
 --]]
 	
 function profile.HandleDefault()
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();	
 	local ew = gData.GetEquipment();
@@ -2181,8 +2173,6 @@ function profile.HandlePrecast()
 	end
 
 	magic.HandlePrecast();
-
-	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandlePrecast
 
 --[[
@@ -2199,8 +2189,6 @@ function profile.HandleMidcast()
 
 	-- Call the common HandleMidcast now
 	magic.HandleMidcast();
-
-	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
 end		-- HandleMidcast
 
 --[[

@@ -135,15 +135,15 @@ local sets = {
 					SUBSET = 'rFancyAttire',
 				},
 				GROUP//NOT_RIDING = {
-                    Head   = { 'Drachen Armet', 'Empress Hairpin' },
+                    Head   = { 'Drachen Armet', 'Homam Zucchetto', 'Empress Hairpin' },
                     Neck   = { 'Opo-opo necklace//SLEPT', 'Peacock Amulet', 'Spike Necklace' },
-                    Ears   = { 'Bat Earring//BLINDED', 'Pilferer\'s Earring//SJ:THF', 'Genin Earring//SJ:NIN', 'Drone Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
-                    Body   = { 'Drachen Mail', 'Wyvern Mail', 'Brigandine', 'Wonder Kaftan' },
-                    Hands  = { 'Drachen Fng. Gnt.', 'Shep. Bracers', 'Wonder Mitts', 'Battle Gloves' },
+                    Ears   = { 'Bat Earring//BLINDED', 'Genin Earring//SJ:NIN', 'Drone Earring' },
+                    Body   = { 'Drachen Mail', 'Homam Corazza', 'Wyvern Mail', 'Brigandine', 'Wonder Kaftan' },
+                    Hands  = { 'Drachen Fng. Gnt.', 'Shep. Bracers', 'Battle Gloves' },
                     Rings  = { 'Kshama Ring No.8', 'Kshama Ring No.2' },
                     Back   = { 'Forager\'s Mantle', 'Amemet Mantle', 'Fed. Army Mantle' },
                     Waist  = { 'Warwolf Belt', 'Swift Belt', 'Life Belt', 'Tilt Belt', 'Powerful Rope//MSJ' },
-                    Legs   = { 'Drachen Brais', 'Wonder Braccae', 'Shep. Hose' },
+                    Legs   = { 'Drachen Brais', 'Homam Cosciales', 'Wonder Braccae', 'Shep. Hose' },
                     Feet   = { 'Drachen Greaves', 'Mannequin Pumps//MSJ', 'Bounding Boots' },
 				},
 			},
@@ -156,15 +156,15 @@ local sets = {
 --]]
 
 	['rFancyAttire'] = {
-        Head   = { 'Lilac Corsage//TOWN', 'Drachen Armet', 'Empress Hairpin' },
+        Head   = { 'Lilac Corsage//TOWN', 'Drachen Armet', 'Homam Zucchetto', 'Empress Hairpin' },
         Neck   = 'Peacock Amulet',
-        Ears   = { 'Pilferer\'s Earring//SJ:THF', 'Genin Earring//SJ:NIN', 'Drone Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
-        Body   = { 'Ducal Aketon//TOWN-AK', 'Drachen Mail', 'Wyvern Mail' },
+        Ears   = { 'Genin Earring//SJ:NIN', 'Drone Earring', 'Energy Earring +1//MSJ', 'Energy Earring +1//MSJ' },
+        Body   = { 'Ducal Aketon//TOWN-AK', 'Drachen Mail', 'Homam Corazza', 'Wyvern Mail' },
         Hands  = { 'Carbuncle Mitts//SJ:SMN//PETNAME:Carbuncle', 'Drachen Fng. Gnt.', 'Shep. Bracers' },
         Rings  = { 'Kshama Ring No.8', 'Kshama Ring No.2' },
         Back   = { 'Forager\'s Mantle', 'Amemet Mantle', 'Fed. Army Mantle' },
         Waist  = { 'Warwolf Belt', 'Swift Belt' },
-        Legs   = { 'Drachen Brais', 'Wonder Braccae', 'Shep. Hose' },
+        Legs   = { 'Drachen Brais', 'Homam Cosciales', 'Wonder Braccae', 'Shep. Hose' },
         Feet   = { 'Drachen Greaves', 'Mannequin Pumps//MSJ', 'Bounding Boots' },
 	},
 
@@ -194,20 +194,25 @@ local sets = {
 			SUBSET = 'Evasion',
 		},
 		GROUP//NOT_KITE = {
-			Neck = 'Justice Torque',
 			GROUP//TANK = {
 				SUBSET = 'rEnmity_Plus',
-				Head   = { 'Asn. Bonnet +1', 'Homam Zucchetto' },
+				Head   = 'Homam Zucchetto',
+				Neck   = 'Justice Torque',
 				Ears   = { 'Bat Earring//BLINDED', 'Coral Earring//DT_MAGICAL', 'Stealth Earring//SJ:NIN', 'Ethereal Earring' },
 				Body   = { 'Scorpion Harness', 'Brigandine', 'Angler\'s Tunica' },
 				Rings  = { 'Bomb Queen Ring//NOT_CC1', 'Kshama Ring No.4', 'Kshama Ring No.3' },
 			},
 			GROUP//NOT_TANK = {
-				Rings  = { 'Default::Rings', 'Kshama Ring No.3' },
-				Back   = { 'Forager\'s Mantle', 'Amemet Mantle', 'Raptor Mantle' },
+				Head   = 'Homam Zucchetto',		-- 3% haste
+				Neck   = 'Love Torque',			-- +7 Polearm
+				Ears   = { 'Beastly Earring', 'Brutal Earring' }, -- +5 Polarm, enhances double attack/store tp+1
+				Body   = 'Homam Corazza',		-- enhances triple attack
+				Hands  = 'Homam Manopolas',		-- 3% haste
+				Rings  = { 'Flame Ring', 'Kshama ring No.8' },	-- +5/3 STR
+				Back   = { 'Forager\'s Mantle', 'Amemet Mantle' },
 				Waist  = 'Swift Belt',
-				Feet   = { 'Homam Gambieras', 'Assassin\'s Pouln.', 'Creek F Clomps', 'Wonder Clomps', 'Bounding Boots' },
-				Body   = { 'Blue Cotehardie//MSJ//MP.LT.40', 'Rapparee Harness', 'Brigandine', 'Angler\'s Tunica' },
+				Legs   = 'Homam Cosciales',		-- 3% haste
+				Feet   = { 'Homam Gambieras', 'Drachen Greaves', 'Creek F Clomps', 'Bounding Boots' },
 			},
 		},
     },
@@ -233,8 +238,9 @@ local sets = {
 	['rAccuracy'] = {
 		Neck  = { 'Peacock Amulet', 'Love Torque', 'Spike Necklace' },		-- +10 Acc, +5/3 DEX
 		Ears  = 'Beastly Earring//PET',
-		Body  = { 'Homam Corazza', 'Rog. Vest +1', 'Scorpion Harness', 'Narasimha\'s Vest', 'Brigandine' },		-- +15/10/10/4 Acc, +2 DEX
+		Body  = { 'Homam Corazza', 'Scorpion Harness', 'Narasimha\'s Vest', 'Brigandine' },		-- +15/10/4 Acc, +2 DEX
 		Hands = { 'Homam Manopolas', 'Battle Gloves' },					-- +4/3 Acc
+		Back  = 'Psilos Mantle',										--  +1 Acc
 		Legs  = 'Homam Cosciales',										-- +3 ACC
 		Feet  = { 'Homam Gambieras', 'Bounding Boots' },				-- +6 Acc, +3 DEX
 		GROUP//TANK = {
@@ -257,8 +263,8 @@ local sets = {
 
 	['rRanged_Accuracy'] = {
 		Head  = { 'Optical Hat', 'Homam Zucchetto' },					-- +10/4 RAcc
-		Neck  = 'Peacock Amulet',		-- +10 RAcc
-		Body  = 'Rapparee Harness',		--  +2 RAcc
+		Neck  = { 'Peacock Amulet', 'Reraise Gorget' },					-- +10/3 RAcc
+		Hands  = 'Crimson Fng. Gnt.',									-- +10 RAcc
 		Rings = { 'Woodsman Ring', 'Woodsman Ring', 'Jaeger Ring' },	-- +5/5/4 RAcc
 		Back  = 'Psilos Mantle',		--  +1 RAcc
 		Feet  = 'Homam Gambieras'		--  +6 RAcc
@@ -337,9 +343,10 @@ local sets = {
         Ears  = { 'Bat Earring//BLINDED', 'Ethereal Earring', 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +15 Eva if blind, +5 Eva, +4 AGI if sj NIN, +3 AGI
         Body  = { 'Scorpion Harness', 'Narasimha\'s Vest' },	-- +10/4 Eva
         Hands = 'Battle Gloves',								-- +3 Eva
-        Rings = 'Kshama Ring No.3',								-- +3 AGI
+        Rings = { 'Kshama Ring No.3', 'Tamas Ring//IF:Woodsman Ring', 'Jaeger Ring//IF:Woodsman Ring' },								-- +3 AGI
         Waist = 'Scouter\'s Rope',								-- +10 Eva
-        Feet  = { 'Dance Shoes', 'Bounding Boots' },			-- +6 Eva, +3 AGI
+        Legs  = 'Shep. Hose//PET',								-- +3 Pet Eva
+        Feet  = { 'Dance Shoes +1', 'Dance Shoes', 'Drachen Greaves', 'Bounding Boots' },			-- +7/6 Eva, +3/3 AGI
     },
 
 --[[
@@ -374,13 +381,13 @@ local sets = {
 	['Resting_Refresh'] = {
 		SUBSET = 'rDamage_Taken',
 		Main//WSWAP = 'Pluto\'s Staff//MSJ',			-- +10 MP while healing
-		Body   = 'Blue Cotehardie//MSJ//MP.LT.40',		-- adds Refresh if MP < 40
 	},
 
 	['Resting_Regen'] = {
 		SUBSET = 'rDamage_Taken',
 		Head   = 'President. Hairpin//NOT_OWN',			-- adds Regen if player in territory not owned by their nation
-		Hands  = 'Carbuncle Cuffs//SHINING_RUBY',		-- +5 HP/tic while player has 'Shining Ruby' buff
+		Body = { 'Wyvern Mail', 'Drachen Mail//PET' },	-- +1 Regen, Adds regen to pet
+		Hands  = { 'Carbuncle Cuffs//SHINING_RUBY', 'Shep. Bracers' },	-- +5 HP/tic while player has 'Shining Ruby' buff, +1 regen, adds regen to pet
 	},
 
 --[[
@@ -390,15 +397,8 @@ local sets = {
 --]]
 
 	['Start_Weapons'] = {
-		Range = 'Cmb.Cst. B\'merang'
-		GROUP//DUALWIELD = {
-			Main = 'Heart Snatcher',
-			Sub  = 'X\'s Knife',
-		},
-		GROUP//NOT_DUALWIELD = {
-			Main = 'X\'s Knife//SJ:NIN',
-			Sub  = 'Tatami Shield',
-		},
+		Main = { 'Leviathan\'s Couse', 'Peregrine', 'Pitchfork +1' },
+		Ammo = 'Happy Egg',
     },
 
 --[[
@@ -433,8 +433,9 @@ local sets = {
 
 	-- Strength Reference gear set
 	['rSTR'] = {
+		Head   = 'Wyrm Armet',								-- +4 STR
 		Neck   = { 'Justice Torque', 'Spike Necklace' },	-- +5/3 STR
-		Body   = { 'Rog. Vest +1', 'Narasimha\'s Vest', 'Blue Cotehardie', 'Wonder Kaftan' },	-- +6/3/4/1 STR
+		Body   = { 'Narasimha\'s Vest', 'Drachen Mail', 'Wonder Kaftan' },	-- +3/3/1 STR
 		Hands  = 'Wonder Mitts',							-- +3 STR
 		Rings  = { 'Flame Ring', 'Kshama Ring No.8' },		-- +5/3 STR
 		Back   = { 'Forager\'s Mantle', 'Amemet Mantle' },	-- +3/1 STR
@@ -445,21 +446,20 @@ local sets = {
 
 	-- Dexterity Reference gear set
 	['rDEX'] = {
-		Head   = { 'Asn. Bonnet +1', 'Assassin\'s Bonnet', 'Empress Hairpin' },		-- +6/5/3 DEX
+		Head   = 'Empress Hairpin',								-- +3 DEX
 		Neck   = { 'Love Torque', 'Spike Necklace' },			-- +5/3 DEX
 		Body   = 'Brigandine',									-- +2 DEX
-		Hands  = 'Rogue\'s Armlets',							-- +3 DEX
+		Hands  = 'Drachen Fng. Gnt.',							-- +3 DEX
+		Waist  = 'Warwolf Belt',								-- +5 DEX
 		Rings  = 'Kshama Ring No.2',							-- +3 DEX
-		Back   = 'Assassin\'s Cape',							-- +4 DEX
-		Waist  = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },			-- +5/1 DEX
-		Feet   = { 'Rogue\'s Poulaines', 'Bounding Boots' },	-- +3/3 DEX
+		Feet   = 'Bounding Boots',								-- +3 DEX
 	},
 
 	-- Vitality Reference gear set
 	['rVIT'] = {
 		Body   = { 'Narasimha\'s Vest', 'Brigandine' },			-- +3/2 VIT
 		Rings  = 'Kshama Ring No.4',							-- +3 VIT
-		Waist  = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },			-- +5/1 VIT
+		Waist  = 'Warwolf Belt', 								-- +5 VIT
 		Legs   = 'Wonder Braccae',								-- +2 VIT
 		Feet   = 'Creek F Clomps',								-- +4 VIT
 	},
@@ -468,20 +468,13 @@ local sets = {
 	['rAGI'] = {
 		Head   = 'Empress Hairpin',								-- +3 AGI
 		Ears   = { 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +4 AGI if sj NIN, +3 AGI
-		Body   = { 'Assassin\'s Vest', 'Blue Cotehardie' },		-- +4/4 AGI
 		Rings  = 'Kshama Ring No.3',							-- +3 AGI
-		Back   = 'Assassin\'s Cape',							-- +4 AGI
-		Waist  = 'Mrc.Cpt. Belt',								-- +1 AGI
-		Legs   = 'Rogue\'s Culottes',							-- +4 AGI
 		Feet   = 'Bounding Boots',								-- +3 AGI
 	},
 
 	-- Intelligence Reference gear set
 	['rINT'] = {
-		Head  = 'Rogue\'s Bonnet',								-- +5 INT
-		Body  = { 'Blue Cotehardie', 'Baron\'s Saio' },			-- +3/1 INT
 		Rings = { 'Tamas Ring', 'Kshama Ring No.5', 'Flame Ring' },	-- +5/3/2 INT
-		Waist = 'Mrc.Cpt. Belt',								-- +1 INT
 		Feet  = 'Mannequin Pumps',								-- +1 INT
 	},
 
@@ -489,10 +482,9 @@ local sets = {
 	['rMND'] = {
 		Neck  = { 'Promise Badge', 'Justice Badge' },		-- +5/3 MND
 		Ears  = 'Geist Earring',							-- +1 MND
-		Body  = { 'Wonder Kaftan', 'Baron\'s Saio' },		-- +1/1 MND
-		Hands = 'Baron\'s Cuffs',							-- +1 MND
+		Body  = 'Wonder Kaftan',							-- +1 MND
 		Rings = { 'Tamas Ring', 'Kshama Ring No.9' },		-- +5/3 MND
-		Waist = { 'Mrc.Cpt. Belt', 'Friar\'s Rope' },		-- +1/1 MND
+		Waist = 'Friar\'s Rope',							-- +1 MND
 		Legs  = 'Wonder Braccae',							-- +2 MND
 		Feet  = 'Mannequin Pumps',							-- +2 MND
 	},
@@ -502,22 +494,16 @@ local sets = {
 		Head  = 'Entrancing Ribbon',						-- +2 CHR
 		Neck  = { 'Star Necklace', 'Flower Necklace' },		-- +3/3 CHR
 		Ears  = 'Beastly Earring',							-- +2 CHR
-		Hands = 'Assassin\'s Armlets',						-- +5 CHR
 		Rings = 'Kshama Ring No.6',							-- +3 CHR
-		Waist = 'Mrc.Cpt. Belt',							-- +1 CHR
-		Feet  = { 'Assassin\'s Pouln.', 'Dance Shoes' },	-- +5/3 CHR
+		Feet  = { 'Dance Shoes +1', 'Dance Shoes' },		-- +4/3 CHR
 	},
 
 	-- Then Enmity based sets
 
 	-- Enmity+ Reference gear set, for player
 	['rEnmity_Plus'] = {
-		Head  = { 'Asn. Bonnet +1','Assassin\'s Bonnet' },	-- +3/2 Enmity
-		Body  = 'Assassin\'s Vest',							-- +3 Enmity
 		Hands = 'Homam Manopolas',							-- +3 Enmity
-		Back  = 'Assassin\'s Cape',							-- +5 Enmity
 		Waist = 'Warwolf Belt',								-- +3 Enmity
-		Feet  = 'Assassin\'s Pouln.',						-- +2 Enmity
 	},
 
 	-- Enmity- Reference gear set, for player
@@ -535,6 +521,7 @@ local sets = {
 
 	['rAttackPower'] = {
 		Ears  = { 'Ethereal Earring', 'Coral Earring', 'Fang Earring' },	-- +5/5/4 Att
+		Body  = 'Drachen Mail',												-- +3 Att
 		Rings = 'Kshama Ring No.8',											-- +3 Att
 		Back  = { 'Forager\'s Mantle', 'Psilos Mantle', 'Amemet Mantle' },	-- +15/12/10 Att
 		Waist = 'Warwolf Belt//IF:SWIFT BELT',
@@ -855,7 +842,8 @@ local sets = {
 
 	['EnhancingMagic'] = {
 		SUBSET = 'rEnhancing_Magic_Skill',
-	},		Hands  = 'Carbuncle\'s Cuffs',				-- Summoning magic casting time -1
+		Hands  = 'Carbuncle\'s Cuffs',				-- Summoning magic casting time -1
+	},
 
 --[[
 	****************************
@@ -1371,16 +1359,16 @@ local sets = {
 
 	['WS_RANGED_STRAGI'] = {
 		SUBSET = 'rAttackPower',
-		Head   = 'Empress Hairpin',								-- +3 AGI
-		Neck   = 'Spike Necklace',								-- +3 STR
+		Head   = { 'Wyrm Armet', 'Empress Hairpin' },		-- +4 STR, 3 AGI
+		Neck   = { 'Justice Torque', 'Spike Necklace' },	-- +5/3 STR
 		Ears   = { 'Genin Earring//SJ:NIN', 'Drone Earring' },	-- +4 AGI if sj is NIN, +3 AGI
-		Body   = { 'Blue Cotehardie', 'Assassin\'s Vest', 'Rogue\'s Vest', 'Wonder Kaftan' },	-- +4 STR/+4 AGI, +4 AGI, +3/1 STR
+		Body   = { 'Narasimha\'s Vest', 'Drachen Mail', 'Wonder Kaftan' },	-- +3/3/1 STR
 		Hands  = 'Wonder Mitts',								-- +3 STR
 		Rings  = { 'Flame Ring', 'Kshama Ring No.8', 'Kshama Ring No.3' },	-- +5/3 STR, +3 AGI
 		Back   = { 'Forager\'s Mantle', 'Amemet Mantle' },		-- +3/1 STR
-		Waist  = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },			-- +5 STR, +1 STR/+1 AGI
-		Legs   = { 'Rogue\'s Culottes', 'Wonder Braccae' },		-- +4 AGI, +1 STR
-		Feet   = { 'Creek F clomps', 'Bounding Boots' },		-- +4 STR, +3 AGI
+		Waist  = 'Warwolf Belt',								-- +5 STR
+		Legs   = 'Wonder Braccae',								-- +1 STR
+		Feet   = { 'Creek F Clomps', 'Drachen Greaves', 'Bounding Boots' },		-- +4 STR, +3/3 AGI
 	},
 
 --[[
@@ -1394,15 +1382,15 @@ local sets = {
 
 	['WS_STRDEX'] = {
 		SUBSET = 'rAttackPower',
-		Head   = { 'Asn. Bonnet +1', 'Empress Hairpin' },		-- +6/3 DEX
-		Neck   = { 'Love Torque', 'Spike Necklace' },			-- +5 DEX, +3 STR
-		Body   = { 'Rog. Vest +1', 'Narasimha\'s Vest', 'Brigandine' },	-- +6 STR, +4/2 DEX
-		Hands  = { 'Rogue\'s Armlets', 'Wonder Mitts' },		-- +3 DEX, +3 STR
+		Head   = { 'Empress Hairpin', 'Drachen Armet' },		-- +3/2 DEX
+		Neck   = { 'Spike Necklace', 'Justice Torque', 'Love Torque', 'Opo-opo Necklace' },	-- +3 STR/+3 DEX, +5 STR, +5/1 DEX
+		Body   = { 'Drachen Mail', 'Brigandine', 'Wonder Kaftan' },	-- +3 STR, +2 DEX, +1 STR
+		Hands  = { 'Drachen Fng. Gnt.', 'Wonder Mitts' },	-- +3 DEX, +3 STR
 		Rings  = { 'Flame Ring', 'Kshama Ring No.8', 'Kshama Ring No.2' },	-- +5/4 STR, +3 DEX
 		Back   = { 'Forager\'s Mantle', 'Amemet Mantle' },		-- +3/1 STR
-		Waist  = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },			-- +5 STR/+5 DEX, +1 STR/+1 DEX
+		Waist  = 'Warwolf Belt',								-- +5 STR/+5 DEX
 		Legs   = 'Wonder Braccae',								-- +1 STR
-		Feet   = { 'Creek F clomps', 'Rogue\'s Poulaines', 'Bounding Boots' },	-- +4 STR, +3/3 DEX
+		Feet  = { 'Bounding Boots', 'Wonder Clomps' },		-- +3 DEX, +2 STR
 	},
 
 --[[
@@ -1413,15 +1401,15 @@ local sets = {
 
 	['WS_STRINT'] = {
 		SUBSET = 'rAttackPower',
-		Head   = 'Rogue\'s Bonnet',								-- +5 INT
-		Neck   = 'Spike Necklace',								-- +3 STR
-		Body   = { 'Rog. Vest +1', 'Blue Cotehardie', 'Narasimha\'s Vest', 'Wonder Kaftan' },	-- +6 STR, +4 STR/+2 INT, +3/3/1 STR
+		Head   = 'Wyrm Armet',									-- +4 STR
+		Neck   = { 'Justice Torque', 'Spike Necklace' },		-- +5/3 STR
+		Body   = { 'Narasimha\'s Vest', 'Drachen Mail', 'Wonder Kaftan' },	-- +3/3/1 STR
 		Hands  = 'Wonder Mitts',								-- +3 STR
-		Rings  = { 'Tamas Ring', 'Flame Ring', 'Kshama Ring No.8', 'Kshama Ring No.5' },		-- +5 INT, +5/3 STR, +3 INT
+		Rings  = { 'Flame Ring', 'Tamas Ring', 'Kshama Ring No.8', 'Kshama Ring No.5' },	-- +5 STR/+2 INT, +5 INT, +3 STR, +3 INT
 		Back   = { 'Forager\'s Mantle', 'Amemet Mantle' },		-- +3/1 STR
-		Waist  = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },			-- +5 STR/+5 DEX, +1 STR,+1 INT
+		Waist  = 'Warwolf Belt',								-- +5 STR/+5 DEX
 		Legs   = 'Wonder Braccae',								-- +1 STR
-		Feet   = { 'Creek F Clomps', 'Wonder Clomps' },			-- +4/2 STR
+		Feet   = { 'Creek F Clomps', 'Wonder Clomps', 'Mannequin Pumps' },	-- +4/2 STR, +1 INT
 	},
 
 --[[
@@ -1433,15 +1421,16 @@ local sets = {
 
 	['WS_STRMND'] = {
 		SUBSET = 'rAttackPower',
-		Neck   = { 'Promise Badge', 'Justice Badge' },		-- +5/3 MND
+		Head   = 'Wyrm Armet',								-- +4 STR
+		Neck   = { 'Justice Torque', 'Promise Badge', 'Justice Badge' },		-- +5 STR, +5/3 MND
 		Ears   = 'Geist Earring',							-- +1 MND
-		Body   = { 'Rog. Vest +1', 'Narasimha\'s Vest', 'Wonder Kaftan' },		-- +6/3/1 STR
+		Body   = { 'Narasimha\'s Vest', 'Wonder Kaftan' },	-- +3/1 STR
 		Hands  = 'Wonder Mitts',							-- +3 STR
-		Rings  = { 'Tamas Ring', 'Flame Ring', 'Kshama Ring No.8', 'Kshama Ring No.9' },		-- +5 MND, +5/3 STR, +3 MND
+		Rings  = { 'Flame Ring', 'Tamas Ring', 'Kshama Ring No.8', 'Kshama Ring No.9' },	-- +5 STR, +5 MND, +3 STR, +3 MND
 		Back   = { 'Forager\'s Mantle', 'Amemet Mantle' },	-- +3/1 STR
-		Waist  = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },		-- +5 STR, +1 STR/+1 MND
+		Waist  = 'Warwolf Belt', 							-- +5 STR
 		Legs   = 'Wonder Braccae',							-- +1 STR
-		Feet   = { 'Creek F clomps', 'Wonder Clomps' },		-- +4/2 STR
+		Feet   = { 'Creek F clomps', 'Mannequin Pumps', 'Wonder Clomps' },	-- +4 STR, +2 MND, +2 STR
 	},
 
 --[[
@@ -1493,15 +1482,14 @@ local sets = {
 
 	['WS_DEXAGI'] = {
 		SUBSET = 'rAttackPower',
-		Head   = { 'Asn. Bonnet +1', 'Assassin\'s Bonnet', 'Empress Hairpin' },		-- +6/5/3 DEX
+		Head   = 'Empress Hairpin',									-- +3 DEX
 		Neck   = { 'Love Torque', 'Spike Necklace' },				-- +5/3 DEX
 		Ears   = { 'Genin Earring//SJ:NIN', 'Drone Earring' },		-- +4 AGI if sj is NIN, +3 AGI
-		Body   = { 'Assassin\'s Vest', 'Brigandine' },				-- +4 AGI, +2 DEX
-		Hands  = 'Rogue\'s Armlets',								-- +3 DEX
+		Body   = 'Brigandine',										-- +2 DEX
+		Hands  = 'Drachen Fng. Gnt.',								-- +3 DEX
 		Rings  = { 'Kshama Ring No.2', 'Kshama Ring No.3' },		-- +3 DEX, +3 AGI
-		Back   = 'Assassin\'s Cape',								-- +4 DEX/+4 AGI
-		Waist  = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },				-- +5 DEX, +1 DEX/+1 AGI
-		Feet   = { 'Rogue\'s Poulaines', 'Bounding Boots' },		-- +3 DEX, +3 DEX/+3 AGI
+		Waist  = 'Warwolf Belt',									-- +5 DEX
+		Feet   = 'Bounding Boots',									-- +3 DEX/+3 AGI
 	},
 
 --[[
@@ -1514,15 +1502,14 @@ local sets = {
 
 	['WS_DEXCHR'] = {
 		SUBSET = 'rAttackPower',
-		Head   = { 'Asn. Bonnet +1', 'Assassin\'s Bonnet', 'Empress Hairpin' },	-- +6/5/3 DEX
-		Neck   = { 'Love Torque', 'Spike Necklace' },							-- +53 DEX
-		Ears   = 'Beastly Earring',												-- +2 CHR
-		Body   = 'Brigandine',													-- +2 DEX
-		Hands  = 'Rogue\'s Armlets',											-- +3 DEX
-		Rings  = { 'Kshama Ring No.2', 'Kshama Ring No.6'},						-- +3 DEX, +3 CHR
-		Back   = 'Assassin\'s Cape',											-- +4 DEX
-		Waist  = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },							-- +5 DEX, +1 DEX/+1 CHR
-		Feet   = { 'Rogue\'s Poulaines', 'Bounding Boots' },					-- +3/3 DEX
+		Head   = 'Empress Hairpin',										-- +3 DEX
+		Neck   = { 'Love Torque', 'Spike Necklace' },					-- +5/3 DEX
+		Ears   = 'Beastly Earring',										-- +2 CHR
+		Body   = 'Brigandine',											-- +2 DEX
+		Hands  = 'Drachen Fng. Gnt.',									-- +3 DEX
+		Rings  = { 'Kshama Ring No.2', 'Kshama Ring No.6'},				-- +3 DEX, +3 CHR
+		Waist  = 'Warwolf Belt',										-- +5 DEX
+		Feet   = 'Bounding Boots',										-- +3 DEX
 	},
 
 --[[
@@ -1533,14 +1520,13 @@ local sets = {
 
 	['WS_DEXINT'] = {
 		SUBSET = 'rAttackPower',
-		Head   = { 'Asn. Bonnet +1', 'Assassin\'s Bonnet', 'Empress Hairpin' },	-- +6/5/3 DEX
+		Head   = 'Empress Hairpin',												-- +3 DEX
 		Neck   = { 'Love Torque', 'Spike Necklace' },							-- +5/3 DEX
 		Body   = 'Brigandine',													-- +2 DEX
-		Hands  = 'Rogue\'s Armlets',											-- +3 DEX
+		Hands  = 'Drachen Fng. Gnt.',											-- +3 DEX
 		Rings  = { 'Tamas Ring', 'Kshama Ring No.2', 'Kshama Ring No.5' },		-- +5/3 DEX, +3 INT
-		Back   = 'Assassin\'s Cape',											-- +4 DEX
-		Waist  = 'Mrc.Cpt. Belt',												-- +1 DEX/+1 INT
-		Feet   = { 'Rogue\'s Poulaines', 'Bounding Boots' },					-- +3/3 DEX
+		Waist  = 'Warwolf Belt',												-- +5 DEX
+		Feet   = 'Bounding Boots',												-- +3 DEX
 	},
 
 --[[
@@ -1583,8 +1569,9 @@ local sets = {
 --]]
 
 	['WS_Skill'] = {
-		SUBSET   = 'rAttackPower',
-		Neck   = { 'Justice Torque//SCYTHE', 'Justice Torque//GKATANA', 'Love Torque//DAGGER', 'Love Torque//POLEARM' },	-- +7 Scythe/G.Katana skill, +7 Dagger/Polearm skill
+		SUBSET  = 'rAttackPower',
+		Neck    = 'Love Torque//POLEARM',			-- +7 Polearm skill
+		Ears 	= 'Beastly Earring//POLEARM',		-- +5 Polearm skill
 	},
 
 --[[
@@ -1595,14 +1582,14 @@ local sets = {
 
 	['WS_HP']  = {
 		SUBSET = 'rAttackPower',
-		Head   = { 'Homam Zucchetto', 'Asn. Bonnet +1', 'Assassin\'s Bonnet', 'Rogue\'s Bonnet' },		-- 22/16/16/13 HP
+		Head   = { 'Homam Zucchetto', 'Drachen Armet', 'Shep. Bonnet' },								-- 22/12/4 HP
 		Neck   = 'Promise Badge',																		-- 10 HP
 		Ears   = { 'Physical Earring//MP.GE.15', 'Physical Earring//MP.GT.40', 'Ethereal Earring' },	-- Convert 25 MP to HP x2, +15 HP
 		Body   = 'Wonder Kaftan',																		-- +36 HP
-		Hands  = { 'Homam Manopolas', 'Wonder Mitts', 'Rogue\'s Armlets' },								-- +20/12/10 HP
+		Hands  = { 'Homam Manopolas', 'Crimson Fng. Gnt.', 'Wonder Mitts' },								-- +20/20/12 HP
 		Rings  = { 'Bomb Queen Ring//NOT_CC1', 'Toreador\'s Ring', 'Toreador\'s Ring' },				-- +75/10/10 HP
 		Waist  = 'Powerful Rope',																		-- +20 HP
-		Legs   = { 'Homam Cosciales', 'Wonder Braccae', 'Rogue\'s Culottes' },							-- +26/21/15 HP
+		Legs   = { 'Homam Cosciales', 'Wonder Braccae' },												-- +26/21 HP
 		Feet   = { 'Creek F Clomps', 'Homam Gambieras', 'Wonder Clomps' },								-- +35/31/20 HP
 	},
 
@@ -1700,11 +1687,10 @@ local sets = {
 		Neck = 'Spike Necklace',							-- +3 DEX
 		Ears = 'Drone Earring',								-- +3 AGI
 		Body = 'Brigandine',								-- +2 DEX
-		Hands = 'Abs. Gauntlets +1',						-- +5 DEX
 		Rings = { 'Kshama Ring No.2', 'Kshama Ring No.3', 'Balance Ring' },	-- +3 DEX, +3 AGI, +2 DEX
-		Waist = { 'Warwolf Belt', 'Mrc.Cpt. Belt' },		-- +5 DEX, +1 DEX/+1 AGI
+		Waist = 'Warwolf Belt',								-- +5 DEX
 		Legs  = 'Ryl.Kgt. Breeches',						-- +2 DEX
-		Feet = 'Bounding Boots',							-- +3 DEX/+3 AGI
+		Feet  = 'Bounding Boots',							-- +3 DEX/+3 AGI
 	},
 
 --[[
@@ -1754,8 +1740,17 @@ local sets = {
 	},
 
 	-- WyvernBreathHealing is equipped to maximize how much healing a wyvern's breath will do
+	-- The inclusion of MaxHPUpSet makes it more likely that if your HP is low that you will
+	-- be healed. (Dead healer, no one is healed.) If you don't want to be favored over other
+	-- people in your party, remove this subset from WyvernBreathHealing. Note though, when
+	-- determining if someone should be healed (and you have a defensive job), MaxHPUpSet is
+	-- not equipped until after the test for healing breath is done. (You will not artificially
+	-- make yourself a target, but you may become a target when the healing breath occurs.)
 	['WyvernBreathHealing'] = {
-		Subset = 'WyvernMaxHPUpSet',
+		Subset = {
+			[1] = 'MaxHPUpSet',
+			[2] = 'WyvernMaxHPUpSet',
+		},
 		Head = 'Drachen Armet',		-- Pet: Enhances breath attack
 	},
 
@@ -1828,8 +1823,7 @@ profile.settings = {
 	--*********************************************************************
 	-- From this point forward, all entries can be modified by the player *
 	--*********************************************************************
-	WyvernName = nil;					-- Name of pet wyvern
-	FavorDRGHBreath = true;				-- Indicates if MaxHPUpSet should be equipped before healing breath
+	WyvernName = 'Delphyne';			-- Name of pet wyvern
 	defaultSpirit = 'Light Spirit',		-- for /911, what spirit should be defaulted to
 	defaultPetFood = nil;				-- What (if any) pet food to use when Reward processed
 	-- Order of operations:
@@ -1855,7 +1849,123 @@ profile.settings = {
 	bAutoMacrobook_page = true;			-- Should macro book/page be automatically assigned
 	bJustMacroBook = false;				-- Should only the macro book be automatically assigned
 	MacroBook = 11;						-- Which macro book should be equipped for THF
-};
+	-- You can have up to two display bars. Each section definies which bar (either, both, or neither) a field should be
+	-- displayed in, and should the field be visible. The two overall entries define the two bars, identified by: gVars._BAR1
+	-- and gVars._BAR2. The first three entries affect the whole bar: should it be visible, and the X/Y coordinates of where
+	-- the bar should start on your screen. All entries after these fields define what can be displayed on that bar. If you
+	-- want to see it, it must be visible (i.e., ['visible'] = true].) You can also find a 'tag' parameter on some fields.
+	-- Leave those alone. They are used by the /smg command. Some fields let you define an initial value (e.g., ['init'] = true).
+	-- The initialization of these fields have been broken out into their own section: gVars._INITIALIZE. Not all fields support
+	-- initialization.
+	DisplayBar = {
+		[gVars._BAR1] = {
+			-- By default, bar 1 is visible. During testing, the prefix is set to 'X:'. This will be set to nil (meaning no
+			-- prefix will be displayed) once Boxcar is ready to be deployed. You can set it to anything you want. It's just
+			-- what's displayed first on the bar.
+			[gVars._VISIBLE] = true,															-- should display bar 1 be visible
+			[gVars._POS_X] = 325,																-- x coordinate of display bar 1
+			[gVars._POS_Y] = 0,																	-- y coordinate of display bar 1
+			---
+			[gVars._PREFIX] = 'X:',																-- what to display prior to the fields
+			[gVars._JOB] = { ['visible'] = true, ['tag'] = 'job' },								-- job/subjob display. Visible?
+			[gVars._CAP] = { ['visible'] = true, ['tag'] = 'cap' },								-- gear level capped. Visible?
+			--
+			[gVars._GC]  = { ['visible'] = true, ['tag'] = 'gc' },								-- was gear check run. Visible?
+			--
+			[gVars._WSWAP]   = { ['visible'] = true,  ['tag'] = 'wswap' },						-- weapon swap. Visible?
+			[gVars._KITE]    = { ['visible'] = true,  ['tag'] = 'kite' },						-- kiting. Visible?
+			[gVars._TH]	     = { ['visible'] = false, ['tag'] = 'th' },							-- treasure hunter. Visible?
+			[gVars._TANK]    = { ['visible'] = false, ['tag'] = 'tank' },						-- tanking. Visible?
+			[gVars._IDLE]    = { ['visible'] = false, ['tag'] = 'idle' },						-- idle gear. Visible?
+			[gVars._EVASION] = { ['visible'] = true,  ['tag'] = 'eva' },						-- evasion. Visible?
+			[gVars._SPF]     = { ['visible'] = true,  ['tag'] = 'spf' },						-- show pull. Visible?
+			[gVars._SGS]     = { ['visible'] = true,  ['tag'] = 'sgs' },						-- show gear sets. Visible?
+			[gVars._GSWAP]   = { ['visible'] = true,  ['tag'] = 'gswap' },						-- gear swapping. Visible?
+			-- Magic accuracy is only available to jobs/subjobs that use magic
+			[gVars._MACC]    = { ['visible'] = true,  ['tag'] = 'macc' },						-- macc. Visible?
+			-- HPPlus is only available to dragoons
+			[gVars._HPPLUS]  = { ['visible'] = true,  ['tag'] = 'hpplus' },						-- equip HPPlus gear prior to healing breath?
+			[gVars._DT]		 = { ['visible'] = true,  ['tag'] = 'dt' },							-- damage taken. Visible?
+			[gVars._REGION]  = { ['tag'] = 'region',  ['visible'] = true },						-- region control. Visible?
+			--
+			[gVars._ACC]     = { ['visible'] = true,  ['tag'] = 'acc' },						-- accuracy. Visible?
+			[gVars._RACC]    = { ['visible'] = true,  ['tag'] = 'racc' },						-- ranged accuracy. Visible?
+			--
+			[gVars._LOCKS]   = { ['visible'] = true,  ['tag'] = 'locks' },						-- locks. Visible?
+			--
+			[gVars._DAY]     = { ['visible'] = true,  ['tag'] = 'day' },						-- day. Visible?
+			[gVars._TIME]    = { ['visible'] = true,  ['tag'] = 'time' },						-- time. Visible?
+			[gVars._MOON]    = { ['visible'] = true,  ['tag'] = 'moon' },						-- moon phase and percent. Visible?
+			[gVars._WEATHER] = { ['visible'] = true,  ['tag'] = 'weather' },					-- weather. Visible?
+			[gVars._ZONE]    = { ['visible'] = true,  ['tag'] = 'zone' },						-- zone name. Visible?
+			[gVars._CC]		 = { ['visible'] = true,  ['tag'] = 'cc' },							-- custom conditionals? Visible?
+		},
+		[gVars._BAR2] = {
+			[gVars._VISIBLE] = false,															-- Should display bar 2 be visible
+			[gVars._POS_X] = 325,																-- X coordinate of second display bar
+			[gVars._POS_Y] = 40,																-- Y coordinate of second display bar
+			---
+			[gVars._PREFIX] = 'X2:',															-- what to display prior to the fields
+			[gVars._JOB] = { ['visible'] = true, ['tag'] = 'job' },								-- job/subjob display. Visible?
+			[gVars._CAP] = { ['visible'] = true, ['tag'] = 'cap' },								-- gear level capped. Visible?
+			--
+			[gVars._GC]  = { ['visible'] = true, ['tag'] = 'gc' },								-- was gear check run. Visible?
+			--            ScanGearDelay                   Populates the gear delay structure
+			[gVars._WSWAP]   = { ['visible'] = true,  ['tag'] = 'wswap' },						-- weapon swap. Visible?
+			[gVars._KITE]    = { ['visible'] = true,  ['tag'] = 'kite' },						-- kiting. Visible?
+			[gVars._TH]	     = { ['visible'] = false, ['tag'] = 'th' },							-- treasure hunter. Visible?
+			[gVars._TANK]    = { ['visible'] = false, ['tag'] = 'tank' },						-- tanking. Visible?
+			[gVars._IDLE]    = { ['visible'] = false, ['tag'] = 'idle' },						-- idle gear. Visible?
+			[gVars._EVASION] = { ['visible'] = true,  ['tag'] = 'eva' },						-- evasion. Visible?
+			[gVars._SPF]     = { ['visible'] = true,  ['tag'] = 'spf' },						-- show pull. Visible?
+			[gVars._SGS]     = { ['visible'] = true,  ['tag'] = 'sgs' },						-- show gear sets. Visible?
+			[gVars._GSWAP]   = { ['visible'] = true,  ['tag'] = 'gswap' },						-- gear swapping. Visible?
+			-- Magic accuracy is only available to jobs/subjobs that use magic
+			[gVars._MACC]    = { ['visible'] = true,  ['tag'] = 'macc' },						-- macc. Visible?
+			-- HPPlus is only available to dragoons
+			[gVars._HPPLUS]  = { ['visible'] = true,  ['tag'] = 'hpplus' },						-- equip HPPlus gear prior to healing breath?
+			[gVars._DT]		 = { ['visible'] = true,  ['tag'] = 'dt' },							-- damage taken. Visible?
+			[gVars._REGION]  = { ['tag'] = 'region',  ['visible'] = true },						-- region control. Visible?
+			--
+			[gVars._ACC]     = { ['visible'] = true,  ['tag'] = 'acc' },						-- accuracy. Visible?
+			[gVars._RACC]    = { ['visible'] = true,  ['tag'] = 'racc' },						-- ranged accuracy. Visible?
+			--
+			[gVars._LOCKS]   = { ['visible'] = true,  ['tag'] = 'locks' },						-- locks. Visible?
+			--
+			[gVars._DAY]     = { ['visible'] = true,  ['tag'] = 'day' },						-- day. Visible?
+			[gVars._TIME]    = { ['visible'] = true,  ['tag'] = 'time' },						-- time. Visible?
+			[gVars._MOON]    = { ['visible'] = true,  ['tag'] = 'moon' },						-- moon phase and percent. Visible?
+			[gVars._WEATHER] = { ['visible'] = true,  ['tag'] = 'weather' },					-- weather. Visible?
+			[gVars._ZONE]    = { ['visible'] = true,  ['tag'] = 'zone' },						-- zone name. Visible?
+			[gVars._CC]		 = { ['visible'] = true,   ['tag'] = 'cc' },						-- custom conditionals? Visible?
+		},
+		[gVars._INITIALIZE] = {
+			-- Certain fields have initial values. Because all fields can be either in bar 1 or bar 2, the initialization
+			-- values have been moved to their own breakout section. These values are shared across both display bars.
+			--
+			-- Note that including a value implies that the option should be displayed on one of the display bars
+			-- If you remove the option, Luashitacast will determine if it should be included.
+			[gVars._WSWAP] 		= true,
+			[gVars._KITE] 		= false,
+			[gVars._TH] 		= false,
+			[gVars._TANK] 		= false,
+			[gVars._IDLE] 		= true,
+			[gVars._EVASION]	= false,
+			[gVars._SGS] 		= false,
+			[gVars._GSWAP] 		= true,
+			-- Magic accuracy is only available to jobs/subjobs that use magic
+			[gVars._MACC] 		= false,
+			-- HPPlus is DRG only. Indicates if DRG's HP+ gear should be equipped prior to healing breath
+			[gVars._HPPLUS]		= false,
+			-- Mode is currently only available to summoners (SMN/ or /SMN). Mode let's the player define what emphasis gearing should
+			-- have, affecting their pet: perpetuation cost (gVars_MODE_PERPETUATION), attack (gVars_MODE_ATTACK), or enmity down
+			-- (gVars_MODE_ENMITY_MINUS)
+			[gVars._MODE] 		= gVars._MODE_PERPETUATION,
+			-- Damage Taken is a cycle available to all jobs. Settings are: off (gVars._DT_OFF), magical (gVars._DT_MAG), breath (gVars._DT_BRE),
+			-- or physical (gVars._DT_PHY)
+			[gVars._DT] 		= gVars._DT_OFF,
+		},
+	};
 
 -- Table of custom conditionals
 profile.CustomConditionals = {
@@ -1912,7 +2022,7 @@ end		-- SetSubjobSet
 --]]
 
 function profile.OnLoad()
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 
 	gSettings.AllowAddSet = true;
 	utilities.Initialize();
@@ -1951,19 +2061,11 @@ end		-- OnLoad
 	end		-- OnUnload
 
 --[[
-	HandleCommand is run when you type in a command defined in LUASHITACAST. The commands handled here instead
-	of in crossjobs.HandleCommands are specific to BST or the help system, which has been tailored to BST.
+	HandleCommand is run when you type in a command defined in LUASHITACAST.
 --]]
 
 function profile.HandleCommand(args)
-
-	if args[1] == 'man' then
-		help.ShowHelp();
-	elseif args[1] == 'petfood' then
-		pets.fPetReward((args[2],true);
-	else
-		crossjobs.HandleCommands(args);
-	end
+	crossjobs.HandleCommands(args);
 end		-- HandleCommand
 
 --[[
@@ -1995,7 +2097,7 @@ end		-- HandlePetAction
 --]]
 
 function profile.HandleDefault()
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();
 	local ew = gData.GetEquipment();
@@ -2076,7 +2178,12 @@ function profile.HandleDefault()
 				j = string.lower(j);
 				if j == 'eva' and utilities.fGetToggle('Eva') == true and profile.settings.EmbedOnlyEvasion == false then
 					gear.MoveToDynamicGS(profile.Sets.Evasion,crossjobs.Sets.CurrentGear,false,'Evasion');
-				elseif j == 'acc' and profile.settings.EmbedOnlyAccuracy == false then
+				elseif j == 'acc' and profile.if player.MainJobLevel < 60 and player.HPP <= 25 or
+					(player.MainJobLevel >= 60 and player.HPP <= 33 and
+					(gVars.tGearDetails['head']['drachen armet'] ~= nil or
+					gVars.tGearDetails['head']['drachen armet +1'] ~= nil)) then
+					gear.MoveToDynamicGS(profile.Sets.Pet_BreathHealing,crossjobs.Sets.CurrentGear,true,'Pet_BreathHealing');
+				settings.EmbedOnlyAccuracy == false then
 					crossjobs.ProgressiveAccuracy('Acc');
 				end
 			end
@@ -2198,9 +2305,7 @@ function profile.HandlePrecast()
 	magic.HandlePrecast();
 
 	-- Special case when using magic to trigger your wyvern's healing breath
-	HealingBreath();
-
-	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
+	pets.HealingBreath();
 end		-- HandlePrecast
 
 --[[
@@ -2219,57 +2324,8 @@ function profile.HandleMidcast()
 	magic.HandleMidcast();
 
 	-- Special case when using magic to trigger your wyvern's healing breath
-	HealingBreath();
-
-	gear.EquipTheGear(crossjobs.Sets.CurrentGear);
+	pets.HealingBreath();
 end		-- HandleMidcast
-
---[[
-	HealingBreath determines if the appropriate conditions are met for your wyvern to cast a healing
-	breath on either you or someone in your party.
---]]
-
-function HealingBreath()
-	local pet = gData.GetPet();
-	local player = gData.GetPlayer();
-	local pParty = AshitaCore:GetMemoryManager():GetParty();
-
-	if pet ~= nil and pet.Name == profile.WyvernName then
-		if string.find('PLD,DRK,NIN,BRD',player.SubJob) ~= nil then
-			-- Because of the subjob, the only player that can be affected by the heal is the DRG.
-			-- Equipping an HP Up set makes it more likely that the conditions for a healing breath
-			-- will occur. Target HP% is 25% or 33% if you equip a "drachen armet(+1)"
-			-- Now, check to see if the HP% is low enough for a healing breath
-			gear.EquipTheGear(profile.Sets.MaxHPUpSet);
-			if player.MainJobLevel < 60 and player.HPP <= 25 or
-				(player.MainJobLevel >= 60 and player.HPP <= 33 and
-				(gVars.tGearDetails['head']['drachen armet'] ~= nil or
-				 gVars.tGearDetails['head']['drachen armet +1'] ~= nil)) then
-				gear.MoveToDynamicGS(profile.Sets.Pet_BreathHealing,crossjobs.Sets.CurrentGear,true,'Pet_BreathHealing');
-			end
-		else
-			-- Since the DRG has a defensive subjob, we need to see if anyone in their party meets
-			-- the criteria for healing. Target HP% is 33% or 50% if you equip a "drachen armet(+1)"
-			-- Based on a setting, upping the max HP of the DRG might be warranted (dead healer, no
-			-- heals. Decision on this though is made when configuring the DRG job file.)
-			if profile.settings.FavorDRGHBreath == true then
-				gear.EquipTheGear(profile.Sets.MaxHPUpSet);
-			end
-
-			for i=0,5,1 do		-- First 6 is your party, you're 0
-				if pParty:GetMemberHP(i) ~= nil then
-					if player.MainJobLevel < 60 and pParty:GetMemberHPPercent(i) <= 33 or
-						(player.MainJobLevel >= 60 and pParty:GetMemberHPPercent(i) <= 50 and
-						(gVars.tGearDetails['head']['drachen armet'] ~= nil or
-						 gVars.tGearDetails['head']['drachen armet +1'] ~= nil)) then
-						gear.MoveToDynamicGS(profile.Sets.Pet_BreathHealing,crossjobs.Sets.CurrentGear,true,'Pet_BreathHealing');
-						break;
-					end
-				end
-			end
-		end
-	end
-end		-- HealingBreath
 
 --[[
 	HandlePreshot is similar to HandlePrecast, but for ranged actions. It loads Ranged Accuracy
