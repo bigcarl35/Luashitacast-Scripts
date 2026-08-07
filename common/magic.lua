@@ -180,28 +180,29 @@ magic.tTiered = {
             [3] = { ['Name'] = 'Watera', ['SID'] = 199, ['MP'] = 34, ['BLM'] = 19 }
         },
         ['flare'] = {
-            [1] = { ['Name'] = 'Flare', ['SID'] = 204, ['MP'] = 315, ['BLM'] = 60 },
-            -- [2] = { ['Name'] = 'Flare II', ['SID'] = 205, ['MP'] = 280, ['BLM'] = 75 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Flare II', ['SID'] = 205, ['MP'] = 280, ['BLM'] = 75 },
+            [2] = { ['Name'] = 'Flare', ['SID'] = 204, ['MP'] = 315, ['BLM'] = 60 },
         },
         ['freeze'] = {
-            [1] = { ['Name'] = 'Freeze', ['SID'] = 206, ['MP'] = 315, ['BLM'] = 50 },
-            -- [2] = { ['Name'] = 'Freeze II', ['SID'] = 207, ['MP'] = 280, ['BLM'] = 75 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Freeze II', ['SID'] = 207, ['MP'] = 280, ['BLM'] = 75 },
+            [2] = { ['Name'] = 'Freeze', ['SID'] = 206, ['MP'] = 315, ['BLM'] = 50 },
+
         },
         ['tornado'] = {
-            [1] = { ['Name'] = 'Tornado', ['SID'] = 208, ['MP'] = 315, ['BLM'] = 52 },
-            -- [2] = { ['Name'] = 'Tornado II', ['SID'] = 209, ['MP'] = 280, ['BLM'] = 75 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Tornado II', ['SID'] = 209, ['MP'] = 280, ['BLM'] = 75 },
+            [2] = { ['Name'] = 'Tornado', ['SID'] = 208, ['MP'] = 315, ['BLM'] = 52 },
         },
         ['quake'] = {
-            [1] = { ['Name'] = 'Quake', ['SID'] = 210, ['MP'] = 315, ['BLM'] = 54 },
-            -- [2] = { ['Name'] = 'Quake II', ['SID'] = 211, ['MP'] = 280, ['BLM'] = 75 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Quake II', ['SID'] = 211, ['MP'] = 280, ['BLM'] = 75 },
+            [2] = { ['Name'] = 'Quake', ['SID'] = 210, ['MP'] = 315, ['BLM'] = 54 },
         },
         ['burst'] = {
-            [1] = { ['Name'] = 'Burst', ['SID'] = 212, ['MP'] = 315, ['BLM'] = 56 },
-            -- [2] = { ['Name'] = 'Burst II', ['SID'] = 213, ['MP'] = 280, ['BLM'] = 75 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Burst II', ['SID'] = 213, ['MP'] = 280, ['BLM'] = 75 },
+            [2] = { ['Name'] = 'Burst', ['SID'] = 212, ['MP'] = 315, ['BLM'] = 56 },
         },
         ['flood'] = {
-            [1] = { ['Name'] = 'Flood', ['SID'] = 214, ['MP'] = 315, ['BLM'] = 58 },
-            -- [2] = { ['Name'] = 'Flood II', ['SID'] = 215, ['MP'] = 280, ['BLM'] = 75 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Flood II', ['SID'] = 215, ['MP'] = 280, ['BLM'] = 75 },
+            [2] = { ['Name'] = 'Flood', ['SID'] = 214, ['MP'] = 315, ['BLM'] = 58 },
         },
         ['poison'] = {
             [1] = { ['Name'] = 'Poison II', ['SID'] = 221, ['MP'] = 38, ['RDM'] = 46, ['BLM'] = 43, ['DRK'] = 46 },
@@ -212,13 +213,13 @@ magic.tTiered = {
             [2] = { ['Name'] = 'Poisonga', ['SID'] = 225, ['MP'] = 5, ['BLM'] = 24, ['DRK'] = 26 }
         },
         ['bio'] = {
-            [1] = { ['Name'] = 'Bio II', ['SID'] = 231, ['MP'] = 36, ['RDM'] = 36, ['BLM'] = 35, ['DRK'] = 40 },
-            [2] = { ['Name'] = 'Bio', ['SID'] = 230, ['MP'] = 15, ['RDM'] = 10, ['BLM'] = 10, ['DRK'] = 15 }
-            -- [3] { ['Name'] = 'Bio III', ['SID'] = 232, ['MP'] = 36, ['RDM'] songs= 75 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Bio III', ['SID'] = 232, ['MP'] = 36, ['RDM'] = 75 },
+            [2] = { ['Name'] = 'Bio II', ['SID'] = 231, ['MP'] = 36, ['RDM'] = 36, ['BLM'] = 35, ['DRK'] = 40 },
+            [3] = { ['Name'] = 'Bio', ['SID'] = 230, ['MP'] = 15, ['RDM'] = 10, ['BLM'] = 10, ['DRK'] = 15 },
         },
         ['drain'] = {
-            [1] = { ['Name'] = 'Drain', ['SID'] = 245, ['MP'] = 21, ['SCH'] = 21, ['BLM'] = 12, ['DRK'] = 10 },
-            -- [2] = { ['Name'] = 'Drain II', ['SID'] = 246, ['MP'] = 37, ['DRK'] = 62 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Drain II', ['SID'] = 246, ['MP'] = 37, ['DRK'] = 62 },
+            [2] = { ['Name'] = 'Drain', ['SID'] = 245, ['MP'] = 21, ['SCH'] = 21, ['BLM'] = 12, ['DRK'] = 10 },
         },
         ['sleep'] = {
             [1] = { ['Name'] = 'Sleep II', ['SID'] = 259, ['MP'] = 29, ['RDM'] = 46, ['SCH'] = 65, ['BLM'] = 41, ['DRK'] = 56, ['GEO'] = 70 },
@@ -229,62 +230,62 @@ magic.tTiered = {
             [2] = { ['Name'] = 'Sleepga', ['SID'] = 273, ['MP'] = 38, ['BLM'] = 31 }
         },
         ['blind'] = {
-            [1] = { ['Name'] = 'Blind', ['SID'] = 254, ['MP'] = 5, ['RDM'] = 8, ['BLM'] = 4 },
-            -- [2] = { ['Name'] = 'Blind II', ['SID'] = 276, ['MP'] = 31, ['BIn a silly moodLM'] = 75 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Blind II', ['SID'] = 276, ['MP'] = 31, ['BLM'] = 75 },
+            [2] = { ['Name'] = 'Blind', ['SID'] = 254, ['MP'] = 5, ['RDM'] = 8, ['BLM'] = 4 },
         },
         ['enfire'] = {
-            [1] = { ['Name'] = 'Enfire', ['SID'] = 100, ['MP'] = 12, ['RDM'] = 24 },
-            -- [2] = { ['Name'] = 'Enfire II', ['SID'] = 312, ['MP'] = 24, ['RDM'] = 58 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Enfire II', ['SID'] = 312, ['MP'] = 24, ['RDM'] = 58 },
+            [2] = { ['Name'] = 'Enfire', ['SID'] = 100, ['MP'] = 12, ['RDM'] = 24 },
         },
         ['enblizzard'] = {
-            [1] = { ['Name'] = 'Enblizzard', ['SID'] = 101, ['MP'] = 12, ['RDM'] = 22 },
-            -- [2] = { ['Name'] = 'Enblizzard II', ['SID'] = 313, ['MP'] = 24, ['RDM'] = 56 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Enblizzard II', ['SID'] = 313, ['MP'] = 24, ['RDM'] = 56 },
+            [2] = { ['Name'] = 'Enblizzard', ['SID'] = 101, ['MP'] = 12, ['RDM'] = 22 },
         },
         ['enaero'] = {
-            [1] = { ['Name'] = 'Enaero', ['SID'] = 102, ['MP'] = 12, ['RDM'] = 20 },
-            -- [2] = { ['Name'] = 'Enaero II', ['SID'] = 314, ['MP'] = 24, ['RDM'] = 52 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Enaero II', ['SID'] = 314, ['MP'] = 24, ['RDM'] = 52 },
+            [2] = { ['Name'] = 'Enaero', ['SID'] = 102, ['MP'] = 12, ['RDM'] = 20 },
         },
         ['enstone'] = {
-            [1] = { ['Name'] = 'Enstone', ['SID'] = 103, ['MP'] = 12, ['RDM'] = 18 },
-            -- [2] = { ['Name'] = 'Enstone II', ['SID'] = 315, ['MP'] = 24, ['RDM'] = 52 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Enstone II', ['SID'] = 315, ['MP'] = 24, ['RDM'] = 52 },
+            [2] = { ['Name'] = 'Enstone', ['SID'] = 103, ['MP'] = 12, ['RDM'] = 18 },
         },
         ['enthunder'] = {
-            [1] = { ['Name'] = 'Enthunder', ['SID'] = 104, ['MP'] = 12, ['RDM'] = 16 },
-            -- [2] = { ['Name'] = 'Enthunder II', ['SID'] = 316, ['MP'] = 24, ['RDM'] = 50 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Enthunder II', ['SID'] = 316, ['MP'] = 24, ['RDM'] = 50 },
+            [2] = { ['Name'] = 'Enthunder', ['SID'] = 104, ['MP'] = 12, ['RDM'] = 16 },
         },
         ['enwater'] = {
-            [1] = { ['Name'] = 'Enwater', ['SID'] = 105, ['MP'] = 12, ['RDM'] = 27 },
-            -- [2] = { ['Name'] = 'Enwater II', ['SID'] = 317, ['MP'] = 24, ['RDM'] = 60 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Enwater II', ['SID'] = 317, ['MP'] = 24, ['RDM'] = 60 },
+            [2] = { ['Name'] = 'Enwater', ['SID'] = 105, ['MP'] = 12, ['RDM'] = 27 },
         },
         ['katon'] = {
-            [1] = { ['Name'] = 'Katon: Ni', ['SID'] = 321, ['MP'] = 0, ['NIN'] = 40 },
-            [2] = { ['Name'] = 'Katon: Ichi', ['SID'] = 320, ['MP'] = 0, ['NIN'] = 15 }
-            -- [3] = { ['Name'] = 'Katon: San', ['SID'] = 322, ['MP'] = 0, ['NIN'] = 75 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Katon: San', ['SID'] = 322, ['MP'] = 0, ['NIN'] = 75 },
+            [2] = { ['Name'] = 'Katon: Ni', ['SID'] = 321, ['MP'] = 0, ['NIN'] = 40 },
+            [3] = { ['Name'] = 'Katon: Ichi', ['SID'] = 320, ['MP'] = 0, ['NIN'] = 15 },
         },
         ['hyoton'] = {
-            [1] = { ['Name'] = 'Hyoton: Ni', ['SID'] = 324, ['MP'] = 0, ['NIN'] = 40 },
-            [2] = { ['Name'] = 'Hyoton: Ichi', ['SID'] = 323, ['MP'] = 0, ['NIN'] = 15 }
-            --		{ ['Name'] = 'Hyoton: San', ['SID'] = 325, ['MP'] = 0, ['NIN'] = 75 }     -- Make #1 when uncommented
+            [1]	={ ['Name'] = 'Hyoton: San', ['SID'] = 325, ['MP'] = 0, ['NIN'] = 75 },
+            [2] = { ['Name'] = 'Hyoton: Ni', ['SID'] = 324, ['MP'] = 0, ['NIN'] = 40 },
+            [3] = { ['Name'] = 'Hyoton: Ichi', ['SID'] = 323, ['MP'] = 0, ['NIN'] = 15 },
         },
         ['huton'] = {
-            [1] = { ['Name'] = 'Huton: Ni', ['SID'] = 327, ['MP'] = 0, ['NIN'] = 40 },
-            [2] = { ['Name'] = 'Huton: Ichi', ['SID'] = 326, ['MP'] = 0, ['NIN'] = 15 }
-            -- [3] = { ['Name'] = 'Huton: San', ['SID'] = 328, ['MP'] = 0, ['NIN'] = 75 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Huton: San', ['SID'] = 328, ['MP'] = 0, ['NIN'] = 75 },
+            [2] = { ['Name'] = 'Huton: Ni', ['SID'] = 327, ['MP'] = 0, ['NIN'] = 40 },
+            [3] = { ['Name'] = 'Huton: Ichi', ['SID'] = 326, ['MP'] = 0, ['NIN'] = 15 },
         },
         ['doton'] = {
-            [1] = { ['Name'] = 'Doton: Ni', ['SID'] = 330, ['MP'] = 0, ['NIN'] = 40 },
-            [2] = { ['Name'] = 'Doton: Ichi', ['SID'] = 329, ['MP'] = 0, ['NIN'] = 15 }
-            -- [3] = { ['Name'] = 'Doton: San', ['SID'] = 331, ['MP'] = 0, ['NIN'] = 75 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Doton: San', ['SID'] = 331, ['MP'] = 0, ['NIN'] = 75 },
+            [2] = { ['Name'] = 'Doton: Ni', ['SID'] = 330, ['MP'] = 0, ['NIN'] = 40 },
+            [3] = { ['Name'] = 'Doton: Ichi', ['SID'] = 329, ['MP'] = 0, ['NIN'] = 15 },
         },
         ['raiton'] = {
-            [1] = { ['Name'] = 'Raiton: Ni', ['SID'] = 333, ['MP'] = 0, ['NIN'] = 40 },
-            [2] = { ['Name'] = 'Raiton: Ichi', ['SID'] = 332, ['MP'] = 0, ['NIN'] = 15 }
-            -- [3] = { ['Name'] = 'Raiton: San', ['SID'] = 334, ['MP'] = 0, ['NIN'] = 75 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Raiton: San', ['SID'] = 334, ['MP'] = 0, ['NIN'] = 75 },
+            [2] = { ['Name'] = 'Raiton: Ni', ['SID'] = 333, ['MP'] = 0, ['NIN'] = 40 },
+            [3] = { ['Name'] = 'Raiton: Ichi', ['SID'] = 332, ['MP'] = 0, ['NIN'] = 15 },
         },
         ['suiton'] = {
-            [1] = { ['Name'] = 'Suiton: Ni', ['SID'] = 336, ['MP'] = 0, ['NIN'] = 40 },
-            [2] = { ['Name'] = 'Suiton: Ichi', ['SID'] = 335, ['MP'] = 0, ['NIN'] = 15 }
-            -- [3] = { ['Name'] = 'Suiton: San', ['SID'] = 337, ['MP'] = 0, ['NIN'] = 75 }     -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Suiton: San', ['SID'] = 337, ['MP'] = 0, ['NIN'] = 75 },
+            [2] = { ['Name'] = 'Suiton: Ni', ['SID'] = 336, ['MP'] = 0, ['NIN'] = 40 },
+            [3] = { ['Name'] = 'Suiton: Ichi', ['SID'] = 335, ['MP'] = 0, ['NIN'] = 15 },
         },
         ['utsusemi'] = {
             [1] = { ['Name'] = 'Utsusemi: Ni', ['SID'] = 339, ['MP'] = 0, ['NIN'] = 37 },
@@ -392,7 +393,7 @@ end		-- magic.fBardSongType
 
 function magic.HandlePrecast()
     local spell = gData.GetAction();
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
 
     -- Clear out the CurrentGear in case of leftovers
     utilities.ClearSet(crossjobs.Sets.CurrentGear);
@@ -418,7 +419,7 @@ end		-- magic.HandlePrecast
 
 function magic.HandleMidcast()
     local spell = gData.GetAction();
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
 
     -- Clear out the CurrentGear in case of leftovers
     utilities.ClearSet(crossjobs.Sets.CurrentGear);
@@ -924,7 +925,7 @@ end		-- MidcastNinjutsu
 --]]
 
 function magic.MaxCast(sName,bSpell,sTarget,bCast)
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local sMain = player.MainJob;
     local sSub = player.SubJob;
     local MainLvl = player.MainJobSync;

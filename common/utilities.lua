@@ -18,6 +18,7 @@ local utilities = {};
             Reminder                Reminder function to nag player to /gc
             SetAliasCC              Registers all custom conditional commands
             SetAliasAll             Registers all luashitacast commands
+            SetJob                  Determines if main job is NON and sets it from Profile
 
             AdvanceCycle            Advance the setting of a specific cycle
             AdvanceToggle           Advance the setting of a specific toggle
@@ -27,10 +28,11 @@ local utilities = {};
             ToggleState             Toggles on/off feedback mechanism
 
         Functions:
-            local fBit              2^(n-1) resultant
-            local fHasBit           Determines if bit set in value
+            fBit                    2^(n-1) resultant
+            fHasBit                 Determines if bit set in value
             fAccEnabled             Determines if any accuracy stage has been set
             fBuffed                 Determines if passed buff is on character
+            fCheckDisplayFieldValidity  Determines if the passed value is valid and if so returns the appropriate index
             fCheckItemOwned         Determines if character owns piece of gear
             fCheckMagicJob          Determines if character has a magic job/subjob
             fCheckObiDW             Determines if Day/weather element advantageous for obi
@@ -38,6 +40,7 @@ local utilities = {};
             fCheckRegionControl     Determines if player's nation controls region
             fCheckTime              Determines if passed time matches keyword
             fCheckWSBailout         Determines range to target would fail Weapon Skill
+            fFindCommand            Determines which toggle the passed command matches
             fFormattedWord          Capitalization routine for passed in word
             fGetAllGearSetNames     Creates and returns a list of all gear sets
             fGetCCDescription       Returns the question associated with the passed code
@@ -47,10 +50,10 @@ local utilities = {};
             fGetTableByName         Returns the gear set associated with name
             fIsGearsetDetailsFound  Is the passed in gear details record found in the passed in list
             fIsVisible              Determines if the visibility is true
-            fIsVisibleSetting       Determines if the visibility setting is valid
+            fIsDisplaybarSettingValid Determines if the visibility setting is valid
             fLtrim                  Trims leading spaces from the passed in string
+            fMagicalJob             Determines if the player's main job or subjob is magical
             fMagicalSubjob          Determines if the player's subjob can do magic
-            fMakeConditionalTable   Splits apart conditionals into a table
             fNewFileName            Generates a new report file name
             fOpenByFilename         Opens the passed in file for writing/appending
             fParseFileDesignation   Determines the file name from the passed file designation
@@ -58,11 +61,13 @@ local utilities = {};
             fRemoveConditional      Removes inline conditionals from string
             fSetColorText           Colors text for displaying on screen
             fSlotMatch              Determines if item can be loaded into slot
+            fSplitStringByDelimiter Splits apart the delimnited string into a table
             fTargetId               Returns the target ID (hex) of player's target
+            fToggleExists           Determines if the passed in toggle exists
             fTranslateWhichSlot     Determines if passed in slot valid
             fTrim                   Trims leading and trailing spaces from a string
             fValidSlots             Determines if passed in slot list is valid
-
+            fWhichWSStat            Determines which stat(s) are emphasized in the weapon skill
             fGetCycle                Get a specific cycle's value
             fGetToggle               Get a specific toggle's value
             fSetCycle                Set a specific cycle's value
@@ -155,6 +160,22 @@ function utilities.fSetCycle(name,val)
 end		-- utilities.SetCycle
 
 --[[
+    fCycleExists determines if there's a cyclee by the passed in name
+
+    Parameter
+        sName       Name of cycle
+
+    Returned
+        T/F, does the toggle exist
+--]]
+
+function utilities.fCycleExists(sName)
+    local ctable = gVars.Cycles[sName];
+
+    return (type(ctable) == 'table');
+end     -- utilities.fToggleExists
+
+--[[
     CreateToggle creates a binary variable that can be turrned on or off
 
     Parameters
@@ -163,6 +184,7 @@ end		-- utilities.SetCycle
 --]]
 
 function utilities.CreateToggle(name, default)
+
     gVars.Toggles[name] = default;
 end		-- utilities.CreateToggle
 
@@ -186,6 +208,21 @@ function utilities.fGetToggle(name)
 end		-- utilities.fGetToggle
 
 --[[
+    fToggleExists determines if there's a toggle by the passed in name
+
+    Parameter
+        sName       Name of toggle
+
+    Returned
+        T/F, does the toggle exist
+--]]
+
+function utilities.fToggleExists(sName)
+
+    return (type(gVars.Toggles[sName]) == 'boolean');
+end     -- utilities.fToggleExists
+
+--[[
     AdvanceToggle just flips the binary setting of the passed toggle variable
 
     Parameter
@@ -194,7 +231,7 @@ end		-- utilities.fGetToggle
 
 function utilities.AdvanceToggle(name)
 
-    if (type(gVars.Toggles[name]) ~= 'boolean') then
+    if utilities.fToggleExist(name) == false then
         return;
     elseif gVars.Toggles[name] then
         gVars.Toggles[name] = false;
@@ -242,7 +279,7 @@ function utilities.Reminder()
         return;
     end
 
-    if gProfile.settings.Reminder.bGCReminder == true then
+    if gProfile.system_settings.bGCReminder == true then
         -- Since reminder already shown once, change the wait
         -- interval from 15 seconds to 5 minutes
         iTestVal = gProfile.settings.Reminder.MaxBasetime;
@@ -256,7 +293,7 @@ function utilities.Reminder()
             print(chat.message('FYI: Remember to do a /gc'));
         end
         print(chat.message('************'));
-        gProfile.settings.Reminder.bGCReminder = true;
+        gProfile.system_settings.Reminder.bGCReminder = true;
         -- Change the base to current so that comparison is from now forward
         utilities.basetime = iNow;
     end
@@ -611,7 +648,7 @@ function utilities.fGetTableByName(sName)
     local sName2;
 
     sName2 = string.lower(sName);
-    if string.find(sName2,'gprofile.sets.') ~= nil then
+    if string.find(sName2,'gProfile.sets.') ~= nil then
         sName2 = string.sub(sName2,14,-1);
         bProfile = true;
     elseif string.find(sName2,'crossjobs.sets.') ~= nil then
@@ -640,48 +677,6 @@ function utilities.fGetTableByName(sName)
 
     return nil;
 end     -- utilities.fGetTableByName
-
---[[
-    fMakeConditionalTable takes the passed, // delimited list and
-    returns the individual codes in a table.
-
-    Parameters:
-        sList       delimited list of inline conditionals
-        del         what delimiter to split on
-
-    Returned:
-        Table of the split apart inline conditionals, all uppercase
---]]
-
-function utilities.fMakeConditionalTable(sList,del)
-    local tTbl = {};
-    local iPos;
-
-    if del == nil then
-        del = '//';
-    end
-
-    if string.find(sList,del) == nil then
-        return;
-    end
-
-    sList = string.upper(sList);
-    iPos = 1;		-- Assume start at first position
-    while iPos ~= nil do
-        -- Look for the next //
-        iPos = string.find(string.sub(sList,3,-1),del);
-        if iPos ~= nil then
-            -- since found, add the current entry
-            table.insert(tTbl,string.sub(sList,3,iPos+2-1));    -- skip the //, include up to next //
-            -- and move the list to the next inline
-            sList = string.sub(sList,iPos+2,-1);                -- save portion from next // onwards
-        else
-            -- since no more found, just save the conditional entry
-            table.insert(tTbl,string.sub(sList,3,-1));          -- skip the //
-        end
-    end
-    return tTbl;
-end     -- utilities.fMakeConditionalTable
 
 --[[
     fBuffed determines if the player has the buff/debuff or not. The passed buff name
@@ -1093,21 +1088,21 @@ end		-- utilities.fReferenceCheck
 --]]
 
 function utilities.fGetLevel(bActual)
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
 
     if bActual == nil then
         bActual = false;
     end
 
-    if bActual == true or gProfile.settings.PlayerCappedLevel == 0 then
+    if bActual == true or gProfile.system_settings.PlayerCappedLevel == 0 then
         -- Actual max level wanted
         return player.MainJobSync;
     else
         -- Player capped level wanted unless the sync level is lower
-        if player.MainJobSync < gProfile.settings.PlayerCappedLevel then
+        if player.MainJobSync < gProfile.system_settings.PlayerCappedLevel then
             return player.MainJobSync;
         else
-            return gProfile.settings.PlayerCappedLevel;
+            return gProfile.system_settings.PlayerCappedLevel;
         end
     end
 end     -- utilities.fGetLevel
@@ -1246,7 +1241,7 @@ end		-- utilities.Initialize
 --]]
 
 function utilities.fCheckWsBailout()
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local ws = gData.GetAction();
     local target = gData.GetActionTarget();
     local bGood = true;
@@ -1278,10 +1273,20 @@ end		-- utilities.fCheckWsBailout
 --]]
 
 function utilities.fMagicalSubJob()
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
 
     return (string.find(gVars._sMagicjobs,player.SubJob) ~= nil);
 end		-- utilities.fMagicalSubJob
+
+--[[
+    fMagicalJob determines if the player's job or subjob is magical
+--]]
+
+function utilities.fMagicalJob()
+    local player = utilities.SetJob();
+
+    return (string.find(gVars._sMagicJobs,player.MainJob) ~= nil or string.find(gVars._sMagicJobs,player.SubJob) ~= nil);
+end     -- utilities.fMagicalJob
 
 --[[
     NewFileName generates a new file name based on the player's character name, job, and
@@ -1292,7 +1297,7 @@ end		-- utilities.fMagicalSubJob
 --]]
 
 function utilities.fNewFileName()
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local sName = string.format('%s_%s_%x.txt',string.upper(player.Name),player.MainJob,os.clock);
 
     return sName;
@@ -1353,6 +1358,10 @@ end     -- utilities.fOpenByFilename
 --]]
 
 function utilities.fLtrim(s)
+    if s == nil then
+        return nil;
+    end
+
     return s:match'^%s*(.*)';
 end     -- utilities.fLtrim
 
@@ -1367,6 +1376,10 @@ end     -- utilities.fLtrim
 --]]
 
 function utilities.fRtrim(s)
+    if s == nil then
+        return nil;
+    end
+
     return s:match'^(.*%S)%s*$';
 end     -- utilities.fRtrim
 
@@ -1381,6 +1394,10 @@ end     -- utilities.fRtrim
 --]]
 
 function utilities.fTrim(s)
+    if s == nil then
+        return nil;
+    end
+
     return s:match'^()%s*$' and '' or s:match'^%s*(.*%S)';
 end     -- utilities.fTrim
 
@@ -1545,8 +1562,10 @@ end     -- utilities.GetWeaponsList
         T/F, was the target of the specified type or no target selected?
 
         ** revise **
+        Need to change because value sent could be a list
 --]]
-function utilities.fGetMobType(sType,bFamily)
+
+function utilities.fGetMobType(sType)
     local curr = AshitaCore:GetMemoryManager():GetParty():GetMemberZone(0);
     local targetIndex = gData.GetTargetIndex();
     local tEntity = gData.GetEntity(targetIndex);
@@ -1692,74 +1711,60 @@ function utilities.UpdateRegionalLabel()
                    gVars.sRegion = gVars._REGION_STATUS_NA;
                 end
             else        -- Unknown
-                gVars.sRegion =gVars._REGION_STATUS_UNKNOWN;
+                gVars.sRegion = gVars._REGION_STATUS_UNKNOWN;
             end
+        else
+            -- Region not in master list
+            gVars.sRegion = gVars._REGION_STATUS_UNKNOWN;
         end
     end
 end     -- utilities.UpdateRegionalLabel
 
 --[[
-    fCheckVisability will update (if appropriate) the player's displaybar's settings. Returned is whether a change in visibility was requested
+    fIsDisplaybarSettingValid determines if the specified field in the display bar is defined
+
+    Parameters:
+        bBar1       Is it in bar 1?
+        sName       Name of setting
 --]]
 
-function utilities.fCheckVisibility(cmd,args)
-    local bVisible = nil;
+function utilities.fIsDisplaybarSettingValid(bBar1,sField)
+    local sBar;
 
-    if cmd == nil then
+    if bBar1 == nil or sField == nil then
         return false;
     end
 
-    for _,j in pairs(args) do
-        lj = string.lower(j);
-        if lj == 'visible' then
-            bVisible = true;
-        elseif lj == 'invisible' then
-            bVisible = false;
-        end
+    if bBar1 == true then
+        sBar = gVars._BAR1;
+    else
+        sBar = gVars._BAR2;
     end
 
-    if bVisible ~= nil then
-        if utilities.fIsVisibleSetting(cmd) == true then
-            gProfile.settings.DisplayBar[cmd]['visible'] = bVisible;
-            if gProfile.settings.bConfirmation == true then
-                print(chat.message('Info: /' .. cmd .. ' is visible? ' .. tostring(bVisible)));
-            end
-        else
-            print(chat.message('Info: /' .. cmd .. ' is either undefined or ' .. cmd .. '.\'visible\' is undefined in your job file\'s setting.Displaybar definition'));
-        end
-    end
-
-    return (bVisible ~= nil);
-end     -- utilities.fCheckVisibility
-
---[[
-    fIsVisibleSetting determines if the passed setting name is valid
-
-    Parameter:
-        sName       Name of setting
-
-    Returned:
-        T/F         Is it valid
---]]
-
-function utilities.fIsVisibleSetting(sName)
-
-    return (gProfile.settings.DisplayBar[sName] ~= nil and gProfile.settings.DisplayBar[sName]['visible'] ~= nil);
-end     -- utilities.fIsVisibleSetting
+    return (gProfile.settings.DisplayBar[sBar] ~= nil and gProfile.settings.DisplayBar[sBar][sField] ~= nil);
+end     -- utilities.fIsDisplaybarSettingValid
 
 --[[
     fIsVisible determines if the passed setting name's visibility is true
 
-    Parameter:
+    Parameters:
+        bBar1       Is it in bar 1?
         sName       Name of setting
 
     Returned:
         T/F         Is it visible
 --]]
 
-function utilities.fIsVisible(sName)
+function utilities.fIsVisible(sBar1,sName)
+    local sBar;
 
-    return gProfile.settings.DisplayBar[sName]['visible'];
+    if bBar1 == true then
+        sBar = gVars._BAR1;
+    else
+        sBar = gVars._BAR2;
+    end
+
+    return (gProfile.settings.DisplayBar[sBar][sName]);
 end     -- utilities.fIsVisible
 
 
@@ -1780,7 +1785,7 @@ end     -- utilities.CopyDisplaybarSettings
 --]]
 
 function utilities.fCheckMagicJob()
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
 
     if string.find(gVars._sMagicjobs,player.MainJob) ~= nil or
         string.find(gVars._sMagicjobs,player.SubJob) ~= nil then
@@ -1796,16 +1801,17 @@ end     -- fCheckMagicJob
     in common slot.
 
     Parameter:
-        gRec        Reference to the gear's item definition
+        sName       Name of item
         gsRec       Reference to the list of gear for the in common slot
 
     Returned:
         T/F         Was the record found
 --]]
-function utilities.fIsGearsetDetailsFound(gRec,gsRec)
+
+function utilities.fIsGearsetDetailsFound(sName,gsRec)
 
     for _,j in pairs(gsRec) do
-        if j['id'] == gRec['id'] then
+        if j == sName then
             return true;
         end
     end
@@ -1834,5 +1840,105 @@ function utilities.fGetCCDescription(ccc)
 
     return('Not found');
 end     -- utilities.fGetCCDescription
+
+--[[
+
+    fFindCommand determines if the passed command is valid and returns the appropriately formatted
+    index for the command
+
+    Parameter:
+        sCmd        Command to check
+
+    Returned:
+        toggle index
+--]]
+
+function utilities.fFindCommand(sCmd)
+
+    if sCmd == nil then
+        return nil;
+    else
+        sCmd = string.lower(sCmd);
+    end
+
+    for i,j in pairs(gVars.Toggles) do
+        if string.lower(i) == sCmd then
+            return i;
+        end
+    end
+
+    return nil;
+end
+
+--[[
+    fCheckDisplayFieldValidity determines if the passed field name is a valid field name in the displaybar and
+    returns the actual index if a match is found.
+
+    Parameter:
+        s   name of field to look for
+
+    Returned:
+        field index name or nil
+--]]
+function utilities.fCheckDisplayFieldValidity(s)
+
+    if s == nil then
+        return nil;
+    end
+
+    -- Walk through the DisplayBar settings looking for a match
+
+    for i,j in pairs(gProfile.settings.DisplayBar) do
+        if j['tag'] ~= nil and j == s then
+            return i;
+        end
+    end
+
+    return nil;
+end
+
+--[[
+    fWhichWSStat determines which known stat(s) are associated with the passed in weaponskill and
+    returns the appropriate reference name.
+
+    Parameter
+        Name        Name of the weaponskill
+
+    Return
+        weaponskill Type
+--]]
+
+function utilities.fWhichWSStat(name)
+
+    if name == nil then then
+        return nil,'unknown';
+    end
+
+    name = string.lower(name);
+    for i,j in pairs(gVars.tWeaponSkills) do
+        if table.find(j,name) ~= nil then
+            return i,name;
+        end
+    end
+    return nil,name;
+end     -- utilities.fWhichWSStat
+
+--[[
+    SetJob determines if NON is returned and sets the main job based on the system setting
+    found in the job file
+
+    Return
+        Player's main job
+--]]
+
+function utilities.SetJob()
+    local player = gData.GetPlayer();
+
+    if (player.MainJob == nil or player.MainJob == 'NON') and gProfile.system_settings.job ~= nil then
+        player.Mainjob = gProfile.system_settings.job;
+    end
+
+    return player;
+end     -- utilities.SetJob
 
 return utilities;

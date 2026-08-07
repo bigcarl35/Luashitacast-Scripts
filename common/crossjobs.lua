@@ -78,30 +78,39 @@ crossjobs.sets = {
 --]]
 
 	['FISH'] = {	-- Fishing
-			Range = 'Lu Shang\'s F. Rod',
-			Ammo  = 'Sinking Minnow',
-			Neck  = 'Justice Badge',	-- Included to block out Default's neck definition
-			Body  = 'Angler\'s Tunica',
-			Rings = 'Albatross Ring',
-			Legs  = 'Fisherman\'s Hose',
-			Feet  = 'Waders'
+		Range = 'Lu Shang\'s F. Rod',
+		Ammo  = 'Sinking Minnow',
+		Neck  = 'Justice Badge',	-- Included to block out Default's neck definition
+		Body  = 'Angler\'s Tunica',
+		Rings = 'Albatross Ring',
+		Legs  = 'Fisherman\'s Hose',
+		Feet  = 'Waders'
 	},
 
 	['HELM'] = {	-- Harvesting, Excavation, Logging, Mining
-			Body  = 'Field Tunica',
-			Hands = 'Field Gloves',
-			Legs  = 'Field Hose',
-			Feet  = 'Field Boots'
+		Body  = 'Field Tunica',
+		Hands = 'Field Gloves',
+		Legs  = 'Field Hose',
+		Feet  = 'Field Boots'
 	},
 
 	['DIG'] = {		-- Digging
-			Head = 'Egg Helm//CC2',
-			Body = 'Choc. Jack Coat'
+		Head = 'Egg Helm//CC2',
+		Body = 'Choc. Jack Coat'
 	},
 	['CLAM']  = {	-- Clamming
-			Body = 'Tarutaru Top +1',
-			Legs = 'Taru. Shorts +1'
+		Body = 'Tarutaru Top +1',
+		Legs = 'Taru. Shorts +1'
 	},
+
+--[[
+	The Riding set is used to extend the duration of a chocobo ride. You equip it prior
+	to mounting a chocobo (or one of the other mounts if they're ever added.)
+--]]
+
+	['Riding'] = {
+		Body = 'Choc. Jack Coat',
+	}
 
 --[[
 	The Sneaky set is equipped and the slots are locked. It's a set intended to equip gear
@@ -185,9 +194,13 @@ end);
 
 function crossjobs.t1(args)
 
-	for i=1,20,1 do
-		print(chat.color1(i,'color: ' .. tostring(i)));
-	end
+	print(displaybar.fHTMLColor('red','This is red'));
+	print(displaybar.fHTMLColor('yellow','This is yellow'));
+	print(displaybar.fHTMLColor('blue','This is blue'));
+	print(displaybar.fHTMLColor('unknown','This is unknown'));
+--	for i=1,20,1 do
+--		print(chat.color1(i,'color: ' .. tostring(i)));
+--	end
 end		-- crossjobs.t1
 
 --[[
@@ -199,148 +212,163 @@ end		-- crossjobs.t1
 --]]
 
 function crossjobs.SetVariables(bRefresh)
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 
 	if bRefresh == nil then
 		bRefresh = false;
 	end
 
 	-- General toggles
-	if gProfile.settings.DisplayBar[gVars._GSWAP]['init'] ~= nil then				-- Gear Swap
-		utilities.CreateToggle(gVars._GSWAP, gProfile.settings.DisplayBar[gVars._GSWAP]['init']);
+	if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._GSWAP] ~= nil then	-- Gear Swap
+		utilities.CreateToggle(gVars._GSWAP, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._GSWAP]);
 	else
-		utilities.CreateToggle(gVars._GSWAP, true);
+		utilities.CreateToggle(gVars._GSWAP, true);		-- Default value since not found in the DisplayBar's initialize area
 	end
 
-	if gProfile.settings.DisplayBar[gVars._KITE]['init'] ~= nil then				-- Kiting
-		utilities.CreateToggle(gVars._KITE, gProfile.settings.DisplayBar[gVars._KITE]['init']);
+	if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._KITE] ~= nil then		-- Kiting
+		utilities.CreateToggle(gVars._KITE, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._KITE]);
 	else
-		utilities.CreateToggle(gVars._KITE, false);
+		utilities.CreateToggle(gVars._KITE, false);		-- Default value since not found in the DisplayBar's initialize area
 	end
 
-	if gProfile.settings.DisplayBar[gVars._EVASION]['init'] ~= nil then					-- Evasion
-		utilities.CreateToggle(gVars._EVASION, gProfile.settings.DisplayBar[gVars._EVASION]['init']);
+	if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._EVASION] ~= nil then	-- Evasion
+		utilities.CreateToggle(gVars._EVASION, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._EVASION]);
 	else
-		utilities.CreateToggle(gVars._EVASION, false);
+		utilities.CreateToggle(gVars._EVASION, false);	-- Default value since not found in the DisplayBar's initialize area
 	end
 
-	if gProfile.settings.DisplayBar[gVars._IDLE]['init'] ~= nil then				-- Should Default set equip when idling
-		utilities.CreateToggle(gVars._IDLE, gProfile.settings.DisplayBar[gVars._IDLE]['init']);
+	if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._IDLE] ~= nil then		-- Idling
+		utilities.CreateToggle(gVars._IDLE, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._IDLE]);
 	else
-		utilities.CreateToggle(gVars._IDLE, false);
+		utilities.CreateToggle(gVars._IDLE, true);		-- Default value since not found in the DisplayBar's initialize area
 	end
 
-	if gProfile.settings.DisplayBar[gVars._SPF]['init'] ~= nil then					-- Show Pull Feedback
-		utilities.CreateToggle(gVars._SPF, gProfile.settings.DisplayBar[gVars._SPF]['init']);
+	if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._SGS] ~= nil then		-- Show Gear Sets
+		utilities.CreateToggle(gVars._SGS, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._SGS]);
 	else
-		utilities.CreateToggle(gVars._SPF, false);
+		utilities.CreateToggle(gVars._SGS, false);		-- Default value since not found in the DisplayBar's initialize area
 	end
 
-	if gProfile.settings.DisplayBar[gVars._TH]['init'] ~= nil then					-- Treasure Hunter
-		utilities.CreateToggle(gVars._TH, gProfile.settings.DisplayBar[gVars._TH]['init']);
+	if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._SPF] ~= nil then		-- Show Pull Feedback
+		utilities.CreateToggle(gVars._SPF, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._SPF]);
 	else
-		utilities.CreateToggle(gVars._TH, false);
+		utilities.CreateToggle(gVars._SPF, false);		-- Default value since not found in the DisplayBar's initialize area
 	end
 
-	-- Weapon swapping WSWAP is now available for all jobs, previous assumptions have been removed
-	if gProfile.settings.DisplayBar[gVars._WSWAP]['init'] ~= nil then				-- Weapon Swap
-		utilities.CreateToggle(gVars._WSWAP, gProfile.settings.DisplayBar[gVars._WSWAP]['init']);
+	if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._TH] ~= nil then		-- Treasure Hunter
+		utilities.CreateToggle(gVars._TH, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._TH]);
 	else
-		utilities.CreateToggle(gVars._WSWAP, false);
+		utilities.CreateToggle(gVars._TH, false);		-- Default value since not found in the DisplayBar's initialize area
+	end
+
+	if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._WSWAP] ~= nil then	-- Weapon Swap
+		utilities.CreateToggle(gVars._WSWAP, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._WSWAP]);
+	else
+		utilities.CreateToggle(gVars._WSWAP, false);	-- Default value since not found in the DisplayBar's initialize area
 	end
 
 	-- Tanking is now available to all jobs. In most cases jobs that people don't assume tank
 	-- will never touch the setting, but the Player can toggle tanking if that's appropriate.
-	if gProfile.settings.DisplayBar[gVars._TANK]['init'] ~= nil then				-- Tanking
-		utilities.CreateToggle(gVars._TANK, gProfile.settings.DisplayBar[gVars._TANK]['init']);
+	if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._TANK] ~= nil then		-- Tanking
+		utilities.CreateToggle(gVars._TANK, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._TANK]);
 	else
-		utilities.CreateToggle(gVars._TANK, false);
+		utilities.CreateToggle(gVars._TANK, false);		-- Default value since not found in the DisplayBar's initialize area
 	end
 
-	-- If data is still downloading, then job specific variables cannot be set since there's no
-	-- hint as to what job the player is playing unless we explicitly store the job type in the
-	-- job file. (That's a fine answer for the main job, but impractical for the sub job.)
-	if not (player.MainJob == nil or player.MainJob == 'NON') then
-		-- Magic Accuracy (Macc)
-		if string.find(gVars._sMagicJobs,player.MainJob) ~= nil or string.find(gVars._sMagicJobs,player.SubJob) ~= nil then
-			if gProfile.settings.DisplayBar[gVars._MACC]['init'] ~= nil then				-- Macc
-				utilities.CreateToggle(gVars._MACC, gProfile.settings.DisplayBar[gVars._MACC]['init']);
-			else
-				utilities.CreateToggle(gVars._MACC, false);
-			end
+	-- Now deal with the job specific variables. Please note though that if data is still downloading, the
+	-- subjob will be either nil or NON. That means if you're matching on subjob, it won't set correctly.
+
+	-- Magic Accuracy (Macc). Only created if main job or sub job supports magic
+	-- (Before checking, remove toggle if it exists. This can occur when changing subjobs.)
+	if gVars.Toggles[gVars._MACC] ~= nil then
+		gVars.Toggles[gVars._MACC] = nil;
+	end
+	-- Now process MACC "freshly"
+	if utilities.fMagicalJob() == true then
+		if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._MACC] ~= nil then	-- Macc
+			utilities.CreateToggle(gVars._MACC, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._MACC]);
+		else
+			utilities.CreateToggle(gVars._MACC, false);		-- Default
 		end
-
-		-- BST only, AJug is an automated system to equip jug pets. DB is a setting to determine the
-		-- type of debuff wanted from the Jackcoat. Either BPP or WSS (blind,poison,parallize) or
-		-- (weighted,silence,slow). Please note that the Beast Jackoat +1 (AF +1) can dispel all
-		-- six debuffs from the pet whereas Beast Jackcoat does BPP and Monster Jackcoat/Monster
-		-- Jackcoat+1 only dispels WSS.
-		if player.MainJob == 'BST' then
-			-- Because AJug can be optional, need to check to see if it is definied in the display_bar
-			-- settings before checking for an 'init' value.
-			if gProfile.settings.DisplayBar[gVars._AJUG] ~= nil and gProfile.settings.DisplayBar[gVars._AJUG]['init'] ~= nil then
-				utilities.CreateToggle(gVars._AJUG, gProfile.settings.DisplayBar[gVars._AJUG]['init']);
-			else
-				utilities.CreateToggle(gVars._AJUG, true);
-			end
-
-			-- Create the cycle
-			utilities.CreateCycle(gVars._DB, {[1] = gVars._sDB_NORM, [2] = gVars._sDB_BPP, [3] = gVars._sDB_WSS});
-
-			-- and then check for an initial setting. Like AJug this is an optional setting
-			if gProfile.settings.DisplayBar[gVars._DB] ~= nil and gProfile.settings.DisplayBar[gVars._DB]['init'] ~= nil then
-				utilities.fSetCycle(gVars._DB, gProfile.settings.DisplayBar[gVars._DB]['init']);
-			else
-				utilities.fSetCycle(gVars._DB, gVars._sDB_NORM);
-			end
-		end
-
-		-- BRD main only, Instrument indicates what default type of instrument should be equipped,
-		-- Horn or String
-		if player.MainJob == 'BRD' then
-			utilities.CreateCycle(gVars._INSTRUMENT, {[1] = gVars._HORN, [2] = gVars._STRING});
-
-			if gProfile.settings.DisplayBar[gVars._INSTRUMENT] ~= nil and gProfile.settings.DisplayBar[gVars._INSTRUMENT]['init'] ~= nil then
-				utilities.fSetCycle(gVars._INSTRUMENT, gProfile.settings.DisplayBar[gVars._INSTRUMENT]['init']);
-			else
-				utilities.fSetCycle(gVars._INSTRUMENT, gVars._HORN);
-			end
-		end
-
-		-- SMN only, sBP indicates if the a message should be printed in the party chat when
-		-- the pet does an offensive blood pact.
-		if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
-			if gProfile.settings.DisplayBar[gVars._SBP] ~= nil and gProfile.settings.DisplayBar[gVars._SBP]['init'] ~= nil then
-				utilities.CreateToggle(gVars._SBP, gProfile.settings.DisplayBar[gVars._SBP]['init']);
-			else
-				utilities.CreateToggle(gVars._SBP, true);
-			end
-
-			utilities.CreateCycle(gVars._MODE, {[1] = gVars._MODE_PERPETUATION, [2] = gVars._MODE_ATTACK, [3] = gVars._MODE_ENMITY_MINUS});
-			if gProfile.settings.DisplayBar[gVars._MODE]['init'] ~= nil then
-				utilities.fSetCycle(gVars._MODE, gProfile.settings.DisplayBar[gVars._MODE]['init']);
-			else
-				utilities.fSetCycle(gVars._MODE, gVars._MODE_PERPETUATION);
-			end
-		end
-
-		-- THF only, SS indicates that when the player steals, a message should be displayed.
-		-- This is used to coordinate thieve's stealing in activities like Dynamis.
-		if player.MainJob == 'THF' or player.SubJob == 'THF' then
-			if gProfile.settings.DisplayBar[gVars._SS] ~= nil and gProfile.settings.DisplayBar[gVars._SS]['init'] ~= nil then
-				utilities.CreateToggle(gVars._SS, gProfile.settings.DisplayBar[gVars._SS]['init']);
-			else
-				utilities.CreateToggle(gVars._SS, false);
-			end
-		end
-	else
-		print(chat.message('Warning: Unable to create job-specific variables while data downloading hasn\'t finished. Run /rv when no longer the case'));
 	end
 
-	-- General cycles: Damage Taken and Region
+	-- BST only, AJug is an automated system to equip jug pets. DB is a setting to determine the
+	-- type of debuff wanted from the Jackcoat. Either BPP or WSS (blind,poison,parallize) or
+	-- (weighted,silence,slow). Please note that the Beast Jackoat +1 (AF +1) can dispel all
+	-- six debuffs from the pet whereas Beast Jackcoat does BPP and Monster Jackcoat/Monster
+	-- Jackcoat+1 only dispels WSS.
+	if player.MainJob == 'BST' then
+		-- Because AJug can be optional, need to check to see if it is definied in the display_bar
+		-- settings before checking for an 'init' value.
+		if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._AJUG] ~= nil then
+			utilities.CreateToggle(gVars._AJUG, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._AJUG]);
+		else
+			utilities.CreateToggle(gVars._AJUG, true);
+		end
+
+		-- Create the cycle, no default so treat as is
+		utilities.CreateCycle(gVars._DB, {[1] = gVars._sDB_NORM, [2] = gVars._sDB_BPP, [3] = gVars._sDB_WSS});
+
+		-- and then check for an initial setting. Like AJug this is an optional setting
+		if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._DB] ~= nil then
+			utilities.fSetCycle(gVars._DB, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._DB]);
+		else
+			utilities.fSetCycle(gVars._DB, gVars._sDB_NORM);
+		end
+	end
+
+	-- BRD main only, Instrument indicates what default type of instrument should be equipped,
+	-- Horn or String
+	if player.MainJob == 'BRD' then
+		utilities.CreateCycle(gVars._INSTRUMENT, {[1] = gVars._HORN, [2] = gVars._STRING});
+
+		if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._INSTRUMENT] ~= nil then
+			utilities.fSetCycle(gVars._INSTRUMENT, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._INSTRUMENT]);
+		else
+			utilities.fSetCycle(gVars._INSTRUMENT, gVars._HORN);
+		end
+	end
+
+	-- SMN only, sBP indicates if the a message should be printed in the party chat when
+	-- the pet does an offensive blood pact.
+	if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
+		if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._SBP] ~= nil then
+			utilities.CreateToggle(gVars._SBP, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._SBP]);
+		else
+			utilities.CreateToggle(gVars._SBP, true);
+		end
+
+		utilities.CreateCycle(gVars._MODE, {[1] = gVars._MODE_PERPETUATION, [2] = gVars._MODE_ATTACK, [3] = gVars._MODE_ENMITY_MINUS});
+		if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._MODE] ~= nil then
+			utilities.fSetCycle(gVars._MODE, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._MODE]);
+		else
+			utilities.fSetCycle(gVars._MODE, gVars._MODE_PERPETUATION);
+		end
+	end
+
+	-- DRG only, HPPlus indicates if the DRG's HPPlus set should be equipped prior to healing breath
+	if player.MainJob == 'DRG' or player.SubJob == 'DRG' then
+		if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._HPPLUS] ~= nil then
+			utilities.CreateToggle(gVars._HPPLUS, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._HPPLUS]);
+		else
+			utilities.CreateToggle(gVars._HPPLUS, false);
+		end
+	end
+
+	-- THF only, SS indicates that when the player steals, a message should be displayed.
+	-- This is used to coordinate thieve's stealing in activities like Dynamis.
+	if player.MainJob == 'THF' or player.SubJob == 'THF' then
+		if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._SS] ~= nil then
+			utilities.CreateToggle(gVars._SS, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._SS]);
+		else
+			utilities.CreateToggle(gVars._SS, false);
+		end
+	end
+
+	-- Damage Taken
 	utilities.CreateCycle(gVars._DT, {[1] = gVars._DT_OFF, [2] = gVars._DT_PHY, [3] = gVars._DT_MAG, [4] = gVars._DT_BRE});
-	if gProfile.settings.DisplayBar[gVars._DT] ~= nil and gProfile.settings.DisplayBar[gVars._DT]['init'] ~= nil then
-		utilities.fSetCycle(gVars._DT, gProfile.settings.DisplayBar[gVars._DT]['init']);
+	if gProfile.settings.DisplayBar[gVars._INITIALIZE] ~= nil and gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._DT] ~= nil then
+		utilities.fSetCycle(gVars._DT, gProfile.settings.DisplayBar[gVars._INITIALIZE][gVars._DT]);
 	else
 		utilities.fSetCycle(gVars._DT, gVars._DT_OFF);
 	end
@@ -365,7 +393,7 @@ end		-- crossjobs.SetVariables
 	Pararameter
 		args		Passed in list of args from the command line
 
-	Invocation: 	/acc [#|MAX] | [visible|invisible]
+	Invocation: 	/acc [#|MAX] [help]
 --]]
 
 function ProcessAccuracy(args)
@@ -387,19 +415,49 @@ function ProcessAccuracy(args)
 		end
 	end
 
-	if utilities.fCheckVisibility(args[1],args) == false then
-		-- Ok, visiblity has been processed. Now process (potentially) the rest of the command
-		if #args == 1 then
-			-- This is an unload acc command. Make sure both the appropriate acc and the tank versions are unloaded
-			if args[1] == 'acc' then
-				displaybar.SetAccCur(gVars._Progressive_ACC,0);
-				displaybar.SetAccCur(gVars._Progressive_TACC,0);
-			else
-				displaybar.SetAccCur(gVars._Progressive_RACC,0);
-				displaybar.SetAccCur(gVars._Progressive_TRACC,0);
-			end
+	if #args == 1 then
+		-- This is an unload acc command. Make sure both the appropriate acc and the tank versions are unloaded
+		if args[1] == 'acc' then
+			displaybar.SetAccCur(gVars._Progressive_ACC,0);
+			displaybar.SetAccCur(gVars._Progressive_TACC,0);
+		else
+			displaybar.SetAccCur(gVars._Progressive_RACC,0);
+			displaybar.SetAccCur(gVars._Progressive_TRACC,0);
+		end
 
-			if gProfile.settings.bConfirmation then
+		if gProfile.settings.bConfirmation then
+			if tmp == gVars._Progressive_ACC or tmp == gVars._Progressive_TACC then
+				print(chat.message('Info: Accuracy has been turned off'));
+			else
+				print(chat.message('Info: Ranged Accuracy has been turned off'));
+			end
+		end
+	else
+		for _,j in pairs(args) do
+			if string.upper(j) == 'MAX' then	-- Maximum (R)Acc stage
+				narg = gear.fGetAccStage(tmp,'MAX')
+			elseif string.find('visible,invisible',j) == nil then	-- This is a stage
+				narg = tonumber(args[2]);
+			end
+		end
+
+		if narg < 0 or narg > gear.fGetAccStage(tmp,'MAX') then
+			print(chat.message('Info: Invalid stage. Number must be between 0 and ' .. tostring(gear.fGetAccStage(tmp,'MAX'))));
+			return;
+		else
+			num = narg;
+		end
+
+		if num == 0 then
+			displaybar.SetAccCur(tmp,0);
+			-- Make sure that both tank and non-tank versions are turned off
+			if string.find(gVars._Progressive_ACC..','..gVars._Progressive_RACC,tmp) ~= nil then
+				tmp = 'T' .. tmp;				-- Add a 'T' to the beginning of tmp
+			else
+				tmp = string.sub(tmp,2,-1);		-- Remove the 'T' from the beginning of tmp
+			end
+			displaybar.SetAccCur(tmp,0);
+			if gProfile.settings.bConfirmation == true then
 				if tmp == gVars._Progressive_ACC or tmp == gVars._Progressive_TACC then
 					print(chat.message('Info: Accuracy has been turned off'));
 				else
@@ -407,42 +465,9 @@ function ProcessAccuracy(args)
 				end
 			end
 		else
-			for _,j in pairs(args) do
-				if string.upper(j) == 'MAX' then	-- Maximum (R)Acc stage
-					narg = gear.fGetAccStage(tmp,'MAX')
-				elseif string.find('visible,invisible',j) == nil then	-- This is a stage
-					narg = tonumber(args[2]);
-				end
-			end
-
-			if narg < 0 or narg > gear.fGetAccStage(tmp,'MAX') then
-				print(chat.message('Info: Invalid stage. Number must be between 0 and ' .. tostring(gear.fGetAccStage(tmp,'MAX'))));
-				return;
-			else
-				num = narg;
-			end
-
-			if num == 0 then
-				displaybar.SetAccCur(tmp,0);
-				-- Make sure that both tank and non-tank versions are turned off
-				if string.find(gVars._Progressive_ACC..','..gVars._Progressive_RACC,tmp) ~= nil then
-					tmp = 'T' .. tmp;				-- Add a 'T' to the beginning of tmp
-				else
-					tmp = string.sub(tmp,2,-1);		-- Remove the 'T' from the beginning of tmp
-				end
-				displaybar.SetAccCur(tmp,0);
-				if gProfile.settings.bConfirmation == true then
-					if tmp == gVars._Progressive_ACC or tmp == gVars._Progressive_TACC then
-						print(chat.message('Info: Accuracy has been turned off'));
-					else
-						print(chat.message('Info: Ranged Accuracy has been turned off'));
-					end
-				end
-			else
-				displaybar.SetAccCur(tmp,num);
-				if gProfile.settings.bConfirmation == true then
-					print(chat.message(string.format('Info: %s stage set to %d',tmp,num)));
-				end
+			displaybar.SetAccCur(tmp,num);
+			if gProfile.settings.bConfirmation == true then
+				print(chat.message(string.format('Info: %s stage set to %d',tmp,num)));
 			end
 		end
 	end
@@ -451,36 +476,34 @@ end		-- ProcessAccuracy
 --[[
 	ProcessCap enables/disables an artificial level cap
 
-	Invocation: /cap [#] | [visible|invisible]
+	Invocation: /cap [#] {help}
 --]]
 
 function ProcessCap(args);
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 	local ss;
 
-	if utilities.fCheckVisibility(gVars._CAP,args) == false then
-		-- Find the cap number
-		for _,j in pairs(args) do
-			if string.find('cap,visible,invisible',j) == nil then
-				ss = tonumber(j);
-				break;
-			end
+	-- Find the cap number
+	for _,j in pairs(args) do
+		if string.find('cap,visible,invisible',j) == nil then
+			ss = tonumber(j);
+			break;
 		end
+	end
 
-		if ss ~= nil then
-			if ss < player.MainJobSync and ss >= 0 then
-				gProfile.settings.PlayerCappedLevel = ss;
-				if gProfile.settings.bConfirmation == true then
-					print(chat.message(string.format('Info: Player gear level capped at level %d',gProfile.settings.PlayerCappedLevel)));
-				end
-			else
-				print(chat.message('Info: Invalid level cap specified: ' .. tostring(s)));
+	if ss ~= nil then
+		if ss < player.MainJobSync and ss >= 0 then
+			gProfile.system_settings.PlayerCappedLevel = ss;
+			if gProfile.settings.bConfirmation == true then
+				print(chat.message(string.format('Info: Player gear level capped at level %d',gProfile.system_settings.PlayerCappedLevel)));
 			end
 		else
-			gProfile.settings.PlayerCappedLevel = 0;
-			if gProfile.settings.bConfirmation == true then
-				print(chat.message('Info: Player gear level cap disabled'));
-			end
+			print(chat.message('Info: Invalid level cap specified: ' .. tostring(s)));
+		end
+	else
+		gProfile.system_settings.PlayerCappedLevel = 0;
+		if gProfile.settings.bConfirmation == true then
+			print(chat.message('Info: Player gear level cap disabled'));
 		end
 	end
 end		-- ProcessCap
@@ -488,21 +511,19 @@ end		-- ProcessCap
 --[[
 	ProcessCC enables/disables the indicated custom conditional or lists the commands
 
-	Invocation: /cc[#] | [visible|invisible]
+	Invocation: /cc[#] [help]
 --]]
 
 function ProcessCC(args)
 
-	if utilities.fCheckVisibility(gVars._CC,args) == false then
-		if args[1] == 'cc' then
-			reporting.DisplayCC();
-		else
-			if string.find(args[1],'cc') ~= nil then
-				local us = string.upper(args[1]);
-				utilities.AdvanceToggle(us);
-				if gProfile.settings.bConfirmation == true then
-					print(chat.message('Info: /' .. us .. ', ' .. utilities.fGetCCDescription(us) .. ', is set to ' .. tostring(utilities.fGetToggle(us))));
-				end
+	if args[1] == 'cc' then
+		reporting.DisplayCC();
+	else
+		if string.find(args[1],'cc') ~= nil then
+			local us = string.upper(args[1]);
+			utilities.AdvanceToggle(us);
+			if gProfile.settings.bConfirmation == true then
+				print(chat.message('Info: /' .. us .. ', ' .. utilities.fGetCCDescription(us) .. ', is set to ' .. tostring(utilities.fGetToggle(us))));
 			end
 		end
 	end
@@ -511,68 +532,64 @@ end		-- ProcessCC
 --[[
 	ProcessDT either advances /DT setting or assigns the setting directly
 
-	Invocation: /dt [M|B|P|O] | [visible|invisible]
+	Invocation: /dt [M|B|P|O] [help]
 --]]
 
 function ProcessDT(args)
 	local bFound = false;
 
-	if utilities.fCheckVisibility(gVars._DT,args) == false then
-		for i,j in pairs(args) do
-			local cType = string.upper(string.sub(j,1,1));
-			if cType == gVars._DT_M then
-				utilities.fSetCycle(gVars._DT,gVars._DT_MAG);
-				bFound = true;
-			elseif cType == gVars._DT_B then
-				utilities.fSetCycle(gVars._DT,gVars._DT_BRE);
-				bFound = true;
-			elseif cType == gVars._DT_P then
-				utilities.fSetCycle(gVars._DT,gVars._DT_PHY);
-				bFound = true;
-			elseif cType == gVars._DT_O then
-				utilities.fSetCycle(gVars._DT,gVars._DT_PHY);
-				bFound = true;
-			end
-		end
-
-		if bFound == false then
-			utilities.AdvanceCycle(gVars._DT);
+	for i,j in pairs(args) do
+		local cType = string.upper(string.sub(j,1,1));
+		if cType == gVars._DT_M then
+			utilities.fSetCycle(gVars._DT,gVars._DT_MAG);
+			bFound = true;
+		elseif cType == gVars._DT_B then
+			utilities.fSetCycle(gVars._DT,gVars._DT_BRE);
+			bFound = true;
+		elseif cType == gVars._DT_P then
+			utilities.fSetCycle(gVars._DT,gVars._DT_PHY);
+			bFound = true;
+		elseif cType == gVars._DT_O then
+			utilities.fSetCycle(gVars._DT,gVars._DT_PHY);
 			bFound = true;
 		end
+	end
 
-		if gProfile.settings.bConfirmation == true and bFound == true then
-			print(chat.message('Info: /DT is set to ' .. utilities.fGetCycle(gVars._DT)));
-		end
+	if bFound == false then
+		utilities.AdvanceCycle(gVars._DT);
+		bFound = true;
+	end
+
+	if gProfile.settings.bConfirmation == true and bFound == true then
+		print(chat.message('Info: /DT is set to ' .. utilities.fGetCycle(gVars._DT)));
 	end
 end		-- ProcessDT
 
 --[[
 	ProcessHornString sets which type of bard instrument should be the default
 
-	Invocation: /horn | [visible|invisible]
-				/string | [visible|invisible]
+	Invocation: /horn [help]
+				/string [help]
 --]]
 
 function ProcessHornString(args)
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 	local bFound = false;
 
 	if player.MainJob == 'BRD' then
-		if utilities.fCheckVisibility(gVars._INSTRUMENT,args) == false then
-			for _,j in pairs(args) do
-				j = string.lower(j);
-				if j == 'horn' then
-					utilities.fSetCycle(gVars._INSTRUMENT,gVars._HORN);
-					bFound = true;
-				elseif j == 'string' then
-					utilities.fSetCycle(gVars._INSTRUMENT,gVars._STRING);
-					bFound = true;
-				end
+		for _,j in pairs(args) do
+			j = string.lower(j);
+			if j == 'horn' then
+				utilities.fSetCycle(gVars._INSTRUMENT,gVars._HORN);
+				bFound = true;
+			elseif j == 'string' then
+				utilities.fSetCycle(gVars._INSTRUMENT,gVars._STRING);
+				bFound = true;
 			end
+		end
 
-			if bFound == true and gProfile.settings.bConfirmation == true then
-				print(chat.message('Info: Instrument is set to ' .. utilities.fGetCycle(gVars._INSTRUMENT)));
-			end
+		if bFound == true and gProfile.settings.bConfirmation == true then
+			print(chat.message('Info: Instrument is set to ' .. utilities.fGetCycle(gVars._INSTRUMENT)));
 		end
 	else
 		print(chat.message('Info: Only bards use this command. Ignoring.'));
@@ -582,38 +599,36 @@ end		-- ProcessHornString
 --[[
 	ProcessMode indicates whether perpetuation cost or attack power should be emphasized, SMN only
 
-	Invocation: /mode [PERP|ATTK|ENMM] | [visible|invisible]
+	Invocation: /mode [PERP|ATTK|ENMM] [help]
 --]]
 
 function ProcessMode(args)
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 	local u2;
 
 	if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
-		if utilities.fCheckVisibility(gVars._MODE,args) == false then
-			for _,j in  pairs(args) do
-				j = string.upper(j);
-				if  string.find('ATTK,PERP,ENMM',j) ~= nil then
-					if string.len(j) >= 1 then
-						u2 = string.sub(u2,1,1);
-					else
-						u2 = j;
-					end
+		for _,j in  pairs(args) do
+			j = string.upper(j);
+			if  string.find('ATTK,PERP,ENMM',j) ~= nil then
+				if string.len(j) >= 1 then
+					u2 = string.sub(u2,1,1);
+				else
+					u2 = j;
 				end
 			end
+		end
 
-			if u2 == gVars._MODE_A then
-				utilities.fSetCycle(gVars._MODE,gVars._MODE_ATTACK);
-			elseif u2 == gVars._MODE_P then
-				utilities.fSetCycle(gVars._MODE,gVars._MODE_PERPETUATION);
-			elseif u2 == gVars._MODE_E then
-				utilities.fSetCycle(gVars._MODE,gVars._MODE_ENMITY_MINUS);
-			else
-				utilities.AdvanceCycle(gVars._MODE);
-			end
-			if gProfile.settings.bConfirmation == true then
-				print(chat.message('Info: Mode is set to ' .. utilities.fGetCycle(gVars._MODE)));
-			end
+		if u2 == gVars._MODE_A then
+			utilities.fSetCycle(gVars._MODE,gVars._MODE_ATTACK);
+		elseif u2 == gVars._MODE_P then
+			utilities.fSetCycle(gVars._MODE,gVars._MODE_PERPETUATION);
+		elseif u2 == gVars._MODE_E then
+			utilities.fSetCycle(gVars._MODE,gVars._MODE_ENMITY_MINUS);
+		else
+			utilities.AdvanceCycle(gVars._MODE);
+		end
+		if gProfile.settings.bConfirmation == true then
+			print(chat.message('Info: Mode is set to ' .. utilities.fGetCycle(gVars._MODE)));
 		end
 	else
 		print(chat.message('Info: /mode is only available to summoners'));
@@ -626,7 +641,7 @@ end		-- ProcessMode
 --]]
 
 function ProcessSW()
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 
 	utilities.ClearSet(crossjobs.Sets.CurrentGear);
 	gear.MoveToDynamicGS(gProfile.Sets.Start_Weapons,crossjobs.Sets.CurrentGear,false,'Start_Weapons');
@@ -636,7 +651,7 @@ end		-- ProcessSW
 --[[
 	ProcessWSDISTANCE either sets a new weapon skil distance or turns the check on or off
 
-	Form: WSDISTANCE [#]
+	Form: WSDISTANCE [#] [help]
 --]]
 
 function ProcessWSDISTANCE(args)
@@ -666,22 +681,23 @@ end		-- ProcessWSDISTANCE
 		bMacc		Check on magic ability
 
 	Invocation:
-		/aJug | [visible|invisible]
-		/eva | [visible|invisible]
-		/gswap | [visible|invisible]
-		/idle | [visible|invisible]
-		/kite | [visible|invisible]
-		/macc | [visible|invisible]
-		/sbp | [visible|invisible]
-		/spf | [visible|invisible]
-		/ss | [visible|invisible]
-		/tank | [visible|invisible]
-		/th | [visible|invisible]
-		/wswap | [visible|invisible]
+		/aJug [help]
+		/eva [help]
+		/gswap [help]
+		/idle [help]
+		/kite [help]
+		/macc [help]
+		/sbp [help]
+		/sgs [help]
+		/spf [help]
+		/ss [help]
+		/tank [help]
+		/th [help]
+		/wswap [help]
 --]]
 
 function ProcessToggle(args,id,job,bSJ,bMagic)
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 
 	if bSJ == nil then
 		bSJ = false;
@@ -691,54 +707,50 @@ function ProcessToggle(args,id,job,bSJ,bMagic)
 		bMagic = false;
 	end
 
-	if utilities.fCheckVisibility(id,args) == false then
-		if (bMagic == true and utilities.fCheckMagicJob() == true) or bMagic == false then
-			if job == nil or player.MainJob == job or (bSJ == true and player.SubJob == job) then
-				utilities.AdvanceToggle(id);
-				if gProfile.settings.bConfirmation == true then
-					print(chat.message('Info: /' .. string.lower(id) .. ' is set to ' .. tostring(utilities.fGetToggle(id))));
-				end
-			else
-				if bSJ == true then
-					print(chat.message('Warning: /' .. string.lower(id) .. ' requires either your main job or sub job be ' .. job));
-				else
-					print(chat.message('Warning: /' .. string.lower(id) .. ' requires either your main job be ' .. job));
-				end
+	if (bMagic == true and utilities.fCheckMagicJob() == true) or bMagic == false then
+		if job == nil or player.MainJob == job or (bSJ == true and player.SubJob == job) then
+			utilities.AdvanceToggle(id);
+			if gProfile.settings.bConfirmation == true then
+				print(chat.message('Info: /' .. string.lower(id) .. ' is set to ' .. tostring(utilities.fGetToggle(id))));
 			end
 		else
-			print(chat.message('Warning: /' .. string.lower(id) .. ' requires a magic job'));
+			if bSJ == true then
+				print(chat.message('Warning: /' .. string.lower(id) .. ' requires either your main job or sub job be ' .. job));
+			else
+				print(chat.message('Warning: /' .. string.lower(id) .. ' requires either your main job be ' .. job));
+			end
 		end
+	else
+		print(chat.message('Warning: /' .. string.lower(id) .. ' requires a magic job'));
 	end
 end		-- ProcessToggle
 
 --[[
 	ProcessDB sets the DeBuff conditional setting appropriately
 
-	Invocation: /db [BPP|WSS] | [visible|invisible]
+	Invocation: /db [BPP|WSS] [help]
 --]]
 
 function ProcessDB(args)
 	local s = nil;
 
 	if player.MainJob == 'BST' then
-		if utilities.fCheckVisibility(gVars._KITE,args) == false then
-			for _,j in pairs(args) do
-				j = string.upper(j);
-				if string.find(gVars._sDB_Debuffs,j) ~= nil then
-					s = j;
-					break;
-				end
+		for _,j in pairs(args) do
+			j = string.upper(j);
+			if string.find(gVars._sDB_Debuffs,j) ~= nil then
+				s = j;
+				break;
 			end
+		end
 
-			if s ~= nil then
-				gcdisplay.SetCycle(gVars._DB,s);
-			else
-				gcdisplay.AdvanceCycle(gVars._DB);
-			end
+		if s ~= nil then
+			utilities.SetCycle(gVars._DB,s);
+		else
+			utilities.AdvanceCycle(gVars._DB);
+		end
 
-			if gProfile.settings.bConfirmation == true then
-				print(chat.message('Info: /' .. gVars._DB .. ' is set to ' .. utilities.fGetCycle(gVars._DB)));
-			end
+		if gProfile.settings.bConfirmation == true then
+			print(chat.message('Info: /' .. gVars._DB .. ' is set to ' .. utilities.fGetCycle(gVars._DB)));
 		end
 	else
 		print(chat.message('Warning: This command is only valid if your main job is BST'));
@@ -748,12 +760,13 @@ end		-- ProcessDB
 --[[
 	ProcessDBar is used to setup/modify the display bar
 
-	Invocation: /dbar [show] [vis=[all|none|name,name,...] ] [invis=[all|none|name,name,...] ] [save|reset] [file[=name] ][+]
+	Invocation: /dbar [show] [bar=i|v] [vis=[all|none|name,name,...] ] [invis=[all|none|name,name,...] ] [save|reset] [file[=name] ][+]
 --]]
 
 function ProcessDBar(args)
 	local bShow = false;
-	local sVis,sInvis;
+	local sVis,sInvis,iPos,sFile,sBar;
+	local bAppend = false;
 	local bReset = false;
 	local bSave = false;
 
@@ -764,13 +777,72 @@ function ProcessDBar(args)
 		bShow = true;
 	else
 		for i = 2,#args,1 do
-			--args[i] == string.lower(args[i]);
-			--if
-			--end
+			args[i] = string.lower(args[i]);
+			if args[i] == 'show' then
+				bShow = true;
+			elseif args[i] == 'save' then
+				bSave = true;
+			elseif args[i] == 'reset' then
+				bReset = true;
+			elseif string.find(args[i],'bar') ~= nil and string.find(args[i],'bar') == 1 then
+				iPos = string.find(args[i],'=');
+				if iPos ~= nil and iPos > 0 then
+					sBar = string.sub(args[i],iPos+1,iPos+1);
+				end
+			elseif string.find(args[i],'invis') ~= nil and string.find(args[i],'invis') == 1 then
+				iPos = string.find(args[i],'=');
+				if iPos ~= nil then
+					sInvis = string.sub(args[i],iPos+1,-1);
+				end
+			elseif string.find(args[i],'vis') ~= nil and string.find(args[i],'vis') == 1 then
+				iPos = string.find(args[i],'=');
+				if iPos ~= nil then
+					sVis = string.sub(args[i],iPos+1,-1);
+				end
+			elseif string.find(args[i],'file') ~= nil and string.find(args[i],'file') == 1 then
+				iPos = string.find(args[i],'=');
+				if iPos ~= nil then
+					sFile = string.sub(args[i],iPos+1,-1);
+					iPos = string.find(sFile,'%+');
+					if iPos ~= nil then
+						bAppend = true;
+						sFile = string.sub(sFile,1,iPos-1);
+					end
+				end
+			elseif args[i] == '+' then
+				bAppend = true;
+			end
+		end
+
+		-- Now process what was found
+		if bSave == true then
+			print(chat.message('"/dbar save" is not implemented yet'));
+		end
+
+		if sFile ~= nil then
+			print(chat.message('"/dbar file" is not implemented yet'));
+		end
+
+		if bShow == true then
+			print(chat.message('"/dbar show" is not implemented yet'));
+		end
+
+		if sBar ~= nil then
+			displaybar.FontObject.visible = (sBar == 'v');
+		end
+
+		if bReset == true then
+			displaybar.ResetVisibility();
+		end
+
+		if sVis ~= nil then
+			displaybar.SetVisibility(sVis,true);
+		end
+
+		if sInvis ~= nil then
+			displaybar.SetVisibility(sInvis,false);
 		end
 	end
-
-
 end		-- ProcessDBar
 
 --[[
@@ -781,7 +853,7 @@ end		-- ProcessDBar
 --]]
 
 function crossjobs.HandleCommands(args)
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 	local bTank = utilities.fGetToggle(gVars._TANK);
 	local sList, sKey, sSet;
 
@@ -833,6 +905,9 @@ function crossjobs.HandleCommands(args)
 	elseif string.find('horn,string',args[1]) ~= nil then
 		-- /STRING or /HORN, BRD only, indicates type of default instrument
 		ProcessHornString(args);
+	elseif args[1] == 'hpp' then
+		-- /HPP, DRG only, indicates if HP+ set should be equipped prior to healing breath
+		ProcessToggle(args,gVars._HPPLUS,nil,false,false);
 	elseif args[1] == 'idle' then
 		-- /IDLE, Turns on/off whether idle gear should be equipped during idle
 		ProcessToggle(args,gVars._IDLE,nil,false,false);
@@ -872,6 +947,9 @@ function crossjobs.HandleCommands(args)
 	elseif args[1] == 'sbp' then
 		-- /SBP, Turns on/off whether the SMN blood pact message is shown
 		ProcessToggle(args,gVars._SBP,'SMN',true,false);
+	elseif args[1] == 'sgs' then
+		-- /SGS, Turns on/off whether feedback when gear sets are processed should be given
+		ProcessToggle(args,gVars._SGS,nil,false,false);
 	elseif args[1] == 'showit' then
 		-- /SHOWIT, Shows debug info
 		reporting.DB_ShowIt();
@@ -920,97 +998,69 @@ end		-- crossjobs.HandleCommands
 --]]
 
 function crossjobs.HandleAbility()
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 	local ability = gData.GetAction();
 	local eq = gData.GetEquipment();
-	local n,ts;
+	local n,ts,bValid;
 	local bFound = false;
+	local bPreBP = false;
 
 	-- Store the name of the ammo. This is used when the ammo slot is automatically
 	-- populated so that the original ammo can be re-equipped.
 	if eq.Ammo ~= nil then
-		gProfile.settings.sAmmo = eq.Ammo.Name;
+		gProfile.system_settings.sAmmo = eq.Ammo.Name;
 	else
-		gProfile.settings.sAmmo = nil;
+		gProfile.system_settings.sAmmo = nil;
 	end
 
 	-- Clear out the CurrentGear in case of leftovers
 	utilities.ClearSet(crossjobs.Sets.CurrentGear);
 
-	if player.MainJob == 'BST' or player.SubJob == 'BST' then
-		n = nil;
-		if string.match(ability.Name, 'Reward') then
-			-- Pet reward. Make sure that pet food already equipped
-			if gProfile.settings.sAmmo == nil or string.find(string.lower(gProfile.settings.sAmmo),'pet f') == nil then		-- something else equipped
-				gProfile.settings.bAmmo = pets.PetReward(gProfile.settings.defaultPetFood,'max');
-			end
-			n = 'JA_Reward';
-		elseif string.find('Sic,Ready',ability.Name) ~= nil then
-			-- Sic and Ready load the same set
-			n = 'JA_Sic_Ready';
-		elseif string.match(ability.name, 'Call Beast') then
-			-- see if there's already a jug in the ammo slot
-			if utilities.fGetToggle(gVars._AJUG) == true then
-				local current = gData.GetCurrentSet();
-				local bValid = false;
+	-- The Job_Ability gear set handles all abilities, so if something
+	-- extra has to occur, do it here.
 
-				if current['Ammo'] ~= nil or current['Ammo'] ~= '' then
-					bValid = pets.fIsValidJugPet(current['Ammo']);
-				end
-
-				if bValid == false then
-					local x = pets.fWhichJugToEquip();
-					if x ~= nil then
-						crossjobs.Sets.CurrentGear['Ammo'] = x;
-					end
-				end
-			end
-			n = 'JA_Call_Beast';
-		else
-			n = 'JA_' .. string.gsub(ability.Name,' ','_');
-		end
-
-		if n ~= nil then
-			ts = utilities.fGetTableByName(n);
-			if ts ~= nil then
-				gear.MoveToDynamicGS(ts,crossjobs.Sets.CurrentGear,false,n);
-				-- Special case on Charm. Check for "light" staff
-				if n == 'JA_Charm' then
-					local sStave = gear.fCheckForEleGear('staff','light');
-					if sStave ~= nil then
-						gear.fSwapToStave(sStave,false,crossjobs.Sets.CurrentGear);
-					end
-				end
-				bFound = true;
+	-- Check for summoner's blood pact, to load the pre-blood pact gearset (PreBP)
+	if table.find(pets.SmnBPRageList,ability.Name) ~= nil or
+			table.find(pets.SmnBPWardList,ability.Name) ~= nil then
+		gear.MoveToDynamicGS(gProfile.Sets.PC_Pre_BloodPact,crossjobs.Sets.CurrentGear,false,'PC_Pre_BloodPact');
+		bPreBP = true;
+	elseif string.match(ability.Name, 'Reward') then
+		-- Obviously a BST or /BST doing a reward. Make sure a pet food has been loaded
+		if gProfile.system_settings.sAmmo == nil or string.find(string.lower(gProfile.system_settings.sAmmo),'pet f') == nil then
+			-- either empty or something else equipped
+			gProfile.system_settings.bAmmo = pets.PetReward(gProfile.settings.defaultPetFood,'max');
+			if gProfile.system_settings.bAmmo == true then
+				crossjobs.Sets.CurrentGear['Ammo'] = gProfile.system_settings.sAmmo;
 			end
 		end
-	-- Check for summoner's blood pact, to load the PreBP
-	elseif table.find(pets.SmnBPRageList,ability.Name) ~= nil or
-		   table.find(pets.SmnBPWardList,ability.Name) ~= nil then
-		gear.MoveToDynamicGS(gProfile.Sets.PreBP,crossjobs.Sets.CurrentGear,false,'PreBP');
-		bFound = true;
-	end
+	elseif string.match(ability.Name, 'Call Beast') then
+		-- see if a pet jug already equipped. If not and the automatic jug function is enabled,
+		-- determine jug to use and equip it.
+		if utilities.fGetToggle(gVars._AJUG) == true then
+			local current = gData.GetCurrentSet();
+			local bValid = false;
 
-	if bFound == false then
-		if string.find(pets._PetCommands,string.upper(ability.Name)) ~= nil then
-			-- Assume it's a pet command
-			n = 'PET_' .. string.gsub(ability.Name,' ','_');
-		else
-			-- Assume it's an ability
-			n = 'JA_' .. string.gsub(ability.Name,' ','_');
-		end
+			if current['Ammo'] ~= nil or current['Ammo'] ~= '' then
+				-- since something is in the ammo slot, check that it's a jug pet
+				bValid = pets.fIsValidJugPet(current['Ammo']);
+			end
 
-		ts = utilities.fGetTableByName(n);
-
-		if ts ~= nil then
-			gear.MoveToDynamicGS(ts,crossjobs.Sets.CurrentGear,false,n);
-			bFound = true;
+			if bValid == false then
+				-- since not a jug pet, determine which jug to equip
+				local x = pets.fWhichJugToEquip();
+				if x ~= nil then
+					crossjobs.Sets.CurrentGear['Ammo'] = x;
+				end
+			end
 		end
 	end
 
-	if bFound == true then
-		gear.EquipTheGear(crossjobs.Sets.CurrentGear,false,false);		-- Equip the composited HandleAbility set
+	if bPreBP == false then
+		gear.MoveToDynamicGS(gProfile.Sets.Job_Ability,crossjobs.Sets.CurrentGear,false,'Job_Ability');
 	end
+
+	-- Now, equip the appropriate gear
+	gear.EquipTheGear(crossjobs.Sets.CurrentGear,false,false);
 end		-- crossjobs.HandleAbility
 
 --[[
@@ -1060,7 +1110,7 @@ end		-- crossjobs.HandlePreshot
 function crossjobs.HandleMidshot()
 
 	-- Clear out the CurrentGear in case of leftovers
-	gcinclude.ClearSet(sets.CurrentGear);
+	utilities.ClearSet(crossjobs.Sets.CurrentGear);
 
 	gear.MoveToDynamicGS(gProfile.Sets.Midshot,crossjobs.Sets.CurrentGear,false,'Midshot');
 	crossjobs.ProgressiveAccuracy('RAcc');
@@ -1095,38 +1145,55 @@ end		-- crossjobs.HandleWeaponskill
 
 --[[
 	fHandleWeaponskill loads the appropriate gear for the weapon skill you're doing
+
+	-- Transition not complete --
 --]]
 
 function crossjobs.fHandleWeaponskill()
-	local ws = gData.GetAction();
-	local lName = string.lower(ws.Name);
-	local sName,sEle,n;
 	local t = {};
+	local ws = gData.GetAction();
+	local s,sWSName;
+	local sName,statName;
 
-	-- See if there's a custom gear set defined for this weapon skill
-	n = 'WS_' .. string.gsub(lName,' ','_');
-	t = utilities.fGetTableByName(n);
-	if t ~= nil then
-		gear.MoveToDynamicGS(t,gProfile.Sets.CurrentGear,false,lName);
-	else
-		-- No custom set, look for the stat set
-		for i,j in pairs(gVars.tWeaponSkills) do
-			if table.find(j,lName) ~= nil then
-				sName = 'WS_' .. i;
-				t = utilities.fGetTableByName(sName);
-				if t ~= nil then
-					gear.MoveToDynamicGS(t,gProfile.Sets.CurrentGear,false,sName);
-				end
-				break;
-			end
+	if ws.Name == nil then
+		return;
+	end
+
+	sName = string.lower(string.gsub(ws.Name,' ','_'));
+	-- First see if there's a custom weaponskill definition
+	for i,j in pairs(gProfile.Custom_Weaponskills) do
+		if string.lower(i) == sName then
+			-- It's a custom weaponskill definition
+			t = j;
+			break;
 		end
 	end
+
+	if t == nil then
+		-- Not custom, so look for what stat(s) are emphasized
+		statName,sWSName = utilities.fWhichWSStat(sName);
+		if statName == nil then
+			s = 'Warning: Weaponskill type for ' .. sWSName .. ' is undefined.'
+			reporting.DisplayOnce(s,false);
+			return;
+		else
+			t = gProfile.Sets.Weaponskill;
+		end
+	end
+
+	if t == nil then		-- Should never occur
+		return;
+	end
+
+	-- Must have been found
+	gProfile.system_settings.WSTypeName = 'WS_' .. string.upper(statName);
+	gear.MoveToDynamicGS(t,gProfile.Sets.CurrentGear,false,'Weaponskill');
 
 	-- Now, process the other gearsets that affects weapon skills based on the order
 	-- provided by the player
 	for _,j in ipairs(gProfile.settings.postGSWeaponSkill) do
 		j = string.lower(j);
-		if j == 'egorget' and gProfile.settings.EmbedOnly.eGorget == false then
+		if j == 'eGorget' and gProfile.settings.EmbedOnly.eGorget == false then
 			-- An elemental gorget will add the fTP (at least 10% more damage) to the first hit
 			-- of an elemental weapon skill (and many multi-hit weapon skills replicate the fTP
 			-- for all the hits.) Also, they give +10 Accuracy to all of the weapon skill's hits
@@ -1135,7 +1202,7 @@ function crossjobs.fHandleWeaponskill()
 			if sGorget ~= nil then
 				crossjobs.Sets.CurrentGear['Neck'] = sGorget;
 			end
-		elseif j == 'eobi' and gProfile.settings.EmbedOnly.eObi == false then
+		elseif j == 'eObi' and gProfile.settings.EmbedOnly.eObi == false then
 --[[
 			If the weaponskill is elemental and is closing a skillchain, then if
 			the conditions for equipping an elemental obi are advantageous, it
@@ -1147,9 +1214,9 @@ function crossjobs.fHandleWeaponskill()
 
 			- CCF, 1/12/2024
 --]]
-		elseif j == 'acc' and gProfile.settings.EmbedOnly.Accuracy == false then
-			if table.find(gVars.tWeaponSkills['RANGED_AGI'],lname) ~= nil or
-				table.find(gVars.tWeaponSkills['RANGED_STRAGI'],lname) ~= nil then
+		elseif j == 'Acc' and gProfile.settings.EmbedOnly.Accuracy == false then
+			if table.find(gVars.tWeaponSkills['RANGED_AGI'],sName) ~= nil or
+				table.find(gVars.tWeaponSkills['RANGED_STRAGI'],sNname) ~= nil then
 				crossjobs.ProgressiveAccuracy('RAcc');
 			else
 				crossjobs.ProgressiveAccuracy('Acc');
@@ -1160,7 +1227,7 @@ function crossjobs.fHandleWeaponskill()
 	-- Certain weapon skills can take advantage of magic attack bonus. Check here and equip gear
 	-- appropriately. (Note: even though rMAB is a reference gear set, in this particular instance
 	-- it is treated like it is a normal gear set.)
-	if string.find('red lotus blade,sanguine blade',lName) ~= nil then
+	if string.find('red lotus blade,sanguine blade',sName) ~= nil then
 		gear.MoveToDynamicGS(gProfile.Sets.rMAB,gProfile.Sets.CurrentGear,false,'rMAB');
 	end
 end		-- crossjobs.fHandleWeaponskill
@@ -1258,6 +1325,10 @@ function crossjobs.Unload()
 
 	-- Remove all objects associated with the display bar
 	displaybar.Unload();
+
+	-- unload dynamic arrays
+	gVars.AverageMaxStats = {};
+
 end		-- crossjobs.Unload
 
 return crossjobs;

@@ -4,7 +4,7 @@ require 'common'
 
 version = { ['author']	= 'Paiine',
  		    ['name']	= 'Luashitacast (Karma)',
-			['version']	= '1.5.7' };
+			['version']	= '1.5.8' };
 	
 --[[
 	This file contains routines that are used with Luashitacast across any supported job.
@@ -153,9 +153,9 @@ gcinclude.SlotNames = { 'subset','main','sub','range','ammo','head',
 
 gcinclude.tWeaponSkills = {
 	['CHR']    = { 'shadowstitch' },
-	['DEX']    = { 'wasp sting', 'viper bite', 'blade: metsu', 'dancing edge' },
+	['DEX']    = { 'wasp sting', 'viper bite', 'blade: metsu' },
 	['DEXAGI'] = { 'shark bite', 'coronach' },
-	['DEXCHR'] = { 'eviseration' },
+	['DEXCHR'] = { 'eviseration', 'dancing edge' },
 	['DEXINT'] = { 'gust slash', 'cyclone' },
 	['INT']    = { 'gate of tartarus' },
 	['INTMND'] = { 'spirit taker' },
@@ -409,7 +409,8 @@ gcinclude.tElemental_gear = T{
 				['HQ'] = { ['Name'] = 'Vulcan\'s staff', ['Ref'] = {} }, 
 				['Affinity'] = { 'blaze','burn','firaga','fire','flare','enfire','katon' },
 				['SongAffinity'] = { 'ice threnody' },
-				['Summons'] = { 'ifrit','fire spirit','firespirit','fire' }
+				['Summons'] = { 'ifrit','fire spirit','firespirit','fire' },
+				['Nuke'] = { 'firaga','fire','flare' },
 			},
 			['ice'] = {
 				['Weak'] = 'fire',
@@ -418,6 +419,7 @@ gcinclude.tElemental_gear = T{
 				['Affinity'] = { 'blizzaga','blizzard','freeze','frost','ice','enblizzard','jubaku','hyoton','bind','distract','paralyze' },
 				['SongAffinity'] = { 'wind threnody' },
 				['Summons'] = { 'shiva','ice spirit','icespirit','ice' },
+				['Nuke'] = { 'blizzaga','blizzard','freeze' },
 			},
 			['wind'] = {
 				['Weak'] = 'ice',
@@ -426,6 +428,7 @@ gcinclude.tElemental_gear = T{
 				['Affinity'] = { 'aero','aeroga','choke','tornado','enaero','huton','gravity','silence' },
 				['SongAffinity'] = { 'earth threnody' },
 				['Summons'] = { 'garuda','air spirit','airspirit','air','siren' },
+				['Nuke'] = { 'aero','aeroga','tornado' },
 			},
 			['earth'] = { 
 				['Weak'] = 'wind',
@@ -434,6 +437,7 @@ gcinclude.tElemental_gear = T{
 				['Affinity'] = { 'quake','rasp','stone','stonega','enstone','hojo','doton','slow' },
 				['SongAffinity'] = { 'lightning threnody', 'battlefield elegy', 'carnage elegy' },
 				['Summons'] = {'titan','earth spirit','earthspirit','earth' },
+				['Nuke'] = { 'quake','stone','stonega' },
 			},
 			['thunder'] = {
 				['Weak'] = 'earth',
@@ -442,6 +446,7 @@ gcinclude.tElemental_gear = T{
 				['Affinity'] = { 'burst','shock','thundaga','thunder','enthunder','raiton' },
 				['SongAffinity'] = { 'water threnody' },
 				['Summons'] = { 'ramuh','thunder spirit','thunderspirit','thunder' },
+				['Nuke'] = { 'burst','thundaga','thunder' },
 			},
 			['water'] = {
 				['Weak'] = 'thunder',
@@ -450,6 +455,7 @@ gcinclude.tElemental_gear = T{
 				['Affinity'] = { 'drown','flood','poison','poisonga','water','waterga','enwater','dokumori','suiton' },
 				['SongAffinity'] = { 'fire threnody' },
 				['Summons'] = { 'leviathan','water spirit','waterspirit','water' },
+				['Nuke'] = { 'flood','water','waterga' },
 			},
 			['light'] = { 
 				['Weak'] = 'dark',
@@ -458,6 +464,7 @@ gcinclude.tElemental_gear = T{
 				['Affinity'] = { 'banish','banishga','curaga','cure','dia','diaga','flash','holy','enlight','repose','inundation' },
 				['SongAffinity'] = { 'dark threnody', 'foe requiem', 'foe requiem ii', 'foe requiem iii', 'foe requiem iv', 'foe requiem v', 'foe requiem vi', 'foe lullaby', 'horde lullaby', 'magic finale', 'maiden\'s virelai' },
 				['Summons'] = {'carbuncle','light spirit','lightspirit','light','cait sith','caitsith','alexander'},
+				['Nuke'] = nil,
 			},
 			['dark'] = {
 				['Weak'] = 'light',
@@ -466,6 +473,7 @@ gcinclude.tElemental_gear = T{
 				['Affinity'] = { 'absorb','aspir','blind','bio','dispel','drain','dread','frazzle','sleep','sleepga','endark','kurayami' },
 				['SongAffinity'] = { 'light threnody' },
 				['Summons'] = { 'fenrir','diabolos','dark spirit','darkspirit','dark','atomos','odin' },
+				['Nuke'] = nil,
 			},
 		},
 		['obi'] = {
@@ -4698,6 +4706,7 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride,bIgnoreWSWAP)
 	local ts2 = {};
 	local root,sK,vRoot,stK,sRoot;
 	local bContinue,iNum,bGood,bSkip,bG;
+	local bIndexed = false;
 
 	if tSet == nil or tMaster == nil then
 		return;
@@ -4735,26 +4744,30 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride,bIgnoreWSWAP)
 		if sK == 'subset' then
 			if type(v) == 'table' then
 				ts = v;
+				bIndexed = (v[1] ~= nil);
 			else
-				ts[k] = v;
+				ts[1] = v;
 			end
-			
+
 			-- Then determine the appropriate set to load
-			for kk,vv in pairs(ts) do
+			for i=1,#ts,1 do
 				-- In case it's a table of subsets...
-				if type(vv) == 'table' then
-					ts2 = vv;
+				if type(ts[i]) == 'table' then
+					ts2 = ts[i];
 				else
-					ts2[k] = vv;
+					ts2[1] = ts[i];
 				end
 				
 				for kkk,vvv in pairs(ts2) do
-					bGood,vRoot = fCheckInline(vvv,'subset',tMaster);			
+					bGood,vRoot = fCheckInline(vvv,'subset',tMaster);
 					if bGood == true then
 						gcinclude.MoveToCurrent(vRoot,tMaster,bOverride);
-						break;
+						if bIndexed == false then
+							break;
+						end
 					end
 				end
+
 			end			
 		end
 	end
@@ -4840,7 +4853,7 @@ function gcinclude.MoveToCurrent(tSet,tMaster,bOverride,bIgnoreWSWAP)
 											tMaster[stK] = vRoot;
 										end
 									end
-									iNum = 3;	-- This forces the pairing to kick out								
+									iNum = 3;	-- This forces the pairing to kick out
 								end						
 							else							
 								-- Normal single slot							
@@ -5457,7 +5470,20 @@ function gcinclude.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
 	elseif gcinclude.fIsLocked('neck') then -- gorget
 		return nil,nil;
 	end
-		
+
+	-- Note: problem noted here, but not implemented yet.
+	--
+	-- There's a special check to be done before proceding with the normal processing
+	-- of this routine. If "sWhat" equals "staff" and there's dark weather (regular or
+	-- 2x) or Voidstorm, which is only an issue when WotG is released (this is a SCH
+	-- spell), and the player is casting either Drain or Aspir and they own a diabolos
+	-- pole that is accessible outside of town, then that pole should be equipped
+	-- instead of a elemental staff.
+	--
+	-- I'll try to get this working in BOXCAR and then move it here. In the mean time,
+	-- there is no solution beyond a manual one. I'm including this note here so it's
+	-- easy to see what the problem is and where it will probably be invoked.
+
 	-- What's searched for is sometimes a "root" and other times an "as-is"
 	if string.find('Affinity,MEacc',sWhich) ~= nil then
 		sRoot = fGetRoot(sElement);	
@@ -5725,9 +5751,10 @@ end		-- EquipItem
 function fGetTableByName(sName)
 	local s,s2;
 	local sName2;
-	
+
 	sName2 = string.lower(sName);
 	s = string.find(sName2,'gcinclude');
+
 	if s == nil then
 		for k,l in pairs(gProfile.Sets) do
 			if string.lower(k) == sName2 then
@@ -5747,7 +5774,7 @@ function fGetTableByName(sName)
 			return l;
 		end
 	end
-	
+
 	return nil;
 end		-- fGetTableByName
 
@@ -6126,7 +6153,7 @@ function gcinclude.HandleCommands(args)
 			local sArg = string.upper(args[2]);
 			local sTmp = ',' .. gcinclude.Crafting_Types .. ',';
 			local sTmp2 = ',' .. gcinclude.Gathering_Types .. ',';
-print(sArg);
+
 			if string.find(sTmp,sArg) ~= nil or string.find(sTmp2,sArg) ~= nil then
 				-- gather or crafting set
 				if string.find(sTmp,sArg) then
@@ -6553,14 +6580,14 @@ function MidcastHealingMagic()
 				end
 			end
 		end
+	end
 		
-		-- While the reasoning is different, both types of "cures" can use an elemental
-		-- stave. (Offensive cures take advantage of affinity while regular cures 
-		-- appreciate the cure potency on a light-based staff.)
-		sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
-		if sGear ~= nil then
-			gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
-		end
+	-- While the reasoning is different, both types of "cures" can use an elemental
+	-- stave. (Offensive cures take advantage of affinity while regular cures
+	-- appreciate the cure potency on a light-based staff.)
+	sGear,sEle = gcinclude.fCheckForElementalGearByValue('staff','Affinity',spell.Name);
+	if sGear ~= nil then
+		gcinclude.fSwapToStave(sGear,false,gProfile.Sets.CurrentGear);
 	end
 end		-- MidcastHealingMagic
 

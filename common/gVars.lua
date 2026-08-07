@@ -29,7 +29,8 @@ gVars.tElemental_gear = {
             ['Grip'] = { ['Name'] = 'Fire Grip', ['Ref'] = {} },
             ['Affinity'] = { 'blaze','burn','firaga','fire','flare','enfire','katon' },
             ['SongAffinity'] = { 'ice threnody' },
-            ['Summons'] = { 'ifrit','fire spirit','firespirit','fire' }
+            ['Summons'] = { 'ifrit','fire spirit','firespirit','fire' },
+            ['Nuke'] = { 'firaga','fire','flare' },
         },
         ['ice'] = {
             ['Weak'] = 'fire',
@@ -39,6 +40,7 @@ gVars.tElemental_gear = {
             ['Affinity'] = { 'blizzaga','blizzard','freeze','frost','ice','enblizzard','jubaku','hyoton','bind','distract','paralyze' },
             ['SongAffinity'] = { 'wind threnody' },
             ['Summons'] = { 'shiva','ice spirit','icespirit','ice' },
+            ['Nuke'] = { 'blizzaga','blizzard','freeze' },
         },
         ['wind'] = {
             ['Weak'] = 'ice',
@@ -48,6 +50,7 @@ gVars.tElemental_gear = {
             ['Affinity'] = { 'aero','aeroga','choke','tornado','enaero','huton','gravity','silence' },
             ['SongAffinity'] = { 'earth threnody' },
             ['Summons'] = { 'garuda','air spirit','fCheckInlineWeatherairspirit','air','siren' },
+            ['Nuke'] = { 'aero','aeroga','tornado' },
         },
         ['earth'] = {
             ['Weak'] = 'wind',
@@ -57,6 +60,7 @@ gVars.tElemental_gear = {
             ['Affinity'] = { 'quake','rasp','stone','stonega','enstone','hojo','doton','slow' },
             ['SongAffinity'] = { 'lightning threnody', 'battlefield elegy', 'carnage elegy' },
             ['Summons'] = {'titan','earth spirit','earthspirit','earth' },
+            ['Nuke'] = [ 'quake','stone','stonega' },
         },
         ['thunder'] = {
             ['Weak'] = 'earth',
@@ -66,6 +70,7 @@ gVars.tElemental_gear = {
             ['Affinity'] = { 'burst','shock','thundaga','thunder','enthunder','raiton' },
             ['SongAffinity'] = { 'water threnody' },
             ['Summons'] = { 'ramuh','thunder spirit','thunderspirit','thunder' },
+            ['Nuke'] = { 'burst','thundaga','thunder' },
         },
         ['water'] = {
             ['Weak'] = 'thunder',
@@ -75,6 +80,7 @@ gVars.tElemental_gear = {
             ['Affinity'] = { 'drown','flood','poison','poisonga','water','waterga','enwater','dokumori','suiton' },
             ['SongAffinity'] = { 'fire threnody' },
             ['Summons'] = { 'leviathan','water spirit','waterspirit','water' },
+            ['Nuke'] = { 'flood','water','waterga' },
         },
         ['light'] = {
             ['Weak'] = 'dark',
@@ -84,16 +90,19 @@ gVars.tElemental_gear = {
             ['Affinity'] = { 'banish','banishga','curaga','cure','dia','diaga','flash','holy','enlight','repose','inundation' },
             ['SongAffinity'] = { 'dark threnody','foe requiem','foe requiem ii','foe requiem iii','foe requiem iv','foe requiem v','foe requiem vi','foe lullaby','horde lullaby',
                 'magic finale','maiden\'s virelai' },
-                ['Summons'] = {'carbuncle','light spirit','lightspirit','light','cait sith','caitsith','alexander'},
+            ['Summons'] = {'carbuncle','light spirit','lightspirit','light','cait sith','caitsith','alexander'},
+            ['Nuke'] = nil,
         },
         ['dark'] = {
             ['Weak'] = 'light',
             ['NQ'] = { ['Name'] = 'Dark staff', ['Ref'] = {} },
             ['HQ'] = { ['Name'] = 'Pluto\'s staff', ['Ref'] = {} },
+            ['Special'] = { ['Name'] = 'Diabolos\'s pole', ['Ref'] = {} },
             ['Grip'] = { ['Name'] = 'Dark Grip', ['Ref'] = {} },
             ['Affinity'] = { 'absorb','aspir','blind','bio','dispel','drain','dread','frazzle','sleep','sleepga','endark','kurayami' },
             ['SongAffinity'] = { 'light threnody' },
             ['Summons'] = { 'fenrir','diabolos','dark spirit','darkspirit','dark','atomos','odin' },
+            ['Nuke'] = nil,
         },
     },
     ['obi'] = {
@@ -247,6 +256,99 @@ gVars.tElemental_gear = {
     },
 };
 
+-- Ecosystems is a fixed structure for monster definitions that defines all the ecosystems/family relationships. The "loaded" attribute is just
+-- used to indicate if all the family's data has been loaded into the gVars.Fanilies structure for the specified ecosystem
+gVars.Ecosystems = {
+    ['amorphs'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'flans','hecteyes','leeches','slimes','worms' },
+    },
+    ['aquans'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'crabs','orobons','pterakos','pugils','sea monks','toads','urganites' },
+    },
+    ['arcana'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'acroliths','bombs','clusters','evil weapons','dolls','golems','khimairas','magic pots','mammets','mimics','snolls','spheroids' },
+    },
+    ['archaia'] = {
+        ['Loaded'] = false,
+        ['Family'] = { },
+    },
+    ['archaic machines'] = {
+        ['Loaded'] = false,
+        ['Family'] = { },
+    },
+    ['beastmen'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'antica','bugbears','gigas','goblins','lamiae','mamool ja','moblins','orcs','poroggos','qiqirn','quadavs','sahagin','tonberries','trolls','yagudo' },
+    },
+    ['beasts'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'behemoths','buffaloes','cerberuses','coeurls','dhalmels','manticores','marids','opo-opos','rabbits','rams','sheep','tigers' },
+    },
+    ['birds'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'apkallu','bat trios','bats','birds','cockatrices','colibris','hippogryphs','rocs' },
+    },
+    ['demons'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'ahrimans','demons','dvergrs','imps','soulflayers','tauri' },
+    },
+    ['dragons'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'dragons','hydras','puks','wyrms','wyverns' },
+    },
+    ['elementals'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'elementals' },
+    },
+    ['empties'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'cravers','gorgers','receptacles','seethers','thinkers','wanderers','weepers' },
+    },
+    ['humanoids'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'elvaan','galka','humes','mithra','tarutaru','zilart' },
+    },
+    ['lizards'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'adamantoises','bugards','efts','lizards','raptors','wivres' },
+    },
+    ['luminiums'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'aerns','euvhi','ghrahs','hpemde','phuabo','xzomits','yovra','zdei' },
+    },
+    ['plantoids'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'belladonnas','flytraps','funguars','goobbues','mandragoras','morbols','rafflesias','sabotenders','saplings','treants' },
+    },
+    ['structures'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'structures' },
+    },
+    ['unclassified'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'animated weapons','automatons','avatars','biotechnological weapons','monsters','simulacra','supreme beings' },
+    },
+    ['undead'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'corpselights','corses','doomed','fomors','ghosts','hounds','qutrubs','skeletons','vampyrs' },
+    },
+    ['vermin'] = {
+        ['Loaded'] = false,
+        ['Family'] = { 'antlions','bees','beetles','chigoes','crawlers','diremites','flies','mantids','scorpions','spiders','wamouras','wamouracampa' },
+    },
+};
+
+-- Families is a dynamic structure that is populated by need. It tracks what monsters belong to what family. It is populated
+-- from the appropriate files based on a player's use of //eco or //fam inline conditionals in gear sets. Each entry loaded
+-- is as follows:
+--          ['family name'] = { ['eco'] = 'ecosystem associated with family', ['monsters'] = { list of monster names} },
+-- This provides the means to only load "families" that are used as opposed to the large structure that loading all families
+-- would entail. There's no "loaded" field here since the presence of a record indicates it was loaded.
+gVars.Families = {
+};
 -- Define constants for Region so typos aren't made
 gVars._REGION_SANDY = 1;
 gVars._REGION_BASTOK = 2;
@@ -258,7 +360,9 @@ gVars._REGION_TRUE_NA = -2;
 
 -- This table tracks regional control using zone id's associated with a region, and querying the server for who last gained
 -- conquest of the region. This table is automatically populated by digesting the appropriate packet from the server when
--- the player zones.
+-- the player zones. Note: Added generic ToAU and WotG entries so that NA would be displayed in the region. Need to update
+-- again if any other regions added because of expansions or downloads. Might need to make a new table for sanction (ToAU),
+-- sigil (WotG), and ionis (SoA).
 
 gVars.RegionControl = {
     ['Argoneau'] 		= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {152,7,8,151,200,119,120}},
@@ -286,7 +390,14 @@ gVars.RegionControl = {
     ['Zulkheim']		= { ['own'] = gVars._REGION_UNKNOWN, ['zones'] = {196,108,102,193,248,103}},
     ['Dynamis']			= { ['own'] = gVars._REGION_NA,      ['zones'] = {39,40,41,42,134,135,185,186,187,188}},
     ['Lumoria']			= { ['own'] = gVars._REGION_NA,      ['zones'] = {33,34,35,36,37,38}},
-    ['Promyvion']		= { ['own'] = gVars._REGION_NA,      ['zones'] = {16,17,18,19,20,21,22,23,39,40,41,42}}
+    ['Promyvion']		= { ['own'] = gVars._REGION_NA,      ['zones'] = {16,17,18,19,20,21,22,23,39,40,41,42}},
+    ['ToAU']            = { ['own'] = gVars._REGION_NA,      ['zones'] = {48,50,51,52,53,54,55,56,57,58,59,60,
+                                                                          61,62,63,64,65,66,67,68,69,70,71,72,
+                                                                          73,74,75,76,77,78,79}},
+    ['WotG']            = { ['own'] = gVars._REGION_NA,      ['zones'] = {80,81,82,83,84,85,86,87,88,89,90,91,
+                                                                          92,93,94,95,96,97,98,99,136,137,138,
+                                                                          155,156,164,171,175}},
+    }},
 };
 
 -- List of all conquest region controller's designations
@@ -359,15 +470,15 @@ gVars.tGearsetDetails = {};
 gVars.version = {
     ['author']	= 'Paiine',
     ['name']	= 'Luashitacast (Boxcar)',
-    ['version']	= '3.alpha.3',
+    ['version']	= '3.alpha.4',
 };
 
 -- List of all supported commands
 gVars.AliasList = {
     '911','acc','ajug','cap','cc','db','dbar','dt','ei','equipit','eva','gc','gearset','gs','gswap',
-    'horn','idle','kite','lachelp','lock','macc','maxsong','maxspell','mode','petfood','pull','racc',
-    'rc','rv','sbp','showit','smg','spf','ss','string','sw','tank','th','unlock','val','ver',
-    'wsdistance','wswap','t1'
+    'horn','hpp','idle','kite','lachelp','lock','macc','maxsong','maxspell','mode','petfood','pull',
+    'racc','rc','rv','sbp','sgs','showit','smg','spf','ss','string','sw','tank','th','unlock','val',
+    'ver','wsdistance','wswap','t1'
 };
 
 -- Lists all player storage containers available in FFXI.
@@ -420,31 +531,31 @@ gVars.tSpellGroupings = {
 -- List of all weaponskills according to desired stats
 gVars.tWeaponSkills = {
     ['CHR']             = { 'shadowstitch' },
-    ['DEX']             = { 'wasp sting','viper bite','blade: metsu','dancing edge' },
-    ['DEXAGI']          = { 'shark bite','coronach' },
-    ['DEXCHR']          = { 'eviseration' },
-    ['DEXINT']          = { 'gust slash','cyclone' },
-    ['INT']             = { 'gate of tartarus' },
-    ['INTMND']          = { 'spirit taker' },
-    ['MND']             = { 'energy steal','energy drain'},
-    ['RANGED_AGI']      = { 'hot shot','split shot','sniper shot','slugshot','blast shot','heavy shot','detonator' }, -- MARKSMANSHIP
-    ['RANGED_STRAGI']   = { 'flaming arrow','piercing arrow','dulling arrow','sidewinder','blast arrow','arching arrow','empyreal arrow','namas arrow' }, -- ARCHERY
-    ['STR']             = { 'raging axe','smash axe','gale axe','avalanche axe','spinning axe','rampage','mistral axe','decimation','spinning attack','flat blade',
-                            'circle blade','vorpal blade','hard slash','crescent moon','mercy stroke','iron tempest','sturmwind','keen edge','raging rush',
-                            'metatron torment','leg sweep','skewer','wheeling thrust','impulse drive','tachi: enpi','tachi: hobaku','tachi: goten','tachi: kagero',
-                            'tachi: jinpu','tachi: yukikaze','tachi: gekko','tachi: kasha','tachi: kaiten','brainshaker','skullbreaker','true strike','heavy swing',
-                            'shell crusher','full swing','onslaught','double thrust','spinning scythe','Vorpal Scythe' },
-    ['STRAGI']          = { 'sickle moon','vorpal thrust' },
-    ['STRDEX']          = { 'combo','backhand blow','raging fists','fast blade','penta thrust','blade: rin','blade: retsu','blade: jin','blade: ten','blade: ku','Geirskogul' },
-    ['STRINT']          = { 'dark harvest','shadow of death','nightmare scythe','spiral hell','burning blade','frostbite','freezebite','spinning slash','ground strike',
-                            'thunder thrust','raiden thrust','blade: teki','blade: to','blade: chi','blade: ei','rock crusher','earth crusher','catastrophe' },
-    ['STRINT_30_20']    = { 'red lotus blade' },
-    ['STRMND']          = { 'guillotine','cross reaper','shining blade','seraph blade','swift blade','savage blade','shockwave','tachi: koki','shining strike','seraph strike',
-                            'judgment','hexa strike','randgrith','retribution', 'knights of round' },
-    ['STRMND_30_50']    = { 'black halo' },
-    ['STRVIT']          = { 'shoulder tackle','one inch punch','final heaven' },
+    ['DEX']             = { 'wasp_sting','viper_bite','blade:_metsu' },
+    ['DEXAGI']          = { 'shark_bite','coronach' },
+    ['DEXCHR']          = { 'dancing_edge','eviseration' },
+    ['DEXINT']          = { 'gust_slash','cyclone' },
+    ['INT']             = { 'gate_of_tartarus' },
+    ['INTMND']          = { 'spirit_taker' },
+    ['MND']             = { 'energy_steal','energy_drain'},
+    ['RANGED_AGI']      = { 'hot_shot','split_shot','sniper_shot','slug_shot','blast_shot','heavy_shot','detonator' },
+    ['RANGED_STRAGI']   = { 'flaming_arrow','piercing_arrow','dulling_arrow','sidewinder','blast_arrow','arching_arrow','empyreal_arrow','namas_arrow' },
+    ['STR']             = { 'raging_axe','smash_axe','gale_axe','avalanche_axe','spinning_axe','rampage','mistral_axe','decimation','spinning_attack','flat_blade',
+                            'circle_blade','vorpal_blade','hard_slash','crescent_moon','mercy_stroke','iron_tempest','sturmwind','keen_edge','raging_rush',
+                            'metatron_torment','leg_sweep','skewer','wheeling_thrust','impulse_drive','tachi:_enpi','tachi:_hobaku','tachi:_goten','tachi:_kagero',
+                            'tachi:_jinpu','tachi:_yukikaze','tachi:_gekko','tachi:_kasha','tachi:_kaiten','brainshaker','skullbreaker','true_strike','heavy_swing',
+                            'shell_crusher','full_swing','onslaught','double_thrust','spinning_scythe','vorpal_scythe' },
+    ['STRAGI']          = { 'sickle_moon','vorpal_thrust' },
+    ['STRDEX']          = { 'combo','backhand_blow','raging_fists','fast_blade','penta_thrust','blade:_rin','blade:_retsu','blade:_jin','blade:_ten','blade:_ku','Geirskogul' },
+    ['STRINT']          = { 'dark_harvest','shadow_of_death','nightmare_scythe','spiral_hell','burning_blade','frostbite','freezebite','spinning_slash','ground_strike',
+                            'thunder_thrust','raiden_thrust','blade:_teki','blade:_to','blade:_chi','blade:_ei','rock_crusher','earth_crusher','catastrophe' },
+    ['STRINT_30_20']    = { 'red_lotus_blade' },
+    ['STRMND']          = { 'guillotine','cross_reaper','shining_blade','seraph_blade','swift_blade','savage_blade','shockwave','tachi:_koki','shining_strike','seraph_strike',
+                            'judgment','hexa_strike','randgrith','retribution','knights_of_round' },
+    ['STRMND_30_50']    = { 'black_halo' },
+    ['STRVIT']          = { 'shoulder_tackle','one_inch_punch','final_heaven' },
     ['Skill']           = { 'starlight','moonlight' },
-    ['HP']              = { 'spirits within' }
+    ['HP']              = { 'spirits_within' },
 };
 
 -- Various lists of slot names. Standard is the basic 16 slots equipment grid, extended adds the metas: rings and ears, full includes subset and group, progressive is full
@@ -528,6 +639,9 @@ gVars.NON_GEAR = {
 gVars.Toggles = {};
 gVars.Cycles = {};
 
+-- Contains list of average max HP and MP
+gVars.AverageMaxStats = {};
+
 -- Holding variable for all of the messages that should only be displayed once
 gVars.GearWarnings = nil;
 
@@ -545,9 +659,6 @@ gVars.bGC = false;
 -- Current regional setting
 gVars.sRegion = gVars._REGION_STATUS_MUST_ZONE;
 
--- Copy of the displaybar settings
-gVars.Displaybar = {};
-
 --[[
     ********************
     * global constants *
@@ -564,6 +675,10 @@ gVars._SLOT_FA = 'FA';     -- formatted output: first letter uppercase, rest low
 gVars._LOCK   = 'lock';
 gVars._UNLOCK = 'unlock';
 
+-- Define constants for the average max HPP/MPP settings
+gVars._MAXHPP = 'mHPP';
+gVars,_MAXMPP = 'mMPP';
+
 -- define the code lists for the crafting and gathering types
 gVars._Crafting_Types = 'ALC,BONE,CLOTH,COOK,GSM,LTH,BSM,WW';
 gVars._Gathering_Types = 'HELM,DIG,CLAM,FISH';
@@ -572,7 +687,7 @@ gVars._Gathering_Types = 'HELM,DIG,CLAM,FISH';
 gVars._validJobs = 'BLM,BLU,BRD,BST,COR,DNC,DRG,DRK,GEO,MNK,PLD,PUP,RDM,RNG,RUN,SAM,SCH,SMN,THF,WAR,WHM';
 
 -- List of all magic using jobs
-gVars._sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,BLU,SCH,GEO,RUN,NIN,BRD';
+gVars._sMagicJobs = 'BLM,WHM,RDM,SMN,PLD,DRK,BLU,SCH,GEO,RUN,NIN,BRD,COR';
 
 -- List of all jobs that can use ranged weapons (either range or ammo slot)
 gVars._sRangedJobs = 'NIN,PUP,SAM,DNC,COR,RNG,BLM,SCH,THF,WAR,BRD,MNK,WHM,RDM';
@@ -587,9 +702,12 @@ gVars._sDB_NORM = 'Norm';
 gVars._sDB_BPP = 'BPP';
 gVars._sDB_WSS = 'WSS';
 
+-- Overall bar details
+gVars._PREFIX = 'Prefix';
+gVars._BAR1  = 'BAR_1';
+gVars._BAR2  = 'BAR_2';
 gVars._POS_X = 'POS_X';
 gVars._POS_Y = 'POS_Y';
-gVars._VISIBLE = 'VIS';
 
 -- List of all toggles and cycles to reduce the likeliness of a typo or case mismatch.
 -- Start with ones that are
@@ -602,6 +720,7 @@ gVars._WSWAP        = 'WSwap';      -- Weapon Swap
 gVars._TANK         = 'Tank';       -- Tanking
 gVars._MACC         = 'MAcc';       -- Magic Accuracy
 gVars._TH           = 'TH';         -- Treasure Hunter
+gVars._SGS          = 'SGS';        -- Show Gear Sets
 -- Job specific ones
 gVars._AJUG         = 'AJug';       -- Automatic pet Jug equipping
 gVars._DB           = 'DB';         -- pet DeBuff removal
@@ -611,6 +730,7 @@ gVars._MODE         = 'Mode';       -- SMN preference mode: ATTK (attack), PERP 
 gVars._SS           = 'SS';         -- Show Steals
 gVars._DT           = 'DT';         -- Damage Taken
 gVars._REGION       = 'Region';     -- Region ownership
+gVars._HPPLUS       = 'HPPlus';     -- Boost DRG's maxHP or not prior to healing breath
 -- Static display bar referernces
 gVars._JOB          = 'Job';        -- Job/sj
 gVars._CAP          = 'Cap';        -- Level cap
@@ -643,6 +763,7 @@ gVars._VALIDATE     = 'VAL';        -- Validate
 gVars._VERSION      = 'VER';        -- Version
 gVars._VISIBLE      = 'vis';        -- Visible/Invisible
 gVars._WSDISTANCE   = 'WSD';        -- Weapon Skill Distance
+gVars._INITIALIZE   = 'Init';       -- Display bar initialization
 
 -- Define constants for DT so typos aren't made
 gVars._DT_OFF = 'Off';
@@ -664,7 +785,7 @@ gVars._MODE_A = 'A';
 gVars._MODE_P = 'P';
 gVars._MODE_E = 'E';
 
--- define constants for Instrument so typos aren't made
+-- Define constants for Instrument so typos aren't made
 gVars._HORN = 'Horn';
 gVars._STRING = 'String';
 
@@ -672,6 +793,25 @@ gVars._STRING = 'String';
 gVars._RAGE = 'Rage';
 gVars._WARD = 'Ward';
 gVars._UNKNOWN = 'Unknown';
+
+-- Define grid options
+gVars._LOCK_STYLE = 'style';
+gVars._SHOW_DELAY = 'SD';
+
+-- Define grid lock styles
+gVars._REDX = 'redx';
+
+-- Define HTML character emphasis types
+gVars._HTML_UNDERLINE = 'u';
+gVars._HTML_BOLD = 'b'
+gVars._HTML_STRIKE = 's'
+
+-- Define pet types, none means no pet
+gVars._TYPE_SMN = 'SMN';
+gVars._TYPE_BST = 'BST';
+gVars._TYPE_DRG = 'DRG';
+gVars._TYPE_PUP = 'PUP';
+gVars._TYPE_NONE = 'NONE';
 
 -- Since gVars is loaded from all job files, the individual modules will be loaded here
 crossjobs   = gFunc.LoadFile('common\\crossjobs.lua');

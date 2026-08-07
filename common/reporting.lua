@@ -19,6 +19,9 @@ local reporting = {};
             lGearSetListingReport   Display gear list in gearset format
             ProcessSMG              Processes the invocation of /smg
             RegionControlDisplay    Displays all regions and who controls them
+
+        Functions:
+            tParseFileDefinition    Parses file designation and returns file structure
 --]]
 
 --[[
@@ -26,7 +29,7 @@ local reporting = {};
 --]]
 
 function reporting.DB_ShowIt()
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local sSlip = slips.fDisplaySlips(false);
 
     print(chat.message(' '));
@@ -75,13 +78,14 @@ end     -- reporting.DisplayVersion
     Pararameter
         args    possible file designation
 
-    Invocations: /rc [file[=name] ][+] | [visible|invisible]
+    Invocations: /rc [file[=name] ][+] [help]
 
 ++ modify for file ++
 --]]
 
 function reporting.RegionControlDisplay(args)
-    tColorList = { }
+    local wcnt = 0, bcnt = 0, scnt = 0;
+    local bscnt = 0;
 
     -- Make sure we know what nation we belong to
     if crossjobs.OwnNation == -1 then
@@ -96,18 +100,31 @@ function reporting.RegionControlDisplay(args)
         print(chat.message('Info: Player\'s nation = ' .. chat.color1(gVars.tRegionControllerColors[crossjobs.OwnNation],gVars.tRegionControllerSettings[crossjobs.OwnNation])));
     end
 
-    -- Check visibility setting
-    if utilities.fCheckVisibility(gVars._RC,args) == false then
-        -- Now process the list
-        print(' ');
-        for i,j in pairs(gVars.RegionControl) do
-            if j['own'] < gVars._REGION_NA or j['own'] > gVars._REGION_BEASTMEN then
-                print(chat.message('Huh? ' .. i ..' = ' .. tostring(j['own'])));
-            else
-                print(chat.message(i .. ' = ' .. chat.color1(gVars.tRegionControllerColors[j['own']],gVars.tRegionControllerSettings[j['own']])));
+    -- Now process the list
+    print(' ');
+    for i,j in pairs(gVars.RegionControl) do
+        if j['own'] < gVars._REGION_NA or j['own'] > gVars._REGION_BEASTMEN then
+            print(chat.message('Huh? ' .. i ..' = ' .. tostring(j['own'])));
+        else
+            print(chat.message(i .. ' = ' .. chat.color1(gVars.tRegionControllerColors[j['own']],gVars.tRegionControllerSettings[j['own']])));
+            if j['own'] == gVars._REGION_WINDY then
+                wcnt = wcnt + 1;
+            elseif j['own'] == gVars._REGION_BASTOK then
+                bcnt = bcnt + 1;
+            elseif j['own'] == gVars._REGION_SANDY then
+                scnt = scnt + 1;
+            elseif j['own'] == gVars._REGION_BEASTMEN then
+                bscnt = bscnt + 1;
             end
         end
     end
+
+    print ' ';
+    print(chat.message('Tallies:'));
+    print(chat.message(chat.color1(gVars.tRegionControllerColors[gVars._REGION_SANDY],gVars.tRegionControllerSettings[gVars._REGION_SANDY] .. ' - ' .. tostring(scnt))));
+    print(chat.message(chat.color1(gVars.tRegionControllerColors[gVars._REGION_BASTOK],gVars.tRegionControllerSettings[gVars._REGION_BASTOK] .. ' - ' .. tostring(bcnt))));
+    print(chat.message(chat.color1(gVars.tRegionControllerColors[gVars._REGION_WINDY],gVars.tRegionControllerSettings[gVars._REGION_WINDY] .. ' - ' .. tostring(wcnt))));
+    print(chat.message(chat.color1(gVars.tRegionControllerColors[gVars._REGION_BEASTMEN],gVars.tRegionControllerSettings[gVars._REGION_BEASTMEN] .. ' - ' .. tostring(bscnt))));
 end		-- reporting.RegionControlDisplay
 
 --[[
@@ -497,10 +514,6 @@ function lSlotListingReport(rec,fptr)
             end
             for i,j in pairs(rec.tgs) do
                 -- For each gear set
-
-
-
-
                 if gVars.tGearsetDetails[j][l] ~= nil then
                     for m = 1,#gVars.tGearsetDetails[j][l]['items'],1 do
                         local item = gVars.tGearsetDetails[j][l]['items'][m];
@@ -605,5 +618,71 @@ function reporting.DisplayOnce(msg,bOverride)
         end
     end
 end     -- reporting.fDisplayOnce
+
+--[[
+    tParseFileDefinition takes the passed in commandline definition for a file and
+    parses it into a structure. If the name is not specified, it generates an
+    automatic name.
+
+    Parameters:
+        sCLFileDef      Command line file designation
+        sRptName        Type of "report" that invoked this function
+
+    Return:
+        tFDef           Structure with the individual components of the file definition
+
+    Note: This routine will generate the information to be used in reporting, but does
+    not open the file. That is left to the invoking procedure.
+
+    Form: [file[[:text|:html]=name]][+]
+--]]
+
+function reporting,tParseFileDefinition(sCLFileDef,sRptName)
+    local iPos,sTmp;
+    local tFDef = {
+        ['sDef'] = sCLFileDef,
+        ['sFType'] = nil,
+        ['bAppend'] = nil
+        ['sFN'] = nil
+    };
+
+    if sCLFileDef == nil then
+        return nil;
+    end
+
+    sCLFileDef = string.lower(sCLFileDef);
+    -- First determine output type
+    if string.find(sCLFileDef,':html') ~= nil then
+        tFDef['sFType'] = 'html';
+    else
+        tFDef['sFType'] = 'txt';
+    end
+
+    -- Next, see if the file should be opened for appending
+    tFDef['bAppend'] = (string.find(sCLFileDef,'%+') ~= nil);
+
+    -- Lastly, was a filename supplied or should it be generated
+    iPos = string.find(sCLFileDef,'=');
+    if iPos == string.length(sCLFileDef) or sCLFileDef[iPos+1] == '+' then
+        -- This assumes a generated name
+        tFDef['sFN'] = utilities.fNewFileName();
+        if sRptName ~= nil then
+            tFDef['sFN'] = tFDef['sFN'] .. '_' ..sRptName;
+        end
+    else
+        -- Pull the name out of the definition
+        sTmp = string.sub(sCLFileDef,iPos+1,-1);
+        -- remove appending "+" if there
+        iPos = string.find(sCLFileDef,'%+');
+        if iPos ~= nil then
+            tFDef['sFN'] = string.sub(sTmp,1,iPos-1);
+        else
+            tFDef['sFN'] = sTmp;
+        end
+        tFDef['sFN'] = utilities.fRtrim(tFDef['sFN'])
+    end
+
+    return tFDef;
+end     -- reporting.tParseFileDefinition
 
 return reporting;

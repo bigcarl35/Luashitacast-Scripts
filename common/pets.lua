@@ -16,6 +16,7 @@ local pets = {};
             lfFindAllJugs           Determines which jugs the player has that are accessible
             fIsValidJugPet          Determines if passed name is a valid jug pet
             fPetReward              Scans all containers for pet food returns best
+            fPetType                Determines type of pet: SMN,BST,DRG,PUP
             fSummonerPet            Determines if pet is a smn avatar/spirit
 --]]
 
@@ -109,24 +110,17 @@ pets.SmnBPWardList = { 'Healing Ruby','Lunar Cry','Shining Ruby','Aerial Armor',
     'Earthen Ward','Spring Water','Hastega','Noctoshield','Ecliptic Growl','Dream Shroud','Healing Ruby II','Somnolence'
 };
 
--- List of all pet commands
-pets._PetCommands = 'FIGHT,HEEL,STAY,LEAVE,SIC,READY,STEADY WING,DISMISS,ASSAULT,RELEASE,RETREAT';
-
 --[[
     HandlePetAction processes the passed in pet action so that the appropriate gear set
     is equipped.
 
     Parameter
         PetAction       Structure containing pet's action details
-
-    Note: BST's Sic and Ready commands send the action name to this routine. That's
-    why table searches are done. Also, SMN's Blood Pacts also identify the pet skill.
-    Unlike BST, SMN's MidBP is split into groups
 --]]
 
 function pets.HandlePetAction(PetAction)
     local pet = gData.GetPet();
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local sn;
 
     -- Ensure there's a pet
@@ -134,41 +128,18 @@ function pets.HandlePetAction(PetAction)
         return;
     end
 
-    -- Check for BST's Sic or Ready attack skills
-    if table.find(pets.BstPetAttack,PetAction.Name) ~= nil or
-       table.find(pets.BstPetMagicalAccuracy,PetAction.Name) ~= nil or
-       table.find(pets.BstPetMagicalAttack,PetAction.Name) ~= nil then
-        sn = utilities.fGetTableByName('PET_Sic_Ready');
-        if sn ~= nil then
-            gear.MoveToDynamicGS(sn,crossjobs.Sets.CurrentGear,false,'PET_Sic_Ready');
-        end
-    -- Next, SMN Blood pacts
-    elseif table.find(pets.SmnBPSkill,PetAction.Name) ~= nil or
-       table.find(pets.SmnBPMagical,PetAction.Name) ~= nil or
-       table.find(pets.SmnBPPhysical,PetAction.Name) ~= nil or
-       table.find(pets.SmnBPAccuracy,PetAction.Name) ~= nil or
-       table.find(pets.SmnBPHybrid,PetAction.Name) ~= nil then
-        gear.MoveToDynamicGS(gProfile.Sets.MidBP,crossjobs.Sets.CurrentGear,false,'MidBP');
-    elseif player.MainJob == 'DRG' then
-        -- And DRG's Steady Wing'
-        if PetAction.Name == 'Steady Wing' then
-            -- And DRG's Steady Wing'
-            sn = utilities.fGetTableByName('PET_Steady_Wing');
-            if sn ~= nil then
-                gear.MoveToDynamicGS(sn,crossjobs.Sets.CurrentGear,false,'PET_Steady_Wing');
-            end
-        else
-            -- This has to be a breath attack
-            gear.MoveToDynamicGS(gProfile.Sets.WyvernBreathAttack,crossjobs.Sets.CurrentGear,false,'WyvernBreathAttack');
-        end
-    -- Lastly, any other leftover commands
-    else
-        local sName = 'PET_' .. string.gsub(PetAction.Name,' ','_');
-        sn = utilities.fGetTableByName(sName);
-        if sn ~= nil then
-            gear.MoveToDynamicGS(sn,crossjobs.Sets.CurrentGear,false,sName);
-        end
+    -- If something special has to be done before the gear for a specific pet action is
+    -- equipped, do it here.
+
+    if player.MainJob == 'DRG' and pets.fPetType() == gVars._TYPE_DRG and PetAction.Name ~= 'Steady Wing' then
+        -- This has to be a wyvern breath attack
+        gear.MoveToDynamicGS(gProfile.Sets.WyvernBreathAttack,crossjobs.Sets.CurrentGear,false,'WyvernBreathAttack');
+        gear.EquipTheGear(crossjobs.Sets.CurrentGear,false,false);
     end
+
+    -- Now deal with the generic pet_command invocation
+
+    gear.MoveToDynamicGS(gProfile.Sets.Pet_Command,crossjobs.Sets.CurrentGear,false,'Pet_Command');
     gear.EquipTheGear(crossjobs.Sets.CurrentGear,false,false);
 end		-- pets.HandlePetAction
 
@@ -179,15 +150,17 @@ end		-- pets.HandlePetAction
 
 function pets.HealingBreath()
     local pet = gData.GetPet();
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local pParty = AshitaCore:GetMemoryManager():GetParty();
 
-    if pet ~= nil and pet.Name == gProfile.settings.WyvernName then
+    if pet ~= nil and pets.fPetType() == gVars._TYPE_DRG then
         if string.find('PLD,DRK,NIN,BRD',player.SubJob) ~= nil then
             -- Because of the subjob, the only player that can be affected by the heal is the DRG.
             -- Target HP% is 25% or 33% if you equip a "drachen armet(+1)". Now, check to see if the
             -- HP% is low enough for a healing breath
-            gear.EquipTheGear(profile.Sets.MaxHPUpSet,false,false);
+            if utilities.fGetToggle(gVars._HPPLUS) == true then
+                gear.EquipTheGear(profile.Sets.MaxHPUpSet,false,false);
+            end
             if player.MainJobLevel < 60 and player.HPP <= 25 or
                 (player.MainJobLevel >= 60 and player.HPP <= 33 and
                 (gVars.tGearDetails['head']['drachen armet'] ~= nil or
@@ -197,8 +170,12 @@ function pets.HealingBreath()
         else
             -- Since the DRG has a defensive subjob, we need to see if anyone in their party meets
             -- the criteria for healing. Target HP% is 33% or 50% if you equip a "drachen armet(+1)"
+            -- Note that you can indicate if you should be favored.
             for i=0,5,1 do		-- First 6 is your party, you're 0
                 if pParty:GetMemberHP(i) ~= nil then
+                    if utilities.fGetToggle(gVars._HPPLUS) == true then
+                        gear.EquipTheGear(profile.Sets.MaxHPUpSet,false,false);
+                    end
                     if player.MainJobLevel < 60 and pParty:GetMemberHPPercent(i) <= 33 or
                         (player.MainJobLevel >= 60 and pParty:GetMemberHPPercent(i) <= 50 and
                         (gVars.tGearDetails['head']['drachen armet'] ~= nil or
@@ -241,7 +218,7 @@ end     -- pets.fIsValidJugPet
 --]]
 
 function pets.FavoredJugPets()
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local t1,t2;
 
     if player.MainJob == 'BST' and gProfile.FavoredJugPets ~= nil then
@@ -265,7 +242,7 @@ end     -- pets.FavoredJugPets
 
 function lfFindAllJugs()
     local resources = AshitaCore:GetResourceManager();
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local tStorage = gVars.EQUIPABLE_NONHOLIDAY;
     local iCount = 0;
 
@@ -311,7 +288,7 @@ end     -- lfFindAllJugs
 --]]
 
 function pets.fWhichJugToEquip()
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local favored = nil;
     local nonfavored = nil;
 
@@ -385,7 +362,7 @@ end     -- pets.fWhichJugToEquip
 function pets.fPetReward(sFood,bMax)
     local inventory = AshitaCore:GetMemoryManager():GetInventory();
     local resources = AshitaCore:GetResourceManager();
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local tStorage = gVars.EQUIPABLE_NONHOLIDAY;
     local containerID;
     local i1,i2,step;
@@ -403,8 +380,8 @@ function pets.fPetReward(sFood,bMax)
     end
 
     -- Check for capped level
-    if gProfile.settings.PlayerCappedLevel > 0 then
-        targetLevel = gProfile.settings.PlayerCappedLevel;
+    if gProfile.system_settings.PlayerCappedLevel > 0 then
+        targetLevel = gProfile.system_settings.PlayerCappedLevel;
     end
 
     -- Reset the pet food indicators
@@ -586,7 +563,7 @@ end		-- pets.fElementByPetName
 --]]
 
 function pets.Call911()
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local pet = gData.GetPet();
     local environ = gData.GetEnvironment();
     local dayEle = string.lower(environ.DayElement);
@@ -696,5 +673,37 @@ function pets.Call911()
     AshitaCore:GetChatManager():QueueCommand(1, sCmd);
     return;
 end     -- pets.Call911
+
+--[[
+    fPetType determines the type of pet the plyayer has out: SMN, BST, DRG, or PUP. Lack of a pet
+    returns "none".
+--]]
+
+function pets.fPetType()
+    local player = utilities.SetJob();
+    local pet = gData.GetPet();
+
+    if pet == nil or pet.Name == nil then
+        return gVars._TYPE_NONE;
+    elseif pets.fSummonerPet() == true then
+        return gVars._TYPE_SMN;
+    else
+        if player.MainJob == 'DRG' and gProfile.settings.petName ~= nil then
+            if string.upper(gProfile.settings.petName) == string.upper(pet.Name) then
+                return gVars._TYPE_DRG;
+            end
+        end
+
+        if (player.MainJob == 'PUP' or player.SubJob == 'PUP') and gProfile.settings.petName ~= nil then
+            if string.upper(gProfile.settings.petName) == string.upper(pet.Name) then
+                return gVars._TYPE_PUP;
+            end
+        end
+
+        -- At this point it's a guessing game. As long as settings.petName is correct, SMN, DRG, and PUP
+        -- pet should have been detected. We have to assume it is a BST pet
+        return gVars._TYPE_BST;
+    end
+end     -- pets.fPetType
 
 return pets;

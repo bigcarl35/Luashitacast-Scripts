@@ -54,3 +54,86 @@ if (((m_AshitaCore->GetMemoryManager()->GetEntity()->GetRenderFlags0(myIndex) & 
 
 Carbuncle Mitts are being used wrong. While wearing the mitts if you have "Shining Ruby" buff, you will gain regen. Take gloves off
 or "shining ruby" buff wears, regen goes away. It only affects the wearer.
+
+
+--[[
+	FractionalSet is similar to FractionalAccuracy in that is equips part of a
+	predefined set, but it's not based on accuracy. Instead, it's based on a
+	list of slots. (Note that only names are supported and not slot numbers.)
+	It creates a temporary set based on the specified slots and equips it.
+--]]
+
+function gear.FractionalSet(hs,sSlots)
+	local i,t;
+	local tAcc = {};
+	local ts = {};
+	local bGood,vRoot;
+	local bFound = false;
+	local bSubset = false;
+
+	if hs == nil or sSlots == nil then
+		return;
+	end
+
+	sSlots = string.lower(sSlots);
+
+	if type(hs) == 'string' then
+		ts = utilities.fGetTableByName(hs);
+	else
+		ts = hs;
+	end
+
+	for j,k in pairs(ts) do
+		t = string.lower(j)
+		if t == 'subset' then
+			bSubset = true;
+		else
+			-- Since ears and rings are pseudo slots, if specified, make
+			-- sure to match with the actual slot names
+			if string.find(sSlots,'ear') ~= nil and
+				(t == 'ears' or t == 'ear1' or t == 'ear2') then
+				tAcc[j] = k;
+			elseif string.find(sSlots,'ring') ~= nil and
+				(t == 'rings' or t == 'ring1' or t == 'ring2') then
+				tAcc[j] = k;
+			-- at this point it's an exact match
+			elseif string.find(sSlots,t) ~= nil then
+				tAcc[j] = k;
+			end
+			if bFound == false then
+				-- This indicates there was a match copied and that the
+				-- temporary set will need to be moved to current
+				bFound = (tAcc[j] ~= nil);
+			end
+		end
+	end
+
+	if bFound == true then
+		gear.MoveToDynamicGS(tAcc,gProfile.Sets.CurrentGear,false,nil);
+	else
+		if bSubset == true then
+			for j,k in pairs(ts) do
+				t = string.lower(j)
+				if t == 'subset' then
+					for ji,ki in ipairs(k) do
+						if type(ki) == 'table' then
+							ts = ki;
+						else
+							ts[j] = ki;
+						end
+
+						-- Then determine the appropriate set to load
+						for kk,vv in pairs(ts) do
+							bGood,vRoot = inline.fCheckInline(vv,'subset');
+
+							if bGood == true then
+								gear.FractionalSet(vRoot,sSlots)
+								break;
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end	-- gear.FractionalSet

@@ -13,7 +13,7 @@ local help = {};
 --]]
 
 function help.ShowHelp(sWhich)
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
 
     if sWhich ~= nil then
         ShowHelpFor(sWhich);
@@ -107,7 +107,7 @@ function IndividualHelp(id)
         print(' ');
         -- More goes here
     elseif id == gVars._ACC then    -- /acc
-        print(chat.message('Form: /acc [#|max|all|none] | [visible|invisible]'));
+        print(chat.message('Form: /acc [#|max|all|none] [help]'));
         print(' ');
         print(chat.message('/acc is used to defined stages in the "progressive" structure found in your job file.'));
         print(chat.message('Listed in the display bar (if not invisible), each number designates a set of gear'));
@@ -119,11 +119,11 @@ function IndividualHelp(id)
         print(chat.message('gear. The visible/invisible option indicates if the accuracy options should be displayed in'));
         print(chat.message('display bar. (Type \'/man visible\' for more details on this option.'));
     elseif id = gVars._AJUG then    -- BST only, /ajug
-        print(chat.message('Form: /ajug | [visible|invisible]'));
+        print(chat.message('Form: /ajug [help]'));
         print(' ');
         -- More goes here
     elseif id == gVars._CAP then    -- /cap
-        print(chat.message('Form: /cap [#] | [visible|invisible]')):
+        print(chat.message('Form: /cap [#] [help]')):
         print(' ');
         print(chat.message('The /cap command is used to artificially limit what gear your character can wear to a specific');
         print(chat.message('level. This is used mostly for testing gear sets. The cap command tells Luashitacast to not');
@@ -132,7 +132,7 @@ function IndividualHelp(id)
         print(chat.message('invisible option indicates if the level cap option should be displayed in display bar. (Type'));
         print(chat.message('\'/man visible\' for more details on this option.'));
     elseif id == gVars._CC then     -- /cc
-        print(chat.message('Form: /cc[#] [file[=name]][+] | [visible|invisible]'));
+        print(chat.message('Form: /cc[#] [file[=name]][+][help]'));
         print(' ');
         print(chat.message('Custom conditional codes are codes that a player creates in their job file that are not predefined'));
         print(chat.message('in Luashitacast. They ask a simple Yes/No question. Their meaning is important to the player, but'));
@@ -143,11 +143,11 @@ function IndividualHelp(id)
         print(chat.message('file for more details on this option.) The visible/invisible option indicates if the custom conditional'));
         print(chat.message('option should be displayed in display bar. (Type \'/man visible\' for more details on this option.'));
     elseif id = gVars._DB then      -- BST only, /db
-        print(chat.message('Form: /db [BPP|WSS] | [visible|invisible]'));
+        print(chat.message('Form: /db [BPP|WSS] [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._DBAR then    -- /dbar
-        print(chat.message('Form: /dbar [pos|show|save|reset] [file[=name]][+] | [visible|invisible]'));
+        print(chat.message('Form: /dbar [show] [bar=v|i] [vis=[all|none|name,name,...]] [vis=[all|none|name,name,...]] [invis=[all|none|name,name,...]] [save|reset] [file[=name]][+] [help]'));
         print(' ');
         print(chat.message('Part of the display bar manipulation system, dbar gives the player information about the display bar'));
         print(chat.message('and/or lets them save the layout to a startup configuration file. "Pos" displays the XY position of'));
@@ -159,137 +159,137 @@ function IndividualHelp(id)
         print(chat.message('(Type \'/man file\' for more details on this option.) The visible/invisible option indicates if the'));
         print(chat.message('display bar should be displayed or not. (Type \'/man visible\' for more details on this option.'));
     elseif id = gVars._DT then      -- /dt
-        print(chat.message('/dt [M|P|B] | [visible|invisible]'));
+        print(chat.message('/dt [M|P|B] [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._EI then      -- /ei or /equipit
-        print(chat.message('Form: /ei code|"name" or /equipit code|"name"'));
+        print(chat.message('Form: /ei code|"name" [help] or /equipit code|"name" [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._EVASION then -- /eva
-        print(chat.message('Form: /eva | [visible|invisible]'));
+        print(chat.message('Form: /eva [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._GC then      -- /gc
-        print(chat.message('Form: /gc [list] [file[=name]][+] | [visible|invisible]'));
+        print(chat.message('Form: /gc [list] [file[=name]][+] [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._GS then      -- /gs or /gearset
-        print(chat.message('Form: /gs "name" [w][l] or /gearset "name" [w][l]'));
+        print(chat.message('Form: /gs "name" [w][l] [help] or /gearset "name" [w][l] [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._GSWAP then   -- /gswap
-        print(chat.message('Form: /gswap | [visible|invisible]'));
+        print(chat.message('Form: /gswap [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._HORN then    -- BRD only, /horn
-        print(chat.message('Form: /horn | [visible|invisible]'));
+        print(chat.message('Form: /horn [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._IDLE then    -- /idle
-        print(chat.message('Form: /idle | [visible|invisible]'));
+        print(chat.message('Form: /idle [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._KITE then    -- /kite
-        print(chat.message('Form: /kite | [visible|invisible]'));
+        print(chat.message('Form: /kite [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._LACHELP then -- /lachelp
 
     elseif id = gVars._LOCKS then   -- /locks
-        print(chat.message('Form: /lock [slot name|slot number[,...]] | [visible|invisible]'));
+        print(chat.message('Form: /lock [slot name|slot number[,...]] [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._MACC then    -- /macc
-        print(chat.message('Form: /macc | [visible|invisible]'));
+        print(chat.message('Form: /macc [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._MAXSONG then -- /maxsong
-        print(chat.message('Form: /maxsong song'));
+        print(chat.message('Form: /maxsong song [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._MAXSPELL then -- /maxspell
-        print(chat.message('Form: /maxspell spell'));
+        print(chat.message('Form: /maxspell spell [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._MODE then    -- SMN Only, /mode
-        print(chat.message('Form: /mode [PERP|ATTK|ENMM] | [visible|invisible]'));
+        print(chat.message('Form: /mode [PERP|ATTK|ENMM] [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._PETFOOD then  -- BST only, /petfood
-        print(chat.message('Form: /petfood [name]'));
+        print(chat.message('Form: /petfood [name] [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._PULL then    -- /pull
-        print(chat.message('Form: /pull'));
+        print(chat.message('Form: /pull [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._RACC then    -- /racc
-        print(chat.message('Form: /racc [#|max|all|none] | [visible|invisible]'));
+        print(chat.message('Form: /racc [#|max|all|none] [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._RC then     -- /rc
-        print(chat.message('Form: /rc [file[=name]][+] | [visible|invisible]'));
+        print(chat.message('Form: /rc [file[=name]][+] [help]]'));
         print(' ');
         -- More goes here
     elseif id = gVars._RV then     -- /rv
-        print(chat.message('Form: /rv'));
+        print(chat.message('Form: /rv [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._SBP then     -- SMN only, /sbp
-        print(chat.message('Form: /sbp | [visible|invisible]'));
+        print(chat.message('Form: /sbp [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._SHOWIT then -- /showit
-        print(chat.message('Form: /showit [file[=name]][+]'));
+        print(chat.message('Form: /showit [file[=name]][+] [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._SMG then     -- /smg
-        print(chat.message('Form: /smg [g|s] [noac] [gs=set name,set name,...] [slot=slot name,slot name,...] [file[=name]][+]'));
+        print(chat.message('Form: /smg [g|s] [noac] [gs=set name,set name,...] [slot=slot name,slot name,...] [file[=name]][+] [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._SPF then     -- /spf
-        print(chat.message('Form: /spf | [visible|invisible]'));
+        print(chat.message('Form: /spf [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._SS then      -- THF only, /ss
-        print(chat.message('Form: /ss | [visible|invisible]'));
+        print(chat.message('Form: /ss [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._STRING then  -- BRD only, /string
-        print(chat.message('Form: /string | [visible|invisible]'));
+        print(chat.message('Form: /string [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._SW then      -- /sw
-        print(chat.message('Form: /sw'));
+        print(chat.message('Form: /sw [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._TANK then    -- /tank
-        print(chat.message('Form: /tank | [visible|invisible]'));
+        print(chat.message('Form: /tank [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._TH then      -- /th
-        print(chat.message('Form: /th | [visible|invisible]'));
+        print(chat.message('Form: /th [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._UNLOCK then  -- /unlock
-        print(chat.message('Form: /unlock [all|list of slot names|list of slot numbers]'));
+        print(chat.message('Form: /unlock [all|list of slot names|list of slot numbers] [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._VALIDATE then -- /val
-        print(chat.message('Form: /val gs=[all|name,name,...] [file[=name]][+]'));
+        print(chat.message('Form: /val gs=[all|name,name,...] [file[=name]][+] [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._VERSION then  -- /ver
-        print(chat.message('Form: /ver'));
+        print(chat.message('Form: /ver [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._WSDISTANCE then -- /WSDISTANCE
-        print(chat.message('Form: /wsdistance [#]'));
+        print(chat.message('Form: /wsdistance [#] [help]'));
         print(' ');
         -- More goes here
     elseif id = gVars._WSWAP then   -- /wswap
-        print(chat.message('Form: /wswap | [visible|invisible]'));
+        print(chat.message('Form: /wswap [help]'));
         print(' ');
         -- More goes here
     end

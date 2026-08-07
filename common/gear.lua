@@ -16,6 +16,7 @@ local gear = {};
 
         Functions:
             fCheckForEleGear                Determines if you have the right elemental gear
+            fCheckForElementalBypassGear    Determines if a non-elemental gear should be used instead
             fCheckForElementalGearByValue   Determines if an elemental gear should be equipped
             fExpandGearLine                 Expands slot's definition from subsets and references
             fGearCheckItem                  Processes and places the item in the dynamic listing
@@ -60,10 +61,10 @@ gear.tEquipIt = {
     ['ret']    = { ['Name'] = 'Return Ring', ['Slot'] = 'Ring' },
     ['tav']    = { ['Name'] = 'Tavnazian Ring', ['Slot'] = 'Ring' },
     ['tin']	   = { ['Name'] = 'Tinfoil Hat', ['Slot'] = 'Head' },
-    ['dcl']    = { ['Name'] = 'Dcl.Grd. Ring', ['Slot'] = 'Ring' },
     ['warp']   = { ['Name'] = 'Warp Cudgel', ['Slot'] = 'Main' },
     ['trick2'] = { ['Name'] = 'Trick Staff II', ['Slot'] = 'Main' },
     ['treat2'] = { ['Name'] = 'Treat Staff II', ['Slot'] = 'Main' },
+    -- "purgo" here assumes race is tarutaru
     ['purgo']  = { ['Name'] = 'Wonder Top +1', ['Slot'] = 'Body' },
     ['rre']    = { ['Name'] = 'Reraise Earring', ['Slot'] = 'Ear' },
     ['rrg']    = { ['Name'] = 'Reraise Gorget', ['Slot'] = 'Neck' },
@@ -89,7 +90,7 @@ end     -- gear.fHasGCBeenRun
     Parameter
         args        Passed argument list
 
-    Form: /gc [list] [file[=name]\][+] [visible|invisible]
+    Form: /gc [list] [file[=name]\][+] [help]
 
     Note: The parameters are position independent. This means they can be in any order.
     "file" designates that the output should be written to a file in the \reports
@@ -108,54 +109,52 @@ function gear.ProcessGC(args)
     local bAppend = false;
     local bWarn = false;
 
-    if utilities.fCheckVisibility(gVars._GC,args) == false then
-        for _,j in pairs(args) do
-            j = string.lower(j);
-            if j ~= 'gc' then
-                if j == 'list' then
-                    bList = true;
-                elseif (j == '+') then
-                    bAppend = true;
-                elseif string.find(j,'file') ~= nil then
-                    bFile = true;
-                    sFile,bAppend = utilities.fParseFileDesignation(j);
-                    if sFile == nil then
-                        bWarn = true;
-                    end
-                else
-                    print(chat.message('Warning: Unrecognized /gc option: ' .. j));
+    for _,j in pairs(args) do
+        j = string.lower(j);
+        if j ~= 'gc' then
+            if j == 'list' then
+                bList = true;
+            elseif (j == '+') then
+                bAppend = true;
+            elseif string.find(j,'file') ~= nil then
+                bFile = true;
+                sFile,bAppend = utilities.fParseFileDesignation(j);
+                if sFile == nil then
                     bWarn = true;
                 end
+            else
+                print(chat.message('Warning: Unrecognized /gc option: ' .. j));
+                bWarn = true;
+            end
+        end
+    end
+
+    if bWarn == true then
+        print(chat.message('Info: /gc [list] [file[=name]][+]'));
+        print(chat.message('Info: Please fix and resubmit'));
+    else
+        if sFile ~= nil then
+            fptr = utilities.fOpenByFilename(sFile,bAppend);
+            if fptr == nil then
+                print(chat.message('Warning: Unable to open file: ' .. sFile));
+                print(chat.message('/gc output redirected to screen'));
             end
         end
 
-        if bWarn == true then
-            print(chat.message('Info: /gc [list] [file[=name]][+]'));
-            print(chat.message('Info: Please fix and resubmit'));
+        if bList == true then
+            reporting.GearCheckList(fptr);
         else
-            if sFile ~= nil then
-                fptr = utilities.fOpenByFilename(sFile,bAppend);
-                if fptr == nil then
-                    print(chat.message('Warning: Unable to open file: ' .. sFile));
-                    print(chat.message('/gc output redirected to screen'));
-                end
-            end
+            gear.GearCheck(fptr);
+            gVars.bGC = true;
+        end
 
-            if bList == true then
-                reporting.GearCheckList(fptr);
+        if fptr ~= nil then
+            if bAppend == true then
+                print(chat.message('Info: /GC output appended to '.. sFile));
             else
-                gear.GearCheck(fptr);
-                gVars.bGC = true;
+                print(chat.message('Info: /GC output written to '.. sFile));
             end
-
-            if fptr ~= nil then
-                if bAppend == true then
-                    print(chat.message('Info: /GC output appended to '.. sFile));
-                else
-                    print(chat.message('Info: /GC output written to '.. sFile));
-                end
-                io.close(fptr);
-            end
+            io.close(fptr);
         end
     end
 end     -- gear.ProcessGC
@@ -255,7 +254,7 @@ end		-- gear.ProcessGS
 --]]
 
 function gear.MoveToDynamicGS(tSet,tMaster,bIgnoreWSWAP,sSetname)
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local item = {};
     local ref = {};
     local ts = {};
@@ -263,7 +262,8 @@ function gear.MoveToDynamicGS(tSet,tMaster,bIgnoreWSWAP,sSetname)
     local ts2 = {};
     local root,sK,vRoot,stK,sRoot,tAffected;
     local bContinue,iNum,bGood,bSkip,bG;
-    local sGear,bIndexed;
+    local sGear,sName;
+    local bIndexed = false;
 
     if tSet == nil or tMaster == nil then       -- missing sets
         return;
@@ -277,6 +277,18 @@ function gear.MoveToDynamicGS(tSet,tMaster,bIgnoreWSWAP,sSetname)
     -- Make sure player's transition between zones is complete and that /gc has been run
     if player.MainJob == nil or player.MainJob == 'NON' or gear.fHasGCBeenRun() == false then
         return;
+    end
+
+    -- See if gear set name display wanted
+    if sSetname ~= nil then
+        sName = sSetname;
+    else
+        sName = 'composite';
+    end
+
+    if utilities.fGetToggle(gVars._SGS) == true and gProfile.system_settings.sLastSGS ~= sName then
+        print(chat.message('Info: Processing GS - ' .. sName));
+        gProfile.system_settings.sLastSGS = sName;
     end
 
     -- Make sure that the passed in set is a table and not just a name.
@@ -310,9 +322,9 @@ function gear.MoveToDynamicGS(tSet,tMaster,bIgnoreWSWAP,sSetname)
                 else
                     bIndexed = (v[1] ~= nil);
                     -- Walk the table
-                    for kk,vv in pairs(v) do
-                        if type(vv) == 'string' then
-                            bGood,vRoot = inline.fCheckInline(vv,'subset',tMaster,false,false,sSetname);
+                    for i=1,#v,1 do
+                        if type(v[i]) == 'string' then
+                            bGood,vRoot = inline.fCheckInline(v[i],'subset',tMaster,false,false,sSetname);
                             if bGood == true then
                                 gear.MoveToDynamicGS(vRoot,tMaster,bIgnoreWSWAP,sSetname);
                                 if bIndexed == false then
@@ -320,7 +332,7 @@ function gear.MoveToDynamicGS(tSet,tMaster,bIgnoreWSWAP,sSetname)
                                 end
                             end
                         else -- Assume an unindexed table
-                            for kkk,vvv in pairs(vv) do
+                            for kkk,vvv in pairs(v[i]) do
                                 bGood,vRoot = inline.fCheckInline(vvv,'subset',tMaster,false,false,sSetname);
                                 if bGood == true then
                                     gear.MoveToDynamicGS(vRoot,tMaster,bIgnoreWSWAP,sSetname);
@@ -358,7 +370,7 @@ function gear.MoveToDynamicGS(tSet,tMaster,bIgnoreWSWAP,sSetname)
         sK = string.lower(k);
 
         -- Make sure to ignore subsets and groups
-        if string.find(sK,'subset') == nil and  string.find(sK,'group') == nil then
+        if string.find(sK,'subset') == nil and string.find(sK,'group') == nil then
             local sTmp = utilities.fRemoveConditional(sK);
             -- Check for special case: Ears and Rings
             if string.find('ears,rings',sTmp) ~= nil then
@@ -454,7 +466,7 @@ end     -- gear.MoveToDynamicGS
 function CheckFillInEmpties(tSet)
     local current = gData.GetCurrentSet();
 
-    if gProfile.settings.PlayerCappedLevel == 0 then
+    if gProfile.system_settings.PlayerCappedLevel == 0 then
         return
     else
         -- Use lock list for complete list of slots
@@ -796,7 +808,7 @@ end		-- fParseDescription
 --]]
 
 function fParseDescriptionExceptions(rec,sGear,sDesc)
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local environ = gData.GetEnvironment();
     local bFound = true;
 
@@ -956,13 +968,13 @@ function fTallyGear(sGear,sSlot)
             sPiece = string.lower(jj.Name);
         end
 
-        if gcinclude.GearDetails[lcii][sPiece] ~= nil and
-           gcinclude.GearDetails[lcii][sPiece]['valid'] == true then
-            item = fParseDescription(sPiece,gcinclude.GearDetails[lcii][sPiece]['desc']);
+        if gVars.GearDetails[lcii][sPiece] ~= nil and
+           gVars.GearDetails[lcii][sPiece]['valid'] == true then
+            item = fParseDescription(sPiece,gVars.GearDetails[lcii][sPiece]['desc']);
 
             -- Now tally the parsed description, divided between visible and invisible,
             -- accordingly
-            if gcinclude.GearDetails[lcii]['vis'] == true then
+            if gVars.GearDetails[lcii]['vis'] == true then
                 sVis = 'visible';
             else
                 sVis = 'invisible';
@@ -975,7 +987,7 @@ function fTallyGear(sGear,sSlot)
             rec[sVis]['cHM'] = rec[sVis]['cHM'] + item['cHM'];
             rec[sVis]['cMH'] = rec[sVis]['cMH'] + item['cMH'];
 
-            local bOwn = (utilities.fGetCycle(gVars._REGION) == gVars._REGION_OWNED);
+            local bOwn = (gVars.sRegion == gVars._REGION_OWNED);
 
             if (item['own']['ctrl'] == 'T' and bOwn == true) or
                (item['own']['ctrl'] == 'F' and bOwn == false) then
@@ -1004,7 +1016,7 @@ end		-- fTallyGear
 --]]
 
 function gear.fValidateSpecial(sSlot,sGear)
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local rec = {};
     local gear;
     local bGood = false;
@@ -1105,12 +1117,10 @@ end     -- gear.fValidateSpecial
     Future: Just found out to empty a slot you designate 'empty' for the piece of gear.
         Obviously 'empty' will match any level and there's no gear check involved. Have
         to address this exception.
-
-        ** revise re: gs defs for SMG **
 --]]
 
 function fGearCheckItem(sSlot,sName,bAccess,gsname)
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local bJob,bAccessible,bSlot
     local lgsname = nil;
     local iPos;
@@ -1206,12 +1216,12 @@ function fGearCheckItem(sSlot,sName,bAccess,gsname)
 
         -- gsName can be nil if routine called from a list rather than a gear set. Skip it
         if gsName ~= nil then
-            if gVars.tGearsetDetails[gsName][sSlot] ==  nil or gVars.tGearsetDetails[gsName][sSlot]['items'] == nil then
-                gVars.tGearsetDetails[gsName][sSlot]['items'][1] = gVars.tGearDetails[sSlot][sName];
+            if gVars.tGearsetDetails[gsName][sSlot] == nil or gVars.tGearsetDetails[gsName][sSlot]['items'] == nil then
+                gVars.tGearsetDetails[gsName][sSlot]['items'][1] = sName;
             else
-                if utilities.fIsGearsetDetailsFound(gVars.tGearDetails[sSlot][sName],gVars.tGearsetDetails[gsName][sSlot]['items']) == false then
+                if utilities.fIsGearsetDetailsFound(sName,gVars.tGearsetDetails[gsName][sSlot]['items']) == false then
                     -- Add a new gear piece to the set's list for the current slot
-                    gVars.tGearsetDetails[gsName][sSlot]['items'][#gVars.tGearsetDetails+1] = gVars.tGearDetails[sSlot][sName];
+                    gVars.tGearsetDetails[gsName][sSlot]['items'][#gVars.tGearsetDetails+1] = sName;
                 end
             end
         end
@@ -1237,6 +1247,10 @@ end	-- fGearCheckItem
         sName   The name of the gear set
         gs      The gear set's definition
         ct      Item counter
+
+    Note: Enbedded subsets are skipped in this routine because they are processed on their own individually.
+    No reason to reprocess subsets, we already know their contents.
+
 --]]
 
 function GearCheckGS(sName,gs,ct)
@@ -1299,7 +1313,7 @@ end     -- GearCheckGS
 --]]
 
 function gear.GearCheck(fp)
-	local player = gData.GetPlayer();
+	local player = utilities.SetJob();
     local tTarget = { gProfile.Sets, crossjobs.Sets };
     local ts = {};
     local ref = {};
@@ -1423,6 +1437,11 @@ function gear.GearCheck(fp)
                     bGood,jj['NQ']['Ref'] = fGearCheckItem('main',jj['NQ']['Name'],false,nil);
                     bGood,jj['HQ']['Ref'] = fGearCheckItem('main',jj['HQ']['Name'],false,nil);
                     iCnt = iCnt + 2;
+                    -- Take care of any special cases found
+                    if jj['Special'] ~= nil then
+                        bGood,jj['Special']['Ref'] = fGearCheckItem('main',jj['Special']['Name'],false,nil);
+                        iCnt = iCnt + 1;
+                    end
                 end
                 utilities.ProcessedTally('sets',iCnt,50);
             end
@@ -1488,6 +1507,43 @@ function gear.TallyProgressiveCaps()
 end		-- gear.TallyProgressiveCaps
 
 --[[
+    fCheckForElementalBypassGear determines if the passed elemental gear
+    should be superceded by better gear. At the moment only the diabolos's
+    pole is checked for, but in the future other gear might also fall under
+    their behavior.
+--]]
+
+function fCheckForElementalBypassGear(sWhat,sElement)
+    local spell = gData.GetAction();
+
+
+    if spell == nil then
+        return nil,nil;
+    end
+
+    sElement = string.lower(sElement);
+    spell.Name = string.lower(spell.Name);
+
+    if sWhat == 'staff' then
+        -- The only known special case is for diabolos's pole. If dark
+        -- weather is present (dark or 2x dark) or voidstorm (SCH spell)
+        -- and the player owns a diabolos's pole and it's accessible
+        -- outside of town, and either drain or aspir is being cast, this
+        -- pole gets priority over an elemental staff.
+        if sElement == 'dark' and
+            (string.find(string.upper(environ.Weather),'DARK') ~= nil or
+             utilities.fBuffed('voidstorm',true)) and
+            (gVars.tElemental_gear['staff']['dark']['Special']['Ref'] ~= nil and
+             gVars.tElemental_gear['staff']['dark']['Special']['Ref']['owned'] == true and
+             gVars.tElemental_gear['staff']['dark']['Special']['Ref']['accessible'] == true) and
+            (string.find(spell.Name,'drain') ~= nil or string.find(spell.Name,'aspir') then
+            return 'diabolos\'s pole','dark';
+        end
+    end
+    return nil,nil;
+end     -- fCheckForElementalBypassGear
+
+--[[
     fCheckForElementalGearByValue is a generalized routine that searches to see
     if the targetted elemental gear should be equipped (assuming you own the
     piece and it's accessible.)
@@ -1502,7 +1558,7 @@ end		-- gear.TallyProgressiveCaps
 --]]
 
 function gear.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local sRoot,bGood,sTarget;
 
     -- Make sure locks won't block equipping the item
@@ -1533,18 +1589,20 @@ function gear.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
         sTarget = 'main';
     end
 
-    -- Then determine which gear is the appropriate one
+    -- Sometimes gear will override the need to use elemental gear under certain
+    -- circumstances.
+    sName,i = fCheckForElementalBypassGear(sWhat,sElement);
+    if sName ~= nil then
+        return sName,i;
+    end
+
+    -- Not special, now determine which gear is the appropriate one
     for i,j in pairs(gVars.tElemental_gear[sWhat]) do
         -- Looking for elemental entries. Ignore the rest
         if string.find(gVars._AllElements,i) ~= nil then
             -- Look for a match in the associated field
             if sWhat == 'staff' then
                 if table.find(gVars.tElemental_gear[sWhat][i][sWhich],sRoot) ~= nil then
-                    -- Make sure the link to the dynamic table is in place
-                    bGood,gVars.tElemental_gear[sWhat][i]['HQ']['Ref'] =
-                        fGearCheckItem(sTarget,gVars.tElemental_gear[sWhat][i]['HQ']['Name'],false,nil);
-                    bGood,gVars.tElemental_gear[sWhat][i]['NQ']['Ref'] =
-                        fGearCheckItem(sTarget,gVars.tElemental_gear[sWhat][i]['NQ']['Name'],false,nil);
                     -- Make sure ref in place before checking accessibility
                     if gVars.tElemental_gear[sWhat][i]['HQ']['Ref'] ~= nil and
                        gVars.tElemental_gear[sWhat][i]['HQ']['Ref']['accessible'] == true then
@@ -1557,11 +1615,6 @@ function gear.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
                     end
                 end
             elseif sWhat == 'obi' or sWhat == 'gorget' then
-                if table.find(gVars.tElemental_gear[sWhat][i][sWhich],sRoot) ~= nil then
-                    bGood,gVars.tElemental_gear[sWhat][i]['Ref'] =
-                        fGearCheckItem(sTarget,gVars.tElemental_gear[sWhat][i]['Name'],false,nil);
-                end
-
                 -- Then determine if there's an obi or gorget that matches
                 if gVars.tElemental_gear[sWhat][i]['Ref'] ~= nil and
                         gVars.tElemental_gear[sWhat][i]['Ref']['accessible'] == true then
@@ -1588,7 +1641,7 @@ end		-- gear.fCheckForElementalGearByValue
 
 function gear.fSwapToStave(sStave,noSave,cs)
     local ew = gData.GetEquipment();
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local msg = nil;
     local sGear;
     local eWeap = nil;
@@ -1895,87 +1948,6 @@ function gear.fGetSlotDefinition(ts,sSlot)
 end     -- gear.fGetSlotDefinition
 
 --[[
-	FractionalSet is similar to FractionalAccuracy in that is equips part of a
-	predefined set, but it's not based on accuracy. Instead, it's based on a
-	list of slots. (Note that only names are supported and not slot numbers.)
-	It creates a temporary set based on the specified slots and equips it.
---]]
-
-function gear.FractionalSet(hs,sSlots)
-	local i,t;
-	local tAcc = {};
-	local ts = {};
-	local bGood,vRoot;
-	local bFound = false;
-	local bSubset = false;
-
-	if hs == nil or sSlots == nil then
-		return;
-	end
-
-	sSlots = string.lower(sSlots);
-
-	if type(hs) == 'string' then
-		ts = utilities.fGetTableByName(hs);
-	else
-		ts = hs;
-	end
-
-	for j,k in pairs(ts) do
-		t = string.lower(j)
-		if t == 'subset' then
-			bSubset = true;
-		else
-			-- Since ears and rings are pseudo slots, if specified, make
-			-- sure to match with the actual slot names
-			if string.find(sSlots,'ear') ~= nil and
-				(t == 'ears' or t == 'ear1' or t == 'ear2') then
-					tAcc[j] = k;
-			elseif string.find(sSlots,'ring') ~= nil and
-				(t == 'rings' or t == 'ring1' or t == 'ring2') then
-					tAcc[j] = k;
-			-- at this point it's an exact match
-			elseif string.find(sSlots,t) ~= nil then
-				tAcc[j] = k;
-			end
-			if bFound == false then
-				-- This indicates there was a match copied and that the
-				-- temporary set will need to be moved to current
-				bFound = (tAcc[j] ~= nil);
-			end
-		end
-	end
-
-	if bFound == true then
-		gear.MoveToDynamicGS(tAcc,gProfile.Sets.CurrentGear,false,nil);
-	else
-		if bSubset == true then
-			for j,k in pairs(ts) do
-				t = string.lower(j)
-				if t == 'subset' then
-					for ji,ki in ipairs(k) do
-						if type(ki) == 'table' then
-							ts = ki;
-						else
-							ts[j] = ki;
-						end
-
-						-- Then determine the appropriate set to load
-						for kk,vv in pairs(ts) do
-							bGood,vRoot = inline.fCheckInline(vv,'subset');
-							if bGood == true then
-								gear.FractionalSet(vRoot,sSlots)
-								break;
-							end
-						end
-					end
-				end
-			end
-		end
-	end
-end	-- gear.FractionalSet
-
---[[
     fCheckForEleGear determines if the player has the piece of elemental gear
     indicated by type and if it is accessible
 
@@ -1988,7 +1960,7 @@ end	-- gear.FractionalSet
 --]]
 
 function gear.fCheckForEleGear(sType,sElement)
-    local player = gData.GetPlayer();
+    local player = utilities.SetJob();
     local bGood,slot;
 
     -- Make sure player job defined and download not transitioning

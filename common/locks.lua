@@ -316,19 +316,17 @@ end		-- locks.LockUnlock
         args		Passed argument list
 
     Invocation:
-        /lock [slot name|slot number[,...] ] [visible|invisible]
-        /unlock [all|list of slot names|list of slot numbers]
+        /lock [slot name|slot number[,...] ] [help]
+        /unlock [all|list of slot names|list of slot numbers] [help]
 --]]
 
 function locks.ProcessLocks(args)
     local slots = nil;
 
-    if utilities.fCheckVisibility(gVars._LOCKS,args) == false then
-        for i,j in pairs(args) do
-            j = string.lower(j);
-            if string.find('lock,unlock,visible,invisible',j) == nil then
-                slots = j;
-            end
+    for i,j in pairs(args) do
+        j = string.lower(j);
+        if string.find('lock,unlock',j) == nil then
+            slots = j;
         end
     end
 

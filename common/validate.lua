@@ -113,7 +113,7 @@ function lFlowControl(gs,pFile)
 				iPos = string.find(i,'//');
 				if iPos ~= nil then
 					sTmp = string.upper(string.sub(i,iPos,-1));
-					tGs = utilities.fMakeConditionalTable(sTmp);
+					tGs = utilities.fSplitStringByDelimiter(sTmp,'//');
 					ValidateGearSet(tGs,i,bLeft,bRight,pFile);
 				end
 			else
@@ -123,7 +123,7 @@ function lFlowControl(gs,pFile)
 					iPos = string.find(i,'//');
 					if iPos ~= nil then
 						sTmp = string.upper(string.sub(i,iPos,-1));
-						tGs = utilities.fMakeConditionalTable(sTmp);
+						tGs = utilities.fSplitStringByDelimiter(sTmp,'//');
 						lValidateConditionalList(tGs,j,bLeft,bRight,pFile);
 					end
 				end
