@@ -1,0 +1,51 @@
+- Added /SS (exclusive to THF.) When enabled, if the THF steals, a message will indicate they
+  did so, identifying the target and it's associated ID. If off, the steal happens without
+  a message.
+
+- Added /PULL. This will "pull" the target with a ranged attack or with a pet if you're a SMN,
+  BST, or PUP. A message identifying the name of the target and it's identifying ID is relayed
+  to the party. Added /SPF so that the message display can be turned on or off.
+
+- Fixed problem with /SMG displaying a set which contained a subset of multiple sets. It can
+  now handle one depth down. The following example now displays correctly:
+
+    ['Resting_Regen'] = {
+		Subset = {
+			[1] = {
+				'Damage_Taken_Breath//DT_BREATH',
+				'Damage_Taken_Magical//DT_MAGICAL',
+				'Damage_Taken_Physical//DT_PHYSICAL',
+			}
+		},
+        Waist = 'Hierarch Belt',		-- +2 HP/tick while resting
+    },
+
+  Alternatively you might be inclined to change that set to:
+
+		Subset = {
+			[1] = 'Damage_Taken_Breath//DT_BREATH',
+			[2] = 'Damage_Taken_Magical//DT_MAGICAL',
+			[3] = 'Damage_Taken_Physical//DT_PHYSICAL',
+			}
+		},
+        Waist = 'Hierarch Belt',		-- +2 HP/tick while resting
+    },
+
+  Because the three damage taken sets are mutually exclusive, this would have the same result,
+  although the processing is less efficient.
+
+- Changed Gate of Tartarus from an Ice to Dark elemental skill.
+
+- Changed slots affected on Mandragora Suit to Body, Hands, Legs, and Feet. Change needed due
+  to recent patch.
+
+- Changed Midcast on THF to see if target is a monster and TH enabled, it will now equip
+  TH gear.
+
+- Fixed an error in /gc if the character has no storage slips. It now prints "none".
+
+- Fixed small logic confusion when checking for national aketons, Ducal Aketon was uneffected.
+
+- Fixed error in routine that checked for an enchantment buff.
+
+= Added //ME inline. It checks to see if the target is the player.
