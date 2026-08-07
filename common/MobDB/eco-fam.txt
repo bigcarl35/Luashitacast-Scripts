@@ -1,0 +1,204 @@
+    This is a list of all monsters families broken out by their respective eco systems. Only eco systems/families listed here are used in the MobDB lua files associated with each zone, in Luashitacast.
+
+amorphs
+    botuli
+    flans
+    hecteyes
+    leeches
+    slimes
+    worms
+
+aquans
+    crabs
+    orobons
+    pterakos
+    pugils
+    sea monks
+    toads
+    urganites
+
+arcana
+    acroliths
+    avatars
+    bombs
+    cardians
+    caturae
+    clusters
+    dolls
+    evil weapons
+    golems
+    grimoires
+    khimairas
+    magic pots
+    mammets
+    mimics
+    snolls
+    spheroids
+
+archaia
+    chariots
+    gears
+    ramparts
+
+archaic machines
+    iron giants
+
+beasts
+    behemoths
+    buffaloes
+    cerberuses
+    coeurls
+    dhamels
+    manticores
+    marids
+    opo-opos
+    rabbits
+    rams
+    sheep
+    tigers
+    yztargs
+
+beastsmen
+    antica
+    bugbears
+    gigas
+    goblins
+    lamia
+    mamool ja
+    moblins
+    moogles
+    orcish warmachines
+    orcs
+    poroggos
+    qiqirns
+    quadav
+    sahagin
+    shadow lords
+    tonberries
+    trolls
+    yagudo
+
+birds
+    apkallu
+    bat trios
+    bats
+    birds
+    cockatrices
+    colibris
+    harpeia
+    hyppogryphs
+    rocs
+
+demons
+    ahriman
+    demons
+    dvergrs
+    gallus
+    gargouille
+    imps
+    kindred
+    puks
+    soulflayers
+    tauri
+
+dragons
+    dragons
+    hydras
+    puks
+    wyrms
+    wyverns
+    zilant
+
+elementals
+    elementals
+    pixies
+
+empties
+    cravers
+    gorgers
+    receptacles
+    seethers
+    thinkers
+    wanderers
+    weepers
+
+humanoids
+    elvaan
+    galka
+    humes
+    mithra
+    tarutaru
+    zilart
+
+lizards
+    adamantoises
+    bugards
+    efts
+    lizards
+    rapters
+    wivres
+
+luminians
+    aerns
+    euvhi
+    ghrahs
+    hpemde
+    phuabo
+    xzomits
+    yovra
+    zdei
+
+plantoids
+    belladonnas
+    flytraps
+    funguars
+    goobues
+    mandragoras
+    morbols
+    rafflesias
+    sabotenders
+    saplings
+    treants
+
+structures
+    structures
+
+unclassified
+    animated weapons
+    automatons
+    avatars
+    biotechnological weapons
+    living crystals
+    mines
+    monsters
+    replicas
+    supreme beings
+    unknowns
+
+undead
+    corpslights
+    corses
+    doomsundead
+    fomors
+    ghosts
+    hounds
+    naraka
+    qutrubs
+    shadows
+    skeletons
+    vampyrs
+
+vermin
+    antlions
+    bees
+    beetles
+    chigoes
+    crawlers
+    diremites
+    flies
+    gnats
+    mantids
+    scorpions
+    spiders
+    wamouras
+    wamouracampa

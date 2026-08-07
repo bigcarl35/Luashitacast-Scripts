@@ -1,0 +1,33 @@
+--Zone: Riverne - Site #B01
+--Zone ID: 29
+return {
+    Names = {
+        ['Air Elemental'] = { Name='Air Elemental', Ecosystem='elementals', Family='elementals'},
+        ['Airi'] = { Name='Airi', Ecosystem='undead', Family='ghosts'},
+        ['Bahamut'] = { Name='Bahamut', Ecosystem='unclassified', Family='avatars'},
+        ['Blazedrake'] = { Name='Blazedrake', Ecosystem='dragons', Family='wyverns'},
+        ['Book Browser Bokabraq'] = { Name='Book Browser Bokabraq', Ecosystem='beastmen', Family='moblins'},
+        ['Boroka'] = { Name='Boroka', Ecosystem='birds', Family='hipppogryphs'},
+        ['Chemical Cook Chemachiq'] = { Name='Chemical Cook Chemachiq', Ecosystem='beastmen', Family='moblins'},
+        ['Earth Elemental'] = { Name='Earth Elemental', Ecosystem='elementals', Family='elementals'},
+        ['Ignidrake'] = { Name='Ignidrake', Ecosystem='dragons', Family='wyverns'},
+        ['Imdugud'] = { Name='Imdugud', Ecosystem='birds', Family='hipppogryphs'},
+        ['Iruci'] = { Name='Iruci', Ecosystem='undead', Family='skeletons'},
+        ['Jormungand'] = { Name='Jormungand', Ecosystem='dragons', Family='wyrms'},
+        ['Lesser Roc'] = { Name='Lesser Roc', Ecosystem='birds', Family='rocs'},
+        ['Lunantishee'] = { Name='Lunantishee', Ecosystem='plantoids', Family='morbols'},
+        ['Nimbus Hippogryph'] = { Name='Nimbus Hippogryph', Ecosystem='birds', Family='hipppogryphs'},
+        ['Nitro Cluster'] = { Name='Nitro Cluster', Ecosystem='arcana', Family='clusters'},
+        ['Ouryu'] = { Name='Ouryu', Ecosystem='dragons', Family='wyrms'},
+        ['Pey'] = { Name='Pey', Ecosystem='undead', Family='skeletons'},
+        ['Pyrodrake'] = { Name='Pyrodrake', Ecosystem='dragons', Family='wyverns'},
+        ['Spell Spitter Spilospok'] = { Name='Spell Spitter Spilospok', Ecosystem='beastmen', Family='moblins'},
+        ['Strato Hippogryph'] = { Name='Strato Hippogryph', Ecosystem='birds', Family='hipppogryphs'},
+        ['Thunder Elemental'] = { Name='Thunder Elemental', Ecosystem='elementals', Family='elementals'},
+        ['Tiamat'] = { Name='Tiamat', Ecosystem='dragons', Family='wyrms'},
+        ['Unstable Cluster'] = { Name='Unstable Cluster', Ecosystem='arcana', Family='clusters'},
+        ['Vrtra'] = { Name='Vrtra', Ecosystem='dragons', Family='wyrms'},
+        ['Water Elemental'] = { Name='Water Elemental', Ecosystem='elementals', Family='elementals'},
+        ['Ziryu'] = { Name='Ziryu', Ecosystem='amorphs', Family='worms'},
+    },
+};
