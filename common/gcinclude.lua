@@ -4,7 +4,7 @@ require 'common'
 
 version = { ['author']	= 'Paiine',
  		    ['name']	= 'Luashitacast (Karma)',
-			['version']	= '1.5.8' };
+			['version']	= '1.5.8.1' };
 	
 --[[
 	This file contains routines that are used with Luashitacast across any supported job.
@@ -153,9 +153,9 @@ gcinclude.SlotNames = { 'subset','main','sub','range','ammo','head',
 
 gcinclude.tWeaponSkills = {
 	['CHR']    = { 'shadowstitch' },
-	['DEX']    = { 'wasp sting', 'viper bite', 'blade: metsu', 'dancing edge' },
+	['DEX']    = { 'wasp sting', 'viper bite', 'blade: metsu' },
 	['DEXAGI'] = { 'shark bite', 'coronach' },
-	['DEXCHR'] = { 'eviseration' },
+	['DEXCHR'] = { 'eviseration', 'dancing edge' },
 	['DEXINT'] = { 'gust slash', 'cyclone' },
 	['INT']    = { 'gate of tartarus' },
 	['INTMND'] = { 'spirit taker' },
@@ -409,7 +409,8 @@ gcinclude.tElemental_gear = T{
 				['HQ'] = { ['Name'] = 'Vulcan\'s staff', ['Ref'] = {} }, 
 				['Affinity'] = { 'blaze','burn','firaga','fire','flare','enfire','katon' },
 				['SongAffinity'] = { 'ice threnody' },
-				['Summons'] = { 'ifrit','fire spirit','firespirit','fire' }
+				['Summons'] = { 'ifrit','fire spirit','firespirit','fire' },
+				['Nuke'] = { 'firaga','fire','flare' },
 			},
 			['ice'] = {
 				['Weak'] = 'fire',
@@ -418,6 +419,7 @@ gcinclude.tElemental_gear = T{
 				['Affinity'] = { 'blizzaga','blizzard','freeze','frost','ice','enblizzard','jubaku','hyoton','bind','distract','paralyze' },
 				['SongAffinity'] = { 'wind threnody' },
 				['Summons'] = { 'shiva','ice spirit','icespirit','ice' },
+				['Nuke'] = { 'blizzaga','blizzard','freeze' },
 			},
 			['wind'] = {
 				['Weak'] = 'ice',
@@ -426,6 +428,7 @@ gcinclude.tElemental_gear = T{
 				['Affinity'] = { 'aero','aeroga','choke','tornado','enaero','huton','gravity','silence' },
 				['SongAffinity'] = { 'earth threnody' },
 				['Summons'] = { 'garuda','air spirit','airspirit','air','siren' },
+				['Nuke'] = { 'aero','aeroga','tornado' },
 			},
 			['earth'] = { 
 				['Weak'] = 'wind',
@@ -434,6 +437,7 @@ gcinclude.tElemental_gear = T{
 				['Affinity'] = { 'quake','rasp','stone','stonega','enstone','hojo','doton','slow' },
 				['SongAffinity'] = { 'lightning threnody', 'battlefield elegy', 'carnage elegy' },
 				['Summons'] = {'titan','earth spirit','earthspirit','earth' },
+				['Nuke'] = { 'quake','stone','stonega' },
 			},
 			['thunder'] = {
 				['Weak'] = 'earth',
@@ -442,6 +446,7 @@ gcinclude.tElemental_gear = T{
 				['Affinity'] = { 'burst','shock','thundaga','thunder','enthunder','raiton' },
 				['SongAffinity'] = { 'water threnody' },
 				['Summons'] = { 'ramuh','thunder spirit','thunderspirit','thunder' },
+				['Nuke'] = { 'burst','thundaga','thunder' },
 			},
 			['water'] = {
 				['Weak'] = 'thunder',
@@ -450,6 +455,7 @@ gcinclude.tElemental_gear = T{
 				['Affinity'] = { 'drown','flood','poison','poisonga','water','waterga','enwater','dokumori','suiton' },
 				['SongAffinity'] = { 'fire threnody' },
 				['Summons'] = { 'leviathan','water spirit','waterspirit','water' },
+				['Nuke'] = { 'flood','water','waterga' },
 			},
 			['light'] = { 
 				['Weak'] = 'dark',
@@ -458,6 +464,7 @@ gcinclude.tElemental_gear = T{
 				['Affinity'] = { 'banish','banishga','curaga','cure','dia','diaga','flash','holy','enlight','repose','inundation' },
 				['SongAffinity'] = { 'dark threnody', 'foe requiem', 'foe requiem ii', 'foe requiem iii', 'foe requiem iv', 'foe requiem v', 'foe requiem vi', 'foe lullaby', 'horde lullaby', 'magic finale', 'maiden\'s virelai' },
 				['Summons'] = {'carbuncle','light spirit','lightspirit','light','cait sith','caitsith','alexander'},
+				['Nuke'] = nil,
 			},
 			['dark'] = {
 				['Weak'] = 'light',
@@ -466,6 +473,7 @@ gcinclude.tElemental_gear = T{
 				['Affinity'] = { 'absorb','aspir','blind','bio','dispel','drain','dread','frazzle','sleep','sleepga','endark','kurayami' },
 				['SongAffinity'] = { 'light threnody' },
 				['Summons'] = { 'fenrir','diabolos','dark spirit','darkspirit','dark','atomos','odin' },
+				['Nuke'] = nil,
 			},
 		},
 		['obi'] = {
@@ -1069,6 +1077,7 @@ gcinclude.EQUIPABLE = {
 			gcinclude.STORAGES[1],		-- Inventory
 			gcinclude.STORAGES[9],		-- Wardrobe
 			gcinclude.STORAGES[11],		-- Wardrobe 2
+			gcinclude.STORAGES[12],		-- Wardrobe 3
 			gcinclude.STORAGES[17]		-- Wardrobe 8
 };
 
@@ -1076,13 +1085,15 @@ gcinclude.EQUIPABLE_LIST = {
 			gcinclude.STORAGES[1]['id'],	-- Inventory
 			gcinclude.STORAGES[9]['id'],	-- Wardrobe
 			gcinclude.STORAGES[11]['id'],	-- Wardrobe 2
+			gcinclude.STORAGES[12]['id'],	-- Wardrobe 3
 			gcinclude.STORAGES[17]['id']	-- Wardrobe 8
 };
 			
 gcinclude.EQUIPABLE_NONHOLIDAY = {
 			gcinclude.STORAGES[1],		-- Inventory
 			gcinclude.STORAGES[9],		-- Wardrobe
-			gcinclude.STORAGES[11]		-- Wardrobe 2
+			gcinclude.STORAGES[11],		-- Wardrobe 2
+			gcinclude.STORAGES[12],		-- Wardrobe 3
 };
 
 gcinclude.NON_GEAR = {
@@ -3839,7 +3850,7 @@ function fCheckItemOwned(gear)
 					elseif string.find(tOwned['locations'],','..desc['name']..',') == nil then
 						tOwned['locations'] = tOwned['locations'] .. desc['name'] .. ',';
 					end
-					if table.find(gcinclude.EQUIPABLE_LIST,desc['id']) then
+					if table.find(gcinclude.EQUIPABLE_LIST,desc['id']) ~= nil then
 						tOwned['accessible'] = true;
 					end
 				end
@@ -4632,12 +4643,102 @@ function RegionControlDisplay()
 end		-- RegionControlDisplay
 
 function gcinclude.t1(args)
+	local eq = gData.GetEquipment();
+
+	local t = {
+		[0] = 'None', [1] = 'H2H', [2] = 'Dagger', [3] = 'Sword', [4] = 'Great Sword', [5] = 'Axe', [6] = 'Great Axe',
+		[7] = 'Scythe', [8] = 'Polearm', [9] = 'Katana', [10] = 'Great Katana', [11] = 'Club', [12] = 'Staff',
+		[25] = 'Bow', [26] = 'Marksmanship', [27] = 'Throwing'
+	};
+
+	if eq.Main ~= nil and eq.Main.Name ~= nil then
+		local rMain = AshitaCore:GetResourceManager():GetItemByName(eq.Main.Name, 0);
+
+		if rMain and rMain.Skill then
+			local w = rMain.Skill;
+
+			if w ~= nil and t[w] ~= nil then
+				print('Main slot contains: ' .. t[w].. ' (' .. eq.Main.Name .. ')');
+			elseif w ~= nil then
+				print('Main slot contains: Unknown, ' .. tostring(w));
+			else
+				print('Main slot is either empty or not a weapon');
+			end
+		else
+			print('Main slot is probably empty');
+		end
+	else
+		print('Main slot is empty');
+	end
+
+	-- Sub is different. Look for a shield before looking for a weapon
+	if eq.Sub ~= nil and eq.Sub.Name ~= nil then
+		local rSub = AshitaCore:GetResourceManager():GetItemByName(eq.Sub.Name, 0);
+
+		if rSub and rSub.Type == 4 then
+			print('Sub slot contains: shield (' .. eq.Sub.Name .. ')');
+		else
+			local w = rSub.Skill;
+
+			if w ~= nil and t[w] ~= nil then
+				print('Sub slot contains: ' .. t[w] .. ' (' .. eq.Sub.Name .. ')');
+			elseif w ~= nil then
+				print('Sub slot contains: Unknown, ' .. tostring(w));
+			else
+				print('Sub slot is probably empty');
+			end
+		end
+	else
+		print('Sub slot is empty');
+	end
+
+	if eq.Range ~= nil and eq.Range.Name ~= nil then
+		local rRange = AshitaCore:GetResourceManager():GetItemByName(eq.Range.Name, 0);
+
+		if rRange and rRange.Skill then
+			local w = rRange.Skill;
+
+			if t[w] ~= nil then
+				print('Range slot contains: ' .. t[w] .. ' (' .. eq.Range.Name .. ')');
+			elseif w ~= nil then
+				print('Range slot contains: Unknown, ' .. tostring(w));
+			else
+				print('Range slot is either empty or not a weapon');
+			end
+		else
+			print('Range slot is probably empty');
+		end
+	else
+		print('Range slot is empty');
+	end
+
+	if eq.Ammo ~= nil and eq.Ammo.Name ~= nil then
+		local rAmmo = AshitaCore:GetResourceManager():GetItemByName(eq.Ammo.Name, 0);
+		if rAmmo and rAmmo.Skill then
+			local w = rAmmo.Skill;
+
+			if t[w] ~= nil then
+				print('Ammo slot contains: ' .. t[w] .. ' (' .. eq.Ammo.Name .. ')');
+			elseif w ~= nil then
+				print('Ammo slot contains: Unknown, ' .. tostring(w));
+			else
+				print('Ammo slot is either empty or not a weapon');
+			end
+		else
+			print('Ammo slot is probably empty');
+		end
+	else
+		print('Ammo slot is empty');
+	end
+
+--[[
 	local targetIndex = gData.GetTargetIndex();
 	local tEntity = gData.GetEntity(targetIndex);
 
 	if tEntity.Name ~= nil then
 		print(chat.message(string.format('%s: %s',tEntity.Name,tEntity.Type)));
 	end
+--]]
 end
 
 --[[
