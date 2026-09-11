@@ -4,7 +4,7 @@
 	This file contains all the gear sets associated with the SMN job.
 	
 	Gear Sets last updated: July 9, 2026
-	Code update: July 30, 2026
+	Code update: August 16, 2026
 
 	Intended Role: All Levels
 --]]
@@ -1359,10 +1359,101 @@ local sets = {
 	},
 
 --[[
-	Blue Magic: Until the release of Treasures of Aht Urghan is close to a 
-	release, there's no point in fleshing this out, especially since this job
-	is being majorly altered.
+	***********************
+	* Midcast: Blue Magic *
+	***********************
+--]]
 
+	-- rBlue_Magic_Skill specifies gear that boosts Blue Magic
+	['rBlue_Magic_Skill'] = {
+	},
+
+--[[
+	With the advent of grouping all the variations for Blue Mage midcast
+	are supported in one gear set. Whether the spell is an attack, buff,
+	debuff, utility, etc, this set handles it all. Since Blue Magic can
+	only be cast as a subjob in the SMN job file, what this set handles
+	is restricted to level 37.
+
+	Note: the following spells I had to get the details about from
+	FFXIclopedia.com since the HorizonXI wiki didn't list the details
+	yet. When they do I will update things accordingly.
+
+	Spells: Empty Thrash,Digest,and Pinecomb Bomb
+--]]
+	['BLU_Midcast'] = {
+		SUBSET = 'rBlue_Magic_Skill',
+		['GROUP//BLU_PHYSICAL'] = {
+			-- This area is for all physical spells. It emphasizes Attack Power and Accuracy. Within each physical section
+			-- spells that have the same WSC are grouped together.
+			SUBSET = 'rAttackPower',
+			['GROUP//SPELL:feather storm,helldive,wild oats'] = {
+				-- WSC emphasizes AGI
+			},
+			['GROUP//SPELL:claw cyclone,sickle slash,vanity dive'] = {
+				-- WSC emphasizes DEX
+			},
+			['GROUP//SPELL:queasyshroom'] = {
+				-- WSC emphasizes INT
+			},
+			['GROUP//SPELL:battle dance,empty thrash'] = {
+				-- WSC emphasizes STR
+			},
+			['GROUP//SPELL:pinecomb bomb'] = {
+				-- WSC emphasizes 20% STR and 20% AGI
+			},
+			['GROUP//SPELL:smite of rage'] = {
+				-- WSC emphasizes 20% STR and 20% DEX
+			},
+			['GROUP//SPELL:foot kick'] = {
+				-- WSC emphasizes 10% STR and 10% DEX
+			},
+			['GROUP//SPELL:head butt'] = {
+				-- WSC emphasizes 20% STR and 20% INT
+			},
+			['GROUP//SPELL:screwdriver'] = {
+				-- WSC emphasizes 20% STR and 20% MND
+			},
+			['GROUP//SPELL:grand slam,power attack,sprout smack'] = {
+				-- WSC emphasizes VIT
+			},
+		},
+		['GROUP//BLU_MAGICAL'] = {
+			-- This section is for magical BLU spells that are unable to take advantage of things like MAB,
+			-- Day/Weather affinity, etc.  Within each magical section spells that have the same WSC are
+			-- grouped together
+			['GROUP//SPELL:poison breath'] = {
+				-- WSC emphasizes HP
+			},
+			['GROUP//SPELL:blood saber,chaotic eye,occulation,refueling,sound blast'] = {
+				-- No stat emphasizes for WSC
+			},
+		},
+		['GROUP//BLU_MAGICAL_ELE'] = {
+			-- This section is for BLU magical spells that take advantage of MAB, Day/Weather affinity, etc.
+			-- Within each magical section spells that have the same WSC are grouped together.
+			-- Note: INT does not affect accuracy of Blood Drain or Digest
+			['GROUP//SPELL:blastbomb,bomb toss,cursed sphere,sandspin'] = {
+				-- WSC emphasizes INT
+			},
+			['GROUP//SPELL:blood drain,death ray,digest'] = {
+				-- No stat emphasizes for WSC
+				-- Note: INT does not affect accuracy of Blood Drain or Digest
+			},
+		},
+		['GROUP//BLU_HEALING'] = {
+			['GROUP//SPELL:healing breeze,pollen,wild carrot'] = {
+				-- No stat emphasizes for WSC, but MND, VIT, and Healing Magic Skill affects potency
+			},
+		},
+		['GROUP//BLU_UTILITY'] = {
+			['GROUP//SPELL:cocoon,metallic body,sheep song,soporific'] = {
+				-- No stat emphasizes for WSC
+			},
+		},
+	},
+
+--[[
 	Geomancy Magic: Until the release of Seekers of Adoulin is close to a 
 	reality, there's no point in fleshing this out.
 --]]
@@ -1722,8 +1813,10 @@ local sets = {
 		['GROUP//JA:HIGH_JUMP'] = {
 		},
 		-- /COR abilities
-		-- Summoner's can't use guns, quick Draw and dice are not supported
-		['GROUP//JA:RANDOM_DEAL'] = {
+		['GROUP//JA:PHANTOM_ROLL'] = {
+			-- ['GROUP//PR:xxx,...'] = {},	-- If you want to equip gear for a specific phantom roll
+		},
+		['GROUP//JA:DOUBLE-UP'] = {
 		},
 		-- /BLU abilities
 		['GROUP//JA:BURST_AFFINITY'] = {
@@ -1731,11 +1824,7 @@ local sets = {
 		-- /PUP abilities
 		['GROUP//JA:ACTIVATE'] = {
 		},
-		['GROUP//JA:DEUX_EX_AUTOMATA'] = {
-		},
 		['GROUP//JA:REPAIR'] = {
-		},
-		['GROUP//JA:MAINTENANCE'] = {
 		},
 		-- /SCH abilities
 		['GROUP//JA:LIGHT_ARTS'] = {
@@ -1951,7 +2040,7 @@ local sets = {
 --]]
 
 -- Load gVars to define most globals and the individual modules
-gVars = gFunc.LoadFile('common\\gVars.lua');
+	gVars = gFunc.LoadFile('common\\gVars.lua');
 
 -- The following structure contains settings that are controlled by the program.
 --
@@ -1983,6 +2072,10 @@ profile.system_settings = {
 -- # PLAYER CAN MODIFY SETTINGS IN STRUCTURE #
 -- ###########################################
 profile.settings = {
+	-- MobDB_Path defines where the MobDB files can be found. Note that capitalization tends to be
+	-- more important in Linux than in Windows. The install path, what is found before the "config"
+	-- will automatically be gotten from the FFXI launcher.
+	MobDB_Path = 'config/addons/luAshitacast/common/MobDB/';
 	defaultSpirit = 'Light Spirit',		-- for /911, what default spirit should be used
 	defaultPetFood = nil;				-- What (if any) pet food to use when Reward processed
 	petName = nil;						-- Leave nil for SMN. Defines pet name for DRG and PUP
@@ -2248,7 +2341,7 @@ end		-- SetSubjobSet
 --]]
 
 function profile.OnLoad()
-	local player = utilities.SetJob();
+	local player = gData.GetPlayer();
 
 	-- Initialize settings
 	gSettings.AllowAddSet = true;
@@ -2329,7 +2422,7 @@ function HandlePetAction(PetAction)
 
 		if (profile.system_settings.sPetAction == nil or profile.system_settings.sPetAction ~= PetAction.Name) and
 		   utilities.fGetToggle('sBP') == true then
-			if sType == gVars._Rage or sType == gVars._WARD then
+			if sType == gVars._RAGE or sType == gVars._WARD then
 				sMsg = '/p [<pet>] Blood Pact[' .. sType .. ']: ' .. PetAction.Name .. ' >> <t>.';
 				AshitaCore:GetChatManager():QueueCommand(-1, sMsg);
 			end
@@ -2356,11 +2449,11 @@ end		-- HandlePetAction
 function profile.HandleDefault()
 	local pet = gData.GetPet();
 	local petAction = gData.GetPetAction();
-	local player = utilities.SetJob();
+	local player = gData.GetPlayer();
 	local zone = gData.GetEnvironment();
 	local ew = gData.GetEquipment();
-	local bSA = utilities.fBuffed('Sneak Attack');
-	local bTA = utilities.fBuffed('Trick Attack');
+	local bSA = buff_manager.has('SNEAK_ATTACK');
+	local bTA = buff_manager.had('TRICK_ATTACK');
 	local eWeap = nil;
 	local bIgnoreLocks = false;
 	local bOverride = false;
@@ -2507,7 +2600,7 @@ end		-- HandleDefault
 
 function profile.HandleAbility()
 	local ability = gData.GetAction();
-	local player = utilities.SetJob();
+	local player = gData.GetPlayer();
 	local sj = player.SubJob;
 	
 	-- Make sure the data download is done
