@@ -212,7 +212,7 @@ end		-- crossjobs.t1
 --]]
 
 function crossjobs.SetVariables(bRefresh)
-	local player = utilities.SetJob();
+	local player = gData.GetPlayer();
 
 	if bRefresh == nil then
 		bRefresh = false;
@@ -396,7 +396,7 @@ end		-- crossjobs.SetVariables
 	Invocation: 	/acc [#|MAX] [help]
 --]]
 
-function ProcessAccuracy(args)
+local function ProcessAccuracy(args)
 	local bTank = utilities.fGetToggle(gVars._TANK);
 	local tmp,narg;
 	local num = 0;		-- 0 means turn off that type of accuracy
@@ -479,8 +479,8 @@ end		-- ProcessAccuracy
 	Invocation: /cap [#] {help}
 --]]
 
-function ProcessCap(args);
-	local player = utilities.SetJob();
+local function ProcessCap(args);
+	local player = gData.GetPlayer();
 	local ss;
 
 	-- Find the cap number
@@ -514,7 +514,7 @@ end		-- ProcessCap
 	Invocation: /cc[#] [help]
 --]]
 
-function ProcessCC(args)
+local function ProcessCC(args)
 
 	if args[1] == 'cc' then
 		reporting.DisplayCC();
@@ -535,7 +535,7 @@ end		-- ProcessCC
 	Invocation: /dt [M|B|P|O] [help]
 --]]
 
-function ProcessDT(args)
+local function ProcessDT(args)
 	local bFound = false;
 
 	for i,j in pairs(args) do
@@ -572,8 +572,8 @@ end		-- ProcessDT
 				/string [help]
 --]]
 
-function ProcessHornString(args)
-	local player = utilities.SetJob();
+local function ProcessHornString(args)
+	local player = gData.GetPlayer();
 	local bFound = false;
 
 	if player.MainJob == 'BRD' then
@@ -602,8 +602,8 @@ end		-- ProcessHornString
 	Invocation: /mode [PERP|ATTK|ENMM] [help]
 --]]
 
-function ProcessMode(args)
-	local player = utilities.SetJob();
+local function ProcessMode(args)
+	local player = gData.GetPlayer();
 	local u2;
 
 	if player.MainJob == 'SMN' or player.SubJob == 'SMN' then
@@ -640,8 +640,8 @@ end		-- ProcessMode
 	weapons to be equipped
 --]]
 
-function ProcessSW()
-	local player = utilities.SetJob();
+local function ProcessSW()
+	local player = gData.GetPlayer();
 
 	utilities.ClearSet(crossjobs.Sets.CurrentGear);
 	gear.MoveToDynamicGS(gProfile.Sets.Start_Weapons,crossjobs.Sets.CurrentGear,false,'Start_Weapons');
@@ -654,7 +654,7 @@ end		-- ProcessSW
 	Form: WSDISTANCE [#] [help]
 --]]
 
-function ProcessWSDISTANCE(args)
+local function ProcessWSDISTANCE(args)
 
 	if args[2] ~= nil then
 		gProfile.settings.WScheck = true;
@@ -696,8 +696,8 @@ end		-- ProcessWSDISTANCE
 		/wswap [help]
 --]]
 
-function ProcessToggle(args,id,job,bSJ,bMagic)
-	local player = utilities.SetJob();
+local function ProcessToggle(args,id,job,bSJ,bMagic)
+	local player = gData.GetPlayer();
 
 	if bSJ == nil then
 		bSJ = false;
@@ -731,7 +731,7 @@ end		-- ProcessToggle
 	Invocation: /db [BPP|WSS] [help]
 --]]
 
-function ProcessDB(args)
+local function ProcessDB(args)
 	local s = nil;
 
 	if player.MainJob == 'BST' then
@@ -763,7 +763,7 @@ end		-- ProcessDB
 	Invocation: /dbar [show] [bar=i|v] [vis=[all|none|name,name,...] ] [invis=[all|none|name,name,...] ] [save|reset] [file[=name] ][+]
 --]]
 
-function ProcessDBar(args)
+local function ProcessDBar(args)
 	local bShow = false;
 	local sVis,sInvis,iPos,sFile,sBar;
 	local bAppend = false;
@@ -853,7 +853,7 @@ end		-- ProcessDBar
 --]]
 
 function crossjobs.HandleCommands(args)
-	local player = utilities.SetJob();
+	local player = gData.GetPlayer();
 	local bTank = utilities.fGetToggle(gVars._TANK);
 	local sList, sKey, sSet;
 
@@ -915,7 +915,7 @@ function crossjobs.HandleCommands(args)
 		-- /KITE, Turns on/off whether movement gear is equipped
 		ProcessToggle(args,gVars._KITE,nil,false,false);
 	elseif args[1] == 'lachelp' then
-		-- /LACKHELP, Shows the help system, either a list of valid commands or details on a specific command
+		-- /LACHELP, Shows the help system, either a list of valid commands or details on a specific command
 		help.ShowHelp(args);	-- needs more work
 	elseif string.find('lock,unlock',args[1]) ~= nil then
 		-- /LOCK, Lock/unlock gear slots
@@ -998,7 +998,7 @@ end		-- crossjobs.HandleCommands
 --]]
 
 function crossjobs.HandleAbility()
-	local player = utilities.SetJob();
+	local player = gData.GetPlayer();
 	local ability = gData.GetAction();
 	local eq = gData.GetEquipment();
 	local n,ts,bValid;

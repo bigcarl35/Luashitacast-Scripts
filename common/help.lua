@@ -13,7 +13,7 @@ local help = {};
 --]]
 
 function help.ShowHelp(sWhich)
-	local player = utilities.SetJob();
+	local player = gData.GetPlayer();
 
     if sWhich ~= nil then
         ShowHelpFor(sWhich);

@@ -254,7 +254,7 @@ end		-- gear.ProcessGS
 --]]
 
 function gear.MoveToDynamicGS(tSet,tMaster,bIgnoreWSWAP,sSetname)
-    local player = utilities.SetJob();
+    local player = gData.GetPlayer();
     local item = {};
     local ref = {};
     local ts = {};
@@ -603,7 +603,7 @@ function gear.CheckForExceptions(tSet)
     local sList = nil;
     local cgear = gData.GetEquipment();
 
-    if utilities.fBuffed('Enchantment',true) == true then
+    if buff_manager.has('ENCHANTMENT') == true then
         -- If 'High Brth. Mantle' enchantment going, keep equipped
         if cgear.Back ~= nil and tSet['Back'] ~= nil then
             if cgear.Back.Name == 'High Brth. Mantle' and tSet['Back'] ~= 'High Brth. Mantle' then
@@ -808,7 +808,7 @@ end		-- fParseDescription
 --]]
 
 function fParseDescriptionExceptions(rec,sGear,sDesc)
-    local player = utilities.SetJob();
+    local player = gData.GetPlayer();
     local environ = gData.GetEnvironment();
     local bFound = true;
 
@@ -1016,7 +1016,7 @@ end		-- fTallyGear
 --]]
 
 function gear.fValidateSpecial(sSlot,sGear)
-    local player = utilities.SetJob();
+    local player = gData.GetPlayer();
     local rec = {};
     local gear;
     local bGood = false;
@@ -1120,7 +1120,7 @@ end     -- gear.fValidateSpecial
 --]]
 
 function fGearCheckItem(sSlot,sName,bAccess,gsname)
-    local player = utilities.SetJob();
+    local player = gData.GetPlayer();
     local bJob,bAccessible,bSlot
     local lgsname = nil;
     local iPos;
@@ -1313,7 +1313,7 @@ end     -- GearCheckGS
 --]]
 
 function gear.GearCheck(fp)
-	local player = utilities.SetJob();
+	local player = gData.GetPlayer();
     local tTarget = { gProfile.Sets, crossjobs.Sets };
     local ts = {};
     local ref = {};
@@ -1532,7 +1532,7 @@ function fCheckForElementalBypassGear(sWhat,sElement)
         -- pole gets priority over an elemental staff.
         if sElement == 'dark' and
             (string.find(string.upper(environ.Weather),'DARK') ~= nil or
-             utilities.fBuffed('voidstorm',true)) and
+             buff_manager.has('VOIDSTORM')) and
             (gVars.tElemental_gear['staff']['dark']['Special']['Ref'] ~= nil and
              gVars.tElemental_gear['staff']['dark']['Special']['Ref']['owned'] == true and
              gVars.tElemental_gear['staff']['dark']['Special']['Ref']['accessible'] == true) and
@@ -1558,7 +1558,7 @@ end     -- fCheckForElementalBypassGear
 --]]
 
 function gear.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
-    local player = utilities.SetJob();
+    local player = gData.GetPlayer();
     local sRoot,bGood,sTarget;
 
     -- Make sure locks won't block equipping the item
@@ -1573,7 +1573,7 @@ function gear.fCheckForElementalGearByValue(sWhat,sWhich,sElement)
     -- What's searched for is sometimes a "root" and other times an "as-is"
     if string.find('Affinity,MEacc',sWhich) ~= nil then
         sRoot = utilities.fGetRoot(sElement);
-    elseif string.find('Summons,eleWS,SongAffinity',sWhich) ~= nil then
+    elseif string.find('Summons,eleWS,SongAffinity,BluAffinity,ChainAffinity,BurstAffinity',sWhich) ~= nil then
         sRoot = string.lower(sElement);
     else
         print(chat.message('Warning: Unknown field to search: ' ..sWhich));
@@ -1641,7 +1641,7 @@ end		-- gear.fCheckForElementalGearByValue
 
 function gear.fSwapToStave(sStave,noSave,cs)
     local ew = gData.GetEquipment();
-    local player = utilities.SetJob();
+    local player = gData.GetPlayer();
     local msg = nil;
     local sGear;
     local eWeap = nil;
@@ -1960,7 +1960,7 @@ end     -- gear.fGetSlotDefinition
 --]]
 
 function gear.fCheckForEleGear(sType,sElement)
-    local player = utilities.SetJob();
+    local player = gData.GetPlayer();
     local bGood,slot;
 
     -- Make sure player job defined and download not transitioning

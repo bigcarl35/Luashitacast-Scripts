@@ -31,6 +31,7 @@ gVars.tElemental_gear = {
             ['SongAffinity'] = { 'ice threnody' },
             ['Summons'] = { 'ifrit','fire spirit','firespirit','fire' },
             ['Nuke'] = { 'firaga','fire','flare' },
+            ['BluAffinity'] = { 'firespit','heat breath','blastbomb','bomb toss','self-destruct','lowing' },
         },
         ['ice'] = {
             ['Weak'] = 'fire',
@@ -41,6 +42,7 @@ gVars.tElemental_gear = {
             ['SongAffinity'] = { 'wind threnody' },
             ['Summons'] = { 'shiva','ice spirit','icespirit','ice' },
             ['Nuke'] = { 'blizzaga','blizzard','freeze' },
+            ['BluAffinity'] = { 'ice break','cold wave','frost breath','maelstrom','sub-zero smash' },
         },
         ['wind'] = {
             ['Weak'] = 'ice',
@@ -51,6 +53,7 @@ gVars.tElemental_gear = {
             ['SongAffinity'] = { 'earth threnody' },
             ['Summons'] = { 'garuda','air spirit','fCheckInlineWeatherairspirit','air','siren' },
             ['Nuke'] = { 'aero','aeroga','tornado' },
+            ['BluAffinity'] = { 'mysterious light','hecatomb wave','wind breath','frightful roar','chaotic eye','stinking gas','feather tickle' },
         },
         ['earth'] = {
             ['Weak'] = 'wind',
@@ -61,6 +64,7 @@ gVars.tElemental_gear = {
             ['SongAffinity'] = { 'lightning threnody', 'battlefield elegy', 'carnage elegy' },
             ['Summons'] = {'titan','earth spirit','earthspirit','earth' },
             ['Nuke'] = [ 'quake','stone','stonega' },
+            ['BluAffinity'] = { 'sandspin','magnetite cloud','bad breath','filament hold' },
         },
         ['thunder'] = {
             ['Weak'] = 'earth',
@@ -71,6 +75,7 @@ gVars.tElemental_gear = {
             ['SongAffinity'] = { 'water threnody' },
             ['Summons'] = { 'ramuh','thunder spirit','thunderspirit','thunder' },
             ['Nuke'] = { 'burst','thundaga','thunder' },
+            ['BluAffinity'] = { 'blitzstrahl','radiant breath','shock wave' },
         },
         ['water'] = {
             ['Weak'] = 'thunder',
@@ -81,6 +86,7 @@ gVars.tElemental_gear = {
             ['SongAffinity'] = { 'fire threnody' },
             ['Summons'] = { 'leviathan','water spirit','waterspirit','water' },
             ['Nuke'] = { 'flood','water','waterga' },
+            ['BluAffinity'] = { 'water bomb','regurgitation','flying hip press','corrosive ooze' },
         },
         ['light'] = {
             ['Weak'] = 'dark',
@@ -92,6 +98,7 @@ gVars.tElemental_gear = {
                 'magic finale','maiden\'s virelai' },
             ['Summons'] = {'carbuncle','light spirit','lightspirit','light','cait sith','caitsith','alexander'},
             ['Nuke'] = nil,
+            ['BluAffinity'] = { 'pollen','magic fruit','wild carrot','healing breeze','blank gaze','actinic burst','jettatura','awful eye' },
         },
         ['dark'] = {
             ['Weak'] = 'light',
@@ -103,6 +110,7 @@ gVars.tElemental_gear = {
             ['SongAffinity'] = { 'light threnody' },
             ['Summons'] = { 'fenrir','diabolos','dark spirit','darkspirit','dark','atomos','odin' },
             ['Nuke'] = nil,
+            ['BluAffinity'] = { 'death ray','digest','blood drain','blood saber','mp drainkiss','soporific','geist wall','enervation','sandspray' },
         },
     },
     ['obi'] = {
@@ -113,13 +121,19 @@ gVars.tElemental_gear = {
             ['Ref'] = {},
             ['MEacc'] = { 'burn','firaga','fire','flare','blaze','enfire','blaze','katon' },
             ['eleWS'] = { 'burning blade','red lotus blade','tachi: Kagero','flaming arrow','hot shot','wildfire' },
-        },
+            ['BluAffinity'] = { 'blastbomb','bomb toss','exuvation','firespit','heat breath','lowing','sound blast','self-destruct','triumphant roar'}.
+            ['ChainAffinity'] = { 'blastbomb','bomb toss','firespit','sound blast' },
+            ['BurstAffinity'] = { 'blastbomb','bomb toss','firespit' },
+            },
         ['ice'] = {
             ['Weak'] = 'fire',
             ['Name'] = 'Hyorin obi',
             ['Ref'] = {},
             ['MEacc'] = { 'frost','blizzaga','blizzard','freeze','paralyze','bind','distract','ice','enblizzard','hyoton' },
             ['eleWS'] = { 'frostbite','freezebite','herculean slash','blade: to' },
+            ['BluAffinity'] = { 'cold wave','frost breath','ice break'},
+            ['ChainAffinity'] = { 'cold wave','ice break' },
+            ['BurstAffinity'] = { 'cold wave','ice break' },
             ['Other'] = 'elemental magic',
         },
         ['wind'] = {
@@ -128,6 +142,9 @@ gVars.tElemental_gear = {
             ['Ref'] = {},
             ['MEacc'] = { 'choke','aero','aeroga','tornado','silence','gravity','flurry','enaero','huton' },
             ['eleWS'] = { 'gust slash','cyclone','aeolian edge','tachi: jinpu' },
+            ['BluAffinity'] = { 'claw cyclone','cursed sphere','filamented hold','healing breeze','mysterious light','tail slap'},
+            ['ChainAffinity'] = { 'chaotic eye','hecatomb wave','mysterious light' },
+            ['BurstAffinity'] = { 'hecatomb wave','mysterious light' },
         },
         ['earth'] = {
             ['Weak'] = 'wind',
@@ -135,6 +152,9 @@ gVars.tElemental_gear = {
             ['Ref'] = {},
             ['MEacc'] = { 'rasp','quake','stone','stonega','slow','enstone','doton' },
             ['eleWS'] = { 'blade: chi','rock crusher','earth crusher' },
+            ['BluAffinity'] = { 'magnetite cloud','sandspin' }, -- While bad breath is earth-based, the dorin obi has minimal impact. Use a MAcc belt or SIR belt instead
+            ['ChainAffinity'] = { 'sandspin' },
+            ['BurstAffinity'] = { 'sandspin' },
         },
         ['thunder'] = {
             ['Weak'] = 'earth',
@@ -142,6 +162,9 @@ gVars.tElemental_gear = {
             ['Ref'] = {},
             ['MEacc'] = { 'shock','burst','thundaga','thunder','stun','enthunder','raiton' },
             ['eleWS'] = { 'cloudsplitter','thunder thrust','raiden thrust','tachi: goten' },
+            ['BluAffinity'] = { 'blitzstrahl','mind blast','plasma charge' }.
+            ['ChainAffinity'] = { 'blitzstrahl','mind blast' },
+            ['BurstAffinity'] = { 'blitzstrahl','mind blast' },
         },
         ['water'] = {
             ['Weak'] = 'thunder',
@@ -149,6 +172,9 @@ gVars.tElemental_gear = {
             ['Ref'] = {},
             ['MEacc'] = { 'drown','flood','water','waterga','poison','enwater','suiton' },
             ['eleWS'] = { 'blade: teki','blade: yu' },
+            ['BluAffinity'] = { 'cursed sphere','maelstrom','poison breath','regurgitation' }.
+            ['ChainAffinity'] = { 'maelstrom','regurgitation' },
+            ['BurstAffinity'] = { 'cursed sphere','maelstrom','regurgitation' },
             ['Other'] = 'divine magic',
         },
         ['light'] = {
@@ -157,6 +183,9 @@ gVars.tElemental_gear = {
             ['Ref'] = {},
             ['MEacc'] = { 'banish','banishga','dia','diaga','flash','repose','holy','auspice','esuna','sacrifice','reprisal','cure','curaga','enlight' },
             ['eleWS'] = { 'shining blade','seraph blade','primal rend','tachi: koki','shining strike','seraph strike','starburst','sunburst','garland of bliss','trueflight' },
+            ['BluAffinity'] = { 'magic fruit','magic hammer','pollen','wild carrot'},
+            ['ChainAffinity'] = { 'healing breeze','magic hamner' },
+            ['BurstAffinity'] = { 'healing breeze','magic hammer' },
             ['Other'] = 'cure potency',
         },
         ['dark'] = {
@@ -166,6 +195,9 @@ gVars.tElemental_gear = {
             ['MEacc'] = { 'blind','bio','sleep','dispel','frazzle','drain','warp','tractor','aspir','escape','sleep','sleepga','retrace','endark' },
             ['eleWS'] = { 'energy steal','energy drain','sanguine blade','dark harvest','shadow death','infernal scythe','blade: ei','starburst',
                 'sunburst','cataclysm','vidohunir','omniscience','leaden suite' },
+            ['BluAffinity'] = { 'blood drain','cold wave','digest','jet stream','mp drainkiss','soporific' },
+            ['ChainAffinity'] = { 'blood drain','death ray','digest','eyes on me' },
+            ['BurstAffinity'] = { 'blood drain','death ray','digest','eyes on me' },
         },
     },
     ['gorget'] = {
@@ -179,6 +211,7 @@ gVars.tElemental_gear = {
                 'flaming arrow','full swing','garland of bliss','heavy shot','hexa strike','hot shot','insurgency','knights of round','last stand','mandalic stab','mistral axe',
                 'metatron torment','realmrazer','red lotus blade','scourge','shijin spiral','sniper shot','spinning attack','spinning axe','stringing pummel','tachi: kagero','tachi: kasha',
                 'upheaval','wheeling thrust' },
+            ['ChainAffinity'] = { 'body slam','spinal cleave','sprout smack','thrashing assault' },
         },
         ['ice'] = {
             ['Weak'] = 'fire',
@@ -188,6 +221,7 @@ gVars.tElemental_gear = {
             ['eleWS'] = { 'blade: to','blast arrow','cross reaper','death blossom','expiacion','freezebite','frostbite','full break','geirskogul','ground strike','guillotine','quietus',
                 'impulse drive','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','ruinator','raging rush','shadow of death','shattersoul','skullbreaker',
                 'smash axe','spiral hell','steel cyclone','tachi: gekko','tachi: hobaku','tachi: rana','tachi: yukikaze','tornado kick','vidohunir' },
+            ['ChainAffinity'] = { 'disseverment','frenetic rip','goblin rush','grand slam','mandibular bite' },
         },
         ['wind'] = {
             ['Weak'] = 'ice',
@@ -198,6 +232,7 @@ gVars.tElemental_gear = {
                 'dragon kick','earth crusher','exenterator','freezebite','gale axe','ground strike','gust slash','king\'s justice','mordant rime','raging axe','randgrith',
                 'red lotus blade','resolution','ruinator','savage blade','shark bite','shell crusher','sidewinder','slug shot','spinning slash','steel cyclone','tachi: jinpu',
                 'tachi: kaiten','taichi: shoha','taichi: yukikaze','tornado kick','trueflight','true strike','victory smite','vidohunir' },
+            ['ChainAffinity'] = { 'asuran claws','body slam','foot kick','smite of rage','spinal cleave'
         },
         ['earth'] = {
             ['Weak'] = 'wind',
@@ -209,6 +244,7 @@ gVars.tElemental_gear = {
                 'primal rend','pyrrhic kleos','rampage','requiscat','resolution','retibution','savage blade','seraph blade','shattersoul','shining blade','sickle moon','slice','spinning axe',
                 'spinning scythe','spiral hell','stardiver','stringing pummel','sturmwind','swift blade','tachi: enpi','tachi: jinpu','tachi: rana','trueflight','viper bite','vorpal blade',
                 'wasp sting' },
+            ['ChainAffinity'] = { 'battle dance','death scissors','queasyshroom','power attack','screwdriver','sickle slash'
         },
         ['thunder'] = {
             ['Weak'] = 'earth',
@@ -220,6 +256,7 @@ gVars.tElemental_gear = {
                 'judgement','king\'s justice','leg sweep','mordant rime','raging axe','raging fist','raiden thrust','realmrazer','resolution','rock crusher','savage blade','seraph strike',
                 'shark bite','shield break','shining strike','shoulder tackle','sickle moon','skewer','spinning attack','spinning axe','tachi: goten','tachi: koki','tachi: shoha',
                 'thunder thrust','true strike','victory smite','vidohunir','vorpal blade','weapon break' },
+            ['ChainAffinity'] = { 'asuran claws','body slam','ram change','sub-zero smash','vertical cleave',
         },
         ['water'] = {
             ['Weak'] = 'thunder',
@@ -230,6 +267,7 @@ gVars.tElemental_gear = {
                 'garland of bliss','gate of tartarus','geirskogul','ground strike','last stand','mordant rime','namas arrow','piercing arrow','pyrrhic kleos','rudra\'s storm','primal rend',
                 'raging rush','retribution','ruinator','shadow of death','shockwave','shoulder tackle','sidewinder','skullbreaker','slug shot','smash axe','spinning scythe','spiral hell',
                 'split shot','steel cyclone','sturmwind','sunburst','tachi: gekko','tachi: koki','vidohunir','vorpal thrust' },
+            ['ChainAffinity'] = { 'disseverment','hydro shot','mandibular bite' },
         },
         ['light'] = {
             ['Weak'] = 'dark',
@@ -241,6 +279,8 @@ gVars.tElemental_gear = {
                 'hexa strike','hot shot','howling fist','insurgency','knight\'s of round','leaden salute','last stand','mandalic stab','metatron torment','mistral axe','omniscience',
                 'piercing arrow','power slash','realmrazer','raiden thrust','scourge','shijin spiral','sidewinder','skewer','slug shot','sniper shot','split shot','stardiver','tachi: enpi',
                 'tachi: goten','tachi: kasha','thunder thrust','torcleaver','victory smite','upheaval','vorpal scythe','vorpal thrust','wheeling thrust' },
+            ['ChainAffinity'] = { 'asuran claws','battle dance','cannonball','death scissors','disseverment','feather storm','frenetic rip','head butt','helldive','hysteric barrage',
+                'sickle slash','spinal cleave','thrashing assault','wild oats' },
         },
         ['dark'] = {
             ['Weak'] = 'light',
@@ -251,6 +291,7 @@ gVars.tElemental_gear = {
                 'insurgency','keen edge','leaden salute','maturns gear swapping on or offndalic stab','mercy stroke','requiscat','rundra\'s storm','nightmare scythe','omniscience','one inch punch','penta thrust',
                 'primal rend','retribution','shattersoul','starburst','stardiver','stringing pummel','sunburst','swift blade','tachi: kasha','tachi: rana','tachi: shoha','upheaval',
                 'gate of tartarus' },
+            ['ChainAffinity'] = { 'awful eye','eyes on me' },
         },
         ['searched'] = false,
     },
@@ -574,10 +615,29 @@ gVars.tSlotNames = {
 
 -- Lists of valid Weapon Types. Note: while SHIELD and AMMO isn't a weapon, it conforms to the weapon type mechanism in this program
 gVars.tWeaponTypes = {
+    [0]   = 'NONE',
+    [1]   = 'H2H',
+    [2]   = 'DAGGER',
+    [3]   = 'SWORD',
+    [4]   = 'GSWORD',
+    [5]   = 'AXE',
+    [5]   = 'GAXE',
+    [7]   = 'SCYTHE',
+    [8]   = 'POLEARM',
+    [9]   = 'KATANA',
+    [10]  = 'GKATANA',
+    [11]  = 'CLUB',
+    [12]  = 'STAFF',
+    [25]  = 'ARCHERY',
+    [26]  = 'MARKSMANSHIP',
+    [27]  = 'THROWING'
+};
+--[[
     ['all']     = { 'ARCHERY','AXE','CLUB','DAGGER','GAXE','GKATANA','GSWORD','H2H','KATANA','MARKSMANSHIP','POLEARM','SCYTHE','STAVE','SWORD','THROWING','SHIELD','AMMO' },
     ['melee']   = { 'AXE','CLUB','DAGGER','GAXE','GKATANA','GSWORD','H2H','KATANA','POLEARM','SCYTHE','STAVE','SWORD','SHIELD' },
     ['range']   = { 'ARCHERY','MARKSMANSHIP','THROWING','AMMO' },
 };
+--]]
 
 -- List of all towns and the areas that are specific to each nation and Jeuno
 gVars.tTownAreas = {
@@ -593,11 +653,17 @@ gVars.tTownAreas = {
     ['Jeuno']  = { 'Ru\'Lude Gardens','Upper Jeuno','Lower Jeuno','Port Jeuno' }
 };
 
--- Lists of gear storages that contain gear that can be equipped from outside of a moghouse
+-- Lists of gear storages that contain gear that can be equipped from outside of a moghouse.
+-- Please note that some of these storages there's currently no way to get storage in them yet
 gVars.EQUIPABLE = {
     gVars.STORAGES[1],		-- Inventory
     gVars.STORAGES[9],		-- Wardrobe
     gVars.STORAGES[11],		-- Wardrobe 2
+    gVars.STORAGES[12],		-- Wardrobe 3
+    gVars.STORAGES[13],		-- Wardrobe 4
+    gVars.STORAGES[14],		-- Wardrobe 5
+    gVars.STORAGES[15],		-- Wardrobe 6
+    gVars.STORAGES[16],		-- Wardrobe 7
     gVars.STORAGES[17]		-- Wardrobe 8
 };
 
@@ -606,6 +672,11 @@ gVars.EQUIPABLE_LIST = {
     gVars.STORAGES[1]['id'],    -- Inventory
     gVars.STORAGES[9]['id'],    -- Wardrobe
     gVars.STORAGES[11]['id'],   -- Wardrobe 2
+    gVars.STORAGES[12]['id'],	-- Wardrobe 3
+    gVars.STORAGES[13]['id'],	-- Wardrobe 4
+    gVars.STORAGES[14]['id'],	-- Wardrobe 5
+    gVars.STORAGES[15]['id'],	-- Wardrobe 6
+    gVars.STORAGES[16]['id'],	-- Wardrobe 7
     gVars.STORAGES[17]['id']    -- Wardrobe 8
 };
 
@@ -614,9 +685,14 @@ gVars.EQUIPABLE_NONHOLIDAY = {
     gVars.STORAGES[1],		-- Inventory
     gVars.STORAGES[9],		-- Wardrobe
     gVars.STORAGES[11]		-- Wardrobe 2
+    gVars.STORAGES[12],		-- Wardrobe 3
+    gVars.STORAGES[13],		-- Wardrobe 4
+    gVars.STORAGES[14],		-- Wardrobe 5
+    gVars.STORAGES[15],		-- Wardrobe 6
+    gVars.STORAGES[16],		-- Wardrobe 7
 };
 
--- List of storages that can contain other items besides gear. Please not that gear can be
+-- List of storages that can contain other items besides gear. Please note that gear can be
 -- contained in these storages too
 gVars.NON_GEAR = {
     gVars.STORAGES[1],		-- Inventory
@@ -658,6 +734,9 @@ gVars.bGC = false;
 
 -- Current regional setting
 gVars.sRegion = gVars._REGION_STATUS_MUST_ZONE;
+
+-- (COR or /COR specific) Last Phantom Roll
+gVars.PhantomRoll = 'None'; -- Note: a space in the name is changed to an underscore
 
 --[[
     ********************
@@ -792,7 +871,7 @@ gVars._STRING = 'String';
 -- Define blood pact types
 gVars._RAGE = 'Rage';
 gVars._WARD = 'Ward';
-gVars._UNKNOWN = 'Unknown';
+gVars._UNKNOWN = 'Unknown';     -- Also used with BLU spells
 
 -- Define grid options
 gVars._LOCK_STYLE = 'style';
@@ -814,16 +893,18 @@ gVars._TYPE_PUP = 'PUP';
 gVars._TYPE_NONE = 'NONE';
 
 -- Since gVars is loaded from all job files, the individual modules will be loaded here
-crossjobs   = gFunc.LoadFile('common\\crossjobs.lua');
-utilities   = gFunc.LoadFile('common\\utilities.lua');
-validate    = gFunc.LoadFile('common\\validate.lua');
-slips       = gFunc.LoadFile('common\\slips.lua');
-reporting   = gFunc.LoadFile('common\\reporting.lua');
-pets        = gFunc.LoadFile('common\\pets.lua');
-magic       = gFunc.LoadFile('common\\magic.lua');
-locks       = gFunc.LoadFile('common\\locks.lua');
-inline      = gFunc.LoadFile('common\\inline.lua');
-gear        = gFunc.LoadFile('common\\gear.lua');
-displaybar  = gFunc.LoadFile('common\\displaybar.lua');
+-- Please note that these declarations were intentionally made global
+crossjobs    = gFunc.LoadFile('common\\crossjobs.lua');
+utilities    = gFunc.LoadFile('common\\utilities.lua');
+validate     = gFunc.LoadFile('common\\validate.lua');
+slips        = gFunc.LoadFile('common\\slips.lua');
+reporting    = gFunc.LoadFile('common\\reporting.lua');
+pets         = gFunc.LoadFile('common\\pets.lua');
+magic        = gFunc.LoadFile('common\\magic.lua');
+locks        = gFunc.LoadFile('common\\locks.lua');
+buff_manager = gFunc.LoadFile('common\\buff_manager.lua');
+inline       = gFunc.LoadFile('common\\inline.lua');
+gear         = gFunc.LoadFile('common\\gear.lua');
+displaybar   = gFunc.LoadFile('common\\displaybar.lua');
 
 return gVars;

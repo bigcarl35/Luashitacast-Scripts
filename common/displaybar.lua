@@ -478,7 +478,7 @@ end     -- fDbarFormatDisplays
 --]]
 
 function displaybar.InitializeDisplayBar()
-    local player = utilities.SetJob();
+    local player = gData.GetPlayer();
     local cmn = { [1] = gVars._WSWAP, [2] = gVars._KITE , [3] = gVars._TH, [4] = gVars._TANK ,
                   [5] = gVars._IDLE, [6] = gVars._EVASION , [7] = gVars._SPF , [8] = gVars._SGS,
                   [9] = gVars._GSWAP

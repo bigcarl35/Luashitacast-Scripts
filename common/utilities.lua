@@ -39,6 +39,7 @@ local utilities = {};
             fCheckPartyJob          Is a member of your party a certain job?
             fCheckRegionControl     Determines if player's nation controls region
             fCheckTime              Determines if passed time matches keyword
+            fCheckTimeList          Determines if one of the past time keywords is valid
             fCheckWSBailout         Determines range to target would fail Weapon Skill
             fFindCommand            Determines which toggle the passed command matches
             fFormattedWord          Capitalization routine for passed in word
@@ -46,13 +47,17 @@ local utilities = {};
             fGetCCDescription       Returns the question associated with the passed code
             fGetLevel               Determines gear level cap for player
             fGetMobType             Determines if the target is of the passed type
+            fGetPartyCount          Determines how many characters in party
             fGetRoot                Retrieves the "base" of the passed in spell/song
             fGetTableByName         Returns the gear set associated with name
+            fIs_busy                Determines if player is busy (fishing,gathering,crafting)
             fIsGearsetDetailsFound  Is the passed in gear details record found in the passed in list
             fIsVisible              Determines if the visibility is true
             fIsDisplaybarSettingValid Determines if the visibility setting is valid
+            fJobInParty             Determines if a party member has the passed in job
             fLtrim                  Trims leading spaces from the passed in string
             fMagicalJob             Determines if the player's main job or subjob is magical
+            fMagicalMainJob         Determines if the player's main job can do magic
             fMagicalSubjob          Determines if the player's subjob can do magic
             fNewFileName            Generates a new report file name
             fOpenByFilename         Opens the passed in file for writing/appending
@@ -397,6 +402,56 @@ function utilities.fCheckTime(hr,sTime)
     return bGood,nil;
 end     -- utilities.fCheckTime
 
+--[[
+    fCheckTimeList determines if any of the passed named time periods is valid
+
+    Parameter
+        sList       One of more named time periods delimited by commas
+
+    Return
+        T/F
+--]]
+
+function utilities.fCheckTimeList(sList)
+    local timestamp = gData.GetTimestamp();
+    local t = utilities.fSplitStringByDelimiter(sList,',');
+
+    for i,j in pairs(t) do
+        if utilities.fCheckTime(timestamp.hour,j) == true then
+            return true;
+        end
+    end
+    return false;
+end     -- utilities.fCheckTimeList
+
+--[[
+    fGetPartyCount determines how many charaters are in your party.
+
+    Parameter
+        bAlliance   T/F Should whole alliance be processed
+
+    Return
+        #   1 if solo, but up to 6 (or 18 if alliance count wanted)
+--]]
+
+function utilities.fGetPartyCount(bAlliance)
+    local party = AshitaCore:GetMemoryManager():GetParty();
+    local partyCount = 0;
+    local PartySize = 6;
+
+    bAlliance = bAlliance or false;
+
+    if bAlliance then
+        PartySize = 18;
+    end
+
+    for i = 0, PartySize-1 do
+        if party and party:GetMemberIsActive(i) == 1 then
+            partyCount = partyCount + 1
+        end
+    end
+    return partyCount;
+end     -- utilities.fGetPartyCount
 
 --[[
     fValidSlots determines if the passed in list of slots is valid. It then translates the valids slots
@@ -1088,7 +1143,7 @@ end		-- utilities.fReferenceCheck
 --]]
 
 function utilities.fGetLevel(bActual)
-    local player = utilities.SetJob();
+    local player = gData.GetPlayer();
 
     if bActual == nil then
         bActual = false;
@@ -1241,7 +1296,7 @@ end		-- utilities.Initialize
 --]]
 
 function utilities.fCheckWsBailout()
-    local player = utilities.SetJob();
+    local player = gData.GetPlayer();
     local ws = gData.GetAction();
     local target = gData.GetActionTarget();
     local bGood = true;
@@ -1253,11 +1308,7 @@ function utilities.fCheckWsBailout()
     elseif player.TP <= 999 then
         print(chat.message('Warning: insufficient TP to weapon skill'));
         bGood = false;
-    elseif utilities.fBuffed('Sleep',true) == true or
-           utilities.fBuffed('Petrification',true) == true or
-           utilities.fBuffed('Stun',true) == true or
-           utilities.fBuffed('Amnesia',true) == true or
-           utilities.fBuffed('Charm', true) == true then
+    elseif buff_manager.has('SLEPT,PETRIFIED,STUNNED,AMNESIA,CHARMED') == true then
         print(chat.message('Warning: detrimental debuff inhibiting any action'));
         bGood = false;
     end
@@ -1273,17 +1324,30 @@ end		-- utilities.fCheckWsBailout
 --]]
 
 function utilities.fMagicalSubJob()
-    local player = utilities.SetJob();
+    local player = gData.GetPlayer();
 
     return (string.find(gVars._sMagicjobs,player.SubJob) ~= nil);
 end		-- utilities.fMagicalSubJob
+
+--[[
+    fMagicMainJob determines if the sub job can do magic
+
+    Returned
+        T/F
+--]]
+
+function utilities.fMagicalMainJob()
+    local player = gData.GetPlayer();
+
+    return (string.find(gVars._sMagicjobs,player.MainJob) ~= nil);
+end		-- utilities.fMagicalMainJob
 
 --[[
     fMagicalJob determines if the player's job or subjob is magical
 --]]
 
 function utilities.fMagicalJob()
-    local player = utilities.SetJob();
+    local player = gData.GetPlayer();
 
     return (string.find(gVars._sMagicJobs,player.MainJob) ~= nil or string.find(gVars._sMagicJobs,player.SubJob) ~= nil);
 end     -- utilities.fMagicalJob
@@ -1297,7 +1361,7 @@ end     -- utilities.fMagicalJob
 --]]
 
 function utilities.fNewFileName()
-    local player = utilities.SetJob();
+    local player = gData.GetPlayer();
     local sName = string.format('%s_%s_%x.txt',string.upper(player.Name),player.MainJob,os.clock);
 
     return sName;
@@ -1561,8 +1625,8 @@ end     -- utilities.GetWeaponsList
     Returned
         T/F, was the target of the specified type or no target selected?
 
-        ** revise **
-        Need to change because value sent could be a list
+    This has changed. Instead of loading a zone, check for the existance of the fam/eco
+    in the global variable. If absent, load it. Then check for the specified target type.
 --]]
 
 function utilities.fGetMobType(sType)
@@ -1570,17 +1634,18 @@ function utilities.fGetMobType(sType)
     local targetIndex = gData.GetTargetIndex();
     local tEntity = gData.GetEntity(targetIndex);
     local iPos = nil;
+    local sRest;
     local bFamily = false;
 
-    if tEntity.Name == nil then
+    if tEntity == nil or tEntity.Name == nil then
         -- no target, might need to change in the future. Beneficial spells default to <me>
         return false;
     end
 
-    iPos = string.find(sType,'=');
+    iPos = string.find(sType,':');
     if iPos ~= nil then
-        bFamily = (string.sub(sType,1,iPos) ~= 'fam=');
-        sType = string.sub(sType,iPos+1,-1);
+        bFamily = (string.sub(sType,1,iPos) ~= 'fam:');
+        sRest = string.sub(sType,iPos+1,-1);
     end
 
     if curr ~= crossjobs.CurrentZone then
@@ -1637,6 +1702,40 @@ function utilities.fValidCustomCommand(cmd)
 
     return bValid;
 end		-- utilities.fValidCustomCommand
+
+--[[
+    fJobInParty determines if any player in the party is of the passed in job acronym
+
+    Parameter
+        sVal        Job to check
+        bNotMe      T/F should the invoking player be considered
+
+    Return
+        T/F
+--]]
+
+function utilities.fJobInParty(sList,bNotMe)
+    local party = AshitaCore:GetMemoryManager():GetParty()
+    sList = sList:upper();
+    bNotMe = bNotMe or false;
+
+    -- Walk the party
+    for i = 0, 5 do
+        -- Skip 0 if indicated
+        if bNotMe == false or (bNotMe and i > 0) then
+            local member = party:GetMemberProperty(i)
+            -- if an active member of the party
+            if member and member.Active == 1 then
+                -- Convert the job ID to its 3-letter abbreviation
+                local jobAbbrev = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", member.MainJob)
+                if string.find(sList,jobAbbrev:upper()) ~= nil then
+                    return true
+                end
+            end
+        end
+    end
+    return false;
+end     -- utilities.fJobInParty
 
 --[[
     fParseFileDesignation dissects the passed file designation and returns the name of the file and
@@ -1785,7 +1884,7 @@ end     -- utilities.CopyDisplaybarSettings
 --]]
 
 function utilities.fCheckMagicJob()
-    local player = utilities.SetJob();
+    local player = gData.GetPlayer();
 
     if string.find(gVars._sMagicjobs,player.MainJob) ~= nil or
         string.find(gVars._sMagicjobs,player.SubJob) ~= nil then
@@ -1940,5 +2039,45 @@ function utilities.SetJob()
 
     return player;
 end     -- utilities.SetJob
+
+--[[
+    is_busy determines if the player is doing some action like fishing, gathering, or crafting.
+
+    Parameter
+        bNot    Should the result be inverted
+
+    Return
+        True if they are, false if not
+
+    This is missing buff definition. function should go in the buff_manager file
+--]]
+
+function utilities.fIsBusy(bNot)
+    local player = AshitaCore:GetMemoryManager():GetPlayer()
+    local bBusy = false;
+
+    if not player then return false end
+
+    if bNot == nil then
+        bNot = false
+    end
+
+    -- 1. Check Character Status (4 = clamming/event lock, 5 = Crafting, 45 = Fishing)
+    local status = player:GetStatus()
+    if status == 4 or status == 5 or status == 45 then
+        bBusy = true;
+    end
+
+    -- 2. Check for gathering buff lock (254 = Logging/Mining/Harvesting)
+    if bBusy == false and buffs and buffs.has(254) then
+        bBusy = true;
+    end
+
+    if bNot then
+        bBusy = not bBusy;
+    end
+
+    return bBusy;
+end     -- utilities.fIsBusy
 
 return utilities;

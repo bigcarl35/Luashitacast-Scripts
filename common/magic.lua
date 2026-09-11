@@ -5,18 +5,20 @@ local magic = {};
 
     List of routines-
         Subroutines:
+            BLUType                         Determines category type of the blue magic spell being cast
             HandleMidcast                   Coordinating routine that invokes appropriate midcast based on type
             HandlePrecast                   Equips the appropriate precast gear
             MaxCast                         Casts the highest version of the passed spell/song
-            Local MidcastDarkMagic          Handles all gear appropriate for dark magic
-            local MidcastDivineMagic        Handles all gear appropriate for divine magic
-            local MidcastElementalMagic     Handles all gear appropriate for elemental magic
-            local MidcastEnfeeblingMagic    Handles all gear appropriate for enfeebling magic
-            local MidcastEnhancingMagic     Handles all gear appropriate for enhancing magic
-            local MidcastHealingMagic       Handles all gear appropriate for healing magic
-            local MidcastNinjutsu           Handles all gear appropriate for ninjutsu
-            local MidcastSinging            Handles all gear appropriate for singing/instrument playing
-            local MidcastSummoning          Handles all gear appropriate for summoning magic
+            MidcastBlueMagic                Handles all gear appropriate for blue magic
+            MidcastDarkMagic                Handles all gear appropriate for dark magic
+            MidcastDivineMagic              Handles all gear appropriate for divine magic
+            MidcastElementalMagic           Handles all gear appropriate for elemental magic
+            MidcastEnfeeblingMagic          Handles all gear appropriate for enfeebling magic
+            MidcastEnhancingMagic           Handles all gear appropriate for enhancing magic
+            MidcastHealingMagic             Handles all gear appropriate for healing magic
+            MidcastNinjutsu                 Handles all gear appropriate for ninjutsu
+            MidcastSinging                  Handles all gear appropriate for singing/instrument playing
+            MidcastSummoning                Handles all gear appropriate for summoning magic
 
         Functions:
             fBardSongType                   Determines if the bard song being sung is of type passed
@@ -98,8 +100,8 @@ magic.tTiered = {
             [2] = { ['Name'] = 'Paralyze', ['SID'] = 58, ['MP'] = 6, ['WHM'] = 4, ['RDM'] = 6 }
         },
         ['phalanx'] = {
-            [1] = { ['Name'] = 'Phalanx', ['SID'] = 106, ['MP'] = 21, ['RDM'] = 33, ['RUN'] = 68 }
-            --[2] = { ['Name'] = 'Phalanx II', ['SID'] = 107, ['MP'] = 42, ['RDM'] = 75 },      -- Make #1 when uncommented
+            [1] = { ['Name'] = 'Phalanx II', ['SID'] = 107, ['MP'] = 42, ['RDM'] = 75 },
+            [2] = { ['Name'] = 'Phalanx', ['SID'] = 106, ['MP'] = 21, ['RDM'] = 33, ['RUN'] = 68 }
         },
         ['protect'] = {
             [1] = { ['Name'] = 'Protect IV', ['SID'] = 46, ['MP'] = 65, ['WHM'] = 63, ['RDM'] = 63, ['PLD'] = 70, ['SCH'] = 66 },
@@ -350,6 +352,99 @@ magic.tTiered = {
         }
     }
 };
+-- Blue Magic spells are grouped by type. The following structure identifies all the spells
+-- associated with each group based on the stat that should be emphasized
+magic.tBLU_Spells = {
+    ['physical']    = { 'asuran claws','battle dance','bludgeon','body slam','cannonball','claw cyclone',
+                        'death scissors','dimensional death','disseverment','empty thrash','feather storm',
+                        'foot kick','frenetic rip','frypan','grand slam','head butt','helldive','hydro shot',
+                        'hysteric barrage','jet stream','mandibular bite','pinecone bomb','power attack',
+                        'quadratic continuum','queasyshroom','ram charge','screwdriver','seedspray',
+                        'sickle slash','smite of rage','spinal cleave','spiral spin','sprout smack',
+                        'sub-zero smash','tail slap','terror touch','uppercut','vanity dive',
+                        'vertical cleave','wild oats' },
+    ['magical']     = { '1000 needles','actinic burst','auroral drape','awful eye','bad breath','chaotic eye',
+                        'enervation','eyes on me','feather tickle','filamented hold','flying hip press',
+                        'frightful roar','frost breath','hecatomb wave','heat breath','geist wall',
+                        'infrasonics','jettataru','light of penance','lowing','magnetite cloud','mp drainkiss',
+                        'mysterious light','poison breath','radiant breath','sandspray','self-destruct',
+                        'sound blast','stinking gas','temporal shift','venom shell','yawn' },
+    ['magical_ele'] = { 'blastbomb','bomb toss','corrosive ooze','cursed sphere','ice break','sandspin',
+                        'blitzstrahl','firepit','regurgitation','magic hammer','mind blast',
+                        'blood drain','blood saber','cold wave','death ray','digest','maelstrom' },
+    ['healing']     = { 'healing breeze','magic fruit','pollen','wild carrot' },
+    ['utility']     = { 'amplification','cocoon','diamondhide','exuviation','feather barrier','memento mori',
+                        'metallic body','occultation','plasma charge','reactor cool','refueling','saline coat',
+                        'sheep song','soporific','voracious trunk','warm-up','winds of promyvion','zephyr mantle',
+                        'triumphant roar' },
+};
+
+-- Singing types are based on the song cast. Unlike spells, singing types are not automatically
+-- classified by Ashita
+magic.tSinging_Types = {
+    ['aubade']      = { 'fowl aubade' },
+    ['ballad']      = { 'mage\'s ballad','mage\'s ballad ii' },
+    ['capriccio']   = { 'gold capriccio' },
+    ['carol']       = { 'dark carol','earth carol','fire carol','ice carol','light carol','lightning carol',
+                        'water carol' },
+    ['elegy']       = { 'battlefield elegy','carnage elegy' },
+    ['etude']       = { 'bewitching etude','dextrous etude','enchanting etude','herculean etude','learned etude',
+                        'logical etude','quick etude','sage etude','sinewy etude','spirited etude','swift etude',
+                        'uncanny etude','vital etude','vivacious etude' },
+    ['fantasia']    = { 'shining fantasia' },
+    ['finale']      = { 'magic finale' },
+    ['gavotte']     = { 'goblin gavotte' },
+    ['hymnus']      = { 'godess\'s hymnus' },
+    ['lullaby']     = { 'foe lullaby','horde lullaby' },
+    ['madrigal']    = { 'blade madrigal','sword madrigal' },
+    ['mambo']       = { 'dragonfoe mambo','sheepfoe mambo' },
+    ['march']       = { 'advancing march','victory march' },
+    ['mazurka']     = { 'chocobo mazurka','raptor mazurka' },
+    ['minne']       = { 'knight\'s minne','knight\'s minne ii','knight\'s minne iii','knight\'s minne iv' },
+    ['minuet']      = { 'valor minuet','valor minuet ii','valor minuet iii','valor minuet iv' },
+    ['operetta']    = { 'puppet\'s operetta','scop\'s operetta' },
+    ['paeon']       = { 'army\'s paeon','army\'s paeon ii','army\'s paeon iii','army\'s paeon iv',
+                        'army\'s paeon v' },
+    ['pastoral']    = { 'herb pastoral' },
+    ['prelude']     = { 'archer\'s prelude','hunter\'s prelude' },
+    ['requiem']     = { 'foe requiem','foe requiem ii','foe requiem iii','foe requiem iv','foe requiem v',
+                        'foe requiem vi' },
+    ['round']       = { 'warding round' },
+    ['sivente']     = { 'foe sivente' },
+    ['threnody']    = { 'dark threnody','earth threnody','fire threnody','ice threnody','light threnody',
+                        'lightning threnody','water threnody','wind threnody' },
+    ['virelai']     = { 'maiden\'s virelai' }
+};
+-- Globally known type of BLU spell being cast
+magic.BLU_Spell_Type = nil;
+
+--[[
+    fBLUType determines the classification type of the BLU spell being cast
+    and returns the classification name
+
+    Returned
+        spell type name or 'Unknown'
+--]]
+
+function magic.BLUType()
+    local spell = gData.GetAction();
+
+    if spell == nil or spell.Name == nil then
+        magic.BLU_Spell_Type = gVars._Unknown;
+        return;
+    end
+
+    local s = string.lower(spell.Name);
+
+    for i,j in pairs(magic.tBLU_Spells) do
+        if table.find(j,s) ~= nil then
+            magic.BLU_Spell_Type = i;
+            return;
+        end
+    end
+
+    magic.BLU_Spell_Type = gVars._Unknown;
+end     -- Magic.BLUType
 
 --[[
     fBardSongType determines if bard song being cast is of the type being passed.
@@ -393,7 +488,7 @@ end		-- magic.fBardSongType
 
 function magic.HandlePrecast()
     local spell = gData.GetAction();
-    local player = utilities.SetJob();
+    local player = gData.GetPlayer();
 
     -- Clear out the CurrentGear in case of leftovers
     utilities.ClearSet(crossjobs.Sets.CurrentGear);
@@ -852,6 +947,81 @@ end		-- MidcastSummoning
 --]]
 
 function MidcastBlueMagic()
+    local spell = gData.GetAction();
+    local pDay,pWeather,sObi,sGorget,sEle;
+
+    magic.BLUType();
+    if magic.BLU_Spell_Type == gVars._Unknown then
+        local smsg;
+        if spell == nil or spell.Name == nil then
+            smsg = 'Warning: MidcastBlueMagic was invoked without a Blue Mage spell being cast';
+        else
+            smsg = 'Warning: Uncategorized Blue Mage spell invoked in MidcastBlueMagic: ' .. spell.Name;
+        end
+        reporting.DisplayOnce(smsg,false);
+        magic.BLU_Spell_Type = nil;
+        return;
+    end
+
+    gear.MoveToDynamicGS(gProfile.Sets.BLU_Midcast,crossjobs.Sets.CurrentGear,false,'Blue(' .. magic.BLU_Spell_Type .. ')');
+
+    -- See if Macc should be added
+    if utilities.fGetToggle(gVars._MACC) and gProfile.settings.EmbedOnly.Macc == false and
+            string.lower(spell.Name) ~= 'triumphant roar' then
+        gear.MoveToDynamicGS(gProfile.Sets.Macc,crossjobs.Sets.CurrentGear,false,'MAcc');
+    end
+
+    -- And then if an elemental staff would be useful, for the affinity
+    sGear,sEle = gear.fCheckForElementalGearByValue('staff','BluAffinity',spell.Name);
+    if sGear ~= nil then
+        gear.fSwapToStave(sGear,false,crossjobs.Sets.CurrentGear);
+    end
+
+    -- and then an elemental obi under chain affinity
+    if buff_manager.has('CHAIN_AFFINITY') == true and gProfile.settings.EmbedOnly.eObi == false then
+        sObi,sEle = gear.fCheckForElementalGearByValue('obi','ChainAffinity',spell.Name);
+        pDay,pWeather = utilities.fCheckObiDW(sEle);
+        if pDay + pWeather > 0 then
+            crossjobs.Sets.CurrentGear['Waist'] = sGear;
+        else
+            sObi = nil;
+        end
+    end
+
+    -- sObi being nil means that the first attempt didn't find a match. Check burst affinity
+    if sObi == nil and buff_manager.has('BURST_AFFINITY') == true then
+        sObi,sEle = gear.fCheckForElementalGearByValue('obi','BurstAffinity',spell.Name);
+        pDay,pWeather = utilities.fCheckObiDW(sEle);
+        if pDay + pWeather > 0 then
+            crossjobs.Sets.CurrentGear['Waist'] = sGear;
+        else
+            sObi = nil;
+        end
+    end
+
+    -- Last chance on the obi, if there's weather and/or the day's element matches
+    -- the spell's element, the obi is still useful
+    if sObi == nil then
+        sObi,sEle = gear.fCheckForElementalGearByValue('obi','BluAffinity',spell.Name);
+        pDay,pWeather = utilities.fCheckObiDW(sEle);
+        if pDay + pWeather > 0 then
+            crossjobs.Sets.CurrentGear['Waist'] = sGear;
+        end
+    end
+
+    -- Lastly, see if the spell is being treated as a weapon skill. If so, see if an
+    -- elemental gorget is appropriate
+    if buff_manager.has('CHAIN_AFFINITY') == true and gProfile.settings.EmbedOnly.eGorget == false then
+        -- An elemental gorget will add the at least 10% more damage. Also, +10 Accuracy to
+        -- all of the spell's hits and a 1% chance of not depleting the player's TP
+        sGorget,sEle = gear.fCheckForElementalGearByValue('gorget','ChainAffinity',spell.Name);
+        if sGorget ~= nil then
+            crossjobs.Sets.CurrentGear['Neck'] = sGorget;
+        end
+    end
+
+    -- Done processing, nil out the type
+    magic.BLU_Spell_Type = nil;
 end		-- MidcastBlueMagic
 
 --[[

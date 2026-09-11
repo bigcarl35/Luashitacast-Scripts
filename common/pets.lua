@@ -520,10 +520,11 @@ end     -- pets.fSummonerPet
 --]]
 
 function pets.fElementByPetName(pName)
+    local pet = gData.GetPet();
     local lcName;
     local ele = nil;
 
-    if pName == nil then
+    if pName == nil or pet == nil then
         return nil;
     end
 
