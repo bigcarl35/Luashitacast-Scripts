@@ -146,7 +146,7 @@ crossjobs.sets = {
 };
 
 -- Indicates what nation your character is from, -1 is unassigned
-crossjobs.OwnNation = -1;
+crossjobs.OwnNation = gVars._REGION_UNKNOWN;
 crossjobs.Sets = crossjobs.sets;
 crossjobs.WeaponTypes = {};
 crossjobs.ZoneList = {};

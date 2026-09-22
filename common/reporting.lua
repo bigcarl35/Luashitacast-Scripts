@@ -88,13 +88,13 @@ function reporting.RegionControlDisplay(args)
     local bscnt = 0;
 
     -- Make sure we know what nation we belong to
-    if crossjobs.OwnNation == -1 then
+    if crossjobs.OwnNation == gVars._REGION_UNKNOWN then
         crossjobs.OwnNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation() + 1;
     end
 
 
     -- Make sure controller ID is valid
-    if crossjobs.OwnNation < gVars._REGION_TRUE_NA or crossjobs.OwnNation > gVars._REGION_BEASTMEN then
+    if crossjobs.OwnNation < gVars._REGION_UNKNOWN or crossjobs.OwnNation > gVars._REGION_BEASTMEN then
         print(chat.message('Warning: Unknown player\'s nation = ' .. tostring(crossjobs.OwnNation)));
     else
         print(chat.message('Info: Player\'s nation = ' .. chat.color1(gVars.tRegionControllerColors[crossjobs.OwnNation],gVars.tRegionControllerSettings[crossjobs.OwnNation])));

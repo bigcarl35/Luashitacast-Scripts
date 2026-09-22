@@ -38,6 +38,7 @@ local utilities = {};
             fCheckObiDW             Determines if Day/weather element advantageous for obi
             fCheckPartyJob          Is a member of your party a certain job?
             fCheckRegionControl     Determines if player's nation controls region
+            fCheckSlot              Determines if the passed slot name is valid
             fCheckTime              Determines if passed time matches keyword
             fCheckTimeList          Determines if one of the past time keywords is valid
             fCheckWSBailout         Determines range to target would fail Weapon Skill
@@ -50,7 +51,7 @@ local utilities = {};
             fGetPartyCount          Determines how many characters in party
             fGetRoot                Retrieves the "base" of the passed in spell/song
             fGetTableByName         Returns the gear set associated with name
-            fIs_busy                Determines if player is busy (fishing,gathering,crafting)
+            fIsBusy                 Determines if player is busy (fishing,gathering,crafting)
             fIsGearsetDetailsFound  Is the passed in gear details record found in the passed in list
             fIsVisible              Determines if the visibility is true
             fIsDisplaybarSettingValid Determines if the visibility setting is valid
@@ -1793,7 +1794,7 @@ function utilities.UpdateRegionalLabel()
 
     -- Make sure the player's nation is known
     if crossjobs.OwnNation == -1 then
-        crossjobs.OwnNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation() + 1;
+        crossjobs.OwnNation = AshitaCore:GetMemoryManager():GetPlayer():GetNation();
     end
 
     -- Determine if current zone in region controlled by player's nation
@@ -2079,5 +2080,33 @@ function utilities.fIsBusy(bNot)
 
     return bBusy;
 end     -- utilities.fIsBusy
+
+--[[
+    fCheckSlot determines if the passed equipment slot name is valid
+
+    Parameters
+        sVal        The slot name to check
+        sFMT        How should the slot name returned be formatted
+
+    Returned
+        T/F         Is it valid
+        Formatted slot name if valid
+--]]
+
+function utilities.fCheckSlot(sVal,sFMT)
+    local sFSlot = nil;
+
+    sFMT = sFMT or gVars._SLOT_FA;
+    if sVal == nil then
+        return false;
+    end
+
+    if table.find(Vars.tSlotNames['full'],sVal:lower()) ~= nil then
+        sFSlot = utilities.fFormattedWord(sVal,sFSlot);
+        return true,sFSlot;
+    else
+        return false;
+    end
+end     -- utilities.fCheckSlot
 
 return utilities;

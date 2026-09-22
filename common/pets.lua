@@ -677,34 +677,161 @@ end     -- pets.Call911
 
 --[[
     fPetType determines the type of pet the plyayer has out: SMN, BST, DRG, or PUP. Lack of a pet
-    returns "none".
+    returns "none". "Unknown" is returned when a pet exists, but the function can't determine the
+    type
+
+    Returned
+        gVars._TYPE_NONE,gVars._TYPE_DRG,gVars._TYPE_PUP,gVars._TYPE_SMN,gVars._TYPE_BST,
+        gVars._TYPE_UNKNOWN
 --]]
 
 function pets.fPetType()
-    local player = utilities.SetJob();
-    local pet = gData.GetPet();
+    local playerEntity = AshitaCore:GetMemoryManager():GetEntity():GetLocalPlayer();
+    local petTargetIndex = playerEntity.PetTargetIndex;
+    if petTargetIndex <= 0 then return gVars._TYPE_NONE; end
 
-    if pet == nil or pet.Name == nil then
-        return gVars._TYPE_NONE;
-    elseif pets.fSummonerPet() == true then
-        return gVars._TYPE_SMN;
-    else
-        if player.MainJob == 'DRG' and gProfile.settings.petName ~= nil then
-            if string.upper(gProfile.settings.petName) == string.upper(pet.Name) then
-                return gVars._TYPE_DRG;
-            end
+    local petEntity = AshitaCore:GetMemoryManager():GetEntity():GetEntity(petTargetIndex);
+    if not petEntity then return gVars._TYPE_UNKNOWN; end
+
+    local modelId = petEntity.ModelId;
+    local spawnFlags = petEntity.SpawnFlags; -- text or index lookup depending on Ashita exposure
+
+    ---------------------------------------------------------
+    -- 1. PUPPETMASTER AUTOMATONS & DRAGOON WYVERNS
+    ---------------------------------------------------------
+    if (bit.band(spawnFlags, 0x0002) ~= 0) then
+        -- Wyvern checking (Skeletal Mesh 156 is universally reserved for Drg Wyverns)
+        if modelId == 156 then
+            return gVars._TYPE_DRG;
         end
 
-        if (player.MainJob == 'PUP' or player.SubJob == 'PUP') and gProfile.settings.petName ~= nil then
-            if string.upper(gProfile.settings.petName) == string.upper(pet.Name) then
-                return gVars._TYPE_PUP;
-            end
+        -- Automaton frames use specific, continuous blocks in the asset library
+        if modelId >= 158 and modelId <= 161 then
+            return gVars._TYPE_PUP;
+        end
+    end
+
+    ---------------------------------------------------------
+    -- 2. SUMMONER AVATARS/SPIRITS & BEASTMASTER PETS
+    ---------------------------------------------------------
+    if (bit.band(spawnFlags, 0x0010) ~= 0) or (bit.band(spawnFlags, 0x000A) ~= 0) then
+        -- Summoner Elementals (Skeletal meshes 140 to 147 are exclusively Fire through Light spirits)
+        if (modelId >= 140 and modelId <= 155) or modelId == 170 or modelId == 171 then
+            return gVars._TYPE_SMN;
         end
 
-        -- At this point it's a guessing game. As long as settings.petName is correct, SMN, DRG, and PUP
-        -- pet should have been detected. We have to assume it is a BST pet
+        -- What's left is a BST pet
         return gVars._TYPE_BST;
     end
+
+    return gVars._TYPE_UNKNOWN;
 end     -- pets.fPetType
+
+--[[
+    fPetTypeSpecific digs deeper into the player's pet definition and, depending on the job that
+    created/summoned the pet, returns finer details: PUG - frame type, BST - charmed or jug pet,
+    SMN - avatar or spirit, DRG - Wyvern
+--]]
+
+function pets.fPetTypeSpecific()
+    local playerEntity = AshitaCore:GetMemoryManager():GetEntity():GetLocalPlayer();
+    local petTargetIndex = playerEntity.PetTargetIndex;
+    if petTargetIndex <= 0 then return gVars._TYPE_NONE; end
+
+    local petEntity = AshitaCore:GetMemoryManager():GetEntity():GetEntity(petTargetIndex);
+    if not petEntity then return gVars._TYPE_UNKNOWN; end
+
+    local modelId = petEntity.ModelId;
+    local spawnFlags = petEntity.SpawnFlags; -- text or index lookup depending on Ashita exposure
+
+    -- While PUP, SMN, and BST pets can be refined below the job's origin, DRG is just the
+    -- wyvern. So, a generic DRG type will be returned.
+    ---------------------------------------------------------
+    -- 1. PUPPETMASTER AUTOMATONS & DRAGOON WYVERNS
+    ---------------------------------------------------------
+    if (bit.band(spawnFlags, 0x0002) ~= 0) then
+        -- Wyvern checking (Skeletal Mesh 156 is universally reserved for Drg Wyverns)
+        if modelId == 156 then
+            return gVars._TYPE_DRG;
+        end
+
+        -- Automaton frames use specific, continuous blocks in the asset library
+        if modelId == 158 then return gVars._PUP_HARLEQUIN;   end
+        if modelId == 159 then return gVars._PUP_VALOREDGE;   end
+        if modelId == 160 then return gVars._PUP_SHARPSHOT;   end
+        if modelId == 161 then return gVars._PUP_STORMWALKER; end
+    end
+
+    ---------------------------------------------------------
+    -- 2. SUMMONER AVATARS/SPIRITS & BEASTMASTER PETS
+    ---------------------------------------------------------
+    if (bit.band(spawnFlags, 0x0010) ~= 0) or (bit.band(spawnFlags, 0x000A) ~= 0) then
+        -- Summoner Elemental spirits (Skeletal meshes 140 to 147 are exclusively Fire through Light spirits)
+        if (modelId >= 140) and (modelId <= 147) then
+            return gVars._SMN_SPIRIT;
+        end
+
+        -- Summoner Avatars (Carbuncle, Fenrir, Diabolos, and the Celestial 6 occupy fixed IDs, e.g., Carby = 148)
+        if ((modelId >= 148) and (modelId <= 155)) or (modelId == 170) or (modelId == 171) then
+            return gVars._SMN_AVATAR;
+        end
+
+        -- What's left is the BST's pet
+        -- To separate a Jug Pet from a Charmed Pet without a text string,
+        -- we query if the monster entity exists natively in the current zone's database.
+        local zoneEntities = AshitaCore:GetMemoryManager():GetEntity();
+        local isNativeToZone = false;
+        -- If the pet's structural ID matches a pre-existing monster spawn entry
+        -- native to the map data array, it's a Charmed Mob. Otherwise, it's a Jug.
+        if zoneEntities:IsNativeSpawn(petTargetIndex.TargetIndex) then
+            return gVars._BST_CHARMED;
+        else
+            return gVars,_BST_JUGPET;
+        end
+    end
+
+    return gVars._TYPE_UNKNOWN;
+end     -- pets.fPetTypeSpecific
+
+--[[
+    SummonerCastingPetType determines if the spell being cast is for a summoner's pet and if so what type: avatar
+    or spirit.
+--]]
+
+function pets.SummonerCastingPetType()
+    local castManager = AshitaCore:GetMemoryManager():GetMagic();
+    -- Query what spell the player is currently actively incanting
+    local activeSpellId = castManager:GetActiveSpellId();
+
+    if activeSpellId > 0 then
+        -- Pull the structural resource block for that spell from Ashita's database
+        local spellData = ashita.res.get_spell(activeSpellId);
+
+        if spellData and spellData.Type == "SummonerMagic" then
+            local elementId = spellData.Element; -- 0: Fire, 1: Ice, 2: Wind, 3: Earth, 4: Lightning, 5: Water, 6: Light, 7: Dark
+
+            -- If it's a standard elemental (Fire, Ice, Wind, Earth, Lightning, Water)
+            -- but categorized under a Summoner Magic skill casting block, it MUST be an Avatar.
+            if elementId >= 0 and elementId <= 5 then
+                return gVars._SMN_AVATAR;
+            -- If the casting element is Light (6) or Dark (7)
+            elseif elementId == 6 or elementId == 7 then
+                -- Because Carbuncle (Light), Fenrir (Dark), and Diabolos (Dark) also use these elements,
+                -- you filter exclusively by casting time or MP cost profiles natively in the resource block.
+                if spellData.CastTime > 2000 then -- Spirits have significantly faster baseline casting times than major Avatars
+                    return gVars._SMN_SPIRIT;
+                else
+                    return gVars._SMN_AVATAR;
+                end
+            end
+        else
+            -- Player casting a non-summoning spell
+            return gVars._SMN_OTHER;
+        end
+    else
+        -- Player not casting a spell
+        return gVars._SMN_NS;
+    end
+end     -- pets.SummonerCastingPetType
 
 return pets;

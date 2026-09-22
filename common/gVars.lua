@@ -382,20 +382,12 @@ gVars.Ecosystems = {
     },
 };
 
--- Families is a dynamic structure that is populated by need. It tracks what monsters belong to what family. It is populated
--- from the appropriate files based on a player's use of //eco or //fam inline conditionals in gear sets. Each entry loaded
--- is as follows:
---          ['family name'] = { ['eco'] = 'ecosystem associated with family', ['monsters'] = { list of monster names} },
--- This provides the means to only load "families" that are used as opposed to the large structure that loading all families
--- would entail. There's no "loaded" field here since the presence of a record indicates it was loaded.
-gVars.Families = {
-};
 -- Define constants for Region so typos aren't made
-gVars._REGION_SANDY = 1;
-gVars._REGION_BASTOK = 2;
-gVars._REGION_WINDY = 3;
-gVars._REGION_BEASTMEN = 4;
-gVars._REGION_NA = 0;
+gVars._REGION_SANDY = 0;    -- use to be 1;
+gVars._REGION_BASTOK = 1;   -- use to be 2;
+gVars._REGION_WINDY = 2;    -- use to be 3;
+gVars._REGION_BEASTMEN = 3; -- use to be 4;
+gVars._REGION_NA = -10;     -- use to be 0;
 gVars._REGION_UNKNOWN = -1;
 gVars._REGION_TRUE_NA = -2;
 
@@ -544,7 +536,7 @@ gVars.STORAGES = {
     [17]= { ['id'] = 16, ['name'] = 'Wardrobe 8' }
 };
 
--- Lists spells grouped by a dependency or a type. These are "root" names
+-- Lists grouped by a dependency or a type. These are "root" names
 gVars.tSpellGroupings = {
     ['int']		  =  { 'gravity','blind','sleep','sleepga','poison','poisonga','bind','dispel','blaze','ice','shock' },
     ['mnd']		   = { 'paralyze','slow','slowga','frazzle','distract','silence' },
@@ -568,6 +560,10 @@ gVars.tSpellGroupings = {
     },
     ['brd-enf']	   = { 'requiem','threnody','lullaby','finale','elegy','virelai' }
 };
+-- List of groupings that do not use roots. This is a table of convenience
+gVars.tGroupings = {
+    ['maneuvers']  = { 'dark maneuver','earth maneuver','fire maneuver','ice maneuver','light maneuver', 'thunder maneuver','water maneuver','wind maneuver' },
+    };
 
 -- List of all weaponskills according to desired stats
 gVars.tWeaponSkills = {
@@ -599,6 +595,40 @@ gVars.tWeaponSkills = {
     ['HP']              = { 'spirits_within' },
 };
 
+gVars.tPetSpecialActions = {
+    -- BST
+    ['BST:PET_ATTACK']  = { 'foot kick','whirl claws','big scissors','tail blow','blockhead','lamb chop','sheep charge','frogkick','queasyshroom','numbshroom',
+                            'shakeshroom','nimble snap','cyclotail','somersault','grapple','double claw','spinning top','power attack','rhino attack','razor fang',
+                            'claw cyclone','mandibular bite','head butt','wild oats','needle shot' },
+    ['BST:PET_MATT']    = { 'fireball','cursed sphere' },
+    ['BST:PET_MACC']    = { 'toxic spit','leaf dagger','venom spray','venom','dark spore','sandblast','dust cloud','gloeosuccus','filamented hold','roar',
+                            'palsy pollen','spore','brain crush','silence gas','sheep song','soporific','numbing noise','bubble shower','spoil','scream','infrasonics',
+                            'hi-freq field','sandpit' },
+    -- SMN
+    ['SMN:BP:PHYSICAL'] = { 'poison nails','punch','moonlit charge','crescent fang','eclipse bite','punch','double punch','rock throw','rock buster','megalith throw',
+                            'mountain buster','barracuda dive','tail whip','spinning dive','claw','predator claws','axe kick','double slap','rush','shock strike',
+                            'chaotic strike','camisado' },
+    ['SMN:BP:MAGICAL']  = { 'searing light','meteorite','inferno','fire ii','fire iv','meteor strike','diamond dust','blizzard ii','blizzard iv','heavenly strike',
+                            'aerial blast','aero ii','aero iv','wind blade','earthen fury','stone ii','stone iv','geocrush','judgement bolt','thunder ii',
+                            'thunder iv','thunderstorm','thunderspark','tidal wave','water ii','water iv','grand fall','howling moon','ruinous omen','somnolence',
+                            'nether blast' },
+    ['SMN:BP:SKILL']    = { 'shining ruby','glittering ruby','crimson howl','inferno howl','frost armor','aerial armor','hastega','earthen ward','rolling thunder',
+                            'lightning armor','ecliptic growl','ecliptic howl','noctoshield','dream shroud' },
+    ['SMN:BP:ACCURACY'] = { 'healing ruby','healing ruby ii','whispering wind','spring water','sleepga','slowga','ultimate terror','nightmare' },
+    ['SMN:BP:HYBRID']   = { 'burning strike','flaming crush' },
+    -- SMN Blood Pact Major Sections
+    ['SMN:BP:RAGE']     = { 'searing light','poison nails','meteorite','howling moon','moonlit charge','crescent fang','eclipse bite','inferno','punch','fire ii','burning strike',
+                            'double punch','fire iv','flaming crush','earthen fury','rock throw','stone ii','rock buster','megalith throw','stone iv','mountain buster',
+                            'barracuda dive','water ii','tidal wave','tail whip','water iv','spinning dive','aerial blast','claw','aero ii','aero iv','predator claws',
+                            'diamond dust','axe kick','blizzard ii','double slap','blizzard iv','rush','judgement bolt','shock strike','thunder ii','thunderspark',
+                            'thunder iv','chaotic strike','ruinous omen','camisado','nether blast','meteor strike','heavenly strike','wind blade','geocrush','thunderstorm',
+                            'grand fall'
+    },
+    ['SMN:BP:WARD']     = { 'healing ruby','shining ruby','glittering ruby','healing ruby ii','lunar cry','lunar roar','ecliptic howl','ecliptic growl','crimson howl',
+                            'earthen ward','slowga','spring water','aerial armor','whispering wind','hastega','frost armor','sleepga','rolling thunder','lightning armor',
+                            'somnolence','nightmare','ultimate terror','noctoshield','dream shroud' },
+};
+
 -- Various lists of slot names. Standard is the basic 16 slots equipment grid, extended adds the metas: rings and ears, full includes subset and group, progressive is full
 -- minus group and smg is the extended list minus the individual minus the individual ears and rings: ear1,ear2,ring1,ring2. (And yes, LUA lets you have a mix of implicit
 -- and explicit defined arrays in the same structure.)
@@ -613,7 +643,7 @@ gVars.tSlotNames = {
                       },
 };
 
--- Lists of valid Weapon Types. Note: while SHIELD and AMMO isn't a weapon, it conforms to the weapon type mechanism in this program
+-- Lists of valid Weapon Types
 gVars.tWeaponTypes = {
     [0]   = 'NONE',
     [1]   = 'H2H',
@@ -891,6 +921,23 @@ gVars._TYPE_BST = 'BST';
 gVars._TYPE_DRG = 'DRG';
 gVars._TYPE_PUP = 'PUP';
 gVars._TYPE_NONE = 'NONE';
+gVars._TYPE_UNKNOWN = 'UNKNOWN';
+
+-- Define PUP automaton frames
+gVars._PUP_HARLEQUIN = 'harlequin';
+gVars._PUP_VALOREDGE = 'valoredge';
+gVARS._PUP_SHARPSHOT = 'sharpshot';
+gVars._PUP_STORMWALKER = 'storwalker';
+
+-- Define SMN pet types
+gVars._SMN_SPIRIT = 'spirit';
+gVars._SMN_AVATAR = 'avatar';
+gVars._SMN_OTHER  = 'other';
+gVars._SMN_NS     = 'no spell';
+
+-- Define BST pet origin types
+gVars._BST_CHARMED = 'charmed';
+gVars._BST_JUGPET  = 'jugpet';
 
 -- Since gVars is loaded from all job files, the individual modules will be loaded here
 -- Please note that these declarations were intentionally made global
@@ -903,7 +950,9 @@ pets         = gFunc.LoadFile('common\\pets.lua');
 magic        = gFunc.LoadFile('common\\magic.lua');
 locks        = gFunc.LoadFile('common\\locks.lua');
 buff_manager = gFunc.LoadFile('common\\buff_manager.lua');
-inline       = gFunc.LoadFile('common\\inline.lua');
+preprocess   = gFunc.LoadFile('common\\preprocess.lua');
+conditionals = gFunc.LoadFile('common\\conditional.lua');
+--inline       = gFunc.LoadFile('common\\inline.lua');
 gear         = gFunc.LoadFile('common\\gear.lua');
 displaybar   = gFunc.LoadFile('common\\displaybar.lua');
 

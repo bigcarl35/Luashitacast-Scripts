@@ -354,6 +354,8 @@ magic.tTiered = {
 };
 -- Blue Magic spells are grouped by type. The following structure identifies all the spells
 -- associated with each group based on the stat that should be emphasized
+
+-- Note: need to check quadratic continuum. gcinclude identified it by Quad. Continuum
 magic.tBLU_Spells = {
     ['physical']    = { 'asuran claws','battle dance','bludgeon','body slam','cannonball','claw cyclone',
                         'death scissors','dimensional death','disseverment','empty thrash','feather storm',
@@ -363,14 +365,14 @@ magic.tBLU_Spells = {
                         'sickle slash','smite of rage','spinal cleave','spiral spin','sprout smack',
                         'sub-zero smash','tail slap','terror touch','uppercut','vanity dive',
                         'vertical cleave','wild oats' },
-    ['magical']     = { '1000 needles','actinic burst','auroral drape','awful eye','bad breath','chaotic eye',
-                        'enervation','eyes on me','feather tickle','filamented hold','flying hip press',
-                        'frightful roar','frost breath','hecatomb wave','heat breath','geist wall',
-                        'infrasonics','jettataru','light of penance','lowing','magnetite cloud','mp drainkiss',
-                        'mysterious light','poison breath','radiant breath','sandspray','self-destruct',
-                        'sound blast','stinking gas','temporal shift','venom shell','yawn' },
+    ['magical']     = { '1000 needles','actinic burst','auroral drape','awful eye','bad breath','blank gaze',
+                        'blitzstrahl','chaotic eye','enervation','eyes on me','feather tickle','filamented hold',
+                        'flying hip press','frightful roar','frost breath','hecatomb wave','heat breath',
+                        'geist wall','infrasonics','jettataru','light of penance','lowing','magnetite cloud',
+                        'mp drainkiss','mysterious light','poison breath','radiant breath','sandspray',
+                        'self-destruct','sound blast','stinking gas','temporal shift','venom shell','yawn' },
     ['magical_ele'] = { 'blastbomb','bomb toss','corrosive ooze','cursed sphere','ice break','sandspin',
-                        'blitzstrahl','firepit','regurgitation','magic hammer','mind blast',
+                        'firepit','regurgitation','magic hammer','mind blast',
                         'blood drain','blood saber','cold wave','death ray','digest','maelstrom' },
     ['healing']     = { 'healing breeze','magic fruit','pollen','wild carrot' },
     ['utility']     = { 'amplification','cocoon','diamondhide','exuviation','feather barrier','memento mori',
