@@ -1,0 +1,731 @@
+me: I have a lua file that contains data for a region. It contains multiple lines that look like: ['Goblin Weaver'] = { Name='Goblin Weaver', Ecosystem='beastmen', Family='goblins' }, How would I parse out the Name, Ecosystem, and Family
+
+To parse out the Name, Ecosystem, and Family from your Lua data lines, you can use Regular Expressions (Regex).
+
+Because text processing varies by environment, here are the most effective solutions using Python and Command Line (Grep/Sed).
+
+Option 1: Python (Recommended for Data Extraction)
+
+Python's re module allows you to easily extract these values into a structured format like a list of dictionaries or a CSV.
+
+    import re
+
+    # Example data from your Lua file
+    lua_lines = [
+        "['Goblin Weaver']       = { Name='Goblin Weaver', Ecosystem='beastmen', Family='goblins' }",
+        "['Orc Warrior']         = { Name='Orc Warrior', Ecosystem='beastmen', Family='orcs' }"
+    ]
+
+    # Regex pattern using named capture groups
+    pattern = r"Name='(?P<name>[^']+)',\s*Ecosystem='(?P<ecosystem>[^']+)',\s*Family='(?P<family>[^']+)'"
+
+    for line in lua_lines:
+        match = re.search(pattern, line)
+        if match:
+            data = match.groupdict()
+            print(f"Name: {data['name']} | Ecosystem: {data['ecosystem']} | Family: {data['family']}")
+
+Option 2: Command Line (Quick Inspection)
+
+If you just want to quickly extract the values into a clean, comma-separated list directly from your terminal, you can use sed.
+
+    sed -E "s/.*Name='([^']+)'.*Ecosystem='([^']+)'.*Family='([^']+)'.*/\1, \2, \3/" your_file.lua
+
+me: I want to do it in lua
+
+In Lua, you can easily extract these values using string patterns (Lua's built-in version of regex) and the string.match or string.gmatch functions.
+
+Here is the complete, copy-pasteable script to parse your file line-by-line:
+
+    -- Sample line from your file
+    local line = "['Goblin Weaver']       = { Name='Goblin Weaver', Ecosystem='beastmen', Family='goblins' }"
+
+    -- 1. Define the Lua pattern to capture the values inside the single quotes
+    local pattern = "Name='([^']*)'.-Ecosystem='([^']*)'.-Family='([^']*)'"
+
+    -- 2. Extract the values
+    local name, ecosystem, family = string.match(line, pattern)
+
+    -- 3. Print the results
+    if name and ecosystem and family then
+        print("Name: " .. name)
+        print("Ecosystem: " .. ecosystem)
+        print("Family: " .. family)
+    else
+        print("No match found")
+    end
+
+How to Process a Whole FileIf you want to read an entire Lua file named region_data.lua and parse every line, use this structure:
+
+    local pattern = "Name='([^']*)'.-Ecosystem='([^']*)'.-Family='([^']*)'"
+
+    -- Open the file in read-only mode
+    local file = io.open("region_data.lua", "r")
+
+    if file then
+        for line in file:lines() do
+            local name, ecosystem, family = string.match(line, pattern)
+            if name and ecosystem and family then
+                -- Process your extracted data here (e.g., save to a table)
+                print(string.format("Found: %s (%s / %s)", name, ecosystem, family))
+            end
+        end
+        file:close()
+    else
+        print("Could not open file.")
+    end
+
+Breakdown of the Lua Pattern
+
+    - Name='([^']*)' — Finds Name=' and captures everything ([^']*) until it hits the next single quote.
+
+    - .- — A non-greedy wildcard that cleanly skips the spaces and commas between fields without overshooting.
+
+    - Ecosystem='([^']*)' and Family='([^']*)' — Repeat the capture logic for the remaining fields.
+
+Do any of the names contain escaped quotes (like Name='Goblin\'s Chief'), which might break a basic pattern?
+
+me: yeah, ['Bo\'Who Warmonger'] is a valid first field.
+
+Since some names contain escaped single quotes (like \'), the previous basic pattern will break because it stops capturing at the very first single
+quote it encounters.
+
+To fix this, you need a pattern that accounts for the backslash escape character. Here is the updated Lua script that uses a robust pattern to handle
+escaped quotes perfectly.
+
+    -- Sample lines including your escaped quote example
+    local lines = {
+        "['Bo\\'Who Warmonger']       = { Name='Bo\\'Who Warmonger', Ecosystem='beastmen', Family='orcs' }",
+        "['Goblin Weaver']       = { Name='Goblin Weaver', Ecosystem='beastmen', Family='goblins' }"
+    }
+
+    -- The robust pattern to handle optional escaped single quotes
+    -- It captures anything that is NOT a quote, OR a backslash followed by any character
+    local pattern = "Name='((?:[^'\\]|\\.)*)'.-Ecosystem='((?:[^'\\]|\\.)*)'.-Family='((?:[^'\\]|\\.)*)'"
+
+    -- Note: Standard Lua patterns don't support alternation (like |).
+    -- If you are using standard Lua without extensions, we solve it using an elegant match-and-clean approach:
+
+    for _, line in ipairs(lines) do
+        -- 1. Temporarily swap out escaped quotes so they don't break the pattern
+        local safe_line = string.gsub(line, "\\'", "___ESCAPED_QUOTE___")
+
+        -- 2. Extract using the simple pattern
+        local name, ecosystem, family = string.match(safe_line, "Name='([^']*)'.-Ecosystem='([^']*)'.-Family='([^']*)'")
+
+        if name and ecosystem and family then
+            -- 3. Restore the escaped quotes back to their original form
+            name = string.gsub(name, "___ESCAPED_QUOTE___", "\\'")
+            ecosystem = string.gsub(ecosystem, "___ESCAPED_QUOTE___", "\\'")
+            family = string.gsub(family, "___ESCAPED_QUOTE___", "\\'")
+
+            print("Name: " .. name .. " | Ecosystem: " .. ecosystem .. " | Family: " .. family)
+        end
+    end
+
+Why the Match-and-Clean Approach is Best
+
+Standard Lua string patterns are highly lightweight but lack advanced Regex features like alternation (|) or lookarounds. By temporarily replacing \' with a
+unique placeholder string (___ESCAPED_QUOTE___), you can still use Lua's native string.match safely without needing to install external heavy regex libraries \
+like luaposix or lpeg.
+
+me: What if I have a more complicated data file. Example: ['eco'] = {
+        ['amorphs'] = {
+            ['worms'] = { 'carrion worm','tunnel worm' },
+        },
+        ['aquans'] = {
+            ['crabs'] = {
+                'land crab','limicoline crab','passage crab','river crab','tree crab','vermivorous crab'
+            },
+        },
+        },
+
+If your data file looks like this, it is actually just a standard Lua table literal. Instead of trying to parse it with complex string patterns or regex,
+the most powerful and reliable approach in Lua is to load the file directly as code using loadfile or load.
+
+By executing the file, Lua will automatically parse the nested structure into a native, walkable table for you.
+
+Option 1: The loadfile Approach (Recommended)
+
+If your .lua data file returns the table (e.g., it starts with return { ... }), you can load it in two lines:
+
+    -- Load and execute the file safely
+    local chunk = assert(loadfile("data.lua"))
+    local data = chunk()
+
+    -- Now you can access it like any normal Lua table!
+    print(data.eco.amorphs.worms[1]) -- Outputs: carrion worm
+
+Option 2: The load Approach (If it's assigned to a variable)
+
+If the data file defines a global variable instead (like data = { eco = ... }), you run the file and then access that global variable:
+
+    -- Execute the file to populate the global environment
+    assert(loadfile("data.lua"))()
+
+    -- Access the global variable created by the file
+    print(data.eco.aquans.crabs[2]) -- Outputs: limicoline crab
+
+How to Loop Through and Flatten the DataOnce Lua has parsed the file into a table, you can deeply traverse it using nested loops to extract or flatten the
+information into a clean list:
+
+    -- Simulating your complex table structure in memory
+    local data = {
+        eco = {
+            amorphs = {
+                worms = { 'carrion worm', 'tunnel worm' },
+            },
+            aquans = {
+                crabs = {
+                    'land crab', 'limicoline crab', 'passage crab', 'river crab', 'tree crab', 'vermivorous crab'
+                },
+            },
+        }
+    }
+
+    -- Deeply traverse the nested table
+    if data and data.eco then
+        for ecosystem, families in pairs(data.eco) do
+            for family, monsters in pairs(families) do
+                for _, monster_name in ipairs(monsters) do
+
+                    print(string.format("Monster: %-20s | Ecosystem: %-10s | Family: %s",
+                        monster_name, ecosystem, family))
+
+                end
+            end
+        end
+    end
+
+Output:
+
+    Monster: carrion worm        | Ecosystem: amorphs   | Family: worms
+    Monster: tunnel worm         | Ecosystem: amorphs   | Family: worms
+    Monster: land crab           | Ecosystem: aquans    | Family: crabs
+    Monster: limicoline crab     | Ecosystem: aquans    | Family: crabs
+
+Does the data file begin with a variable assignment (e.g., local myData = {), a return statement, or just an open bracket {?
+
+me: It starts with a return and thanks for how to flatten that structure, that is more useful.
+
+Since your file starts with a return statement, loading it is incredibly clean. Lua evaluates the file directly and hands you the table immediately.
+
+Here is a complete, copy-pasteable script that loads your file, executes it, and flattens that deeply nested structure into a single, highly optimized
+lookup table.
+
+Complete Script: Load & Flatten
+
+    -- 1. Load and execute the data file directly
+    local data_chunk = assert(loadfile("region_data.lua"))
+    local data = data_chunk()
+
+    -- 2. Create a flat table to hold the results
+    -- Format will be: flat_data["carrion worm"] = { ecosystem = "amorphs", family = "worms" }
+    local flat_data = {}
+
+    -- 3. Traverse and flatten the nested structure
+    if data and data.eco then
+        for ecosystem_name, families in pairs(data.eco) do
+            for family_name, monsters in pairs(families) do
+                for _, monster_name in ipairs(monsters) do
+
+                    -- Store the flat relation using the monster's name as the key
+                    flat_data[monster_name] = {
+                        ecosystem = ecosystem_name,
+                        family = family_name
+                    }
+
+                end
+            end
+        end
+    end
+
+    -- 4. Test your new flat structure!
+    local query = "tunnel worm"
+    local info = flat_data[query]
+
+    if info then
+        print(string.format("Found match!\nName: %s\nEcosystem: %s\nFamily: %s",
+            query, info.ecosystem, info.family))
+    else
+        print("Monster not found.")
+    end
+
+Why This Flattened Structure is Better
+    - O(1) Lookup Speed: Instead of running three nested loops every time you want to find a monster, you can check flat_data["carrion worm"] instantly.
+
+    - Memory Efficiency: Lua handles strings and references natively, meaning this flat table creates minimal memory overhead while significantly accelerating
+      lookup speeds.
+
+    - No Regex Formatting Headaches: Because Lua's engine handles the file parser natively, escaped quotes like Bo'Who are handled safely in the background
+      automatically.
+
+Would you like help with saving this flattened data to another file format, or do you need to write a quick function to search by family or ecosystem instead
+of just by monster name?
+
+me: In most cases I will know the name and want to know the ecosystem and family. The flatten version makes that easier. In a special case, I'll know the
+ecosystem and want to extract all of the names. That is also easier with a flattened table. The structured layout makes it easier not to introduce typos.
+
+You have hit on the exact reason why decoupled architecture works so beautifully. Keeping the original structured layout ensures data integrity (preventing
+human typos), while flattening it in memory gives you maximum performance and flexibility for your code.
+
+Since you mentioned needing to look up all monster names by ecosystem as a special case, here are two clean helper functions you can add to your script to
+handle both lookup directions instantly.
+
+    -- ==========================================
+    -- Use Case 1: Know Name -> Find Eco & Family
+    -- ==========================================
+    -- Time complexity: O(1) [Instant lookup]
+    local function get_monster_info(monster_name)
+        return flat_data[monster_name]
+        -- Returns: { ecosystem = "...", family = "..." } or nil
+    end
+
+    -- ==========================================
+    -- Use Case 2: Know Eco -> Extract All Names
+    -- ==========================================
+    -- Time complexity: O(N) [Scans the flat table once]
+    local function get_monsters_by_ecosystem(target_eco)
+        local results = {}
+
+        for monster_name, info in pairs(flat_data) do
+            if info.ecosystem == target_eco then
+                table.insert(results, monster_name)
+            end
+        end
+
+        return results -- Returns an array of strings
+    end
+
+    -- ==========================================
+    -- Examples in Action
+    -- ==========================================
+
+    -- 1. Finding details for a specific monster
+    local worm_info = get_monster_info("tunnel worm")
+    if worm_info then
+        print("Tunnel Worm belongs to family: " .. worm_info.family)
+    end
+
+    -- 2. Extracting all monsters in an ecosystem
+    print("\n--- Listing all Amorphs ---")
+    local amorphs = get_monsters_by_ecosystem("amorphs")
+    for _, name in ipairs(amorphs) do
+        print("- " .. name)
+    end
+
+Pro-Tip: Indexing on Load (Optional Optimization)
+
+If your file becomes massive and you intend to query ecosystems frequently, you can build a secondary "index" table during the flattening step so that the ecosystem
+search is also an instant (O(1)) lookup:
+
+    local flat_data = {}
+    local ecosystem_index = {} -- Secondary look up table
+
+    if data and data.eco then
+        for eco_name, families in pairs(data.eco) do
+            -- Initialize an array for this ecosystem if it doesn't exist
+            ecosystem_index[eco_name] = ecosystem_index[eco_name] or {}
+
+            for fam_name, monsters in pairs(families) do
+                for _, monster_name in ipairs(monsters) do
+
+                    flat_data[monster_name] = { ecosystem = eco_name, family = fam_name }
+
+                    -- Fast-cache the name to its ecosystem bucket
+                    table.insert(ecosystem_index[eco_name], monster_name)
+
+                end
+            end
+        end
+    end
+
+    -- Now, finding all aquans is a single, direct access step:
+    -- local all_aquans = ecosystem_index["aquans"]
+
+me: my lua code is part of luashitacast on horizonxi. When a player zones I want to load a list of all of the monsters in the zone. That way, I can figure out the
+ecosystem and family of the monster the player is targetting. The special case is when a whm is casting a cure spell on undead, I want to make sure the target is
+an undead.
+
+Integrating this logic into LuaShitacast on HorizonXI is a great way to handle automation. Since players shift zones frequently, you can optimize memory usage by
+dynamically flushing and loading only the active zone's file when the zone packet or event fires.
+
+To check if a target is Undead during a White Mage (WHM) Cure spell, we look up the target's family. In Final Fantasy XI, the "Undead" classification isn't an
+ecosystem itself; it is a super-family trait that spans multiple families (like Skeletons, Ghosts, Shadows, Vampires, and Zombies).
+
+Here is how you can set up your global tables and write the target validation function inside your LuaShitacast file.
+
+1. Define the Undead Lookup Table
+
+At the top of your script, define a static table containing all families that count as undead. This makes your specific WHM conditional statement incredibly clean.
+
+    -- Static list of families categorized as Undead in FFXI
+    local UNDEAD_FAMILIES = {
+        ["skeletons"] = true,
+        ["ghosts"]    = true,
+        ["shadows"]   = true,
+        ["vampires"]  = true,
+        ["zombies"]   = true,
+        ["hounds"]    = true, -- Note: Corses/Ice Elements vary, add what you need
+    }
+
+    -- Global flat data table for the CURRENT zone
+    local current_zone_monsters = {}
+
+2. The Dynamic Zone Loader
+
+Hook this into your LuaShitacast zoning function (usually triggered via an environment change or packet chunk). It clears out old zone data and loads the table
+structure for the new zone.
+
+    local function load_zone_data(zone_name)
+    -- Clear previous data to keep memory usage low
+    current_zone_monsters = {}
+
+    -- Format file path (assumes files are named 'Ronfaure.lua', etc.)
+    local path = string.format("%s/addon/data/%s.lua", gWindower.addon_path, zone_name)
+    local chunk, err = loadfile(path)
+
+    if not chunk then
+        -- Print error safely to the Windower console if file is missing
+        print("Failed to load zone file: " .. tostring(err))
+        return
+    end
+
+    local data = chunk()
+    if data and data.eco then
+        for eco_name, families in pairs(data.eco) do
+            for fam_name, monsters in pairs(families) do
+                for _, monster_name in ipairs(monsters) do
+                    -- Lowercase the name to prevent any case-matching mismatches
+                    current_zone_monsters[string.lower(monster_name)] = {
+                        ecosystem = eco_name,
+                        family = fam_name
+                    }
+                end
+            end
+        end
+    end
+end
+
+3. The WHM Precast Check
+
+Inside your Luashitacast gFunc.PreCast() block, check the spell name and validate your current target against your lookup data.
+
+    function gFunc.PreCast()
+        local spell = gData.GetAction()
+        local target = gData.GetTarget()
+
+        -- Special Case: WHM casting a Cure spell on an enemy target
+        if string.match(spell.Name, "Cure") and target.Type == "Monster" then
+
+            -- Pull target data from our flat table (using lowercase for safety)
+            local monster_info = current_zone_monsters[string.lower(target.Name)]
+
+            if monster_info then
+                local is_undead = UNDEAD_FAMILIES[monster_info.family]
+
+                if is_undead then
+                    -- Target is valid undead! Let the Cure spell execute as damage.
+                    print(string.format("[Cure Logic] Targeting Undead: %s (%s)", target.Name, monster_info.family))
+                else
+                    -- Target is a normal monster. Block the spell to save MP / prevent errors.
+                    print(string.format("[Cure Logic] Blocked! %s is not Undead.", target.Name))
+                    gFunc.CancelAction()
+                    return
+                end
+            else
+                -- Optional: Handle cases where the monster name isn't in your database yet
+                print("[Cure Logic] Warning: Target not found in database.")
+            end
+        end
+    end
+
+Why This Approach Fits Luashitacast Perfectly
+    - Zero Frame Drop: By lowering names and building a direct key-value mapping (current_zone_monsters["tunnel worm"]), the check inside
+      PreCast runs in a fraction of a millisecond, completely bypassing macro delay.
+
+    - Safer File Management: Keeping individual .lua files per zone (instead of one giant mega-file) means your client won't hitch or bloat
+      its RAM allocations whenever you switch areas.
+
+me: I'm doing things a bit differently, but what you've stated gives me ideas. I have created the data files (since ecosystem and family is
+not something I can get from the server.) I have followed online wikis as best as I can for the family and ecosystem names. (lots of typing,
+that's why I switched to the structured approach.) For undead I've made the ecosystem be "undead" and the families be "skeletons, ghosts, etc"
+
+Got it. Making "undead" its own top-level ecosystem in your structured files is a fantastic design choice. It completely matches the way you
+actually interact with the game mechanics as a White Mage—it saves you from having to maintain a separate checklist of undead families in
+code, since the data file explicitly tells you everything you need to know.
+
+Because you structured it that way, your WHM check inside LuaShitacast becomes incredibly clean. You don't need a hardcoded list of undead
+families anymore. Instead, your code just directly reads the ecosystem string.
+
+Simplified WHM Cure Logic
+
+When your flat table is built, a monster like a skeleton will naturally map to { ecosystem = "undead", family = "skeletons" }. Your precast
+check simplifies down to this:
+
+    function gFunc.PreCast()
+        local spell = gData.GetAction()
+        local target = gData.GetTarget()
+
+        -- Check if it's a Cure spell being cast on an enemy monster
+        if string.match(spell.Name, "Cure") and target.Type == "Monster" then
+
+            -- Pull target data from your dynamically loaded zone table
+            local monster_info = current_zone_monsters[string.lower(target.Name)]
+
+            if monster_info then
+                -- Direct check: Is the ecosystem explicitly mapped as 'undead'?
+                if monster_info.ecosystem == "undead" then
+                    print(string.format("[Cure Logic] Valid Target! %s is Undead (%s)", target.Name, monster_info.family))
+                else
+                    print(string.format("[Cure Logic] Blocked! %s belongs to '%s', not undead.", target.Name, monster_info.ecosystem))
+                    gFunc.CancelAction()
+                    return
+                end
+            else
+                -- Fallback if the monster isn't in your custom data file yet
+                print("[Cure Logic] Warning: Target not found in zone database. Casting anyway.")
+            end
+        end
+    end
+
+The Payoff of Your Structured Approach
+
+By handling the heavy lifting during data entry (grouping skeletons and ghosts under ['undead'] = {}), you reap huge benefits in your script:
+    - Zero Maintenance: If HorizonXI introduces a new undead monster family later, you only have to update your data file under the ['undead']
+      section. Your core Lua code never has to change.
+
+    - Streamlined Extraction: When you run that special case to "extract all monster names in an ecosystem," grabbing all undead targets is a
+      single step (get_monsters_by_ecosystem("undead")).
+
+me: as to how I track when zones are changed I have a packet_in event that's looking for 0x05E.
+
+Using 0x05E (Zone Line / Area Marker) packets is a solid, precise way to track transitions in Final Fantasy XI. Because this packet triggers right
+when your client registers a physical zone line or transition update, you can grab the new Zone ID straight from the packet payload and feed it
+directly into your loader.
+
+Since you are tracking 0x05E in packet_in, you can make your life easier by naming your structured data files by their numeric Zone ID (e.g.,
+101.lua for West Ronfaure) instead of string names. This avoids any string capitalization mismatches or typos when loading files.
+
+Here is a clean pattern for hooking your data loader directly into that packet event:
+
+1. The Packet Event Hook
+
+Depending on whether you are extracting bytes via standard offset reading or a library structure, you will pull the Zone ID out of the packet data.
+
+    -- Hooking into Luashitacast / Ashita packet_in event
+    -- Note: Assuming standard Ashita v4 event structure or equivalent
+    -- 0x05E is the structural Zone Update packet
+    if (e.id == 0x05E) then
+        -- Extract the Zone ID from the packet payload
+        -- In FFXI, the Zone ID is a 2-byte unsigned short located at offset 0x04
+        local zone_id = struct.unpack('H', e.data, 0x04 + 1) -- Shifted for Lua's 1-based index
+
+        if zone_id then
+            print(string.format("[Zone Tracker] Detected zone transition! New Zone ID: %d", zone_id))
+
+            -- Trigger your dynamic flattening function
+            load_zone_data_by_id(zone_id)
+        end
+    end
+
+2. The Updated ID-Based Loader
+
+Now, your load_zone_data function looks up the numeric ID, keeping your workspace fast and organized:
+
+    local current_zone_monsters = {}
+
+    function load_zone_data_by_id(zone_id)
+        -- Flush out the old zone data completely
+        current_zone_monsters = {}
+
+        -- Load the file named after the Zone ID
+        local path = string.format("%s/addon/data/%d.lua", gWindower.addon_path, zone_id)
+        local chunk, err = loadfile(path)
+
+        if not chunk then
+            -- Safe failure: Log it, but don't crash the script if the zone file doesn't exist yet
+            print(string.format("[Zone Tracker] No database file for Zone %d (or error: %s)", zone_id, tostring(err)))
+            return
+        end
+
+        -- Execute and flatten exactly like before
+        local data = chunk()
+        if data and data.eco then
+            for eco_name, families in pairs(data.eco) do
+                for fam_name, monsters in pairs(families) do
+                    for _, monster_name in ipairs(monsters) do
+
+                        -- Use lowercase names for flawless matching in PreCast
+                        current_zone_monsters[string.lower(monster_name)] = {
+                            ecosystem = eco_name,
+                            family = fam_name
+                        }
+
+                    end
+                end
+            end
+            print(string.format("[Zone Tracker] Successfully loaded and flattened data for Zone %d.", zone_id))
+        end
+    end
+
+Why combining 0x05E with IDs works perfectly:
+
+1. Unambiguous Mapping: You never have to worry about matching a string like "West Ronfaure" vs "West_Ronfaure" vs "W. Ronfaure". The Zone ID
+   is always a constant integer.
+
+2. Timing Accuracy: Because 0x05E fires on the incoming packet thread, your monster lookup table is completely cleared and rebuilt before your
+   character fully materializes and has a chance to select a new target or cast a spell.
+
+me: does that gWindower.addon_path change because I use ashita?
+
+Yes, gWindower does not exist in Ashita. That global object is exclusive to the Windower 4 framework.
+
+Because LuAshitacast is native to Ashita v4, you use Ashita's built-in file path properties instead.
+
+The Ashita v4 EquivalentIn Ashita v4, you can obtain the exact path to your specific addon's folder by using:
+
+    _addon.path
+
+This is a local environment variable provided by Ashita directly to every loaded addon.
+
+Updated Path Loader for Ashita v4
+
+If you place your custom data folder inside your luashitacast folder (e.g., Ashita/addons/luashitacast/data/), update your file path generator
+to this:
+
+    -- Generates path like: C:/Ashita/addons/luashitacast/data/101.lua
+    local path = string.format("%sdata/%d.lua", _addon.path, zone_id)
+    local chunk, err = loadfile(path)
+
+(Note: _addon.path already includes a trailing slash \, so you don't need to add one before data/.)
+
+Placing Files in the Shared Config Directory (Alternative)
+
+Because LuAshitacast reads user profiles from Ashita's central config folder (Game/config/addons/luashitacast/), you might prefer to put your data
+files there so they don't get overwritten if LuAshitacast updates.
+
+If you put them in the config folder, you can hardcode the relative path from the main Ashita directory using native Lua file handling:
+
+    -- Looks directly into your central Ashita configuration folder
+    local path = string.format("./config/addons/luashitacast/data/%d.lua", zone_id)
+    local chunk, err = loadfile(path)
+
+me: does this work for both windows and linux?
+
+Yes, but with one crucial file path adjustment.
+
+The core Lua code, logic parsing, packet structures (0x05E), and flattening mechanics are 100% cross-platform. However, Windows and Linux handle
+directory path separators differently:
+
+Windows historically uses backslashes (\).
+
+Linux strictly requires forward slashes (/).
+
+While modern Windows environments can handle forward slashes in many API layers, Linux will instantly crash or throw a File Not Found error if a
+backslash is present in the path string.
+
+Cross-Platform Path Handling in Ashita v4
+
+Because Ashita v4 can run natively on Windows or via compatibility layers like Wine/Proton on Linux (Steam Deck, etc.), the safest approach is to
+use forward slashes for your subdirectories and allow Lua's internal handlers to settle the rest.
+
+Update your file path logic to look like this:
+
+    -- 1. Using _addon.path (If files live in your addon folder)
+    -- Since _addon.path uses the operating system's native format,
+    -- enforce forward slashes for the remainder of your string.
+    local clean_path = string.gsub(_addon.path, "\\", "/") -- Forces all slashes forward
+    local path = string.format("%sdata/%d.lua", clean_path, zone_id)
+
+
+    -- 2. Using relative paths (If files live in the shared Config directory)
+    -- Relative paths starting with a dot always work seamlessly across OS lines
+    local path = string.format("./config/addons/luashitacast/data/%d.lua", zone_id)
+
+Why This Is Bulletproof
+
+loadfile() in Lua natively interprets forward slashes correctly on both Windows and Linux kernels.
+
+Forcing string.gsub(_addon.path, "\\", "/") ensures that if Ashita outputs Windows-style backslashes, they are normalized before the string is passed
+into Lua's file IO loader.
+
+Would you like to write a safety fallback wrapper using pcall so that if a zone file is missing or named incorrectly, your script prints a clean warning
+instead of throwing an addon-crashing error?
+
+me: yes, there are times (especially in dynamic areas like bcnms) where there won't be any zone ids.
+
+In HorizonXI, battlefield instances like BCNMs, KSNMs, or Dynamis usually preserve the baseline structural Zone ID of the arena they are housed in (e.g.,
+Balga's Dais or Horlais Peak). However, your packet filter will often see periods where the 0x05E zone payload returns a 0 or a junk value while the
+instance initializes, or you may simply choose not to build data files for those temporary zones.
+
+To prevent missing or unmapped zone IDs from throwing fatal Lua execution errors that freeze your entire LuaShitacast script, you can wrap your loader
+in a pcall (protected call).
+
+If pcall catches an error (like a missing file), it halts the error silently and hands control back to your code. Here is the bulletproof, cross-platform
+implementation:
+
+Safe Zone Loader with pcall
+
+    local current_zone_monsters = {}
+
+    function load_zone_data_by_id(zone_id)
+        -- 1. Early exit rule for unassigned, zero, or invalid zone IDs
+        if not zone_id or zone_id <= 0 then
+            current_zone_monsters = {} -- Clear old data safely
+            return
+        end
+
+        -- 2. Build cross-platform path string
+        local clean_path = string.gsub(_addon.path, "\\", "/")
+        local path = string.format("%sdata/%d.lua", clean_path, zone_id)
+
+        -- 3. Execute loadfile inside a protected call to catch file-missing errors
+        -- pcall returns: success status (true/false), and either the loaded chunk or the error message
+        local load_success, chunk_or_err = pcall(loadfile, path)
+
+        if not load_success or not chunk_or_err then
+            -- File doesn't exist, is unreadable, or contains syntax errors.
+            -- Wipe the table so you aren't accidentally tracking monsters from the previous zone.
+            current_zone_monsters = {}
+            -- Log a clean, non-crashing message to your Ashita console
+            print(string.format("[Zone Tracker] No valid data file found for Zone %d. Lookup bypassed.", zone_id))
+            return
+        end
+
+        -- 4. If the file loaded successfully, run it inside another pcall
+        -- This prevents syntax/runtime errors inside your data layout from crashing your script
+        local run_success, data = pcall(chunk_or_err)
+
+        if not run_success or type(data) ~= "table" then
+            current_zone_monsters = {}
+            print(string.format("[Zone Tracker] Critical: Data file for Zone %d failed to execute properly.", zone_id))
+            return
+        end
+
+        -- 5. Data is safe to flatten
+        if data.eco then
+            for eco_name, families in pairs(data.eco) do
+                for fam_name, monsters in pairs(families) do
+                    for _, monster_name in ipairs(monsters) do
+                        current_zone_monsters[string.lower(monster_name)] = {
+                            ecosystem = eco_name,
+                            family = fam_name
+                        }
+                    end
+                end
+            end
+            print(string.format("[Zone Tracker] Successfully initialized data mapping for Zone %d.", zone_id))
+        end
+    end
+
+How this Handles BCNMs & Special Cases
+
+    - Graceful Degradation: If you step into a BCNM zone that has no corresponding .lua file, the script clears current_zone_monsters and prints a single
+      warning line. Your PreCast script will still run perfectly—it will just drop down to its fallback code (letting spells through normally).
+
+    - Sanity-Checked Execution: If you make a syntax typo while manually writing a data file (like forgetting a comma in the table layout), the second
+      pcall will intercept the break and block the crash.
+
+
+

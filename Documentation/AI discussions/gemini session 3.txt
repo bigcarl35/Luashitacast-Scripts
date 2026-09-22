@@ -1,0 +1,106 @@
+gemini session #3
+
+    me: on horizonxi in luashitacast when a corsair does a phantom roll, does handleability show the specific die or is it just a generic phantom roll?
+
+    In Luashitacast on HorizonXI, the gData.GetAction() properties evaluate Phantom Rolls as a generic action named "Phantom Roll" rather than listing the specific die or individual
+    roll name (like Chaos Roll or Evoker's Roll).
+
+    How Luashitacast Identifies Phantom RollsWhen handling equipment swaps or writing rules, Luashitacast views the ability category collectively. To catch your Phantom Rolls in your
+    LUA script, you check for the general action name or its type:
+
+        if (action.Name == 'Phantom Roll' or action.Name == 'Double-Up') then
+            -- Equip your Phantom Roll / PR Duration gear here
+        end
+
+    Displaying Specific Roll Information
+
+    While Luashitacast reads the mechanic as a generic action for gear swapping purposes, on-screen UI overlays (such as HUD elements or text cues telling you your current Roll numbers,
+    Lucky/Unlucky targets, and status) are managed by the specific Profile configuration you are using (e.g., GetAwayCoxn's Luashitacast-Profiles) or separate Ashita v4 addons like Timers
+    or custom UI text objects. These pull data from the game client's chat log or active buffs to display the specific roll details.
+
+    If you are trying to write specific gear swaps for unique rolls (like changing to a specific element or set for a single roll type), would you like an example of how to track the last
+    used specific roll via chat triggers or variables?
+
+    me: yes
+
+    To track specific Phantom Rolls in Luashitacast (since action.Name only returns "Phantom Roll"), you can intercept the outgoing packet or read the specific roll name using Ashita's chat
+    or packet listeners.
+
+    However, the cleanest and most reliable way within a standard Luashitacast profile is to hook into gData.GetAction() before the cast finishes or use an Ashita event packet listener inside
+    your profile to set a variable.
+
+    Here is how you can set up a variable to track the last used specific roll and use it for your gear swaps.
+
+    Step 1: Initialize the Variable
+
+    At the very top of your Luashitacast script (outside of any functions), create a variable to hold the name of the current roll.
+
+        local currentRoll = 'None';
+
+    Step 2: Intercept the Roll Name via Packet or Chat
+
+    Since action.Name defaults to "Phantom Roll" when the command is sent, we can look at the outgoing command text or hook the command itself to see exactly what the player typed (e.g.,
+    /ja "Chaos Roll" <me>).
+
+    Add this Ashita event handler to the top of your script to catch the command before Luashitacast processes the generic action:
+
+        -- Track the specific roll command typed by the player
+        ashita.events.register('command', 'track_rolls', function(cmd, nType)
+            local args = cmd:args();
+            if #args >= 2 then
+                -- Check if the player is using a job ability command
+                if args[1]:lower() == '/ja' or args[1]:lower() == '/jobability' then
+                    local abilityName = args[2]:gsub('"', ''):lower(); -- Remove quotes and lowercase
+
+                    -- If it looks like a roll, save it to our variable
+                    if abilityName:find('roll') then
+                        currentRoll = abilityName;
+                    end
+                end
+            end
+            return false;
+        end);
+
+    Step 3: Use the Variable in your HandleAbility Logic
+
+    Now that currentRoll updates whenever you type or macro a roll, you can check it inside your profile.HandleAbility() block.
+
+        profile.HandleAbility = function()
+            local action = gData.GetAction();
+
+            -- Generic check for any Phantom Roll
+            if (action.Name == 'Phantom Roll') then
+                -- 1. Equip your baseline roll gear (e.g., Luzaf's Ring, Corsair's Tricorne)
+                gFunc.EquipSet(sets.PhantomRoll);
+
+                -- 2. Specific swaps based on the exact roll we intercepted
+                if (currentRoll == 'blitzers roll') then
+                    gFunc.Equip('Legs', 'Chocobo Hose'); -- Example specific item swap
+                elseif (currentRoll == 'tacticians roll') then
+                    -- Equip specific gear for Tactician's
+                end
+
+            -- Handle Double-Up safely
+            elseif (action.Name == 'Double-Up') then
+                gFunc.EquipSet(sets.DoubleUp);
+            end
+        end;
+
+    Step 4: Clear the Variable After Use
+
+    To prevent your script from thinking you are permanently rolling the same thing, clear the variable inside your HandleDefault or HandlePostRender once the player returns to an idle state or a
+    buff is gained.
+
+        profile.HandleDefault = function()
+            -- Your normal idle/engaged sets here
+
+            -- Optional: Clear the roll tracking if you want to reset states
+            if (gData.GetPlayer().Status == 'Idle') then
+                -- currentRoll = 'None';
+            end
+        end;
+
+    Would you like help setting up a specific logic block to automatically swap out your Luzaf's Ring if you need to double-up safely at a shorter range, or are you looking to customize sets for
+    specific roll duration bonuses?
+
+    me: Luzaf's Ring doubles the range of a phantom roll or double-up. It's an interesting question, but outside of what I was interested in finding out at the moment.

@@ -1,0 +1,447 @@
+me: on horizonxi using luashitacast or ashitacore directly, are there ids associated with weaponskills?
+
+Yes, there are numerical IDs explicitly associated with weaponskills when using both LuAshitacast and AshitaCore directly on HorizonXI. These IDs are inherited
+directly from the standard Final Fantasy XI data structures (e.g., Savage Blade is ID 240, Asuran Fists is ID 32, etc.)
+
+1. In LuAshitacast (LAC)
+
+When a weaponskill is executed, it populates a global action/spell table passed into functions like profile.OnPrecast. You can capture and read the ID via the
+action object:
+
+    profile.OnPrecast = function(action, bSpells)
+        if (action.Type == 'Weaponskill') then
+            local wsId = action.Id
+            -- alternative syntax depending on LAC version: action.Resource.Id
+
+            if (wsId == 240) then
+                -- Logic specifically for Savage Blade
+                gFunc.EquipSet(sets.SavageBlade);
+            end
+        end
+    end
+
+2. Accessing Directly via AshitaCore
+
+If you are writing an addon/plugin from scratch or bypassing LuAshitacast, you pull this data from Ashita's Resource Manager:
+
+    - By ID: AshitaCore:GetResourceManager():GetWeaponSkillById(id);
+
+    - By Name: AshitaCore:GetResourceManager():GetWeaponSkillByName(name, language);
+
+Example of checking the current action packet or parsing a weaponskill:
+
+    local resource = AshitaCore:GetResourceManager():GetWeaponSkillById(240);
+    if resource ~= nil then
+        print(resource.Name[1]); -- Outputs the English name (e.g., "Savage Blade")
+    end
+
+me: I currently track a list weaponskills based on the stats that affect damage. I use the weaponskill names, but I suspect Ids would be more efficient.
+
+Switching your tracking system to numerical IDs is significantly more efficient than matching text strings. In Lua, integer lookups in a table are instantaneous
+hash lookups, whereas string comparisons require evaluating characters sequentially, which consumes more overhead over hundreds of combat cycles.
+
+Performance & Structural Advantages
+
+Using IDs instead of names provides major advantages for LuAshitacast tables:
+
+    - Zero String Parsing: It bypasses standard string overhead entirely.
+
+    - Typo Prevention: It eliminates bugs caused by spelling mistakes or extra spaces (e.g., "Savage Blade " vs "Savage Blade").
+
+    - Unified Stat Grouping: You can restructure your table so multiple weaponskills that share the exact same stat modifiers point to a single gear set profile.
+
+Recommended Lua Structure
+
+Instead of creating a giant if/elseif chain for every single weaponskill name, you can map the Weaponskill IDs directly to their primary stat scaling modifiers
+inside a lookup table:
+
+    -- Group your weaponskills by their primary scaling stat IDs
+    local ws_modifiers = {
+        -- STR Modifiers
+        [32]  = 'STR', -- Asuran Fists
+        [240] = 'STR', -- Savage Blade (HorizonXI relies heavily on STR/MND, map to primary)
+
+        -- DEX Modifiers
+        [17]  = 'DEX', -- Raging Fists
+        [43]  = 'DEX', -- Evisceration
+
+        -- AGI Modifiers
+        [179] = 'AGI', -- Sidewinder
+        [181] = 'AGI', -- Arching Arrow
+    }
+
+    profile.OnPrecast = function(action, bSpells)
+        if (action.Type == 'Weaponskill') then
+            -- Find the primary modifier category using the ID
+            local modifier = ws_modifiers[action.Id]
+
+            if (modifier == 'STR') then
+                gFunc.EquipSet(sets.WS.STR);
+            elseif (modifier == 'DEX') then
+                gFunc.EquipSet(sets.WS.DEX);
+            elseif (modifier == 'AGI') then
+                gFunc.EquipSet(sets.WS.AGI);
+            else
+                -- Fallback default weaponskill set if ID isn't explicitly mapped
+                gFunc.EquipSet(sets.WS.Default);
+            end
+        end
+    end
+
+
+HorizonXI / Ashita Weaponskill ID Quick Reference
+
+Here are the standard FXI data IDs for the most common tracked weaponskills on HorizonXI:
+
+Weaponskill     ID   Primary Stat Grouping
+==========================================
+Combo           16   STR / DEX
+Raging Fists    17   STR / DEX
+Spinning Attack 19   STR
+Asuran Fists    32   STR / VIT
+Fast Blade     224   STR / DEX
+Vorpal Blade   230   STR
+Swift Blade    233   STR / DEX
+Savage Blade   240   STR / MND
+Wasp Sting      33   DEX
+Viper Bite      35   DEX
+Shark Bite      42   DEX / AGI
+Evisceration    43   DEX
+Raging Axe      80   STR / DEX
+Rampage         85   STR
+Calamity        87   STR / VIT
+Mistral Axe     88   STR
+Tachi: Enpi    144   STR / DEX
+Tachi: Jinpu   145   STR / GKT (Magic)
+Tachi: Koki    147   STR / MND
+Tachi: Gekko   150   STR
+Tachi: Kasha   151  STR
+
+me: could you recreate that chart for all weaponskills?
+
+Here is a comprehensive chart of Weaponskill IDs across all major physical weapon types in Final Fantasy XI (specifically matching the era
+structures used on HorizonXI and parsed natively by AshitaCore / LuAshitacast).
+
+The primary stat groupings provided represent the core attributes that dominate gear scaling configuration requirements for optimization.
+
+Hand-to-Hand                                            Dagger
+============                                            ======
+Weaponskill         ID      Primary Stat Grouping       Weaponskill     ID      Primary Stat Grouping
+Combo               16      STR / DEX                   Gust Slash      48      DEX / INT
+Raging Fists        17      STR / DEX                   Wasp Sting      33      DEX
+Spinning Attack     19      STR                         Viper Bite      35      DEX
+Howling Fist        18      STR / VIT                   Shadow Stitch   36      CHR
+Dragon Kick         20      STR / DEX                   Cyclone         37      DEX / INT
+Asuran Fists        32      STR / VIT                   Energy Steal    38      MND / INT
+Ascetic's Fury      21      STR / DEX                   Energy Drain    39      MND / INT
+Stringing Pummel    23      STR / DEX                   Dancing Edge    40      DEX / CHR
+Victory Smite       25      STR / LUK (Crit)            Shark Bite      42      DEX / AGI
+Shijin Spiral       26      DEX                         Evisceration    43      DEX (Crit)
+Final Heaven        24      STR / VIT                   Pyrrhic Kleos   45      DEX / STR
+                                                        Exenterator     46      AGI
+                                                        Mercy Stroke    44      STR
+
+Sword                                                   Great Sword
+=====                                                   ===========
+Weaponskill         ID      Primary Stat Grouping       Weaponskill     ID      Primary Stat Grouping
+Fast Blade         224      STR / DEX                   Hard Slash     241      STR / DEX
+Burning Blade      225      STR / INT                   Power Slash    242      STR / DEX
+Red Lotus Blade    226      STR / INT                   Frost Bite     243      STR / INT
+Flat Blade         227      STR                         Freezebite     244      STR / INT
+Shining Blade      228      STR / MND                   Shockwave      245      STR / MND
+Seraph Blade       229      STR / MND                   Crescent Fang  246      STR
+Circle Blade       231      STR                         Sickle Moon    247      STR / AGI
+Spirits Within     232      Current HP                  Spinning Slash 248      STR / INT
+Vorpal Blade       230      STR / DEX                   Ground Strike  249      STR / MND
+Swift Blade        233      STR / DEX                   Resolution     251      STR
+Savage Blade       240      STR / MND                   Scourge        250      STR / VIT
+Requiescat         235      MND
+Knights of Round   234      STR / MND
+
+Axe                                                     Great Axe
+===                                                     =========
+Weaponskill         ID      Primary Stat Grouping       Weaponskill       ID      Primary Stat Grouping
+Raging Axe          80      STR / DEX                   Shield Break      96      STR / DEX
+Smash Axe           81      STR                         Iron Tempest      97      STR
+Gale Axe            82      STR / INT                   Sturmwind         98      STR
+Avalanche Axe       83      STR / DEX                   Armor Break       99      STR
+Bora Axe            84      STR / DEX                   Keen Edge        100      STR / DEX
+Rampage             85      STR                         Weapon Break     101      STR
+Power Axe           86      STR / DEX                   Raging Rush      102      STR
+Calamity            87      STR / VIT                   Full Break       103      STR
+Mistral Axe         88      STR                         Steel Cyclone    104      STR / VIT
+Decimation          89      STR / DEX                   Upheaval         106      VIT
+Ruinator            91      STR / DEX                   King's Justice   107      STR
+Onslaught           90      DEX                         Metatron Torment 105      STR / VIT
+
+
+Scythe                                                  Polearm
+======                                                  =======
+Weaponskill         ID      Primary Stat Grouping       Weaponskill       ID        Primary Stat Grouping
+Slice              112      STR / DEX                   Double Thrust    128        STR / DEX
+Dark Harvest       113      STR / INT                   Thunder Thrust   129        STR / INT
+Shadow of Death    114      STR / INT                   Raiden Thrust    130        STR / INT
+Nightmare Scythe   115      STR                         Leg Sweep        131        STR
+Spinning Scythe    116      STR                         Penta Thrust     132        STR / DEX
+Vorpal Scythe      117      STR                         Vorpal Thrust    133        STR / DEX
+Guillotine         118      STR / MND                   Skewer           134        STR / DEX
+Cross Bite         119      STR / DEX                   Wheeling Thrust  135        STR
+Spiral Hell        120      STR / INT                   Impulse Drive    136        STR / DEX
+Insurgency         122      STR / INT                   Sonic Thrust     137        STR / DEX
+Entropy            123      INT                         Stardiver        139        STR / AGI
+Catastrophe        121      STR / INT                   Geirskogul       138        STR / DEX
+
+Katana                                                  Great Katana
+======                                                  ============
+Weaponskill         ID      Primary Stat Grouping       Weaponskill       ID        Primary Stat Grouping
+Blade: Rin         160      STR / DEX                   Tachi: Enpi      144        STR / DEX
+Blade: Retsu       161      STR / DEX                   Tachi: Jinpu     145        STR
+Blade: Teki        162      STR / INT                   Tachi: Koki      147        STR / MND
+Blade: To          163      STR / INT                   Tachi: Goten     146        STR
+Blade: Chi         164      STR / INT                   Tachi: Kagirohi  148        STR
+Blade: Ei          165      STR / INT                   Tachi: Yukikaze  149        STR / VIT
+Blade: Jin         166      STR / DEX                   Tachi: Gekko     150        STR
+Blade: Ten         167      STR                         Tachi: Kasha     151        STR
+Blade: Ku          168      STR / DEX                   Tachi: Ageha     152        STR / CHR
+Blade: Shun        170      DEX                         Tachi: Shoha     154        STR
+Blade: Kamu        169      STR / INT                   Tachi: Fudo      153        STR
+                                                        Tachi: Kaiten    155        STR
+
+Club                                                    Staff
+====                                                    =====
+Weaponskill         ID      Primary Stat Grouping       Weaponskill       ID        Primary Stat Grouping
+Shining Strike     176      STR / MND                   Heavy Blast      192        STR
+Seraph Strike      177      STR / MND                   Rock Smash       193        STR / INT
+Brainshaker        178      STR                         Earth Crusher    194        STR / INT
+Starlight          179      MP Recovery                 Star Burst       195        STR / MND
+Moonlight          180      MP Recovery                 Sun Burst        196        STR / MND
+Skullbreaker       181      STR                         Shell Crusher    197        STR
+True Strike        182      STR / MND                   Full Swing       198        STR / DEX
+Judgment           183      STR / MND                   Spirit Taker     199        Current MP
+Hexa Strike        184      STR / MND                   Retribution      200        STR / MND
+Black Halo         185      STR / MND                   Cataclysm        202        STR / INT
+Realmrazer         187      MND                         Shattersoul      203        INT
+Randgrith          186      STR / MND                   Gate of Tartarus 201        INT / MND
+
+Archery                                                 Marksmanship
+=======                                                 ============
+Weaponskill         ID      Primary Stat Grouping       Weaponskill       ID        Primary Stat Grouping
+Flaming Arrow      208      AGI / STR                   Trueflight       221        AGI
+Piercing Arrow     209      AGI / STR                   Wildfire         222        AGI
+Dulling Arrow      210      AGI / STR                   Hot Shot         214        AGI / STR
+Sidewinder         211      AGI / STR                   Sniper Shot      215        AGI / STR
+Blast Arrow        212      AGI / STR                   Split Shot       216        AGI / STR
+Arching Arrow      213      AGI / STR                   Slug Shot        217        AGI / STR
+Empyreal Arrow     216      AGI / STR                   Blast Shot       218        AGI / STR
+Apex Arrow         218      AGI                         Heavy Shot       219        AGI / STR
+Namas Arrow        217      AGI / STR                   Detonator        220        AGI / STR
+                                                        Last Stand       224        AGI
+                                                        Coronach         223        AGI / DEX
+
+me: Thank you. That will help me to prove that I categorized my weapon skill correctly while helping me to switch to using ids.
+
+You are very welcome! Moving to IDs is going to make your profile completely bulletproof against typos and noticeably cleaner to read.
+
+Since you are auditing your categorizations, here is a quick protip for debugging your profile using LuAshitacast:
+
+You can add a temporary print command inside your OnPrecast function. Every time you use a weaponskill, it will print both the name and
+the exact ID directly to your Ashita chat log. This is the fastest way to verify your mappings live in-game:
+
+    profile.OnPrecast = function(action, bSpells)
+        if (action.Type == 'Weaponskill') then
+            -- Temporary debug line:
+            print(string.format("[LAC Debug] WS Name: %s | WS ID: %d", action.Name, action.Id));
+
+            -- Your actual gear swapping logic below...
+        end
+    end
+
+me: wouldn't weapon skills show up in the HandleWeaponskill function?
+
+Yes, many popular LuAshitacast profile frameworks use a dedicated profile.HandleWeaponskill function (or call it via custom event dispatchers)
+rather than a raw profile.OnPrecast block.
+
+Whether your profile hooks into profile.HandleWeaponskill or profile.OnPrecast, the underlying action table (gData.GetAction() or the action
+argument) still exposes the exact same .Id and .Name parameters.
+
+Implementing IDs inside HandleWeaponskill
+
+If your specific template relies on profile.HandleWeaponskill, you can refactor it cleanly using an ID-based lookup table like this:
+
+    -- Define your ID-to-modifier lookup table at the top of your file
+    local ws_modifiers = {
+        [240] = 'STR_MND', -- Savage Blade
+        [32]  = 'STR_VIT', -- Asuran Fists
+        [43]  = 'DEX_CRIT',-- Evisceration
+        [85]  = 'STR',     -- Rampage
+    }
+
+    profile.HandleWeaponskill = function()
+        -- Check your standard bailout/amnesia conditions first if your template uses them
+        if (gcinclude and gcinclude.CheckWsBailout and gcinclude.CheckWsBailout() == false) then
+            gFunc.CancelAction()
+            return
+        end
+
+        local ws = gData.GetAction()
+
+        -- Fallback default set
+        gFunc.EquipSet(sets.Ws_Default)
+
+        -- Lookup via ID instead of string matching
+        local ws_type = ws_modifiers[ws.Id]
+        if (ws_type == 'STR_MND') then
+            gFunc.EquipSet(sets.Ws_Savage)
+        elseif (ws_type == 'DEX_CRIT') then
+            gFunc.EquipSet(sets.Ws_Evisceration)
+        else
+            -- Catch-all for unmapped IDs using standard gear
+            gFunc.EquipSet(sets.Ws_General)
+        end
+    end
+
+me: are there any weapon skills that completely ignore the stats on your gear?
+
+On HorizonXI, there are no weaponskills that completely ignore all gear stats, but there is one legendary exception that completely ignores standard attribute
+modifiers (STR, DEX, VIT, etc.) and enemy defense:
+
+The Outlier: Spirits Within (ID: 232) / Spirit Taker (ID: 199)
+
+Spirits Within (Sword) and Spirit Taker (Staff) utilize a unique damage formula that completely bypasses your standard stats (like STR or Attack) and structural
+enemy defense.
+
+    - The Formula: The base damage is computed entirely as a fixed percentage of your Current HP (scaled additionally by your TP).
+
+    - What it ignores: Adding +STR, +DEX, +Attack, or Accuracy to your gear will provide 0% damage increase to the calculated hit.
+
+    - How to gear for it: While it ignores standard offensive stats, it still scales off gear. To optimize it, you must swap into a specialized Max HP gear set.
+
+Other "Stat-Ignoring" Sub-Categories
+
+If you are auditing your configuration files for LuAshitacast, keep these secondary categories in mind:
+
+1. Element-Based Magic Weaponskills
+
+Weaponskills like Blade: Teki (ID: 162), Tachi: Jinpu (ID: 145), Red Lotus Blade (ID: 226), and Earth Crusher (ID: 194) deal purely elemental magic damage.
+
+    - They completely ignore Your Attack, Melee Accuracy, and the Enemy's Physical Defense.
+
+    - However, they do not ignore all stats; they scale based on Magic Attack Bonus (MAB), Elemental Affinity Gear, and standard dINT/dMND stat differences.
+
+2. Flash / Stun / MP Drain Utility Weaponskills
+
+Weaponskills like Flat Blade (ID: 227), Leg Sweep (ID: 131), Starlight (ID: 179), and Energy Drain (ID: 39) focus strictly on adding utility statuses or draining
+static pools.
+
+    -Their primary function completely ignores your standard damage attributes.
+
+    - Instead, they scale exclusively with your base Weapon Skill Level (for accuracy/landing the status effect) and specific secondary elements (MND/INT for drains).
+
+Implementation Advice for LuAshitacast
+
+Because Spirits Within (ID: 232) relies on completely separate gearing philosophies compared to every other physical skill in the game, it is highly recommended to
+isolate it completely in your script:
+
+    if (ws.Id == 232) then
+        -- Completely ignores STR/DEX; forces pure Max HP gear
+        gFunc.EquipSet(sets.WS.MaxHP);
+    end
+
+me: if I'm using a BLU spell with chain affinity, I assume the id's are the spell's Id and not a weaponskill Id.
+
+Correct. Your assumption is completely right.
+
+Even when under the effects of Chain Affinity, the action you are executing is still technically a Magic Spell (action.Type == 'Spell'), not a weaponskill. Therefore,
+LuAshitacast and AshitaCore will pass the Spell ID (e.g., Sprout Smack is ID 547, Sickle Slash is ID 563).
+
+Because Chain Affinity causes physical Blue Magic to behave like a weaponskill for skillchains and consumes your TP, it changes your gearing requirements dramatically.
+
+How to Handle This in Your Code
+
+To track and gear these correctly using IDs, you want to inspect if the Chain Affinity buff is active when a spell is cast. You can achieve this cleanly by checking
+the player's active buffs using the Ashita core buff data:
+
+    profile.OnPrecast = function(action, bSpells)
+        if (action.Type == 'Spell') then
+            -- Check if player has the Chain Affinity buff active (Buff ID: 407)
+            local player = gData.GetPlayer()
+            local isChainAffinity = false
+
+            for _, buffId in ipairs(player.Buffs) do
+                if buffId == 407 then
+                    isChainAffinity = true
+                    break
+                end
+            end
+
+            if isChainAffinity then
+                -- This is a Chain Affinity Spell!
+                -- Map the Spell ID to your physical scaling categories
+                if (action.Id == 563) then -- Sickle Slash
+                    gFunc.EquipSet(sets.CA_Spells.STR_VIT)
+                elseif (action.Id == 547) then -- Sprout Smack
+                    gFunc.EquipSet(sets.CA_Spells.STR_DEX)
+                end
+            else
+                -- Standard Magic Midcast / Precast logic
+                gFunc.EquipSet(sets.Precast.FastCast)
+            end
+        end
+    end
+
+Would you like a list of Spell IDs for the primary physical Blue Magic spells used on HorizonXI to populate your new lookup system?
+
+me: yes, what are the spell IDs for the primary physical blue mage spells.
+
+Here is the chart of standard Spell IDs for the primary physical Blue Magic spells used across different leveling eras and endgame settings on HorizonXI.
+
+They are categorized by their dominant gear scaling attributes so you can cleanly update your profile.HandleWeaponskill or profile.OnPrecast lookup maps.
+
+STR & DEX Scaling (Multi-hit / Critical Hit Spells)
+
+These represent the heaviest-hitting spells when paired with Chain Affinity, benefiting significantly from Critical Hit Rate and standard melee accuracy gear.
+
+Spell Name          Spell ID        Hit Type & Scaling Attributes
+==========          ========        =============================
+Bludgeon                 529        3-hit Blunt / CHR & STR
+Claw Cyclone             587        2-hit Slashing / STR & DEX
+Screwdriver              519        2-hit Water-Physical / STR & MND
+Frenetic Rip             540        3-hit Blunt / STR & DEX
+Sickle Slash             545        1-hit Slashing (High Crit) / STR & DEX
+Disseverment             611        5-hit Piercing (High Poison) / STR & DEX
+Hysteric Barrage         592        5-hit Blunt / STR & DEX
+Asuran Claws             631        6-hit Blunt / STR & DEX
+Thrashing Assault        623        4-hit Blunt / STR & DEX
+Vertical Cleave          617        1-hit Slashing / STR & DEX
+
+STR & VIT Scaling (Single-hit / Defense Spells)
+
+These spells excel when you are gearing heavily into raw defense attributes or using Cocoon.
+
+Spell Name          Spell ID        Hit Type & Scaling Attributes
+==========          ========        =============================
+Sprout Smack             597        1-hit Blunt / STR & VIT
+Power Attack             551        1-hit Blunt / STR & VIT
+Head Butt                577        1-hit Blunt (Stun) / STR & VIT
+Body Slam                574        AoE Blunt / STR & VIT
+Grand Slam               593        AoE Blunt / STR & VIT
+Cannonball               638        Ranged Physical / STR & VIT (Scales heavily off Defense)
+Quad. Continuum          615        4-hit Slashing / STR & VIT
+
+AGI / INT / MND Utility & Piercing Spells
+
+These physical spells scale uniquely off secondary variables or utilize niche damage distributions.
+
+Spell Name          Spell ID        Hit Type & Scaling Attributes
+==========          ========        =============================
+Wild Oats                603        1-hit Piercing / STR & AGI
+Feather Storm            543        Ranged Piercing / STR & AGI
+Jet Stream               569        3-hit Ranged Blunt / STR & AGI
+Spiral Spin              605        AoE Slashing / STR & AGI
+Queasyshroom             599        1-hit Piercing / STR & INT
+Mandibular Bite          581        1-hit Slashing / STR & INT
+Ram Charge               622        1-hit Blunt (Knockback) / STR & MND
+
+Implementation Mapping Tip
+
+Because Ashita Core / LuAshitacast evaluates these as Spell objects, you can now easily expand your tracking rules.

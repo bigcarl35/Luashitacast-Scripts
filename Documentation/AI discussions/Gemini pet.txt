@@ -1,0 +1,496 @@
+me: in luashitacast on horizonxi in HandlePetAction when a BST does the Ready ability, what does PetAction.Name evaluate to?
+
+In Luashitacast on HorizonXI, when a Beastmaster (BST) uses a Ready move, PetAction.Name evaluates to the specific name of the pet command/move being executed
+(for example: "Tegmina Buffet", "Razor Fang", "Fluid Toss", or "Foot Kick"), rather than the word "Ready" itself.
+
+However, there is an important quirk in Luashitacast's packet handling you need to account for when writing your script:
+
+The "Trailing Space" Quirk
+
+By default, the packet data coming from HorizonXI often appends a hidden trailing space to the pet action's name. If your pet uses Tegmina Buffet, PetAction.Name
+will actually evaluate to "Tegmina Buffet ".
+
+Because of this, standard BST profiles in Luashitacast use string manipulation to strip that trailing character before checking it against physical or magical gear sets:
+
+    profile.HandlePetAction = function()
+        local petAction = gData.GetPetAction()
+
+        -- Strip the trailing space quirk common in Horizon Luashitacast
+        local actionName = string.sub(petAction.Name, 1, #petAction.Name - 1)
+
+        -- Now actionName evaluates exactly to "Tegmina Buffet", "Razor Fang", etc.
+        if PetPhysMoves:contains(actionName) then
+            gFunc.EquipSet(sets.PetAtk)
+        elseif PetMabMoves:contains(actionName) then
+            gFunc.EquipSet(sets.PetMab)
+        end
+    end
+
+To Swap Gear on the "Ready" Activation Itself
+
+If you want to swap gear for the actual "Ready" command precast (to lower charges or augment the activation using things like Charmer's Merlin or Desultor Tassets), you
+handle that inside HandlePrecast using the player's ability type:
+
+    profile.HandlePrecast = function()
+        local ability = gData.GetAction()
+
+        -- This checks if the player is initiating the "Ready" command
+        if string.match(ability.Type, 'Ready') then
+            gFunc.EquipSet(sets.Ready_Charges)
+        end
+    end
+
+me: what about if the bst does a sic?
+
+When a Beastmaster uses Sic, PetAction.Name evaluates exactly the same way it does for Ready: it evaluates to the specific name of the move the pet randomly chooses to
+execute (such as "Foot Kick", "Lamb Chop", or "Head Butt"), rather than the word "Sic".
+
+Because Sic forces the pet to choose a move on its own based on its current TP, Luashitacast intercepts the actual incoming pet outgoing action packet. From the Lua's
+perspective, whether you used Ready to choose the move manually or Sic to let the pet choose it randomly, the resulting pet action is what populates PetAction.Name.
+
+Handling the "Sic" Trailing Space
+
+Just like Ready, Sic moves are plagued by the exact same trailing space bug in HorizonXI's packet stream. If your pet randomly selects Foot Kick via Sic, PetAction.Name
+will actually read as "Foot Kick ".
+
+You should use the exact same string trimming logic inside your HandlePetAction function to capture both types of moves cleanly:
+
+    profile.HandlePetAction = function()
+        local petAction = gData.GetPetAction()
+
+        -- This handles BOTH Ready and Sic moves cleanly by wiping the trailing space
+        local actionName = string.sub(petAction.Name, 1, #petAction.Name - 1)
+
+        -- Example lookup table check
+        if PetPhysMoves:contains(actionName) then
+            gFunc.EquipSet(sets.Pet_Physical)
+        end
+    end
+
+Swapping Gear for the "Sic" Activation
+
+If you are looking to swap into Sic Recast / Sic Reduction gear (like Beast Mitts or Stout Jerkin), you must do that during the player's activation step inside HandlePrecast.
+
+Unlike Ready, which uses ability.Type == 'Ready', Sic is categorized natively as a standard Job Ability:
+
+    profile.HandlePrecast = function()
+        local action = gData.GetAction()
+
+        -- Swap gear for the actual character's "Sic" command activation
+        if action.Name == 'Sic' then
+            gFunc.EquipSet(sets.Sic_Recast)
+        end
+    end
+
+me: what about other commands like Stay or Heel?
+
+For universal utility pet commands like Stay, Heel, Fight, or Leave, the behavior changes completely because these are player-directed master commands, not physical or magical
+abilities executed by the pet.
+
+    1. HandlePetAction will completely ignore them
+
+        The HandlePetAction function in Luashitacast only intercepts outgoing abilities performed by the pet (like Ready moves, Sic moves, or Blood Pacts).
+
+        When you use Stay or Heel, your pet does not use a TP move or an ability.
+
+        Consequently, HandlePetAction does not fire at all, and PetAction.Name will not evaluate to anything for these commands.
+    2. They are caught in HandlePrecast instead
+
+        Because Stay, Heel, Fight, and Leave are commands executed by the player character, they are processed natively as incoming actions. You catch them inside HandlePrecast
+        using gData.GetAction().
+
+    When you trigger them, the master action properties evaluate exactly to their literal names:
+
+    Player Command      action.Name evaluates to...     action.Type evaluates to...
+    --------------      ---------------------------     ---------------------------
+    /pet "Stay"             "Stay"                          "Pet Command"
+    /pet "Heel"             "Heel"                          "Pet Command"
+    /pet "Fight"            "Fight"                         "Pet Command"
+    /pet "Leave"            "Leave"                         "Pet Command"
+
+How to use this to swap gear
+
+If you want to swap into a Pet Damage Taken (Pet: DT) / Pet Idle set when you order your pet to Stay (or swap to a high movement-speed set when you call them to Heel), you
+handle it like this inside HandlePrecast:
+
+    profile.HandlePrecast = function()
+        local action = gData.GetAction()
+
+        -- Check if it's a general pet command
+        if action.Type == 'Pet Command' then
+            if action.Name == 'Stay' then
+                gFunc.EquipSet(sets.Pet_Idle_DT) -- Lock your pet down in defensive gear
+            elseif action.Name == 'Heel' then
+                gFunc.EquipSet(sets.MovementSpeed) -- Put yourself in movement gear while it runs back
+            end
+        end
+    end
+
+me: that would also be true of the smn Fight command.
+
+Yes, that is exactly correct.
+
+The Summoner (SMN) /pet "Fight" command behaves identically to the Beastmaster commands. Because "Fight" is a direct master-to-pet utility command, HandlePetAction will
+completely ignore it, meaning it won't fire at all for this action.
+
+Instead, it passes straight through HandlePrecast as a standard player command. When a SMN issues a Fight command, Luashitacast evaluates it using these precise
+properties:
+    action.Name evaluates strictly to "Fight"
+
+    action.Type evaluates strictly to "Pet Command"
+
+How to use it in your SMN Profile
+
+If you want to swap into Avatar Per-Tick Perpetuation / Avatar DT gear the absolute millisecond you send your avatar in to fight, you catch it in HandlePrecast just like
+you would for BST:
+
+    profile.HandlePrecast = function()
+        local action = gData.GetAction()
+
+        -- Catch the master command
+        if action.Type == 'Pet Command' and action.Name == 'Fight' then
+            gFunc.EquipSet(sets.Avatar_Engaged) -- Immediately equip your avatar's perpetuation/blood pact precast hybrid set
+        end
+    end
+
+⚠️ A Crucial Difference for Blood Pacts
+
+While the Fight command behaves the same as BST, Blood Pacts (Ward and Rage) deviate from BST's Ready moves in how Luashitacast reads them:
+
+    1. Unlike Ready moves (which immediately execute as a pet action), when you use a Blood Pact, the SMN must first perform a player casting animation.
+
+    2. Because of this, a Blood Pact will hit your player's HandlePrecast first as action.Type == 'Blood Pact Rage' or 'Blood Pact Ward'. This is where you equip your
+       Blood Pact Delay Reduction gear.
+
+    3. Only after your character finishes the command will HandlePetAction fire for the Avatar's actual move (e.g., Predatory Claws). This is where you swap to your
+       Avatar's physical or magical damage gear.
+
+me: and PUP deploy?
+
+The Puppetmaster (PUP) command /pet "Deploy" behaves exactly like the BST and SMN utility commands.
+
+Because Deploy is a master-directed macro command and not an ability executed by the pet, HandlePetAction will completely ignore it.
+
+Instead, it flows directly into HandlePrecast via gData.GetAction(), evaluating to the following exact properties:
+
+    action.Name evaluates strictly to "Deploy"
+
+    action.Type evaluates strictly to "Pet Command"
+
+How to use it in a PUP Profile
+
+You can catch this inside HandlePrecast to swap into your desired Automaton Engaged or Automaton Tanking gear the exact moment you order your puppet into battle:
+
+    profile.HandlePrecast = function()
+        local action = gData.GetAction()
+
+        -- Catch the Deploy command instantly
+        if action.Type == 'Pet Command' and action.Name == 'Deploy' then
+            gFunc.EquipSet(sets.Automaton_Engaged)
+        end
+    end
+
+⚠️ The PUP Limitation (Why HandlePetAction won't help you later)
+
+Unlike BST (Ready) or SMN (Blood Pacts), Luashitacast has a notorious limitation when it comes to the Automaton's subsequent combat actions.
+
+When your Automaton decides to execute a Weapon Skill (like String Shredder) or cast a spell (like Fire IV), the game handles this entirely server-side between the
+pet and the monster. Because Luashitacast does not intercept outgoing Automaton physical execution packets the way it does for a BST pet, HandlePetAction will never
+fire for Automaton Weapon Skills.
+
+To swap gear for an Automaton Weapon Skill, PUP players typically use an Ashita addon (like TPActions or a custom helper) to look at the pet's TP/actions, or they
+tie their mid-fight Automaton sets directly to their Master's macro buttons.
+
+me: So, for DRG doing Steady Wing, would I check for it in HandlePrecast or HandlePetAction?
+
+You must check for Steady Wing inside HandlePrecast.
+
+Even though Steady Wing is an ability that grants a Stoneskin barrier to your Wyvern, it is classified as a player-activated Job Ability (JA). Because your character
+is the one executing the macro and spending the JA cooldown timer, the outgoing packet initiates from you, meaning it bypasses HandlePetAction entirely.
+
+How to write it in your DRG profile
+
+Inside HandlePrecast, you will evaluate it exactly like any other player Job Ability using gData.GetAction(). To optimize the stoneskin amount, you'll want to
+swap into Wyvern Max HP+ gear:
+
+    profile.HandlePrecast = function()
+        local action = gData.GetAction()
+
+        -- Catch Steady Wing when the master executes it
+        if action.Type == 'Job Ability' and action.Name == 'Steady Wing' then
+            gFunc.EquipSet(sets.Steady_Wing) -- Equip Wyvern: HP+ gear here
+        end
+    end
+
+The DRG Rule of Thumb: HandlePrecast vs. HandlePetAction
+
+To prevent confusion on Dragoon, remember this distinction for your automation rules:
+
+Use HandlePrecast for Master Abilities: Steady Wing, Spirit Link, Deep Breathing, and Call Wyvern are all triggered by the player.
+
+Use HandlePetAction for Wyvern Breaths: The only time HandlePetAction fires on DRG is when the Wyvern automatically executes a Healing Breath, Restoring Breath, or
+Elemental/Smiting Breath in response to your magic casting.
+
+me: but doesn't HandlePrecast also handle the precast of Spells/Songs?
+
+Yes, HandlePrecast handles absolutely every action your character initiates [1]—including Spells, Ninjutsu, Songs, Job Abilities, Weapon Skills, and Items.
+
+Because HandlePrecast is a single catchment zone for all player actions, you separate them cleanly by wrapping your logic in conditional checks using action.Type
+or action.Skill.
+
+Here is how a standard profile organizes HandlePrecast so that your Job Abilities (like Steady Wing) don't conflict with your Spells or Songs:
+
+Clean Structure for HandlePrecast
+
+    profile.HandlePrecast = function()
+        local action = gData.GetAction()
+
+        -- 1. Handle Spells & Ninjutsu (Fast Cast gear)
+        if action.Type == 'Magic' or action.Type == 'Ninjutsu' then
+            gFunc.EquipSet(sets.FastCast)
+
+        -- 2. Handle Bard Songs (Song Precast gear)
+        elseif action.Type == 'BardSong' then
+            gFunc.EquipSet(sets.SongPrecast)
+
+        -- 3. Handle Weapon Skills (WS specific gear)
+        elseif action.Type == 'WeaponSkill' then
+            gFunc.EquipSet(sets.WS[action.Name] or sets.WS_Default)
+
+        -- 4. Handle Job Abilities (Steady Wing, etc.)
+        elseif action.Type == 'Job Ability' then
+            if action.Name == 'Steady Wing' then
+                gFunc.EquipSet(sets.Steady_Wing)
+            elseif action.Name == 'Spirit Link' then
+                gFunc.EquipSet(sets.Spirit_Link)
+            end
+        end
+    end
+
+The Universal Execution Pipeline
+
+To visualize why Steady Wing goes here and why your Wyvern's Breaths do not, here is how Luashitacast steps through a player action vs a pet action:
+
+    1. Player hits a Macro (Spell, Song, or JA like Steady Wing) → HandlePrecast fires (Equip Fast Cast / JA Augments) → HandleMidcast fires (Only for Spells/Songs
+       to equip potency gear) → HandlePreshot/Midshot (Only for Ranged attacks).
+
+    2. Wyvern reacts with a Breath → HandlePetAction fires (Equip Wyvern Potency/Breath gear).
+
+Since Steady Wing is structurally just a Job Ability, it gets handled alongside your standard physical actions before any magical casting ever touches your script.
+
+me: Wait, I thought luashitacast split out weapon skills into HandleWeaponskill.
+
+You are completely right, and I apologize for that confusion! Luashitacast absolutely splits out weapon skills into profile.HandleWeaponskill.
+
+Unlike older legacy Ashitacast XMLs, Luashitacast provides a dedicated, clean execution loop specifically for your Weapon Skills.
+
+The exact execution blocks available to your profile are divided like this:
+
+    - profile.HandlePrecast – Exclusively handles Spells, Ninjutsu, Songs, and Job Abilities (like Steady Wing).
+
+    - profile.HandleWeaponskill – Exclusively handles your Weapon Skills (like Wheel Shark or Impulse Drive).
+
+    - profile.HandleMidcast – Handles the final gear swap for magic casting potency/accuracy.
+
+    - profile.HandlePetAction – Handles any physical or magical moves executed by your pet.
+
+Because Luashitacast separates it for you, you don't need to put weapon skill logic inside HandlePrecast at all. Your actual DRG profile setup will look like this:
+
+    -- Steady Wing stays in Precast because it is a Job Ability
+    profile.HandlePrecast = function()
+        local action = gData.GetAction()
+
+        if action.Type == 'Job Ability' and action.Name == 'Steady Wing' then
+            gFunc.EquipSet(sets.Steady_Wing)
+        end
+    end
+
+    -- Weapon Skills cleanly get their own separate block!
+    profile.HandleWeaponskill = function()
+        local ws = gData.GetAction()
+
+        gFunc.EquipSet(sets.WS_Default)
+
+        if ws.Name == 'Impulse Drive' then
+            gFunc.EquipSet(sets.WS_Impulse)
+        elseif ws.Name == 'Sonic Thrust' then
+            gFunc.EquipSet(sets.WS_AoE)
+        end
+    end
+
+me: wow, I've been limiting my HandlePrecast to just spells/songs. I'll make changes.
+
+That is going to unlock a ton of automation power for your profiles! Moving your Job Abilities (JAs) into HandlePrecast is a massive game-changer, especially for
+jobs like Dragoon, Beastmaster, and Thief where JA gear swaps make or break your performance.
+
+Before you dive in and overhaul your scripts, here are three quick tips to keep in mind so your new HandlePrecast runs flawlessly:
+
+    1. Always check action.Type first
+
+    Since HandlePrecast now handles both magic and JAs, you want to prevent Luashitacast from accidentally looking up magic-only properties on a Job Ability.
+    Wrap your logic clearly:
+
+        profile.HandlePrecast = function()
+        local action = gData.GetAction()
+
+        -- JAs don't have cast times, so skip Fast Cast entirely for them
+        if action.Type == 'Job Ability' then
+            if action.Name == 'Steady Wing' then
+                gFunc.EquipSet(sets.Steady_Wing)
+            elseif action.Name == 'Spirit Link' then
+                gFunc.EquipSet(sets.Spirit_Link)
+            end
+
+        -- Magic, Ninjutsu, and Songs get your Fast Cast sets
+        elseif action.Type == 'Magic' or action.Type == 'Ninjutsu' or action.Type == 'BardSong' then
+            gFunc.EquipSet(sets.FastCast)
+        end
+    end
+
+    2. No HandleMidcast for JAs
+
+    Unlike Spells, which hit HandlePrecast (Fast Cast) and then immediately jump to HandleMidcast (MAB/Healing Potency), Job Abilities fire instantly. They
+    execute entirely within HandlePrecast and then stop. The gear you equip inside the Job Ability block will stay on until the animation finishes and your
+    default HandleDefault loop puts you back into your Idle/TP gear.
+
+    3. Great for Subjob JAs too!Now that you are opening this up, don't forget you can automate your subjob abilities here too. If you sub Warrior, you can
+    automatically swap into high-defense/Enmity gear for Provoke, or attack gear for Berserk, all within the exact same block.Have fun updating your profiles!
+
+me: so what is the action.Type of pet commands then?
+
+The action.Type for pet commands is exactly 'Pet Command'.
+
+When you evaluate utility actions like /pet "Fight", /pet "Stay", /pet "Heel", /pet "Leave", or /pet "Deploy" inside your newly updated HandlePrecast function,
+ashitacast marks them with that exact string type.
+
+Here is exactly how you can add a dedicated section for them right alongside your Spells and Job Abilities:
+
+Precast Implementation
+
+    profile.HandlePrecast = function()
+        local action = gData.GetAction()
+
+        -- 1. Handle Master-Directed Pet Commands (Fight, Stay, Heel, Deploy, etc.)
+        if action.Type == 'Pet Command' then
+            if action.Name == 'Fight' or action.Name == 'Deploy' then
+                gFunc.EquipSet(sets.Pet_Engaged)
+            elseif action.Name == 'Stay' then
+                gFunc.EquipSet(sets.Pet_Idle_DT)
+            end
+
+        -- 2. Handle Player Job Abilities (Steady Wing, Jump, Berserk, etc.)
+        elseif action.Type == 'Job Ability' then
+            if action.Name == 'Steady Wing' then
+                gFunc.EquipSet(sets.Steady_Wing)
+            end
+
+        -- 3. Handle Magic, Ninjutsu, and Songs
+        elseif action.Type == 'Magic' or action.Type == 'Ninjutsu' or action.Type == 'BardSong' then
+            gFunc.EquipSet(sets.FastCast)
+        end
+    end
+
+⚠️ A Final Quick Distinction for your SMN Profile
+
+Keep in mind that while utility orders use 'Pet Command', Summoner Blood Pacts use their own unique types because they cost MP and function similarly to spells.
+
+    - A SMN Rage pact evaluates to action.Type == 'Blood Pact Rage'
+
+    - A SMN Ward pact evaluates to action.Type == 'Blood Pact Ward'
+
+Everything else—whether it's a BST pet order, a SMN positioning order, or a PUP deployment—will fall perfectly under 'Pet Command'!
+
+me: So, gData.GetPetAction is just a subfunction that luashitacast is doing to isolate pet commands.
+
+Under the hood, gData.GetPetAction() isn't just isolating the master commands you type—it is actually doing something much cooler. It is looking at a completely
+different network packet stream coming from the server.
+
+When you use Luashitacast on HorizonXI, the system splits actions into two totally separate data feeds:
+
+    1. gData.GetAction() (Player Stream): This captures the network packets generated by your character. This includes your spells, your songs, your Job Abilities,
+       and your master /pet macros (like Fight or Stay).
+
+    2. gData.GetPetAction() (Pet Stream): This captures network packets generated specifically by your pet or avatar.
+
+Because your pet is technically an independent entity in the game world, its combat animations and TP moves are broadcast on a separate frequency.
+Data.GetPetAction() is Luashitacast's built-in helper function to listen to that pet frequency.
+
+Why the Distinction Matters for Your Code
+
+Because these two streams are completely separate, Luashitacast routes them to different blocks:
+
+    - Player Macros flow into HandlePrecast and are read using gData.GetAction().
+
+    - Pet-Executed Abilities (like Tegmina Buffet, Razor Fang, or Predatory Claws) flow into HandlePetAction and are read using gData.GetPetAction().
+
+If you ever try to call gData.GetPetAction() inside your normal HandlePrecast loop, or try to call gData.GetAction() inside HandlePetAction, the script will
+usually return nil or crash because the data isn't there.
+
+me: reviewing what you said earlier, it sounds like I can tell on a DRG when my wyvern will do a breath weapon.
+
+Yes, you can, but there is a crucial timing limitation to how FFXI handles Wyvern Breaths that changes how you write your code.
+
+While HandlePetAction will perfectly detect when your Wyvern is executing a breath (evaluating PetAction.Name to things like "Healing Breath", "Healing Breath II",
+or "Flame Breath"), it only fires the exact millisecond the Wyvern begins its animation. By the time HandlePetAction notices the breath, the game server has already
+calculated the potency based on the gear you were wearing when the breath was triggered.
+
+Because of this system lag, you cannot swap into Wyvern gear inside HandlePetAction and expect it to boost the breath. You have to predict and catch it a step earlier.
+
+How to Actually Automate Wyvern Breaths
+
+To successfully buff a Wyvern Breath, you must swap your Wyvern gear on during your own spell's midcast loop, right before the Wyvern reacts.
+
+The strategy relies on tracking the type of spell you cast while your character is subjobbed as a Mage (like White Mage, Red Mage, or Ninja):
+
+    1. Your Precast: You cast a spell (e.g., Dia or Barfira). You equip Fast Cast gear.
+
+    2. Your Midcast (HandleMidcast): This is where you intercept it. You check if you are low on HP (for a Healing Breath) or if the spell is offensive (for a Smiting
+       Breath). If the criteria are met, you equip your Wyvern: HP+ or Breath+ gear right here.
+
+    3. The Execution: Your spell finishes casting, which instantly triggers the Wyvern's breath while you are already wearing the correct gear.
+
+    4. The Cleanup: You return to normal TP/Idle gear.
+
+The Implementation Script
+
+Here is how you structure your HandleMidcast to force your Wyvern gear onto your character right before the breath triggers:
+
+    profile.HandleMidcast = function()
+        local action = gData.GetAction()
+        local player = gData.GetPlayer()
+
+        -- 1. Check for a Healing Breath trigger
+        -- Typically triggers when you cast any magic while below 33% HP (or 50% with Wyvern Helm)
+        if (action.Type == 'Magic' or action.Type == 'Ninjutsu') and player.HPPercent < 50 then
+            gFunc.EquipSet(sets.Wyvern_Healing_Breath) -- Maximize Wyvern HP+ for huge cures
+            return -- Exit early so standard magic sets don't overwrite this
+        end
+
+        -- 2. Check for an Elemental / Smiting Breath trigger
+        -- Triggers when you cast offensive magic (like Dia) while the pet is engaged
+        if action.Type == 'Magic' and (action.Name == 'Dia' or action.Name == 'Bio') then
+            gFunc.EquipSet(sets.Wyvern_Smiting_Breath) -- Maximize Breath Potency gear
+            return
+        end
+
+        -- 3. Default Magic Handling (if no breath is expected)
+        if action.Type == 'Magic' or action.Type == 'Ninjutsu' then
+            gFunc.EquipSet(sets.Magic_Default)
+        end
+    end
+
+So what do you use HandlePetAction for on DRG?
+
+Since you can't use it to swap gear for the breath, HandlePetAction on Dragoon is primarily used as a safety lock.
+
+You can use it to set a temporary variable or a visual print to confirm the breath went off, or use it to prevent your script from accidentally putting you
+back into standard Idle gear while the Wyvern is stuck mid-animation:
+
+    profile.HandlePetAction = function()
+        local petAction = gData.GetPetAction()
+
+        -- Optional: Just a clean chat log to let you know the automation worked
+        if string.match(petAction.Name, "Healing Breath") then
+            print("Wyvern is executing: " .. petAction.Name)
+        end
+    end
